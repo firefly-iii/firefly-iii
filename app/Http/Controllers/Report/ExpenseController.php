@@ -59,6 +59,60 @@ class ExpenseController extends Controller
         );
     }
 
+    /**
+     * @param Collection $accounts
+     * @param Collection $expense
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     * @throws \Throwable
+     */
+    public function budget(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
+    {
+        // Properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('expense-budget');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        $cache->addProperty($expense->pluck('id')->toArray());
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+        $combined = $this->combineAccounts($expense);
+        $all      = new Collection;
+        foreach ($combined as $name => $combi) {
+            $all = $all->merge($combi);
+        }
+        // now find spent / earned:
+        $spent = $this->spentByBudget($accounts, $all, $start, $end);
+        // do some merging to get the budget info ready.
+        $together = [];
+        foreach ($spent as $budgetId => $spentInfo) {
+            if (!isset($together[$budgetId])) {
+                $together[$budgetId]['spent'] = $spentInfo;
+                // get category info:
+                $first                         = reset($spentInfo);
+                $together[$budgetId]['budget'] = $first['budget'];
+            }
+        }
+
+        $result = view('reports.partials.exp-budgets', compact('together'))->render();
+        $cache->store($result);
+
+        return $result;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $expense
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     * @throws \Throwable
+     */
     public function category(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
         // Properties for cache:
@@ -82,20 +136,20 @@ class ExpenseController extends Controller
 
         // join arrays somehow:
         $together = [];
-        foreach($spent as $categoryId => $spentInfo) {
-            if(!isset($together[$categoryId])) {
+        foreach ($spent as $categoryId => $spentInfo) {
+            if (!isset($together[$categoryId])) {
                 $together[$categoryId]['spent'] = $spentInfo;
                 // get category info:
-                $first = reset($spentInfo);
+                $first                             = reset($spentInfo);
                 $together[$categoryId]['category'] = $first['category'];
             }
         }
 
-        foreach($earned as $categoryId => $earnedInfo) {
-            if(!isset($together[$categoryId])) {
+        foreach ($earned as $categoryId => $earnedInfo) {
+            if (!isset($together[$categoryId])) {
                 $together[$categoryId]['earned'] = $earnedInfo;
                 // get category info:
-                $first = reset($earnedInfo);
+                $first                             = reset($earnedInfo);
                 $together[$categoryId]['category'] = $first['category'];
             }
         }
@@ -223,6 +277,58 @@ class ExpenseController extends Controller
         return $combined;
     }
 
+    /**
+     * @param Collection $assets
+     * @param Collection $opposing
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    protected function earnedByCategory(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array
+    {
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($assets);
+        $collector->setOpposingAccounts($opposing)->withCategoryInformation();
+        $set = $collector->getJournals();
+        $sum = [];
+        // loop to support multi currency
+        foreach ($set as $transaction) {
+            $currencyId   = $transaction->transaction_currency_id;
+            $categoryName = $transaction->transaction_category_name;
+            $categoryId   = intval($transaction->transaction_category_id);
+            // if null, grab from journal:
+            if ($categoryId === 0) {
+                $categoryName = $transaction->transaction_journal_category_name;
+                $categoryId   = intval($transaction->transaction_journal_category_id);
+            }
+            if ($categoryId !== 0) {
+                $categoryName = app('steam')->tryDecrypt($categoryName);
+            }
+
+            // if not set, set to zero:
+            if (!isset($sum[$categoryId][$currencyId])) {
+                $sum[$categoryId][$currencyId] = [
+                    'sum'      => '0',
+                    'category' => [
+                        'id'   => $categoryId,
+                        'name' => $categoryName,
+                    ],
+                    'currency' => [
+                        'symbol' => $transaction->transaction_currency_symbol,
+                        'dp'     => $transaction->transaction_currency_dp,
+                    ],
+                ];
+            }
+
+            // add amount
+            $sum[$categoryId][$currencyId]['sum'] = bcadd($sum[$categoryId][$currencyId]['sum'], $transaction->transaction_amount);
+        }
+
+        return $sum;
+    }
+
     protected function earnedInPeriod(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array
     {
         /** @var JournalCollectorInterface $collector */
@@ -259,37 +365,34 @@ class ExpenseController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
+     * @return array
      */
-    protected function earnedByCategory(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array
+    protected function spentByBudget(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($assets);
-        $collector->setOpposingAccounts($opposing)->withCategoryInformation();
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($assets);
+        $collector->setOpposingAccounts($opposing)->withBudgetInformation();
         $set = $collector->getJournals();
         $sum = [];
         // loop to support multi currency
         foreach ($set as $transaction) {
-            $currencyId   = $transaction->transaction_currency_id;
-            $categoryName = $transaction->transaction_category_name;
-            $categoryId   = intval($transaction->transaction_category_id);
+            $currencyId = $transaction->transaction_currency_id;
+            $budgetName = $transaction->transaction_budget_name;
+            $budgetId   = intval($transaction->transaction_budget_id);
             // if null, grab from journal:
-            if ($categoryId === 0) {
-                $categoryName = $transaction->transaction_journal_category_name;
-                $categoryId   = intval($transaction->transaction_journal_category_id);
-            }
-            if($categoryId !== 0) {
-                $categoryName = app('steam')->tryDecrypt($categoryName);
+            if ($budgetId === 0) {
+                $budgetName = $transaction->transaction_journal_budget_name;
+                $budgetId   = intval($transaction->transaction_journal_budget_id);
             }
 
             // if not set, set to zero:
-            if (!isset($sum[$categoryId][$currencyId])) {
-                $sum[$categoryId][$currencyId] = [
+            if (!isset($sum[$budgetId][$currencyId])) {
+                $sum[$budgetId][$currencyId] = [
                     'sum'      => '0',
-                    'category' => [
-                        'id'   => $categoryId,
-                        'name' => $categoryName,
+                    'budget'   => [
+                        'id'   => $budgetId,
+                        'name' => $budgetName,
                     ],
                     'currency' => [
                         'symbol' => $transaction->transaction_currency_symbol,
@@ -299,7 +402,7 @@ class ExpenseController extends Controller
             }
 
             // add amount
-            $sum[$categoryId][$currencyId]['sum'] = bcadd($sum[$categoryId][$currencyId]['sum'], $transaction->transaction_amount);
+            $sum[$budgetId][$currencyId]['sum'] = bcadd($sum[$budgetId][$currencyId]['sum'], $transaction->transaction_amount);
         }
 
         return $sum;
@@ -353,7 +456,6 @@ class ExpenseController extends Controller
 
         return $sum;
     }
-
 
     /**
      * @param Collection $assets
