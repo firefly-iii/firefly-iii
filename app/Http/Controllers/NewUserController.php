@@ -114,7 +114,7 @@ class NewUserController extends Controller
             'virtualBalance'     => 0,
             'active'             => true,
             'accountRole'        => 'defaultAsset',
-            'openingBalance'     => round($request->input('bank_balance'), 12),
+            'openingBalance'     => $request->input('bank_balance'),
             'openingBalanceDate' => new Carbon,
             'currency_id'        => intval($request->input('amount_currency_id_bank_balance')),
         ];
@@ -139,7 +139,7 @@ class NewUserController extends Controller
             'virtualBalance'     => 0,
             'active'             => true,
             'accountRole'        => 'savingAsset',
-            'openingBalance'     => round($request->input('savings_balance'), 12),
+            'openingBalance'     => $request->input('savings_balance'),
             'openingBalanceDate' => new Carbon,
             'currency_id'        => intval($request->input('amount_currency_id_bank_balance')),
         ];
