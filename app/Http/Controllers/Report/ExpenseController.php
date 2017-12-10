@@ -385,6 +385,9 @@ class ExpenseController extends Controller
                 $budgetName = $transaction->transaction_journal_budget_name;
                 $budgetId   = intval($transaction->transaction_journal_budget_id);
             }
+            if ($budgetId !== 0) {
+                $budgetName = app('steam')->tryDecrypt($budgetName);
+            }
 
             // if not set, set to zero:
             if (!isset($sum[$budgetId][$currencyId])) {
@@ -433,6 +436,9 @@ class ExpenseController extends Controller
             if ($categoryId === 0) {
                 $categoryName = $transaction->transaction_journal_category_name;
                 $categoryId   = intval($transaction->transaction_journal_category_id);
+            }
+            if ($categoryId !== 0) {
+                $categoryName = app('steam')->tryDecrypt($categoryName);
             }
 
             // if not set, set to zero:
