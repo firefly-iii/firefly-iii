@@ -775,6 +775,7 @@ return [
     'piggyBanks'                               => 'Piggy banks',
     'bills'                                    => 'Bills',
     'withdrawal'                               => 'Withdrawal',
+    'opening_balance'                          => 'Opening balance',
     'deposit'                                  => 'Deposit',
     'account'                                  => 'Account',
     'transfer'                                 => 'Transfer',
