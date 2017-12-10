@@ -90,6 +90,13 @@ interface JournalCollectorInterface
      *
      * @return JournalCollectorInterface
      */
+    public function setOpposingAccounts(Collection $accounts): JournalCollectorInterface;
+
+    /**
+     * @param Collection $accounts
+     *
+     * @return JournalCollectorInterface
+     */
     public function setAccounts(Collection $accounts): JournalCollectorInterface;
 
     /**

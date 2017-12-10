@@ -26,3 +26,32 @@ function loadAjaxPartial(holder, uri) {
         failAjaxPartial(uri, holder);
     });
 }
+
+function failAjaxPartial(uri, holder) {
+    "use strict";
+    var holderObject = $('#' + holder);
+    holderObject.parent().find('.overlay').remove();
+    holderObject.addClass('general-chart-error');
+
+}
+
+function displayAjaxPartial(data, holder) {
+    "use strict";
+    var obj = $('#' + holder);
+    obj.html(data);
+    obj.parent().find('.overlay').remove();
+
+    // call some often needed recalculations and what-not:
+
+    // find a sortable table and make it sortable:
+    if (typeof $.bootstrapSortable === "function") {
+        $.bootstrapSortable(true);
+    }
+
+    // find the info click things and respond to them:
+    triggerInfoClick();
+
+    // trigger list thing
+    listLengthInitial();
+
+}

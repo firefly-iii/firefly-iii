@@ -1,0 +1,36 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsign="az">{{ 'category'|_ }}</th>
+        <th style="text-align: right;">{{ 'spent'|_ }}</th>
+        <th style="text-align: right;">{{ 'earned'|_ }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for categoryId, entry in together %}
+        <tr>
+            <td data-value="{% if entry.category.name|length ==0 %}{{ 'noCategory'|_ }}{% else %}{{ entry.category.name }}{% endif %}">
+                <a href="{{ route('categories.show', categoryId) }}">{% if entry.category.name|length ==0 %}{{ 'noCategory'|_ }}{% else %}{{ entry.category.name }}{% endif %}</a>
+            </td>
+            <td style="text-align: right;">
+                {% if entry.spent|length ==0 %}
+                    {{ '0'|formatAmount }}
+                {% else %}
+                    {% for expense in entry.spent %}
+                        {{ formatAmountBySymbol(expense.sum, expense.currency.symbol, expense.currency.dp) }}<br />
+                    {% endfor %}
+                {% endif %}
+            </td>
+            <td style="width:20px;">
+                {% if entry.earned|length ==0 %}
+                    {{ '0'|formatAmount }}
+                {% else %}
+                    {% for income in entry.earned %}
+                        {{ formatAmountBySymbol(income.sum, income.currency.symbol, income.currency.dp) }}<br />
+                    {% endfor %}
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

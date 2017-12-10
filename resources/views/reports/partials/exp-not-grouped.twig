@@ -1,0 +1,33 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsign="az">{{ 'name'|_ }}</th>
+        <th class="hidden-xs" style="text-align: right;" data-defaultsort="disabled">{{ 'spent'|_ }}</th>
+        <th class="hidden-xs" style="text-align: right;" data-defaultsort="disabled">{{ 'earned'|_ }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for name, amounts in result %}
+            <tr>
+                <td>{{ name }}</td>
+                <td style="text-align: right;" >
+                    {% if amounts.spent|length == 0%}
+                        {{ '0'|formatAmount }}
+                    {% endif %}
+                    {% for expense in amounts.spent %}
+                        {{ formatAmountBySymbol(expense.sum, expense.currency.symbol, expense.currency.dp) }}<br />
+                    {% endfor %}
+                </td>
+                <td style="text-align: right;" >
+                    {% if amounts.earned|length == 0 %}
+                        {{ '0'|formatAmount }}
+                    {% endif %}
+                    {% for income in amounts.earned %}
+                        {{ formatAmountBySymbol(income.sum, income.currency.symbol, income.currency.dp) }}<br />
+                    {% endfor %}
+                </td>
+            </tr>
+    {% endfor %}
+
+    </tbody>
+</table>

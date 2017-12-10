@@ -498,6 +498,20 @@ class JournalCollector implements JournalCollectorInterface
     }
 
     /**
+     * @param Collection $accounts
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setOpposingAccounts(Collection $accounts): JournalCollectorInterface
+    {
+        $this->withOpposingAccount();
+
+        $this->query->whereIn('opposing.account_id', $accounts->pluck('id')->toArray());
+
+        return $this;
+    }
+
+    /**
      * @param int $page
      *
      * @return JournalCollectorInterface
