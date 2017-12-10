@@ -132,7 +132,7 @@ class ExpenseController extends Controller
         }
         // now find spent / earned:
         $spent  = $this->spentByCategory($accounts, $all, $start, $end);
-        $earned = $this->earnedByCategory($accounts, $combi, $start, $end);
+        $earned = $this->earnedByCategory($accounts, $all, $start, $end);
 
         // join arrays somehow:
         $together = [];
