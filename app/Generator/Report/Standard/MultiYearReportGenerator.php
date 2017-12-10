@@ -99,6 +99,16 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * @param Collection $expense
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setExpense(Collection $expense): ReportGeneratorInterface
+    {
+        return $this;
+    }
+
+    /**
      * @param Carbon $date
      *
      * @return ReportGeneratorInterface

@@ -164,7 +164,17 @@ class HomeController extends Controller
     {
         Preferences::mark();
         $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range']);
+        Log::debug('Call cache:clear...');
         Artisan::call('cache:clear');
+        Log::debug('Call config:clear...');
+        Artisan::call('config:clear');
+        Log::debug('Call route:clear...');
+        Artisan::call('route:clear');
+        Log::debug('Call twig:clean...');
+        Artisan::call('twig:clean');
+        Log::debug('Call view:clear...');
+        Artisan::call('view:clear');
+        Log::debug('Done! Redirecting...');
 
         return redirect(route('index'));
     }
