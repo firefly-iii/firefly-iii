@@ -164,13 +164,16 @@ class VerifyDatabase extends Command
         }
         foreach ($errored as $journalId) {
             // select and update:
-            $res = Transaction::where('transaction_journal_id', $journalId)->groupBy('amount')->get([DB::raw('MIN(id) as first_id')]);
+            $res = Transaction::whereNull('deleted_at')->where('transaction_journal_id', $journalId)->groupBy('amount')->get([DB::raw('MIN(id) as first_id')]);
             $ids = $res->pluck('first_id')->toArray();
             DB::table('transactions')->whereIn('id', $ids)->update(['amount' => DB::raw('amount * -1')]);
             $count++;
             // report about it
             /** @var TransactionJournal $journal */
             $journal = TransactionJournal::find($journalId);
+            if (is_null($journal)) {
+                continue;
+            }
             if ($journal->transactionType->type === TransactionType::OPENING_BALANCE) {
                 $this->error(
                     sprintf(
@@ -200,7 +203,7 @@ class VerifyDatabase extends Command
      */
     private function repairPiggyBanks(): void
     {
-        $set   = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal', 'TransactionJournal.TransactionType'])->get();
+        $set = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal', 'TransactionJournal.TransactionType'])->get();
         $set->each(
             function (PiggyBankEvent $event) {
                 if (null === $event->transaction_journal_id) {
@@ -350,18 +353,18 @@ class VerifyDatabase extends Command
     private function reportJournals()
     {
         $count = 0;
-        $set = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                 ->whereNotNull('transaction_journals.deleted_at')// USE THIS
-                                 ->whereNull('transactions.deleted_at')
-                                 ->whereNotNull('transactions.id')
-                                 ->get(
-                                     [
-                                         'transaction_journals.id as journal_id',
-                                         'transaction_journals.description',
-                                         'transaction_journals.deleted_at as journal_deleted',
-                                         'transactions.id as transaction_id',
-                                         'transactions.deleted_at as transaction_deleted_at',]
-                                 );
+        $set   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                   ->whereNotNull('transaction_journals.deleted_at')// USE THIS
+                                   ->whereNull('transactions.deleted_at')
+                                   ->whereNotNull('transactions.id')
+                                   ->get(
+                                       [
+                                           'transaction_journals.id as journal_id',
+                                           'transaction_journals.description',
+                                           'transaction_journals.deleted_at as journal_deleted',
+                                           'transactions.id as transaction_id',
+                                           'transactions.deleted_at as transaction_deleted_at',]
+                                   );
         /** @var stdClass $entry */
         foreach ($set as $entry) {
             $this->error(
@@ -370,7 +373,7 @@ class VerifyDatabase extends Command
             );
             $count++;
         }
-        if($count === 0) {
+        if ($count === 0) {
             $this->info('No orphaned transactions!');
         }
     }
@@ -381,10 +384,10 @@ class VerifyDatabase extends Command
     private function reportNoTransactions()
     {
         $count = 0;
-        $set = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                 ->groupBy('transaction_journals.id')
-                                 ->whereNull('transactions.transaction_journal_id')
-                                 ->get(['transaction_journals.id']);
+        $set   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                   ->groupBy('transaction_journals.id')
+                                   ->whereNull('transactions.transaction_journal_id')
+                                   ->get(['transaction_journals.id']);
 
         foreach ($set as $entry) {
             $this->error(
@@ -392,7 +395,7 @@ class VerifyDatabase extends Command
             );
             $count++;
         }
-        if($count === 0) {
+        if ($count === 0) {
             $this->info('No orphaned journals!');
         }
     }
