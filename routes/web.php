@@ -614,9 +614,8 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/expense', 'as' => 'report-data.expense.'], function () {
 
-    // spent per period / spent grouped
+    // spent per period
     Route::get('spent/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@spent', 'as' => 'spent']);
-    Route::get('spent-grouped/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@spentGrouped', 'as' => 'spent-grouped']);
 
     // per category && per budget
     Route::get('category/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@category', 'as' => 'category']);

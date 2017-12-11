@@ -207,58 +207,9 @@ class ExpenseController extends Controller
 
     /**
      * @param Collection $accounts
-     * @param Collection $expense
-     * @param Carbon     $start
-     * @param Carbon     $end
      *
-     * @return array|mixed|string
-     * @throws \Throwable
+     * @return array
      */
-    public function spentGrouped(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
-    {
-        // Properties for cache:
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('expense-spent-grouped');
-        $cache->addProperty($accounts->pluck('id')->toArray());
-        $cache->addProperty($expense->pluck('id')->toArray());
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
-        $combined = $this->combineAccounts($expense);
-        $format   = app('navigation')->preferredRangeFormat($start, $end);
-        $result   = [];
-
-        foreach ($combined as $name => $combi) {
-            $current  = clone $start;
-            $combiSet = [];
-            while ($current <= $end) {
-                $period     = $current->format('Ymd');
-                $periodName = app('navigation')->periodShow($current, $format);
-                $currentEnd = app('navigation')->endOfPeriod($current, $format);
-                /**
-                 * @var string     $name
-                 * @var Collection $combi
-                 */
-                $spent             = $this->spentInPeriod($accounts, $combi, $current, $currentEnd);
-                $earned            = $this->earnedInPeriod($accounts, $combi, $current, $currentEnd);
-                $current           = app('navigation')->addPeriod($current, $format, 0);
-                $combiSet[$period] = [
-                    'period' => $periodName,
-                    'spent'  => $spent,
-                    'earned' => $earned,
-                ];
-            }
-            $result[$name] = $combiSet;
-        }
-        $result = view('reports.partials.exp-grouped', compact('result'))->render();
-        $cache->store($result);
-
-        return $result;
-    }
-
     protected function combineAccounts(Collection $accounts): array
     {
         $combined = [];

@@ -21,20 +21,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ ('in_out_accounts_period_'~preferredPeriod)|_ }}</h3>
-                </div>
-                <div class="box-body table-responsive no-padding" id="inOutPeriod">
-                    {# loading indicator #}
-                    <div class="overlay">
-                        <i class="fa fa-refresh fa-spin"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     {# chart #}
@@ -133,7 +119,6 @@
 
         // boxes with stuff:
         var spentUri = '{{ route('report-data.expense.spent', [accountIds, expenseIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var groupedUri = '{{ route('report-data.expense.spent-grouped', [accountIds, expenseIds, start.format('Ymd'), end.format('Ymd')]) }}';
         var categoryUri = '{{ route('report-data.expense.category', [accountIds, expenseIds, start.format('Ymd'), end.format('Ymd')]) }}';
         var budgetUri = '{{ route('report-data.expense.budget', [accountIds, expenseIds, start.format('Ymd'), end.format('Ymd')]) }}';
         var expenseUri = '{{ route('report-data.expense.expenses', [accountIds, expenseIds, start.format('Ymd'), end.format('Ymd')]) }}';

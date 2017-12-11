@@ -24,7 +24,6 @@ $(function () {
     drawChart();
 
     loadAjaxPartial('inOutAccounts', spentUri);
-    loadAjaxPartial('inOutPeriod', groupedUri);
     loadAjaxPartial('inOutCategory', categoryUri);
     loadAjaxPartial('inOutBudget', budgetUri);
     loadAjaxPartial('topXexpense', expenseUri);
