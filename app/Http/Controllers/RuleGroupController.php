@@ -71,8 +71,6 @@ class RuleGroupController extends Controller
             $this->rememberPreviousUri('rule-groups.create.uri');
         }
         Session::forget('rule-groups.create.fromStore');
-        Session::flash('gaEventCategory', 'rules');
-        Session::flash('gaEventAction', 'create-rule-group');
 
         return view('rules.rule-group.create', compact('subTitleIcon', 'subTitle'));
     }
@@ -92,8 +90,6 @@ class RuleGroupController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('rule-groups.delete.uri');
-        Session::flash('gaEventCategory', 'rules');
-        Session::flash('gaEventAction', 'delete-rule-group');
 
         return view('rules.rule-group.delete', compact('ruleGroup', 'subTitle', 'ruleGroupList'));
     }
@@ -145,8 +141,6 @@ class RuleGroupController extends Controller
             $this->rememberPreviousUri('rule-groups.edit.uri');
         }
         Session::forget('rule-groups.edit.fromUpdate');
-        Session::flash('gaEventCategory', 'rules');
-        Session::flash('gaEventAction', 'edit-rule-group');
 
         return view('rules.rule-group.edit', compact('ruleGroup', 'subTitle'));
     }

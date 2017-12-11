@@ -1,26 +1,25 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th  style="width:50%;" data-defaultsign="az">{{ 'budget'|_ }}</th>
-        <th style="width:50%;text-align: right;" data-defaultsort="disabled">{{ 'spent'|_ }}</th>
+        <th  style="width:66%;" data-defaultsign="az">{{ 'category'|_ }}</th>
+        <th style="width:34%;" data-defaultsort="_19">{{ 'spent'|_ }}</th>
     </tr>
     </thead>
     <tbody>
     {% for budgetId, entry in together %}
         <tr>
-            <td style="width:50%;" data-value="{% if entry.budget.name|length ==0 %}{{ 'no_budget_squared'|_ }}{% else %}{{ entry.budget.name }}{% endif %}">
-
-                {% if entry.budget.name|length ==0 %}
+            <td data-value="{% if entry.budget == null %}zzzzzzzzzzz{% else %}{{ entry.budget }}{% endif %}">
+                {% if entry.budget == null %}
                     <a href="{{ route('budgets.no-budget') }}">{{ 'no_budget_squared'|_ }}</a>
                 {% else %}
-                    <a href="{{ route('budgets.show', budgetId) }}">{{ entry.budget.name }}</a>
+                    <a href="{{ route('budgets.show', budgetId) }}">{{ entry.budget }}</a>
                 {% endif %}
             </td>
-            <td style="text-align: right;">
-                {% if entry.spent|length ==0 %}
+            <td data-value="{{ entry.spent.grand_total }}">
+                {% if entry.spent.per_currency|length ==0 %}
                     {{ '0'|formatAmount }}
                 {% else %}
-                    {% for expense in entry.spent %}
+                    {% for expense in entry.spent.per_currency %}
                         {{ formatAmountBySymbol(expense.sum, expense.currency.symbol, expense.currency.dp) }}<br />
                     {% endfor %}
                 {% endif %}

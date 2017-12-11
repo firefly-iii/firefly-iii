@@ -70,8 +70,6 @@ class AttachmentController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('attachments.delete.uri');
-        $request->session()->flash('gaEventCategory', 'attachments');
-        $request->session()->flash('gaEventAction', 'delete-attachment');
 
         return view('attachments.delete', compact('attachment', 'subTitle'));
     }

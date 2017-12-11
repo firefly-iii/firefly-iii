@@ -43,7 +43,7 @@ class ExpenseController extends Controller
     protected $accountRepository;
 
     /**
-     *
+     * Constructor for ExpenseController
      */
     public function __construct()
     {
@@ -60,6 +60,8 @@ class ExpenseController extends Controller
     }
 
     /**
+     * Generates the overview per budget.
+     *
      * @param Collection $accounts
      * @param Collection $expense
      * @param Carbon     $start
@@ -86,18 +88,18 @@ class ExpenseController extends Controller
             $all = $all->merge($combi);
         }
         // now find spent / earned:
-        $spent = $this->spentByBudget($accounts, $all, $start, $end);
-        // do some merging to get the budget info ready.
+        $spent  = $this->spentByBudget($accounts, $all, $start, $end);
+        // join arrays somehow:
         $together = [];
-        foreach ($spent as $budgetId => $spentInfo) {
-            if (!isset($together[$budgetId])) {
-                $together[$budgetId]['spent'] = $spentInfo;
-                // get category info:
-                $first                         = reset($spentInfo);
-                $together[$budgetId]['budget'] = $first['budget'];
+        foreach ($spent as $categoryId => $spentInfo) {
+            if (!isset($together[$categoryId])) {
+                $together[$categoryId]['spent']       = $spentInfo;
+                $together[$categoryId]['budget']    = $spentInfo['name'];
+                $together[$categoryId]['grand_total'] = '0';
             }
+            $together[$categoryId]['grand_total'] = bcadd($spentInfo['grand_total'], $together[$categoryId]['grand_total']);
         }
-
+        unset($spentInfo);
         $result = view('reports.partials.exp-budgets', compact('together'))->render();
         $cache->store($result);
 
@@ -105,6 +107,8 @@ class ExpenseController extends Controller
     }
 
     /**
+     * Generates the overview per category (spent and earned).
+     *
      * @param Collection $accounts
      * @param Collection $expense
      * @param Carbon     $start
@@ -133,25 +137,24 @@ class ExpenseController extends Controller
         // now find spent / earned:
         $spent  = $this->spentByCategory($accounts, $all, $start, $end);
         $earned = $this->earnedByCategory($accounts, $all, $start, $end);
-
         // join arrays somehow:
         $together = [];
         foreach ($spent as $categoryId => $spentInfo) {
             if (!isset($together[$categoryId])) {
-                $together[$categoryId]['spent'] = $spentInfo;
-                // get category info:
-                $first                             = reset($spentInfo);
-                $together[$categoryId]['category'] = $first['category'];
+                $together[$categoryId]['spent']       = $spentInfo;
+                $together[$categoryId]['category']    = $spentInfo['name'];
+                $together[$categoryId]['grand_total'] = '0';
             }
+            $together[$categoryId]['grand_total'] = bcadd($spentInfo['grand_total'], $together[$categoryId]['grand_total']);
         }
-
+        unset($spentInfo);
         foreach ($earned as $categoryId => $earnedInfo) {
             if (!isset($together[$categoryId])) {
-                $together[$categoryId]['earned'] = $earnedInfo;
-                // get category info:
-                $first                             = reset($earnedInfo);
-                $together[$categoryId]['category'] = $first['category'];
+                $together[$categoryId]['earned']       = $earnedInfo;
+                $together[$categoryId]['category']    = $earnedInfo['name'];
+                $together[$categoryId]['grand_total'] = '0';
             }
+            $together[$categoryId]['grand_total'] = bcadd($earnedInfo['grand_total'], $together[$categoryId]['grand_total']);
         }
 
         $result = view('reports.partials.exp-categories', compact('together'))->render();
@@ -161,6 +164,8 @@ class ExpenseController extends Controller
     }
 
     /**
+     * Overview of spending
+     *
      * @param Collection $accounts
      * @param Collection $expense
      * @param Carbon     $start
@@ -234,7 +239,7 @@ class ExpenseController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
+     * @return array
      */
     protected function earnedByCategory(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array
     {
@@ -260,21 +265,32 @@ class ExpenseController extends Controller
 
             // if not set, set to zero:
             if (!isset($sum[$categoryId][$currencyId])) {
-                $sum[$categoryId][$currencyId] = [
-                    'sum'      => '0',
-                    'category' => [
-                        'id'   => $categoryId,
-                        'name' => $categoryName,
-                    ],
-                    'currency' => [
-                        'symbol' => $transaction->transaction_currency_symbol,
-                        'dp'     => $transaction->transaction_currency_dp,
+
+                $sum[$categoryId] = [
+                    'grand_total'  => '0',
+                    'name'         => $categoryName,
+                    'per_currency' => [
+                        $currencyId => [
+                            'sum'      => '0',
+                            'category' => [
+                                'id'   => $categoryId,
+                                'name' => $categoryName,
+                            ],
+                            'currency' => [
+                                'symbol' => $transaction->transaction_currency_symbol,
+                                'dp'     => $transaction->transaction_currency_dp,
+                            ],
+                        ],
                     ],
                 ];
+
             }
 
             // add amount
-            $sum[$categoryId][$currencyId]['sum'] = bcadd($sum[$categoryId][$currencyId]['sum'], $transaction->transaction_amount);
+            $sum[$categoryId]['per_currency'][$currencyId]['sum'] = bcadd(
+                $sum[$categoryId]['per_currency'][$currencyId]['sum'], $transaction->transaction_amount
+            );
+            $sum[$categoryId]['grand_total']                      = bcadd($sum[$categoryId]['grand_total'], $transaction->transaction_amount);
         }
 
         return $sum;
@@ -287,14 +303,17 @@ class ExpenseController extends Controller
         $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($assets);
         $collector->setOpposingAccounts($opposing);
         $set = $collector->getJournals();
-        $sum = [];
+        $sum = [
+            'grand_sum'    => '0',
+            'per_currency' => [],
+        ];
         // loop to support multi currency
         foreach ($set as $transaction) {
             $currencyId = $transaction->transaction_currency_id;
 
             // if not set, set to zero:
-            if (!isset($sum[$currencyId])) {
-                $sum[$currencyId] = [
+            if (!isset($sum['per_currency'][$currencyId])) {
+                $sum['per_currency'][$currencyId] = [
                     'sum'      => '0',
                     'currency' => [
                         'symbol' => $transaction->transaction_currency_symbol,
@@ -304,7 +323,8 @@ class ExpenseController extends Controller
             }
 
             // add amount
-            $sum[$currencyId]['sum'] = bcadd($sum[$currencyId]['sum'], $transaction->transaction_amount);
+            $sum['per_currency'][$currencyId]['sum'] = bcadd($sum['per_currency'][$currencyId]['sum'], $transaction->transaction_amount);
+            $sum['grand_sum']                        = bcadd($sum['grand_sum'], $transaction->transaction_amount);
         }
 
         return $sum;
@@ -328,7 +348,7 @@ class ExpenseController extends Controller
         $sum = [];
         // loop to support multi currency
         foreach ($set as $transaction) {
-            $currencyId = $transaction->transaction_currency_id;
+            $currencyId   = $transaction->transaction_currency_id;
             $budgetName = $transaction->transaction_budget_name;
             $budgetId   = intval($transaction->transaction_budget_id);
             // if null, grab from journal:
@@ -342,21 +362,31 @@ class ExpenseController extends Controller
 
             // if not set, set to zero:
             if (!isset($sum[$budgetId][$currencyId])) {
-                $sum[$budgetId][$currencyId] = [
-                    'sum'      => '0',
-                    'budget'   => [
-                        'id'   => $budgetId,
-                        'name' => $budgetName,
-                    ],
-                    'currency' => [
-                        'symbol' => $transaction->transaction_currency_symbol,
-                        'dp'     => $transaction->transaction_currency_dp,
+
+                $sum[$budgetId] = [
+                    'grand_total'  => '0',
+                    'name'         => $budgetName,
+                    'per_currency' => [
+                        $currencyId => [
+                            'sum'      => '0',
+                            'budget' => [
+                                'id'   => $budgetId,
+                                'name' => $budgetName,
+                            ],
+                            'currency' => [
+                                'symbol' => $transaction->transaction_currency_symbol,
+                                'dp'     => $transaction->transaction_currency_dp,
+                            ],
+                        ],
                     ],
                 ];
             }
 
             // add amount
-            $sum[$budgetId][$currencyId]['sum'] = bcadd($sum[$budgetId][$currencyId]['sum'], $transaction->transaction_amount);
+            $sum[$budgetId]['per_currency'][$currencyId]['sum'] = bcadd(
+                $sum[$budgetId]['per_currency'][$currencyId]['sum'], $transaction->transaction_amount
+            );
+            $sum[$budgetId]['grand_total']                      = bcadd($sum[$budgetId]['grand_total'], $transaction->transaction_amount);
         }
 
         return $sum;
@@ -368,7 +398,7 @@ class ExpenseController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
+     * @return array
      */
     protected function spentByCategory(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array
     {
@@ -394,21 +424,31 @@ class ExpenseController extends Controller
 
             // if not set, set to zero:
             if (!isset($sum[$categoryId][$currencyId])) {
-                $sum[$categoryId][$currencyId] = [
-                    'sum'      => '0',
-                    'category' => [
-                        'id'   => $categoryId,
-                        'name' => $categoryName,
-                    ],
-                    'currency' => [
-                        'symbol' => $transaction->transaction_currency_symbol,
-                        'dp'     => $transaction->transaction_currency_dp,
+
+                $sum[$categoryId] = [
+                    'grand_total'  => '0',
+                    'name'         => $categoryName,
+                    'per_currency' => [
+                        $currencyId => [
+                            'sum'      => '0',
+                            'category' => [
+                                'id'   => $categoryId,
+                                'name' => $categoryName,
+                            ],
+                            'currency' => [
+                                'symbol' => $transaction->transaction_currency_symbol,
+                                'dp'     => $transaction->transaction_currency_dp,
+                            ],
+                        ],
                     ],
                 ];
             }
 
             // add amount
-            $sum[$categoryId][$currencyId]['sum'] = bcadd($sum[$categoryId][$currencyId]['sum'], $transaction->transaction_amount);
+            $sum[$categoryId]['per_currency'][$currencyId]['sum'] = bcadd(
+                $sum[$categoryId]['per_currency'][$currencyId]['sum'], $transaction->transaction_amount
+            );
+            $sum[$categoryId]['grand_total']                      = bcadd($sum[$categoryId]['grand_total'], $transaction->transaction_amount);
         }
 
         return $sum;
@@ -420,7 +460,7 @@ class ExpenseController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
+     * @return array
      */
     protected function spentInPeriod(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array
     {
@@ -429,14 +469,17 @@ class ExpenseController extends Controller
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($assets);
         $collector->setOpposingAccounts($opposing);
         $set = $collector->getJournals();
-        $sum = [];
+        $sum = [
+            'grand_sum'    => '0',
+            'per_currency' => [],
+        ];
         // loop to support multi currency
         foreach ($set as $transaction) {
             $currencyId = $transaction->transaction_currency_id;
 
             // if not set, set to zero:
-            if (!isset($sum[$currencyId])) {
-                $sum[$currencyId] = [
+            if (!isset($sum['per_currency'][$currencyId])) {
+                $sum['per_currency'][$currencyId] = [
                     'sum'      => '0',
                     'currency' => [
                         'symbol' => $transaction->transaction_currency_symbol,
@@ -446,7 +489,8 @@ class ExpenseController extends Controller
             }
 
             // add amount
-            $sum[$currencyId]['sum'] = bcadd($sum[$currencyId]['sum'], $transaction->transaction_amount);
+            $sum['per_currency'][$currencyId]['sum'] = bcadd($sum['per_currency'][$currencyId]['sum'], $transaction->transaction_amount);
+            $sum['grand_sum']                        = bcadd($sum['grand_sum'], $transaction->transaction_amount);
         }
 
         return $sum;

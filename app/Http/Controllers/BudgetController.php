@@ -111,8 +111,6 @@ class BudgetController extends Controller
             $this->rememberPreviousUri('budgets.create.uri');
         }
         $request->session()->forget('budgets.create.fromStore');
-        $request->session()->flash('gaEventCategory', 'budgets');
-        $request->session()->flash('gaEventAction', 'create');
         $subTitle = (string)trans('firefly.create_new_budget');
 
         return view('budgets.create', compact('subTitle'));
@@ -130,8 +128,6 @@ class BudgetController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('budgets.delete.uri');
-        $request->session()->flash('gaEventCategory', 'budgets');
-        $request->session()->flash('gaEventAction', 'delete');
 
         return view('budgets.delete', compact('budget', 'subTitle'));
     }
@@ -167,8 +163,6 @@ class BudgetController extends Controller
             $this->rememberPreviousUri('budgets.edit.uri');
         }
         $request->session()->forget('budgets.edit.fromUpdate');
-        $request->session()->flash('gaEventCategory', 'budgets');
-        $request->session()->flash('gaEventAction', 'edit');
 
         return view('budgets.edit', compact('budget', 'subTitle'));
     }

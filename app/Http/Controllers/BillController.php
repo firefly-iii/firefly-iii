@@ -85,8 +85,6 @@ class BillController extends Controller
             $this->rememberPreviousUri('bills.create.uri');
         }
         $request->session()->forget('bills.create.fromStore');
-        $request->session()->flash('gaEventCategory', 'bills');
-        $request->session()->flash('gaEventAction', 'create');
 
         return view('bills.create', compact('periods', 'subTitle'));
     }
@@ -101,8 +99,6 @@ class BillController extends Controller
     {
         // put previous url in session
         $this->rememberPreviousUri('bills.delete.uri');
-        $request->session()->flash('gaEventCategory', 'bills');
-        $request->session()->flash('gaEventAction', 'delete');
         $subTitle = trans('firefly.delete_bill', ['name' => $bill->name]);
 
         return view('bills.delete', compact('bill', 'subTitle'));
@@ -162,8 +158,6 @@ class BillController extends Controller
         $request->session()->flash('preFilled', $preFilled);
 
         $request->session()->forget('bills.edit.fromUpdate');
-        $request->session()->flash('gaEventCategory', 'bills');
-        $request->session()->flash('gaEventAction', 'edit');
 
         return view('bills.edit', compact('subTitle', 'periods', 'bill'));
     }

@@ -70,8 +70,6 @@ class MassController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('transactions.mass-delete.uri');
-        Session::flash('gaEventCategory', 'transactions');
-        Session::flash('gaEventAction', 'mass-delete');
 
         return view('transactions.mass-delete', compact('journals', 'subTitle'));
     }
@@ -166,8 +164,6 @@ class MassController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('transactions.mass-edit.uri');
-        Session::flash('gaEventCategory', 'transactions');
-        Session::flash('gaEventAction', 'mass-edit');
 
         // collect some useful meta data for the mass edit:
         $filtered->each(

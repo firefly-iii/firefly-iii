@@ -83,8 +83,6 @@ class CurrencyController extends Controller
             $this->rememberPreviousUri('currencies.create.uri');
         }
         $request->session()->forget('currencies.create.fromStore');
-        $request->session()->flash('gaEventCategory', 'currency');
-        $request->session()->flash('gaEventAction', 'create');
 
         return view('currencies.create', compact('subTitleIcon', 'subTitle'));
     }
@@ -131,8 +129,6 @@ class CurrencyController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('currencies.delete.uri');
-        $request->session()->flash('gaEventCategory', 'currency');
-        $request->session()->flash('gaEventAction', 'delete');
         $subTitle = trans('form.delete_currency', ['name' => $currency->name]);
 
         return view('currencies.delete', compact('currency', 'subTitle'));
@@ -191,8 +187,6 @@ class CurrencyController extends Controller
             $this->rememberPreviousUri('currencies.edit.uri');
         }
         $request->session()->forget('currencies.edit.fromUpdate');
-        $request->session()->flash('gaEventCategory', 'currency');
-        $request->session()->flash('gaEventAction', 'edit');
 
         return view('currencies.edit', compact('currency', 'subTitle', 'subTitleIcon'));
     }

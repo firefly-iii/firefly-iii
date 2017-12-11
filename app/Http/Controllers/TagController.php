@@ -88,8 +88,6 @@ class TagController extends Controller
             $this->rememberPreviousUri('tags.create.uri');
         }
         Session::forget('tags.create.fromStore');
-        Session::flash('gaEventCategory', 'tags');
-        Session::flash('gaEventAction', 'create');
 
         return view('tags.create', compact('subTitle', 'subTitleIcon', 'apiKey'));
     }
@@ -107,8 +105,6 @@ class TagController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('tags.delete.uri');
-        Session::flash('gaEventCategory', 'tags');
-        Session::flash('gaEventAction', 'delete');
 
         return view('tags.delete', compact('tag', 'subTitle'));
     }
@@ -147,8 +143,6 @@ class TagController extends Controller
             $this->rememberPreviousUri('tags.edit.uri');
         }
         Session::forget('tags.edit.fromUpdate');
-        Session::flash('gaEventCategory', 'tags');
-        Session::flash('gaEventAction', 'edit');
 
         return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon', 'apiKey'));
     }

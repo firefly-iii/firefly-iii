@@ -173,8 +173,6 @@ class SingleController extends Controller
             $this->rememberPreviousUri('transactions.create.uri');
         }
         Session::forget('transactions.create.fromStore');
-        Session::flash('gaEventCategory', 'transactions');
-        Session::flash('gaEventAction', 'create-' . $what);
 
         asort($piggies);
 
@@ -205,8 +203,6 @@ class SingleController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('transactions.delete.uri');
-        Session::flash('gaEventCategory', 'transactions');
-        Session::flash('gaEventAction', 'delete-' . $what);
 
         return view('transactions.single.delete', compact('journal', 'subTitle', 'what'));
     }
@@ -313,8 +309,6 @@ class SingleController extends Controller
         }
 
         Session::flash('preFilled', $preFilled);
-        Session::flash('gaEventCategory', 'transactions');
-        Session::flash('gaEventAction', 'edit-' . $what);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('transactions.edit.fromUpdate')) {

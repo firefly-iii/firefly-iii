@@ -90,8 +90,6 @@ class ReconcileController extends Controller
         ];
 
         Session::flash('preFilled', $preFilled);
-        Session::flash('gaEventCategory', 'transactions');
-        Session::flash('gaEventAction', 'edit-reconciliation');
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('reconcile.edit.fromUpdate')) {

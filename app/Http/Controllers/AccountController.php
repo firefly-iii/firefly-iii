@@ -96,8 +96,6 @@ class AccountController extends Controller
             $this->rememberPreviousUri('accounts.create.uri');
         }
         $request->session()->forget('accounts.create.fromStore');
-        $request->session()->flash('gaEventCategory', 'accounts');
-        $request->session()->flash('gaEventAction', 'create-' . $what);
 
         return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'currencySelectList', 'allCurrencies', 'roles'));
     }
@@ -118,8 +116,6 @@ class AccountController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('accounts.delete.uri');
-        $request->session()->flash('gaEventCategory', 'accounts');
-        $request->session()->flash('gaEventAction', 'delete-' . $typeName);
 
         return view('accounts.delete', compact('account', 'subTitle', 'accountList'));
     }
@@ -198,8 +194,6 @@ class AccountController extends Controller
             'currency_id'          => $currency->id,
         ];
         $request->session()->flash('preFilled', $preFilled);
-        $request->session()->flash('gaEventCategory', 'accounts');
-        $request->session()->flash('gaEventAction', 'edit-' . $what);
 
         return view(
             'accounts.edit',

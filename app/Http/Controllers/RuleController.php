@@ -102,8 +102,6 @@ class RuleController extends Controller
             $this->rememberPreviousUri('rules.create.uri');
         }
         Session::forget('rules.create.fromStore');
-        Session::flash('gaEventCategory', 'rules');
-        Session::flash('gaEventAction', 'create-rule');
 
         return view(
             'rules.rule.create',
@@ -124,8 +122,6 @@ class RuleController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('rules.delete.uri');
-        Session::flash('gaEventCategory', 'rules');
-        Session::flash('gaEventAction', 'delete-rule');
 
         return view('rules.rule.delete', compact('rule', 'subTitle'));
     }
@@ -203,8 +199,6 @@ class RuleController extends Controller
             $this->rememberPreviousUri('rules.edit.uri');
         }
         Session::forget('rules.edit.fromUpdate');
-        Session::flash('gaEventCategory', 'rules');
-        Session::flash('gaEventAction', 'edit-rule');
 
         return view(
             'rules.rule.edit',

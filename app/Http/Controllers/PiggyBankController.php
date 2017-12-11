@@ -120,8 +120,6 @@ class PiggyBankController extends Controller
             $this->rememberPreviousUri('piggy-banks.create.uri');
         }
         Session::forget('piggy-banks.create.fromStore');
-        Session::flash('gaEventCategory', 'piggy-banks');
-        Session::flash('gaEventAction', 'create');
 
         return view('piggy-banks.create', compact('accounts', 'subTitle', 'subTitleIcon'));
     }
@@ -137,8 +135,6 @@ class PiggyBankController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('piggy-banks.delete.uri');
-        Session::flash('gaEventCategory', 'piggy-banks');
-        Session::flash('gaEventAction', 'delete');
 
         return view('piggy-banks.delete', compact('piggyBank', 'subTitle'));
     }
@@ -188,8 +184,6 @@ class PiggyBankController extends Controller
                       'note'         => null === $note ? '' : $note->text,
         ];
         Session::flash('preFilled', $preFilled);
-        Session::flash('gaEventCategory', 'piggy-banks');
-        Session::flash('gaEventAction', 'edit');
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('piggy-banks.edit.fromUpdate')) {

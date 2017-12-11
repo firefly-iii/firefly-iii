@@ -36,6 +36,7 @@ use Illuminate\Support\Collection;
 use Log;
 use Monolog\Handler\RotatingFileHandler;
 use Preferences;
+use ReflectionException;
 use Route as RouteFacade;
 use Session;
 use View;
@@ -171,7 +172,11 @@ class HomeController extends Controller
         Log::debug('Call route:clear...');
         Artisan::call('route:clear');
         Log::debug('Call twig:clean...');
-        Artisan::call('twig:clean');
+        try {
+            Artisan::call('twig:clean');
+        } catch(ReflectionException $e) {
+            // dont care
+        }
         Log::debug('Call view:clear...');
         Artisan::call('view:clear');
         Log::debug('Done! Redirecting...');

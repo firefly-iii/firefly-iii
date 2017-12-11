@@ -241,9 +241,6 @@ class ProfileController extends Controller
         Session::flush();
         $repository->destroy($user);
 
-        Session::flash('gaEventCategory', 'user');
-        Session::flash('gaEventAction', 'delete-account');
-
         return redirect(route('index'));
     }
 

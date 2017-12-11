@@ -74,8 +74,6 @@ class CategoryController extends Controller
             $this->rememberPreviousUri('categories.create.uri');
         }
         $request->session()->forget('categories.create.fromStore');
-        $request->session()->flash('gaEventCategory', 'categories');
-        $request->session()->flash('gaEventAction', 'create');
         $subTitle = trans('firefly.create_new_category');
 
         return view('categories.create', compact('subTitle'));
@@ -93,8 +91,6 @@ class CategoryController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('categories.delete.uri');
-        $request->session()->flash('gaEventCategory', 'categories');
-        $request->session()->flash('gaEventAction', 'delete');
 
         return view('categories.delete', compact('category', 'subTitle'));
     }
@@ -132,8 +128,6 @@ class CategoryController extends Controller
             $this->rememberPreviousUri('categories.edit.uri');
         }
         $request->session()->forget('categories.edit.fromUpdate');
-        $request->session()->flash('gaEventCategory', 'categories');
-        $request->session()->flash('gaEventAction', 'edit');
 
         return view('categories.edit', compact('category', 'subTitle'));
     }
