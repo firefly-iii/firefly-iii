@@ -446,8 +446,9 @@ Route::group(
     Route::get('bank/{bank}/prerequisites', ['uses' => 'Import\BankController@prerequisites', 'as' => 'bank.prerequisites']);
     Route::post('bank/{bank}/prerequisites', ['uses' => 'Import\BankController@postPrerequisites', 'as' => 'bank.prerequisites.post']);
 
-    Route::get('bank/{bank}/form', ['uses' => 'Import\BankController@form', 'as' => 'bank.form']);
-    Route::post('bank/{bank}/form', ['uses' => 'Import\BankController@postForm', 'as' => 'bank.form.post']);
+    Route::get('bank/{bank}/create', ['uses' => 'Import\BankController@createJob', 'as' => 'bank.create-job']);
+    Route:: get('bank/{bank}/configure/{importJob}', ['uses' => 'Import\BankController@configure', 'as' => 'bank.configure']);
+    Route::post('bank/{bank}/configure/{importJob}', ['uses' => 'Import\BankController@postConfigure', 'as' => 'bank.configure.post']);
 }
 );
 

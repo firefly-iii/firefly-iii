@@ -195,6 +195,11 @@ return [
     'csv_delimiter'         => 'CSV field delimiter',
     'csv_import_account'    => 'Default import account',
     'csv_config'            => 'CSV import configuration',
+    'client_id'             => 'Client ID',
+    'service_secret'        => 'Service secret',
+    'app_secret'            => 'App secret',
+    'public_key'            => 'Public key',
+    'country_code'          => 'Country code',
 
 
     'due_date'           => 'Due date',

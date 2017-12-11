@@ -22,8 +22,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Import;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Support\Import\Information\InformationInterface;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Prerequisites\PrerequisitesInterface;
 use Illuminate\Http\Request;
 use Log;
@@ -31,66 +32,27 @@ use Session;
 
 class BankController extends Controller
 {
-    /**
-     * This method must ask the user all parameters necessary to start importing data. This may not be enough
-     * to finish the import itself (ie. mapping) but it should be enough to begin: accounts to import from,
-     * accounts to import into, data ranges, etc.
-     *
-     * @param string $bank
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
-     */
-    public function form(string $bank)
-    {
-        $class = config(sprintf('firefly.import_pre.%s', $bank));
-        /** @var PrerequisitesInterface $object */
-        $object = app($class);
-        $object->setUser(auth()->user());
-
-        if ($object->hasPrerequisites()) {
-            return redirect(route('import.bank.prerequisites', [$bank]));
-        }
-        $class = config(sprintf('firefly.import_info.%s', $bank));
-        /** @var InformationInterface $object */
-        $object = app($class);
-        $object->setUser(auth()->user());
-        $remoteAccounts = $object->getAccounts();
-
-        return view('import.bank.form', compact('remoteAccounts', 'bank'));
-    }
 
     /**
-     * With the information given in the submitted form Firefly III will call upon the bank's classes to return transaction
-     * information as requested. The user will be able to map unknown data and continue. Or maybe, it's put into some kind of
-     * fake CSV file and forwarded to the import routine.
+     * Once there are no prerequisites, this method will create an importjob object and
+     * redirect the user to a view where this object can be used by a bank specific
+     * class to process.
      *
-     * @param Request $request
-     * @param string  $bank
+     * @param ImportJobRepositoryInterface $repository
+     * @param string                       $bank
      *
      * @return \Illuminate\Http\RedirectResponse|null
+     * @throws FireflyException
      */
-    public function postForm(Request $request, string $bank)
+    public function createJob(ImportJobRepositoryInterface $repository, string $bank)
     {
         $class = config(sprintf('firefly.import_pre.%s', $bank));
-        /** @var PrerequisitesInterface $object */
-        $object = app($class);
-        $object->setUser(auth()->user());
-
-        if ($object->hasPrerequisites()) {
-            return redirect(route('import.bank.prerequisites', [$bank]));
+        if (!class_exists($class)) {
+            throw new FireflyException(sprintf('Cannot find class %s', $class));
         }
-        $remoteAccounts = $request->get('do_import');
-        if (!is_array($remoteAccounts) || 0 === count($remoteAccounts)) {
-            Session::flash('error', 'Must select accounts');
+        $importJob = $repository->create($bank);
 
-            return redirect(route('import.bank.form', [$bank]));
-        }
-        $remoteAccounts = array_keys($remoteAccounts);
-        $class          = config(sprintf('firefly.import_pre.%s', $bank));
-        // get import file
-        unset($remoteAccounts, $class);
-
-        // get import config
+        return redirect(route('import.file.configure', [$importJob->key]));
     }
 
     /**
@@ -105,18 +67,22 @@ class BankController extends Controller
      * @param string  $bank
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws FireflyException
      */
     public function postPrerequisites(Request $request, string $bank)
     {
         Log::debug(sprintf('Now in postPrerequisites for %s', $bank));
         $class = config(sprintf('firefly.import_pre.%s', $bank));
+        if (!class_exists($class)) {
+            throw new FireflyException(sprintf('Cannot find class %s', $class));
+        }
         /** @var PrerequisitesInterface $object */
         $object = app($class);
         $object->setUser(auth()->user());
         if (!$object->hasPrerequisites()) {
             Log::debug(sprintf('No more prerequisites for %s, move to form.', $bank));
 
-            return redirect(route('import.bank.form', [$bank]));
+            return redirect(route('import.bank.create-job', [$bank]));
         }
         Log::debug('Going to store entered preprerequisites.');
         // store post data
@@ -128,7 +94,7 @@ class BankController extends Controller
             return redirect(route('import.bank.prerequisites', [$bank]));
         }
 
-        return redirect(route('import.bank.form', [$bank]));
+        return redirect(route('import.bank.create-job', [$bank]));
     }
 
     /**
@@ -138,21 +104,26 @@ class BankController extends Controller
      * @param string $bank
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @throws FireflyException
      */
     public function prerequisites(string $bank)
     {
         $class = config(sprintf('firefly.import_pre.%s', $bank));
+        if (!class_exists($class)) {
+            throw new FireflyException(sprintf('Cannot find class %s', $class));
+        }
         /** @var PrerequisitesInterface $object */
         $object = app($class);
         $object->setUser(auth()->user());
 
         if ($object->hasPrerequisites()) {
             $view       = $object->getView();
-            $parameters = $object->getViewParameters();
+            $parameters = ['title' => strval(trans('firefly.import_index_title')), 'mainTitleIcon' => 'fa-archive'];
+            $parameters = $object->getViewParameters() + $parameters;
 
             return view($view, $parameters);
         }
 
-        return redirect(route('import.bank.form', [$bank]));
+        return redirect(route('import.bank.create-job', [$bank]));
     }
 }
