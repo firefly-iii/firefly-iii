@@ -1,15 +1,25 @@
 <?php
-declare(strict_types=1);
-
 /**
  * firefly.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     // general stuff:
@@ -159,11 +169,11 @@ return [
     'import_and_export'                          => 'Import / eksport',
     'export_data'                                => 'Eksportuj dane',
     'export_and_backup_data'                     => 'Eksport i kopia zapasowa',
-    'export_data_intro'                          => 'For backup purposes, when migrating to another system or when migrating to another Firefly III installation.',
+    'export_data_intro'                          => 'Do celów tworzenia kopii zapasowych, migracji do innego systemu lub migracji do innej instalacji Firefly III.',
     'export_format'                              => 'Format eksportu',
     'export_format_csv'                          => 'Wartości oddzielone przecinkami (plik CSV)',
     'export_format_mt940'                        => 'Format kompatybilny z MT940',
-    'include_old_uploads_help'                   => 'Firefly III does not throw away the original CSV files you have imported in the past. You can include them in your export.',
+    'include_old_uploads_help'                   => 'Firefly III nie wyrzuca oryginalnych plików CSV zaimportowanych w przeszłości. Możesz uwzględnić je w eksporcie.',
     'do_export'                                  => 'Eksportuj',
     'export_status_never_started'                => 'Eksport nie został jeszcze rozpoczęty',
     'export_status_make_exporter'                => 'Creating exporter thing...',
@@ -707,6 +717,7 @@ return [
     'mass_edit_journals'                       => 'Modyfikuj wiele transakcji',
     'cannot_edit_other_fields'                 => 'Nie możesz masowo modyfikować innych pól niż te tutaj, ponieważ nie ma miejsca, aby je pokazać. Proszę użyć ikony edycji i edytować je jedno po drugim, jeśli chcesz edytować te pola.',
     'no_budget'                                => '(bez budżetu)',
+    'no_budget_squared'                        => '(no budget)',
     'perm-delete-many'                         => 'Usuwanie wielu elementów jednocześnie może być bardzo destrukcyjne. Proszę zachować ostrożność.',
     'mass_deleted_transactions_success'        => 'Usunięto :amount transakcję(i).',
     'mass_edited_transactions_success'         => 'Zaktualizowano :amount transakcję(i)',
@@ -764,6 +775,7 @@ return [
     'piggyBanks'                               => 'Skarbonki',
     'bills'                                    => 'Rachunki',
     'withdrawal'                               => 'Wypłata',
+    'opening_balance'                          => 'Opening balance',
     'deposit'                                  => 'Wpłata',
     'account'                                  => 'Konto',
     'transfer'                                 => 'Transfer',
@@ -786,6 +798,7 @@ return [
     'report_default'                           => 'Domyślny raport finansowy między :start i :end',
     'report_audit'                             => 'Przegląd historii transakcji między :start i :end',
     'report_category'                          => 'Raport kategorii między :start a :end',
+    'report_account'                           => 'Expense/revenue account report between :start and :end',
     'report_budget'                            => 'Raport budżetów między :start a :end',
     'report_tag'                               => 'Raport tagów między :start a :end',
     'quick_link_reports'                       => 'Szybkie linki',
@@ -821,6 +834,7 @@ return [
     'report_type_category'                     => 'Raport kategorii',
     'report_type_budget'                       => 'Raport budżetów',
     'report_type_tag'                          => 'Raport tagów',
+    'report_type_account'                      => 'Expense/revenue account report',
     'more_info_help'                           => 'More information about these types of reports can be found in the help pages. Press the (?) icon in the top right corner.',
     'report_included_accounts'                 => 'Uwzględnione konta',
     'report_date_range'                        => 'Zakres dat',
@@ -872,7 +886,10 @@ return [
     'account_role_ccAsset'                     => 'Karta kredytowa',
     'budget_chart_click'                       => 'Kliknij na nazwę budżetu w tabeli powyżej, aby zobaczyć wykres.',
     'category_chart_click'                     => 'Kliknij na nazwę kategorii w tabeli powyżej, aby zobaczyć wykres.',
-
+    'in_out_accounts'                          => 'Earned and spent per combination',
+    'in_out_per_category'                      => 'Earned and spent per category',
+    'out_per_budget'                           => 'Spent per budget',
+    'select_expense_revenue'                   => 'Select expense/revenue account',
 
     // charts:
     'chart'                                    => 'Wykres',
@@ -884,7 +901,6 @@ return [
     'earned'                                   => 'Zarobiono',
     'overspent'                                => 'Przepłacono',
     'left'                                     => 'Pozostało',
-    'no_budget'                                => '(no budget)',
     'max-amount'                               => 'Maksymalna kwota',
     'min-amount'                               => 'Minimalna kwota',
     'journal-amount'                           => 'Faktyczna kwota',
@@ -1054,6 +1070,10 @@ return [
     // import bread crumbs and titles:
     'import'                                => 'Importuj',
     'import_data'                           => 'Importuj dane',
+    'import_from_bunq'                      => 'Import from bunq',
+    'import_using_spectre'                  => 'Import using Spectre',
+    'import_using_plaid'                    => 'Import using Plaid',
+
 
     // import index page:
     'import_index_title'                    => 'Importuj dane do Firefly III',

@@ -1,15 +1,25 @@
 <?php
-declare(strict_types=1);
-
 /**
  * firefly.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     // general stuff:
@@ -708,6 +718,7 @@ return [
     'mass_edit_journals'                       => 'Modifier un certain nombre d’opérations',
     'cannot_edit_other_fields'                 => 'Vous ne peut pas modifier en masse d\'autres champs que ceux ici, car il n’y a pas de place pour tous les montrer. S’il vous plaît suivez le lien et modifiez les par un par un, si vous devez modifier ces champs.',
     'no_budget'                                => '(pas de budget)',
+    'no_budget_squared'                        => '(no budget)',
     'perm-delete-many'                         => 'Supprimer de nombreux éléments en une seule fois peut être très problématique. Soyez prudent.',
     'mass_deleted_transactions_success'        => 'Montant des opérations supprimées : :amount.',
     'mass_edited_transactions_success'         => 'Montant des opérations mises à jour : :amount',
@@ -765,6 +776,7 @@ return [
     'piggyBanks'                               => 'Tirelires',
     'bills'                                    => 'Factures',
     'withdrawal'                               => 'Retrait',
+    'opening_balance'                          => 'Opening balance',
     'deposit'                                  => 'Dépôt',
     'account'                                  => 'Compte',
     'transfer'                                 => 'Transfert',
@@ -787,6 +799,7 @@ return [
     'report_default'                           => 'Rapport financier par défaut entre :start et :end',
     'report_audit'                             => 'Aperçu de l\'historique des transactions entre :start et :end',
     'report_category'                          => 'Rapport de catégorie entre :start et :end',
+    'report_account'                           => 'Expense/revenue account report between :start and :end',
     'report_budget'                            => 'Rapport du budget entre :start et :end',
     'report_tag'                               => 'Marquer le rapport entre :start and :end',
     'quick_link_reports'                       => 'Liens rapides',
@@ -822,6 +835,7 @@ return [
     'report_type_category'                     => 'Rapport par catégories',
     'report_type_budget'                       => 'Rapport du budget',
     'report_type_tag'                          => 'Rapport de tag',
+    'report_type_account'                      => 'Expense/revenue account report',
     'more_info_help'                           => 'Plus d’informations sur ces types de rapports se trouvent dans les pages d’aide. Appuyez sur l’icône ( ?) dans le coin supérieur droit.',
     'report_included_accounts'                 => 'Comptes inclus',
     'report_date_range'                        => 'Intervalle de dates',
@@ -873,7 +887,10 @@ return [
     'account_role_ccAsset'                     => 'Carte de crédit',
     'budget_chart_click'                       => 'Cliquez sur le nom du budget dans le tableau ci-dessus pour voir un graphique.',
     'category_chart_click'                     => 'Cliquez sur un nom de catégorie dans le tableau ci-dessus pour voir un graphique.',
-
+    'in_out_accounts'                          => 'Earned and spent per combination',
+    'in_out_per_category'                      => 'Earned and spent per category',
+    'out_per_budget'                           => 'Spent per budget',
+    'select_expense_revenue'                   => 'Select expense/revenue account',
 
     // charts:
     'chart'                                    => 'Diagramme',
@@ -885,7 +902,6 @@ return [
     'earned'                                   => 'Gagné',
     'overspent'                                => 'Trop dépensé',
     'left'                                     => 'Reste',
-    'no_budget'                                => '(pas de budget)',
     'max-amount'                               => 'Montant maximum',
     'min-amount'                               => 'Montant minimum',
     'journal-amount'                           => 'Entrée de facture courante',
@@ -1055,6 +1071,10 @@ return [
     // import bread crumbs and titles:
     'import'                                => 'Import',
     'import_data'                           => 'Importer des données',
+    'import_from_bunq'                      => 'Import from bunq',
+    'import_using_spectre'                  => 'Import using Spectre',
+    'import_using_plaid'                    => 'Import using Plaid',
+
 
     // import index page:
     'import_index_title'                    => 'Importer des données dans Firefly III',

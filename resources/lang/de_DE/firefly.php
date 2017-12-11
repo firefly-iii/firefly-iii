@@ -1,15 +1,25 @@
 <?php
-declare(strict_types=1);
-
 /**
  * firefly.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     // general stuff:
@@ -71,7 +81,7 @@ return [
     'source_accounts'                            => 'Herkunftskonto',
     'destination_accounts'                       => 'Zielkonto',
     'user_id_is'                                 => 'Ihre Benutzerkennung ist <strong>:user</strong>',
-    'field_supports_markdown'                    => 'Diese Feld unterstützt <a href="https://en.support.wordpress.com/markdown-quick-reference/"> Abschlag </a>.',
+    'field_supports_markdown'                    => 'Dieses Feld unterstützt <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
     'need_more_help'                             => 'Wenn Sie Hilfe beim Bedienen von Firefly III brauchen, <a href="https://github.com/firefly-iii/firefly-iii/issues">erstellen Sie ein Ticket auf Github</a>.',
     'reenable_intro_text'                        => 'Sie können auch <a href="#" id="reenableGuidance">die Einführung</a> wieder aktivieren.',
     'intro_boxes_after_refresh'                  => 'Die Einführungsfelder werden wieder angezeigt, wenn Sie die Seite aktualisieren.',
@@ -708,6 +718,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'mass_edit_journals'                       => 'Bearbeiten Sie eine Reihe von Überweisungen',
     'cannot_edit_other_fields'                 => 'You cannot mass-edit other fields than the ones here, because there is no room to show them. Please follow the link and edit them by one-by-one, if you need to edit these fields.',
     'no_budget'                                => '(kein Budget)',
+    'no_budget_squared'                        => '(no budget)',
     'perm-delete-many'                         => 'Das Löschen von mehreren Elementen auf einmal kann sich störend auswirken. Bitte seien Sie vorsichtig.',
     'mass_deleted_transactions_success'        => ':amount Überweisung(en) gelöscht.',
     'mass_edited_transactions_success'         => ':amount Überweisung(en) aktualisiert',
@@ -765,6 +776,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'piggyBanks'                               => 'Sparschweine',
     'bills'                                    => 'Rechnungen',
     'withdrawal'                               => 'Ausgabe',
+    'opening_balance'                          => 'Opening balance',
     'deposit'                                  => 'Einnahme',
     'account'                                  => 'Konto',
     'transfer'                                 => 'Überweisung',
@@ -787,6 +799,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'report_default'                           => 'Default financial report between :start and :end',
     'report_audit'                             => 'Transaction history overview between :start and :end',
     'report_category'                          => 'Category report between :start and :end',
+    'report_account'                           => 'Expense/revenue account report between :start and :end',
     'report_budget'                            => 'Budget report between :start and :end',
     'report_tag'                               => 'Tag report between :start and :end',
     'quick_link_reports'                       => 'Schnellzugriff',
@@ -822,6 +835,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'report_type_category'                     => 'Kategorie-Bericht',
     'report_type_budget'                       => 'Budgetbericht',
     'report_type_tag'                          => 'Tag report',
+    'report_type_account'                      => 'Expense/revenue account report',
     'more_info_help'                           => 'Weitere Informationen über diese Art von Berichten finden Sie in der Hilfe. Drücken Sie hierfür das (?)-Symbol in der oberen rechten Ecke.',
     'report_included_accounts'                 => 'Eingezogene Konten',
     'report_date_range'                        => 'Zeitraum',
@@ -873,7 +887,10 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'account_role_ccAsset'                     => 'Kreditkarte',
     'budget_chart_click'                       => 'Klicken Sie auf einen Budgetnamen in der obigen Tabelle, um ein Diagramm anzuzeigen.',
     'category_chart_click'                     => 'Klicken Sie auf einen Kategorienamen in der obigen Tabelle, um ein Diagramm zu sehen.',
-
+    'in_out_accounts'                          => 'Earned and spent per combination',
+    'in_out_per_category'                      => 'Earned and spent per category',
+    'out_per_budget'                           => 'Spent per budget',
+    'select_expense_revenue'                   => 'Select expense/revenue account',
 
     // charts:
     'chart'                                    => 'Diagram',
@@ -885,7 +902,6 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'earned'                                   => 'Verdient',
     'overspent'                                => 'Zuviel ausgegeben',
     'left'                                     => 'Übrig',
-    'no_budget'                                => '(no budget)',
     'max-amount'                               => 'Höchstbetrag',
     'min-amount'                               => 'Mindestbetrag',
     'journal-amount'                           => 'Aktueller Rechnungseintrag',
@@ -1055,6 +1071,10 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     // import bread crumbs and titles:
     'import'                                => 'Import',
     'import_data'                           => 'Daten importieren',
+    'import_from_bunq'                      => 'Import from bunq',
+    'import_using_spectre'                  => 'Import using Spectre',
+    'import_using_plaid'                    => 'Import using Plaid',
+
 
     // import index page:
     'import_index_title'                    => 'Daten in Firefly III importieren',

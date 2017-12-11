@@ -1,15 +1,25 @@
 <?php
-declare(strict_types=1);
-
 /**
  * firefly.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     // general stuff:
@@ -707,6 +717,7 @@ return [
     'mass_edit_journals'                       => 'Wijzig een aantal transacties',
     'cannot_edit_other_fields'                 => 'Je kan andere velden dan de velden die je hier ziet niet groepsgewijs wijzigen. Er is geen ruimte om ze te laten zien. Als je deze velden toch wilt wijzigen, volg dan de link naast de transactie en wijzig ze stuk voor stuk.',
     'no_budget'                                => '(geen budget)',
+    'no_budget_squared'                        => '(geen budget)',
     'perm-delete-many'                         => 'Veel items in één keer verwijderen kan zeer storend zijn. Wees voorzichtig.',
     'mass_deleted_transactions_success'        => 'Verwijder :amount transactie(s).',
     'mass_edited_transactions_success'         => 'Wijzig :amount transactie(s)',
@@ -764,6 +775,7 @@ return [
     'piggyBanks'                               => 'Spaarpotjes',
     'bills'                                    => 'Contracten',
     'withdrawal'                               => 'Uitgave',
+    'opening_balance'                          => 'Startsaldo',
     'deposit'                                  => 'Inkomsten',
     'account'                                  => 'Rekening',
     'transfer'                                 => 'Overschrijving',
@@ -786,6 +798,7 @@ return [
     'report_default'                           => 'Standaard financieel rapport (:start tot :end)',
     'report_audit'                             => 'Transactiehistorie-overzicht van :start tot :end',
     'report_category'                          => 'Categorierapport van :start tot :end',
+    'report_account'                           => 'Debiteuren/crediteurenrapport tussen :start en :end',
     'report_budget'                            => 'Budgetrapport van :start tot :end',
     'report_tag'                               => 'Tagrapport van :start tot :end',
     'quick_link_reports'                       => 'Snelle links',
@@ -821,6 +834,7 @@ return [
     'report_type_category'                     => 'Categorierapport',
     'report_type_budget'                       => 'Budgetrapport',
     'report_type_tag'                          => 'Tagrapport',
+    'report_type_account'                      => 'Debiteuren/crediteurenrapport',
     'more_info_help'                           => 'Meer informatie over deze rapporten vind je in de hulppagina\'s. Klik daarvoor op het (?) icoontje rechtsboven.',
     'report_included_accounts'                 => 'Accounts in rapport',
     'report_date_range'                        => 'Datumbereik',
@@ -872,7 +886,10 @@ return [
     'account_role_ccAsset'                     => 'Credit card',
     'budget_chart_click'                       => 'Klik op een budgetnaam in de tabel hierboven om een ​​grafiek te zien.',
     'category_chart_click'                     => 'Klik op een categorienaam in de tabel hierboven om een ​​grafiek te zien.',
-
+    'in_out_accounts'                          => 'Inkomsten en uitgaven per combinatie',
+    'in_out_per_category'                      => 'Verdiend en uitgegeven per categorie',
+    'out_per_budget'                           => 'Uitgaven per budget',
+    'select_expense_revenue'                   => 'Selecteer debiteur+crediteur',
 
     // charts:
     'chart'                                    => 'Diagram',
@@ -884,7 +901,6 @@ return [
     'earned'                                   => 'Verdiend',
     'overspent'                                => 'Teveel uitgegeven',
     'left'                                     => 'Over',
-    'no_budget'                                => '(geen budget)',
     'max-amount'                               => 'Maximumbedrag',
     'min-amount'                               => 'Minimumbedrag',
     'journal-amount'                           => 'Bedrag voor dit contract',
@@ -1054,6 +1070,10 @@ return [
     // import bread crumbs and titles:
     'import'                                => 'Import',
     'import_data'                           => 'Importeer data',
+    'import_from_bunq'                      => 'Importeer uit bunq',
+    'import_using_spectre'                  => 'Importeer via Spectre',
+    'import_using_plaid'                    => 'Importeer via Plaid',
+
 
     // import index page:
     'import_index_title'                    => 'Gegevens importeren in Firefly III',
