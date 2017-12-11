@@ -62,7 +62,7 @@ class ProfileController extends Controller
                 return $next($request);
             }
         );
-        $this->middleware(IsLimitedUser::class)->except(['confirmEmailChange', 'undoEmailChange']);
+        $this->middleware(IsLimitedUser::class)->except(['confirmEmailChange','index', 'undoEmailChange']);
     }
 
     /**
