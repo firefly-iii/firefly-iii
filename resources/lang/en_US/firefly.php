@@ -1073,6 +1073,10 @@ return [
     // import bread crumbs and titles:
     'import'                                => 'Import',
     'import_data'                           => 'Import data',
+    'import_from_bunq'                      => 'Import from bunq',
+    'import_using_spectre'                  => 'Import using Spectre',
+    'import_using_plaid'                    => 'Import using Plaid',
+
 
     // import index page:
     'import_index_title'                    => 'Import data into Firefly III',

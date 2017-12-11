@@ -20,32 +20,32 @@
                     </div>
 
                     <div class="row">
+                        {# file import #}
                         <div class="col-lg-1 text-center">
-                                {# file import #}
                                 <a href="{{ route('import.file.index') }}">
                                     <img src="images/logos/csv.png" alt="bunq"/><br />
                                     {{ 'import_general_index_csv_file'|_ }}
                                 </a>
                         </div>
+                        {# bunq import #}
                         <div class="col-lg-1 text-center">
-                                {# bunq import #}
                                 <a href="{{ route('import.bank.prerequisites', ['bunq']) }}">
                                     <img src="images/logos/bunq.png" alt="bunq"/><br />
-                                    Import from bunq
+                                    {{ 'import_from_bunq'|_ }}
                                 </a>
                         </div>
+                        {# import from Spectre #}
                         <div class="col-lg-1 text-center">
-                                {# import from Spectre #}
                                 <a href="{{ route('import.bank.prerequisites', ['spectre']) }}">
                                     <img src="images/logos/spectre.png" alt="Spectre"/><br />
-                                    Import using Spectre
+                                    {{ 'import_using_spectre'|_ }}
                                 </a>
                         </div>
                         <div class="col-lg-1 text-center">
                             {# import from Plaid #}
                             <a href="{{ route('import.bank.prerequisites', ['plaid']) }}">
                                 <img src="images/logos/plaid.png" alt="Plaid"/><br />
-                                Import using Plaid
+                                {{ 'import_using_plaid'|_ }}
                             </a>
                         </div>
                         </div>
