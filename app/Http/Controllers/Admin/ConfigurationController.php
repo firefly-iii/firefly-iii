@@ -51,7 +51,7 @@ class ConfigurationController extends Controller
                 return $next($request);
             }
         );
-        $this->middleware(IsLimitedUser::class)->except(['postIndex']);
+        $this->middleware(IsLimitedUser::class)->except(['index']);
     }
 
     /**

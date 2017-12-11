@@ -24,6 +24,7 @@ namespace FireflyIII\Http\Controllers\Admin;
 
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Http\Middleware\IsLimitedUser;
 use Illuminate\Http\Request;
 use Log;
 use Session;
@@ -33,6 +34,16 @@ use Session;
  */
 class HomeController extends Controller
 {
+    /**
+     * ConfigurationController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware(IsLimitedUser::class)->except(['index']);
+    }
+
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
