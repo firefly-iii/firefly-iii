@@ -623,8 +623,8 @@ Route::group(
     Route::get('budget/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@budget', 'as' => 'budget']);
 
     //expense earned top X
-    Route::get('expenses/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@topX', 'as' => 'expenses']);
-    Route::get('income/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@topXPeriod', 'as' => 'income']);
+    Route::get('expenses/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@topExpense', 'as' => 'expenses']);
+    Route::get('income/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@topIncome', 'as' => 'income']);
 
 }
 );

@@ -54,7 +54,7 @@ return [
     'import_pre'           => [
         'bunq'    => 'FireflyIII\Support\Import\Prerequisites\BunqPrerequisites',
         'spectre' => 'FireflyIII\Support\Import\Prerequisites\SpectrePrerequisites',
-        'plaid'   => 'FireflyIII\Support\Import\Prerequisites\PlairPrerequisites',
+        'plaid'   => 'FireflyIII\Support\Import\Prerequisites\PlaidPrerequisites',
     ],
     'import_info'          => [
         'bunq'    => 'FireflyIII\Support\Import\Information\BunqInformation',

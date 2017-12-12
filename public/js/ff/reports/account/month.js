@@ -36,5 +36,6 @@ function drawChart() {
 
     // month view:
     // draw account chart
-    lineChart(mainUri, 'in-out-chart');
+    // month view:
+    doubleYChart(mainUri, 'in-out-chart');
 }

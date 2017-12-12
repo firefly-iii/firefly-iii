@@ -28,6 +28,7 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -88,13 +89,13 @@ class ExpenseController extends Controller
             $all = $all->merge($combi);
         }
         // now find spent / earned:
-        $spent  = $this->spentByBudget($accounts, $all, $start, $end);
+        $spent = $this->spentByBudget($accounts, $all, $start, $end);
         // join arrays somehow:
         $together = [];
         foreach ($spent as $categoryId => $spentInfo) {
             if (!isset($together[$categoryId])) {
                 $together[$categoryId]['spent']       = $spentInfo;
-                $together[$categoryId]['budget']    = $spentInfo['name'];
+                $together[$categoryId]['budget']      = $spentInfo['name'];
                 $together[$categoryId]['grand_total'] = '0';
             }
             $together[$categoryId]['grand_total'] = bcadd($spentInfo['grand_total'], $together[$categoryId]['grand_total']);
@@ -150,7 +151,7 @@ class ExpenseController extends Controller
         unset($spentInfo);
         foreach ($earned as $categoryId => $earnedInfo) {
             if (!isset($together[$categoryId])) {
-                $together[$categoryId]['earned']       = $earnedInfo;
+                $together[$categoryId]['earned']      = $earnedInfo;
                 $together[$categoryId]['category']    = $earnedInfo['name'];
                 $together[$categoryId]['grand_total'] = '0';
             }
@@ -208,6 +209,76 @@ class ExpenseController extends Controller
         return $result;
         // for period, get spent and earned for each account (by name)
 
+    }
+
+    public function topExpense(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
+    {
+        // Properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('expense-budget');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        $cache->addProperty($expense->pluck('id')->toArray());
+        if ($cache->has()) {
+            //return $cache->get(); // @codeCoverageIgnore
+        }
+        $combined = $this->combineAccounts($expense);
+        $all      = new Collection;
+        foreach ($combined as $name => $combi) {
+            $all = $all->merge($combi);
+        }
+        // get all expenses in period:
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($accounts);
+        $collector->setOpposingAccounts($all);
+        $set    = $collector->getJournals();
+        $sorted = $set->sortBy(
+            function (Transaction $transaction) {
+                return floatval($transaction->transaction_amount);
+            }
+        );
+        $result = view('reports.partials.top-transactions', compact('sorted'))->render();
+        $cache->store($result);
+
+        return $result;
+    }
+
+
+
+    public function topIncome(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
+    {
+        // Properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('expense-budget');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        $cache->addProperty($expense->pluck('id')->toArray());
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+        $combined = $this->combineAccounts($expense);
+        $all      = new Collection;
+        foreach ($combined as $name => $combi) {
+            $all = $all->merge($combi);
+        }
+        // get all expenses in period:
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($accounts);
+        $collector->setOpposingAccounts($all);
+        $set    = $collector->getJournals();
+        $sorted = $set->sortByDesc(
+            function (Transaction $transaction) {
+                return floatval($transaction->transaction_amount);
+            }
+        );
+        $result = view('reports.partials.top-transactions', compact('sorted'))->render();
+        $cache->store($result);
+
+        return $result;
     }
 
     /**
@@ -348,7 +419,7 @@ class ExpenseController extends Controller
         $sum = [];
         // loop to support multi currency
         foreach ($set as $transaction) {
-            $currencyId   = $transaction->transaction_currency_id;
+            $currencyId = $transaction->transaction_currency_id;
             $budgetName = $transaction->transaction_budget_name;
             $budgetId   = intval($transaction->transaction_budget_id);
             // if null, grab from journal:
@@ -369,7 +440,7 @@ class ExpenseController extends Controller
                     'per_currency' => [
                         $currencyId => [
                             'sum'      => '0',
-                            'budget' => [
+                            'budget'   => [
                                 'id'   => $budgetId,
                                 'name' => $budgetName,
                             ],
