@@ -35,7 +35,5 @@ function drawChart() {
     "use strict";
 
     // month view:
-    // draw account chart
-    // month view:
     doubleYChart(mainUri, 'in-out-chart');
 }
