@@ -26,6 +26,7 @@ use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 use League\Csv\Reader;
+use League\Csv\Statement;
 use Log;
 
 /**
@@ -53,9 +54,10 @@ class Roles implements ConfigurationInterface
         // create CSV reader.
         $reader = Reader::createFromString($content);
         $reader->setDelimiter($config['delimiter']);
-        $start = $config['has-headers'] ? 1 : 0;
-        $end   = $start + config('csv.example_rows');
-
+        if ($config['has-headers']) {
+            $reader->setHeaderOffset(0);
+        }
+        $stmt = (new Statement)->limit(intval(config('csv.example_rows', 5)));
         // set data:
         $roles = $this->getRoles();
         asort($roles);
@@ -66,13 +68,13 @@ class Roles implements ConfigurationInterface
             'headers'  => $config['has-headers'] ? $reader->fetchOne(0) : [],
         ];
 
-        while ($start < $end) {
-            $row                 = $reader->fetchOne($start);
+
+        $records = $stmt->process($reader);
+        foreach ($records as $row) {
             $row                 = $this->processSpecifics($row);
             $count               = count($row);
             $this->data['total'] = $count > $this->data['total'] ? $count : $this->data['total'];
             $this->processRow($row);
-            ++$start;
         }
 
         $this->updateColumCount();

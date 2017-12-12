@@ -60,8 +60,10 @@ class Map implements ConfigurationInterface
         /** @var Reader $reader */
         $reader = Reader::createFromString($content);
         $reader->setDelimiter($this->configuration['delimiter']);
-        $offset               = $this->configuration['has-headers'] ? 1 : 0;
-        $results              = $reader->setOffset($offset)->fetch();
+        if($this->configuration['has-headers']) {
+            $reader->setHeaderOffset(0);
+        }
+        $results              = $reader->getRecords();
         $this->validSpecifics = array_keys(config('csv.import_specifics'));
         $indexes              = array_keys($this->data);
         $rowIndex             = 0;

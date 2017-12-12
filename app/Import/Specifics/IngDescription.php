@@ -60,7 +60,7 @@ class IngDescription implements SpecificInterface
      */
     public function run(array $row): array
     {
-        $this->row = $row;
+        $this->row = array_values($row);
         if (count($this->row) >= 8) {                    // check if the array is correct
             switch ($this->row[4]) {                     // Get value for the mutation type
                 case 'GT':                               // InternetBankieren
@@ -69,6 +69,8 @@ class IngDescription implements SpecificInterface
                 case 'IC':                               // Incasso
                     $this->removeIBANIngDescription();
                     $this->removeNameIngDescription();
+                    // if "tegenrekening" empty, copy the description. Primitive, but it works.
+                    $this->copyDescriptionToOpposite();
                     break;
                 case 'BA':                              // Betaalautomaat
                     $this->addNameIngDescription();
@@ -113,9 +115,20 @@ class IngDescription implements SpecificInterface
      */
     protected function removeNameIngDescription()
     {
-        // Try remove everything bevore the 'Omschrijving'
+        // Try remove everything before the 'Omschrijving'
         $this->row[8] = preg_replace('/.+Omschrijving: /', '', $this->row[8]);
 
         return true;
+    }
+
+    /**
+     *
+     */
+    private function copyDescriptionToOpposite(): void
+    {
+        $search = ['Naar Oranje Spaarrekening ', 'Afschrijvingen'];
+        if (strlen($this->row[3]) === 0) {
+            $this->row[3] = trim(str_ireplace($search, '', $this->row[8]));
+        }
     }
 }

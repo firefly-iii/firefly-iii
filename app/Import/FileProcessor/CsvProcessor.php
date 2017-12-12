@@ -169,9 +169,11 @@ class CsvProcessor implements FileProcessorInterface
             $delimiter = "\t";
         }
         $reader->setDelimiter($delimiter);
-        $start   = $config['has-headers'] ? 1 : 0;
-        $results = $reader->setOffset($start)->fetch();
-        Log::debug(sprintf('Created a CSV reader starting at offset %d', $start));
+        if($config['has-headers']) {
+            $reader->setHeaderOffset(0);
+        }
+        $results = $reader->getRecords();
+        Log::debug('Created a CSV reader.');
 
         return $results;
     }
