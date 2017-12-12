@@ -50,6 +50,7 @@ class PresidentsChoice implements SpecificInterface
      */
     public function run(array $row): array
     {
+        $row = array_values($row);
         // first, if column 2 is empty and 3 is not, do nothing.
         // if column 3 is empty and column 2 is not, move amount to column 3, *-1
         if (isset($row[3]) && 0 === strlen($row[3])) {

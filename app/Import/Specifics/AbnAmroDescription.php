@@ -58,7 +58,7 @@ class AbnAmroDescription implements SpecificInterface
      */
     public function run(array $row): array
     {
-        $this->row = $row;
+        $this->row = array_values($row);
 
         if (!isset($row[7])) {
             return $row;

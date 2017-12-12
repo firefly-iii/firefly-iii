@@ -52,6 +52,7 @@ class RabobankDescription implements SpecificInterface
      */
     public function run(array $row): array
     {
+        $row = array_values($row);
         Log::debug(sprintf('Now in RabobankSpecific::run(). Row has %d columns', count($row)));
         $oppositeAccount = isset($row[5]) ? trim($row[5]) : '';
         $oppositeName    = isset($row[6]) ? trim($row[6]) : '';
