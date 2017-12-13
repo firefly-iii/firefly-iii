@@ -13,17 +13,17 @@ There are many financial reports available.
 
 ## Want to try Firefly III?
 
-There is a **[demo site](https://firefly-iii.nder.be)** with an example financial administration already present. You can use Docker, Heroku or Sandstorm.io (see below) to quickly setup your own instance.
+There is a **[demo site](https://demo.firefly-iii.org)** with an example financial administration already present. You can use Docker, Heroku or Sandstorm.io (see below) to quickly setup your own instance.
 
 ## Install Firefly III
 
 ### Using docker
 
-You can use docker-compose to [set up your personal secure](https://firefly-iii.github.io/using-docker.html) Firefly III environment. Advanced users can use the Dockerfile directly. 
+You can use docker-compose to [set up your personal secure](https://firefly-iii.org/using-docker.html) Firefly III environment. Advanced users can use the Dockerfile directly. 
 
 ### Using vagrant (or other VMs)
 
-You can install Firefly III on any Linux or Windows machine. You'll need a web server (preferrably on Linux) and access to the command line. Please read the [installation guide](https://firefly-iii.github.io/using-installing.html).
+You can install Firefly III on any Linux or Windows machine. You'll need a web server (preferrably on Linux) and access to the command line. Please read the [installation guide](https://firefly-iii.org/using-installing.html).
 
 ### Using Heroku
 
@@ -53,7 +53,7 @@ Firefly works on the principle that if you know where you're money is going, you
 - If you feel you're missing something you can just ask me and I'll add it!
 
 Firefly III has become pretty awesome over the years! (but please excuse me for bragging, it's just that I'm proud of it).
-[You can read more about Firefly III, and its features, on the Github Pages](https://firefly-iii.github.io/).
+[You can read more about Firefly III, and its features, on the website](https://firefly-iii.org/).
 
 ### Contributing
 
