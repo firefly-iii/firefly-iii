@@ -9,7 +9,7 @@
 {% endif %}
 
 {# SUCCESS MESSAGE (ALWAYS SINGULAR) #}
-{% if Session.has('success') %}
+{% if session_has('success') %}
     <div class="alert alert-success alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert">
             <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
@@ -19,7 +19,7 @@
 {% endif %}
 
 {# INFO MESSAGE (CAN BE MULTIPLE) #}
-{% if Session.has('info') %}
+{% if session_has('info') %}
     <div class="alert alert-info alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert">
             <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
@@ -49,7 +49,7 @@
 {% endif %}
 
 {# WARNING MESSAGE (ALWAYS SINGULAR) #}
-{% if Session.has('warning') %}
+{% if session_has('warning') %}
     <div class="alert alert-warning alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert">
             <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
@@ -59,7 +59,7 @@
 {% endif %}
 
 {# ERROR MESSAGE (CAN BE MULTIPLE) #}
-{% if Session.has('error') %}
+{% if session_has('error') %}
     <div class="alert alert-danger alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert">
             <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
