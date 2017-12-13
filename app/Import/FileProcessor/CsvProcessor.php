@@ -80,6 +80,7 @@ class CsvProcessor implements FileProcessorInterface
         Log::debug(sprintf('Number of entries: %d', $entries->count()));
         $notImported = $entries->filter(
             function (array $row, int $index) {
+                $row = array_values($row);
                 if ($this->rowAlreadyImported($row)) {
                     $message = sprintf('Row #%d has already been imported.', $index);
                     $this->job->addError($index, $message);
@@ -241,6 +242,7 @@ class CsvProcessor implements FileProcessorInterface
      */
     private function importRow(int $index, array $row): ImportJournal
     {
+        $row = array_values($row);
         Log::debug(sprintf('Now at row %d', $index));
         $row  = $this->specifics($row);
         $hash = $this->getRowHash($row);
