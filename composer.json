@@ -98,7 +98,7 @@
   },
   "scripts": {
     "pre-install-cmd": [
-      "echo 'hello from pre-install-cmd'"
+      "export APP_KEY=7ahyYVPVsmxjdhsweWCauGeJfwc92NP2 && echo 'Temporary app key is ${APP_KEY}.'"
     ],
     "post-root-package-install": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
