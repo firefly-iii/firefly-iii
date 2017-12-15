@@ -98,7 +98,7 @@
   },
   "scripts": {
     "pre-install-cmd": [
-      "export APP_KEY=7ahyYVPVsmxjdhsweWCauGeJfwc92NP2 && echo Temporary app key is $APP_KEY."
+      "if DYNO -gt 0; then @php -r \"file_exists('.env') || copy('.env.heroku', '.env');\"; else echo Not in Heroku environment.; fi"
     ],
     "post-root-package-install": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
@@ -118,9 +118,6 @@
     "post-install-cmd": [
       "php artisan optimize",
       "php artisan firefly:instructions install"
-    ],
-    "compile": [
-      "@php -r \"file_exists('.env.heroku') || copy('.env.heroku', '.env');\""
     ]
   },
   "config": {
