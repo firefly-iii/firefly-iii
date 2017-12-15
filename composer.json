@@ -34,7 +34,7 @@
     "transfers",
     "management"
   ],
-  "license": "GPLv3",
+  "license": "GPL-3.0",
   "homepage": "https://github.com/firefly-iii/firefly-iii",
   "type": "project",
   "authors": [
@@ -64,7 +64,7 @@
     "pragmarx/google2fa": "1.*",
     "rcrowe/twigbridge": "0.9.*",
     "rmccue/requests": "1.*",
-    "twig/twig": "1.30.0",
+    "twig/twig": "1.*",
     "watson/validating": "3.*"
   },
   "require-dev": {
@@ -97,6 +97,9 @@
     }
   },
   "scripts": {
+    "pre-install-cmd": [
+      "echo 'hello from pre-install-cmd'"
+    ],
     "post-root-package-install": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
     ],
