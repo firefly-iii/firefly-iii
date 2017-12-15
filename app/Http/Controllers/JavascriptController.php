@@ -30,7 +30,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Http\Request;
 use Log;
-use Navigation;
 use Preferences;
 
 /**
@@ -140,6 +139,7 @@ class JavascriptController extends Controller
         $first     = session('first');
         $title     = sprintf('%s - %s', $start->formatLocalized($this->monthAndDayFormat), $end->formatLocalized($this->monthAndDayFormat));
         $isCustom  = session('is_custom_range');
+        $today     = new Carbon;
         $ranges    = [
             // first range is the current range:
             $title => [$start, $end],
@@ -149,27 +149,35 @@ class JavascriptController extends Controller
         // when current range is a custom range, add the current period as the next range.
         if ($isCustom) {
             Log::debug('Custom is true.');
-            $index             = Navigation::periodShow($start, $viewRange);
-            $customPeriodStart = Navigation::startOfPeriod($start, $viewRange);
-            $customPeriodEnd   = Navigation::endOfPeriod($customPeriodStart, $viewRange);
+            $index             = app('navigation')->periodShow($start, $viewRange);
+            $customPeriodStart = app('navigation')->startOfPeriod($start, $viewRange);
+            $customPeriodEnd   = app('navigation')->endOfPeriod($customPeriodStart, $viewRange);
             $ranges[$index]    = [$customPeriodStart, $customPeriodEnd];
         }
         // then add previous range and next range
-        $previousDate   = Navigation::subtractPeriod($start, $viewRange);
-        $index          = Navigation::periodShow($previousDate, $viewRange);
-        $previousStart  = Navigation::startOfPeriod($previousDate, $viewRange);
-        $previousEnd    = Navigation::endOfPeriod($previousStart, $viewRange);
+        $previousDate   = app('navigation')->subtractPeriod($start, $viewRange);
+        $index          = app('navigation')->periodShow($previousDate, $viewRange);
+        $previousStart  = app('navigation')->startOfPeriod($previousDate, $viewRange);
+        $previousEnd    = app('navigation')->endOfPeriod($previousStart, $viewRange);
         $ranges[$index] = [$previousStart, $previousEnd];
 
-        $nextDate       = Navigation::addPeriod($start, $viewRange, 0);
-        $index          = Navigation::periodShow($nextDate, $viewRange);
-        $nextStart      = Navigation::startOfPeriod($nextDate, $viewRange);
-        $nextEnd        = Navigation::endOfPeriod($nextStart, $viewRange);
+        $nextDate       = app('navigation')->addPeriod($start, $viewRange, 0);
+        $index          = app('navigation')->periodShow($nextDate, $viewRange);
+        $nextStart      = app('navigation')->startOfPeriod($nextDate, $viewRange);
+        $nextEnd        = app('navigation')->endOfPeriod($nextStart, $viewRange);
         $ranges[$index] = [$nextStart, $nextEnd];
+
+        // today:
+        $todayStart = app('navigation')->startOfPeriod($today, $viewRange);
+        $todayEnd   = app('navigation')->endOfPeriod($todayStart, $viewRange);
+        if ($todayStart->ne($start) || $todayEnd->ne($end)) {
+            $ranges[ucfirst(strval(trans('firefly.today')))] = [$todayStart, $todayEnd];
+        }
 
         // everything
         $index          = strval(trans('firefly.everything'));
         $ranges[$index] = [$first, new Carbon];
+
 
         $return = [
             'title'         => $title,

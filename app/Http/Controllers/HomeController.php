@@ -27,8 +27,8 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Http\Middleware\IsLimitedUser;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Http\Request;
@@ -38,8 +38,8 @@ use Log;
 use Monolog\Handler\RotatingFileHandler;
 use Preferences;
 use ReflectionException;
+use Response;
 use Route as RouteFacade;
-use Session;
 use View;
 
 /**
@@ -55,11 +55,13 @@ class HomeController extends Controller
         parent::__construct();
         View::share('title', 'Firefly III');
         View::share('mainTitleIcon', 'fa-fire');
-		$this->middleware(IsLimitedUser::class)->except(['dateRange', 'index']);
+        $this->middleware(IsLimitedUser::class)->except(['dateRange', 'index']);
     }
 
     /**
      * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function dateRange(Request $request)
     {
@@ -80,12 +82,17 @@ class HomeController extends Controller
         $diff = $start->diffInDays($end);
 
         if ($diff > 50) {
-            Session::flash('warning', strval(trans('firefly.warning_much_data', ['days' => $diff])));
+            $request->session()->flash('warning', strval(trans('firefly.warning_much_data', ['days' => $diff])));
         }
 
-        Session::put('is_custom_range', $isCustomRange);
-        Session::put('start', $start);
-        Session::put('end', $end);
+        $request->session()->put('is_custom_range', $isCustomRange);
+        Log::debug(sprintf('Set is_custom_range to %s', var_export($isCustomRange, true)));
+        $request->session()->put('start', $start);
+        Log::debug(sprintf('Set start to %s', $start->format('Y-m-d H:i:s')));
+        $request->session()->put('end', $end);
+        Log::debug(sprintf('Set end to %s', $end->format('Y-m-d H:i:s')));
+
+        return Response::json(['ok' => 'ok']);
     }
 
     /**
@@ -176,7 +183,7 @@ class HomeController extends Controller
         Log::debug('Call twig:clean...');
         try {
             Artisan::call('twig:clean');
-        } catch(ReflectionException $e) {
+        } catch (ReflectionException $e) {
             // dont care
         }
         Log::debug('Call view:clear...');
@@ -265,12 +272,12 @@ class HomeController extends Controller
     /**
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function testFlash()
+    public function testFlash(Request $request)
     {
-        Session::flash('success', 'This is a success message.');
-        Session::flash('info', 'This is an info message.');
-        Session::flash('warning', 'This is a warning.');
-        Session::flash('error', 'This is an error!');
+        $request->session()->flash('success', 'This is a success message.');
+        $request->session()->flash('info', 'This is an info message.');
+        $request->session()->flash('warning', 'This is a warning.');
+        $request->session()->flash('error', 'This is an error!');
 
         return redirect(route('home'));
     }
