@@ -1,6 +1,6 @@
 <?php
 /**
- * ImportRoutine.php
+ * FileRoutine.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -32,7 +32,10 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 
-class ImportRoutine
+/**
+ * Class FileRoutine
+ */
+class FileRoutine implements RoutineInterface
 {
     /** @var Collection */
     public $errors;

@@ -175,50 +175,7 @@ class FileController extends Controller
         return redirect(route('import.file.configure', [$job->key]));
     }
 
-    /**
-     * Show status of import job in JSON.
-     *
-     * @param ImportJob $job
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function json(ImportJob $job)
-    {
-        $result = [
-            'started'         => false,
-            'finished'        => false,
-            'running'         => false,
-            'errors'          => array_values($job->extended_status['errors']),
-            'percentage'      => 0,
-            'show_percentage' => false,
-            'steps'           => $job->extended_status['steps'],
-            'done'            => $job->extended_status['done'],
-            'statusText'      => trans('firefly.import_status_job_' . $job->status),
-            'status'          => $job->status,
-            'finishedText'    => '',
-        ];
 
-        if (0 !== $job->extended_status['steps']) {
-            $result['percentage']      = round(($job->extended_status['done'] / $job->extended_status['steps']) * 100, 0);
-            $result['show_percentage'] = true;
-        }
-
-        if ('finished' === $job->status) {
-            $tagId = $job->extended_status['tag'];
-            /** @var TagRepositoryInterface $repository */
-            $repository             = app(TagRepositoryInterface::class);
-            $tag                    = $repository->find($tagId);
-            $result['finished']     = true;
-            $result['finishedText'] = trans('firefly.import_status_finished_job', ['link' => route('tags.show', [$tag->id, 'all']), 'tag' => $tag->tag]);
-        }
-
-        if ('running' === $job->status) {
-            $result['started'] = true;
-            $result['running'] = true;
-        }
-
-        return Response::json($result);
-    }
 
     /**
      * Step 4. Save the configuration.
@@ -269,24 +226,7 @@ class FileController extends Controller
             return Response::json(['run' => 'ok']);
         }
 
-        throw new FireflyException('Job did not complete succesfully.');
-    }
-
-    /**
-     * @param ImportJob $job
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
-     */
-    public function status(ImportJob $job)
-    {
-        $statuses = ['configured', 'running', 'finished'];
-        if (!in_array($job->status, $statuses)) {
-            return redirect(route('import.file.configure', [$job->key]));
-        }
-        $subTitle     = trans('firefly.import_status_sub_title');
-        $subTitleIcon = 'fa-star';
-
-        return view('import.status', compact('job', 'subTitle', 'subTitleIcon'));
+        throw new FireflyException('Job did not complete successfully.');
     }
 
     /**

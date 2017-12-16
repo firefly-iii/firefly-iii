@@ -2,25 +2,32 @@
 declare(strict_types=1);
 
 return [
-    'enabled'        => [
+    'enabled'       => [
         'file'    => true,
         'bunq'    => true,
         'spectre' => true,
         'plaid'   => true,
     ],
-    'prerequisites'  => [
+    'prerequisites' => [
         'file'    => 'FireflyIII\Import\Prerequisites\FilePrerequisites',
         'bunq'    => 'FireflyIII\Import\Prerequisites\BunqPrerequisites',
         'spectre' => 'FireflyIII\Import\Prerequisites\SpectrePrerequisites',
         'plaid'   => 'FireflyIII\Import\Prerequisites\PlaidPrerequisites',
 
     ],
-    'configuration'  => [
+    'configuration' => [
         'file'    => 'FireflyIII\Import\Configuration\FileConfigurator',
         'bunq'    => 'FireflyIII\Import\Configuration\BunqConfigurator',
         'spectre' => 'FireflyIII\Import\Configuration\SpectreConfigurator',
         'plaid'   => 'FireflyIII\Import\Configuration\PlaidConfigurator',
     ],
+    'routine'       => [
+        'file'    => 'FireflyIII\Import\Routine\FileRoutine',
+        'bunq'    => 'FireflyIII\Import\Routine\BunqRoutine',
+        'spectre' => 'FireflyIII\Import\Routine\SpectreRoutine',
+        'plaid'   => 'FireflyIII\Import\Routine\PlaidRoutine',
+    ],
+
     'options'        => [
         'file' => [
             'import_formats'        => ['csv'], // mt940

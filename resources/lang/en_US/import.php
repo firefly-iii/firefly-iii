@@ -17,6 +17,15 @@ return [
     //
     //    // import configuration routine:
 
+    // status of import:
+    'status_wait_title'               => 'Please hold...',
+    'status_wait_text'                => 'This box will disappear in a moment.',
+    'status_fatal_title'              => 'A fatal error occurred',
+    'status_fatal_text'               => 'A fatal error occurred, which the import-routine cannot recover from. Please see the explanation in red below.',
+    'status_fatal_more'               => 'If the error is a time-out, the import will have stopped half-way. For some server configurations, it is merely the server that stopped while the import keeps running in the background. To verify this, check out the log files. If the problem persists, consider importing over the command line instead.',
+    'status_ready_title'              => 'Import is ready to start',
+    'status_ready_text'               => 'The import is ready to start. All the configuration you needed to do has been done. Please download the configuration file. It will help you with the import should it not go as planned. To actually run the import, you can either execute the following command in your console, or run the web-based import. Depending on your configuration, the console import will give you more feedback.',
+    'status_ready_noconfig_text'      => 'The import is ready to start. All the configuration you needed to do has been done. To actually run the import, you can either execute the following command in your console, or run the web-based import. Depending on your configuration, the console import will give you more feedback.',
 
     // file: upload something:
     'file_upload_title'               => 'Import setup (1/4) - Upload your file',
@@ -61,12 +70,12 @@ return [
     'csv_roles_warning'               => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
 
 
-    // map data
+    // file: map data
     'file_map_title'                  => 'Import setup (4/4) - Connect import data to Firefly III data',
     'file_map_text'                   => 'In the following tables, the left value shows you information found in your uploaded file. It is your task to map this value, if possible, to a value already present in your database. Firefly will stick to this mapping. If there is no value to map to, or you do not wish to map the specific value, select nothing.',
     'file_map_field_value'            => 'Field value',
     'file_map_field_mapped_to'        => 'Mapped to',
-    'map_do_not_map'             => '(do not map)',
+    'map_do_not_map'                  => '(do not map)',
     'file_map_submit'                 => 'Start the import',
 
     // map things.

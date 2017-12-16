@@ -442,6 +442,14 @@ Route::group(
 
     // get status of any job:
     Route::get('status/{importJob}', ['uses' => 'Import\StatusController@index', 'as' => 'status']);
+    Route::get('json/{importJob}', ['uses' => 'Import\StatusController@json', 'as' => 'status.json']);
+
+    // start a job
+    Route::any('start/{importJob}', ['uses' => 'Import\IndexController@start', 'as' => 'start']);
+
+    // download config
+    Route::get('download/{importJob}', ['uses' => 'Import\IndexController@download', 'as' => 'download']);
+
 
     // file import
     //    Route::get('file', ['uses' => 'Import\FileController@index', 'as' => 'file.index']);
@@ -449,7 +457,7 @@ Route::group(
 
     //    Route::get('file/download/{importJob}', ['uses' => 'Import\FileController@download', 'as' => 'file.download']);
     //    Route::get('file/status/{importJob}', ['uses' => 'Import\FileController@status', 'as' => 'file.status']);
-    //    Route::get('file/json/{importJob}', ['uses' => 'Import\FileController@json', 'as' => 'file.json']);
+    //
     //    Route::any('file/start/{importJob}', ['uses' => 'Import\FileController@start', 'as' => 'file.start']);
     //    Route:: get('bank/{bank}/configure/{importJob}', ['uses' => 'Import\BankController@configure', 'as' => 'bank.configure']);
     //    Route::post('bank/{bank}/configure/{importJob}', ['uses' => 'Import\BankController@postConfigure', 'as' => 'bank.configure.post']);
