@@ -22,18 +22,26 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Routine;
 
-use Carbon\Carbon;
-use DB;
-use FireflyIII\Import\FileProcessor\FileProcessorInterface;
-use FireflyIII\Import\Storage\ImportStorage;
 use FireflyIII\Models\ImportJob;
-use FireflyIII\Models\Tag;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
-use Log;
 
 interface RoutineInterface
 {
+    /**
+     * @return Collection
+     */
+    public function getErrors(): Collection;
+
+    /**
+     * @return Collection
+     */
+    public function getJournals(): Collection;
+
+    /**
+     * @return int
+     */
+    public function getLines(): int;
+
     /**
      * @return bool
      */
@@ -45,4 +53,6 @@ interface RoutineInterface
      * @return mixed
      */
     public function setJob(ImportJob $job);
+
+
 }

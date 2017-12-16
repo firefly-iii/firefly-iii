@@ -56,6 +56,30 @@ class FileRoutine implements RoutineInterface
     }
 
     /**
+     * @return Collection
+     */
+    public function getErrors(): Collection
+    {
+        return $this->errors;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getJournals(): Collection
+    {
+        return $this->journals;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLines(): int
+    {
+        return $this->lines;
+    }
+
+    /**
      *
      */
     public function run(): bool
@@ -111,7 +135,7 @@ class FileRoutine implements RoutineInterface
     {
         $objects  = new Collection;
         $config   = $this->job->configuration;
-        $fileType = $config['file-type'];
+        $fileType = $config['file-type'] ?? 'csv';
         // will only respond to "file"
         $class = config(sprintf('import.options.file.processors.%s', $fileType));
         /** @var FileProcessorInterface $processor */

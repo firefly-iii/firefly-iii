@@ -3,20 +3,6 @@ declare(strict_types=1);
 
 
 return [
-
-    // general strings for file upload
-    //    'import_index_intro'                    => 'This routine will help you import files from your bank into Firefly III. Please check out the help pages in the top right corner.',
-    //    'import_index_file'                     => 'Select your file',
-    //    'import_index_config'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration file</a>.',
-    //
-    //    'import_index_start'                    => 'Start importing',
-    //    'import_file'                           => 'Import a file',
-    //
-    //    // supported file types:
-    //
-    //
-    //    // import configuration routine:
-
     // status of import:
     'status_wait_title'               => 'Please hold...',
     'status_wait_text'                => 'This box will disappear in a moment.',

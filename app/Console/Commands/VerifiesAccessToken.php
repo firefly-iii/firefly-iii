@@ -68,6 +68,7 @@ trait VerifiesAccessToken
         }
         if (!($accessToken->data === $token)) {
             Log::error(sprintf('Invalid access token for user #%d.', $userId));
+            Log::error(sprintf('Token given is "%s", expected "%s".', $token, $accessToken->data));
 
             return false;
         }
