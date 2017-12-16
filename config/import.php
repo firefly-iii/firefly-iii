@@ -32,6 +32,9 @@ return [
         'file' => [
             'import_formats'        => ['csv'], // mt940
             'default_import_format' => 'csv',
+            'processors' => [
+                'csv' => 'FireflyIII\Import\FileProcessor\CsvProcessor',
+            ],
         ],
     ],
     'default_config' => [

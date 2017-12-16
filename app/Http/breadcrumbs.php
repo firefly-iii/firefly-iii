@@ -552,14 +552,14 @@ Breadcrumbs::register(
     'import.configure',
     function (BreadCrumbGenerator $breadcrumbs, ImportJob $job) {
         $breadcrumbs->parent('import.index');
-        $breadcrumbs->push(trans('firefly.import_config_sub_title', ['key' => $job->key]), route('import.configure', [$job->key]));
+        $breadcrumbs->push(trans('import.config_sub_title', ['key' => $job->key]), route('import.configure', [$job->key]));
     }
 );
 Breadcrumbs::register(
     'import.status',
     function (BreadCrumbGenerator $breadcrumbs, ImportJob $job) {
         $breadcrumbs->parent('import.index');
-        $breadcrumbs->push(trans('firefly.import_status_bread_crumb', ['key' => $job->key]), route('import.status', [$job->key]));
+        $breadcrumbs->push(trans('import.status_bread_crumb', ['key' => $job->key]), route('import.status', [$job->key]));
     }
 );
 

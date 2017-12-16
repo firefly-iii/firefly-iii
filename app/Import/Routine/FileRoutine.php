@@ -109,9 +109,11 @@ class FileRoutine implements RoutineInterface
      */
     protected function getImportObjects(): Collection
     {
-        $objects = new Collection;
-        $type    = $this->job->file_type;
-        $class   = config(sprintf('firefly.import_processors.%s', $type));
+        $objects  = new Collection;
+        $config   = $this->job->configuration;
+        $fileType = $config['file-type'];
+        // will only respond to "file"
+        $class = config(sprintf('import.options.file.processors.%s', $fileType));
         /** @var FileProcessorInterface $processor */
         $processor = app($class);
         $processor->setJob($this->job);
@@ -146,7 +148,7 @@ class FileRoutine implements RoutineInterface
         $repository = app(TagRepositoryInterface::class);
         $repository->setUser($this->job->user);
         $data                       = [
-            'tag'         => trans('firefly.import_with_key', ['key' => $this->job->key]),
+            'tag'         => trans('import.import_with_key', ['key' => $this->job->key]),
             'date'        => new Carbon,
             'description' => null,
             'latitude'    => null,

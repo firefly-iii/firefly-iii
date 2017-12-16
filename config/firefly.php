@@ -40,23 +40,6 @@ return [
     'export_formats'       => [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
     ],
-    'import_formats'       => [
-        'csv'     => 'FireflyIII\Import\Configurator\CsvConfigurator',
-        'spectre' => '',
-    ],
-    'import_processors'    => [
-        'csv' => 'FireflyIII\Import\FileProcessor\CsvProcessor',
-    ],
-    'import_info'          => [
-        'bunq'    => 'FireflyIII\Support\Import\Information\BunqInformation',
-        'spectre' => 'FireflyIII\Support\Import\Information\SpectreInformation',
-        'plaid'   => 'FireflyIII\Support\Import\Information\PlaidInformation',
-    ],
-    'import_transactions'  => [
-        'bunq'    => 'FireflyIII\Support\Import\Transactions\BunqTransactions',
-        'spectre' => 'FireflyIII\Support\Import\Transactions\SpectreTransactions',
-        'plaid'   => 'FireflyIII\Support\Import\Transactions\PlaidTransactions',
-    ],
     'bunq'                 => [
         'server' => 'https://sandbox.public.api.bunq.com',
     ],

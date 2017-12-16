@@ -65,11 +65,11 @@
                         {% if job.configuration['has-config-file'] != false %}
                         <div class="col-lg-4">
                             <a href="{{ route('import.download', [job.key]) }}" class="btn btn-default"><i
-                                        class="fa fa-fw fa-download"></i> {{ 'import_status_ready_config'|_ }}</a>
+                                        class="fa fa-fw fa-download"></i> {{ trans('import.status_ready_config') }}</a>
                         </div>
                         {% endif %}
                         <div class="col-lg-4">
-                            <button class="btn btn-success start-job"><i class="fa fa-fw fa-gears"></i> {{ 'import_status_ready_start'|_ }}</button>
+                            <button class="btn btn-success start-job"><i class="fa fa-fw fa-gears"></i> {{ trans('import.status_ready_start') }}</button>
                         </div>
                     </div>
                     {% if job.configuration['has-config-file'] != false %}
@@ -77,7 +77,7 @@
                         &nbsp;
                     </p>
                     <p class="text-info">
-                        {{ 'import_status_ready_share'|_ }}
+                        {{ trans('import.status_ready_share')|raw }}
                     </p>
                     {% endif %}
                 </div>
@@ -90,7 +90,7 @@
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title" id="import-status-title">{{ 'import_status_running_title'|_ }}</h3>
+                    <h3 class="box-title" id="import-status-title">{{ trans('import.status_running_title') }}</h3>
                 </div>
                 <div class="box-body">
                     <div id="import-status-holder">
@@ -100,7 +100,7 @@
                                  aria-valuemax="100" style="width: 100%;min-width:40px;">
                             </div>
                         </div>
-                        <p id="import-status-txt">{{ 'import_status_running_placeholder'|_ }}</p>
+                        <p id="import-status-txt">{{ trans('import.status_running_placeholder') }}</p>
                     </div>
                 </div>
             </div>
@@ -112,11 +112,11 @@
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-default">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'import_status_finished_title'|_ }}</h3>
+                    <h3 class="box-title">{{ trans('import.status_finished_title') }}</h3>
                 </div>
                 <div class="box-body">
                     <p id="import-status-intro">
-                        {{ 'import_status_finished_text'|_ }}
+                        {{ trans('import.status_finished_text') }}
                     </p>
                     <p id="import-status-more-info"></p>
                 </div>
@@ -129,7 +129,7 @@
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-danger">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'import_status_errors_title'|_ }}</h3>
+                    <h3 class="box-title">{{ trans('import.status_errors_title') }}</h3>
                 </div>
                 <div class="box-body">
                     <p id="import-status-error-intro">
@@ -145,8 +145,8 @@
     <script type="text/javascript">
 
         // some useful translations.
-        var langImportSingleError = '{{ trans('firefly.import_status_errors_single')|escape('js') }}';
-        var langImportMultiError = '{{ trans('firefly.import_status_errors_multi')|escape('js') }}';
+        var langImportSingleError = '{{ trans('import.status_errors_single')|escape('js') }}';
+        var langImportMultiError = '{{ trans('import.status_errors_multi')|escape('js') }}';
         var jobStatusUri = '{{ route('import.status.json', [job.key]) }}';
         var jobStartUri = '{{ route('import.start', [job.key]) }}';
         var token = '{{ csrf_token() }}';

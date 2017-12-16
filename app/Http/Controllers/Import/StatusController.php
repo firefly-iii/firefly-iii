@@ -43,7 +43,7 @@ class StatusController extends Controller
         if (!in_array($job->status, $statuses)) {
             return redirect(route('import.file.configure', [$job->key]));
         }
-        $subTitle     = trans('firefly.import_status_sub_title');
+        $subTitle     = trans('import.status_sub_title');
         $subTitleIcon = 'fa-star';
 
         return view('import.status', compact('job', 'subTitle', 'subTitleIcon'));
@@ -67,7 +67,7 @@ class StatusController extends Controller
             'show_percentage' => false,
             'steps'           => $job->extended_status['steps'],
             'done'            => $job->extended_status['done'],
-            'statusText'      => trans('firefly.import_status_job_' . $job->status),
+            'statusText'      => trans('import.status_job_' . $job->status),
             'status'          => $job->status,
             'finishedText'    => '',
         ];
@@ -83,7 +83,7 @@ class StatusController extends Controller
             $repository             = app(TagRepositoryInterface::class);
             $tag                    = $repository->find($tagId);
             $result['finished']     = true;
-            $result['finishedText'] = trans('firefly.import_status_finished_job', ['link' => route('tags.show', [$tag->id, 'all']), 'tag' => $tag->tag]);
+            $result['finishedText'] = trans('import.status_finished_job', ['link' => route('tags.show', [$tag->id, 'all']), 'tag' => $tag->tag]);
         }
 
         if ('running' === $job->status) {

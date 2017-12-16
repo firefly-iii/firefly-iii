@@ -256,7 +256,7 @@ class CsvProcessor implements FileProcessorInterface
          * @var string $value
          */
         foreach ($row as $rowIndex => $value) {
-            $value = trim($value);
+            $value = trim(strval($value));
             if (strlen($value) > 0) {
                 $annotated = $this->annotateValue($rowIndex, $value);
                 Log::debug('Annotated value', $annotated);

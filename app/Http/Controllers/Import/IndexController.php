@@ -7,6 +7,7 @@ namespace FireflyIII\Http\Controllers\Import;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Import\Routine\ImportRoutine;
+use FireflyIII\Import\Routine\RoutineInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Http\Response as LaravelResponse;
@@ -126,11 +127,9 @@ class IndexController extends Controller
         if (null === $className || !class_exists($className)) {
             throw new FireflyException(sprintf('Cannot find import routine class for job of type "%s".', $type)); // @codeCoverageIgnore
         }
-        var_dump($className);
-        exit;
 
-        /** @var ImportRoutine $routine */
-        $routine = app(ImportRoutine::class);
+        /** @var RoutineInterface $routine */
+        $routine = app($className);
         $routine->setJob($job);
         $result = $routine->run();
 

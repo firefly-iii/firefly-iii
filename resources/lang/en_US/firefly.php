@@ -1074,30 +1074,12 @@ return [
     'import_from_bunq'                      => 'Import from bunq',
     'import_using_spectre'                  => 'Import using Spectre',
     'import_using_plaid'                    => 'Import using Plaid',
-    'import_config_sub_title'               => 'Set up your import',
     'import_config_bread_crumb'             => 'Set up your import',
 
     // import index page:
     'import_index_title'                    => 'Import data into Firefly III',
     'import_index_sub_title'                => 'Index',
     'import_general_index_intro'            => 'Welcome to Firefly\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
-
-    // import status page:
-    'import_status_bread_crumb'             => 'Import status',
-    'import_status_sub_title'               => 'Import status',
-    'import_status_ready_config'            => 'Download configuration',
-    'import_status_ready_start'             => 'Start the import',
-    'import_status_ready_share'             => 'Please consider downloading your configuration and sharing it at the <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">import configuration center</a></strong>. This will allow other users of Firefly III to import their files more easily.',
-    'import_status_running_title'           => 'The import is running',
-    'import_status_running_placeholder'     => 'Please hold for an update...',
-    'import_status_errors_title'            => 'Errors during the import',
-    'import_status_errors_single'           => 'An error has occured during the import. It does not appear to be fatal.',
-    'import_status_errors_multi'            => 'Some errors occured during the import. These do not appear to be fatal.',
-    'import_status_finished_title'          => 'Import routine finished',
-    'import_status_finished_text'           => 'The import routine has imported your file.',
-    'import_status_finished_job'            => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
-    'import_status_job_running'             => 'The import is running...',
-    'import_with_key'                       => 'Import with key \':key\'',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',
