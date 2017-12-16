@@ -81,7 +81,7 @@ class FileController extends Controller
         if ($configurator->isJobConfigured()) {
             $this->repository->updateStatus($job, 'configured');
 
-            return redirect(route('import.file.status', [$job->key]));
+            return redirect(route('import.status', [$job->key]));
         }
         $view         = $configurator->getNextView();
         $data         = $configurator->getNextData();
@@ -227,6 +227,7 @@ class FileController extends Controller
      * @param ImportJob $job
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws FireflyException
      */
     public function postConfigure(Request $request, ImportJob $job)
     {
@@ -235,7 +236,7 @@ class FileController extends Controller
 
         // is the job already configured?
         if ($configurator->isJobConfigured()) {
-            return redirect(route('import.file.status', [$job->key]));
+            return redirect(route('import.status', [$job->key]));
         }
         $data = $request->all();
         $configurator->configureJob($data);
@@ -248,7 +249,7 @@ class FileController extends Controller
         }
 
         // return to configure
-        return redirect(route('import.file.configure', [$job->key]));
+        return redirect(route('import.configure', [$job->key]));
     }
 
     /**
@@ -285,7 +286,7 @@ class FileController extends Controller
         $subTitle     = trans('firefly.import_status_sub_title');
         $subTitleIcon = 'fa-star';
 
-        return view('import.file.status', compact('job', 'subTitle', 'subTitleIcon'));
+        return view('import.status', compact('job', 'subTitle', 'subTitleIcon'));
     }
 
     /**

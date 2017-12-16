@@ -440,6 +440,8 @@ Route::group(
     Route::get('configure/{importJob}', ['uses' => 'Import\ConfigurationController@index', 'as' => 'configure']);
     Route::post('configure/{importJob}', ['uses' => 'Import\ConfigurationController@post', 'as' => 'configure.post']);
 
+    // get status of any job:
+    Route::get('status/{importJob}', ['uses' => 'Import\StatusController@index', 'as' => 'status']);
 
     // file import
     //    Route::get('file', ['uses' => 'Import\FileController@index', 'as' => 'file.index']);

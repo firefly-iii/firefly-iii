@@ -45,19 +45,28 @@ class Roles implements ConfigurationInterface
      * Get the data necessary to show the configuration screen.
      *
      * @return array
+     * @throws \League\Csv\Exception
      */
     public function getData(): array
     {
-        $config  = $this->job->configuration;
-        $content = $this->job->uploadFileContents();
-
+        $config                = $this->job->configuration;
+        $content               = $this->job->uploadFileContents();
+        $config['has-headers'] = true;
+        $headers               = [];
+        $offset                = 0;
         // create CSV reader.
         $reader = Reader::createFromString($content);
         $reader->setDelimiter($config['delimiter']);
+
         if ($config['has-headers']) {
-            $reader->setHeaderOffset(0);
+            $offset = 1;
+            // get headers:
+            $stmt    = (new Statement)->limit(1)->offset(0);
+            $records = $stmt->process($reader);
+            $headers = $records->fetchOne();
         }
-        $stmt = (new Statement)->limit(intval(config('csv.example_rows', 5)));
+        // example rows:
+        $stmt = (new Statement)->limit(intval(config('csv.example_rows', 5)))->offset($offset);
         // set data:
         $roles = $this->getRoles();
         asort($roles);
@@ -65,9 +74,8 @@ class Roles implements ConfigurationInterface
             'examples' => [],
             'roles'    => $roles,
             'total'    => 0,
-            'headers'  => $config['has-headers'] ? $reader->fetchOne(0) : [],
+            'headers'  => $headers,
         ];
-
 
         $records = $stmt->process($reader);
         foreach ($records as $row) {
@@ -142,7 +150,7 @@ class Roles implements ConfigurationInterface
     {
         $roles = [];
         foreach (array_keys(config('csv.import_roles')) as $role) {
-            $roles[$role] = trans('csv.column_' . $role);
+            $roles[$role] = trans('import.column_' . $role);
         }
 
         return $roles;
@@ -236,7 +244,7 @@ class Roles implements ConfigurationInterface
      */
     private function processSpecifics(array $row): array
     {
-        $names = array_keys($this->job->configuration['specifics']);
+        $names = array_keys($this->job->configuration['specifics'] ?? []);
         foreach ($names as $name) {
             /** @var SpecificInterface $specific */
             $specific = app('FireflyIII\Import\Specifics\\' . $name);
@@ -271,7 +279,7 @@ class Roles implements ConfigurationInterface
             $this->warning = '';
         }
         if (0 === $assigned || !$hasAmount) {
-            $this->warning = strval(trans('csv.roles_warning'));
+            $this->warning = strval(trans('import.roles_warning'));
         }
 
         return true;

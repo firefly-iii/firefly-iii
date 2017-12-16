@@ -29,6 +29,7 @@ use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 use League\Csv\Reader;
+use League\Csv\Statement;
 use Log;
 
 /**
@@ -49,6 +50,7 @@ class Map implements ConfigurationInterface
      * @return array
      *
      * @throws FireflyException
+     * @throws \League\Csv\Exception
      */
     public function getData(): array
     {
@@ -57,13 +59,15 @@ class Map implements ConfigurationInterface
 
         // in order to actually map we also need all possible values from the CSV file.
         $content = $this->job->uploadFileContents();
+        $offset  = 0;
         /** @var Reader $reader */
         $reader = Reader::createFromString($content);
         $reader->setDelimiter($this->configuration['delimiter']);
-        if($this->configuration['has-headers']) {
-            $reader->setHeaderOffset(0);
+        if ($this->configuration['has-headers']) {
+            $offset = 1;
         }
-        $results              = $reader->getRecords();
+        $stmt                 = (new Statement)->offset($offset);
+        $results              = $stmt->process($reader);
         $this->validSpecifics = array_keys(config('csv.import_specifics'));
         $indexes              = array_keys($this->data);
         $rowIndex             = 0;
@@ -71,13 +75,12 @@ class Map implements ConfigurationInterface
             $row = $this->runSpecifics($row);
 
             //do something here
-
             foreach ($indexes as $index) { // this is simply 1, 2, 3, etc.
                 if (!isset($row[$index])) {
                     // don't really know how to handle this. Just skip, for now.
                     continue;
                 }
-                $value = $row[$index];
+                $value = trim($row[$index]);
                 if (strlen($value) > 0) {
                     // we can do some preprocessing here,
                     // which is exclusively to fix the tags:

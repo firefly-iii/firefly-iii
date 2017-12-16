@@ -46,7 +46,7 @@ class Tags implements MapperInterface
         }
         asort($list);
 
-        $list = [0 => trans('csv.map_do_not_map')] + $list;
+        $list = [0 => trans('import.map_do_not_map')] + $list;
 
         return $list;
     }

@@ -21,6 +21,12 @@ return [
         'spectre' => 'FireflyIII\Import\Configuration\SpectreConfigurator',
         'plaid'   => 'FireflyIII\Import\Configuration\PlaidConfigurator',
     ],
+    'options'        => [
+        'file' => [
+            'import_formats'        => ['csv'], // mt940
+            'default_import_format' => 'csv',
+        ],
+    ],
     'default_config' => [
         'file'    => [
             'has-config-file' => true,

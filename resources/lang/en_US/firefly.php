@@ -1070,29 +1070,17 @@ return [
     // import bread crumbs and titles:
     'import'                                => 'Import',
     'import_data'                           => 'Import data',
+    'import_general_index_file'             => 'Import a file',
     'import_from_bunq'                      => 'Import from bunq',
     'import_using_spectre'                  => 'Import using Spectre',
     'import_using_plaid'                    => 'Import using Plaid',
-
+    'import_config_sub_title'               => 'Set up your import',
+    'import_config_bread_crumb'             => 'Set up your import',
 
     // import index page:
     'import_index_title'                    => 'Import data into Firefly III',
     'import_index_sub_title'                => 'Index',
     'import_general_index_intro'            => 'Welcome to Firefly\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
-    'import_general_index_file'             => 'Import a file',
-    'import_index_intro'                    => 'This routine will help you import files from your bank into Firefly III. Please check out the help pages in the top right corner.',
-    'import_index_file'                     => 'Select your file',
-    'import_index_config'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration file</a>.',
-    'import_index_type'                     => 'Select the type of file you will upload',
-    'import_index_start'                    => 'Start importing',
-    'import_file'                           => 'Import a file',
-
-    // supported file types:
-    'import_file_type_csv'                  => 'CSV (comma separated values)',
-
-    // import configuration routine:
-    'import_config_sub_title'               => 'Set up your import file',
-    'import_config_bread_crumb'             => 'Set up your import file',
 
     // import status page:
     'import_status_bread_crumb'             => 'Import status',

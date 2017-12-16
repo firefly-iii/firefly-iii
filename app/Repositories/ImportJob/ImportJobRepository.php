@@ -125,18 +125,22 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     }
 
     /**
-     * @param ImportJob    $job
-     * @param UploadedFile $file
+     * @param ImportJob         $job
+     * @param null|UploadedFile $file
      *
-     * @return mixed
+     * @return bool
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    public function processFile(ImportJob $job, UploadedFile $file): bool
+    public function processFile(ImportJob $job, ?UploadedFile $file): bool
     {
+        if (is_null($file)) {
+            return false;
+        }
         /** @var UserRepositoryInterface $repository */
         $repository       = app(UserRepositoryInterface::class);
         $newName          = sprintf('%s.upload', $job->key);
         $uploaded         = new SplFileObject($file->getRealPath());
-        $content          = $uploaded->fread($uploaded->getSize());
+        $content          = trim($uploaded->fread($uploaded->getSize()));
         $contentEncrypted = Crypt::encrypt($content);
         $disk             = Storage::disk('upload');
 
@@ -171,8 +175,12 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      */
     public function setConfiguration(ImportJob $job, array $configuration): ImportJob
     {
-        $job->configuration = $configuration;
+        Log::debug(sprintf('Incoming config for job "%s" is: ', $job->key), $configuration);
+        $currentConfig      = $job->configuration;
+        $newConfig          = array_merge($currentConfig, $configuration);
+        $job->configuration = $newConfig;
         $job->save();
+        Log::debug(sprintf('Set config of job "%s" to: ', $job->key), $newConfig);
 
         return $job;
     }

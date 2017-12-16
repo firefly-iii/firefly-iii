@@ -22,11 +22,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Configuration\File;
 
-use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
-use League\Csv\Reader;
-use League\Csv\Statement;
 use Log;
 
 /**
@@ -47,7 +45,17 @@ class Upload implements ConfigurationInterface
      */
     public function getData(): array
     {
-        return [];
+        $importFileTypes   = [];
+        $defaultImportType = config('import.options.file.default_import_format');
+
+        foreach (config('import.options.file.import_formats') as $type) {
+            $importFileTypes[$type] = trans('import.import_file_type_' . $type);
+        }
+
+        return [
+            'default_type' => $defaultImportType,
+            'file_types'   => $importFileTypes,
+        ];
     }
 
     /**
@@ -81,8 +89,28 @@ class Upload implements ConfigurationInterface
      */
     public function storeConfiguration(array $data): bool
     {
-        echo 'do something with data.';
-        exit;
+        Log::debug('Now in storeConfiguration for file Upload.');
+        /** @var ImportJobRepositoryInterface $repository */
+        $repository          = app(ImportJobRepositoryInterface::class);
+        $type                = $data['import_file_type'] ?? 'unknown';
+        $config              = $this->job->configuration;
+        $config['file-type'] = in_array($type, config('import.options.file.import_formats')) ? $type : 'unknown';
+        $repository->setConfiguration($this->job, $config);
+        $uploaded = $repository->processFile($this->job, $data['import_file'] ?? null);
+        $this->job->save();
+        Log::debug(sprintf('Result of upload is %s', var_export($uploaded, true)));
+        // process config, if present:
+        if (isset($data['configuration_file'])) {
+            $repository->processConfiguration($this->job, $data['configuration_file']);
+        }
+        $config                    = $this->job->configuration;
+        $config['has-file-upload'] = $uploaded;
+        $repository->setConfiguration($this->job, $config);
+
+        if ($uploaded === false) {
+            $this->warning = 'No valid upload.';
+        }
+
         return true;
     }
 

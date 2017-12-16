@@ -40,6 +40,7 @@ class IndexController extends Controller
      *
      * @param string $bank
      *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @throws FireflyException
      */
     public function create(string $bank)
