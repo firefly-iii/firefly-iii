@@ -88,8 +88,9 @@ class ReportController extends Controller
 
         View::share(
             'subTitle', trans(
-            'firefly.report_default', ['start' => $start->formatLocalized($this->monthFormat), 'end' => $end->formatLocalized($this->monthFormat),]
-        )
+                          'firefly.report_default',
+                          ['start' => $start->formatLocalized($this->monthFormat), 'end' => $end->formatLocalized($this->monthFormat),]
+                      )
         );
 
         $generator = ReportGeneratorFactory::reportGenerator('Account', $start, $end);

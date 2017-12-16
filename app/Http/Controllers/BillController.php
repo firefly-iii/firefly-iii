@@ -229,7 +229,7 @@ class BillController extends Controller
     public function show(Request $request, BillRepositoryInterface $repository, Bill $bill)
     {
         /** @var Carbon $date */
-        $date           = session('start');
+        $date = session('start');
         /** @var Carbon $end */
         $end            = session('end');
         $year           = $date->year;

@@ -882,7 +882,9 @@ Breadcrumbs::register(
     'accounts.reconcile.edit',
     function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
         $breadcrumbs->parent('transactions.show', $journal);
-        $breadcrumbs->push(trans('breadcrumbs.edit_reconciliation', ['description' => $journal->description]), route('accounts.reconcile.edit', [$journal->id]));
+        $breadcrumbs->push(
+            trans('breadcrumbs.edit_reconciliation', ['description' => $journal->description]), route('accounts.reconcile.edit', [$journal->id])
+        );
     }
 );
 

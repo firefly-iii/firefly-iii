@@ -82,7 +82,7 @@ class ConfigurationController extends Controller
         if ($configurator->isJobConfigured()) {
             return redirect(route('import.status', [$job->key]));
         }
-        $data           = $request->all();
+        $data = $request->all();
         $configurator->configureJob($data);
 
         // get possible warning from configurator:

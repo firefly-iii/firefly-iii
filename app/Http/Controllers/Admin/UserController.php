@@ -52,7 +52,7 @@ class UserController extends Controller
                 return $next($request);
             }
         );
-        $this->middleware(IsLimitedUser::class)->except(['index','show']);
+        $this->middleware(IsLimitedUser::class)->except(['index', 'show']);
     }
 
     /**

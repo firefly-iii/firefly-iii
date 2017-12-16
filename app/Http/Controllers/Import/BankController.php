@@ -26,9 +26,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Prerequisites\PrerequisitesInterface;
-use Illuminate\Http\Request;
-use Log;
-use Session;
 
 class BankController extends Controller
 {
@@ -59,7 +56,6 @@ class BankController extends Controller
 
         return redirect(route('import.file.configure', [$importJob->key]));
     }
-
 
 
 }

@@ -29,7 +29,6 @@ use FireflyIII\Import\Configurator\ConfiguratorInterface;
 use FireflyIII\Import\Routine\ImportRoutine;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as LaravelResponse;
 use Log;
@@ -174,7 +173,6 @@ class FileController extends Controller
 
         return redirect(route('import.file.configure', [$job->key]));
     }
-
 
 
     /**

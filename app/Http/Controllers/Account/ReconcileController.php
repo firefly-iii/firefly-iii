@@ -41,7 +41,6 @@ use Navigation;
 use Preferences;
 use Response;
 use Session;
-use View;
 
 /**
  * Class ReconcileController.
@@ -147,9 +146,14 @@ class ReconcileController extends Controller
         }
         $difference  = bcadd(bcadd(bcsub($startBalance, $endBalance), $clearedAmount), $amount);
         $diffCompare = bccomp($difference, '0');
-        $return         = [
+        $return      = [
             'post_uri' => $route,
-            'html'     => view('accounts.reconcile.overview', compact('account', 'start', 'diffCompare', 'difference', 'end', 'clearedIds', 'transactionIds', 'clearedAmount', 'startBalance', 'endBalance', 'amount', 'route', 'countCleared'))->render(),
+            'html'     => view(
+                'accounts.reconcile.overview', compact(
+                'account', 'start', 'diffCompare', 'difference', 'end', 'clearedIds', 'transactionIds', 'clearedAmount', 'startBalance', 'endBalance', 'amount',
+                'route', 'countCleared'
+            )
+            )->render(),
         ];
 
         return Response::json($return);
@@ -204,7 +208,11 @@ class ReconcileController extends Controller
         $overviewUri     = route('accounts.reconcile.overview', [$account->id, '%start%', '%end%']);
         $indexUri        = route('accounts.reconcile', [$account->id, '%start%', '%end%']);
 
-        return view('accounts.reconcile.index', compact('account', 'currency', 'subTitleIcon', 'start', 'end', 'subTitle', 'startBalance', 'endBalance', 'transactionsUri', 'overviewUri', 'indexUri'));
+        return view(
+            'accounts.reconcile.index', compact(
+            'account', 'currency', 'subTitleIcon', 'start', 'end', 'subTitle', 'startBalance', 'endBalance', 'transactionsUri', 'overviewUri', 'indexUri'
+        )
+        );
     }
 
     /**

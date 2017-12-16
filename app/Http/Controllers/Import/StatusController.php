@@ -31,6 +31,7 @@ class StatusController extends Controller
             }
         );
     }
+
     /**
      * @param ImportJob $job
      *
@@ -89,6 +90,7 @@ class StatusController extends Controller
             $result['started'] = true;
             $result['running'] = true;
         }
+
         // TODO cannot handle 'errored'
 
         return Response::json($result);

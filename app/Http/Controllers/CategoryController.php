@@ -227,7 +227,7 @@ class CategoryController extends Controller
         $start        = null;
         $end          = null;
         $periods      = new Collection;
-        $path = route('categories.show', [$category->id]);
+        $path         = route('categories.show', [$category->id]);
 
         // prep for "all" view.
         if ('all' === $moment) {
@@ -236,7 +236,7 @@ class CategoryController extends Controller
             /** @var Carbon $start */
             $start = null === $first ? new Carbon : $first;
             $end   = new Carbon;
-            $path = route('categories.show', [$category->id,'all']);
+            $path  = route('categories.show', [$category->id, 'all']);
         }
 
         // prep for "specific date" view.
@@ -249,7 +249,7 @@ class CategoryController extends Controller
                  'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat),]
             );
             $periods  = $this->getPeriodOverview($category);
-            $path = route('categories.show', [$category->id, $moment]);
+            $path     = route('categories.show', [$category->id, $moment]);
         }
 
         // prep for current period

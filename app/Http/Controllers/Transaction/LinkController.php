@@ -32,7 +32,6 @@ use Log;
 use Preferences;
 use Session;
 use URL;
-use View;
 
 /**
  * Class LinkController.

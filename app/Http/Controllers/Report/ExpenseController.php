@@ -246,7 +246,6 @@ class ExpenseController extends Controller
     }
 
 
-
     public function topIncome(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
         // Properties for cache:

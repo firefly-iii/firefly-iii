@@ -118,7 +118,7 @@ class LoginController extends Controller
     /**
      * Show the application's login form.
      *
-     * @param Request   $request
+     * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
