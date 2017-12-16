@@ -51,8 +51,8 @@ class MassController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.transactions'));
-                View::share('mainTitleIcon', 'fa-repeat');
+                app('view')->share('title', trans('firefly.transactions'));
+                app('view')->share('mainTitleIcon', 'fa-repeat');
 
                 return $next($request);
             }

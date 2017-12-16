@@ -50,8 +50,8 @@ class AttachmentController extends Controller
         // translations:
         $this->middleware(
             function ($request, $next) {
-                View::share('mainTitleIcon', 'fa-paperclip');
-                View::share('title', trans('firefly.attachments'));
+                app('view')->share('mainTitleIcon', 'fa-paperclip');
+                app('view')->share('title', trans('firefly.attachments'));
 
                 return $next($request);
             }

@@ -55,8 +55,8 @@ class CategoryController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.categories'));
-                View::share('mainTitleIcon', 'fa-bar-chart');
+                app('view')->share('title', trans('firefly.categories'));
+                app('view')->share('mainTitleIcon', 'fa-bar-chart');
 
                 return $next($request);
             }

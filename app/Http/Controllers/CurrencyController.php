@@ -52,8 +52,8 @@ class CurrencyController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.currencies'));
-                View::share('mainTitleIcon', 'fa-usd');
+                app('view')->share('title', trans('firefly.currencies'));
+                app('view')->share('mainTitleIcon', 'fa-usd');
                 $this->repository     = app(CurrencyRepositoryInterface::class);
                 $this->userRepository = app(UserRepositoryInterface::class);
 

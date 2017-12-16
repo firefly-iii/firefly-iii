@@ -60,8 +60,8 @@ class AccountController extends Controller
         // translations:
         $this->middleware(
             function ($request, $next) {
-                View::share('mainTitleIcon', 'fa-credit-card');
-                View::share('title', trans('firefly.accounts'));
+                app('view')->share('mainTitleIcon', 'fa-credit-card');
+                app('view')->share('title', trans('firefly.accounts'));
 
                 return $next($request);
             }

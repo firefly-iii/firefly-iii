@@ -43,8 +43,8 @@ class SearchController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('mainTitleIcon', 'fa-search');
-                View::share('title', trans('firefly.search'));
+                app('view')->share('mainTitleIcon', 'fa-search');
+                app('view')->share('title', trans('firefly.search'));
 
                 return $next($request);
             }

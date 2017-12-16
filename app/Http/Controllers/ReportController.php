@@ -59,8 +59,8 @@ class ReportController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.reports'));
-                View::share('mainTitleIcon', 'fa-line-chart');
+                app('view')->share('title', trans('firefly.reports'));
+                app('view')->share('mainTitleIcon', 'fa-line-chart');
                 View::share('subTitleIcon', 'fa-calendar');
 
                 return $next($request);

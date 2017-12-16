@@ -64,8 +64,8 @@ class BudgetController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.budgets'));
-                View::share('mainTitleIcon', 'fa-tasks');
+                app('view')->share('title', trans('firefly.budgets'));
+                app('view')->share('mainTitleIcon', 'fa-tasks');
                 $this->repository = app(BudgetRepositoryInterface::class);
 
                 return $next($request);

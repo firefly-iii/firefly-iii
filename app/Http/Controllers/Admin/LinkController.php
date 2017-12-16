@@ -45,8 +45,8 @@ class LinkController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', strval(trans('firefly.administration')));
-                View::share('mainTitleIcon', 'fa-hand-spock-o');
+                app('view')->share('title', strval(trans('firefly.administration')));
+                app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
 
                 return $next($request);
             }

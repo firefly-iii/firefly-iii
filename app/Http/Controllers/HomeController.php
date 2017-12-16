@@ -53,8 +53,8 @@ class HomeController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', 'Firefly III');
-        View::share('mainTitleIcon', 'fa-fire');
+        app('view')->share('title', 'Firefly III');
+        app('view')->share('mainTitleIcon', 'fa-fire');
         $this->middleware(IsLimitedUser::class)->except(['dateRange', 'index']);
     }
 

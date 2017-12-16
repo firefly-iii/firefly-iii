@@ -50,8 +50,8 @@ class RuleGroupController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.rules'));
-                View::share('mainTitleIcon', 'fa-random');
+                app('view')->share('title', trans('firefly.rules'));
+                app('view')->share('mainTitleIcon', 'fa-random');
 
                 return $next($request);
             }

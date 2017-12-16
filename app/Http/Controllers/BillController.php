@@ -58,8 +58,8 @@ class BillController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.bills'));
-                View::share('mainTitleIcon', 'fa-calendar-o');
+                app('view')->share('title', trans('firefly.bills'));
+                app('view')->share('mainTitleIcon', 'fa-calendar-o');
                 $this->attachments = app(AttachmentHelperInterface::class);
 
                 return $next($request);

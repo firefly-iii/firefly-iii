@@ -56,8 +56,8 @@ class ProfileController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.profile'));
-                View::share('mainTitleIcon', 'fa-user');
+                app('view')->share('title', trans('firefly.profile'));
+                app('view')->share('mainTitleIcon', 'fa-user');
 
                 return $next($request);
             }

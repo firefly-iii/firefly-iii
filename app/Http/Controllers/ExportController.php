@@ -50,8 +50,8 @@ class ExportController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('mainTitleIcon', 'fa-file-archive-o');
-                View::share('title', trans('firefly.export_and_backup_data'));
+                app('view')->share('mainTitleIcon', 'fa-file-archive-o');
+                app('view')->share('title', trans('firefly.export_and_backup_data'));
 
                 return $next($request);
             }

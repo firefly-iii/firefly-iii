@@ -78,8 +78,8 @@ class SplitController extends Controller
                 $this->tasker      = app(JournalTaskerInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->currencies  = app(CurrencyRepositoryInterface::class);
-                View::share('mainTitleIcon', 'fa-share-alt');
-                View::share('title', trans('firefly.split-transactions'));
+                app('view')->share('mainTitleIcon', 'fa-share-alt');
+                app('view')->share('title', trans('firefly.split-transactions'));
 
                 return $next($request);
             }

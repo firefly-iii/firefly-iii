@@ -46,8 +46,8 @@ class PreferencesController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.preferences'));
-                View::share('mainTitleIcon', 'fa-gear');
+                app('view')->share('title', trans('firefly.preferences'));
+                app('view')->share('mainTitleIcon', 'fa-gear');
 
                 return $next($request);
             }

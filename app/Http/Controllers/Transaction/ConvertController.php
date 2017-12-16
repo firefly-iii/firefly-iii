@@ -55,8 +55,8 @@ class ConvertController extends Controller
             function ($request, $next) {
                 $this->accounts = app(AccountRepositoryInterface::class);
 
-                View::share('title', trans('firefly.transactions'));
-                View::share('mainTitleIcon', 'fa-exchange');
+                app('view')->share('title', trans('firefly.transactions'));
+                app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 return $next($request);
             }

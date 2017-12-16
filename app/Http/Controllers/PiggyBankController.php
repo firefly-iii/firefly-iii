@@ -52,8 +52,8 @@ class PiggyBankController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.piggyBanks'));
-                View::share('mainTitleIcon', 'fa-sort-amount-asc');
+                app('view')->share('title', trans('firefly.piggyBanks'));
+                app('view')->share('mainTitleIcon', 'fa-sort-amount-asc');
 
                 return $next($request);
             }

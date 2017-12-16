@@ -56,8 +56,8 @@ class NewUserController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-        View::share('title', trans('firefly.welcome'));
-        View::share('mainTitleIcon', 'fa-fire');
+        app('view')->share('title', trans('firefly.welcome'));
+        app('view')->share('mainTitleIcon', 'fa-fire');
 
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);
