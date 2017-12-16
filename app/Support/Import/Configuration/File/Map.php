@@ -20,7 +20,7 @@
  */
 declare(strict_types=1);
 
-namespace FireflyIII\Support\Import\Configuration\Csv;
+namespace FireflyIII\Support\Import\Configuration\File;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Mapper\MapperInterface;

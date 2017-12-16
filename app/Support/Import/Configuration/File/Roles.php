@@ -20,7 +20,7 @@
  */
 declare(strict_types=1);
 
-namespace FireflyIII\Support\Import\Configuration\Csv;
+namespace FireflyIII\Support\Import\Configuration\File;
 
 use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\ImportJob;

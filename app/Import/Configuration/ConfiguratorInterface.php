@@ -20,7 +20,7 @@
  */
 declare(strict_types=1);
 
-namespace FireflyIII\Import\Configurator;
+namespace FireflyIII\Import\Configuration;
 
 use FireflyIII\Models\ImportJob;
 

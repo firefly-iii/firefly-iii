@@ -42,20 +42,16 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     private $user;
 
     /**
-     * @param string $fileType
+     * @param string $type
      *
      * @return ImportJob
      *
      * @throws FireflyException
      */
-    public function create(string $fileType): ImportJob
+    public function create(string $type): ImportJob
     {
-        $count    = 0;
-        $fileType = strtolower($fileType);
-        $keys     = array_keys(config('firefly.import_formats'));
-        if (!in_array($fileType, $keys)) {
-            throw new FireflyException(sprintf('Cannot use type "%s" for import job.', $fileType));
-        }
+        $count = 0;
+        $type  = strtolower($type);
 
         while ($count < 30) {
             $key      = Str::random(12);
@@ -63,10 +59,10 @@ class ImportJobRepository implements ImportJobRepositoryInterface
             if (null === $existing->id) {
                 $importJob = new ImportJob;
                 $importJob->user()->associate($this->user);
-                $importJob->file_type       = $fileType;
+                $importJob->file_type       = $type;
                 $importJob->key             = Str::random(12);
                 $importJob->status          = 'new';
-                $importJob->configuration   = [];
+                $importJob->configuration   = config(sprintf('import.default_config.%s', $type)) ?? [];
                 $importJob->extended_status = [
                     'steps'  => 0,
                     'done'   => 0,
@@ -80,8 +76,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
             }
             ++$count;
         }
-
-        return new ImportJob;
+        throw new FireflyException('Could not create an import job with a unique key after 30 tries.');
     }
 
     /**

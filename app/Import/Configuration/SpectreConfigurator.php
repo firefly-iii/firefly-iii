@@ -20,14 +20,14 @@
  */
 declare(strict_types=1);
 
-namespace FireflyIII\Import\Configurator;
+namespace FireflyIII\Import\Configuration;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
-use FireflyIII\Support\Import\Configuration\Spectre\SelectProvider;
 use FireflyIII\Support\Import\Configuration\Spectre\InputMandatory;
 use FireflyIII\Support\Import\Configuration\Spectre\SelectCountry;
+use FireflyIII\Support\Import\Configuration\Spectre\SelectProvider;
 use Log;
 
 /**
@@ -123,14 +123,16 @@ class SpectreConfigurator implements ConfiguratorInterface
      */
     public function isJobConfigured(): bool
     {
-        $config                        = $this->job->configuration;
-        $config['selected-country']    = $config['selected-country'] ?? false;
-        $config['selected-provider']       = $config['selected-provider'] ?? false;
-        $config['has-input-mandatory'] = $config['has-input-mandatory'] ?? false;
-        $this->job->configuration      = $config;
+        $config                          = $this->job->configuration;
+        $config['selected-country']      = $config['selected-country'] ?? false;
+        $config['selected-provider']     = $config['selected-provider'] ?? false;
+        $config['has-input-mandatory']   = $config['has-input-mandatory'] ?? false;
+        $config['has-input-interactive'] = $config['has-input-interactive'] ?? true; // defaults to true.
+        $this->job->configuration        = $config;
         $this->job->save();
 
-        if ($config['selected-country'] && $config['selected-provider'] && $config['has-input-mandatory'] && false) {
+        if ($config['selected-country'] && $config['selected-provider'] && $config['has-input-mandatory'] && $config['has-input-interactive']) {
+            // give job another status
             return true;
         }
 

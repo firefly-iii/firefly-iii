@@ -44,17 +44,8 @@ return [
         'csv'     => 'FireflyIII\Import\Configurator\CsvConfigurator',
         'spectre' => '',
     ],
-    'import_configurators' => [
-        'csv' => 'FireflyIII\Import\Configurator\CsvConfigurator',
-        'spectre' => 'FireflyIII\Import\Configurator\SpectreConfigurator',
-    ],
     'import_processors'    => [
         'csv' => 'FireflyIII\Import\FileProcessor\CsvProcessor',
-    ],
-    'import_pre'           => [
-        'bunq'    => 'FireflyIII\Support\Import\Prerequisites\BunqPrerequisites',
-        'spectre' => 'FireflyIII\Support\Import\Prerequisites\SpectrePrerequisites',
-        'plaid'   => 'FireflyIII\Support\Import\Prerequisites\PlaidPrerequisites',
     ],
     'import_info'          => [
         'bunq'    => 'FireflyIII\Support\Import\Information\BunqInformation',

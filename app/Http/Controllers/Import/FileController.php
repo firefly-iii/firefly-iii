@@ -54,8 +54,8 @@ class FileController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('mainTitleIcon', 'fa-archive');
-                View::share('title', trans('firefly.import_index_title'));
+                app('view')->share('mainTitleIcon', 'fa-archive');
+                app('view')->share('title', trans('firefly.import_index_title'));
                 $this->repository = app(ImportJobRepositoryInterface::class);
 
                 return $next($request);
@@ -107,6 +107,7 @@ class FileController extends Controller
         $config['column-roles-complete']   = false;
         $config['column-mapping-complete'] = false;
         $config['initial-config-complete'] = false;
+        $config['has-file-upload']         = false;
         $config['delimiter']               = "\t" === $config['delimiter'] ? 'tab' : $config['delimiter'];
 
         $result = json_encode($config, JSON_PRETTY_PRINT);

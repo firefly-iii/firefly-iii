@@ -21,38 +21,49 @@
 
                     <div class="row">
                         {# file import #}
-                        <div class="col-lg-1 text-center">
-                                <a href="{{ route('import.file.index') }}">
-                                    <img src="images/logos/csv.png" alt="bunq"/><br />
-                                    {{ 'import_general_index_csv_file'|_ }}
+                        {% if routines.file == true %}
+                            <div class="col-lg-1 text-center">
+                                <a href="{{ route('import.prerequisites', ['file']) }}">
+                                    <img src="images/logos/file.png" alt="{{ 'import_general_index_file'|_ }}"/><br/>
+                                    {{ 'import_general_index_file'|_ }}
                                 </a>
-                        </div>
+                            </div>
+                        {% endif %}
+
                         {# bunq import #}
-                        <div class="col-lg-1 text-center">
-                                <a href="{{ route('import.bank.prerequisites', ['bunq']) }}">
-                                    <img src="images/logos/bunq.png" alt="bunq"/><br />
+                        {% if routines.bunq == true %}
+                            <div class="col-lg-1 text-center">
+                                <a href="{{ route('import.prerequisites', ['bunq']) }}">
+                                    <img src="images/logos/bunq.png" alt="{{ 'import_from_bunq'|_ }}"/><br/>
                                     {{ 'import_from_bunq'|_ }}
                                 </a>
-                        </div>
+                            </div>
+                        {% endif %}
+
                         {# import from Spectre #}
-                        <div class="col-lg-1 text-center">
-                                <a href="{{ route('import.bank.prerequisites', ['spectre']) }}">
-                                    <img src="images/logos/spectre.png" alt="Spectre"/><br />
+                        {% if routines.spectre == true %}
+                            <div class="col-lg-1 text-center">
+                                <a href="{{ route('import.prerequisites', ['spectre']) }}">
+                                    <img src="images/logos/spectre.png" alt="{{ 'import_using_spectre'|_ }}"/><br/>
                                     {{ 'import_using_spectre'|_ }}
                                 </a>
-                        </div>
-                        <div class="col-lg-1 text-center">
-                            {# import from Plaid #}
-                            <a href="{{ route('import.bank.prerequisites', ['plaid']) }}">
-                                <img src="images/logos/plaid.png" alt="Plaid"/><br />
-                                {{ 'import_using_plaid'|_ }}
-                            </a>
-                        </div>
-                        </div>
+                            </div>
+                        {% endif %}
+
+                        {# import from Plaid #}
+                        {% if routines.plaid == true %}
+                            <div class="col-lg-1 text-center">
+                                <a href="{{ route('import.prerequisites', ['plaid']) }}">
+                                    <img src="images/logos/plaid.png" alt="{{ 'import_using_plaid'|_ }}"/><br/>
+                                    {{ 'import_using_plaid'|_ }}
+                                </a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 {% endblock %}
 {% block scripts %}

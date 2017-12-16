@@ -53,12 +53,17 @@
                 </div>
                 <div class="box-body">
                     <p>
-                        {{ 'import_status_ready_text'|_ }}
+                        {% if job.configuration['has-config-file'] == false %}
+                            This should only be visible momentarily.
+                        {% else %}
+                            {{ 'import_status_ready_text'|_ }}
+                        {% endif %}
                     </p>
                     <p>
                         <code>php artisan firefly:start-import {{ job.key }}</code>
                     </p>
                     <div class="row">
+                        {% if job.configuration['has-config-file'] != false %}
                         <div class="col-lg-4">
                             <a href="{{ route('import.file.download', [job.key]) }}" class="btn btn-default"><i
                                         class="fa fa-fw fa-download"></i> {{ 'import_status_ready_config'|_ }}</a>
@@ -66,13 +71,16 @@
                         <div class="col-lg-4">
                             <button class="btn btn-success start-job"><i class="fa fa-fw fa-gears"></i> {{ 'import_status_ready_start'|_ }}</button>
                         </div>
+                        {% endif %}
                     </div>
+                    {% if job.configuration['has-config-file'] != false %}
                     <p>
                         &nbsp;
                     </p>
                     <p class="text-info">
                         {{ 'import_status_ready_share'|_ }}
                     </p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -145,6 +153,11 @@
         var jobImportUrl = '{{ route('import.file.json', [job.key]) }}';
         var jobStartUrl = '{{ route('import.file.start', [job.key]) }}';
         var token = '{{ csrf_token() }}';
+        {% if job.configuration['auto-start'] == true %}
+        var autoStart = true;
+        {% else %}
+        var autoStart = false;
+        {% endif %}
     </script>
     <script type="text/javascript" src="js/ff/import/status.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

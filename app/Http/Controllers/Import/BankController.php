@@ -50,80 +50,16 @@ class BankController extends Controller
         if (!class_exists($class)) {
             throw new FireflyException(sprintf('Cannot find class %s', $class));
         }
-        $importJob = $repository->create($bank);
+        $importJob                 = $repository->create($bank);
+        $config                    = $importJob->configuration;
+        $config['has-config-file'] = false;
+        $config['auto-start']      = true;
+        $importJob->configuration  = $config;
+        $importJob->save();
 
         return redirect(route('import.file.configure', [$importJob->key]));
     }
 
-    /**
-     * This method processes the prerequisites the user has entered in the previous step.
-     *
-     * Whatever storePrerequisites does, it should make sure that the system is ready to continue immediately. So
-     * no extra calls or stuff, except maybe to open a session
-     *
-     * @see PrerequisitesInterface::storePrerequisites
-     *
-     * @param Request $request
-     * @param string  $bank
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws FireflyException
-     */
-    public function postPrerequisites(Request $request, string $bank)
-    {
-        Log::debug(sprintf('Now in postPrerequisites for %s', $bank));
-        $class = config(sprintf('firefly.import_pre.%s', $bank));
-        if (!class_exists($class)) {
-            throw new FireflyException(sprintf('Cannot find class %s', $class));
-        }
-        /** @var PrerequisitesInterface $object */
-        $object = app($class);
-        $object->setUser(auth()->user());
-        if (!$object->hasPrerequisites()) {
-            Log::debug(sprintf('No more prerequisites for %s, move to form.', $bank));
 
-            return redirect(route('import.bank.create-job', [$bank]));
-        }
-        Log::debug('Going to store entered preprerequisites.');
-        // store post data
-        $result = $object->storePrerequisites($request);
 
-        if ($result->count() > 0) {
-            Session::flash('error', $result->first());
-
-            return redirect(route('import.bank.prerequisites', [$bank]));
-        }
-
-        return redirect(route('import.bank.create-job', [$bank]));
-    }
-
-    /**
-     * This method shows you, if necessary, a form that allows you to enter any required values, such as API keys,
-     * login passwords or other values.
-     *
-     * @param string $bank
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
-     * @throws FireflyException
-     */
-    public function prerequisites(string $bank)
-    {
-        $class = config(sprintf('firefly.import_pre.%s', $bank));
-        if (!class_exists($class)) {
-            throw new FireflyException(sprintf('Cannot find class %s', $class));
-        }
-        /** @var PrerequisitesInterface $object */
-        $object = app($class);
-        $object->setUser(auth()->user());
-
-        if ($object->hasPrerequisites()) {
-            $view       = $object->getView();
-            $parameters = ['title' => strval(trans('firefly.import_index_title')), 'mainTitleIcon' => 'fa-archive'];
-            $parameters = $object->getViewParameters() + $parameters;
-
-            return view($view, $parameters);
-        }
-
-        return redirect(route('import.bank.create-job', [$bank]));
-    }
 }

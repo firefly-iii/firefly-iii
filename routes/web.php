@@ -427,28 +427,30 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'import', 'as' => 'import.'], function () {
 
-    Route::get('', ['uses' => 'ImportController@index', 'as' => 'index']);
+    Route::get('', ['uses' => 'Import\IndexController@index', 'as' => 'index']);
+
+    // import method prerequisites:
+    Route::get('prerequisites/{bank}', ['uses' => 'Import\PrerequisitesController@index', 'as' => 'prerequisites']);
+    Route::post('prerequisites/{bank}', ['uses' => 'Import\PrerequisitesController@post', 'as' => 'prerequisites.post']);
+
+    // create the job:
+    Route::get('create/{bank}', ['uses' => 'Import\IndexController@create', 'as' => 'create-job']);
+
+    // configure the job:
+    Route::get('configure/{importJob}', ['uses' => 'Import\ConfigurationController@index', 'as' => 'configure']);
+    Route::post('configure/{importJob}', ['uses' => 'Import\ConfigurationController@post', 'as' => 'configure.post']);
 
 
     // file import
-    Route::get('file', ['uses' => 'Import\FileController@index', 'as' => 'file.index']);
-    Route::post('file/initialize', ['uses' => 'Import\FileController@initialize', 'as' => 'file.initialize']);
+    //    Route::get('file', ['uses' => 'Import\FileController@index', 'as' => 'file.index']);
+    //    Route::post('file/initialize', ['uses' => 'Import\FileController@initialize', 'as' => 'file.initialize']);
 
-    Route::get('file/configure/{importJob}', ['uses' => 'Import\FileController@configure', 'as' => 'file.configure']);
-    Route::post('file/configure/{importJob}', ['uses' => 'Import\FileController@postConfigure', 'as' => 'file.process-configuration']);
-
-    Route::get('file/download/{importJob}', ['uses' => 'Import\FileController@download', 'as' => 'file.download']);
-    Route::get('file/status/{importJob}', ['uses' => 'Import\FileController@status', 'as' => 'file.status']);
-    Route::get('file/json/{importJob}', ['uses' => 'Import\FileController@json', 'as' => 'file.json']);
-    Route::post('file/start/{importJob}', ['uses' => 'Import\FileController@start', 'as' => 'file.start']);
-
-    // banks:
-    Route::get('bank/{bank}/prerequisites', ['uses' => 'Import\BankController@prerequisites', 'as' => 'bank.prerequisites']);
-    Route::post('bank/{bank}/prerequisites', ['uses' => 'Import\BankController@postPrerequisites', 'as' => 'bank.prerequisites.post']);
-
-    Route::get('bank/{bank}/create', ['uses' => 'Import\BankController@createJob', 'as' => 'bank.create-job']);
-    Route:: get('bank/{bank}/configure/{importJob}', ['uses' => 'Import\BankController@configure', 'as' => 'bank.configure']);
-    Route::post('bank/{bank}/configure/{importJob}', ['uses' => 'Import\BankController@postConfigure', 'as' => 'bank.configure.post']);
+    //    Route::get('file/download/{importJob}', ['uses' => 'Import\FileController@download', 'as' => 'file.download']);
+    //    Route::get('file/status/{importJob}', ['uses' => 'Import\FileController@status', 'as' => 'file.status']);
+    //    Route::get('file/json/{importJob}', ['uses' => 'Import\FileController@json', 'as' => 'file.json']);
+    //    Route::any('file/start/{importJob}', ['uses' => 'Import\FileController@start', 'as' => 'file.start']);
+    //    Route:: get('bank/{bank}/configure/{importJob}', ['uses' => 'Import\BankController@configure', 'as' => 'bank.configure']);
+    //    Route::post('bank/{bank}/configure/{importJob}', ['uses' => 'Import\BankController@postConfigure', 'as' => 'bank.configure.post']);
 }
 );
 

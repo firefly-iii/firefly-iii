@@ -36,6 +36,9 @@ $(function () {
     "use strict";
     timeOutId = setTimeout(checkImportStatus, startInterval);
     $('.start-job').click(startJob);
+    if(autoStart) {
+        startJob();
+    }
 });
 
 /**

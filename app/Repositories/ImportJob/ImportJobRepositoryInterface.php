@@ -32,11 +32,11 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 interface ImportJobRepositoryInterface
 {
     /**
-     * @param string $fileType
+     * @param string $type
      *
      * @return ImportJob
      */
-    public function create(string $fileType): ImportJob;
+    public function create(string $type): ImportJob;
 
     /**
      * @param string $key

@@ -20,7 +20,7 @@
  */
 declare(strict_types=1);
 
-namespace FireflyIII\Support\Import\Prerequisites;
+namespace FireflyIII\Import\Prerequisites;
 
 use FireflyIII\Jobs\GetSpectreProviders;
 use FireflyIII\Models\Preference;

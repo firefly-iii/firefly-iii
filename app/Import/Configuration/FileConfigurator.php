@@ -1,6 +1,6 @@
 <?php
 /**
- * CsvConfigurator.php
+ * FileConfigurator.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -20,20 +20,21 @@
  */
 declare(strict_types=1);
 
-namespace FireflyIII\Import\Configurator;
+namespace FireflyIII\Import\Configuration;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
-use FireflyIII\Support\Import\Configuration\Csv\Initial;
-use FireflyIII\Support\Import\Configuration\Csv\Map;
-use FireflyIII\Support\Import\Configuration\Csv\Roles;
+use FireflyIII\Support\Import\Configuration\File\Initial;
+use FireflyIII\Support\Import\Configuration\File\Map;
+use FireflyIII\Support\Import\Configuration\File\Roles;
+use FireflyIII\Support\Import\Configuration\File\Upload;
 use Log;
 
 /**
- * Class CsvConfigurator.
+ * Class FileConfigurator.
  */
-class CsvConfigurator implements ConfiguratorInterface
+class FileConfigurator implements ConfiguratorInterface
 {
     /** @var ImportJob */
     private $job;
@@ -95,14 +96,17 @@ class CsvConfigurator implements ConfiguratorInterface
      */
     public function getNextView(): string
     {
+        if (!$this->job->configuration['has-file-upload']) {
+            return 'import.file.upload';
+        }
         if (!$this->job->configuration['initial-config-complete']) {
-            return 'import.csv.initial';
+            return 'import.file.initial';
         }
         if (!$this->job->configuration['column-roles-complete']) {
-            return 'import.csv.roles';
+            return 'import.file.roles';
         }
         if (!$this->job->configuration['column-mapping-complete']) {
-            return 'import.csv.map';
+            return 'import.file.map';
         }
 
         throw new FireflyException('No view for state');
@@ -124,15 +128,17 @@ class CsvConfigurator implements ConfiguratorInterface
     public function isJobConfigured(): bool
     {
         $config                            = $this->job->configuration;
+        $config['has-file-upload']         = $config['has-file-upload'] ?? false;
         $config['initial-config-complete'] = $config['initial-config-complete'] ?? false;
         $config['column-roles-complete']   = $config['column-roles-complete'] ?? false;
         $config['column-mapping-complete'] = $config['column-mapping-complete'] ?? false;
         $this->job->configuration          = $config;
         $this->job->save();
 
-        if ($this->job->configuration['initial-config-complete']
-            && $this->job->configuration['column-roles-complete']
-            && $this->job->configuration['column-mapping-complete']
+        if ($config['initial-config-complete']
+            && $config['column-roles-complete']
+            && $config['column-mapping-complete']
+            && $config['has-file-upload']
         ) {
             return true;
         }
@@ -162,6 +168,9 @@ class CsvConfigurator implements ConfiguratorInterface
     {
         $class = false;
         switch (true) {
+            case !$this->job->configuration['has-file-upload']:
+                $class = Upload::class;
+                break;
             case !$this->job->configuration['initial-config-complete']:
                 $class = Initial::class;
                 break;

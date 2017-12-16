@@ -1079,7 +1079,7 @@ return [
     'import_index_title'                    => 'Import data into Firefly III',
     'import_index_sub_title'                => 'Index',
     'import_general_index_intro'            => 'Welcome to Firefly\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
-    'import_general_index_csv_file'         => 'Import a (CSV) file',
+    'import_general_index_file'             => 'Import a file',
     'import_index_intro'                    => 'This routine will help you import files from your bank into Firefly III. Please check out the help pages in the top right corner.',
     'import_index_file'                     => 'Select your file',
     'import_index_config'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration file</a>.',
