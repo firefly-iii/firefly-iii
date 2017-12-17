@@ -302,6 +302,9 @@ class BudgetController extends Controller
             $currentStart = app('navigation')->addPeriod($currentStart, $range, 0);
             ++$count;
         }
+        if ($count === 0) {
+            $count = 1;
+        }
         $result['available'] = bcdiv($total, strval($count));
 
         // amount earned in this period:
