@@ -87,6 +87,16 @@ class HomeControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\HomeController::displayDebug()
+     */
+    public function testDisplayDebug()
+    {
+        $this->be($this->user());
+        $response = $this->get(route('debug'));
+        $response->assertStatus(200);
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\HomeController::displayError
      */
     public function testDisplayError()
@@ -168,6 +178,16 @@ class HomeControllerTest extends TestCase
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('index'));
         $response->assertStatus(302);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\HomeController::routes()
+     */
+    public function testRoutes()
+    {
+        $this->be($this->user());
+        $response = $this->get(route('routes'));
+        $response->assertStatus(200);
     }
 
     /**

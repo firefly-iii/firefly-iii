@@ -29,7 +29,6 @@ use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Log;
-use Navigation;
 use Response;
 use Steam;
 
@@ -109,7 +108,7 @@ class ReportController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
         Log::debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
-        $format    = Navigation::preferredCarbonLocalizedFormat($start, $end);
+        $format    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
         $source    = $this->getChartData($accounts, $start, $end);
         $chartData = [
             [
@@ -256,7 +255,7 @@ class ReportController extends Controller
         $tasker = app(AccountTaskerInterface::class);
 
         while ($currentStart <= $end) {
-            $currentEnd = Navigation::endOfPeriod($currentStart, '1M');
+            $currentEnd = app('navigation')->endOfPeriod($currentStart, '1M');
             $earned     = strval(
                 array_sum(
                     array_map(
@@ -282,7 +281,7 @@ class ReportController extends Controller
             $label               = $currentStart->format('Y-m') . '-01';
             $spentArray[$label]  = bcmul($spent, '-1');
             $earnedArray[$label] = $earned;
-            $currentStart        = Navigation::addPeriod($currentStart, '1M', 0);
+            $currentStart        = app('navigation')->addPeriod($currentStart, '1M', 0);
         }
         $result = [
             'spent'  => $spentArray,

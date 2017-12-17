@@ -36,7 +36,6 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
-use Navigation;
 use Preferences;
 use Steam;
 use View;
@@ -178,7 +177,7 @@ class CategoryController extends Controller
         // prep for "specific date" view.
         if (strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
-            $end      = Navigation::endOfPeriod($start, $range);
+            $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
                 'firefly.without_category_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -188,8 +187,8 @@ class CategoryController extends Controller
 
         // prep for current period
         if (0 === strlen($moment)) {
-            $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
-            $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
+            $start    = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
+            $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
             $periods  = $this->getNoCategoryPeriodOverview();
             $subTitle = trans(
                 'firefly.without_category_between',
@@ -242,7 +241,7 @@ class CategoryController extends Controller
         // prep for "specific date" view.
         if (strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
-            $end      = Navigation::endOfPeriod($start, $range);
+            $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
                 'firefly.journals_in_period_for_category',
                 ['name'  => $category->name,
@@ -255,9 +254,9 @@ class CategoryController extends Controller
         // prep for current period
         if (0 === strlen($moment)) {
             /** @var Carbon $start */
-            $start = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
+            $start = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
             /** @var Carbon $end */
-            $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
+            $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
             $periods  = $this->getPeriodOverview($category);
             $subTitle = trans(
                 'firefly.journals_in_period_for_category',
@@ -337,8 +336,8 @@ class CategoryController extends Controller
         $first      = $repository->first();
         $start      = $first->date ?? new Carbon;
         $range      = Preferences::get('viewRange', '1M')->data;
-        $start      = Navigation::startOfPeriod($start, $range);
-        $end        = Navigation::endOfX(new Carbon, $range, null);
+        $start      = app('navigation')->startOfPeriod($start, $range);
+        $end        = app('navigation')->endOfX(new Carbon, $range, null);
         $entries    = new Collection;
 
         // properties for cache
@@ -354,8 +353,8 @@ class CategoryController extends Controller
         Log::debug(sprintf('Going to get period expenses and incomes between %s and %s.', $start->format('Y-m-d'), $end->format('Y-m-d')));
         while ($end >= $start) {
             Log::debug('Loop!');
-            $end        = Navigation::startOfPeriod($end, $range);
-            $currentEnd = Navigation::endOfPeriod($end, $range);
+            $end        = app('navigation')->startOfPeriod($end, $range);
+            $currentEnd = app('navigation')->endOfPeriod($end, $range);
 
             // count journals without category in this period:
             /** @var JournalCollectorInterface $collector */
@@ -386,7 +385,7 @@ class CategoryController extends Controller
             $earned = $collector->getJournals()->sum('transaction_amount');
 
             $dateStr  = $end->format('Y-m-d');
-            $dateName = Navigation::periodShow($end, $range);
+            $dateName = app('navigation')->periodShow($end, $range);
             $entries->push(
                 [
                     'string'      => $dateStr,
@@ -398,7 +397,7 @@ class CategoryController extends Controller
                     'date'        => clone $end,
                 ]
             );
-            $end = Navigation::subtractPeriod($end, $range, 1);
+            $end = app('navigation')->subtractPeriod($end, $range, 1);
         }
         Log::debug('End of loops');
         $cache->store($entries);
@@ -420,11 +419,11 @@ class CategoryController extends Controller
         $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $first             = $repository->firstUseDate($category);
         if (null === $first) {
-            $first = new Carbon;
+            $first = new Carbon; // @codeCoverageIgnore
         }
         $range   = Preferences::get('viewRange', '1M')->data;
-        $first   = Navigation::startOfPeriod($first, $range);
-        $end     = Navigation::endOfX(new Carbon, $range, null);
+        $first   = app('navigation')->startOfPeriod($first, $range);
+        $end     = app('navigation')->endOfX(new Carbon, $range, null);
         $entries = new Collection;
         $count   = 0;
 
@@ -439,12 +438,12 @@ class CategoryController extends Controller
             return $cache->get(); // @codeCoverageIgnore
         }
         while ($end >= $first && $count < 90) {
-            $end        = Navigation::startOfPeriod($end, $range);
-            $currentEnd = Navigation::endOfPeriod($end, $range);
+            $end        = app('navigation')->startOfPeriod($end, $range);
+            $currentEnd = app('navigation')->endOfPeriod($end, $range);
             $spent      = $repository->spentInPeriod(new Collection([$category]), $accounts, $end, $currentEnd);
             $earned     = $repository->earnedInPeriod(new Collection([$category]), $accounts, $end, $currentEnd);
             $dateStr    = $end->format('Y-m-d');
-            $dateName   = Navigation::periodShow($end, $range);
+            $dateName   = app('navigation')->periodShow($end, $range);
 
             // amount transferred
             /** @var JournalCollectorInterface $collector */
@@ -465,7 +464,7 @@ class CategoryController extends Controller
                     'date'        => clone $end,
                 ]
             );
-            $end = Navigation::subtractPeriod($end, $range, 1);
+            $end = app('navigation')->subtractPeriod($end, $range, 1);
             ++$count;
         }
         $cache->store($entries);

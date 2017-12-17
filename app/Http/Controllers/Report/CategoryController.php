@@ -28,7 +28,6 @@ use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Navigation;
 
 /**
  * Class CategoryController.
@@ -58,7 +57,7 @@ class CategoryController extends Controller
         $data       = $repository->periodExpenses($categories, $accounts, $start, $end);
         $data[0]    = $repository->periodExpensesNoCategory($accounts, $start, $end);
         $report     = $this->filterReport($data);
-        $periods    = Navigation::listOfPeriods($start, $end);
+        $periods    = app('navigation')->listOfPeriods($start, $end);
         $result     = view('reports.partials.category-period', compact('report', 'periods'))->render();
 
         $cache->store($result);
@@ -89,7 +88,7 @@ class CategoryController extends Controller
         $data       = $repository->periodIncome($categories, $accounts, $start, $end);
         $data[0]    = $repository->periodIncomeNoCategory($accounts, $start, $end);
         $report     = $this->filterReport($data);
-        $periods    = Navigation::listOfPeriods($start, $end);
+        $periods    = app('navigation')->listOfPeriods($start, $end);
         $result     = view('reports.partials.category-period', compact('report', 'periods'))->render();
 
         $cache->store($result);

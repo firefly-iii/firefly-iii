@@ -36,7 +36,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Navigation;
 use Response;
 
 /**
@@ -177,8 +176,8 @@ class CategoryReportController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $format       = Navigation::preferredCarbonLocalizedFormat($start, $end);
-        $function     = Navigation::preferredEndOfPeriod($start, $end);
+        $format       = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $function     = app('navigation')->preferredEndOfPeriod($start, $end);
         $chartData    = [];
         $currentStart = clone $start;
 

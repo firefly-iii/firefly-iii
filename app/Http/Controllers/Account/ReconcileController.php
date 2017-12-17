@@ -37,7 +37,6 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Navigation;
 use Preferences;
 use Response;
 use Session;
@@ -150,9 +149,10 @@ class ReconcileController extends Controller
             'post_uri' => $route,
             'html'     => view(
                 'accounts.reconcile.overview', compact(
-                'account', 'start', 'diffCompare', 'difference', 'end', 'clearedIds', 'transactionIds', 'clearedAmount', 'startBalance', 'endBalance', 'amount',
-                'route', 'countCleared'
-            )
+                                                 'account', 'start', 'diffCompare', 'difference', 'end', 'clearedIds', 'transactionIds', 'clearedAmount',
+                                                 'startBalance', 'endBalance', 'amount',
+                                                 'route', 'countCleared'
+                                             )
             )->render(),
         ];
 
@@ -189,11 +189,11 @@ class ReconcileController extends Controller
 
         // get start and end
         if (null === $start && null === $end) {
-            $start = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
-            $end   = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
+            $start = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
+            $end   = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
         }
         if (null === $end) {
-            $end = Navigation::endOfPeriod($start, $range);
+            $end = app('navigation')->endOfPeriod($start, $range);
         }
 
         $startDate = clone $start;
@@ -210,8 +210,9 @@ class ReconcileController extends Controller
 
         return view(
             'accounts.reconcile.index', compact(
-            'account', 'currency', 'subTitleIcon', 'start', 'end', 'subTitle', 'startBalance', 'endBalance', 'transactionsUri', 'overviewUri', 'indexUri'
-        )
+                                          'account', 'currency', 'subTitleIcon', 'start', 'end', 'subTitle', 'startBalance', 'endBalance', 'transactionsUri',
+                                          'overviewUri', 'indexUri'
+                                      )
         );
     }
 

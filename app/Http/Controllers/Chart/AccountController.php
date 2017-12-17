@@ -38,7 +38,6 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Log;
-use Navigation;
 use Preferences;
 use Response;
 use Steam;
@@ -348,7 +347,7 @@ class AccountController extends Controller
     public function period(Account $account, Carbon $start)
     {
         $range = Preferences::get('viewRange', '1M')->data;
-        $end   = Navigation::endOfPeriod($start, $range);
+        $end   = app('navigation')->endOfPeriod($start, $range);
         $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);

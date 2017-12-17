@@ -224,6 +224,18 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @param User $user
+     */
+    public function unblockUser(User $user): void
+    {
+        $user->blocked      = 0;
+        $user->blocked_code = '';
+        $user->save();
+
+        return;
+    }
+
+    /**
      * This updates the users email address. Same as changeEmail just without most logging. This makes sure that the undo/confirm routine can't catch this one.
      * The user is NOT blocked.
      *

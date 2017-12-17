@@ -118,6 +118,15 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
+     * @return Rule
+     */
+    public function getRule(): Rule
+    {
+        return $this->rule;
+    }
+
+
+    /**
      * @param User $user
      */
     public function setUser(User $user)

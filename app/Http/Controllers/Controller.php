@@ -126,7 +126,7 @@ class Controller extends BaseController
             $uri = $this->redirectUri;
         }
         if (!(false === strpos($uri, 'jscript'))) {
-            $uri = $this->redirectUri;
+            $uri = $this->redirectUri; // @codeCoverageIgnore
         }
 
         return $uri;

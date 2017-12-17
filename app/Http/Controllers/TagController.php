@@ -31,7 +31,6 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Navigation;
 use Preferences;
 use Session;
 use View;
@@ -216,7 +215,7 @@ class TagController extends Controller
         // prep for "specific date" view.
         if (strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
-            $end      = Navigation::endOfPeriod($start, $range);
+            $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
                 'firefly.journals_in_period_for_tag',
                 ['tag'   => $tag->tag,
@@ -229,9 +228,9 @@ class TagController extends Controller
         // prep for current period
         if (0 === strlen($moment)) {
             /** @var Carbon $start */
-            $start = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
+            $start = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
             /** @var Carbon $end */
-            $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
+            $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
             $periods  = $this->getPeriodOverview($tag);
             $subTitle = trans(
                 'firefly.journals_in_period_for_tag',
@@ -310,8 +309,8 @@ class TagController extends Controller
     {
         // get first and last tag date from tag:
         $range = Preferences::get('viewRange', '1M')->data;
-        $start = Navigation::startOfPeriod($this->repository->firstUseDate($tag), $range);
-        $end   = Navigation::startOfPeriod($this->repository->lastUseDate($tag), $range);
+        $start = app('navigation')->startOfPeriod($this->repository->firstUseDate($tag), $range);
+        $end   = app('navigation')->startOfPeriod($this->repository->lastUseDate($tag), $range);
         // properties for entries with their amounts.
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -327,19 +326,19 @@ class TagController extends Controller
 
         // while end larger or equal to start
         while ($end >= $start) {
-            $currentEnd = Navigation::endOfPeriod($end, $range);
+            $currentEnd = app('navigation')->endOfPeriod($end, $range);
 
             // get expenses and what-not in this period and this tag.
             $arr = [
                 'string' => $end->format('Y-m-d'),
-                'name'   => Navigation::periodShow($end, $range),
+                'name'   => app('navigation')->periodShow($end, $range),
                 'date'   => clone $end,
                 'spent'  => $this->repository->spentInperiod($tag, $end, $currentEnd),
                 'earned' => $this->repository->earnedInperiod($tag, $end, $currentEnd),
             ];
             $collection->push($arr);
 
-            $end = Navigation::subtractPeriod($end, $range, 1);
+            $end = app('navigation')->subtractPeriod($end, $range, 1);
         }
         $cache->store($collection);
 

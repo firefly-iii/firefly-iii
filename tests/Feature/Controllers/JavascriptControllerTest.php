@@ -86,4 +86,21 @@ class JavascriptControllerTest extends TestCase
         $response = $this->get(route('javascript.variables'));
         $response->assertStatus(200);
     }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\JavascriptController::variables
+     * @covers       \FireflyIII\Http\Controllers\JavascriptController::getDateRangeConfig
+     *
+     * @param string $range
+     *
+     * @dataProvider dateRangeProvider
+     */
+    public function testVariablesCustom(string $range)
+    {
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->session(['is_custom_range' => true]);
+        $response = $this->get(route('javascript.variables'));
+        $response->assertStatus(200);
+    }
 }

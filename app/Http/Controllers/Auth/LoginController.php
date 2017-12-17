@@ -31,6 +31,9 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Schema;
 
+/**
+ * Class LoginController
+ */
 class LoginController extends Controller
 {
     /*
@@ -68,6 +71,7 @@ class LoginController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response|void
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function login(Request $request)
     {

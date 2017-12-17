@@ -595,6 +595,15 @@ Breadcrumbs::register(
         $breadcrumbs->push(trans('breadcrumbs.changePassword'), route('profile.change-password'));
     }
 );
+
+Breadcrumbs::register(
+    'profile.change-email',
+    function (BreadCrumbGenerator $breadcrumbs) {
+        $breadcrumbs->parent('profile.index');
+        $breadcrumbs->push(trans('breadcrumbs.change_email'), route('profile.change-email'));
+    }
+);
+
 Breadcrumbs::register(
     'profile.delete-account',
     function (BreadCrumbGenerator $breadcrumbs) {
@@ -757,22 +766,21 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'rule-groups.select-transactions',
-    function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
+    'rules.select-transactions',
+    function (BreadCrumbGenerator $breadcrumbs, Rule $rule) {
         $breadcrumbs->parent('rules.index');
         $breadcrumbs->push(
-            trans('firefly.rule_group_select_transactions', ['title' => $ruleGroup->title]), route('rule-groups.select-transactions', [$ruleGroup])
+            trans('firefly.rule_select_transactions', ['title' => $rule->title]), route('rules.select-transactions', [$rule])
         );
     }
 );
 
 Breadcrumbs::register(
-    'rule-groups.select_transactions',
+    'rule-groups.select-transactions',
     function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
         $breadcrumbs->parent('rules.index');
         $breadcrumbs->push(
-            trans('firefly.execute_group_on_existing_transactions', ['title' => $ruleGroup->title]),
-            route('rule-groups.select_transactions', [$ruleGroup])
+            trans('firefly.rule_group_select_transactions', ['title' => $ruleGroup->title]), route('rule-groups.select-transactions', [$ruleGroup])
         );
     }
 );

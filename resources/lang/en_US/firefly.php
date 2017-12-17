@@ -711,6 +711,8 @@ return [
     'deleted_transfer'                         => 'Successfully deleted transfer ":description"',
     'stored_journal'                           => 'Successfully created new transaction ":description"',
     'select_transactions'                      => 'Select transactions',
+    'rule_group_select_transactions'           => 'Apply ":title" to transactions',
+    'rule_select_transactions'                 => 'Apply ":title" to transactions',
     'stop_selection'                           => 'Stop selecting transactions',
     'reconcile_selected'                       => 'Reconcile',
     'mass_delete_journals'                     => 'Delete a number of transactions',

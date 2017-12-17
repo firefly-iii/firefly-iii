@@ -70,6 +70,7 @@ class ReportController extends Controller
 
     /**
      * @param Collection $accounts
+     * @param Collection $expense
      * @param Carbon     $start
      * @param Carbon     $end
      *
@@ -79,7 +80,7 @@ class ReportController extends Controller
     public function accountReport(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
-            return view('error')->with('message', trans('firefly.end_after_start_date'));
+            return view('error')->with('message', trans('firefly.end_after_start_date'));// @codeCoverageIgnore
         }
 
         if ($start < session('first')) {

@@ -36,7 +36,6 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
-use Navigation;
 use Preferences;
 use Response;
 use View;
@@ -96,7 +95,7 @@ class TransactionController extends Controller
         // prep for "specific date" view.
         if (strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
-            $end      = Navigation::endOfPeriod($start, $range);
+            $end      = app('navigation')->endOfPeriod($start, $range);
             $path     = route('transactions.index', [$what, $moment]);
             $subTitle = trans(
                 'firefly.title_' . $what . '_between',
@@ -107,8 +106,8 @@ class TransactionController extends Controller
 
         // prep for current period
         if (0 === strlen($moment)) {
-            $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
-            $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
+            $start    = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
+            $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
             $periods  = $this->getPeriodOverview($what);
             $subTitle = trans(
                 'firefly.title_' . $what . '_between',
@@ -206,8 +205,8 @@ class TransactionController extends Controller
         $first      = $repository->first();
         $start      = $first->date ?? new Carbon;
         $range      = Preferences::get('viewRange', '1M')->data;
-        $start      = Navigation::startOfPeriod($start, $range);
-        $end        = Navigation::endOfX(new Carbon, $range, null);
+        $start      = app('navigation')->startOfPeriod($start, $range);
+        $end        = app('navigation')->endOfX(new Carbon, $range, null);
         $entries    = new Collection;
         $types      = config('firefly.transactionTypesByWhat.' . $what);
 
@@ -225,8 +224,8 @@ class TransactionController extends Controller
         Log::debug(sprintf('Going to get period expenses and incomes between %s and %s.', $start->format('Y-m-d'), $end->format('Y-m-d')));
         while ($end >= $start) {
             Log::debug('Loop start!');
-            $end        = Navigation::startOfPeriod($end, $range);
-            $currentEnd = Navigation::endOfPeriod($end, $range);
+            $end        = app('navigation')->startOfPeriod($end, $range);
+            $currentEnd = app('navigation')->endOfPeriod($end, $range);
 
             // count journals without budget in this period:
             /** @var JournalCollectorInterface $collector */
@@ -239,7 +238,7 @@ class TransactionController extends Controller
             // count per currency:
             $sums     = $this->sumPerCurrency($journals);
             $dateStr  = $end->format('Y-m-d');
-            $dateName = Navigation::periodShow($end, $range);
+            $dateName = app('navigation')->periodShow($end, $range);
             $array    = [
                 'string' => $dateStr,
                 'name'   => $dateName,
@@ -251,7 +250,7 @@ class TransactionController extends Controller
             if ($journals->count() > 0) {
                 $entries->push($array);
             }
-            $end = Navigation::subtractPeriod($end, $range, 1);
+            $end = app('navigation')->subtractPeriod($end, $range, 1);
         }
         Log::debug('End of loop');
         $cache->store($entries);

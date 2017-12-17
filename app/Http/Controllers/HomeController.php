@@ -239,6 +239,9 @@ class HomeController extends Controller
         );
     }
 
+    /**
+     * @return string
+     */
     public function routes()
     {
         $set    = RouteFacade::getRoutes();
@@ -249,7 +252,7 @@ class HomeController extends Controller
                    'rules.select', 'search.search', 'test-flash', 'transactions.link.delete', 'transactions.link.switch',
                    'two-factor.lost', 'report.options',
         ];
-
+        $return = '&nbsp;';
         /** @var Route $route */
         foreach ($set as $route) {
             $name = $route->getName();
@@ -261,12 +264,12 @@ class HomeController extends Controller
                     }
                 }
                 if (!$found) {
-                    echo 'touch ' . $route->getName() . '.md;';
+                    $return .= 'touch ' . $route->getName() . '.md;';
                 }
             }
         }
 
-        return '&nbsp;';
+        return $return;
     }
 
     /**

@@ -138,13 +138,14 @@ class JavascriptController extends Controller
         $end       = session('end');
         $first     = session('first');
         $title     = sprintf('%s - %s', $start->formatLocalized($this->monthAndDayFormat), $end->formatLocalized($this->monthAndDayFormat));
-        $isCustom  = session('is_custom_range');
+        $isCustom  = session('is_custom_range', false) === true;
         $today     = new Carbon;
         $ranges    = [
             // first range is the current range:
             $title => [$start, $end],
         ];
         Log::debug(sprintf('viewRange is %s', $viewRange));
+        Log::debug(sprintf('isCustom is %s', var_export($isCustom, true)));
 
         // when current range is a custom range, add the current period as the next range.
         if ($isCustom) {

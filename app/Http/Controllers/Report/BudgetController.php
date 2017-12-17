@@ -28,7 +28,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Navigation;
 
 /**
  * Class BudgetController.
@@ -88,7 +87,7 @@ class BudgetController extends Controller
         $data       = $repository->getBudgetPeriodReport($budgets, $accounts, $start, $end);
         $data[0]    = $repository->getNoBudgetPeriodReport($accounts, $start, $end); // append report data for "no budget"
         $report     = $this->filterBudgetPeriodReport($data);
-        $periods    = Navigation::listOfPeriods($start, $end);
+        $periods    = app('navigation')->listOfPeriods($start, $end);
 
         $result = view('reports.partials.budget-period', compact('report', 'periods'))->render();
         $cache->store($result);

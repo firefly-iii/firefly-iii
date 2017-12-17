@@ -91,30 +91,32 @@ class ProfileController extends Controller
     }
 
     /**
-     * @param string $token
+     * @param UserRepositoryInterface $repository
+     * @param string                  $token
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     *
      * @throws FireflyException
      */
-    public function confirmEmailChange(string $token)
+    public function confirmEmailChange(UserRepositoryInterface $repository, string $token)
     {
         // find preference with this token value.
         $set  = Preferences::findByName('email_change_confirm_token');
         $user = null;
+        Log::debug(sprintf('Found %d preferences', $set->count()));
         /** @var Preference $preference */
         foreach ($set as $preference) {
             if ($preference->data === $token) {
+                Log::debug('Found user');
                 $user = $preference->user;
             }
         }
         // update user to clear blocked and blocked_code.
         if (null === $user) {
+            Log::debug('Found no user');
             throw new FireflyException('Invalid token.');
         }
-        $user->blocked      = 0;
-        $user->blocked_code = '';
-        $user->save();
+        Log::debug('Will unblock user.');
+        $repository->unblockUser($user);
 
         // return to login.
         Session::flash('success', strval(trans('firefly.login_with_new_email')));
@@ -172,7 +174,7 @@ class ProfileController extends Controller
         $existing = $repository->findByEmail($newEmail);
         if (null !== $existing) {
             // force user logout.
-            $this->guard()->logout();
+            Auth::guard()->logout();
             $request->session()->invalidate();
 
             Session::flash('success', strval(trans('firefly.email_changed')));
@@ -245,7 +247,7 @@ class ProfileController extends Controller
     }
 
     /**
-     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function regenerate()
     {
@@ -264,7 +266,7 @@ class ProfileController extends Controller
      *
      * @throws FireflyException
      */
-    public function undoEmailChange(string $token, string $hash)
+    public function undoEmailChange(UserRepositoryInterface $repository, string $token, string $hash)
     {
         // find preference with this token value.
         $set  = Preferences::findByName('email_change_undo_token');
@@ -282,6 +284,7 @@ class ProfileController extends Controller
         // found user.
         // which email address to return to?
         $set   = Preferences::beginsWith($user, 'previous_email_');
+        /** @var string $match */
         $match = null;
         foreach ($set as $entry) {
             $hashed = hash('sha256', $entry->data);
@@ -294,10 +297,9 @@ class ProfileController extends Controller
             throw new FireflyException('Invalid token.');
         }
         // change user back
-        $user->email        = $match;
-        $user->blocked      = 0;
-        $user->blocked_code = '';
-        $user->save();
+        // now actually update user:
+        $repository->changeEmail($user, $match);
+        $repository->unblockUser($user);
 
         // return to login.
         Session::flash('success', strval(trans('firefly.login_with_old_email')));

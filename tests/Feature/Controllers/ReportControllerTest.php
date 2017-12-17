@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use FireflyIII\Generator\Report\Account\YearReportGenerator as AcYRG;
 use FireflyIII\Generator\Report\Audit\YearReportGenerator as AYRG;
 use FireflyIII\Generator\Report\Budget\YearReportGenerator as BYRG;
 use FireflyIII\Generator\Report\Category\YearReportGenerator as CYRG;
 use FireflyIII\Generator\Report\Standard\YearReportGenerator as SYRG;
 use FireflyIII\Generator\Report\Tag\YearReportGenerator as TYRG;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
@@ -50,6 +52,26 @@ use Tests\TestCase;
  */
 class ReportControllerTest extends TestCase
 {
+    /**
+     * @covers \FireflyIII\Http\Controllers\ReportController::accountReport()
+     */
+    public function testAccountReport()
+    {
+        $generator    = $this->mock(AcYRG::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $generator->shouldReceive('setStartDate')->once();
+        $generator->shouldReceive('setEndDate')->once();
+        $generator->shouldReceive('setAccounts')->once();
+        $generator->shouldReceive('setExpense')->once();
+        $generator->shouldReceive('generate')->andReturn('here-be-report')->once();
+
+        $this->be($this->user());
+        $response = $this->get(route('reports.report.account', [1, 2, '20160101', '20160131']));
+        $response->assertStatus(200);
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::auditReport
      */
@@ -174,6 +196,28 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::options
+     * @covers \FireflyIII\Http\Controllers\ReportController::accountReportOptions()
+     */
+    public function testOptionsAccount()
+    {
+        $account       = new Account();
+        $account->name = 'Something';
+        $account->id   = 3;
+        $collection    = new Collection([$account]);
+
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::EXPENSE]])->once()->andReturn($collection);
+        $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::REVENUE]])->once()->andReturn($collection);
+
+        $this->be($this->user());
+        $response = $this->get(route('reports.options', ['account']));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\ReportController::options
      * @covers \FireflyIII\Http\Controllers\ReportController::budgetReportOptions
      */
     public function testOptionsBudget()
@@ -222,6 +266,27 @@ class ReportControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->get(route('reports.options', ['tag']));
         $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\ReportController::postIndex
+     */
+    public function testPostIndexAccountOK()
+    {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $data = [
+            'accounts'    => ['1'],
+            'exp_rev'     => ['4'],
+            'daterange'   => '2016-01-01 - 2016-01-31',
+            'report_type' => 'account',
+        ];
+
+        $this->be($this->user());
+        $response = $this->post(route('reports.index.post'), $data);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('reports.report.account', ['1', '4', '20160101', '20160131']));
     }
 
     /**

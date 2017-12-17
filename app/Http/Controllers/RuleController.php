@@ -363,11 +363,11 @@ class RuleController extends Controller
         $triggers = $this->getValidTriggerList($request);
 
         if (0 === count($triggers)) {
-            return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]);
+            return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 
-        $limit = config('firefly.test-triggers.limit');
-        $range = config('firefly.test-triggers.range');
+        $limit = intval(config('firefly.test-triggers.limit'));
+        $range = intval(config('firefly.test-triggers.range'));
 
         /** @var TransactionMatcher $matcher */
         $matcher = app(TransactionMatcher::class);
@@ -379,10 +379,10 @@ class RuleController extends Controller
         // Warn the user if only a subset of transactions is returned
         $warning = '';
         if (count($matchingTransactions) === $limit) {
-            $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]);
+            $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]); // @codeCoverageIgnore
         }
         if (0 === count($matchingTransactions)) {
-            $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]);
+            $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]); // @codeCoverageIgnore
         }
 
         // Return json response
@@ -403,6 +403,7 @@ class RuleController extends Controller
      * @param Rule $rule
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
      */
     public function testTriggersByRule(Rule $rule)
     {
@@ -412,8 +413,8 @@ class RuleController extends Controller
             return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]);
         }
 
-        $limit = config('firefly.test-triggers.limit');
-        $range = config('firefly.test-triggers.range');
+        $limit = intval(config('firefly.test-triggers.limit'));
+        $range = intval(config('firefly.test-triggers.range'));
 
         /** @var TransactionMatcher $matcher */
         $matcher = app(TransactionMatcher::class);
@@ -425,10 +426,10 @@ class RuleController extends Controller
         // Warn the user if only a subset of transactions is returned
         $warning = '';
         if (count($matchingTransactions) === $limit) {
-            $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]);
+            $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]); // @codeCoverageIgnore
         }
         if (0 === count($matchingTransactions)) {
-            $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]);
+            $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]); // @codeCoverageIgnore
         }
 
         // Return json response

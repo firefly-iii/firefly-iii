@@ -281,7 +281,7 @@ class BillController extends Controller
 
         // flash messages
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
         if (1 === intval($request->get('create_another'))) {
@@ -317,7 +317,7 @@ class BillController extends Controller
 
         // flash messages
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
         if (1 === intval($request->get('return_to_edit'))) {
@@ -342,7 +342,7 @@ class BillController extends Controller
     private function lastPaidDate(Collection $dates, Carbon $default): Carbon
     {
         if ($dates->count() === 0) {
-            return $default;
+            return $default; // @codeCoverageIgnore
         }
         $latest = $dates->first();
         /** @var Carbon $date */

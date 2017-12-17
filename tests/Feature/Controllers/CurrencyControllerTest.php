@@ -206,9 +206,11 @@ class CurrencyControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
 
+        $currencies = factory(TransactionCurrency::class, 3)->make();
+
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getCurrencyByPreference')->andReturn(new TransactionCurrency);
-        $repository->shouldReceive('get')->andReturn(new Collection);
+        $repository->shouldReceive('get')->andReturn($currencies);
         $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
 
         $this->be($this->user());
