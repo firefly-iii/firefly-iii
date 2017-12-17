@@ -24,9 +24,9 @@ declare(strict_types=1);
 return [
     'enabled'       => [
         'file'    => true,
-        'bunq'    => true,
-        'spectre' => true,
-        'plaid'   => true,
+        'bunq'    => false,
+        'spectre' => false,
+        'plaid'   => false,
     ],
     'prerequisites' => [
         'file'    => 'FireflyIII\Import\Prerequisites\FilePrerequisites',
