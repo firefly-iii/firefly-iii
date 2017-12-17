@@ -99,6 +99,23 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
+    'accounts.reconcile',
+    function (BreadCrumbGenerator $breadcrumbs, Account $account) {
+        $breadcrumbs->parent('accounts.show', $account, '(nothing)', new Carbon, new Carbon);
+        $breadcrumbs->push(trans('firefly.reconcile_account', ['account' => e($account->name)]), route('accounts.reconcile', [$account->id]));
+    }
+);
+
+Breadcrumbs::register(
+    'accounts.reconcile.show',
+    function (BreadCrumbGenerator $breadcrumbs, Account $account, TransactionJournal $journal) {
+        $breadcrumbs->parent('accounts.show', $account, '(nothing)', new Carbon, new Carbon);
+        $title = trans('firefly.reconciliation') . ' "' . $journal->description . '"';
+        $breadcrumbs->push($title, route('accounts.reconcile.show', [$journal->id]));
+    }
+);
+
+Breadcrumbs::register(
     'accounts.delete',
     function (BreadCrumbGenerator $breadcrumbs, Account $account) {
         $breadcrumbs->parent('accounts.show', $account, '(nothing)', new Carbon, new Carbon);

@@ -417,7 +417,7 @@ class RuleController extends Controller
         $triggers = $rule->ruleTriggers;
 
         if (0 === count($triggers)) {
-            return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]);
+            return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 
         $limit = intval(config('firefly.test-triggers.limit'));

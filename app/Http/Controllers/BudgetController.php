@@ -303,7 +303,7 @@ class BudgetController extends Controller
             ++$count;
         }
         if ($count === 0) {
-            $count = 1;
+            $count = 1; // @codeCoverageIgnore
         }
         $result['available'] = bcdiv($total, strval($count));
 

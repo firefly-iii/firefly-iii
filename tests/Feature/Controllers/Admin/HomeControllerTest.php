@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Admin;
 
+use Event;
+use FireflyIII\Events\AdminRequestedTestMessage;
 use Tests\TestCase;
 
 /**
@@ -35,6 +37,7 @@ class HomeControllerTest extends TestCase
 {
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\HomeController::index
+     * @covers \FireflyIII\Http\Controllers\Admin\HomeController::__construct
      */
     public function testIndex()
     {
@@ -43,5 +46,15 @@ class HomeControllerTest extends TestCase
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    public function testTestMessage() {
+        Event::fake();
+
+        $this->be($this->user());
+        $response = $this->post(route('admin.test-message'));
+        $response->assertStatus(302);
+
+        Event::assertDispatched(AdminRequestedTestMessage::class);
     }
 }

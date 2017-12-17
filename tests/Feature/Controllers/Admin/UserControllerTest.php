@@ -36,6 +36,31 @@ use Tests\TestCase;
 class UserControllerTest extends TestCase
 {
     /**
+     * @covers \FireflyIII\Http\Controllers\Admin\UserController::delete
+     */
+    public function testDelete()
+    {
+        $this->be($this->user());
+        $response = $this->get(route('admin.users.delete', [1]));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Admin\UserController::destroy
+     */
+    public function testDestroy()
+    {
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('destroy')->once();
+        $this->be($this->user());
+        $response = $this->post(route('admin.users.destroy', ['2']));
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\Admin\UserController::edit
      */
     public function testEdit()

@@ -82,7 +82,7 @@ class ExpenseReportController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            // return Response::json($cache->get()); // @codeCoverageIgnore
+             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $format       = app('navigation')->preferredCarbonLocalizedFormat($start, $end);

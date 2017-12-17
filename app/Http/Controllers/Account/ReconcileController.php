@@ -183,7 +183,7 @@ class ReconcileController extends Controller
         $currencyId    = intval($account->getMeta('currency_id'));
         $currency      = $currencyRepos->find($currencyId);
         if (0 === $currencyId) {
-            $currency = app('amount')->getDefaultCurrency();
+            $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
 
         // no start or end:
@@ -233,9 +233,10 @@ class ReconcileController extends Controller
 
         // get main transaction:
         $transaction = $repository->getAssetTransaction($journal);
+        $account     = $transaction->account;
 
 
-        return view('accounts.reconcile.show', compact('journal', 'subTitle', 'transaction'));
+        return view('accounts.reconcile.show', compact('journal', 'subTitle', 'transaction', 'account'));
     }
 
     /**
@@ -250,7 +251,7 @@ class ReconcileController extends Controller
     {
         /** @var JournalRepositoryInterface $repository */
         $repository   = app(JournalRepositoryInterface::class);
-        $transactions = $repository->getTransactionsById($request->get('transactions'));
+        $transactions = $repository->getTransactionsById($request->get('transactions') ?? []);
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             $repository->reconcile($transaction); // mark as reconciled.
@@ -313,7 +314,7 @@ class ReconcileController extends Controller
         $currencyId    = intval($account->getMeta('currency_id'));
         $currency      = $currencyRepos->find($currencyId);
         if (0 === $currencyId) {
-            $currency = app('amount')->getDefaultCurrency();
+            $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
 
         $startBalance = round(app('steam')->balance($account, $startDate), $currency->decimal_places);
@@ -383,7 +384,7 @@ class ReconcileController extends Controller
         /** @var Transaction $transaction */
         $transaction = $account->transactions()->first();
         if (null === $transaction) {
-            throw new FireflyException('Expected a transaction. This account has none. BEEP, error.');
+            throw new FireflyException(sprintf('Expected a transaction. Account #%d has none. BEEP, error.', $account->id)); // @codeCoverageIgnore
         }
 
         $journal = $transaction->transactionJournal;

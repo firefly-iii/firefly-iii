@@ -73,7 +73,7 @@ class CategoryController extends Controller
         $start = $repository->firstUseDate($category);
 
         if (null === $start) {
-            $start = new Carbon;
+            $start = new Carbon; // @codeCoverageIgnore
         }
 
         $range     = Preferences::get('viewRange', '1M')->data;
