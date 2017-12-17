@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Controllers\Import;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Http\Middleware\IsLimitedUser;
 use FireflyIII\Import\Configuration\ConfiguratorInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
@@ -56,6 +57,7 @@ class ConfigurationController extends Controller
                 return $next($request);
             }
         );
+        $this->middleware(IsLimitedUser::class)->except(['index']);
     }
 
     /**
