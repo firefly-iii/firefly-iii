@@ -87,6 +87,8 @@ class ConfigurationController extends Controller
     }
 
     /**
+     * Store the configuration. Returns to "configure" method until job is configured.
+     *
      * @param Request   $request
      * @param ImportJob $job
      *
