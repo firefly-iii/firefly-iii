@@ -24,6 +24,11 @@ namespace FireflyIII\Helpers\Filter;
 
 use Illuminate\Support\Collection;
 
+/**
+ * Interface FilterInterface
+ *
+ * @package FireflyIII\Helpers\Filter
+ */
 interface FilterInterface
 {
     /**

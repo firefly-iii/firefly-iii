@@ -46,6 +46,9 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
+/**
+ * Class Kernel
+ */
 class Kernel extends HttpKernel
 {
     /**

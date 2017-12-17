@@ -53,11 +53,20 @@ class Bill extends Model
             'name_encrypted'  => 'boolean',
             'match_encrypted' => 'boolean',
         ];
+    /**
+     * @var array
+     */
     protected $fillable
                       = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip',
                          'automatch', 'active',];
+    /**
+     * @var array
+     */
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
-    protected $rules  = ['name' => 'required|between:1,200'];
+    /**
+     * @var array
+     */
+    protected $rules = ['name' => 'required|between:1,200'];
 
     /**
      * @param Bill $value

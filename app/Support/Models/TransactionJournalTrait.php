@@ -46,7 +46,6 @@ trait TransactionJournalTrait
     /**
      * @return string
      *
-     * @throws FireflyException
      */
     public function amount(): string
     {

@@ -51,6 +51,7 @@ class Map implements ConfigurationInterface
      *
      * @throws FireflyException
      * @throws \League\Csv\Exception
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function getData(): array
     {
@@ -187,6 +188,7 @@ class Map implements ConfigurationInterface
 
     /**
      * @return bool
+     * @throws FireflyException
      */
     private function getMappableColumns(): bool
     {

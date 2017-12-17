@@ -27,6 +27,9 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Prerequisites\PrerequisitesInterface;
 
+/**
+ * Class BankController
+ */
 class BankController extends Controller
 {
 

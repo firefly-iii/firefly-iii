@@ -24,6 +24,9 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 
+/**
+ * Class ExampleTest
+ */
 class ExampleTest extends TestCase
 {
     /**

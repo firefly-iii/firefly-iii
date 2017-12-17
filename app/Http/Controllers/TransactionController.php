@@ -69,6 +69,7 @@ class TransactionController extends Controller
      * @param string                     $moment
      *
      * @return View
+     * @throws FireflyException
      */
     public function index(Request $request, JournalRepositoryInterface $repository, string $what, string $moment = '')
     {
@@ -128,6 +129,8 @@ class TransactionController extends Controller
     /**
      * @param Request                    $request
      * @param JournalRepositoryInterface $repository
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function reconcile(Request $request, JournalRepositoryInterface $repository)
     {
@@ -139,6 +142,7 @@ class TransactionController extends Controller
 
             $repository->reconcile($transaction);
         }
+        return Response::json(['ok'=>'reconciled']);
     }
 
     /**
@@ -180,7 +184,7 @@ class TransactionController extends Controller
             return $this->redirectToAccount($journal);
         }
         if ($journal->transactionType->type === TransactionType::RECONCILIATION) {
-            return redirect(route('accounts.reconcile.show', [$journal->id]));
+            return redirect(route('accounts.reconcile.show', [$journal->id])); // @codeCoverageIgnore
         }
         $linkTypes    = $linkTypeRepository->get();
         $links        = $linkTypeRepository->getLinks($journal);
@@ -197,7 +201,6 @@ class TransactionController extends Controller
      *
      * @return Collection
      *
-     * @throws FireflyException
      */
     private function getPeriodOverview(string $what): Collection
     {
@@ -248,7 +251,7 @@ class TransactionController extends Controller
             ];
             Log::debug(sprintf('What is %s', $what));
             if ($journals->count() > 0) {
-                $entries->push($array);
+                $entries->push($array); // @codeCoverageIgnore
             }
             $end = app('navigation')->subtractPeriod($end, $range, 1);
         }

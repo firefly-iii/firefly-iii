@@ -74,6 +74,7 @@ class TagRepository implements TagRepositoryInterface
      * @param Tag $tag
      *
      * @return bool
+     * @throws \Exception
      */
     public function destroy(Tag $tag): bool
     {

@@ -31,15 +31,42 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class AccountType extends Model
 {
     const DEFAULT         = 'Default account';
-    const CASH            = 'Cash account';
-    const ASSET           = 'Asset account';
-    const EXPENSE         = 'Expense account';
-    const REVENUE         = 'Revenue account';
+    /**
+     *
+     */
+    const CASH = 'Cash account';
+    /**
+     *
+     */
+    const ASSET = 'Asset account';
+    /**
+     *
+     */
+    const EXPENSE = 'Expense account';
+    /**
+     *
+     */
+    const REVENUE = 'Revenue account';
+    /**
+     *
+     */
     const INITIAL_BALANCE = 'Initial balance account';
-    const BENEFICIARY     = 'Beneficiary account';
-    const IMPORT          = 'Import account';
-    const RECONCILIATION  = 'Reconciliation account';
-    const LOAN            = 'Loan';
+    /**
+     *
+     */
+    const BENEFICIARY = 'Beneficiary account';
+    /**
+     *
+     */
+    const IMPORT = 'Import account';
+    /**
+     *
+     */
+    const RECONCILIATION = 'Reconciliation account';
+    /**
+     *
+     */
+    const LOAN = 'Loan';
     /**
      * The attributes that should be casted to native types.
      *

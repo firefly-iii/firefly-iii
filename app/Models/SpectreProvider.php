@@ -27,6 +27,9 @@ class SpectreProvider extends Model
             'data'            => 'array',
         ];
 
+    /**
+     * @var array
+     */
     protected $fillable = ['spectre_id', 'code', 'mode', 'name', 'status', 'interactive', 'automatic_fetch', 'country_code', 'data'];
 
 }

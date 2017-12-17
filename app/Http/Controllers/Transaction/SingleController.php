@@ -97,6 +97,11 @@ class SingleController extends Controller
         );
     }
 
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function cloneTransaction(TransactionJournal $journal)
     {
         $source       = $journal->sourceAccountList()->first();
@@ -149,7 +154,8 @@ class SingleController extends Controller
     }
 
     /**
-     * @param string $what
+     * @param Request $request
+     * @param string  $what
      *
      * @return View
      */

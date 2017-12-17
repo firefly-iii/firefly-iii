@@ -273,6 +273,8 @@ class HomeController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function testFlash(Request $request)

@@ -29,6 +29,9 @@ use FireflyIII\Models\Transaction;
 use Log;
 use Steam;
 
+/**
+ * Class Modifier
+ */
 class Modifier
 {
     /**
@@ -52,11 +55,11 @@ class Modifier
     /**
      * @param array       $modifier
      * @param Transaction $transaction
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
      * @return bool
      *
-     * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public static function apply(array $modifier, Transaction $transaction): bool
     {

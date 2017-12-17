@@ -37,6 +37,11 @@ class AmountFilter implements FilterInterface
     /** @var int */
     private $modifier = 0;
 
+    /**
+     * AmountFilter constructor.
+     *
+     * @param int $modifier
+     */
     public function __construct(int $modifier)
     {
         $this->modifier = $modifier;

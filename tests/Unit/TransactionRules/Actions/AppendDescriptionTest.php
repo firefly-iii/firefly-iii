@@ -27,6 +27,9 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\AppendDescription;
 use Tests\TestCase;
 
+/**
+ * Class AppendDescriptionTest
+ */
 class AppendDescriptionTest extends TestCase
 {
     /**

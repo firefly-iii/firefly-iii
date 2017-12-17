@@ -46,6 +46,9 @@ class RuleGroup extends Model
             'order'      => 'int',
         ];
 
+    /**
+     * @var array
+     */
     protected $fillable = ['user_id', 'order', 'title', 'description', 'active'];
 
     /**

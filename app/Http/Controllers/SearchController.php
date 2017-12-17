@@ -69,6 +69,13 @@ class SearchController extends Controller
         return view('search.index', compact('query', 'fullQuery', 'subTitle'));
     }
 
+    /**
+     * @param Request         $request
+     * @param SearchInterface $searcher
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function search(Request $request, SearchInterface $searcher)
     {
         $fullQuery    = strval($request->get('query'));
@@ -79,7 +86,7 @@ class SearchController extends Controller
         $cache->addProperty($fullQuery);
 
         if ($cache->has()) {
-            $transactions = $cache->get();
+            $transactions = $cache->get(); // @codeCoverageIgnore
         }
 
         if (!$cache->has()) {

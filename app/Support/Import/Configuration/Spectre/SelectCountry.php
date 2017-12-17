@@ -13,6 +13,9 @@ use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
  */
 class SelectCountry implements ConfigurationInterface
 {
+    /**
+     * @var array
+     */
     public static $allCountries
         = [
             'AF' => 'Afghanistan',
@@ -302,7 +305,7 @@ class SelectCountry implements ConfigurationInterface
     /**
      * @param ImportJob $job
      *
-     * @return ConfigurationInterface
+     * @return void
      */
     public function setJob(ImportJob $job)
     {

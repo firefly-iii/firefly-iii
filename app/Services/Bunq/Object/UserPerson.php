@@ -29,10 +29,19 @@ use Carbon\Carbon;
  */
 class UserPerson extends BunqObject
 {
+    /**
+     * @var
+     */
     private $addressMain;
+    /**
+     * @var
+     */
     private $addressPostal;
     /** @var array */
     private $aliases = [];
+    /**
+     * @var
+     */
     private $avatar;
     /** @var array */
     private $billingContracts = [];
@@ -40,8 +49,17 @@ class UserPerson extends BunqObject
     private $countryOfBirth = '';
     /** @var Carbon */
     private $created;
+    /**
+     * @var
+     */
     private $customer;
+    /**
+     * @var
+     */
     private $customerLimit;
+    /**
+     * @var
+     */
     private $dailyLimit;
     /** @var Carbon */
     private $dateOfBirth;
@@ -77,6 +95,9 @@ class UserPerson extends BunqObject
     private $publicNickName = '';
     /** @var string */
     private $publicUuid = '';
+    /**
+     * @var mixed
+     */
     private $region;
     /** @var int */
     private $sessionTimeout = 0;

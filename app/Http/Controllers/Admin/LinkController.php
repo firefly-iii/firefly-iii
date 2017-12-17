@@ -206,6 +206,13 @@ class LinkController extends Controller
         return redirect($this->getPreviousUri('link_types.create.uri'));
     }
 
+    /**
+     * @param LinkTypeFormRequest         $request
+     * @param LinkTypeRepositoryInterface $repository
+     * @param LinkType                    $linkType
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function update(LinkTypeFormRequest $request, LinkTypeRepositoryInterface $repository, LinkType $linkType)
     {
         if (!$linkType->editable) {

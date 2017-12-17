@@ -185,6 +185,11 @@ class Search implements SearchInterface
         $this->user = $user;
     }
 
+    /**
+     * @param JournalCollectorInterface $collector
+     *
+     * @return JournalCollectorInterface
+     */
     private function applyModifiers(JournalCollectorInterface $collector): JournalCollectorInterface
     {
         foreach ($this->modifiers as $modifier) {

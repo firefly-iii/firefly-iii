@@ -41,6 +41,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * @return string
+     * @throws \Throwable
      */
     public function generate(): string
     {

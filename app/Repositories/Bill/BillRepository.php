@@ -48,6 +48,7 @@ class BillRepository implements BillRepositoryInterface
      * @param Bill $bill
      *
      * @return bool
+     * @throws \Exception
      */
     public function destroy(Bill $bill): bool
     {
@@ -390,6 +391,8 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $date
      *
      * @return \Carbon\Carbon
+     * @throws \FireflyIII\Support\Facades\FireflyException
+     * @throws \FireflyIII\Support\Facades\FireflyException
      */
     public function nextDateMatch(Bill $bill, Carbon $date): Carbon
     {
@@ -427,6 +430,9 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $date
      *
      * @return Carbon
+     * @throws \FireflyIII\Support\Facades\FireflyException
+     * @throws \FireflyIII\Support\Facades\FireflyException
+     * @throws \FireflyIII\Support\Facades\FireflyException
      */
     public function nextExpectedMatch(Bill $bill, Carbon $date): Carbon
     {

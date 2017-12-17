@@ -51,6 +51,8 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @return bool
+     * @throws \Exception
+     * @throws \Exception
      */
     public function cleanupBudgets(): bool
     {
@@ -123,6 +125,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Budget $budget
      *
      * @return bool
+     * @throws \Exception
      */
     public function destroy(Budget $budget): bool
     {
@@ -604,6 +607,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param string $amount
      *
      * @return BudgetLimit
+     * @throws \Exception
      */
     public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): BudgetLimit
     {

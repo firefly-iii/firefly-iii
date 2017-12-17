@@ -31,6 +31,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Session;
 
+/**
+ * Class RegisterController
+ */
 class RegisterController extends Controller
 {
     /*

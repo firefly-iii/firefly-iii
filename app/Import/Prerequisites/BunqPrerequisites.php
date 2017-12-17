@@ -155,6 +155,7 @@ class BunqPrerequisites implements PrerequisitesInterface
      * @return DeviceServerId
      *
      * @throws FireflyException
+     * @throws \Exception
      */
     private function getExistingDevice(): DeviceServerId
     {
@@ -292,6 +293,10 @@ class BunqPrerequisites implements PrerequisitesInterface
      * - Use this token to send a device server request
      * - Store the installation token
      * - Use the installation token each time we need a session.
+     *
+     * @throws FireflyException
+     * @throws FireflyException
+     * @throws \Exception
      */
     private function registerDevice(): DeviceServerId
     {

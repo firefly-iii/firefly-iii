@@ -95,6 +95,7 @@ final class Processor
      * @param string $triggerValue
      *
      * @return Processor
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public static function makeFromString(string $triggerName, string $triggerValue)
     {
@@ -118,6 +119,7 @@ final class Processor
      * @param array $triggers
      *
      * @return Processor
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public static function makeFromStringArray(array $triggers)
     {

@@ -38,6 +38,13 @@ class FixerIO implements ExchangeRateInterface
     /** @var User */
     protected $user;
 
+    /**
+     * @param TransactionCurrency $fromCurrency
+     * @param TransactionCurrency $toCurrency
+     * @param Carbon              $date
+     *
+     * @return CurrencyExchangeRate
+     */
     public function getRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): CurrencyExchangeRate
     {
         $uri        = sprintf('https://api.fixer.io/%s?base=%s&symbols=%s', $date->format('Y-m-d'), $fromCurrency->code, $toCurrency->code);

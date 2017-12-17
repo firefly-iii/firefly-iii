@@ -342,7 +342,6 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      *
-     * @throws FireflyException
      */
     public function period(Account $account, Carbon $start)
     {

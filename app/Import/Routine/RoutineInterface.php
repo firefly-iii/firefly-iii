@@ -25,6 +25,11 @@ namespace FireflyIII\Import\Routine;
 use FireflyIII\Models\ImportJob;
 use Illuminate\Support\Collection;
 
+/**
+ * Interface RoutineInterface
+ *
+ * @package FireflyIII\Import\Routine
+ */
 interface RoutineInterface
 {
     /**

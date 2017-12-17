@@ -151,6 +151,9 @@ class AccountController extends Controller
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @return View
+     * @throws FireflyException
+     * @throws FireflyException
+     * @throws FireflyException
      */
     public function edit(Request $request, Account $account)
     {
@@ -258,6 +261,7 @@ class AccountController extends Controller
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // long and complex but not that excessively so.
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @throws FireflyException
      */
     public function show(Request $request, JournalRepositoryInterface $repository, Account $account, string $moment = '')
     {

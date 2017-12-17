@@ -61,6 +61,7 @@ class SpectreInformation implements InformationInterface
      * color: any associated color.
      *
      * @return array
+     * @throws FireflyException
      */
     public function getAccounts(): array
     {
@@ -113,6 +114,8 @@ class SpectreInformation implements InformationInterface
 
     /**
      * @param SessionToken $sessionToken
+     *
+     * @throws \Exception
      */
     private function closeSession(SessionToken $sessionToken): void
     {
@@ -135,6 +138,7 @@ class SpectreInformation implements InformationInterface
      * @param int          $userId
      *
      * @return Collection
+     * @throws \Exception
      */
     private function getMonetaryAccounts(SessionToken $sessionToken, int $userId): Collection
     {
@@ -159,6 +163,7 @@ class SpectreInformation implements InformationInterface
      * @return int
      *
      * @throws FireflyException
+     * @throws \Exception
      */
     private function getUserInformation(SessionToken $sessionToken): int
     {
@@ -185,6 +190,7 @@ class SpectreInformation implements InformationInterface
 
     /**
      * @return SessionToken
+     * @throws \Exception
      */
     private function startSession(): SessionToken
     {

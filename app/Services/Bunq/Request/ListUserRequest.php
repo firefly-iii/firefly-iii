@@ -43,6 +43,7 @@ class ListUserRequest extends BunqRequest
 
     /**
      *
+     * @throws \Exception
      */
     public function call(): void
     {

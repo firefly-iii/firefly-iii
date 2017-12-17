@@ -38,6 +38,9 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Response;
 
+/**
+ * Class TagReportController
+ */
 class TagReportController extends Controller
 {
     /** @var GeneratorInterface */

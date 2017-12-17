@@ -161,6 +161,9 @@ class MetaPieChartTest extends TestCase
         $this->assertTrue(true);
     }
 
+    /**
+     * @return Collection
+     */
     private function fakeOthers(): Collection
     {
         $set = new Collection;
@@ -181,6 +184,9 @@ class MetaPieChartTest extends TestCase
         return $set;
     }
 
+    /**
+     * @return Collection
+     */
     private function fakeTransactions(): Collection
     {
         $set = new Collection;

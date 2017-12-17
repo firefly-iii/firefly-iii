@@ -70,7 +70,6 @@ class TwoFactorController extends Controller
     /**
      * @return mixed
      *
-     * @throws FireflyException
      */
     public function lostTwoFactor()
     {

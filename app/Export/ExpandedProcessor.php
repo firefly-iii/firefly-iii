@@ -173,6 +173,7 @@ class ExpandedProcessor implements ProcessorInterface
      * @return bool
      *
      * @throws FireflyException
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function createZipFile(): bool
     {

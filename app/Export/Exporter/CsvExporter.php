@@ -52,6 +52,7 @@ class CsvExporter extends BasicExporter implements ExporterInterface
 
     /**
      * @return bool
+     * @throws \TypeError
      */
     public function run(): bool
     {

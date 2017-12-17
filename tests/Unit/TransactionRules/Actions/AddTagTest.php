@@ -28,6 +28,9 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\AddTag;
 use Tests\TestCase;
 
+/**
+ * Class AddTagTest
+ */
 class AddTagTest extends TestCase
 {
     /**

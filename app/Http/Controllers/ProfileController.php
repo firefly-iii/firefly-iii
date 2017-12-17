@@ -259,8 +259,9 @@ class ProfileController extends Controller
     }
 
     /**
-     * @param string $token
-     * @param string $hash
+     * @param UserRepositoryInterface $repository
+     * @param string                  $token
+     * @param string                  $hash
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *

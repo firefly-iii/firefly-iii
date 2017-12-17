@@ -84,10 +84,19 @@ class Transaction extends Model
             'bill_name_encrypted' => 'boolean',
             'reconciled'          => 'boolean',
         ];
+    /**
+     * @var array
+     */
     protected $fillable
                       = ['account_id', 'transaction_journal_id', 'description', 'amount', 'identifier', 'transaction_currency_id', 'foreign_currency_id',
                          'foreign_amount',];
+    /**
+     * @var array
+     */
     protected $hidden = ['encrypted'];
+    /**
+     * @var array
+     */
     protected $rules
                       = [
             'account_id'              => 'required|exists:accounts,id',

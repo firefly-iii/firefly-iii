@@ -31,6 +31,9 @@ use Illuminate\Http\Request;
  */
 class Binder
 {
+    /**
+     * @var array
+     */
     protected $binders = [];
 
     /**

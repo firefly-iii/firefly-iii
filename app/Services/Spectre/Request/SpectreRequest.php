@@ -38,6 +38,9 @@ abstract class SpectreRequest
 {
     /** @var string */
     protected $clientId  = '';
+    /**
+     * @var int
+     */
     protected $expiresAt = 0;
     /** @var ServerPublicKey */
     protected $serverPublicKey;
@@ -52,6 +55,10 @@ abstract class SpectreRequest
 
     /**
      * SpectreRequest constructor.
+     *
+     * @param User $user
+     *
+     * @throws \Illuminate\Container\EntryNotFoundException
      */
     public function __construct(User $user)
     {
@@ -279,11 +286,9 @@ abstract class SpectreRequest
     /**
      * @param string $uri
      * @param array  $data
-     * @param array  $headers
-     *
      * @return array
      *
-     * @throws Exception
+     * @throws FireflyException
      */
     protected function sendSignedSpectreGet(string $uri, array $data): array
     {

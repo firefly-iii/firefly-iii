@@ -34,6 +34,9 @@ use Log;
  */
 class Initial implements ConfigurationInterface
 {
+    /**
+     * @var
+     */
     private $job;
 
     /**

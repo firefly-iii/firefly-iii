@@ -49,6 +49,9 @@ class RuleRepository implements RuleRepositoryInterface
      * @param Rule $rule
      *
      * @return bool
+     * @throws \Exception
+     * @throws \Exception
+     * @throws \Exception
      */
     public function destroy(Rule $rule): bool
     {

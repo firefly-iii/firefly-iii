@@ -13,14 +13,22 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Log;
 
+/**
+ * Class GetSpectreProviders
+ */
 class GetSpectreProviders implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * @var User
+     */
     protected $user;
 
     /**
      * Create a new job instance.
+     *
+     * @param User $user
      */
     public function __construct(User $user)
     {
@@ -30,6 +38,9 @@ class GetSpectreProviders implements ShouldQueue
 
     /**
      * Execute the job.
+     *
+     * @throws \Illuminate\Container\EntryNotFoundException
+     * @throws \Exception
      */
     public function handle()
     {

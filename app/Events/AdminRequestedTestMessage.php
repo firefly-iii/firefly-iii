@@ -33,7 +33,13 @@ class AdminRequestedTestMessage extends Event
 {
     use SerializesModels;
 
+    /**
+     * @var string
+     */
     public $ipAddress;
+    /**
+     * @var User
+     */
     public $user;
 
     /**

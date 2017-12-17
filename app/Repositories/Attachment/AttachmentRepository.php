@@ -43,6 +43,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      * @param Attachment $attachment
      *
      * @return bool
+     * @throws \Exception
      */
     public function destroy(Attachment $attachment): bool
     {
@@ -129,6 +130,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      * @param Attachment $attachment
      *
      * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function getContent(Attachment $attachment): string
     {

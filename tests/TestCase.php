@@ -42,6 +42,8 @@ abstract class TestCase extends BaseTestCase
     /**
      * @param User   $user
      * @param string $range
+     *
+     * @throws \Exception
      */
     public function changeDateRange(User $user, $range)
     {

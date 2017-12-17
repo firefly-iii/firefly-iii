@@ -47,6 +47,7 @@ class DeviceSessionRequest extends BunqRequest
 
     /**
      *
+     * @throws \Exception
      */
     public function call(): void
     {
@@ -115,6 +116,11 @@ class DeviceSessionRequest extends BunqRequest
         return $deviceSessionId;
     }
 
+    /**
+     * @param array $response
+     *
+     * @return SessionToken
+     */
     private function extractSessionToken(array $response): SessionToken
     {
         $data         = $this->getKeyFromResponse('Token', $response);

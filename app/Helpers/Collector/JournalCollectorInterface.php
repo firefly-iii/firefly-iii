@@ -203,6 +203,11 @@ interface JournalCollectorInterface
      */
     public function setTypes(array $types): JournalCollectorInterface;
 
+    /**
+     * @param User $user
+     *
+     * @return mixed
+     */
     public function setUser(User $user);
 
     /**

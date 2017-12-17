@@ -49,6 +49,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      * @param RuleGroup|null $moveTo
      *
      * @return bool
+     * @throws \Exception
+     * @throws \Exception
      */
     public function destroy(RuleGroup $ruleGroup, ?RuleGroup $moveTo): bool
     {

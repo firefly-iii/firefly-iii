@@ -31,7 +31,13 @@ class MonetaryAccountProfile extends BunqObject
     private $profileActionRequired = '';
     /** @var Amount */
     private $profileAmountRequired;
+    /**
+     * @var null
+     */
     private $profileDrain;
+    /**
+     * @var null
+     */
     private $profileFill;
 
     /**

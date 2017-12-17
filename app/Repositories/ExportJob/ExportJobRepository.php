@@ -53,6 +53,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
 
     /**
      * @return bool
+     * @throws \Exception
      */
     public function cleanup(): bool
     {
@@ -137,6 +138,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
      * @param ExportJob $job
      *
      * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function getContent(ExportJob $job): string
     {

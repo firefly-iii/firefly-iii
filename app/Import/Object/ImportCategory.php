@@ -28,6 +28,9 @@ use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
 
+/**
+ * Class ImportCategory
+ */
 class ImportCategory
 {
     /** @var Category */

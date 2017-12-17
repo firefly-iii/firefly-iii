@@ -44,6 +44,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      * @param Category $category
      *
      * @return bool
+     * @throws \Exception
      */
     public function destroy(Category $category): bool
     {

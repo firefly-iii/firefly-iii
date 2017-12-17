@@ -45,44 +45,131 @@ use FireflyIII\Models\Transaction;
 final class Entry
 {
     // @formatter:off
+    /**
+     * @var
+     */
     public $journal_id;
+    /**
+     * @var int
+     */
     public $transaction_id = 0;
 
+    /**
+     * @var
+     */
     public $date;
+    /**
+     * @var
+     */
     public $description;
 
+    /**
+     * @var
+     */
     public $currency_code;
+    /**
+     * @var
+     */
     public $amount;
+    /**
+     * @var string
+     */
     public $foreign_currency_code = '';
-    public $foreign_amount        = '0';
+    /**
+     * @var string
+     */
+    public $foreign_amount = '0';
 
+    /**
+     * @var
+     */
     public $transaction_type;
 
+    /**
+     * @var
+     */
     public $asset_account_id;
+    /**
+     * @var
+     */
     public $asset_account_name;
+    /**
+     * @var
+     */
     public $asset_account_iban;
+    /**
+     * @var
+     */
     public $asset_account_bic;
+    /**
+     * @var
+     */
     public $asset_account_number;
+    /**
+     * @var
+     */
     public $asset_currency_code;
 
+    /**
+     * @var
+     */
     public $opposing_account_id;
+    /**
+     * @var
+     */
     public $opposing_account_name;
+    /**
+     * @var
+     */
     public $opposing_account_iban;
+    /**
+     * @var
+     */
     public $opposing_account_bic;
+    /**
+     * @var
+     */
     public $opposing_account_number;
+    /**
+     * @var
+     */
     public $opposing_currency_code;
 
+    /**
+     * @var
+     */
     public $budget_id;
+    /**
+     * @var
+     */
     public $budget_name;
 
+    /**
+     * @var
+     */
     public $category_id;
+    /**
+     * @var
+     */
     public $category_name;
 
+    /**
+     * @var
+     */
     public $bill_id;
+    /**
+     * @var
+     */
     public $bill_name;
 
+    /**
+     * @var
+     */
     public $notes;
 
+    /**
+     * @var
+     */
     public $tags;
 
 

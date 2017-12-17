@@ -29,10 +29,14 @@ use Log;
  */
 class ListProvidersRequest extends SpectreRequest
 {
+    /**
+     * @var array
+     */
     protected $providers = [];
 
     /**
      *
+     * @throws \Exception
      */
     public function call(): void
     {

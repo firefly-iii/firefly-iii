@@ -27,6 +27,9 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
 use Log;
 
+/**
+ * Class ImportCurrency
+ */
 class ImportCurrency
 {
     /** @var array */

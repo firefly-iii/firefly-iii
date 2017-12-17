@@ -44,6 +44,9 @@ class ImportJob extends Model
             'updated_at' => 'datetime',
         ];
 
+    /**
+     * @var array
+     */
     protected $validStatus
         = [
             'new',
@@ -176,6 +179,7 @@ class ImportJob extends Model
 
     /**
      * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function uploadFileContents(): string
     {

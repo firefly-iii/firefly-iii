@@ -25,6 +25,9 @@ namespace FireflyIII\Services\Bunq\Object;
 use Carbon\Carbon;
 use FireflyIII\Services\Bunq\Id\DeviceServerId;
 
+/**
+ * Class DeviceServer
+ */
 class DeviceServer extends BunqObject
 {
     /** @var Carbon */
@@ -40,6 +43,11 @@ class DeviceServer extends BunqObject
     /** @var Carbon */
     private $updated;
 
+    /**
+     * DeviceServer constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         $id = new DeviceServerId();

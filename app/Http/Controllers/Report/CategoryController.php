@@ -40,6 +40,7 @@ class CategoryController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
+     * @throws \Throwable
      */
     public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -71,6 +72,7 @@ class CategoryController extends Controller
      * @param Collection $accounts
      *
      * @return string
+     * @throws \Throwable
      */
     public function income(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -104,6 +106,7 @@ class CategoryController extends Controller
      * @return mixed|string
      *
      * @internal param ReportHelperInterface $helper
+     * @throws \Throwable
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end)
     {

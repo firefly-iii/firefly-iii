@@ -27,6 +27,11 @@ use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 
+/**
+ * Interface ExchangeRateInterface
+ *
+ * @package FireflyIII\Services\Currency
+ */
 interface ExchangeRateInterface
 {
     /**

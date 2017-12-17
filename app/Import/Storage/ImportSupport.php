@@ -408,6 +408,12 @@ trait ImportSupport
         }
     }
 
+    /**
+     * @param array $parameters
+     *
+     * @return TransactionJournal
+     * @throws FireflyException
+     */
     private function storeJournal(array $parameters): TransactionJournal
     {
         // find transaction type:

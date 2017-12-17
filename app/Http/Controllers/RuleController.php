@@ -72,6 +72,8 @@ class RuleController extends Controller
      * @param RuleGroup $ruleGroup
      *
      * @return View
+     * @throws \Throwable
+     * @throws \Throwable
      */
     public function create(Request $request, RuleGroup $ruleGroup)
     {
@@ -164,6 +166,10 @@ class RuleController extends Controller
      * @param Rule                    $rule
      *
      * @return View
+     * @throws \Throwable
+     * @throws \Throwable
+     * @throws \Throwable
+     * @throws \Throwable
      */
     public function edit(Request $request, RuleRepositoryInterface $repository, Rule $rule)
     {
@@ -356,6 +362,7 @@ class RuleController extends Controller
      * @param TestRuleFormRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
      */
     public function testTriggers(TestRuleFormRequest $request)
     {
@@ -528,6 +535,7 @@ class RuleController extends Controller
      * @param Rule $rule
      *
      * @return array
+     * @throws \Throwable
      */
     private function getCurrentActions(Rule $rule)
     {
@@ -556,6 +564,7 @@ class RuleController extends Controller
      * @param Rule $rule
      *
      * @return array
+     * @throws \Throwable
      */
     private function getCurrentTriggers(Rule $rule)
     {
@@ -586,6 +595,7 @@ class RuleController extends Controller
      * @param Request $request
      *
      * @return array
+     * @throws \Throwable
      */
     private function getPreviousActions(Request $request)
     {
@@ -615,6 +625,7 @@ class RuleController extends Controller
      * @param Request $request
      *
      * @return array
+     * @throws \Throwable
      */
     private function getPreviousTriggers(Request $request)
     {

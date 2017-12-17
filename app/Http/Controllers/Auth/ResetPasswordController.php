@@ -25,6 +25,9 @@ namespace FireflyIII\Http\Controllers\Auth;
 use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 
+/**
+ * Class ResetPasswordController
+ */
 class ResetPasswordController extends Controller
 {
     /*

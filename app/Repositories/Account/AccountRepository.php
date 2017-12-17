@@ -72,6 +72,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @param Account $moveTo
      *
      * @return bool
+     * @throws \Exception
      */
     public function destroy(Account $account, Account $moveTo): bool
     {
@@ -239,6 +240,8 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param Account $account
+     *
+     * @throws \Exception
      */
     protected function deleteInitialBalance(Account $account)
     {
@@ -410,6 +413,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @param string $name
      *
      * @return Account
+     * @throws FireflyException
      */
     protected function storeOpposingAccount(string $name): Account
     {
@@ -507,6 +511,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array              $data
      *
      * @return bool
+     * @throws \Exception
      */
     protected function updateOpeningBalanceJournal(Account $account, TransactionJournal $journal, array $data): bool
     {

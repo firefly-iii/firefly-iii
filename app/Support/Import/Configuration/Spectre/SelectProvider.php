@@ -50,7 +50,7 @@ class SelectProvider implements ConfigurationInterface
     /**
      * @param ImportJob $job
      *
-     * @return ConfigurationInterface
+     * @return void
      */
     public function setJob(ImportJob $job)
     {

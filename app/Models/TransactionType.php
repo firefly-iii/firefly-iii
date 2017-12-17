@@ -33,11 +33,26 @@ class TransactionType extends Model
 {
     use SoftDeletes;
 
-    const WITHDRAWAL      = 'Withdrawal';
-    const DEPOSIT         = 'Deposit';
-    const TRANSFER        = 'Transfer';
+    /**
+     *
+     */
+    const WITHDRAWAL = 'Withdrawal';
+    /**
+     *
+     */
+    const DEPOSIT = 'Deposit';
+    /**
+     *
+     */
+    const TRANSFER = 'Transfer';
+    /**
+     *
+     */
     const OPENING_BALANCE = 'Opening balance';
-    const RECONCILIATION  = 'Reconciliation';
+    /**
+     *
+     */
+    const RECONCILIATION = 'Reconciliation';
     /**
      * The attributes that should be casted to native types.
      *

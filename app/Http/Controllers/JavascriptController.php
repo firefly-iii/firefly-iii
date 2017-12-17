@@ -87,7 +87,10 @@ class JavascriptController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param Request                     $request
+     *
+     * @param AccountRepositoryInterface  $repository
+     * @param CurrencyRepositoryInterface $currencyRepository
      *
      * @return \Illuminate\Http\Response
      */

@@ -28,6 +28,9 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\SingleCacheProperties;
 use Twig_Extension;
 
+/**
+ * Class TransactionJournal
+ */
 class TransactionJournal extends Twig_Extension
 {
     /**

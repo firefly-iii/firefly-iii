@@ -291,6 +291,7 @@ class SingleControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
+     * @throws \Exception
      */
     public function testStoreSuccess()
     {
@@ -338,6 +339,7 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::update
+     * @throws \Exception
      */
     public function testUpdate()
     {

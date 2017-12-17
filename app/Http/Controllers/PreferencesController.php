@@ -71,6 +71,8 @@ class PreferencesController extends Controller
 
     /**
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Exception
+     * @throws \Exception
      */
     public function deleteCode()
     {

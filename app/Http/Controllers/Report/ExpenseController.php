@@ -211,6 +211,15 @@ class ExpenseController extends Controller
 
     }
 
+    /**
+     * @param Collection $accounts
+     * @param Collection $expense
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     * @throws \Throwable
+     */
     public function topExpense(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
         // Properties for cache:
@@ -246,6 +255,15 @@ class ExpenseController extends Controller
     }
 
 
+    /**
+     * @param Collection $accounts
+     * @param Collection $expense
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return mixed|string
+     * @throws \Throwable
+     */
     public function topIncome(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
         // Properties for cache:
@@ -366,6 +384,14 @@ class ExpenseController extends Controller
         return $sum;
     }
 
+    /**
+     * @param Collection $assets
+     * @param Collection $opposing
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
     protected function earnedInPeriod(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array
     {
         /** @var JournalCollectorInterface $collector */

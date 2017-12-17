@@ -65,6 +65,9 @@ class LinkType extends Model
         throw new NotFoundHttpException;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function transactionJournalLinks()
     {
         return $this->hasMany(TransactionJournalLink::class);

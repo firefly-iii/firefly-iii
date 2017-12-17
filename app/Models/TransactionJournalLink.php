@@ -32,6 +32,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class TransactionJournalLink extends Model
 {
+    /**
+     * @var string
+     */
     protected $table = 'journal_links';
 
     /**

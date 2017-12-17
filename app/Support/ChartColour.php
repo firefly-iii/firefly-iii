@@ -27,6 +27,9 @@ namespace FireflyIII\Support;
  */
 class ChartColour
 {
+    /**
+     * @var array
+     */
     public static $colours
         = [
             [53, 124, 165],

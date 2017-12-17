@@ -115,6 +115,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::index
      * @covers \FireflyIII\Http\Controllers\ProfileController::__construct
+     * @throws \Exception
      */
     public function testIndex()
     {

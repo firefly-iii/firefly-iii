@@ -22,6 +22,7 @@ class InputMandatory implements ConfigurationInterface
      * Get the data necessary to show the configuration screen.
      *
      * @return array
+     * @throws FireflyException
      */
     public function getData(): array
     {
@@ -56,7 +57,7 @@ class InputMandatory implements ConfigurationInterface
     /**
      * @param ImportJob $job
      *
-     * @return ConfigurationInterface
+     * @return void
      */
     public function setJob(ImportJob $job)
     {
@@ -69,6 +70,7 @@ class InputMandatory implements ConfigurationInterface
      * @param array $data
      *
      * @return bool
+     * @throws FireflyException
      */
     public function storeConfiguration(array $data): bool
     {

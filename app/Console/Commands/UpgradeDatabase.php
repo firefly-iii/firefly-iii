@@ -26,7 +26,7 @@ use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\BudgetLimit;
+
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
@@ -75,6 +75,8 @@ class UpgradeDatabase extends Command
 
     /**
      * Execute the console command.
+     *
+     * @throws \Exception
      */
     public function handle()
     {
@@ -282,6 +284,8 @@ class UpgradeDatabase extends Command
 
     /**
      * Move all the journal_meta notes to their note object counter parts.
+     *
+     * @throws \Exception
      */
     private function migrateNotes(): void
     {

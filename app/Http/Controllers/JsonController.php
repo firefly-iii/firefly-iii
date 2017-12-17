@@ -46,6 +46,7 @@ class JsonController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
      */
     public function action(Request $request)
     {
@@ -120,6 +121,7 @@ class JsonController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
      */
     public function trigger(Request $request)
     {

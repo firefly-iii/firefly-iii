@@ -73,8 +73,9 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param Budget  $budget
+     * @param Request                   $request
+     * @param BudgetRepositoryInterface $repository
+     * @param Budget                    $budget
      *
      * @return \Illuminate\Http\JsonResponse
      */

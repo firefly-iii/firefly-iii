@@ -128,6 +128,8 @@ class ConvertController extends Controller
      * @param TransactionJournal         $journal
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws FireflyException
+     * @throws FireflyException
      */
     public function postIndex(Request $request, JournalRepositoryInterface $repository, TransactionType $destinationType, TransactionJournal $journal)
     {

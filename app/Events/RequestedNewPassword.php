@@ -32,8 +32,17 @@ class RequestedNewPassword extends Event
 {
     use SerializesModels;
 
+    /**
+     * @var string
+     */
     public $ipAddress;
+    /**
+     * @var string
+     */
     public $token;
+    /**
+     * @var User
+     */
     public $user;
 
     /**

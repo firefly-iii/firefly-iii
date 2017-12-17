@@ -28,6 +28,9 @@ use FireflyIII\Jobs\MailError;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Request;
 
+/**
+ * Class Handler
+ */
 class Handler extends ExceptionHandler
 {
     /**
@@ -78,6 +81,7 @@ class Handler extends ExceptionHandler
      * @param \Exception $exception
      *
      * @return mixed|void
+     * @throws Exception
      */
     public function report(Exception $exception)
     {

@@ -42,6 +42,9 @@ class Configuration extends Model
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    /**
+     * @var string
+     */
     protected $table = 'configuration';
 
     /**

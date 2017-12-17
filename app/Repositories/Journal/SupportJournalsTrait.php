@@ -119,6 +119,8 @@ trait SupportJournalsTrait
      * @param array $data
      *
      * @return array
+     * @throws FireflyException
+     * @throws FireflyException
      */
     protected function storeDepositAccounts(User $user, array $data): array
     {
@@ -165,6 +167,8 @@ trait SupportJournalsTrait
      * @param array $data
      *
      * @return array
+     * @throws FireflyException
+     * @throws FireflyException
      */
     protected function storeWithdrawalAccounts(User $user, array $data): array
     {

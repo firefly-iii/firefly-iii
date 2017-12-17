@@ -42,8 +42,14 @@ class PiggyBankEvent extends Model
         ];
     /** @var array */
     protected $dates    = ['date'];
+    /**
+     * @var array
+     */
     protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'amount'];
-    protected $hidden   = ['amount_encrypted'];
+    /**
+     * @var array
+     */
+    protected $hidden = ['amount_encrypted'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

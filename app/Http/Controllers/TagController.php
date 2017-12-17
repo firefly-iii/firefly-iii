@@ -161,7 +161,7 @@ class TagController extends Controller
         $start = new Carbon;
         if (null !== $oldestTag) {
             /** @var Carbon $start */
-            $start = $oldestTag->date;
+            $start = $oldestTag->date; // @codeCoverageIgnore
         }
         if (null === $oldestTag) {
             /** @var Carbon $start */

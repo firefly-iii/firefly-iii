@@ -42,7 +42,10 @@ class AccountMeta extends Model
         ];
     /** @var array */
     protected $fillable = ['account_id', 'name', 'data'];
-    protected $table    = 'account_meta';
+    /**
+     * @var string
+     */
+    protected $table = 'account_meta';
 
     /**
      * @return BelongsTo
