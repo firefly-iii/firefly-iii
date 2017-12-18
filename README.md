@@ -13,7 +13,7 @@ There are many financial reports available.
 
 ## Want to try Firefly III?
 
-There is a **[demo site](https://firefly-iii.nder.be)** with an example financial administration already present. You can use Docker, Heroku or Sandstorm.io (see below) to quickly setup your own instance.
+There is a **[demo site](https://demo.firefly-iii.org/)** with an example financial administration already present. You can use Docker, Heroku or Sandstorm.io (see below) to quickly setup your own instance.
 
 ## Install Firefly III
 
