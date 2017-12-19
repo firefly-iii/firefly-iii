@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
     'iban'                           => 'Il ne s\'agit pas d\'un IBAN valide.',
     'unique_account_number_for_user' => 'Il semble que ce numéro de compte est déjà utilisé.',

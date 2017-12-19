@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
     'password' => 'Hasło musi zawierać przynajmniej 6 znaków i musi się zgadzać z potwierdzeniem.',
     'user'     => 'Nie możemy znaleźć użytkownika o podanym adresie email.',

@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
     'no_demo_text'                   => 'Leider gibt es keine zusätzlichen Demoerklärungen für <abbr title=":route">diese Seite</abbr>.',
     'see_help_icon'                  => 'Trotzdem kann der <i class="fa fa-question-circle"></i>-Icon in der oberen rechten Ecke mehr erzählen.',

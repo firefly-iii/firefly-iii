@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
     'home'                => 'Strona główna',
     'edit_currency'       => 'Modyfikuj walutę ":name"',
@@ -29,7 +30,7 @@ return [
     'preferences'         => 'Preferencje',
     'profile'             => 'Profil',
     'changePassword'      => 'Zmień swoje hasło',
-    'change_email'      => 'Change your email address',
+    'change_email'        => 'Change your email address',
     'bills'               => 'Rachunki',
     'newBill'             => 'Nowy rachunek',
     'edit_bill'           => 'Modyfikuj rachunek ":name"',

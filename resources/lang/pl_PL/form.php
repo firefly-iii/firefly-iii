@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
 
     // new user:
@@ -200,7 +201,7 @@ return [
     'app_secret'            => 'App secret',
     'public_key'            => 'Public key',
     'country_code'          => 'Country code',
-    'provider_code'          => 'Bank or data-provider',
+    'provider_code'         => 'Bank or data-provider',
 
 
     'due_date'           => 'Termin realizacji',

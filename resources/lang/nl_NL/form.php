@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
 
     // new user:
@@ -200,7 +201,7 @@ return [
     'app_secret'            => 'App secret',
     'public_key'            => 'Publieke sleutel',
     'country_code'          => 'Landcode',
-    'provider_code'          => 'Bank of gegevensprovider',
+    'provider_code'         => 'Bank of gegevensprovider',
 
 
     'due_date'           => 'Vervaldatum',

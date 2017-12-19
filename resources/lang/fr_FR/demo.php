@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
     'no_demo_text'                   => 'Désolé, il n’y a aucun texte supplémentaire de démonstration ou d\'explication pour <abbr title=":route"> cette page</abbr>.',
     'see_help_icon'                  => 'Cependant, l\'icône <i class="fa fa-question-circle"></i> située dans le coin supérieur droit peut vous en dire plus.',

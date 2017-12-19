@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
 
     // new user:
@@ -195,12 +196,12 @@ return [
     'csv_delimiter'         => 'Délimiteur de champ CSV',
     'csv_import_account'    => 'Compte d’importation par défaut',
     'csv_config'            => 'Configuration d\'importation CSV',
-    'client_id'             => 'Client ID',
+    'client_id'             => 'Identifiant',
     'service_secret'        => 'Service secret',
     'app_secret'            => 'App secret',
-    'public_key'            => 'Public key',
-    'country_code'          => 'Country code',
-    'provider_code'          => 'Bank or data-provider',
+    'public_key'            => 'Clé publique',
+    'country_code'          => 'Code pays',
+    'provider_code'         => 'Banque ou fournisseur de données',
 
 
     'due_date'           => 'Échéance',

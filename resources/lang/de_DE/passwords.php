@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
     'password' => 'Passwörter müssen mindestens 6 Zeichen lang sein und übereinstimmen.',
     'user'     => 'Wir können keinen Benutzer mit dieser E-Mail Adresse finden.',

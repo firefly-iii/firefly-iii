@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
     'home'                => 'Home',
     'edit_currency'       => 'Wijzig valuta ":name"',
@@ -29,7 +30,7 @@ return [
     'preferences'         => 'Voorkeuren',
     'profile'             => 'Profiel',
     'changePassword'      => 'Verander je wachtwoord',
-    'change_email'      => 'Verander je emailadres',
+    'change_email'        => 'Verander je emailadres',
     'bills'               => 'Contracten',
     'newBill'             => 'Nieuw contract',
     'edit_bill'           => 'Wijzig contract ":name"',

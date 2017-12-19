@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
     'locale'          => 'nl, Dutch, nl_NL, nl_NL.utf8, nl_NL.UTF-8',
     'month'           => '%B %Y',

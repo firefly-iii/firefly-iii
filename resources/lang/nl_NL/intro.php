@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
     // index
     'index_intro'                           => 'Welkom op de homepage van Firefly III. Neem even de tijd voor deze introductie zodat je Firefly III leert kennen.',

@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
     'home'                => 'Home',
     'edit_currency'       => 'Bearbeite die Währung ":name"',
@@ -29,7 +30,7 @@ return [
     'preferences'         => 'Einstellungen',
     'profile'             => 'Profil',
     'changePassword'      => 'Passwort ändern',
-    'change_email'      => 'Change your email address',
+    'change_email'        => 'Change your email address',
     'bills'               => 'Rechnungen',
     'newBill'             => 'Neue Rechnung',
     'edit_bill'           => 'Bearbeite Rechnung ":name"',

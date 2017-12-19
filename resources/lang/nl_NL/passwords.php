@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
     'password' => 'Wachtwoorden moeten zes karakters lang zijn, en natuurlijk 2x hetzelfde invoeren.',
     'user'     => 'Geen gebruiker met dat e-mailadres.',

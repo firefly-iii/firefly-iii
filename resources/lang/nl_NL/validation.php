@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
     'iban'                           => 'Dit is niet een geldige IBAN.',
     'unique_account_number_for_user' => 'Het lijkt erop dat dit rekeningnummer al in gebruik is.',
