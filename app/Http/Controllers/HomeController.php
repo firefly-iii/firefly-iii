@@ -102,7 +102,7 @@ class HomeController extends Controller
      */
     public function displayDebug(Request $request)
     {
-        $phpVersion     = PHP_VERSION;
+        $phpVersion     = str_replace('~','\~',PHP_VERSION);
         $phpOs          = php_uname();
         $interface      = PHP_SAPI;
         $now            = Carbon::create()->format('Y-m-d H:i:s e');

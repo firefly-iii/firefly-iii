@@ -25,7 +25,7 @@ namespace FireflyIII\Import\Converter;
 use Log;
 
 /**
- * Class RabobankDebetCredit.
+ * Class Amount.
  */
 class Amount implements ConverterInterface
 {

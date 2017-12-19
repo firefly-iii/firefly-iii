@@ -63,7 +63,7 @@ class ImportJournal
     /** @var array */
     private $amountCredit;
     /** @var array */
-    private $amountDebet;
+    private $amountDebit;
     /** @var string */
     private $convertedAmount = null;
     /** @var string */
@@ -105,7 +105,7 @@ class ImportJournal
     {
         Log::debug('Now in getAmount()');
         Log::debug(sprintf('amount is %s', var_export($this->amount, true)));
-        Log::debug(sprintf('debet amount is %s', var_export($this->amountDebet, true)));
+        Log::debug(sprintf('debit amount is %s', var_export($this->amountDebit, true)));
         Log::debug(sprintf('credit amount is %s', var_export($this->amountCredit, true)));
 
         if (null === $this->convertedAmount) {
@@ -188,8 +188,8 @@ class ImportJournal
             case 'amount':
                 $this->amount = $array;
                 break;
-            case 'amount_debet':
-                $this->amountDebet = $array;
+            case 'amount_debit':
+                $this->amountDebit = $array;
                 break;
             case 'amount_credit':
                 $this->amountCredit = $array;
@@ -250,8 +250,8 @@ class ImportJournal
                 break;
             case '_ignore':
                 break;
-            case 'ing-debet-credit':
-            case 'rabo-debet-credit':
+            case 'ing-debit-credit':
+            case 'rabo-debit-credit':
                 $this->addToModifier($array);
                 break;
             case 'opposing-iban':
@@ -284,7 +284,7 @@ class ImportJournal
 
     /**
      * If convertedAmount is NULL, this method will try to calculate the correct amount.
-     * It starts with amount, but can be overruled by debet and credit amounts.
+     * It starts with amount, but can be overruled by debit and credit amounts.
      *
      * @throws FireflyException
      */
@@ -332,13 +332,13 @@ class ImportJournal
             $converterClass = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $this->amount['role'])));
             $info           = $this->amount;
         }
-        if (!is_null($this->amountDebet)) {
-            Log::debug('Amount DEBET value is not NULL, assume this is the correct value (overrules Amount).');
-            $converterClass = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $this->amountDebet['role'])));
-            $info           = $this->amountDebet;
+        if (!is_null($this->amountDebit)) {
+            Log::debug('Amount DEBIT value is not NULL, assume this is the correct value (overrules Amount).');
+            $converterClass = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $this->amountDebit['role'])));
+            $info           = $this->amountDebit;
         }
         if (!is_null($this->amountCredit)) {
-            Log::debug('Amount CREDIT value is not NULL, assume this is the correct value (overrules Amount and AmountDebet).');
+            Log::debug('Amount CREDIT value is not NULL, assume this is the correct value (overrules Amount and AmountDebit).');
             $converterClass = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $this->amountCredit['role'])));
             $info           = $this->amountCredit;
         }

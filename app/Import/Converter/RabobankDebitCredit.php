@@ -1,6 +1,6 @@
 <?php
 /**
- * RabobankDebetCredit.php
+ * RabobankDebitCredit.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -25,9 +25,9 @@ namespace FireflyIII\Import\Converter;
 use Log;
 
 /**
- * Class RabobankDebetCredit.
+ * Class RabobankDebitCredit.
  */
-class RabobankDebetCredit implements ConverterInterface
+class RabobankDebitCredit implements ConverterInterface
 {
     /**
      * @param $value

@@ -35,7 +35,7 @@ use Log;
 class Initial implements ConfigurationInterface
 {
     /**
-     * @var
+     * @var ImportJob
      */
     private $job;
 
@@ -53,6 +53,11 @@ class Initial implements ConfigurationInterface
             'tab' => trans('form.csv_tab'),
         ];
 
+        // update job with default date format:
+        $config = $this->job->configuration;
+        $config['date-format'] = 'Ymd';
+        $this->job->configuration = $config;
+        $this->job->save();
         $specifics = [];
 
         // collect specifics.
@@ -68,6 +73,7 @@ class Initial implements ConfigurationInterface
             'specifix'   => [],
             'delimiters' => $delimiters,
             'specifics'  => $specifics,
+
         ];
 
         return $data;

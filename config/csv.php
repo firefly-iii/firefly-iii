@@ -175,16 +175,16 @@ return [
             'field'           => 'budget',
             'mapper'          => 'Budgets',
         ],
-        'rabo-debet-credit' => [
+        'rabo-debit-credit' => [
             'mappable'        => false,
             'pre-process-map' => false,
-            'converter'       => 'RabobankDebetCredit',
+            'converter'       => 'RabobankDebitCredit',
             'field'           => 'amount-modifier',
         ],
-        'ing-debet-credit'  => [
+        'ing-debit-credit'  => [
             'mappable'        => false,
             'pre-process-map' => false,
-            'converter'       => 'INGDebetCredit',
+            'converter'       => 'INGDebitCredit',
             'field'           => 'amount-modifier',
         ],
         'category-id'       => [
@@ -280,11 +280,11 @@ return [
             'converter'       => 'Amount',
             'field'           => 'amount',
         ],
-        'amount_debet'      => [
+        'amount_debit'      => [
             'mappable'        => false,
             'pre-process-map' => false,
-            'converter'       => 'AmountDebet',
-            'field'           => 'amount_debet',
+            'converter'       => 'AmountDebit',
+            'field'           => 'amount_debit',
         ],
         'amount_credit'     => [
             'mappable'        => false,

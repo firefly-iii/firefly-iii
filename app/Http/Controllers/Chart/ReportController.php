@@ -88,7 +88,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Shows income and expense, debet/credit: operations.
+     * Shows income and expense, debit/credit: operations.
      *
      * @param Collection $accounts
      * @param Carbon     $start
@@ -143,7 +143,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Shows sum income and expense, debet/credit: operations.
+     * Shows sum income and expense, debit/credit: operations.
      *
      * @param Carbon     $start
      * @param Carbon     $end

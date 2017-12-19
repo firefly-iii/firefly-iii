@@ -1,6 +1,6 @@
 <?php
 /**
- * INGDebetCredit.php
+ * AmountDebit.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -22,30 +22,24 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Converter;
 
-use Log;
-
 /**
- * Class INGDebetCredit.
+ * Class AmountDebit
  */
-class INGDebetCredit implements ConverterInterface
+class AmountDebit implements ConverterInterface
 {
     /**
      * @param $value
      *
-     * @return int
+     * @return string
      */
-    public function convert($value)
+    public function convert($value): string
     {
-        Log::debug('Going to convert ing debet credit', ['value' => $value]);
+        /** @var ConverterInterface $converter */
+        $converter = app(Amount::class);
+        $result    = $converter->convert($value);
+        $result    = app('steam')->positive($result);
+        $result    = bcmul($result, '-1');
 
-        if ('Af' === $value) {
-            Log::debug('Return -1');
-
-            return -1;
-        }
-
-        Log::debug('Return 1');
-
-        return 1;
+        return $result;
     }
 }

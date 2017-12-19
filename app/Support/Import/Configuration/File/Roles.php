@@ -55,7 +55,6 @@ class Roles implements ConfigurationInterface
     {
         $config                = $this->job->configuration;
         $content               = $this->job->uploadFileContents();
-        $config['has-headers'] = true;
         $headers               = [];
         $offset                = 0;
         // create CSV reader.
@@ -272,7 +271,7 @@ class Roles implements ConfigurationInterface
             if ('_ignore' !== $role) {
                 ++$assigned;
             }
-            if (in_array($role, ['amount', 'amount_credit', 'amount_debet'])) {
+            if (in_array($role, ['amount', 'amount_credit', 'amount_debit'])) {
                 $hasAmount = true;
             }
         }
