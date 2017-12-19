@@ -36,6 +36,7 @@ return [
     'status_ready_start'              => 'Start the import',
     'status_ready_share'              => 'Please consider downloading your configuration and sharing it at the <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">import configuration center</a></strong>. This will allow other users of Firefly III to import their files more easily.',
     'status_job_running'              => 'The import is running.. Please wait..',
+    'status_job_finished'             => 'The import has finished!',
     'status_running_title'            => 'The import is running',
     'status_running_placeholder'      => 'Please hold for an update...',
     'status_finished_title'           => 'Import routine finished',

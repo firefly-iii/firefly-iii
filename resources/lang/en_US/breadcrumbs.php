@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
     'home'                => 'Home',
     'edit_currency'       => 'Edit currency ":name"',
@@ -29,7 +30,7 @@ return [
     'preferences'         => 'Preferences',
     'profile'             => 'Profile',
     'changePassword'      => 'Change your password',
-    'change_email'      => 'Change your email address',
+    'change_email'        => 'Change your email address',
     'bills'               => 'Bills',
     'newBill'             => 'New bill',
     'edit_bill'           => 'Edit bill ":name"',

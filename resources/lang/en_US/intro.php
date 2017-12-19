@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
     // index
     'index_intro'                           => 'Welcome to the index page of Firefly III. Please take the time to walk through this intro to get a feeling of how Firefly III works.',

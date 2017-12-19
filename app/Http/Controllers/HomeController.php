@@ -27,7 +27,8 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
-use FireflyIII\Http\Middleware\IsLimitedUser;
+use FireflyIII\Http\Middleware\IsDemoUser;
+use FireflyIII\Http\Middleware\IsSandStormUser;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -55,7 +56,8 @@ class HomeController extends Controller
         parent::__construct();
         app('view')->share('title', 'Firefly III');
         app('view')->share('mainTitleIcon', 'fa-fire');
-        $this->middleware(IsLimitedUser::class)->except(['dateRange', 'index']);
+        $this->middleware(IsDemoUser::class)->except(['dateRange', 'index']);
+        $this->middleware(IsSandStormUser::class)->only('routes');
     }
 
     /**

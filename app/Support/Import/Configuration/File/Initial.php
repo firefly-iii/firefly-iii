@@ -55,9 +55,11 @@ class Initial implements ConfigurationInterface
 
         // update job with default date format:
         $config = $this->job->configuration;
-        $config['date-format'] = 'Ymd';
-        $this->job->configuration = $config;
-        $this->job->save();
+        if (!isset($config['date-format'])) {
+            $config['date-format']    = 'Ymd';
+            $this->job->configuration = $config;
+            $this->job->save();
+        }
         $specifics = [];
 
         // collect specifics.

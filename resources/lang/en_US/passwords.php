@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
     'password' => 'Passwords must be at least six characters and match the confirmation.',
     'user'     => 'We can\'t find a user with that e-mail address.',

@@ -163,7 +163,7 @@ function jobIsStalled(data) {
 function startJob() {
     // disable the button, add loading thing.
     $('.start-job').prop('disabled', true).text('...');
-    $.post(jobStartUri).fail(reportOnSubmitError);
+    $.post(jobStartUri, {_token: token}).fail(reportOnSubmitError);
 
     // check status, every 500 ms.
     timeOutId = setTimeout(checkJobStatus, startInterval);

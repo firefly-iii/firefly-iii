@@ -1,6 +1,6 @@
 <?php
 /**
- * IsLimitedUser.php
+ * IsDemoUser.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -29,9 +29,9 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 
 /**
- * Class IsAdmin.
+ * Class IsDemoUser.
  */
-class IsLimitedUser
+class IsDemoUser
 {
     /**
      * Handle an incoming request. May not be a limited user (ie. Sandstorm env. or demo user).
@@ -55,12 +55,6 @@ class IsLimitedUser
         $user = auth()->user();
         if ($user->hasRole('demo')) {
             Session::flash('warning', strval(trans('firefly.not_available_demo_user')));
-
-            return redirect(route('index'));
-        }
-
-        if (1 === intval(getenv('SANDSTORM'))) {
-            Session::flash('warning', strval(trans('firefly.sandstorm_not_available')));
 
             return redirect(route('index'));
         }

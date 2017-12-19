@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
     'locale'          => 'en, English, en_US, en_US.utf8, en_US.UTF-8',
     'month'           => '%B %Y',

@@ -23,7 +23,8 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Admin;
 
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Http\Middleware\IsLimitedUser;
+use FireflyIII\Http\Middleware\IsDemoUser;
+use FireflyIII\Http\Middleware\IsSandStormUser;
 use FireflyIII\Http\Requests\ConfigurationRequest;
 use FireflyIII\Support\Facades\FireflyConfig;
 use Preferences;
@@ -51,7 +52,8 @@ class ConfigurationController extends Controller
                 return $next($request);
             }
         );
-        $this->middleware(IsLimitedUser::class)->except(['index']);
+        $this->middleware(IsDemoUser::class)->except(['index']);
+        $this->middleware(IsSandStormUser::class);
     }
 
     /**

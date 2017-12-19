@@ -26,7 +26,8 @@ use Auth;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\ValidationException;
-use FireflyIII\Http\Middleware\IsLimitedUser;
+use FireflyIII\Http\Middleware\IsDemoUser;
+use FireflyIII\Http\Middleware\IsSandStormUser;
 use FireflyIII\Http\Requests\DeleteAccountFormRequest;
 use FireflyIII\Http\Requests\EmailFormRequest;
 use FireflyIII\Http\Requests\ProfileFormRequest;
@@ -62,7 +63,8 @@ class ProfileController extends Controller
                 return $next($request);
             }
         );
-        $this->middleware(IsLimitedUser::class)->except(['confirmEmailChange', 'index', 'undoEmailChange']);
+        $this->middleware(IsDemoUser::class)->except(['index']);
+        $this->middleware(IsSandStormUser::class)->except('index');
     }
 
     /**

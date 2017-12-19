@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 return [
     'buttons'                 => 'Buttons',
     'icon'                    => 'Icon',

@@ -26,7 +26,7 @@ namespace FireflyIII\Http\Controllers\Import;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Http\Middleware\IsLimitedUser;
+use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Import\Routine\ImportRoutine;
 use FireflyIII\Import\Routine\RoutineInterface;
 use FireflyIII\Models\ImportJob;
@@ -61,7 +61,7 @@ class IndexController extends Controller
             }
         );
 
-        $this->middleware(IsLimitedUser::class)->except(['create','index']);
+        $this->middleware(IsDemoUser::class)->except(['create','index']);
     }
 
     /**
