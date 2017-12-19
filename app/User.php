@@ -27,8 +27,10 @@ use FireflyIII\Models\CurrencyExchangeRate;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Log;
 use Request;
 
 /**
@@ -84,8 +86,12 @@ class User extends Authenticatable
         if (is_array($role)) {
             $role = $role['id'];
         }
-
-        $this->roles()->attach($role);
+        try {
+            $this->roles()->attach($role);
+        } catch (QueryException $e) {
+            // don't care
+            Log::info(sprintf('Query exception when giving user a role: %s', $e->getMessage()));
+        }
     }
 
     /**
