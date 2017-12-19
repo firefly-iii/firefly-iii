@@ -85,10 +85,10 @@ class PrerequisitesController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @throws FireflyException
      */
-    public function postPrerequisites(Request $request, string $bank)
+    public function post(Request $request, string $bank)
     {
         Log::debug(sprintf('Now in postPrerequisites for %s', $bank));
-        $class = config(sprintf('firefly.import_pre.%s', $bank));
+        $class = strval(config(sprintf('import.prerequisites.%s', $bank)));
         if (!class_exists($class)) {
             throw new FireflyException(sprintf('Cannot find class %s', $class));
         }

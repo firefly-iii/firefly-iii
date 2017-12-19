@@ -200,6 +200,7 @@ return [
     'app_secret'            => 'App secret',
     'public_key'            => 'Public key',
     'country_code'          => 'Country code',
+    'provider_code'          => 'Bank or data-provider',
 
 
     'due_date'           => 'Due date',

@@ -28,6 +28,7 @@ use FireflyIII\User;
 use Log;
 use Requests;
 use Requests_Exception;
+use Requests_Response;
 
 //use FireflyIII\Services\Bunq\Object\ServerPublicKey;
 
@@ -37,7 +38,7 @@ use Requests_Exception;
 abstract class SpectreRequest
 {
     /** @var string */
-    protected $clientId  = '';
+    protected $clientId = '';
     /**
      * @var int
      */
@@ -174,7 +175,7 @@ abstract class SpectreRequest
         // base64(sha1_signature(private_key, "Expires-at|request_method|original_url|post_body|md5_of_uploaded_file|")))
         // Prepare the signature
         $toSign = $this->expiresAt . '|' . strtoupper($method) . '|' . $uri . '|' . $data . ''; // no file so no content there.
-        Log::debug(sprintf('String to sign: %s', $toSign));
+        Log::debug(sprintf('String to sign: "%s"', $toSign));
         $signature = '';
 
         // Sign the data
@@ -204,88 +205,8 @@ abstract class SpectreRequest
 
     /**
      * @param string $uri
-     * @param array  $headers
-     *
-     * @return array
-     *
-     * @throws Exception
-     */
-    protected function sendSignedBunqDelete(string $uri, array $headers): array
-    {
-        if (0 === strlen($this->server)) {
-            throw new FireflyException('No bunq server defined');
-        }
-
-        $fullUri                            = $this->server . $uri;
-        $signature                          = $this->generateSignature('delete', $uri, $headers, '');
-        $headers['X-Bunq-Client-Signature'] = $signature;
-        try {
-            $response = Requests::delete($fullUri, $headers);
-        } catch (Requests_Exception $e) {
-            return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
-        }
-
-        $body                        = $response->body;
-        $array                       = json_decode($body, true);
-        $responseHeaders             = $response->headers->getAll();
-        $statusCode                  = intval($response->status_code);
-        $array['ResponseHeaders']    = $responseHeaders;
-        $array['ResponseStatusCode'] = $statusCode;
-
-        Log::debug(sprintf('Response to DELETE %s is %s', $fullUri, $body));
-        if ($this->isErrorResponse($array)) {
-            $this->throwResponseError($array);
-        }
-
-        if (!$this->verifyServerSignature($body, $responseHeaders, $statusCode)) {
-            throw new FireflyException(sprintf('Could not verify signature for request to "%s"', $uri));
-        }
-
-        return $array;
-    }
-
-    /**
-     * @param string $uri
      * @param array  $data
-     * @param array  $headers
      *
-     * @return array
-     *
-     * @throws Exception
-     */
-    protected function sendSignedBunqPost(string $uri, array $data, array $headers): array
-    {
-        $body                               = json_encode($data);
-        $fullUri                            = $this->server . $uri;
-        $signature                          = $this->generateSignature('post', $uri, $headers, $body);
-        $headers['X-Bunq-Client-Signature'] = $signature;
-        try {
-            $response = Requests::post($fullUri, $headers, $body);
-        } catch (Requests_Exception $e) {
-            return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
-        }
-
-        $body                        = $response->body;
-        $array                       = json_decode($body, true);
-        $responseHeaders             = $response->headers->getAll();
-        $statusCode                  = intval($response->status_code);
-        $array['ResponseHeaders']    = $responseHeaders;
-        $array['ResponseStatusCode'] = $statusCode;
-
-        if ($this->isErrorResponse($array)) {
-            $this->throwResponseError($array);
-        }
-
-        if (!$this->verifyServerSignature($body, $responseHeaders, $statusCode)) {
-            throw new FireflyException(sprintf('Could not verify signature for request to "%s"', $uri));
-        }
-
-        return $array;
-    }
-
-    /**
-     * @param string $uri
-     * @param array  $data
      * @return array
      *
      * @throws FireflyException
@@ -308,11 +229,9 @@ abstract class SpectreRequest
         } catch (Requests_Exception $e) {
             throw new FireflyException(sprintf('Request Exception: %s', $e->getMessage()));
         }
+        $this->detectError($response);
         $statusCode = intval($response->status_code);
 
-        if ($statusCode !== 200) {
-            throw new FireflyException(sprintf('Status code %d: %s', $statusCode, $response->body));
-        }
 
         $body                        = $response->body;
         $array                       = json_decode($body, true);
@@ -320,32 +239,9 @@ abstract class SpectreRequest
         $array['ResponseHeaders']    = $responseHeaders;
         $array['ResponseStatusCode'] = $statusCode;
 
-        return $array;
-    }
-
-    /**
-     * @param string $uri
-     * @param array  $headers
-     *
-     * @return array
-     */
-    protected function sendUnsignedBunqDelete(string $uri, array $headers): array
-    {
-        $fullUri = $this->server . $uri;
-        try {
-            $response = Requests::delete($fullUri, $headers);
-        } catch (Requests_Exception $e) {
-            return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
-        }
-        $body                        = $response->body;
-        $array                       = json_decode($body, true);
-        $responseHeaders             = $response->headers->getAll();
-        $statusCode                  = $response->status_code;
-        $array['ResponseHeaders']    = $responseHeaders;
-        $array['ResponseStatusCode'] = $statusCode;
-
-        if ($this->isErrorResponse($array)) {
-            $this->throwResponseError($array);
+        if (isset($array['error_class'])) {
+            $message = $array['error_message'] ?? '(no message)';
+            throw new FireflyException(sprintf('Error of class %s: %s', $array['error_class'], $message));
         }
 
         return $array;
@@ -354,30 +250,59 @@ abstract class SpectreRequest
     /**
      * @param string $uri
      * @param array  $data
-     * @param array  $headers
      *
      * @return array
+     *
+     * @throws FireflyException
      */
-    protected function sendUnsignedBunqPost(string $uri, array $data, array $headers): array
+    protected function sendSignedSpectrePost(string $uri, array $data): array
     {
-        $body    = json_encode($data);
-        $fullUri = $this->server . $uri;
-        try {
-            $response = Requests::post($fullUri, $headers, $body);
-        } catch (Requests_Exception $e) {
-            return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
+        if (0 === strlen($this->server)) {
+            throw new FireflyException('No Spectre server defined');
         }
+
+        $headers              = $this->getDefaultHeaders();
+        $body                 = json_encode($data);
+        $fullUri              = $this->server . $uri;
+        $signature            = $this->generateSignature('post', $fullUri, $body);
+        $headers['Signature'] = $signature;
+
+        Log::debug('Final headers for spectre signed POST request:', $headers);
+        try {
+            $response = Requests::get($fullUri, $headers);
+        } catch (Requests_Exception $e) {
+            throw new FireflyException(sprintf('Request Exception: %s', $e->getMessage()));
+        }
+        $this->detectError($response);
         $body                        = $response->body;
         $array                       = json_decode($body, true);
         $responseHeaders             = $response->headers->getAll();
-        $statusCode                  = $response->status_code;
         $array['ResponseHeaders']    = $responseHeaders;
-        $array['ResponseStatusCode'] = $statusCode;
-
-        if ($this->isErrorResponse($array)) {
-            $this->throwResponseError($array);
-        }
+        $array['ResponseStatusCode'] = $response->status_code;
 
         return $array;
+    }
+
+    /**
+     * @param Requests_Response $response
+     *
+     * @throws FireflyException
+     */
+    private function detectError(Requests_Response $response): void
+    {
+        $body  = $response->body;
+        $array = json_decode($body, true);
+        if (isset($array['error_class'])) {
+            $message = $array['error_message'] ?? '(no message)';
+
+            throw new FireflyException(sprintf('Error of class %s: %s', $array['error_class'], $message));
+        }
+
+        $statusCode = intval($response->status_code);
+        if ($statusCode !== 200) {
+            throw new FireflyException(sprintf('Status code %d: %s', $statusCode, $response->body));
+        }
+
+        return;
     }
 }
