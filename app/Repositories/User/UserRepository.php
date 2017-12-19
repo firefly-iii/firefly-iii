@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -132,6 +132,7 @@ class UserRepository implements UserRepositoryInterface
      * @param User $user
      *
      * @return bool
+     * @throws \Exception
      */
     public function destroy(User $user): bool
     {
@@ -221,6 +222,18 @@ class UserRepository implements UserRepositoryInterface
     public function hasRole(User $user, string $role): bool
     {
         return $user->hasRole($role);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function unblockUser(User $user): void
+    {
+        $user->blocked      = 0;
+        $user->blocked_code = '';
+        $user->save();
+
+        return;
     }
 
     /**

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -50,6 +50,7 @@ class PresidentsChoice implements SpecificInterface
      */
     public function run(array $row): array
     {
+        $row = array_values($row);
         // first, if column 2 is empty and 3 is not, do nothing.
         // if column 3 is empty and column 2 is not, move amount to column 3, *-1
         if (isset($row[3]) && 0 === strlen($row[3])) {

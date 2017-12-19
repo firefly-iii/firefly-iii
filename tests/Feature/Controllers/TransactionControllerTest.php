@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -25,6 +25,7 @@ namespace Tests\Feature\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
@@ -41,10 +42,12 @@ use Tests\TestCase;
  */
 class TransactionControllerTest extends TestCase
 {
+
     /**
      * @covers \FireflyIII\Http\Controllers\TransactionController::index
      * @covers \FireflyIII\Http\Controllers\TransactionController::__construct
      * @covers \FireflyIII\Http\Controllers\TransactionController::getPeriodOverview
+     * @covers \FireflyIII\Http\Controllers\TransactionController::sumPerCurrency
      */
     public function testIndex()
     {
@@ -104,9 +107,19 @@ class TransactionControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\TransactionController::index
      * @covers \FireflyIII\Http\Controllers\TransactionController::getPeriodOverview
+     * @covers \FireflyIII\Http\Controllers\TransactionController::sumPerCurrency
      */
     public function testIndexByDate()
     {
+        $transaction                              = new Transaction;
+        $transaction->transaction_currency_id     = 1;
+        $transaction->transaction_currency_symbol = 'x';
+        $transaction->transaction_currency_code   = 'ABC';
+        $transaction->transaction_currency_dp     = 2;
+        $transaction->transaction_amount          = '5';
+        $collection                               = new Collection([$transaction]);
+
+
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(JournalCollectorInterface::class);
@@ -122,7 +135,7 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
-        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+        $collector->shouldReceive('getJournals')->andReturn($collection);
 
         $this->be($this->user());
         $response = $this->get(route('transactions.index', ['transfer', '2016-01-01']));
@@ -135,9 +148,18 @@ class TransactionControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\TransactionController::index
      * @covers \FireflyIII\Http\Controllers\TransactionController::__construct
      * @covers \FireflyIII\Http\Controllers\TransactionController::getPeriodOverview
+     * @covers \FireflyIII\Http\Controllers\TransactionController::sumPerCurrency
      */
     public function testIndexDeposit()
     {
+        $transaction                              = new Transaction;
+        $transaction->transaction_currency_id     = 1;
+        $transaction->transaction_currency_symbol = 'x';
+        $transaction->transaction_currency_code   = 'ABC';
+        $transaction->transaction_currency_dp     = 2;
+        $transaction->transaction_amount          = '5';
+        $collection                               = new Collection([$transaction]);
+
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(JournalCollectorInterface::class);
@@ -153,7 +175,7 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
-        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+        $collector->shouldReceive('getJournals')->andReturn($collection);
 
         $this->be($this->user());
         $response = $this->get(route('transactions.index', ['deposit']));
@@ -166,9 +188,18 @@ class TransactionControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\TransactionController::index
      * @covers \FireflyIII\Http\Controllers\TransactionController::__construct
      * @covers \FireflyIII\Http\Controllers\TransactionController::getPeriodOverview
+     * @covers \FireflyIII\Http\Controllers\TransactionController::sumPerCurrency
      */
     public function testIndexWithdrawal()
     {
+        $transaction                              = new Transaction;
+        $transaction->transaction_currency_id     = 1;
+        $transaction->transaction_currency_symbol = 'x';
+        $transaction->transaction_currency_code   = 'ABC';
+        $transaction->transaction_currency_dp     = 2;
+        $transaction->transaction_amount          = '5';
+        $collection                               = new Collection([$transaction]);
+
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(JournalCollectorInterface::class);
@@ -184,13 +215,30 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
-        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+        $collector->shouldReceive('getJournals')->andReturn($collection);
 
         $this->be($this->user());
         $response = $this->get(route('transactions.index', ['withdrawal']));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\TransactionController::reconcile
+     */
+    public function testReconcile()
+    {
+        $data       = ['transactions' => [1, 2]];
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository->shouldReceive('first')->times(1)->andReturn(new TransactionJournal);
+
+        $repository->shouldReceive('findTransaction')->andReturn(new Transaction)->twice();
+        $repository->shouldReceive('reconcile')->twice();
+
+        $this->be($this->user());
+        $response = $this->post(route('transactions.reconcile'), $data);
+        $response->assertStatus(200);
     }
 
     /**

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -44,6 +44,9 @@ class ImportJob extends Model
             'updated_at' => 'datetime',
         ];
 
+    /**
+     * @var array
+     */
     protected $validStatus
         = [
             'new',
@@ -176,6 +179,7 @@ class ImportJob extends Model
 
     /**
      * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function uploadFileContents(): string
     {

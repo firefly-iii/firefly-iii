@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -50,8 +50,8 @@ class ExportController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('mainTitleIcon', 'fa-file-archive-o');
-                View::share('title', trans('firefly.export_and_backup_data'));
+                app('view')->share('mainTitleIcon', 'fa-file-archive-o');
+                app('view')->share('title', trans('firefly.export_and_backup_data'));
 
                 return $next($request);
             }

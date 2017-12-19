@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -43,6 +43,21 @@ use Tests\TestCase;
  */
 class BudgetControllerTest extends TestCase
 {
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\BudgetController::infoIncome
+     */
+    public function testInfoIncome() {
+        // mock stuff
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
+
+        $data = ['amount' => 200, 'start' => '2017-01-01', 'end' => '2017-01-31'];
+        $this->be($this->user());
+        $response = $this->get(route('budgets.income.info', ['20170101','20170131']), $data);
+        $response->assertStatus(200);
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\BudgetController::amount
      */

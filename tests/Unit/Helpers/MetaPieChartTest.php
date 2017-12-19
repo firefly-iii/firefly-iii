@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -161,6 +161,9 @@ class MetaPieChartTest extends TestCase
         $this->assertTrue(true);
     }
 
+    /**
+     * @return Collection
+     */
     private function fakeOthers(): Collection
     {
         $set = new Collection;
@@ -181,6 +184,9 @@ class MetaPieChartTest extends TestCase
         return $set;
     }
 
+    /**
+     * @return Collection
+     */
     private function fakeTransactions(): Collection
     {
         $set = new Collection;

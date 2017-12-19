@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -291,6 +291,7 @@ class SingleControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
+     * @throws \Exception
      */
     public function testStoreSuccess()
     {
@@ -338,6 +339,7 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::update
+     * @throws \Exception
      */
     public function testUpdate()
     {

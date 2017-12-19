@@ -34,7 +34,7 @@
     "transfers",
     "management"
   ],
-  "license": "Creative Commons Attribution-ShareAlike 4.0 International License",
+  "license": "GPL-3.0",
   "homepage": "https://github.com/firefly-iii/firefly-iii",
   "type": "project",
   "authors": [
@@ -60,11 +60,11 @@
     "laravel/framework": "5.5.*",
     "laravelcollective/html": "^5.4",
     "league/commonmark": "0.15.*",
-    "league/csv": "8.*",
+    "league/csv": "9.*",
     "pragmarx/google2fa": "1.*",
     "rcrowe/twigbridge": "0.9.*",
     "rmccue/requests": "1.*",
-    "twig/twig": "1.30.0",
+    "twig/twig": "1.*",
     "watson/validating": "3.*"
   },
   "require-dev": {
@@ -97,6 +97,9 @@
     }
   },
   "scripts": {
+    "pre-install-cmd": [
+      "if [ -z ${DYNO+x} ]; then echo Not in Heroku environment.; else php -r \"file_exists('.env') || copy('.env.heroku', '.env');\"; fi"
+    ],
     "post-root-package-install": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
     ],
@@ -115,9 +118,6 @@
     "post-install-cmd": [
       "php artisan optimize",
       "php artisan firefly:instructions install"
-    ],
-    "compile": [
-      "@php -r \"file_exists('.env.heroku') || copy('.env.heroku', '.env');\""
     ]
   },
   "config": {

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -28,39 +28,25 @@ declare(strict_types=1);
  */
 
 return [
-    'configuration'              => [
+    'configuration'        => [
         'single_user_mode' => true,
         'is_demo_site'     => false,
     ],
-    'encryption'                 => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
-    'version'                    => '4.6.11.1',
-    'maxUploadSize'              => 15242880,
-    'allowedMimes'               => ['image/png', 'image/jpeg', 'application/pdf','text/plain'],
-    'list_length'                => 10,
-    'export_formats'             => [
+    'encryption'           => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
+    'version'              => '4.6.12',
+    'maxUploadSize'        => 15242880,
+    'allowedMimes'         => ['image/png', 'image/jpeg', 'application/pdf', 'text/plain'],
+    'list_length'          => 10,
+    'export_formats'       => [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
     ],
-    'import_formats'             => [
-        'csv' => 'FireflyIII\Import\Configurator\CsvConfigurator',
-    ],
-    'import_configurators'       => [
-        'csv' => 'FireflyIII\Import\Configurator\CsvConfigurator',
-    ],
-    'import_processors'          => [
-        'csv' => 'FireflyIII\Import\FileProcessor\CsvProcessor',
-    ],
-    'import_pre'                 => [
-        'bunq' => 'FireflyIII\Support\Import\Prerequisites\BunqPrerequisites',
-    ],
-    'import_info'                => [
-        'bunq' => 'FireflyIII\Support\Import\Information\BunqInformation',
-    ],
-    'import_transactions'        => [
-        'bunq' => 'FireflyIII\Support\Import\Transactions\BunqTransactions',
-    ],
-    'bunq'                       => [
+    'bunq'                 => [
         'server' => 'https://sandbox.public.api.bunq.com',
     ],
+    'spectre'              => [
+        'server' => 'https://www.saltedge.com',
+    ],
+
     'default_export_format'      => 'csv',
     'default_import_format'      => 'csv',
     'bill_periods'               => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
@@ -180,6 +166,7 @@ return [
         'jobKey'            => 'FireflyIII\Models\ExportJob',
         'importJob'         => 'FireflyIII\Models\ImportJob',
         'accountList'       => 'FireflyIII\Support\Binder\AccountList',
+        'expenseList'       => 'FireflyIII\Support\Binder\AccountList',
         'budgetList'        => 'FireflyIII\Support\Binder\BudgetList',
         'journalList'       => 'FireflyIII\Support\Binder\JournalList',
         'categoryList'      => 'FireflyIII\Support\Binder\CategoryList',

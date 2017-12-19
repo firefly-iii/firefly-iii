@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -31,7 +31,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Navigation;
 use Preferences;
 use Response;
 
@@ -74,11 +73,11 @@ class CategoryController extends Controller
         $start = $repository->firstUseDate($category);
 
         if (null === $start) {
-            $start = new Carbon;
+            $start = new Carbon; // @codeCoverageIgnore
         }
 
         $range     = Preferences::get('viewRange', '1M')->data;
-        $start     = Navigation::startOfPeriod($start, $range);
+        $start     = app('navigation')->startOfPeriod($start, $range);
         $end       = new Carbon;
         $accounts  = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $chartData = [
@@ -101,15 +100,15 @@ class CategoryController extends Controller
         ];
 
         while ($start <= $end) {
-            $currentEnd                      = Navigation::endOfPeriod($start, $range);
+            $currentEnd                      = app('navigation')->endOfPeriod($start, $range);
             $spent                           = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $currentEnd);
             $earned                          = $repository->earnedInPeriod(new Collection([$category]), $accounts, $start, $currentEnd);
             $sum                             = bcadd($spent, $earned);
-            $label                           = Navigation::periodShow($start, $range);
+            $label                           = app('navigation')->periodShow($start, $range);
             $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 12);
             $chartData[1]['entries'][$label] = round($earned, 12);
             $chartData[2]['entries'][$label] = round($sum, 12);
-            $start                           = Navigation::addPeriod($start, $range, 0);
+            $start                           = app('navigation')->addPeriod($start, $range, 0);
         }
 
         $data = $this->generator->multiSet($chartData);
@@ -180,7 +179,7 @@ class CategoryController extends Controller
         }
         $expenses  = $repository->periodExpenses(new Collection([$category]), $accounts, $start, $end);
         $income    = $repository->periodIncome(new Collection([$category]), $accounts, $start, $end);
-        $periods   = Navigation::listOfPeriods($start, $end);
+        $periods   = app('navigation')->listOfPeriods($start, $end);
         $chartData = [
             [
                 'label'   => strval(trans('firefly.spent')),
@@ -236,7 +235,7 @@ class CategoryController extends Controller
         }
         $expenses  = $repository->periodExpensesNoCategory($accounts, $start, $end);
         $income    = $repository->periodIncomeNoCategory($accounts, $start, $end);
-        $periods   = Navigation::listOfPeriods($start, $end);
+        $periods   = app('navigation')->listOfPeriods($start, $end);
         $chartData = [
             [
                 'label'   => strval(trans('firefly.spent')),
@@ -281,8 +280,8 @@ class CategoryController extends Controller
     public function specificPeriod(CategoryRepositoryInterface $repository, Category $category, Carbon $date)
     {
         $range = Preferences::get('viewRange', '1M')->data;
-        $start = Navigation::startOfPeriod($date, $range);
-        $end   = Navigation::endOfPeriod($date, $range);
+        $start = app('navigation')->startOfPeriod($date, $range);
+        $end   = app('navigation')->endOfPeriod($date, $range);
         $data  = $this->makePeriodChart($repository, $category, $start, $end);
 
         return Response::json($data);
@@ -336,7 +335,7 @@ class CategoryController extends Controller
             $spent  = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $start);
             $earned = $repository->earnedInPeriod(new Collection([$category]), $accounts, $start, $start);
             $sum    = bcadd($spent, $earned);
-            $label  = trim(Navigation::periodShow($start, '1D'));
+            $label  = trim(app('navigation')->periodShow($start, '1D'));
 
             $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 12);
             $chartData[1]['entries'][$label] = round($earned, 12);

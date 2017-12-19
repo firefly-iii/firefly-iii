@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -58,8 +58,8 @@ class BillController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.bills'));
-                View::share('mainTitleIcon', 'fa-calendar-o');
+                app('view')->share('title', trans('firefly.bills'));
+                app('view')->share('mainTitleIcon', 'fa-calendar-o');
                 $this->attachments = app(AttachmentHelperInterface::class);
 
                 return $next($request);
@@ -85,8 +85,6 @@ class BillController extends Controller
             $this->rememberPreviousUri('bills.create.uri');
         }
         $request->session()->forget('bills.create.fromStore');
-        $request->session()->flash('gaEventCategory', 'bills');
-        $request->session()->flash('gaEventAction', 'create');
 
         return view('bills.create', compact('periods', 'subTitle'));
     }
@@ -101,8 +99,6 @@ class BillController extends Controller
     {
         // put previous url in session
         $this->rememberPreviousUri('bills.delete.uri');
-        $request->session()->flash('gaEventCategory', 'bills');
-        $request->session()->flash('gaEventAction', 'delete');
         $subTitle = trans('firefly.delete_bill', ['name' => $bill->name]);
 
         return view('bills.delete', compact('bill', 'subTitle'));
@@ -162,8 +158,6 @@ class BillController extends Controller
         $request->session()->flash('preFilled', $preFilled);
 
         $request->session()->forget('bills.edit.fromUpdate');
-        $request->session()->flash('gaEventCategory', 'bills');
-        $request->session()->flash('gaEventAction', 'edit');
 
         return view('bills.edit', compact('subTitle', 'periods', 'bill'));
     }
@@ -235,7 +229,7 @@ class BillController extends Controller
     public function show(Request $request, BillRepositoryInterface $repository, Bill $bill)
     {
         /** @var Carbon $date */
-        $date           = session('start');
+        $date = session('start');
         /** @var Carbon $end */
         $end            = session('end');
         $year           = $date->year;
@@ -287,7 +281,7 @@ class BillController extends Controller
 
         // flash messages
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
         if (1 === intval($request->get('create_another'))) {
@@ -323,7 +317,7 @@ class BillController extends Controller
 
         // flash messages
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
         if (1 === intval($request->get('return_to_edit'))) {
@@ -348,7 +342,7 @@ class BillController extends Controller
     private function lastPaidDate(Collection $dates, Carbon $default): Carbon
     {
         if ($dates->count() === 0) {
-            return $default;
+            return $default; // @codeCoverageIgnore
         }
         $latest = $dates->first();
         /** @var Carbon $date */

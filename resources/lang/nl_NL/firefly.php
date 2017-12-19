@@ -1,15 +1,25 @@
 <?php
-declare(strict_types=1);
-
 /**
  * firefly.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     // general stuff:
@@ -701,12 +711,15 @@ return [
     'deleted_transfer'                         => 'Overschrijving ":description" verwijderd',
     'stored_journal'                           => 'Nieuw transactie ":description" opgeslagen',
     'select_transactions'                      => 'Selecteer transacties',
+    'rule_group_select_transactions'           => '":title" op transacties toepassen',
+    'rule_select_transactions'                 => '":title" op transacties toepassen',
     'stop_selection'                           => 'Stop met selecteren',
     'reconcile_selected'                       => 'Verrekenen',
     'mass_delete_journals'                     => 'Verwijder een aantal transacties',
     'mass_edit_journals'                       => 'Wijzig een aantal transacties',
     'cannot_edit_other_fields'                 => 'Je kan andere velden dan de velden die je hier ziet niet groepsgewijs wijzigen. Er is geen ruimte om ze te laten zien. Als je deze velden toch wilt wijzigen, volg dan de link naast de transactie en wijzig ze stuk voor stuk.',
     'no_budget'                                => '(geen budget)',
+    'no_budget_squared'                        => '(geen budget)',
     'perm-delete-many'                         => 'Veel items in één keer verwijderen kan zeer storend zijn. Wees voorzichtig.',
     'mass_deleted_transactions_success'        => 'Verwijder :amount transactie(s).',
     'mass_edited_transactions_success'         => 'Wijzig :amount transactie(s)',
@@ -764,6 +777,7 @@ return [
     'piggyBanks'                               => 'Spaarpotjes',
     'bills'                                    => 'Contracten',
     'withdrawal'                               => 'Uitgave',
+    'opening_balance'                          => 'Startsaldo',
     'deposit'                                  => 'Inkomsten',
     'account'                                  => 'Rekening',
     'transfer'                                 => 'Overschrijving',
@@ -786,6 +800,7 @@ return [
     'report_default'                           => 'Standaard financieel rapport (:start tot :end)',
     'report_audit'                             => 'Transactiehistorie-overzicht van :start tot :end',
     'report_category'                          => 'Categorierapport van :start tot :end',
+    'report_account'                           => 'Debiteuren/crediteurenrapport tussen :start en :end',
     'report_budget'                            => 'Budgetrapport van :start tot :end',
     'report_tag'                               => 'Tagrapport van :start tot :end',
     'quick_link_reports'                       => 'Snelle links',
@@ -821,6 +836,7 @@ return [
     'report_type_category'                     => 'Categorierapport',
     'report_type_budget'                       => 'Budgetrapport',
     'report_type_tag'                          => 'Tagrapport',
+    'report_type_account'                      => 'Debiteuren/crediteurenrapport',
     'more_info_help'                           => 'Meer informatie over deze rapporten vind je in de hulppagina\'s. Klik daarvoor op het (?) icoontje rechtsboven.',
     'report_included_accounts'                 => 'Accounts in rapport',
     'report_date_range'                        => 'Datumbereik',
@@ -872,7 +888,10 @@ return [
     'account_role_ccAsset'                     => 'Credit card',
     'budget_chart_click'                       => 'Klik op een budgetnaam in de tabel hierboven om een ​​grafiek te zien.',
     'category_chart_click'                     => 'Klik op een categorienaam in de tabel hierboven om een ​​grafiek te zien.',
-
+    'in_out_accounts'                          => 'Inkomsten en uitgaven per combinatie',
+    'in_out_per_category'                      => 'Verdiend en uitgegeven per categorie',
+    'out_per_budget'                           => 'Uitgaven per budget',
+    'select_expense_revenue'                   => 'Selecteer debiteur+crediteur',
 
     // charts:
     'chart'                                    => 'Diagram',
@@ -884,7 +903,6 @@ return [
     'earned'                                   => 'Verdiend',
     'overspent'                                => 'Teveel uitgegeven',
     'left'                                     => 'Over',
-    'no_budget'                                => '(geen budget)',
     'max-amount'                               => 'Maximumbedrag',
     'min-amount'                               => 'Minimumbedrag',
     'journal-amount'                           => 'Bedrag voor dit contract',
@@ -1054,49 +1072,16 @@ return [
     // import bread crumbs and titles:
     'import'                                => 'Import',
     'import_data'                           => 'Importeer data',
+    'import_general_index_file'             => 'Importeer een bestand',
+    'import_from_bunq'                      => 'Importeer uit bunq',
+    'import_using_spectre'                  => 'Importeer via Spectre',
+    'import_using_plaid'                    => 'Importeer via Plaid',
+    'import_config_bread_crumb'             => 'Instellen van je import',
 
     // import index page:
     'import_index_title'                    => 'Gegevens importeren in Firefly III',
     'import_index_sub_title'                => 'Index',
     'import_general_index_intro'            => 'Dit is de import-routine van Firefly. Er zijn verschillende manieren om gegevens te importeren in Firefly III, hier als knoppen weergegeven.',
-    'import_general_index_csv_file'         => 'Importeer een (CSV) bestand',
-    'import_index_intro'                    => 'Deze pagina\'s helpen je bestanden van je bank te importeren in Firefly III. Gebruik de hulp-pagina\'s linksboven voor meer informatie.',
-    'import_index_file'                     => 'Selecteer je bestand',
-    'import_index_config'                   => 'Als je eerder gegevens hebt geïmporteerd in Firefly III, heb je wellicht een configuratiebestand, dat een aantal zaken alvast voor je kan instellen. Voor bepaalde banken hebben andere gebruikers uit de liefde van hun hart het benodigde <a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand</a> gedeeld.',
-    'import_index_type'                     => 'Selecteer het type bestand dat je zal uploaden',
-    'import_index_start'                    => 'Start met importeren',
-    'import_file'                           => 'Importeer een bestand',
-
-    // supported file types:
-    'import_file_type_csv'                  => 'CSV (kommagescheiden waardes)',
-
-    // import configuration routine:
-    'import_config_sub_title'               => 'Instellen van je gegevensbestand',
-    'import_config_bread_crumb'             => 'Instellen van je gegevensbestand',
-
-    // import status page:
-    'import_status_bread_crumb'             => 'Status van importeren',
-    'import_status_sub_title'               => 'Status van importeren',
-    'import_status_wait_title'              => 'Momentje...',
-    'import_status_wait_text'               => 'Dit vak verdwijnt zometeen.',
-    'import_status_ready_title'             => 'De import is klaar om te beginnen',
-    'import_status_ready_text'              => 'De import kan beginnen. Alle configuratie is opgeslagen. Download dit bestand. Het kan schelen als je de import opnieuw moet doen. Om daadwerkelijk te beginnen, gebruik je of het commando in je console, of de website. Afhankelijk van hoe je Firefly III hebt ingesteld, geeft de console-methode meer feedback.',
-    'import_status_ready_config'            => 'Download importconfiguratie',
-    'import_status_ready_start'             => 'Start importeren',
-    'import_status_ready_share'             => 'Overweeg om je configuratiebestand te downloaden en te delen op de <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand-wiki</a></strong>. Hiermee kan je het andere Firefly III gebruikers weer makkelijker maken.',
-    'import_status_running_title'           => 'De import is bezig',
-    'import_status_running_placeholder'     => 'Wacht even voor een update...',
-    'import_status_errors_title'            => 'Fouten tijdens het importeren',
-    'import_status_errors_single'           => 'Er is een niet-fatale fout opgetreden tijdens het importeren.',
-    'import_status_errors_multi'            => 'Er zijn een aantal niet-fatale fouten opgetreden tijdens het importeren.',
-    'import_status_fatal_title'             => 'Er is een fatale fout opgetreden',
-    'import_status_fatal_text'              => 'Een fatale fout opgetreden, waar de import-routine niet van terug heeft. Zie de uitleg in het rood hieronder.',
-    'import_status_fatal_more'              => 'Als de fout een time-out is, zal de import-routine halverwege gestopt zijn. Bij bepaalde serverconfiguraties is het alleen maar de server die gestopt terwijl de import-routine op de achtergrond doorloopt. Controleer de logboekbestanden om te zien wat er aan de hand is. Als het probleem zich blijft voordoen, gebruik dan de command-line opdracht.',
-    'import_status_finished_title'          => 'Importeren is klaar',
-    'import_status_finished_text'           => 'Je gegevensbestand is geïmporteerd.',
-    'import_status_finished_job'            => 'De geimporteerde transacties kan je vinden onder tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
-    'import_status_job_running'             => 'De import is bezig...',
-    'import_with_key'                       => 'Import met code \':key\'',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Deze functie werkt niet als je Firefly III gebruikt in combinatie met Sandstorm.IO.',

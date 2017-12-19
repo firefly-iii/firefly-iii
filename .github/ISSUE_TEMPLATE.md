@@ -8,4 +8,4 @@ I am running Firefly III version x.x.x
 
 #### Other important details (log files, system info):
 
-Please visit the /debug page to get extra debug information.
+Please click the version number in the right corner of any Firefly III page to get debug information. 

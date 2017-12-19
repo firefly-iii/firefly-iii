@@ -1,7 +1,7 @@
 <?php
 /**
  * AbnAmroDescription.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 Robert Horlings
  *
  * This file is part of Firefly III.
  *
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -58,7 +58,7 @@ class AbnAmroDescription implements SpecificInterface
      */
     public function run(array $row): array
     {
-        $this->row = $row;
+        $this->row = array_values($row);
 
         if (!isset($row[7])) {
             return $row;

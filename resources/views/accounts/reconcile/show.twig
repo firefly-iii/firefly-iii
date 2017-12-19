@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, journal) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, account, journal) }}
 {% endblock %}
 
 {% block content %}

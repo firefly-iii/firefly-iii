@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -36,9 +36,11 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Navigation;
 use Response;
 
+/**
+ * Class TagReportController
+ */
 class TagReportController extends Controller
 {
     /** @var GeneratorInterface */
@@ -168,8 +170,8 @@ class TagReportController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $format       = Navigation::preferredCarbonLocalizedFormat($start, $end);
-        $function     = Navigation::preferredEndOfPeriod($start, $end);
+        $format       = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $function     = app('navigation')->preferredEndOfPeriod($start, $end);
         $chartData    = [];
         $currentStart = clone $start;
 

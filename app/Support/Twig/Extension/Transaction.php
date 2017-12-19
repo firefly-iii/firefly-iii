@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -394,7 +394,7 @@ class Transaction extends Twig_Extension
                 $txt = sprintf('<i class="fa fa-fw fa-exchange" title="%s"></i>', trans('firefly.transfer'));
                 break;
             case TransactionType::OPENING_BALANCE:
-                $txt = sprintf('<i class="fa-fw fa fa-star-o" title="%s"></i>', trans('firefly.openingBalance'));
+                $txt = sprintf('<i class="fa-fw fa fa-star-o" title="%s"></i>', trans('firefly.opening_balance'));
                 break;
             case TransactionType::RECONCILIATION:
                 $txt = sprintf('<i class="fa-fw fa fa-calculator" title="%s"></i>', trans('firefly.reconciliation_transaction'));

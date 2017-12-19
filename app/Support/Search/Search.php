@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -185,6 +185,11 @@ class Search implements SearchInterface
         $this->user = $user;
     }
 
+    /**
+     * @param JournalCollectorInterface $collector
+     *
+     * @return JournalCollectorInterface
+     */
     private function applyModifiers(JournalCollectorInterface $collector): JournalCollectorInterface
     {
         foreach ($this->modifiers as $modifier) {

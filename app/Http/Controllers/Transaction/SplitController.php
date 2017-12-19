@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -78,8 +78,8 @@ class SplitController extends Controller
                 $this->tasker      = app(JournalTaskerInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->currencies  = app(CurrencyRepositoryInterface::class);
-                View::share('mainTitleIcon', 'fa-share-alt');
-                View::share('title', trans('firefly.split-transactions'));
+                app('view')->share('mainTitleIcon', 'fa-share-alt');
+                app('view')->share('title', trans('firefly.split-transactions'));
 
                 return $next($request);
             }
@@ -116,8 +116,6 @@ class SplitController extends Controller
             $accountArray[$account->id]['currency_id'] = intval($account->getMeta('currency_id'));
         }
 
-        Session::flash('gaEventCategory', 'transactions');
-        Session::flash('gaEventAction', 'edit-split-' . $preFilled['what']);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('transactions.edit-split.fromUpdate')) {

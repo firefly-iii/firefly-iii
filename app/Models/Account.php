@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -59,6 +59,9 @@ class Account extends Model
     protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
     /** @var array */
     protected $hidden = ['encrypted'];
+    /**
+     * @var array
+     */
     protected $rules
                       = [
             'user_id'         => 'required|exists:users,id',
@@ -216,7 +219,6 @@ class Account extends Model
      *
      * @return TransactionJournal
      *
-     * @throws FireflyException
      */
     public function getOpeningBalance(): TransactionJournal
     {
@@ -267,7 +269,6 @@ class Account extends Model
      *
      * @return Carbon
      *
-     * @throws FireflyException
      */
     public function getOpeningBalanceDate(): Carbon
     {

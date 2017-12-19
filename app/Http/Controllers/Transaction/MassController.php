@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -51,8 +51,8 @@ class MassController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.transactions'));
-                View::share('mainTitleIcon', 'fa-repeat');
+                app('view')->share('title', trans('firefly.transactions'));
+                app('view')->share('mainTitleIcon', 'fa-repeat');
 
                 return $next($request);
             }
@@ -70,8 +70,6 @@ class MassController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('transactions.mass-delete.uri');
-        Session::flash('gaEventCategory', 'transactions');
-        Session::flash('gaEventAction', 'mass-delete');
 
         return view('transactions.mass-delete', compact('journals', 'subTitle'));
     }
@@ -166,8 +164,6 @@ class MassController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('transactions.mass-edit.uri');
-        Session::flash('gaEventCategory', 'transactions');
-        Session::flash('gaEventAction', 'mass-edit');
 
         // collect some useful meta data for the mass edit:
         $filtered->each(

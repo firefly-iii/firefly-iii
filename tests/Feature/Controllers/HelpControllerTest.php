@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -57,6 +57,8 @@ class HelpControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\HelpController::show
      * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
+     * @throws \Exception
+     * @throws \Exception
      */
     public function testShowBackupFromCache()
     {
@@ -86,6 +88,8 @@ class HelpControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\HelpController::show
      * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
+     * @throws \Exception
+     * @throws \Exception
      */
     public function testShowBackupFromGithub()
     {

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -86,9 +86,10 @@ class NewUserControllerTest extends TestCase
         $accountRepos->shouldReceive('store')->times(2);
 
         $data = [
-            'bank_name'       => 'New bank',
-            'savings_balance' => '1000',
-            'bank_balance'    => '100',
+            'bank_name'                       => 'New bank',
+            'savings_balance'                 => '1000',
+            'bank_balance'                    => '100',
+            'amount_currency_id_bank_balance' => 1,
         ];
         $this->be($this->emptyUser());
         $response = $this->post(route('new-user.submit'), $data);
@@ -108,8 +109,9 @@ class NewUserControllerTest extends TestCase
         $accountRepos->shouldReceive('store')->twice();
 
         $data = [
-            'bank_name'    => 'New bank',
-            'bank_balance' => '100',
+            'bank_name'                       => 'New bank',
+            'bank_balance'                    => '100',
+            'amount_currency_id_bank_balance' => 1,
         ];
         $this->be($this->emptyUser());
         $response = $this->post(route('new-user.submit'), $data);

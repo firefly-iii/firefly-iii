@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -84,10 +84,19 @@ class Transaction extends Model
             'bill_name_encrypted' => 'boolean',
             'reconciled'          => 'boolean',
         ];
+    /**
+     * @var array
+     */
     protected $fillable
                       = ['account_id', 'transaction_journal_id', 'description', 'amount', 'identifier', 'transaction_currency_id', 'foreign_currency_id',
                          'foreign_amount',];
+    /**
+     * @var array
+     */
     protected $hidden = ['encrypted'];
+    /**
+     * @var array
+     */
     protected $rules
                       = [
             'account_id'              => 'required|exists:accounts,id',

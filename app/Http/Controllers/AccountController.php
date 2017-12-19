@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -38,7 +38,6 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
-use Navigation;
 use Preferences;
 use Steam;
 use View;
@@ -60,8 +59,8 @@ class AccountController extends Controller
         // translations:
         $this->middleware(
             function ($request, $next) {
-                View::share('mainTitleIcon', 'fa-credit-card');
-                View::share('title', trans('firefly.accounts'));
+                app('view')->share('mainTitleIcon', 'fa-credit-card');
+                app('view')->share('title', trans('firefly.accounts'));
 
                 return $next($request);
             }
@@ -96,8 +95,6 @@ class AccountController extends Controller
             $this->rememberPreviousUri('accounts.create.uri');
         }
         $request->session()->forget('accounts.create.fromStore');
-        $request->session()->flash('gaEventCategory', 'accounts');
-        $request->session()->flash('gaEventAction', 'create-' . $what);
 
         return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'currencySelectList', 'allCurrencies', 'roles'));
     }
@@ -118,8 +115,6 @@ class AccountController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('accounts.delete.uri');
-        $request->session()->flash('gaEventCategory', 'accounts');
-        $request->session()->flash('gaEventAction', 'delete-' . $typeName);
 
         return view('accounts.delete', compact('account', 'subTitle', 'accountList'));
     }
@@ -156,6 +151,9 @@ class AccountController extends Controller
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @return View
+     * @throws FireflyException
+     * @throws FireflyException
+     * @throws FireflyException
      */
     public function edit(Request $request, Account $account)
     {
@@ -198,8 +196,6 @@ class AccountController extends Controller
             'currency_id'          => $currency->id,
         ];
         $request->session()->flash('preFilled', $preFilled);
-        $request->session()->flash('gaEventCategory', 'accounts');
-        $request->session()->flash('gaEventAction', 'edit-' . $what);
 
         return view(
             'accounts.edit',
@@ -265,6 +261,7 @@ class AccountController extends Controller
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // long and complex but not that excessively so.
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @throws FireflyException
      */
     public function show(Request $request, JournalRepositoryInterface $repository, Account $account, string $moment = '')
     {
@@ -299,7 +296,7 @@ class AccountController extends Controller
         // prep for "specific date" view.
         if (strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
-            $end      = Navigation::endOfPeriod($start, $range);
+            $end      = app('navigation')->endOfPeriod($start, $range);
             $fStart   = $start->formatLocalized($this->monthAndDayFormat);
             $fEnd     = $end->formatLocalized($this->monthAndDayFormat);
             $subTitle = trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
@@ -309,8 +306,8 @@ class AccountController extends Controller
 
         // prep for current period view
         if (0 === strlen($moment)) {
-            $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
-            $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
+            $start    = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
+            $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
             $fStart   = $start->formatLocalized($this->monthAndDayFormat);
             $fEnd     = $end->formatLocalized($this->monthAndDayFormat);
             $subTitle = trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
@@ -423,8 +420,8 @@ class AccountController extends Controller
         $repository = app(AccountRepositoryInterface::class);
         $start      = $repository->oldestJournalDate($account);
         $range      = Preferences::get('viewRange', '1M')->data;
-        $start      = Navigation::startOfPeriod($start, $range);
-        $end        = Navigation::endOfX(new Carbon, $range, null);
+        $start      = app('navigation')->startOfPeriod($start, $range);
+        $end        = app('navigation')->endOfX(new Carbon, $range, null);
         $entries    = new Collection;
         $count      = 0;
         // properties for cache
@@ -440,8 +437,8 @@ class AccountController extends Controller
 
         Log::debug('Going to get period expenses and incomes.');
         while ($end >= $start && $count < 90) {
-            $end        = Navigation::startOfPeriod($end, $range);
-            $currentEnd = Navigation::endOfPeriod($end, $range);
+            $end        = app('navigation')->startOfPeriod($end, $range);
+            $currentEnd = app('navigation')->endOfPeriod($end, $range);
 
             // try a collector for income:
             /** @var JournalCollectorInterface $collector */
@@ -455,7 +452,7 @@ class AccountController extends Controller
             $collector->setAccounts(new Collection([$account]))->setRange($end, $currentEnd)->setTypes([TransactionType::WITHDRAWAL])->withOpposingAccount();
             $spent    = strval($collector->getJournals()->sum('transaction_amount'));
             $dateStr  = $end->format('Y-m-d');
-            $dateName = Navigation::periodShow($end, $range);
+            $dateName = app('navigation')->periodShow($end, $range);
             $entries->push(
                 [
                     'string' => $dateStr,
@@ -464,7 +461,7 @@ class AccountController extends Controller
                     'earned' => $earned,
                     'date'   => clone $end,]
             );
-            $end = Navigation::subtractPeriod($end, $range, 1);
+            $end = app('navigation')->subtractPeriod($end, $range, 1);
             ++$count;
         }
         $cache->store($entries);

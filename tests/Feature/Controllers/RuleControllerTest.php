@@ -16,21 +16,25 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
+use FireflyIII\Jobs\Job;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use Illuminate\Support\Collection;
+use Queue;
 use Tests\TestCase;
 
 /**
@@ -184,6 +188,31 @@ class RuleControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\RuleController::execute
+     */
+    public function testExecute()
+    {
+        Queue::fake();
+
+        $data = [
+            'accounts'   => [1],
+            'start_date' => '2017-01-01',
+            'end_date'   => '2017-01-02',
+        ];
+
+        $this->be($this->user());
+        $response = $this->post(route('rules.execute', [1]), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+
+        Queue::assertPushed(
+            ExecuteRuleOnExistingTransactions::class, function (Job $job) {
+            return $job->getRule()->id === 1;
+        }
+        );
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\RuleController::index
      * @covers \FireflyIII\Http\Controllers\RuleController::__construct
      * @covers \FireflyIII\Http\Controllers\RuleController::createDefaultRule
@@ -243,6 +272,20 @@ class RuleControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->post(route('rules.reorder-triggers', [1]), $data);
         $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\RuleController::selectTransactions()
+     */
+    public function testSelectTransactions()
+    {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
+
+        $this->be($this->user());
+        $response = $this->get(route('rules.select-transactions', [1]));
+        $response->assertStatus(200);
+        $response->assertSee('<ol class="breadcrumb">');
     }
 
     /**
@@ -310,6 +353,25 @@ class RuleControllerTest extends TestCase
         $uri      = route('rules.test-triggers') . '?' . http_build_query($data);
         $response = $this->get($uri);
         $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\RuleController::testTriggersByRule()
+     */
+    public function testTestTriggersByRule()
+    {
+
+        $matcher = $this->mock(TransactionMatcher::class);
+
+        $matcher->shouldReceive('setLimit')->withArgs([10])->andReturnSelf()->once();
+        $matcher->shouldReceive('setRange')->withArgs([200])->andReturnSelf()->once();
+        $matcher->shouldReceive('setRule')->andReturnSelf()->once();
+        $matcher->shouldReceive('findTransactionsByRule')->andReturn(new Collection);
+
+        $this->be($this->user());
+        $response = $this->get(route('rules.test-triggers-rule', [1]));
+        $response->assertStatus(200);
+
     }
 
     /**

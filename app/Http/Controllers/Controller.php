@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -126,7 +126,7 @@ class Controller extends BaseController
             $uri = $this->redirectUri;
         }
         if (!(false === strpos($uri, 'jscript'))) {
-            $uri = $this->redirectUri;
+            $uri = $this->redirectUri; // @codeCoverageIgnore
         }
 
         return $uri;

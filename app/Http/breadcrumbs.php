@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -95,6 +95,23 @@ Breadcrumbs::register(
             );
             $breadcrumbs->push($title, route('accounts.show', [$account->id, $moment, $start, $end]));
         }
+    }
+);
+
+Breadcrumbs::register(
+    'accounts.reconcile',
+    function (BreadCrumbGenerator $breadcrumbs, Account $account) {
+        $breadcrumbs->parent('accounts.show', $account, '(nothing)', new Carbon, new Carbon);
+        $breadcrumbs->push(trans('firefly.reconcile_account', ['account' => e($account->name)]), route('accounts.reconcile', [$account->id]));
+    }
+);
+
+Breadcrumbs::register(
+    'accounts.reconcile.show',
+    function (BreadCrumbGenerator $breadcrumbs, Account $account, TransactionJournal $journal) {
+        $breadcrumbs->parent('accounts.show', $account, '(nothing)', new Carbon, new Carbon);
+        $title = trans('firefly.reconciliation') . ' "' . $journal->description . '"';
+        $breadcrumbs->push($title, route('accounts.reconcile.show', [$journal->id]));
     }
 );
 
@@ -548,27 +565,18 @@ Breadcrumbs::register(
     }
 );
 
-// FILE IMPORT
 Breadcrumbs::register(
-    'import.file.index',
-    function (BreadCrumbGenerator $breadcrumbs) {
+    'import.configure',
+    function (BreadCrumbGenerator $breadcrumbs, ImportJob $job) {
         $breadcrumbs->parent('import.index');
-        $breadcrumbs->push(trans('firefly.import_file'), route('import.file.index'));
-    }
-);
-
-Breadcrumbs::register(
-    'import.file.configure',
-    function (BreadCrumbGenerator $breadcrumbs, ImportJob $job) {
-        $breadcrumbs->parent('import.file.index');
-        $breadcrumbs->push(trans('firefly.import_config_sub_title', ['key' => $job->key]), route('import.file.configure', [$job->key]));
+        $breadcrumbs->push(trans('import.config_sub_title', ['key' => $job->key]), route('import.configure', [$job->key]));
     }
 );
 Breadcrumbs::register(
-    'import.file.status',
+    'import.status',
     function (BreadCrumbGenerator $breadcrumbs, ImportJob $job) {
-        $breadcrumbs->parent('import.file.index');
-        $breadcrumbs->push(trans('firefly.import_status_bread_crumb', ['key' => $job->key]), route('import.file.status', [$job->key]));
+        $breadcrumbs->parent('import.index');
+        $breadcrumbs->push(trans('import.status_bread_crumb', ['key' => $job->key]), route('import.status', [$job->key]));
     }
 );
 
@@ -604,6 +612,15 @@ Breadcrumbs::register(
         $breadcrumbs->push(trans('breadcrumbs.changePassword'), route('profile.change-password'));
     }
 );
+
+Breadcrumbs::register(
+    'profile.change-email',
+    function (BreadCrumbGenerator $breadcrumbs) {
+        $breadcrumbs->parent('profile.index');
+        $breadcrumbs->push(trans('breadcrumbs.change_email'), route('profile.change-email'));
+    }
+);
+
 Breadcrumbs::register(
     'profile.delete-account',
     function (BreadCrumbGenerator $breadcrumbs) {
@@ -673,6 +690,20 @@ Breadcrumbs::register(
         $title       = (string)trans('firefly.report_category', ['start' => $startString, 'end' => $endString]);
 
         $breadcrumbs->push($title, route('reports.report.category', [$accountIds, $categoryIds, $start->format('Ymd'), $end->format('Ymd')]));
+    }
+);
+
+Breadcrumbs::register(
+    'reports.report.account',
+    function (BreadCrumbGenerator $breadcrumbs, string $accountIds, string $expenseIds, Carbon $start, Carbon $end) {
+        $breadcrumbs->parent('reports.index');
+
+        $monthFormat = (string)trans('config.month_and_day');
+        $startString = $start->formatLocalized($monthFormat);
+        $endString   = $end->formatLocalized($monthFormat);
+        $title       = (string)trans('firefly.report_account', ['start' => $startString, 'end' => $endString]);
+
+        $breadcrumbs->push($title, route('reports.report.account', [$accountIds, $expenseIds, $start->format('Ymd'), $end->format('Ymd')]));
     }
 );
 
@@ -752,22 +783,21 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'rule-groups.select-transactions',
-    function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
+    'rules.select-transactions',
+    function (BreadCrumbGenerator $breadcrumbs, Rule $rule) {
         $breadcrumbs->parent('rules.index');
         $breadcrumbs->push(
-            trans('firefly.rule_group_select_transactions', ['title' => $ruleGroup->title]), route('rule-groups.select-transactions', [$ruleGroup])
+            trans('firefly.rule_select_transactions', ['title' => $rule->title]), route('rules.select-transactions', [$rule])
         );
     }
 );
 
 Breadcrumbs::register(
-    'rule-groups.select_transactions',
+    'rule-groups.select-transactions',
     function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
         $breadcrumbs->parent('rules.index');
         $breadcrumbs->push(
-            trans('firefly.execute_group_on_existing_transactions', ['title' => $ruleGroup->title]),
-            route('rule-groups.select_transactions', [$ruleGroup])
+            trans('firefly.rule_group_select_transactions', ['title' => $ruleGroup->title]), route('rule-groups.select-transactions', [$ruleGroup])
         );
     }
 );
@@ -877,7 +907,9 @@ Breadcrumbs::register(
     'accounts.reconcile.edit',
     function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
         $breadcrumbs->parent('transactions.show', $journal);
-        $breadcrumbs->push(trans('breadcrumbs.edit_reconciliation', ['description' => $journal->description]), route('accounts.reconcile.edit', [$journal->id]));
+        $breadcrumbs->push(
+            trans('breadcrumbs.edit_reconciliation', ['description' => $journal->description]), route('accounts.reconcile.edit', [$journal->id])
+        );
     }
 );
 

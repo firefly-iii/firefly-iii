@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -46,8 +46,8 @@ class PreferencesController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.preferences'));
-                View::share('mainTitleIcon', 'fa-gear');
+                app('view')->share('title', trans('firefly.preferences'));
+                app('view')->share('mainTitleIcon', 'fa-gear');
 
                 return $next($request);
             }
@@ -71,6 +71,8 @@ class PreferencesController extends Controller
 
     /**
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Exception
+     * @throws \Exception
      */
     public function deleteCode()
     {

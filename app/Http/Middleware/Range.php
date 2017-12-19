@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -29,7 +29,6 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Navigation;
 use Preferences;
 use Session;
 use View;
@@ -126,8 +125,8 @@ class Range
         if (!Session::has('start') && !Session::has('end')) {
             $viewRange = Preferences::get('viewRange', '1M')->data;
             $start     = new Carbon;
-            $start     = Navigation::updateStartDate($viewRange, $start);
-            $end       = Navigation::updateEndDate($viewRange, $start);
+            $start     = app('navigation')->updateStartDate($viewRange, $start);
+            $end       = app('navigation')->updateEndDate($viewRange, $start);
 
             Session::put('start', $start);
             Session::put('end', $end);

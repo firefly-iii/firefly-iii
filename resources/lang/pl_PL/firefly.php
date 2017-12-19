@@ -1,15 +1,25 @@
 <?php
-declare(strict_types=1);
-
 /**
  * firefly.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     // general stuff:
@@ -159,11 +169,11 @@ return [
     'import_and_export'                          => 'Import / eksport',
     'export_data'                                => 'Eksportuj dane',
     'export_and_backup_data'                     => 'Eksport i kopia zapasowa',
-    'export_data_intro'                          => 'For backup purposes, when migrating to another system or when migrating to another Firefly III installation.',
+    'export_data_intro'                          => 'Do celów tworzenia kopii zapasowych, migracji do innego systemu lub migracji do innej instalacji Firefly III.',
     'export_format'                              => 'Format eksportu',
     'export_format_csv'                          => 'Wartości oddzielone przecinkami (plik CSV)',
     'export_format_mt940'                        => 'Format kompatybilny z MT940',
-    'include_old_uploads_help'                   => 'Firefly III does not throw away the original CSV files you have imported in the past. You can include them in your export.',
+    'include_old_uploads_help'                   => 'Firefly III nie wyrzuca oryginalnych plików CSV zaimportowanych w przeszłości. Możesz uwzględnić je w eksporcie.',
     'do_export'                                  => 'Eksportuj',
     'export_status_never_started'                => 'Eksport nie został jeszcze rozpoczęty',
     'export_status_make_exporter'                => 'Creating exporter thing...',
@@ -701,12 +711,15 @@ return [
     'deleted_transfer'                         => 'Pomyślnie usunięto transfer ":description"',
     'stored_journal'                           => 'Pomyślnie utworzono nową transakcję ":description"',
     'select_transactions'                      => 'Wybierz transakcje',
+    'rule_group_select_transactions'           => 'Apply ":title" to transactions',
+    'rule_select_transactions'                 => 'Apply ":title" to transactions',
     'stop_selection'                           => 'Przestań wybierać transakcje',
     'reconcile_selected'                       => 'Uzgodnij',
     'mass_delete_journals'                     => 'Usuń wiele transakcji',
     'mass_edit_journals'                       => 'Modyfikuj wiele transakcji',
     'cannot_edit_other_fields'                 => 'Nie możesz masowo modyfikować innych pól niż te tutaj, ponieważ nie ma miejsca, aby je pokazać. Proszę użyć ikony edycji i edytować je jedno po drugim, jeśli chcesz edytować te pola.',
     'no_budget'                                => '(bez budżetu)',
+    'no_budget_squared'                        => '(no budget)',
     'perm-delete-many'                         => 'Usuwanie wielu elementów jednocześnie może być bardzo destrukcyjne. Proszę zachować ostrożność.',
     'mass_deleted_transactions_success'        => 'Usunięto :amount transakcję(i).',
     'mass_edited_transactions_success'         => 'Zaktualizowano :amount transakcję(i)',
@@ -764,6 +777,7 @@ return [
     'piggyBanks'                               => 'Skarbonki',
     'bills'                                    => 'Rachunki',
     'withdrawal'                               => 'Wypłata',
+    'opening_balance'                          => 'Opening balance',
     'deposit'                                  => 'Wpłata',
     'account'                                  => 'Konto',
     'transfer'                                 => 'Transfer',
@@ -786,6 +800,7 @@ return [
     'report_default'                           => 'Domyślny raport finansowy między :start i :end',
     'report_audit'                             => 'Przegląd historii transakcji między :start i :end',
     'report_category'                          => 'Raport kategorii między :start a :end',
+    'report_account'                           => 'Expense/revenue account report between :start and :end',
     'report_budget'                            => 'Raport budżetów między :start a :end',
     'report_tag'                               => 'Raport tagów między :start a :end',
     'quick_link_reports'                       => 'Szybkie linki',
@@ -821,6 +836,7 @@ return [
     'report_type_category'                     => 'Raport kategorii',
     'report_type_budget'                       => 'Raport budżetów',
     'report_type_tag'                          => 'Raport tagów',
+    'report_type_account'                      => 'Expense/revenue account report',
     'more_info_help'                           => 'More information about these types of reports can be found in the help pages. Press the (?) icon in the top right corner.',
     'report_included_accounts'                 => 'Uwzględnione konta',
     'report_date_range'                        => 'Zakres dat',
@@ -872,7 +888,10 @@ return [
     'account_role_ccAsset'                     => 'Karta kredytowa',
     'budget_chart_click'                       => 'Kliknij na nazwę budżetu w tabeli powyżej, aby zobaczyć wykres.',
     'category_chart_click'                     => 'Kliknij na nazwę kategorii w tabeli powyżej, aby zobaczyć wykres.',
-
+    'in_out_accounts'                          => 'Earned and spent per combination',
+    'in_out_per_category'                      => 'Earned and spent per category',
+    'out_per_budget'                           => 'Spent per budget',
+    'select_expense_revenue'                   => 'Select expense/revenue account',
 
     // charts:
     'chart'                                    => 'Wykres',
@@ -884,7 +903,6 @@ return [
     'earned'                                   => 'Zarobiono',
     'overspent'                                => 'Przepłacono',
     'left'                                     => 'Pozostało',
-    'no_budget'                                => '(no budget)',
     'max-amount'                               => 'Maksymalna kwota',
     'min-amount'                               => 'Minimalna kwota',
     'journal-amount'                           => 'Faktyczna kwota',
@@ -1054,49 +1072,16 @@ return [
     // import bread crumbs and titles:
     'import'                                => 'Importuj',
     'import_data'                           => 'Importuj dane',
+    'import_general_index_file'             => 'Import a file',
+    'import_from_bunq'                      => 'Import from bunq',
+    'import_using_spectre'                  => 'Import using Spectre',
+    'import_using_plaid'                    => 'Import using Plaid',
+    'import_config_bread_crumb'             => 'Set up your import',
 
     // import index page:
     'import_index_title'                    => 'Importuj dane do Firefly III',
     'import_index_sub_title'                => 'Indeks',
     'import_general_index_intro'            => 'Witamy w procedurze importu Firefly III. Istnieje kilka sposobów importowania danych do Firefly III.',
-    'import_general_index_csv_file'         => 'Importuj plik CSV',
-    'import_index_intro'                    => 'Ta procedura pomoże Ci zaimportować pliki z Twojego banku do Firefly III. Proszę sprawdzić stronę pomocy w prawym górnym rogu.',
-    'import_index_file'                     => 'Wybierz swój plik',
-    'import_index_config'                   => 'Jeśli wcześniej importowałeś dane do Firefly III, może posiadać plik konfiguracji, który wstępnie ustawi wartości parametrów konfiguracyjnych dla Ciebie. Dla niektórych banków, inni użytkownicy uprzejmie dostarczyli swoje <a href="https://github.com/firefly-iii/import-configurations/wiki">pliki konfiguracji</a>.',
-    'import_index_type'                     => 'Wybierz typ pliku, który będziesz przesyłać',
-    'import_index_start'                    => 'Rozpocznij import',
-    'import_file'                           => 'Importuj plik',
-
-    // supported file types:
-    'import_file_type_csv'                  => 'CSV (wartości oddzielone przecinkami)',
-
-    // import configuration routine:
-    'import_config_sub_title'               => 'Skonfiguruj swój importowany plik',
-    'import_config_bread_crumb'             => 'Skonfiguruj swój plik',
-
-    // import status page:
-    'import_status_bread_crumb'             => 'Status importu',
-    'import_status_sub_title'               => 'Status importu',
-    'import_status_wait_title'              => 'Proszę czekać...',
-    'import_status_wait_text'               => 'To pole za chwilę zniknie.',
-    'import_status_ready_title'             => 'Import jest gotowy do uruchomienia',
-    'import_status_ready_text'              => 'Import jest gotowy do uruchomienia. Wszystkie potrzebne ustawienia zostały skonfigurowane. Pobierz proszę plik konfiguracyjny. Pomoże Ci on gdy import nie pójdzie zgodnie z planem. Aby rzeczywiście uruchomić import, można wykonać następujące polecenie w konsoli lub uruchomić importowanie z poziomu strony www. W zależności od konfiguracji, import przez konsolę da Ci więcej informacji zwrotnych.',
-    'import_status_ready_config'            => 'Pobierz konfigurację',
-    'import_status_ready_start'             => 'Rozpocznij Importowanie',
-    'import_status_ready_share'             => 'Rozważ proszę pobranie swojej konfiguracji i udostępnienie jej w <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">centrum konfiguracji importu</a></strong>. Pozwoli to innym użytkownikom Firefly III łatwo importować swoje pliki.',
-    'import_status_running_title'           => 'Importowanie jest uruchomione',
-    'import_status_running_placeholder'     => 'Proszę czekać na aktualizację...',
-    'import_status_errors_title'            => 'Błędy podczas importowania',
-    'import_status_errors_single'           => 'Wystąpił błąd podczas importowania. Nie wydaje się być krytyczny.',
-    'import_status_errors_multi'            => 'Wystąpiły błędy podczas importowania. Nie wydają się być śmiertelne.',
-    'import_status_fatal_title'             => 'Wystąpił krytyczny błąd',
-    'import_status_fatal_text'              => 'Wystąpił błąd krytyczny, którego procedura importu nie naprawić. Proszę sprawdzić wyjaśnienia na czerwono poniżej.',
-    'import_status_fatal_more'              => 'Jeśli przekroczono limitu czasu, import zostanie zatrzymany w połowie. W przypadku niektórych konfiguracji serwerów, jedynie serwer przestał odpowiadać podczas gdy importowanie nadal działa w tle. Aby to sprawdzić, należy sprawdzić pliki dziennika. Jeśli problem będzie się powtarzał, zamiast tego, należy rozważyć Importowanie poprzez konsolę.',
-    'import_status_finished_title'          => 'Importowanie zakończone',
-    'import_status_finished_text'           => 'Procedura importu pomyślnie zaimportowała Twój plik.',
-    'import_status_finished_job'            => 'Zaimportowane transakcje znajdują się w tagu <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
-    'import_status_job_running'             => 'The import is running...',
-    'import_with_key'                       => 'Import z kluczem \':key\'',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Ta funkcja nie jest dostępna, gdy używasz Firefly III w środowisku Sandstorm.io.',

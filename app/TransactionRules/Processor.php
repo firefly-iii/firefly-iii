@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -95,6 +95,7 @@ final class Processor
      * @param string $triggerValue
      *
      * @return Processor
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public static function makeFromString(string $triggerName, string $triggerValue)
     {
@@ -118,6 +119,7 @@ final class Processor
      * @param array $triggers
      *
      * @return Processor
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public static function makeFromStringArray(array $triggers)
     {

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -37,7 +37,6 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
-use Navigation;
 use Preferences;
 use Response;
 use View;
@@ -64,8 +63,8 @@ class BudgetController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.budgets'));
-                View::share('mainTitleIcon', 'fa-tasks');
+                app('view')->share('title', trans('firefly.budgets'));
+                app('view')->share('mainTitleIcon', 'fa-tasks');
                 $this->repository = app(BudgetRepositoryInterface::class);
 
                 return $next($request);
@@ -74,8 +73,9 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param Budget  $budget
+     * @param Request                   $request
+     * @param BudgetRepositoryInterface $repository
+     * @param Budget                    $budget
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -85,7 +85,7 @@ class BudgetController extends Controller
         $start       = Carbon::createFromFormat('Y-m-d', $request->get('start'));
         $end         = Carbon::createFromFormat('Y-m-d', $request->get('end'));
         $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
-        if (bccomp($amount,'0') === 0) {
+        if (bccomp($amount, '0') === 0) {
             $budgetLimit = null;
         }
 
@@ -111,8 +111,6 @@ class BudgetController extends Controller
             $this->rememberPreviousUri('budgets.create.uri');
         }
         $request->session()->forget('budgets.create.fromStore');
-        $request->session()->flash('gaEventCategory', 'budgets');
-        $request->session()->flash('gaEventAction', 'create');
         $subTitle = (string)trans('firefly.create_new_budget');
 
         return view('budgets.create', compact('subTitle'));
@@ -130,8 +128,6 @@ class BudgetController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('budgets.delete.uri');
-        $request->session()->flash('gaEventCategory', 'budgets');
-        $request->session()->flash('gaEventAction', 'delete');
 
         return view('budgets.delete', compact('budget', 'subTitle'));
     }
@@ -167,8 +163,6 @@ class BudgetController extends Controller
             $this->rememberPreviousUri('budgets.edit.uri');
         }
         $request->session()->forget('budgets.edit.fromUpdate');
-        $request->session()->flash('gaEventCategory', 'budgets');
-        $request->session()->flash('gaEventAction', 'edit');
 
         return view('budgets.edit', compact('budget', 'subTitle'));
     }
@@ -191,7 +185,7 @@ class BudgetController extends Controller
         if (null !== $moment || 0 !== strlen(strval($moment))) {
             try {
                 $start = new Carbon($moment);
-                $end   = Navigation::endOfPeriod($start, $range);
+                $end   = app('navigation')->endOfPeriod($start, $range);
             } catch (Exception $e) {
                 // start and end are already defined.
             }
@@ -200,7 +194,7 @@ class BudgetController extends Controller
         $next->addDay();
         $prev = clone $start;
         $prev->subDay();
-        $prev = Navigation::startOfPeriod($prev, $range);
+        $prev = app('navigation')->startOfPeriod($prev, $range);
         $this->repository->cleanupBudgets();
         $budgets           = $this->repository->getActiveBudgets();
         $inactive          = $this->repository->getInactiveBudgets();
@@ -218,9 +212,9 @@ class BudgetController extends Controller
         $count        = 0;
         while ($count < 12) {
             $previousDate->subDay();
-            $previousDate          = Navigation::startOfPeriod($previousDate, $range);
+            $previousDate          = app('navigation')->startOfPeriod($previousDate, $range);
             $format                = $previousDate->format('Y-m-d');
-            $previousLoop[$format] = Navigation::periodShow($previousDate, $range);
+            $previousLoop[$format] = app('navigation')->periodShow($previousDate, $range);
             ++$count;
         }
 
@@ -232,16 +226,16 @@ class BudgetController extends Controller
 
         while ($count < 12) {
             $format            = $nextDate->format('Y-m-d');
-            $nextLoop[$format] = Navigation::periodShow($nextDate, $range);
-            $nextDate          = Navigation::endOfPeriod($nextDate, $range);
+            $nextLoop[$format] = app('navigation')->periodShow($nextDate, $range);
+            $nextDate          = app('navigation')->endOfPeriod($nextDate, $range);
             ++$count;
             $nextDate->addDay();
         }
 
         // display info
-        $currentMonth = Navigation::periodShow($start, $range);
-        $nextText     = Navigation::periodShow($next, $range);
-        $prevText     = Navigation::periodShow($prev, $range);
+        $currentMonth = app('navigation')->periodShow($start, $range);
+        $nextText     = app('navigation')->periodShow($next, $range);
+        $prevText     = app('navigation')->periodShow($prev, $range);
 
         return view(
             'budgets.index',
@@ -283,9 +277,11 @@ class BudgetController extends Controller
         $cache->addProperty('info-income');
 
         if ($cache->has()) {
-            $result = $cache->get(); // @codeCoverageIgnore
+            // @codeCoverageIgnoreStart
+            $result = $cache->get();
 
             return view('budgets.info', compact('result', 'begin', 'currentEnd'));
+            // @codeCoverageIgnoreEnd
         }
         $result   = [
             'available' => '0',
@@ -294,17 +290,20 @@ class BudgetController extends Controller
         ];
         $currency = app('amount')->getDefaultCurrency();
         $range    = Preferences::get('viewRange', '1M')->data;
-        $begin    = Navigation::subtractPeriod($start, $range, 3);
+        $begin    = app('navigation')->subtractPeriod($start, $range, 3);
 
         // get average amount available.
         $total        = '0';
         $count        = 0;
         $currentStart = clone $begin;
         while ($currentStart < $start) {
-            $currentEnd   = Navigation::endOfPeriod($currentStart, $range);
+            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $range);
             $total        = bcadd($total, $this->repository->getAvailableBudget($currency, $currentStart, $currentEnd));
-            $currentStart = Navigation::addPeriod($currentStart, $range, 0);
+            $currentStart = app('navigation')->addPeriod($currentStart, $range, 0);
             ++$count;
+        }
+        if ($count === 0) {
+            $count = 1; // @codeCoverageIgnore
         }
         $result['available'] = bcdiv($total, strval($count));
 
@@ -360,7 +359,7 @@ class BudgetController extends Controller
         // prep for "specific date" view.
         if (strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
-            $end      = Navigation::endOfPeriod($start, $range);
+            $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
                 'firefly.without_budget_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -370,8 +369,8 @@ class BudgetController extends Controller
 
         // prep for current period
         if (0 === strlen($moment)) {
-            $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
-            $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
+            $start    = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
+            $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
             $periods  = $this->getPeriodOverview();
             $subTitle = trans(
                 'firefly.without_budget_between',
@@ -583,8 +582,8 @@ class BudgetController extends Controller
         $first      = $repository->first();
         $start      = $first->date ?? new Carbon;
         $range      = Preferences::get('viewRange', '1M')->data;
-        $start      = Navigation::startOfPeriod($start, $range);
-        $end        = Navigation::endOfX(new Carbon, $range, null);
+        $start      = app('navigation')->startOfPeriod($start, $range);
+        $end        = app('navigation')->endOfX(new Carbon, $range, null);
         $entries    = new Collection;
         $cache      = new CacheProperties;
         $cache->addProperty($start);
@@ -597,8 +596,8 @@ class BudgetController extends Controller
 
         Log::debug('Going to get period expenses and incomes.');
         while ($end >= $start) {
-            $end        = Navigation::startOfPeriod($end, $range);
-            $currentEnd = Navigation::endOfPeriod($end, $range);
+            $end        = app('navigation')->startOfPeriod($end, $range);
+            $currentEnd = app('navigation')->endOfPeriod($end, $range);
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withoutBudget()->withOpposingAccount()->setTypes([TransactionType::WITHDRAWAL]);
@@ -606,9 +605,9 @@ class BudgetController extends Controller
             $sum      = strval($set->sum('transaction_amount') ?? '0');
             $journals = $set->count();
             $dateStr  = $end->format('Y-m-d');
-            $dateName = Navigation::periodShow($end, $range);
+            $dateName = app('navigation')->periodShow($end, $range);
             $entries->push(['string' => $dateStr, 'name' => $dateName, 'count' => $journals, 'sum' => $sum, 'date' => clone $end]);
-            $end = Navigation::subtractPeriod($end, $range, 1);
+            $end = app('navigation')->subtractPeriod($end, $range, 1);
         }
         $cache->store($entries);
 

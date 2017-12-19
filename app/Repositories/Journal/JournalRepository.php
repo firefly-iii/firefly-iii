@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -99,6 +99,7 @@ class JournalRepository implements JournalRepositoryInterface
      * @param TransactionJournal $journal
      *
      * @return bool
+     * @throws \Exception
      */
     public function delete(TransactionJournal $journal): bool
     {
@@ -273,6 +274,8 @@ class JournalRepository implements JournalRepositoryInterface
      * @param array $data
      *
      * @return TransactionJournal
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function store(array $data): TransactionJournal
     {
@@ -358,6 +361,10 @@ class JournalRepository implements JournalRepositoryInterface
      * @param array              $data
      *
      * @return TransactionJournal
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function update(TransactionJournal $journal, array $data): TransactionJournal
     {

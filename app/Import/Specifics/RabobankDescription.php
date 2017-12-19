@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -52,6 +52,7 @@ class RabobankDescription implements SpecificInterface
      */
     public function run(array $row): array
     {
+        $row = array_values($row);
         Log::debug(sprintf('Now in RabobankSpecific::run(). Row has %d columns', count($row)));
         $oppositeAccount = isset($row[5]) ? trim($row[5]) : '';
         $oppositeName    = isset($row[6]) ? trim($row[6]) : '';

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -52,8 +52,8 @@ class CurrencyController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.currencies'));
-                View::share('mainTitleIcon', 'fa-usd');
+                app('view')->share('title', trans('firefly.currencies'));
+                app('view')->share('mainTitleIcon', 'fa-usd');
                 $this->repository     = app(CurrencyRepositoryInterface::class);
                 $this->userRepository = app(UserRepositoryInterface::class);
 
@@ -83,8 +83,6 @@ class CurrencyController extends Controller
             $this->rememberPreviousUri('currencies.create.uri');
         }
         $request->session()->forget('currencies.create.fromStore');
-        $request->session()->flash('gaEventCategory', 'currency');
-        $request->session()->flash('gaEventAction', 'create');
 
         return view('currencies.create', compact('subTitleIcon', 'subTitle'));
     }
@@ -131,8 +129,6 @@ class CurrencyController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('currencies.delete.uri');
-        $request->session()->flash('gaEventCategory', 'currency');
-        $request->session()->flash('gaEventAction', 'delete');
         $subTitle = trans('form.delete_currency', ['name' => $currency->name]);
 
         return view('currencies.delete', compact('currency', 'subTitle'));
@@ -191,8 +187,6 @@ class CurrencyController extends Controller
             $this->rememberPreviousUri('currencies.edit.uri');
         }
         $request->session()->forget('currencies.edit.fromUpdate');
-        $request->session()->flash('gaEventCategory', 'currency');
-        $request->session()->flash('gaEventAction', 'edit');
 
         return view('currencies.edit', compact('currency', 'subTitle', 'subTitleIcon'));
     }

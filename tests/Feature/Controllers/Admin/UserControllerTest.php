@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -35,6 +35,31 @@ use Tests\TestCase;
  */
 class UserControllerTest extends TestCase
 {
+    /**
+     * @covers \FireflyIII\Http\Controllers\Admin\UserController::delete
+     */
+    public function testDelete()
+    {
+        $this->be($this->user());
+        $response = $this->get(route('admin.users.delete', [1]));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Admin\UserController::destroy
+     */
+    public function testDestroy()
+    {
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('destroy')->once();
+        $this->be($this->user());
+        $response = $this->post(route('admin.users.destroy', ['2']));
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UserController::edit
      */

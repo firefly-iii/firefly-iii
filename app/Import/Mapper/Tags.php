@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -46,7 +46,7 @@ class Tags implements MapperInterface
         }
         asort($list);
 
-        $list = [0 => trans('csv.map_do_not_map')] + $list;
+        $list = [0 => trans('import.map_do_not_map')] + $list;
 
         return $list;
     }

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -131,6 +131,28 @@ class ReportFormRequest extends Request
     }
 
     /**
+     * @return Collection
+     */
+    public function getExpenseList(): Collection
+    {
+        // fixed
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $set        = $this->get('exp_rev');
+        $collection = new Collection;
+        if (is_array($set)) {
+            foreach ($set as $accountId) {
+                $account = $repository->find(intval($accountId));
+                if (null !== $account->id) {
+                    $collection->push($account);
+                }
+            }
+        }
+
+        return $collection;
+    }
+
+    /**
      * @return Carbon
      *
      * @throws FireflyException
@@ -178,7 +200,7 @@ class ReportFormRequest extends Request
     public function rules(): array
     {
         return [
-            'report_type' => 'in:audit,default,category,budget,tag',
+            'report_type' => 'in:audit,default,category,budget,tag,account',
         ];
     }
 }

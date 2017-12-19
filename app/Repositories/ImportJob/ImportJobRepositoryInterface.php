@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -32,11 +32,11 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 interface ImportJobRepositoryInterface
 {
     /**
-     * @param string $fileType
+     * @param string $type
      *
      * @return ImportJob
      */
-    public function create(string $fileType): ImportJob;
+    public function create(string $type): ImportJob;
 
     /**
      * @param string $key
@@ -54,12 +54,12 @@ interface ImportJobRepositoryInterface
     public function processConfiguration(ImportJob $job, UploadedFile $file): bool;
 
     /**
-     * @param ImportJob    $job
-     * @param UploadedFile $file
+     * @param ImportJob         $job
+     * @param null|UploadedFile $file
      *
-     * @return mixed
+     * @return bool
      */
-    public function processFile(ImportJob $job, UploadedFile $file): bool;
+    public function processFile(ImportJob $job, ?UploadedFile $file): bool;
 
     /**
      * @param ImportJob $job
