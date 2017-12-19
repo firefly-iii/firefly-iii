@@ -458,7 +458,7 @@ return [
     'secure_pw_long_password'                  => 'Si vous venez de générer un long mot de passe unique pour Firefly III à l\'aide d\'un type de générateur de mot de passe : <strong>no</strong>.',
     'secure_pw_short'                          => 'Si vous venez d\'entrer le mot de passe que vous utilisez toujours : <em>S\'il vous plaît, oui</em>.',
     'personal_access_token'                    => 'Token d\'accès personnel',
-    'explain_access_token'                     => 'Vous avez besoin de ce token pour exécuter des opérations optionnelles en ligne de commandes telles qu\'import et export de données. Sans celui-ci, te telles commandes sensibles ne fonctionneront pas. Personne ne vous le demandera, pas même moi. Si vous craignez de le perdre, ou si vous êtes parano, régénérez ce token à l\'aide du
+    'explain_access_token'                     => 'Vous avez besoin de ce token pour exécuter des opérations optionnelles en ligne de commandes telles qu\'import et export de données. Sans celui-ci, de telles commandes sensibles ne fonctionneront pas. Personne ne vous le demandera, pas même moi. Si vous craignez de le perdre, ou si vous êtes parano, régénérez ce token à l\'aide du
  bouton.',
     'regenerate_access_token'                  => 'Régénérer le token d\'accès',
     'token_regenerated'                        => 'Un nouveau token a été généré',
