@@ -66,6 +66,18 @@ class Amount implements ConverterInterface
             Log::debug(sprintf('Alternate search resulted in "%s" for decimal sign.', $decimal));
         }
 
+        // decimal character still null? Search from the left for '.',',' or ' '.
+        if (is_null($decimal)) {
+            Log::debug('Decimal is still NULL, probably number with >2 decimals. Search for a dot.');
+            $res = strrpos($value, '.');
+            if (!($res === false)) {
+                // blandly assume this is the one.
+                Log::debug(sprintf('Searched from the left for "." in amount "%s", assume this is the decimal sign.', $value));
+                $decimal = '.';
+            }
+            unset($options, $res, $candidate);
+        }
+
         // if decimal is dot, replace all comma's and spaces with nothing. then parse as float (round to 4 pos)
         if ('.' === $decimal) {
             $search   = [',', ' '];
