@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -711,6 +711,8 @@ return [
     'deleted_transfer'                         => 'Pomyślnie usunięto transfer ":description"',
     'stored_journal'                           => 'Pomyślnie utworzono nową transakcję ":description"',
     'select_transactions'                      => 'Wybierz transakcje',
+    'rule_group_select_transactions'           => 'Apply ":title" to transactions',
+    'rule_select_transactions'                 => 'Apply ":title" to transactions',
     'stop_selection'                           => 'Przestań wybierać transakcje',
     'reconcile_selected'                       => 'Uzgodnij',
     'mass_delete_journals'                     => 'Usuń wiele transakcji',
@@ -1070,53 +1072,16 @@ return [
     // import bread crumbs and titles:
     'import'                                => 'Importuj',
     'import_data'                           => 'Importuj dane',
+    'import_general_index_file'             => 'Import a file',
     'import_from_bunq'                      => 'Import from bunq',
     'import_using_spectre'                  => 'Import using Spectre',
     'import_using_plaid'                    => 'Import using Plaid',
-
+    'import_config_bread_crumb'             => 'Set up your import',
 
     // import index page:
     'import_index_title'                    => 'Importuj dane do Firefly III',
     'import_index_sub_title'                => 'Indeks',
     'import_general_index_intro'            => 'Witamy w procedurze importu Firefly III. Istnieje kilka sposobów importowania danych do Firefly III.',
-    'import_general_index_csv_file'         => 'Importuj plik CSV',
-    'import_index_intro'                    => 'Ta procedura pomoże Ci zaimportować pliki z Twojego banku do Firefly III. Proszę sprawdzić stronę pomocy w prawym górnym rogu.',
-    'import_index_file'                     => 'Wybierz swój plik',
-    'import_index_config'                   => 'Jeśli wcześniej importowałeś dane do Firefly III, może posiadać plik konfiguracji, który wstępnie ustawi wartości parametrów konfiguracyjnych dla Ciebie. Dla niektórych banków, inni użytkownicy uprzejmie dostarczyli swoje <a href="https://github.com/firefly-iii/import-configurations/wiki">pliki konfiguracji</a>.',
-    'import_index_type'                     => 'Wybierz typ pliku, który będziesz przesyłać',
-    'import_index_start'                    => 'Rozpocznij import',
-    'import_file'                           => 'Importuj plik',
-
-    // supported file types:
-    'import_file_type_csv'                  => 'CSV (wartości oddzielone przecinkami)',
-
-    // import configuration routine:
-    'import_config_sub_title'               => 'Skonfiguruj swój importowany plik',
-    'import_config_bread_crumb'             => 'Skonfiguruj swój plik',
-
-    // import status page:
-    'import_status_bread_crumb'             => 'Status importu',
-    'import_status_sub_title'               => 'Status importu',
-    'import_status_wait_title'              => 'Proszę czekać...',
-    'import_status_wait_text'               => 'To pole za chwilę zniknie.',
-    'import_status_ready_title'             => 'Import jest gotowy do uruchomienia',
-    'import_status_ready_text'              => 'Import jest gotowy do uruchomienia. Wszystkie potrzebne ustawienia zostały skonfigurowane. Pobierz proszę plik konfiguracyjny. Pomoże Ci on gdy import nie pójdzie zgodnie z planem. Aby rzeczywiście uruchomić import, można wykonać następujące polecenie w konsoli lub uruchomić importowanie z poziomu strony www. W zależności od konfiguracji, import przez konsolę da Ci więcej informacji zwrotnych.',
-    'import_status_ready_config'            => 'Pobierz konfigurację',
-    'import_status_ready_start'             => 'Rozpocznij Importowanie',
-    'import_status_ready_share'             => 'Rozważ proszę pobranie swojej konfiguracji i udostępnienie jej w <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">centrum konfiguracji importu</a></strong>. Pozwoli to innym użytkownikom Firefly III łatwo importować swoje pliki.',
-    'import_status_running_title'           => 'Importowanie jest uruchomione',
-    'import_status_running_placeholder'     => 'Proszę czekać na aktualizację...',
-    'import_status_errors_title'            => 'Błędy podczas importowania',
-    'import_status_errors_single'           => 'Wystąpił błąd podczas importowania. Nie wydaje się być krytyczny.',
-    'import_status_errors_multi'            => 'Wystąpiły błędy podczas importowania. Nie wydają się być śmiertelne.',
-    'import_status_fatal_title'             => 'Wystąpił krytyczny błąd',
-    'import_status_fatal_text'              => 'Wystąpił błąd krytyczny, którego procedura importu nie naprawić. Proszę sprawdzić wyjaśnienia na czerwono poniżej.',
-    'import_status_fatal_more'              => 'Jeśli przekroczono limitu czasu, import zostanie zatrzymany w połowie. W przypadku niektórych konfiguracji serwerów, jedynie serwer przestał odpowiadać podczas gdy importowanie nadal działa w tle. Aby to sprawdzić, należy sprawdzić pliki dziennika. Jeśli problem będzie się powtarzał, zamiast tego, należy rozważyć Importowanie poprzez konsolę.',
-    'import_status_finished_title'          => 'Importowanie zakończone',
-    'import_status_finished_text'           => 'Procedura importu pomyślnie zaimportowała Twój plik.',
-    'import_status_finished_job'            => 'Zaimportowane transakcje znajdują się w tagu <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
-    'import_status_job_running'             => 'The import is running...',
-    'import_with_key'                       => 'Import z kluczem \':key\'',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Ta funkcja nie jest dostępna, gdy używasz Firefly III w środowisku Sandstorm.io.',

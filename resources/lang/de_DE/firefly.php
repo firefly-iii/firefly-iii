@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -712,6 +712,8 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'deleted_transfer'                         => 'Überweisung ":description" erfolgreich gelöscht',
     'stored_journal'                           => 'Neue Überweisung ":description" erfolgreich erstellt',
     'select_transactions'                      => 'Überweisungen auswählen',
+    'rule_group_select_transactions'           => 'Apply ":title" to transactions',
+    'rule_select_transactions'                 => 'Apply ":title" to transactions',
     'stop_selection'                           => 'Auswahl von Überweisungen stoppen',
     'reconcile_selected'                       => 'Ausgleichen',
     'mass_delete_journals'                     => 'Löschen Sie eine Reihe von Überweisungen',
@@ -1071,53 +1073,16 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     // import bread crumbs and titles:
     'import'                                => 'Import',
     'import_data'                           => 'Daten importieren',
+    'import_general_index_file'             => 'Import a file',
     'import_from_bunq'                      => 'Import from bunq',
     'import_using_spectre'                  => 'Import using Spectre',
     'import_using_plaid'                    => 'Import using Plaid',
-
+    'import_config_bread_crumb'             => 'Set up your import',
 
     // import index page:
     'import_index_title'                    => 'Daten in Firefly III importieren',
     'import_index_sub_title'                => 'Index',
     'import_general_index_intro'            => 'Willkommen beim Importassistenten von Firefly. Es gibt einige Möglichkeiten, Daten in Firefly III zu importieren, die hier als Schaltflächen angezeigt werden.',
-    'import_general_index_csv_file'         => 'Importiere eine (CSV) Datei',
-    'import_index_intro'                    => 'Dieser Assistent hilft Ihnen, Dateien von Ihrer Bank in Firefly III zu importieren. Bitte sehen Sie sich die Hilfeseiten in der oberen rechten Ecke an.',
-    'import_index_file'                     => 'Datei auswählen',
-    'import_index_config'                   => 'Wenn Sie bereits zuvor Daten in Firefly III importiert haben, haben Sie eventuell eine Kofigurationsdatei, welche einige Einstellungen für Sie voreinstellt. Für einige Banken haben andere Nutzer freundlicherweise bereits ihre <a href="https://github.com/firefly-iii/import-configurations/wiki">Konfigurationsdatei</a> zur Verfügung gestellt.',
-    'import_index_type'                     => 'Wählen Sie den Typ der hochgeladenen Datei',
-    'import_index_start'                    => 'Import starten',
-    'import_file'                           => 'Datei importieren',
-
-    // supported file types:
-    'import_file_type_csv'                  => 'CSV (Kommagetrennte Werte)',
-
-    // import configuration routine:
-    'import_config_sub_title'               => 'Set up your import file',
-    'import_config_bread_crumb'             => 'Set up your import file',
-
-    // import status page:
-    'import_status_bread_crumb'             => 'Importstatus',
-    'import_status_sub_title'               => 'Importstatus',
-    'import_status_wait_title'              => 'Bitte warten...',
-    'import_status_wait_text'               => 'Diese Box wird gleich verschwinden.',
-    'import_status_ready_title'             => 'Der Import ist startbereit',
-    'import_status_ready_text'              => 'Der Import ist bereit zu starten. Alle Einstellungen wurden von Ihnen erledigt. Bitte laden Sie die Konfigurationsdatei herunter. Diese wird Ihnen beim Import helfen, sollte dieser nicht wie gewünscht verlaufen. Um den Import tatsächlich zu starten führen Sie den folgenden Befehl in der Konsole aus oder nutzen Sie den Web-basierten Import. Abhängig von ihrer Konfiguration wird Ihnen der Konsolenimport mehr Rückmeldungen geben.',
-    'import_status_ready_config'            => 'Konfigurationsdatei herunterladen',
-    'import_status_ready_start'             => 'Starte den Import',
-    'import_status_ready_share'             => 'Bitte denken Sie darüber nach ihre Konfiguration herunterzuladen und in der <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">Sammlung an Import-Einstellungen</a></strong> zu teilen. Dieses erlaubt es anderen Nutzern von Firefly III ihre Daten einfacher zu importieren.',
-    'import_status_running_title'           => 'Der Import läuft',
-    'import_status_running_placeholder'     => 'Bitte warten Sie auf eine Aktualisierung...',
-    'import_status_errors_title'            => 'Fehler beim Import',
-    'import_status_errors_single'           => 'Beim Import ist ein Fehler aufgetreten. Dieser scheint aber nicht schwerwiegend zu sein.',
-    'import_status_errors_multi'            => 'Beim Import sind einige Fehler aufgetreten. Diese scheinen aber nicht schwerwiegend zu sein.',
-    'import_status_fatal_title'             => 'Ein schwerwiegender Fehler ist aufgetreten',
-    'import_status_fatal_text'              => 'Es ist ein schwerwiegender Fehler aufgetreten und die Importroutine kann nicht fortgeführt werden. Bitte sehen Sie sich die Erklärung in rot unten an.',
-    'import_status_fatal_more'              => 'Wenn der Fehler eine Zeitüberschreitung ist, wird der Import mittendrin gestoppt. Bei einigen Serverkonfigurationen wird lediglich der Server gestoppt, während der Import im Hintergrund ausgeführt wird. Um dies zu überprüfen, überprüfen Sie die Protokolldateien. Wenn das Problem weiterhin besteht, sollten Sie stattdessen den Import über die Befehlszeile in Erwägung ziehen.',
-    'import_status_finished_title'          => 'Importassistent abgeschlossen',
-    'import_status_finished_text'           => 'Der Importassistenten hat Ihre Datei importiert.',
-    'import_status_finished_job'            => 'Die importierten Transaktionen finden Sie im Tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">: tag</a>.',
-    'import_status_job_running'             => 'Der Import läuft...',
-    'import_with_key'                       => 'Import with key \':key\'',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Diese Funktion ist nicht verfügbar, wenn Sie Firefly III in einer Sandstorm.io-Umgebung verwenden.',

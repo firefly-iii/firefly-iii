@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -29,6 +29,7 @@ return [
     'preferences'         => 'Préférences',
     'profile'             => 'Profil',
     'changePassword'      => 'Modifier le mot de passe',
+    'change_email'      => 'Change your email address',
     'bills'               => 'Factures',
     'newBill'             => 'Nouvelle facture',
     'edit_bill'           => 'Editer la facture : ":name"',
