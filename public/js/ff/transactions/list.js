@@ -71,7 +71,7 @@ function goToReconcile() {
         baseHref = bases[0].href;
     }
 
-    $.post(baseHref + 'transactions/reconcile', {transactions: ids}).done(function () {
+    $.post(baseHref + 'transactions/reconcile', {transactions: ids, _token: token}).done(function () {
         window.location.reload(true);
     }).fail(function () {
         alert('Could not reconcile transactions: please check the logs and try again later.');

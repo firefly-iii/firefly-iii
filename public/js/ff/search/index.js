@@ -29,7 +29,7 @@ $(function () {
 });
 
 function startSearch(query) {
-    $.post(searchUri, {query: query}).done(presentSearchResults).fail(searchFailure);
+    $.post(searchUri, {query: query, _token: token}).done(presentSearchResults).fail(searchFailure);
 }
 
 function searchFailure() {

@@ -120,7 +120,7 @@ function updateBudgetedAmounts(e) {
     // send a post to Firefly to update the amount:
     var newUri = budgetAmountUri.replace("REPLACE", id);
 
-    $.post(newUri, {amount: value, start: periodStart, end: periodEnd}).done(function (data) {
+    $.post(newUri, {amount: value, start: periodStart, end: periodEnd, _token: token}).done(function (data) {
 
         // difference between new value and original value
         var difference = value - original;
