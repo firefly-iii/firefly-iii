@@ -234,7 +234,7 @@ class BillController extends Controller
         $end            = session('end');
         $year           = $date->year;
         $page           = intval($request->get('page'));
-        $pageSize       = intval(Preferences::get('transactionPageSize', 50)->data);
+        $pageSize       = intval(Preferences::get('listPageSize', 50)->data);
         $yearAverage    = $repository->getYearAverage($bill, $date);
         $overallAverage = $repository->getOverallAverage($bill);
 

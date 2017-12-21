@@ -36,6 +36,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
@@ -214,18 +215,24 @@ class AccountController extends Controller
     }
 
     /**
+     * @param Request                    $request
      * @param AccountRepositoryInterface $repository
      * @param string                     $what
      *
      * @return View
      */
-    public function index(AccountRepositoryInterface $repository, string $what)
+    public function index(Request $request, AccountRepositoryInterface $repository, string $what)
     {
         $what         = $what ?? 'asset';
         $subTitle     = trans('firefly.' . $what . '_accounts');
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
         $types        = config('firefly.accountTypesByIdentifier.' . $what);
-        $accounts     = $repository->getAccountsByType($types);
+        $collection   = $repository->getAccountsByType($types);
+        $total        = $collection->count();
+        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $pageSize     = intval(Preferences::get('listPageSize', 50)->data);
+        $accounts     = $collection->slice(($page-1) * $pageSize, $pageSize);
+        unset($collection);
         /** @var Carbon $start */
         $start = clone session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
@@ -246,7 +253,11 @@ class AccountController extends Controller
             }
         );
 
-        return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'accounts'));
+        // make paginator:
+        $accounts = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
+        $accounts->setPath(route('accounts.index', [$what]));
+
+        return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
     }
 
     /**
@@ -273,7 +284,7 @@ class AccountController extends Controller
         $range         = Preferences::get('viewRange', '1M')->data;
         $subTitleIcon  = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $page          = intval($request->get('page'));
-        $pageSize      = intval(Preferences::get('transactionPageSize', 50)->data);
+        $pageSize      = intval(Preferences::get('listPageSize', 50)->data);
         $chartUri      = route('chart.account.single', [$account->id]);
         $start         = null;
         $end           = null;

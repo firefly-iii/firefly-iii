@@ -96,7 +96,7 @@ class PreferencesController extends Controller
         $viewRange           = $viewRangePref->data;
         $frontPageAccounts   = Preferences::get('frontPageAccounts', []);
         $language            = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
-        $transactionPageSize = Preferences::get('transactionPageSize', 50)->data;
+        $listPageSize = Preferences::get('listPageSize', 50)->data;
         $customFiscalYear    = Preferences::get('customFiscalYear', 0)->data;
         $showDeps            = Preferences::get('showDepositsFrontpage', false)->data;
         $fiscalYearStartStr  = Preferences::get('fiscalYearStart', '01-01')->data;
@@ -114,7 +114,7 @@ class PreferencesController extends Controller
                 'tjOptionalFields',
                 'viewRange',
                 'customFiscalYear',
-                'transactionPageSize',
+                'listPageSize',
                 'fiscalYearStart',
                 'is2faEnabled',
                 'has2faSecret',
@@ -175,10 +175,10 @@ class PreferencesController extends Controller
         Preferences::set('showDepositsFrontpage', $showDepositsFrontpage);
 
         // save page size:
-        Preferences::set('transactionPageSize', 50);
-        $transactionPageSize = intval($request->get('transactionPageSize'));
-        if ($transactionPageSize > 0 && $transactionPageSize < 1337) {
-            Preferences::set('transactionPageSize', $transactionPageSize);
+        Preferences::set('listPageSize', 50);
+        $listPageSize = intval($request->get('listPageSize'));
+        if ($listPageSize > 0 && $listPageSize < 1337) {
+            Preferences::set('listPageSize', $listPageSize);
         }
 
         $twoFactorAuthEnabled   = false;

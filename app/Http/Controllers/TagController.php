@@ -196,7 +196,7 @@ class TagController extends Controller
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
         $page         = intval($request->get('page'));
-        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
+        $pageSize     = intval(Preferences::get('listPageSize', 50)->data);
         $range        = Preferences::get('viewRange', '1M')->data;
         $start        = null;
         $end          = null;

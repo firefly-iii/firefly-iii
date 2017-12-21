@@ -35,7 +35,7 @@ return [
     'currentBalance'          => 'Current balance',
     'active'                  => 'Is active?',
     'lastActivity'            => 'Last activity',
-    'balanceDiff'             => 'Balance difference between :start and :end',
+    'balanceDiff'             => 'Balance difference',
     'matchesOn'               => 'Matched on',
     'account_type'            => 'Account type',
     'created_at'              => 'Created at',

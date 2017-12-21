@@ -379,7 +379,7 @@ class BudgetController extends Controller
         }
 
         $page     = intval($request->get('page'));
-        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
+        $pageSize = intval(Preferences::get('listPageSize', 50)->data);
 
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -421,7 +421,7 @@ class BudgetController extends Controller
         $start      = session('first', Carbon::create()->startOfYear());
         $end        = new Carbon;
         $page       = intval($request->get('page'));
-        $pageSize   = intval(Preferences::get('transactionPageSize', 50)->data);
+        $pageSize   = intval(Preferences::get('listPageSize', 50)->data);
         $limits     = $this->getLimits($budget, $start, $end);
         $repetition = null;
         // collector:
@@ -452,7 +452,7 @@ class BudgetController extends Controller
         }
 
         $page     = intval($request->get('page'));
-        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
+        $pageSize = intval(Preferences::get('listPageSize', 50)->data);
         $subTitle = trans(
             'firefly.budget_in_period',
             [

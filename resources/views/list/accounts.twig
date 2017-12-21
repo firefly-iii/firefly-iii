@@ -1,3 +1,6 @@
+<div style="padding-left:8px;">
+    {{ accounts.render|raw }}
+</div>
 <table class="table table-hover sortable">
     <thead>
     <tr>
@@ -11,7 +14,7 @@
         <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
         <th data-defaultsign="month" class="hidden-sm hidden-xs hidden-md">{{ trans('list.lastActivity') }}</th>
         <th data-defaultsign="_19" style="width:15%;"
-            class="hidden-sm hidden-xs hidden-md">{{ trans('list.balanceDiff', {'start' : Session.get('start').formatLocalized(monthAndDayFormat),'end' : Session.get('end').formatLocalized(monthAndDayFormat)}) }}</th>
+            class="hidden-sm hidden-xs hidden-md">{{ trans('list.balanceDiff') }}</th>
     </tr>
     </thead>
     <tbody>
@@ -63,3 +66,6 @@
     {% endfor %}
     </tbody>
 </table>
+<div style="padding-left:8px;">
+    {{ accounts.render|raw }}
+</div>

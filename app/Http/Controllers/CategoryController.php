@@ -164,7 +164,7 @@ class CategoryController extends Controller
         $end      = null;
         $periods  = new Collection;
         $page     = intval($request->get('page'));
-        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
+        $pageSize = intval(Preferences::get('listPageSize', 50)->data);
 
         // prep for "all" view.
         if ('all' === $moment) {
@@ -221,7 +221,7 @@ class CategoryController extends Controller
         $subTitle     = $category->name;
         $subTitleIcon = 'fa-bar-chart';
         $page         = intval($request->get('page'));
-        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
+        $pageSize     = intval(Preferences::get('listPageSize', 50)->data);
         $range        = Preferences::get('viewRange', '1M')->data;
         $start        = null;
         $end          = null;

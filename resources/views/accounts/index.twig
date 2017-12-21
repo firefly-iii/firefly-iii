@@ -32,7 +32,8 @@
                 </div>
             </div>
         </div>
-    {% else %}
+    {% endif %}
+    {% if accounts.count == 0 and page == 0 %}
         {% include 'partials.empty' with {what: what, type: 'accounts',route: route('accounts.create', [what])} %}
     {% endif %}
 {% endblock %}
