@@ -45,11 +45,8 @@ class IsSandStormUser
     public function handle(Request $request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->guest()) {
-            if ($request->ajax()) {
-                return response('Unauthorized.', 401);
-            }
-
-            return redirect()->guest('login');
+            // don't care when not logged in, usual stuff applies:
+            return $next($request);
         }
 
         if (1 === intval(getenv('SANDSTORM'))) {
