@@ -75,7 +75,7 @@ class Amount implements ConverterInterface
                 Log::debug(sprintf('Searched from the left for "." in amount "%s", assume this is the decimal sign.', $value));
                 $decimal = '.';
             }
-            unset($options, $res, $candidate);
+            unset($options, $res);
         }
 
         // if decimal is dot, replace all comma's and spaces with nothing. then parse as float (round to 4 pos)
