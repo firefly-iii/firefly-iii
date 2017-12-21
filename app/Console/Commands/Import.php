@@ -22,8 +22,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Logging\CommandHandler;
 use FireflyIII\Import\Routine\ImportRoutine;
+use FireflyIII\Import\Routine\RoutineInterface;
 use FireflyIII\Models\ImportJob;
 use Illuminate\Console\Command;
 use Illuminate\Support\MessageBag;
@@ -81,8 +83,16 @@ class Import extends Command
         $handler = new CommandHandler($this);
         $monolog->pushHandler($handler);
 
-        /** @var ImportRoutine $routine */
-        $routine = app(ImportRoutine::class);
+        // actually start job:
+        $type      = $job->file_type === 'csv' ? 'file' : $job->file_type;
+        $key       = sprintf('import.routine.%s', $type);
+        $className = config($key);
+        if (null === $className || !class_exists($className)) {
+            throw new FireflyException(sprintf('Cannot find import routine class for job of type "%s".', $type)); // @codeCoverageIgnore
+        }
+
+        /** @var RoutineInterface $routine */
+        $routine = app($className);
         $routine->setJob($job);
         $routine->run();
 

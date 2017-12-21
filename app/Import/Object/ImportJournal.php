@@ -245,6 +245,10 @@ class ImportJournal
                 $this->notes .= ' ' . $array['value'];
                 $this->notes = trim($this->notes);
                 break;
+            case 'note':
+                $this->notes .= ' ' . $array['value'];
+                $this->notes = trim($this->notes);
+                break;
             case 'external-id':
                 $this->externalId = $array['value'];
                 break;

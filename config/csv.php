@@ -89,6 +89,12 @@ return [
             'converter'       => 'BillId',
             'mapper'          => 'Bills',
         ],
+        'note'       => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'field'           => 'note',
+            'converter'       => 'Note',
+        ],
         'bill-name'     => [
             'mappable'        => true,
             'pre-process-map' => false,

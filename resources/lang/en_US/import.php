@@ -138,6 +138,7 @@ return [
     'column_tags-space'               => 'Tags (space separated)',
     'column_account-number'           => 'Asset account (account number)',
     'column_opposing-number'          => 'Opposing account (account number)',
+    'column_note'                     => 'Note(s)',
 
     // bunq
     'bunq_prerequisites_title'        => 'Prerequisites for an import from bunq',
