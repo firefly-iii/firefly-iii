@@ -43,7 +43,6 @@ class ListDeviceServerRequest extends BunqRequest
     }
 
     /**
-     *
      * @throws \Exception
      */
     public function call(): void

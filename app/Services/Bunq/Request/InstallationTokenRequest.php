@@ -40,7 +40,6 @@ class InstallationTokenRequest extends BunqRequest
     private $publicKey = '';
 
     /**
-     *
      * @throws \Exception
      */
     public function call(): void

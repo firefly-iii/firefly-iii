@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Spectre\Request;
 
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
 use Log;
@@ -232,7 +231,6 @@ abstract class SpectreRequest
         $this->detectError($response);
         $statusCode = intval($response->status_code);
 
-
         $body                        = $response->body;
         $array                       = json_decode($body, true);
         $responseHeaders             = $response->headers->getAll();
@@ -299,7 +297,7 @@ abstract class SpectreRequest
         }
 
         $statusCode = intval($response->status_code);
-        if ($statusCode !== 200) {
+        if (200 !== $statusCode) {
             throw new FireflyException(sprintf('Status code %d: %s', $statusCode, $response->body));
         }
 

@@ -27,8 +27,6 @@ use Illuminate\Support\Collection;
 
 /**
  * Interface RoutineInterface
- *
- * @package FireflyIII\Import\Routine
  */
 interface RoutineInterface
 {
@@ -58,6 +56,4 @@ interface RoutineInterface
      * @return mixed
      */
     public function setJob(ImportJob $job);
-
-
 }

@@ -152,6 +152,7 @@ class AccountController extends Controller
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @return View
+     *
      * @throws FireflyException
      * @throws FireflyException
      * @throws FireflyException
@@ -229,9 +230,9 @@ class AccountController extends Controller
         $types        = config('firefly.accountTypesByIdentifier.' . $what);
         $collection   = $repository->getAccountsByType($types);
         $total        = $collection->count();
-        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $page         = 0 === intval($request->get('page')) ? 1 : intval($request->get('page'));
         $pageSize     = intval(Preferences::get('listPageSize', 50)->data);
-        $accounts     = $collection->slice(($page-1) * $pageSize, $pageSize);
+        $accounts     = $collection->slice(($page - 1) * $pageSize, $pageSize);
         unset($collection);
         /** @var Carbon $start */
         $start = clone session('start', Carbon::now()->startOfMonth());
@@ -272,6 +273,7 @@ class AccountController extends Controller
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // long and complex but not that excessively so.
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      * @throws FireflyException
      */
     public function show(Request $request, JournalRepositoryInterface $repository, Account $account, string $moment = '')

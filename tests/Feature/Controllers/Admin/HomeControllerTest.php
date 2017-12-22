@@ -48,7 +48,8 @@ class HomeControllerTest extends TestCase
         $response->assertSee('<ol class="breadcrumb">');
     }
 
-    public function testTestMessage() {
+    public function testTestMessage()
+    {
         Event::fake();
 
         $this->be($this->user());

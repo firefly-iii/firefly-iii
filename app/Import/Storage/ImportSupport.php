@@ -93,8 +93,9 @@ trait ImportSupport
      */
     protected function matchBills(TransactionJournal $journal): bool
     {
-        if(!is_null($journal->bill_id)) {
+        if (!is_null($journal->bill_id)) {
             Log::debug('Journal is already linked to a bill, will not scan.');
+
             return true;
         }
         if ($this->bills->count() > 0) {
@@ -264,6 +265,7 @@ trait ImportSupport
      *
      * @return string
      *x
+     *
      * @throws FireflyException
      *
      * @see ImportSupport::getOpposingAccount()
@@ -412,6 +414,7 @@ trait ImportSupport
      * @param array $parameters
      *
      * @return TransactionJournal
+     *
      * @throws FireflyException
      */
     private function storeJournal(array $parameters): TransactionJournal

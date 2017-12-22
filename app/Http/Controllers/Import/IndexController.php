@@ -18,16 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 namespace FireflyIII\Http\Controllers\Import;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
-use FireflyIII\Import\Routine\ImportRoutine;
 use FireflyIII\Import\Routine\RoutineInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
@@ -61,7 +58,7 @@ class IndexController extends Controller
             }
         );
 
-        $this->middleware(IsDemoUser::class)->except(['create','index']);
+        $this->middleware(IsDemoUser::class)->except(['create', 'index']);
     }
 
     /**
@@ -70,11 +67,12 @@ class IndexController extends Controller
      * @param string $bank
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
      * @throws FireflyException
      */
     public function create(string $bank)
     {
-        if (!(config(sprintf('import.enabled.%s', $bank))) === true) {
+        if (true === !(config(sprintf('import.enabled.%s', $bank)))) {
             throw new FireflyException(sprintf('Cannot import from "%s" at this time.', $bank));
         }
 
@@ -82,7 +80,6 @@ class IndexController extends Controller
 
         // from here, always go to configure step.
         return redirect(route('import.configure', [$importJob->key]));
-
     }
 
     /**
@@ -139,11 +136,11 @@ class IndexController extends Controller
      * @param ImportJob $job
      *
      * @return \Illuminate\Http\JsonResponse
+     *
      * @throws FireflyException
      */
     public function start(ImportJob $job)
     {
-
         $type      = $job->file_type;
         $key       = sprintf('import.routine.%s', $type);
         $className = config($key);
@@ -162,5 +159,4 @@ class IndexController extends Controller
 
         throw new FireflyException('Job did not complete successfully. Please review the log files.');
     }
-
 }

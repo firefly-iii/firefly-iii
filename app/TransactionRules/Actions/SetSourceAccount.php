@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -42,7 +41,7 @@ class SetSourceAccount implements ActionInterface
     /** @var TransactionJournal The journal */
     private $journal;
 
-    /** @var Account The new source account*/
+    /** @var Account The new source account */
     private $newSourceAccount;
 
     /** @var AccountRepositoryInterface Account repository */

@@ -89,6 +89,7 @@ class SetBudget implements ActionInterface
 
         $journal->budgets()->sync([$budget->id]);
         $journal->touch();
+
         return true;
     }
 }

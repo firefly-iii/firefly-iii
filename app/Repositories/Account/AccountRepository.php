@@ -43,7 +43,6 @@ use Validator;
  */
 class AccountRepository implements AccountRepositoryInterface
 {
-
     /** @var User */
     private $user;
 
@@ -72,6 +71,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @param Account $moveTo
      *
      * @return bool
+     *
      * @throws \Exception
      */
     public function destroy(Account $account, Account $moveTo): bool
@@ -161,6 +161,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array $data
      *
      * @return Account
+     *
      * @throws FireflyException
      */
     public function store(array $data): Account
@@ -222,7 +223,7 @@ class AccountRepository implements AccountRepositoryInterface
         /** @var Transaction $transaction */
         foreach ($journal->transactions as $transaction) {
             $transaction->amount = bcmul($data['amount'], '-1');
-            if ($transaction->account->accountType->type === AccountType::ASSET) {
+            if (AccountType::ASSET === $transaction->account->accountType->type) {
                 $transaction->amount = $data['amount'];
             }
             $transaction->save();
@@ -413,6 +414,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @param string $name
      *
      * @return Account
+     *
      * @throws FireflyException
      */
     protected function storeOpposingAccount(string $name): Account
@@ -511,6 +513,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array              $data
      *
      * @return bool
+     *
      * @throws \Exception
      */
     protected function updateOpeningBalanceJournal(Account $account, TransactionJournal $journal, array $data): bool

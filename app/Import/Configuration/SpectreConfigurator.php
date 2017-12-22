@@ -171,6 +171,7 @@ class SpectreConfigurator implements ConfiguratorInterface
                 break;
             case !$this->job->configuration['has-input-mandatory']:
                 $class = InputMandatory::class;
+            // no break
             default:
                 break;
         }

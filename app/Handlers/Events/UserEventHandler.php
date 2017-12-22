@@ -86,7 +86,7 @@ class UserEventHandler
             return true;
         }
         // user is only user but has admin role
-        if ($count === 1 && $user->hasRole('owner')) {
+        if (1 === $count && $user->hasRole('owner')) {
             Log::debug(sprintf('User #%d is only user but has role owner so all is well.', $user->id));
 
             return true;

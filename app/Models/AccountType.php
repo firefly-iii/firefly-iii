@@ -30,7 +30,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class AccountType extends Model
 {
-    const DEFAULT         = 'Default account';
+    const DEFAULT = 'Default account';
     /**
      *
      */

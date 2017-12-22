@@ -61,6 +61,7 @@ class BunqInformation implements InformationInterface
      * color: any associated color.
      *
      * @return array
+     *
      * @throws FireflyException
      */
     public function getAccounts(): array
@@ -138,6 +139,7 @@ class BunqInformation implements InformationInterface
      * @param int          $userId
      *
      * @return Collection
+     *
      * @throws \Exception
      */
     private function getMonetaryAccounts(SessionToken $sessionToken, int $userId): Collection
@@ -190,6 +192,7 @@ class BunqInformation implements InformationInterface
 
     /**
      * @return SessionToken
+     *
      * @throws \Exception
      */
     private function startSession(): SessionToken

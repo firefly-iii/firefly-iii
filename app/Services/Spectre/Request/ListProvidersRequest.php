@@ -35,7 +35,6 @@ class ListProvidersRequest extends SpectreRequest
     protected $providers = [];
 
     /**
-     *
      * @throws \Exception
      */
     public function call(): void
@@ -79,6 +78,4 @@ class ListProvidersRequest extends SpectreRequest
     {
         return $this->providers;
     }
-
-
 }

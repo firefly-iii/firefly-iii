@@ -111,10 +111,10 @@ class VerifyDatabase extends Command
                 $token = $user->generateAccessToken();
                 Preferences::setForUser($user, 'access_token', $token);
                 $this->line(sprintf('Generated access token for user %s', $user->email));
-                $count++;
+                ++$count;
             }
         }
-        if ($count === 0) {
+        if (0 === $count) {
             $this->info('All access tokens OK!');
         }
     }
@@ -138,12 +138,12 @@ class VerifyDatabase extends Command
                 $link->name    = $name;
                 $link->outward = $values[0];
                 $link->inward  = $values[1];
-                $count++;
+                ++$count;
             }
             $link->editable = false;
             $link->save();
         }
-        if ($count === 0) {
+        if (0 === $count) {
             $this->info('All link types OK!');
         }
     }
@@ -158,7 +158,7 @@ class VerifyDatabase extends Command
                       ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')]);
         /** @var stdClass $entry */
         foreach ($journals as $entry) {
-            if (bccomp(strval($entry->the_sum), '0') !== 0) {
+            if (0 !== bccomp(strval($entry->the_sum), '0')) {
                 $errored[] = $entry->transaction_journal_id;
             }
         }
@@ -167,14 +167,14 @@ class VerifyDatabase extends Command
             $res = Transaction::whereNull('deleted_at')->where('transaction_journal_id', $journalId)->groupBy('amount')->get([DB::raw('MIN(id) as first_id')]);
             $ids = $res->pluck('first_id')->toArray();
             DB::table('transactions')->whereIn('id', $ids)->update(['amount' => DB::raw('amount * -1')]);
-            $count++;
+            ++$count;
             // report about it
             /** @var TransactionJournal $journal */
             $journal = TransactionJournal::find($journalId);
             if (is_null($journal)) {
                 continue;
             }
-            if ($journal->transactionType->type === TransactionType::OPENING_BALANCE) {
+            if (TransactionType::OPENING_BALANCE === $journal->transactionType->type) {
                 $this->error(
                     sprintf(
                         'Transaction #%d was stored incorrectly. One of your asset accounts may show the wrong balance. Please visit /transactions/show/%d to verify the opening balance.',
@@ -182,7 +182,7 @@ class VerifyDatabase extends Command
                     )
                 );
             }
-            if ($journal->transactionType->type !== TransactionType::OPENING_BALANCE) {
+            if (TransactionType::OPENING_BALANCE !== $journal->transactionType->type) {
                 $this->error(
                     sprintf(
                         'Transaction #%d was stored incorrectly. Could be that the transaction shows the wrong amount. Please visit /transactions/show/%d to verify the opening balance.',
@@ -191,7 +191,7 @@ class VerifyDatabase extends Command
                 );
             }
         }
-        if ($count === 0) {
+        if (0 === $count) {
             $this->info('Amount integrity OK!');
         }
 
@@ -371,9 +371,9 @@ class VerifyDatabase extends Command
                 'Error: Transaction #' . $entry->transaction_id . ' should have been deleted, but has not.' .
                 ' Find it in the table called "transactions" and change the "deleted_at" field to: "' . $entry->journal_deleted . '"'
             );
-            $count++;
+            ++$count;
         }
-        if ($count === 0) {
+        if (0 === $count) {
             $this->info('No orphaned transactions!');
         }
     }
@@ -393,9 +393,9 @@ class VerifyDatabase extends Command
             $this->error(
                 'Error: Journal #' . $entry->id . ' has zero transactions. Open table "transaction_journals" and delete the entry with id #' . $entry->id
             );
-            $count++;
+            ++$count;
         }
-        if ($count === 0) {
+        if (0 === $count) {
             $this->info('No orphaned journals!');
         }
     }

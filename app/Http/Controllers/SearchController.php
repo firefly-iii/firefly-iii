@@ -74,6 +74,7 @@ class SearchController extends Controller
      * @param SearchInterface $searcher
      *
      * @return \Illuminate\Http\JsonResponse
+     *
      * @throws \Throwable
      */
     public function search(Request $request, SearchInterface $searcher)

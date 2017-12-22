@@ -73,6 +73,9 @@ use Validator;
  */
 class FireflyServiceProvider extends ServiceProvider
 {
+    /**
+     * Start provider.
+     */
     public function boot()
     {
         Validator::resolver(
@@ -94,7 +97,7 @@ class FireflyServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * Register stuff.
      */
     public function register()
     {

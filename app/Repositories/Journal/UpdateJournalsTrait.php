@@ -71,6 +71,8 @@ trait UpdateJournalsTrait
     }
 
     /**
+     * Update destination transaction.
+     *
      * @param TransactionJournal $journal
      * @param Account            $account
      * @param array              $data
@@ -94,6 +96,8 @@ trait UpdateJournalsTrait
     }
 
     /**
+     * Update source transaction.
+     *
      * @param TransactionJournal $journal
      * @param Account            $account
      * @param array              $data
@@ -118,6 +122,8 @@ trait UpdateJournalsTrait
     }
 
     /**
+     * Update tags.
+     * 
      * @param TransactionJournal $journal
      * @param array              $array
      *

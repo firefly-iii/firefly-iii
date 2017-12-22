@@ -149,6 +149,7 @@ class AttachmentController extends Controller
      * @param Attachment $attachment
      *
      * @return \Illuminate\Http\Response
+     *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function preview(Attachment $attachment)

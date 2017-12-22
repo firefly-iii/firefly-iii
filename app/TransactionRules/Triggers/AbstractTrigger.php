@@ -73,6 +73,7 @@ class AbstractTrigger
 
     /**
      * Make a new trigger from the rule trigger in the parameter
+     *
      * @codeCoverageIgnore
      *
      * @param RuleTrigger $trigger

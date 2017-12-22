@@ -70,7 +70,7 @@ class Amount implements ConverterInterface
         if (is_null($decimal)) {
             Log::debug('Decimal is still NULL, probably number with >2 decimals. Search for a dot.');
             $res = strrpos($value, '.');
-            if (!($res === false)) {
+            if (!(false === $res)) {
                 // blandly assume this is the one.
                 Log::debug(sprintf('Searched from the left for "." in amount "%s", assume this is the decimal sign.', $value));
                 $decimal = '.';

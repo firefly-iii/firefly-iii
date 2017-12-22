@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Configuration\Spectre;
-
 
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\SpectreProvider;
@@ -69,8 +67,6 @@ class SelectProvider implements ConfigurationInterface
 
     /**
      * @param ImportJob $job
-     *
-     * @return void
      */
     public function setJob(ImportJob $job)
     {
@@ -86,10 +82,10 @@ class SelectProvider implements ConfigurationInterface
      */
     public function storeConfiguration(array $data): bool
     {
-        $config                   = $this->job->configuration;
-        $config['provider']       = intval($data['provider_code']) ?? 0; // default to fake country.
-        $config['selected-provider']  = true;
-        $this->job->configuration = $config;
+        $config                      = $this->job->configuration;
+        $config['provider']          = intval($data['provider_code']) ?? 0; // default to fake country.
+        $config['selected-provider'] = true;
+        $this->job->configuration    = $config;
         $this->job->save();
 
         return true;

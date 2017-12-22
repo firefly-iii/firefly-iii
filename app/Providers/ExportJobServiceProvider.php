@@ -51,7 +51,7 @@ class ExportJobServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * Register export job.
      */
     private function exportJob()
     {
@@ -69,6 +69,9 @@ class ExportJobServiceProvider extends ServiceProvider
         );
     }
 
+    /**
+     * Register import job.
+     */
     private function importJob()
     {
         $this->app->bind(

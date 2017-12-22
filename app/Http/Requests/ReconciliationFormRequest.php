@@ -64,5 +64,4 @@ class ReconciliationFormRequest extends Request
 
         return $rules;
     }
-
 }

@@ -69,6 +69,7 @@ class TransactionController extends Controller
      * @param string                     $moment
      *
      * @return View
+     *
      * @throws FireflyException
      */
     public function index(Request $request, JournalRepositoryInterface $repository, string $what, string $moment = '')
@@ -142,7 +143,8 @@ class TransactionController extends Controller
 
             $repository->reconcile($transaction);
         }
-        return Response::json(['ok'=>'reconciled']);
+
+        return Response::json(['ok' => 'reconciled']);
     }
 
     /**
@@ -183,7 +185,7 @@ class TransactionController extends Controller
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }
-        if ($journal->transactionType->type === TransactionType::RECONCILIATION) {
+        if (TransactionType::RECONCILIATION === $journal->transactionType->type) {
             return redirect(route('accounts.reconcile.show', [$journal->id])); // @codeCoverageIgnore
         }
         $linkTypes    = $linkTypeRepository->get();
@@ -200,7 +202,6 @@ class TransactionController extends Controller
      * @param string $what
      *
      * @return Collection
-     *
      */
     private function getPeriodOverview(string $what): Collection
     {

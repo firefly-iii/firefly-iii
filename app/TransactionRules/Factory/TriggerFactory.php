@@ -49,6 +49,7 @@ class TriggerFactory
      * @param RuleTrigger $trigger
      *
      * @return AbstractTrigger
+     *
      * @throws FireflyException
      */
     public static function getTrigger(RuleTrigger $trigger)

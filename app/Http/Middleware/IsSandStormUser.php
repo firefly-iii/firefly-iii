@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
-use FireflyIII\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Session;

@@ -40,7 +40,6 @@ class DeviceServerRequest extends BunqRequest
     private $permittedIps = [];
 
     /**
-     *
      * @throws \Exception
      */
     public function call(): void

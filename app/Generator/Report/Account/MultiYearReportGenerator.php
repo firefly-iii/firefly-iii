@@ -32,7 +32,8 @@ class MultiYearReportGenerator extends MonthReportGenerator
     /**
      * @return string
      */
-    protected function preferredPeriod(): string {
+    protected function preferredPeriod(): string
+    {
         return 'year';
     }
 }

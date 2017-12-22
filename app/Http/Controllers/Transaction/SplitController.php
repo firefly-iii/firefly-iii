@@ -116,7 +116,6 @@ class SplitController extends Controller
             $accountArray[$account->id]['currency_id'] = intval($account->getMeta('currency_id'));
         }
 
-
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('transactions.edit-split.fromUpdate')) {
             $this->rememberPreviousUri('transactions.edit-split.uri');

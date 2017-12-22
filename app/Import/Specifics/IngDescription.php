@@ -127,7 +127,7 @@ class IngDescription implements SpecificInterface
     private function copyDescriptionToOpposite(): void
     {
         $search = ['Naar Oranje Spaarrekening ', 'Afschrijvingen'];
-        if (strlen($this->row[3]) === 0) {
+        if (0 === strlen($this->row[3])) {
             $this->row[3] = trim(str_ireplace($search, '', $this->row[8]));
         }
     }

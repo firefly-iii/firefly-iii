@@ -39,7 +39,6 @@ class ListMonetaryAccountRequest extends BunqRequest
     private $userId = 0;
 
     /**
-     *
      * @throws \Exception
      */
     public function call(): void

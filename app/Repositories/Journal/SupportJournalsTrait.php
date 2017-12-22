@@ -119,6 +119,7 @@ trait SupportJournalsTrait
      * @param array $data
      *
      * @return array
+     *
      * @throws FireflyException
      * @throws FireflyException
      */
@@ -167,6 +168,7 @@ trait SupportJournalsTrait
      * @param array $data
      *
      * @return array
+     *
      * @throws FireflyException
      * @throws FireflyException
      */

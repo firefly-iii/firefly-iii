@@ -88,7 +88,6 @@ class JavascriptController extends Controller
 
     /**
      * @param Request                     $request
-     *
      * @param AccountRepositoryInterface  $repository
      * @param CurrencyRepositoryInterface $currencyRepository
      *
@@ -141,7 +140,7 @@ class JavascriptController extends Controller
         $end       = session('end');
         $first     = session('first');
         $title     = sprintf('%s - %s', $start->formatLocalized($this->monthAndDayFormat), $end->formatLocalized($this->monthAndDayFormat));
-        $isCustom  = session('is_custom_range', false) === true;
+        $isCustom  = true === session('is_custom_range', false);
         $today     = new Carbon;
         $ranges    = [
             // first range is the current range:
@@ -181,7 +180,6 @@ class JavascriptController extends Controller
         // everything
         $index          = strval(trans('firefly.everything'));
         $ranges[$index] = [$first, new Carbon];
-
 
         $return = [
             'title'         => $title,

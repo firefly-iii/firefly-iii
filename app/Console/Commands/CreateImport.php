@@ -25,7 +25,6 @@ namespace FireflyIII\Console\Commands;
 use Artisan;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Logging\CommandHandler;
-use FireflyIII\Import\Routine\ImportRoutine;
 use FireflyIII\Import\Routine\RoutineInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -75,6 +74,7 @@ class CreateImport extends Command
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // cannot be helped
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five exactly.
+     *
      * @throws FireflyException
      */
     public function handle()
@@ -133,7 +133,7 @@ class CreateImport extends Command
             $monolog->pushHandler($handler);
 
             // start the actual routine:
-            $type      = $job->file_type === 'csv' ? 'file' : $job->file_type;
+            $type      = 'csv' === $job->file_type ? 'file' : $job->file_type;
             $key       = sprintf('import.routine.%s', $type);
             $className = config($key);
             if (null === $className || !class_exists($className)) {

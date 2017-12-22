@@ -81,6 +81,7 @@ class Handler extends ExceptionHandler
      * @param \Exception $exception
      *
      * @return mixed|void
+     *
      * @throws Exception
      */
     public function report(Exception $exception)

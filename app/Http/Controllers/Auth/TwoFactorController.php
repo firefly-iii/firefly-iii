@@ -69,7 +69,6 @@ class TwoFactorController extends Controller
 
     /**
      * @return mixed
-     *
      */
     public function lostTwoFactor()
     {

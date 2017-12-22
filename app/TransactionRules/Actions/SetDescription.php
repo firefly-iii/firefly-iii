@@ -35,7 +35,6 @@ class SetDescription implements ActionInterface
     private $action;
 
     /**
-     *
      * TriggerInterface constructor.
      *
      * @param RuleAction $action

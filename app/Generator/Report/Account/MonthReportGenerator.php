@@ -31,7 +31,6 @@ use Illuminate\Support\Collection;
  */
 class MonthReportGenerator implements ReportGeneratorInterface
 {
-
     /** @var Collection */
     private $accounts;
     /** @var Carbon */
@@ -43,6 +42,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * @return string
+     *
      * @throws \Throwable
      */
     public function generate(): string

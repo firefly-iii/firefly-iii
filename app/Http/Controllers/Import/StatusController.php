@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Import;
-
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\ImportJob;
@@ -34,7 +32,6 @@ use Response;
  */
 class StatusController extends Controller
 {
-
     /**
      *
      */
@@ -115,5 +112,4 @@ class StatusController extends Controller
 
         return Response::json($result);
     }
-
 }

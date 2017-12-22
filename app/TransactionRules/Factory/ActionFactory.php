@@ -47,6 +47,7 @@ class ActionFactory
      * @param RuleAction $action
      *
      * @return ActionInterface
+     *
      * @throws FireflyException
      */
     public static function getAction(RuleAction $action): ActionInterface

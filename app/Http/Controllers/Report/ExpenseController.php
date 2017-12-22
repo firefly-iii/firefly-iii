@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
@@ -33,7 +32,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-
 
 /**
  * Class ExpenseController
@@ -69,6 +67,7 @@ class ExpenseController extends Controller
      * @param Carbon     $end
      *
      * @return string
+     *
      * @throws \Throwable
      */
     public function budget(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
@@ -116,6 +115,7 @@ class ExpenseController extends Controller
      * @param Carbon     $end
      *
      * @return string
+     *
      * @throws \Throwable
      */
     public function category(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
@@ -173,6 +173,7 @@ class ExpenseController extends Controller
      * @param Carbon     $end
      *
      * @return array|mixed|string
+     *
      * @throws \Throwable
      */
     public function spent(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
@@ -193,7 +194,7 @@ class ExpenseController extends Controller
 
         foreach ($combined as $name => $combi) {
             /**
-             * @var string     $name
+             * @var string
              * @var Collection $combi
              */
             $spent         = $this->spentInPeriod($accounts, $combi, $start, $end);
@@ -208,7 +209,6 @@ class ExpenseController extends Controller
 
         return $result;
         // for period, get spent and earned for each account (by name)
-
     }
 
     /**
@@ -218,6 +218,7 @@ class ExpenseController extends Controller
      * @param Carbon     $end
      *
      * @return string
+     *
      * @throws \Throwable
      */
     public function topExpense(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
@@ -254,7 +255,6 @@ class ExpenseController extends Controller
         return $result;
     }
 
-
     /**
      * @param Collection $accounts
      * @param Collection $expense
@@ -262,6 +262,7 @@ class ExpenseController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
+     *
      * @throws \Throwable
      */
     public function topIncome(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
@@ -343,17 +344,16 @@ class ExpenseController extends Controller
             $categoryName = $transaction->transaction_category_name;
             $categoryId   = intval($transaction->transaction_category_id);
             // if null, grab from journal:
-            if ($categoryId === 0) {
+            if (0 === $categoryId) {
                 $categoryName = $transaction->transaction_journal_category_name;
                 $categoryId   = intval($transaction->transaction_journal_category_id);
             }
-            if ($categoryId !== 0) {
+            if (0 !== $categoryId) {
                 $categoryName = app('steam')->tryDecrypt($categoryName);
             }
 
             // if not set, set to zero:
             if (!isset($sum[$categoryId][$currencyId])) {
-
                 $sum[$categoryId] = [
                     'grand_total'  => '0',
                     'name'         => $categoryName,
@@ -371,7 +371,6 @@ class ExpenseController extends Controller
                         ],
                     ],
                 ];
-
             }
 
             // add amount
@@ -448,17 +447,16 @@ class ExpenseController extends Controller
             $budgetName = $transaction->transaction_budget_name;
             $budgetId   = intval($transaction->transaction_budget_id);
             // if null, grab from journal:
-            if ($budgetId === 0) {
+            if (0 === $budgetId) {
                 $budgetName = $transaction->transaction_journal_budget_name;
                 $budgetId   = intval($transaction->transaction_journal_budget_id);
             }
-            if ($budgetId !== 0) {
+            if (0 !== $budgetId) {
                 $budgetName = app('steam')->tryDecrypt($budgetName);
             }
 
             // if not set, set to zero:
             if (!isset($sum[$budgetId][$currencyId])) {
-
                 $sum[$budgetId] = [
                     'grand_total'  => '0',
                     'name'         => $budgetName,
@@ -510,17 +508,16 @@ class ExpenseController extends Controller
             $categoryName = $transaction->transaction_category_name;
             $categoryId   = intval($transaction->transaction_category_id);
             // if null, grab from journal:
-            if ($categoryId === 0) {
+            if (0 === $categoryId) {
                 $categoryName = $transaction->transaction_journal_category_name;
                 $categoryId   = intval($transaction->transaction_journal_category_id);
             }
-            if ($categoryId !== 0) {
+            if (0 !== $categoryId) {
                 $categoryName = app('steam')->tryDecrypt($categoryName);
             }
 
             // if not set, set to zero:
             if (!isset($sum[$categoryId][$currencyId])) {
-
                 $sum[$categoryId] = [
                     'grand_total'  => '0',
                     'name'         => $categoryName,
@@ -591,5 +588,4 @@ class ExpenseController extends Controller
 
         return $sum;
     }
-
 }

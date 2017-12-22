@@ -132,6 +132,7 @@ class UserRepository implements UserRepositoryInterface
      * @param User $user
      *
      * @return bool
+     *
      * @throws \Exception
      */
     public function destroy(User $user): bool

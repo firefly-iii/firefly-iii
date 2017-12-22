@@ -395,7 +395,6 @@ class PiggyBankController extends Controller
         }
         $piggyBank = $repository->store($data);
 
-
         Session::flash('success', strval(trans('firefly.stored_piggy_bank', ['name' => $piggyBank->name])));
         Preferences::mark();
 

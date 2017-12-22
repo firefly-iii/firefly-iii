@@ -75,7 +75,6 @@ class Initial implements ConfigurationInterface
             'specifix'   => [],
             'delimiters' => $delimiters,
             'specifics'  => $specifics,
-
         ];
 
         return $data;

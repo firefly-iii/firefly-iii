@@ -28,8 +28,6 @@ use Illuminate\Support\MessageBag;
 
 /**
  * Interface PrerequisitesInterface
- *
- * @package FireflyIII\Import\Prerequisites
  */
 interface PrerequisitesInterface
 {

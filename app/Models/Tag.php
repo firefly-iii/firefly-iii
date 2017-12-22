@@ -105,6 +105,7 @@ class Tag extends Model
      * @param Tag $tag
      *
      * @return string
+     *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
     public static function tagSum(self $tag): string

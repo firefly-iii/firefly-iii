@@ -188,6 +188,7 @@ class Map implements ConfigurationInterface
 
     /**
      * @return bool
+     *
      * @throws FireflyException
      */
     private function getMappableColumns(): bool

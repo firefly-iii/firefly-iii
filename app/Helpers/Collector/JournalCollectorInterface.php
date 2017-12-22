@@ -90,13 +90,6 @@ interface JournalCollectorInterface
      *
      * @return JournalCollectorInterface
      */
-    public function setOpposingAccounts(Collection $accounts): JournalCollectorInterface;
-
-    /**
-     * @param Collection $accounts
-     *
-     * @return JournalCollectorInterface
-     */
     public function setAccounts(Collection $accounts): JournalCollectorInterface;
 
     /**
@@ -166,6 +159,13 @@ interface JournalCollectorInterface
      * @return JournalCollectorInterface
      */
     public function setOffset(int $offset): JournalCollectorInterface;
+
+    /**
+     * @param Collection $accounts
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setOpposingAccounts(Collection $accounts): JournalCollectorInterface;
 
     /**
      * @param int $page

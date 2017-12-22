@@ -107,11 +107,10 @@ class Upload implements ConfigurationInterface
         $config['has-file-upload'] = $uploaded;
         $repository->setConfiguration($this->job, $config);
 
-        if ($uploaded === false) {
+        if (false === $uploaded) {
             $this->warning = 'No valid upload.';
         }
 
         return true;
     }
-
 }

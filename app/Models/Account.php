@@ -63,7 +63,7 @@ class Account extends Model
      * @var array
      */
     protected $rules
-                      = [
+        = [
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
             'name'            => 'required|between:1,200',
@@ -118,7 +118,7 @@ class Account extends Model
      *
      * @return Account
      */
-    public static function routeBinder(Account $value)
+    public static function routeBinder(self $value)
     {
         if (auth()->check()) {
             if (intval($value->user_id) === auth()->user()->id) {
@@ -218,7 +218,6 @@ class Account extends Model
      * Returns the opening balance.
      *
      * @return TransactionJournal
-     *
      */
     public function getOpeningBalance(): TransactionJournal
     {
@@ -268,7 +267,6 @@ class Account extends Model
      * Returns the date of the opening balance for this account. If no date, will return 01-01-1900.
      *
      * @return Carbon
-     *
      */
     public function getOpeningBalanceDate(): Carbon
     {

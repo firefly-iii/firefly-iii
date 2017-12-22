@@ -24,7 +24,6 @@ namespace FireflyIII\Console\Commands;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Logging\CommandHandler;
-use FireflyIII\Import\Routine\ImportRoutine;
 use FireflyIII\Import\Routine\RoutineInterface;
 use FireflyIII\Models\ImportJob;
 use Illuminate\Console\Command;
@@ -60,6 +59,8 @@ class Import extends Command
 
     /**
      * Run the import routine.
+     *
+     * @throws FireflyException
      */
     public function handle()
     {
@@ -84,7 +85,7 @@ class Import extends Command
         $monolog->pushHandler($handler);
 
         // actually start job:
-        $type      = $job->file_type === 'csv' ? 'file' : $job->file_type;
+        $type      = 'csv' === $job->file_type ? 'file' : $job->file_type;
         $key       = sprintf('import.routine.%s', $type);
         $className = config($key);
         if (null === $className || !class_exists($className)) {

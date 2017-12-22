@@ -49,6 +49,7 @@ class RuleRepository implements RuleRepositoryInterface
      * @param Rule $rule
      *
      * @return bool
+     *
      * @throws \Exception
      * @throws \Exception
      * @throws \Exception

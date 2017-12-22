@@ -48,15 +48,16 @@ class Roles implements ConfigurationInterface
      * Get the data necessary to show the configuration screen.
      *
      * @return array
+     *
      * @throws \League\Csv\Exception
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function getData(): array
     {
-        $config                = $this->job->configuration;
-        $content               = $this->job->uploadFileContents();
-        $headers               = [];
-        $offset                = 0;
+        $config  = $this->job->configuration;
+        $content = $this->job->uploadFileContents();
+        $headers = [];
+        $offset  = 0;
         // create CSV reader.
         $reader = Reader::createFromString($content);
         $reader->setDelimiter($config['delimiter']);

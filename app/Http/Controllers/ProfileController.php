@@ -97,6 +97,7 @@ class ProfileController extends Controller
      * @param string                  $token
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
      * @throws FireflyException
      */
     public function confirmEmailChange(UserRepositoryInterface $repository, string $token)
@@ -286,7 +287,7 @@ class ProfileController extends Controller
 
         // found user.
         // which email address to return to?
-        $set   = Preferences::beginsWith($user, 'previous_email_');
+        $set = Preferences::beginsWith($user, 'previous_email_');
         /** @var string $match */
         $match = null;
         foreach ($set as $entry) {

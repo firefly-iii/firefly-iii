@@ -129,6 +129,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      * @param null|UploadedFile $file
      *
      * @return bool
+     *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function processFile(ImportJob $job, ?UploadedFile $file): bool

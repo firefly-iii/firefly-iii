@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Configuration\Spectre;
-
 
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
@@ -42,6 +40,7 @@ class InputMandatory implements ConfigurationInterface
      * Get the data necessary to show the configuration screen.
      *
      * @return array
+     *
      * @throws FireflyException
      */
     public function getData(): array
@@ -76,8 +75,6 @@ class InputMandatory implements ConfigurationInterface
 
     /**
      * @param ImportJob $job
-     *
-     * @return void
      */
     public function setJob(ImportJob $job)
     {
@@ -90,6 +87,7 @@ class InputMandatory implements ConfigurationInterface
      * @param array $data
      *
      * @return bool
+     *
      * @throws FireflyException
      */
     public function storeConfiguration(array $data): bool

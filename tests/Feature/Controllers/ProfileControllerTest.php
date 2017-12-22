@@ -340,7 +340,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::undoEmailChange()
+     * @covers                   \FireflyIII\Http\Controllers\ProfileController::undoEmailChange()
      * @expectedExceptionMessage Invalid token
      */
     public function testUndoEmailChangeBadHash()
@@ -364,7 +364,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::undoEmailChange()
+     * @covers                   \FireflyIII\Http\Controllers\ProfileController::undoEmailChange()
      * @expectedExceptionMessage Invalid token
      */
     public function testUndoEmailChangeBadToken()

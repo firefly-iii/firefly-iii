@@ -109,6 +109,7 @@ class TransactionMatcher
 
     /**
      * Return limit
+     *
      * @return int
      */
     public function getLimit(): int
@@ -132,6 +133,7 @@ class TransactionMatcher
 
     /**
      * Get range
+     *
      * @return int
      */
     public function getRange(): int
@@ -155,6 +157,7 @@ class TransactionMatcher
 
     /**
      * Get triggers
+     *
      * @return array
      */
     public function getTriggers(): array

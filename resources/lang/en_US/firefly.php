@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 return [
@@ -353,7 +352,6 @@ return [
     'rule_action_set_notes_choice'               => 'Set notes to..',
     'rule_action_set_notes'                      => 'Set notes to ":action_value"',
 
-
     'rules_have_read_warning'                  => 'Have you read the warning?',
     'apply_rule_warning'                       => 'Warning: running a rule(group) on a large selection of transactions could take ages, and it could time-out. If it does, the rule(group) will only be applied to an unknown subset of your transactions. This might leave your financial administration in tatters. Please be careful.',
 
@@ -430,7 +428,6 @@ return [
     'optional_field_attachments'               => 'Attachments',
     'optional_field_meta_data'                 => 'Optional meta data',
 
-
     // profile:
     'change_your_password'                     => 'Change your password',
     'delete_account'                           => 'Delete account',
@@ -466,7 +463,6 @@ return [
     'email_changed_logout'                     => 'Until you verify your email address, you cannot login.',
     'login_with_new_email'                     => 'You can now login with your new email address.',
     'login_with_old_email'                     => 'You can now login with your old email address again.',
-
 
     // attachments
     'nr_of_attachments'                        => 'One attachment|:count attachments',
@@ -572,7 +568,6 @@ return [
     'available_amount_indication'              => 'Use these amounts to get an indication of what your total budget could be.',
     'suggested'                                => 'Suggested',
     'average_between'                          => 'Average between :start and :end',
-
 
     // bills:
     'matching_on'                              => 'Matching on',
@@ -728,7 +723,6 @@ return [
     'opt_group_savingAsset'                    => 'Savings accounts',
     'opt_group_sharedAsset'                    => 'Shared asset accounts',
     'opt_group_ccAsset'                        => 'Credit cards',
-
 
     // new user:
     'welcome'                                  => 'Welcome to Firefly!',
@@ -1053,7 +1047,6 @@ return [
     '(partially) pays for_outward'          => '(partially) pays for',
     '(partially) reimburses_outward'        => '(partially) reimburses',
 
-
     // split a transaction:
     'splits'                                => 'Splits',
     'add_another_split'                     => 'Add another split',
@@ -1131,6 +1124,4 @@ return [
     'no_bills_intro_default'                => 'You have no bills yet. You can create bills to keep track of regular expenses, like your rent or insurance.',
     'no_bills_imperative_default'           => 'Do you have such regular bills? Create a bill and keep track of your payments:',
     'no_bills_create_default'               => 'Create a bill',
-
-
 ];

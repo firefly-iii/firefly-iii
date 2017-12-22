@@ -48,6 +48,7 @@ class BillRepository implements BillRepositoryInterface
      * @param Bill $bill
      *
      * @return bool
+     *
      * @throws \Exception
      */
     public function destroy(Bill $bill): bool
@@ -391,6 +392,7 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $date
      *
      * @return \Carbon\Carbon
+     *
      * @throws \FireflyIII\Support\Facades\FireflyException
      * @throws \FireflyIII\Support\Facades\FireflyException
      */
@@ -430,6 +432,7 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $date
      *
      * @return Carbon
+     *
      * @throws \FireflyIII\Support\Facades\FireflyException
      * @throws \FireflyIII\Support\Facades\FireflyException
      * @throws \FireflyIII\Support\Facades\FireflyException
@@ -616,10 +619,9 @@ class BillRepository implements BillRepositoryInterface
         return $wordMatch;
     }
 
-
     /**
-     * @param Bill $bill
-     * @param string             $note
+     * @param Bill   $bill
+     * @param string $note
      *
      * @return bool
      */

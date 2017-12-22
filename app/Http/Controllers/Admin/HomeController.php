@@ -45,7 +45,6 @@ class HomeController extends Controller
         $this->middleware(IsSandStormUser::class)->except(['index']);
     }
 
-
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */

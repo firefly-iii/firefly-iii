@@ -71,6 +71,7 @@ class PreferencesController extends Controller
 
     /**
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
      * @throws \Exception
      * @throws \Exception
      */
@@ -91,19 +92,19 @@ class PreferencesController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-        $accounts            = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $viewRangePref       = Preferences::get('viewRange', '1M');
-        $viewRange           = $viewRangePref->data;
-        $frontPageAccounts   = Preferences::get('frontPageAccounts', []);
-        $language            = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
-        $listPageSize = Preferences::get('listPageSize', 50)->data;
-        $customFiscalYear    = Preferences::get('customFiscalYear', 0)->data;
-        $showDeps            = Preferences::get('showDepositsFrontpage', false)->data;
-        $fiscalYearStartStr  = Preferences::get('fiscalYearStart', '01-01')->data;
-        $fiscalYearStart     = date('Y') . '-' . $fiscalYearStartStr;
-        $tjOptionalFields    = Preferences::get('transaction_journal_optional_fields', [])->data;
-        $is2faEnabled        = Preferences::get('twoFactorAuthEnabled', 0)->data; // twoFactorAuthEnabled
-        $has2faSecret        = null !== Preferences::get('twoFactorAuthSecret'); // hasTwoFactorAuthSecret
+        $accounts           = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $viewRangePref      = Preferences::get('viewRange', '1M');
+        $viewRange          = $viewRangePref->data;
+        $frontPageAccounts  = Preferences::get('frontPageAccounts', []);
+        $language           = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
+        $listPageSize       = Preferences::get('listPageSize', 50)->data;
+        $customFiscalYear   = Preferences::get('customFiscalYear', 0)->data;
+        $showDeps           = Preferences::get('showDepositsFrontpage', false)->data;
+        $fiscalYearStartStr = Preferences::get('fiscalYearStart', '01-01')->data;
+        $fiscalYearStart    = date('Y') . '-' . $fiscalYearStartStr;
+        $tjOptionalFields   = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $is2faEnabled       = Preferences::get('twoFactorAuthEnabled', 0)->data; // twoFactorAuthEnabled
+        $has2faSecret       = null !== Preferences::get('twoFactorAuthSecret'); // hasTwoFactorAuthSecret
 
         return view(
             'preferences.index',

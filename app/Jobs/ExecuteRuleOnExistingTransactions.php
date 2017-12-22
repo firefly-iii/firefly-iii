@@ -94,6 +94,14 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
+     * @return Rule
+     */
+    public function getRule(): Rule
+    {
+        return $this->rule;
+    }
+
+    /**
      * @return \Carbon\Carbon
      */
     public function getStartDate(): Carbon
@@ -116,15 +124,6 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     {
         return $this->user;
     }
-
-    /**
-     * @return Rule
-     */
-    public function getRule(): Rule
-    {
-        return $this->rule;
-    }
-
 
     /**
      * @param User $user

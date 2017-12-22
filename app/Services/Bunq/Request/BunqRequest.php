@@ -46,7 +46,7 @@ abstract class BunqRequest
      * @var array
      */
     private $upperCaseHeaders
-                    = [
+        = [
             'x-bunq-client-response-id' => 'X-Bunq-Client-Response-Id',
             'x-bunq-client-request-id'  => 'X-Bunq-Client-Request-Id',
         ];
@@ -330,6 +330,7 @@ abstract class BunqRequest
      * @param array  $headers
      *
      * @return array
+     *
      * @throws Exception
      */
     protected function sendUnsignedBunqDelete(string $uri, array $headers): array
@@ -360,6 +361,7 @@ abstract class BunqRequest
      * @param array  $headers
      *
      * @return array
+     *
      * @throws Exception
      */
     protected function sendUnsignedBunqPost(string $uri, array $data, array $headers): array

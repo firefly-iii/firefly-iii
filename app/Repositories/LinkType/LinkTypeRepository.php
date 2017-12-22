@@ -51,6 +51,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      * @param LinkType $moveTo
      *
      * @return bool
+     *
      * @throws \Exception
      */
     public function destroy(LinkType $linkType, LinkType $moveTo): bool
@@ -67,6 +68,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      * @param TransactionJournalLink $link
      *
      * @return bool
+     *
      * @throws \Exception
      */
     public function destroyLink(TransactionJournalLink $link): bool

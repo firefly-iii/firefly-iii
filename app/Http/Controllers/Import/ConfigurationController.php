@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Import;
-
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -66,6 +64,7 @@ class ConfigurationController extends Controller
      * @param ImportJob $job
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     *
      * @throws FireflyException
      */
     public function index(ImportJob $job)
@@ -95,6 +94,7 @@ class ConfigurationController extends Controller
      * @param ImportJob $job
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
      * @throws FireflyException
      */
     public function post(Request $request, ImportJob $job)

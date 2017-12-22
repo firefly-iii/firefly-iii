@@ -41,7 +41,7 @@ class PiggyBankEvent extends Model
             'date'       => 'datetime',
         ];
     /** @var array */
-    protected $dates    = ['date'];
+    protected $dates = ['date'];
     /**
      * @var array
      */

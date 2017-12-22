@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -341,7 +340,6 @@ class AccountController extends Controller
      * @param Carbon  $start
      *
      * @return \Illuminate\Http\JsonResponse
-     *
      */
     public function period(Account $account, Carbon $start)
     {

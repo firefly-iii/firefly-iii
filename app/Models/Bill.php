@@ -42,7 +42,7 @@ class Bill extends Model
      * @var array
      */
     protected $casts
-                      = [
+        = [
             'created_at'      => 'datetime',
             'updated_at'      => 'datetime',
             'deleted_at'      => 'datetime',
@@ -57,8 +57,8 @@ class Bill extends Model
      * @var array
      */
     protected $fillable
-                      = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip',
-                         'automatch', 'active',];
+        = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip',
+           'automatch', 'active',];
     /**
      * @var array
      */

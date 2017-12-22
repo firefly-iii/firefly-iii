@@ -246,7 +246,6 @@ class BillController extends Controller
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath(route('bills.show', [$bill->id]));
 
-
         $bill->paidDates = $repository->getPaidDatesInRange($bill, $date, $end);
         $bill->payDates  = $repository->getPayDatesInRange($bill, $date, $end);
         $lastPaidDate    = $this->lastPaidDate($repository->getPaidDatesInRange($bill, $date, $end), $date);
@@ -273,7 +272,6 @@ class BillController extends Controller
         $bill     = $repository->store($billData);
         $request->session()->flash('success', strval(trans('firefly.stored_new_bill', ['name' => $bill->name])));
         Preferences::mark();
-
 
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
@@ -341,7 +339,7 @@ class BillController extends Controller
      */
     private function lastPaidDate(Collection $dates, Carbon $default): Carbon
     {
-        if ($dates->count() === 0) {
+        if (0 === $dates->count()) {
             return $default; // @codeCoverageIgnore
         }
         $latest = $dates->first();
@@ -353,6 +351,5 @@ class BillController extends Controller
         }
 
         return $latest;
-
     }
 }

@@ -92,5 +92,4 @@ class FilePrerequisites implements PrerequisitesInterface
     {
         return new MessageBag;
     }
-
 }

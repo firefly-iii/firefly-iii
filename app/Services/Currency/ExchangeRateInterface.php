@@ -29,8 +29,6 @@ use FireflyIII\User;
 
 /**
  * Interface ExchangeRateInterface
- *
- * @package FireflyIII\Services\Currency
  */
 interface ExchangeRateInterface
 {

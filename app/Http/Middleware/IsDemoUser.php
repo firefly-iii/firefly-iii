@@ -45,9 +45,9 @@ class IsDemoUser
     public function handle(Request $request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->guest()) {
-        // don't care when not logged in, usual stuff applies:
-        return $next($request);
-    }
+            // don't care when not logged in, usual stuff applies:
+            return $next($request);
+        }
         /** @var User $user */
         $user = auth()->user();
         if ($user->hasRole('demo')) {

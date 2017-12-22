@@ -33,7 +33,6 @@ use Illuminate\Support\Collection;
  */
 interface AccountRepositoryInterface
 {
-
     /**
      * Moved here from account CRUD.
      *

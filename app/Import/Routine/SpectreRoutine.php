@@ -25,9 +25,9 @@ namespace FireflyIII\Import\Routine;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Services\Spectre\Object\Customer;
 use FireflyIII\Services\Spectre\Request\NewCustomerRequest;
-use Preferences;
 use Illuminate\Support\Collection;
 use Log;
+use Preferences;
 
 /**
  * Class FileRoutine
@@ -91,7 +91,6 @@ class SpectreRoutine implements RoutineInterface
         // create customer if user does not have one:
         $customer = $this->getCustomer();
 
-
         return true;
     }
 
@@ -113,7 +112,6 @@ class SpectreRoutine implements RoutineInterface
         echo '<pre>';
         print_r($newCustomerRequest->getCustomer());
         exit;
-
     }
 
     /**
@@ -128,6 +126,4 @@ class SpectreRoutine implements RoutineInterface
         var_dump($preference->data);
         exit;
     }
-
-
 }

@@ -84,6 +84,7 @@ class JournalFormRequest extends Request
 
     /**
      * @return array
+     *
      * @throws FireflyException
      */
     public function rules()

@@ -41,7 +41,6 @@ use Session;
  */
 class RegisterController extends Controller
 {
-
     use RegistersUsers;
 
     /**

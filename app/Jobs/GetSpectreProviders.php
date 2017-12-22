@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * GetSpectreProviders.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -92,8 +94,8 @@ class GetSpectreProviders implements ShouldQueue
             $dbProvider->code            = $provider['code'];
             $dbProvider->mode            = $provider['mode'];
             $dbProvider->status          = $provider['status'];
-            $dbProvider->interactive     = $provider['interactive'] === 1;
-            $dbProvider->automatic_fetch = $provider['automatic_fetch'] === 1;
+            $dbProvider->interactive     = 1 === $provider['interactive'];
+            $dbProvider->automatic_fetch = 1 === $provider['automatic_fetch'];
             $dbProvider->country_code    = $provider['country_code'];
             $dbProvider->data            = $provider;
             $dbProvider->save();

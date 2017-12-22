@@ -24,7 +24,6 @@ namespace FireflyIII\Support\Search;
 
 use Carbon\Carbon;
 use Exception;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use Log;
 use Steam;
@@ -59,7 +58,6 @@ class Modifier
      * @return bool
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     *
      */
     public static function apply(array $modifier, Transaction $transaction): bool
     {

@@ -99,6 +99,7 @@ class JournalRepository implements JournalRepositoryInterface
      * @param TransactionJournal $journal
      *
      * @return bool
+     *
      * @throws \Exception
      */
     public function delete(TransactionJournal $journal): bool
@@ -180,7 +181,7 @@ class JournalRepository implements JournalRepositoryInterface
     {
         /** @var Transaction $transaction */
         foreach ($journal->transactions as $transaction) {
-            if ($transaction->account->accountType->type === AccountType::ASSET) {
+            if (AccountType::ASSET === $transaction->account->accountType->type) {
                 return $transaction;
             }
         }
@@ -274,6 +275,7 @@ class JournalRepository implements JournalRepositoryInterface
      * @param array $data
      *
      * @return TransactionJournal
+     *
      * @throws \FireflyIII\Exceptions\FireflyException
      * @throws \FireflyIII\Exceptions\FireflyException
      */
@@ -361,6 +363,7 @@ class JournalRepository implements JournalRepositoryInterface
      * @param array              $data
      *
      * @return TransactionJournal
+     *
      * @throws \FireflyIII\Exceptions\FireflyException
      * @throws \FireflyIII\Exceptions\FireflyException
      * @throws \FireflyIII\Exceptions\FireflyException
@@ -417,7 +420,6 @@ class JournalRepository implements JournalRepositoryInterface
 
         return $journal;
     }
-
 
     /**
      * Same as above but for transaction journal with multiple transactions.

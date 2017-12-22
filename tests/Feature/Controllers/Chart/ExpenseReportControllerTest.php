@@ -57,10 +57,10 @@ class ExpenseReportControllerTest extends TestCase
         $accountRepository = $this->mock(AccountRepositoryInterface::class);
         $accountRepository->shouldReceive('findByName')->once()->andReturn($expense);
 
-        $set = new Collection;
-        $transaction = new Transaction();
+        $set                                = new Collection;
+        $transaction                        = new Transaction();
         $transaction->opposing_account_name = 'Somebody';
-        $transaction->transaction_amount = '5';
+        $transaction->transaction_amount    = '5';
         $set->push($transaction);
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();

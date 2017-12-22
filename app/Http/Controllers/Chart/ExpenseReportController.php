@@ -63,7 +63,6 @@ class ExpenseReportController extends Controller
         );
     }
 
-
     /**
      * @param Collection $accounts
      * @param Collection $expense
@@ -74,7 +73,6 @@ class ExpenseReportController extends Controller
      */
     public function mainChart(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
-
         $cache = new CacheProperties;
         $cache->addProperty('chart.expense.report.main');
         $cache->addProperty($accounts);
@@ -82,7 +80,7 @@ class ExpenseReportController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-             return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $format       = app('navigation')->preferredCarbonLocalizedFormat($start, $end);

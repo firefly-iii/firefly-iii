@@ -75,7 +75,7 @@ class Transaction extends Model
      * @var array
      */
     protected $casts
-                      = [
+        = [
             'created_at'          => 'datetime',
             'updated_at'          => 'datetime',
             'deleted_at'          => 'datetime',
@@ -88,8 +88,8 @@ class Transaction extends Model
      * @var array
      */
     protected $fillable
-                      = ['account_id', 'transaction_journal_id', 'description', 'amount', 'identifier', 'transaction_currency_id', 'foreign_currency_id',
-                         'foreign_amount',];
+        = ['account_id', 'transaction_journal_id', 'description', 'amount', 'identifier', 'transaction_currency_id', 'foreign_currency_id',
+           'foreign_amount',];
     /**
      * @var array
      */
@@ -98,7 +98,7 @@ class Transaction extends Model
      * @var array
      */
     protected $rules
-                      = [
+        = [
             'account_id'              => 'required|exists:accounts,id',
             'transaction_journal_id'  => 'required|exists:transaction_journals,id',
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',

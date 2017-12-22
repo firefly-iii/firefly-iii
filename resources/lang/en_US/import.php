@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 return [
     // status of import:
@@ -91,7 +89,6 @@ return [
     'csv_roles_no_example_data'       => 'No example data available',
     'csv_roles_submit'                => 'Continue with step 4/4',
     'csv_roles_warning'               => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
-
 
     // file: map data
     'file_map_title'                  => 'Import setup (4/4) - Connect import data to Firefly III data',

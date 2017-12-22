@@ -85,7 +85,7 @@ class BudgetController extends Controller
         $start       = Carbon::createFromFormat('Y-m-d', $request->get('start'));
         $end         = Carbon::createFromFormat('Y-m-d', $request->get('end'));
         $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
-        if (bccomp($amount, '0') === 0) {
+        if (0 === bccomp($amount, '0')) {
             $budgetLimit = null;
         }
 
@@ -302,7 +302,7 @@ class BudgetController extends Controller
             $currentStart = app('navigation')->addPeriod($currentStart, $range, 0);
             ++$count;
         }
-        if ($count === 0) {
+        if (0 === $count) {
             $count = 1; // @codeCoverageIgnore
         }
         $result['available'] = bcdiv($total, strval($count));

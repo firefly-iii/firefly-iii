@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Models;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
@@ -45,7 +44,6 @@ trait TransactionJournalTrait
 {
     /**
      * @return string
-     *
      */
     public function amount(): string
     {

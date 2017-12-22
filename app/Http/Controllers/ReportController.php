@@ -75,12 +75,13 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return string
+     *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function accountReport(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
-            return view('error')->with('message', trans('firefly.end_after_start_date'));// @codeCoverageIgnore
+            return view('error')->with('message', trans('firefly.end_after_start_date')); // @codeCoverageIgnore
         }
 
         if ($start < session('first')) {
@@ -90,7 +91,7 @@ class ReportController extends Controller
         View::share(
             'subTitle', trans(
                           'firefly.report_default',
-                          ['start' => $start->formatLocalized($this->monthFormat), 'end' => $end->formatLocalized($this->monthFormat),]
+                          ['start' => $start->formatLocalized($this->monthFormat), 'end' => $end->formatLocalized($this->monthFormat)]
                       )
         );
 
@@ -108,6 +109,7 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return string
+     *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function auditReport(Collection $accounts, Carbon $start, Carbon $end)
@@ -144,6 +146,7 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return string
+     *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function budgetReport(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
@@ -181,6 +184,7 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return string
+     *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function categoryReport(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
@@ -217,6 +221,7 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return string
+     *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function defaultReport(Collection $accounts, Carbon $start, Carbon $end)
@@ -268,6 +273,7 @@ class ReportController extends Controller
      * @param string $reportType
      *
      * @return mixed
+     *
      * @throws \Throwable
      */
     public function options(string $reportType)
@@ -297,6 +303,7 @@ class ReportController extends Controller
      * @param ReportFormRequest $request
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
+     *
      * @throws \FireflyIII\Exceptions\FireflyException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
@@ -373,6 +380,7 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return string
+     *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function tagReport(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
@@ -405,6 +413,7 @@ class ReportController extends Controller
 
     /**
      * @return string
+     *
      * @throws \Throwable
      */
     private function accountReportOptions(): string
@@ -428,6 +437,7 @@ class ReportController extends Controller
 
     /**
      * @return string
+     *
      * @throws \Throwable
      */
     private function budgetReportOptions(): string
@@ -442,6 +452,7 @@ class ReportController extends Controller
 
     /**
      * @return string
+     *
      * @throws \Throwable
      */
     private function categoryReportOptions(): string
@@ -456,6 +467,7 @@ class ReportController extends Controller
 
     /**
      * @return string
+     *
      * @throws \Throwable
      */
     private function noReportOptions(): string
@@ -465,6 +477,7 @@ class ReportController extends Controller
 
     /**
      * @return string
+     *
      * @throws \Throwable
      */
     private function tagReportOptions(): string

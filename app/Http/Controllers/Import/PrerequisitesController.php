@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Import;
-
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -43,11 +41,12 @@ class PrerequisitesController extends Controller
      * @param string $bank
      *
      * @return \Illuminate\Http\RedirectResponse|null
+     *
      * @throws FireflyException
      */
     public function index(string $bank)
     {
-        if (!(config(sprintf('import.enabled.%s', $bank))) === true) {
+        if (true === !(config(sprintf('import.enabled.%s', $bank)))) {
             throw new FireflyException(sprintf('Cannot import from "%s" at this time.', $bank));
         }
         $class = strval(config(sprintf('import.prerequisites.%s', $bank)));
@@ -83,6 +82,7 @@ class PrerequisitesController extends Controller
      * @param string  $bank
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
      * @throws FireflyException
      */
     public function post(Request $request, string $bank)
@@ -112,6 +112,4 @@ class PrerequisitesController extends Controller
 
         return redirect(route('import.create-job', [$bank]));
     }
-
-
 }

@@ -70,6 +70,7 @@ class CsvProcessor implements FileProcessorInterface
      * Does the actual job.
      *
      * @return bool
+     *
      * @throws \League\Csv\Exception
      */
     public function run(): bool
@@ -160,6 +161,7 @@ class CsvProcessor implements FileProcessorInterface
 
     /**
      * @return Iterator
+     *
      * @throws \League\Csv\Exception
      * @throws \League\Csv\Exception
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
@@ -174,7 +176,7 @@ class CsvProcessor implements FileProcessorInterface
             $delimiter = "\t";
         }
         $reader->setDelimiter($delimiter);
-        if($config['has-headers']) {
+        if ($config['has-headers']) {
             $reader->setHeaderOffset(0);
         }
         $results = $reader->getRecords();
@@ -279,6 +281,7 @@ class CsvProcessor implements FileProcessorInterface
      * @param array $array
      *
      * @return bool
+     *
      * @throws FireflyException
      */
     private function rowAlreadyImported(array $array): bool

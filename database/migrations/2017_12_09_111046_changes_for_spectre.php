@@ -1,5 +1,8 @@
 <?php
-/**
+
+declare(strict_types=1);
+
+/*
  * 2017_12_09_111046_changes_for_spectre.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
@@ -30,18 +33,13 @@ class ChangesForSpectre extends Migration
 {
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {
-        //
     }
 
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {

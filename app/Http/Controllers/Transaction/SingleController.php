@@ -257,7 +257,7 @@ class SingleController extends Controller
         $assetAccounts = $this->groupedAccountList();
         $budgetList    = ExpandedForm::makeSelectListWithEmpty($this->budgets->getBudgets());
 
-        if ($journal->transactionType->type === TransactionType::RECONCILIATION) {
+        if (TransactionType::RECONCILIATION === $journal->transactionType->type) {
             return redirect(route('accounts.reconcile.edit', [$journal->id]));
         }
 

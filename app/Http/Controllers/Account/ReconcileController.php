@@ -43,6 +43,7 @@ use Session;
 
 /**
  * Class ReconcileController.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReconcileController extends Controller
@@ -72,7 +73,7 @@ class ReconcileController extends Controller
      */
     public function edit(TransactionJournal $journal)
     {
-        if ($journal->transactionType->type !== TransactionType::RECONCILIATION) {
+        if (TransactionType::RECONCILIATION !== $journal->transactionType->type) {
             return redirect(route('transactions.edit', [$journal->id]));
         }
         // view related code
@@ -99,7 +100,6 @@ class ReconcileController extends Controller
             'accounts.reconcile.edit',
             compact('journal', 'subTitle')
         )->with('data', $preFilled);
-
     }
 
     /**
@@ -166,6 +166,7 @@ class ReconcileController extends Controller
      * @param Carbon|null $end
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     *
      * @throws FireflyException
      */
     public function reconcile(Account $account, Carbon $start = null, Carbon $end = null)
@@ -226,7 +227,7 @@ class ReconcileController extends Controller
      */
     public function show(JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
-        if ($journal->transactionType->type !== TransactionType::RECONCILIATION) {
+        if (TransactionType::RECONCILIATION !== $journal->transactionType->type) {
             return redirect(route('transactions.show', [$journal->id]));
         }
         $subTitle = trans('firefly.reconciliation') . ' "' . $journal->description . '"';
@@ -234,7 +235,6 @@ class ReconcileController extends Controller
         // get main transaction:
         $transaction = $repository->getAssetTransaction($journal);
         $account     = $transaction->account;
-
 
         return view('accounts.reconcile.show', compact('journal', 'subTitle', 'transaction', 'account'));
     }
@@ -297,6 +297,7 @@ class ReconcileController extends Controller
      * @param Carbon  $end
      *
      * @return mixed
+     *
      * @throws \Throwable
      * @throws FireflyException
      */
@@ -346,10 +347,10 @@ class ReconcileController extends Controller
      */
     public function update(ReconciliationFormRequest $request, AccountRepositoryInterface $repository, TransactionJournal $journal)
     {
-        if ($journal->transactionType->type !== TransactionType::RECONCILIATION) {
+        if (TransactionType::RECONCILIATION !== $journal->transactionType->type) {
             return redirect(route('transactions.show', [$journal->id]));
         }
-        if (bccomp('0', $request->get('amount')) === 0) {
+        if (0 === bccomp('0', $request->get('amount'))) {
             Session::flash('error', trans('firefly.amount_cannot_be_zero'));
 
             return redirect(route('accounts.reconcile.edit', [$journal->id]))->withInput();
@@ -368,9 +369,7 @@ class ReconcileController extends Controller
 
         // redirect to previous URL.
         return redirect($this->getPreviousUri('reconcile.edit.uri'));
-
     }
-
 
     /**
      * @param Account $account
