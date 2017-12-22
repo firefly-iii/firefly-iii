@@ -2,9 +2,11 @@
 
 [![Requires PHP7.1](https://img.shields.io/badge/php-7.1-red.svg)](https://secure.php.net/downloads.php) [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable)](https://packagist.org/packages/grumpydictator/firefly-iii) [![License](https://img.shields.io/badge/license-GPL-lightgrey.svg)](https://www.gnu.org/licenses/gpl.html) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) 
 
-[![The index of Firefly III](https://i.nder.be/ccynyxy0/400)](https://i.nder.be/h327vx3y) [![The account overview of Firefly III](https://i.nder.be/g8v86y2g/400)](https://i.nder.be/hkpynqr9)
+[![The index of Firefly III](https://firefly-iii.org/static/screenshots/4.6.12/tiny/index.png)](https://firefly-iii.org/static/screenshots/4.6.12/index.png) [![The account overview of Firefly III](https://firefly-iii.org/static/screenshots/4.6.12/tiny/account.png)](https://firefly-iii.org/static/screenshots/4.6.12/account.png)
 
-[![The useful financial reports of Firefly III](https://i.nder.be/cs3qx4f3/400)](https://i.nder.be/cwznmryd) [![Saving money is easy!](https://i.nder.be/gpq6ykym/400)](https://i.nder.be/gum2qf8z)
+[![Overview of all budgets](https://firefly-iii.org/static/screenshots/4.6.12/tiny/budget.png)](https://firefly-iii.org/static/screenshots/4.6.12/budget.png) [![Overview of a category](https://firefly-iii.org/static/screenshots/4.6.12/tiny/category.png)](https://firefly-iii.org/static/screenshots/4.6.12/category.png)
+
+[![View of a report](https://firefly-iii.org/static/screenshots/4.6.12/tiny/report1.png)](https://firefly-iii.org/static/screenshots/4.6.12/report1.png) [![View of another report](https://firefly-iii.org/static/screenshots/4.6.12/tiny/report2.png)](https://firefly-iii.org/static/screenshots/4.6.12/report2.png)
 
 "Firefly III" is a financial manager for your personal finances. It can help you keep track of your expenses and income.
 Firefly III supports the use of budgets. You can categorize and tag your transactions.
