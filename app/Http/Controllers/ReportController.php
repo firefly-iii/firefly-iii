@@ -90,7 +90,7 @@ class ReportController extends Controller
 
         View::share(
             'subTitle', trans(
-                          'firefly.report_default',
+                          'firefly.report_account',
                           ['start' => $start->formatLocalized($this->monthFormat), 'end' => $end->formatLocalized($this->monthFormat)]
                       )
         );
