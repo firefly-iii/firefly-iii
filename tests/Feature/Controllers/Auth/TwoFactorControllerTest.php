@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Auth;
 
 use FireflyIII\Models\Preference;
-use PragmaRX\Google2FA\Contracts\Google2FA;
+use Google2FA;
 use Preferences;
 use Tests\TestCase;
 
@@ -46,7 +46,7 @@ class TwoFactorControllerTest extends TestCase
         $truePref               = new Preference;
         $truePref->data         = true;
         $secretPreference       = new Preference;
-        $secretPreference->data = 'BlablaSeecret';
+        $secretPreference->data = 'JZMES376Z6YXY4QZ';
 
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($truePref)->twice();
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret', null])->andReturn($secretPreference)->once();
@@ -104,7 +104,7 @@ class TwoFactorControllerTest extends TestCase
         $truePreference         = new Preference;
         $truePreference->data   = true;
         $secretPreference       = new Preference;
-        $secretPreference->data = 'BlablaSeecret';
+        $secretPreference->data = 'JZMES376Z6YXY4QZ';
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($truePreference);
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret', null])->andReturn($secretPreference);
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn($secretPreference);
@@ -119,8 +119,7 @@ class TwoFactorControllerTest extends TestCase
     public function testPostIndex()
     {
         $data   = ['code' => '123456'];
-        $google = $this->mock(Google2FA::class);
-        $google->shouldReceive('verifyKey')->andReturn(true)->once();
+        Google2FA::shouldReceive('verifyKey')->andReturn(true)->once();
         $this->session(['remember_login' => true]);
 
         $this->be($this->user());

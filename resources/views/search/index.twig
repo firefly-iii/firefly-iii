@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, query) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, query) }}
 {% endblock %}
 
 {% block content %}

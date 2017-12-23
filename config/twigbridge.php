@@ -160,7 +160,7 @@ return [
         'facades'   => [
             'Breadcrumbs'  => [
                 'is_safe' => [
-                    'renderIfExists',
+                    'render',
                 ],
             ],
             'Session',

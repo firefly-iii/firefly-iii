@@ -28,9 +28,9 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
-use PragmaRX\Google2FA\Contracts\Google2FA;
 use Preferences;
 use Tests\TestCase;
+use Google2FA;
 
 /**
  * Class PreferencesControllerTest
@@ -49,10 +49,9 @@ class PreferencesControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $google       = $this->mock(Google2FA::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $google->shouldReceive('generateSecretKey')->andReturn('secret');
-        $google->shouldReceive('getQRCodeInline')->andReturn('long-data-url');
+        Google2FA::shouldReceive('generateSecretKey')->andReturn('secret');
+        Google2FA::shouldReceive('getQRCodeInline')->andReturn('long-data-url');
 
         $this->be($this->user());
         $response = $this->get(route('preferences.code'));
@@ -102,7 +101,6 @@ class PreferencesControllerTest extends TestCase
     {
         $secret = '0123456789abcde';
         $key    = '123456';
-        $google = $this->mock(Google2FA::class);
 
         $this->withoutMiddleware();
         $this->session(['two-factor-secret' => $secret]);
@@ -111,7 +109,7 @@ class PreferencesControllerTest extends TestCase
         Preferences::shouldReceive('set')->withArgs(['twoFactorAuthSecret', $secret])->once();
         Preferences::shouldReceive('mark')->once();
 
-        $google->shouldReceive('verifyKey')->withArgs([$secret, $key])->andReturn(true);
+        Google2FA::shouldReceive('verifyKey')->withArgs([$secret, $key])->andReturn(true);
 
         $data = [
             'code' => $key,

@@ -76,7 +76,7 @@ class TransactionJournalLink extends Model
     public function getCommentAttribute($value): ?string
     {
         if (null !== $value) {
-            return Crypt::decrypt($value);
+            return app('steam')->tryDecrypt($value);
         }
 
         return null;

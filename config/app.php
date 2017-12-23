@@ -76,11 +76,11 @@ return [
         FireflyIII\Providers\RouteServiceProvider::class,
 
         // own stuff:
-//        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-//        Barryvdh\Debugbar\ServiceProvider::class,
-        DaveJamesMiller\Breadcrumbs\BreadcrumbsServiceProvider::class,
+        //        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        //        Barryvdh\Debugbar\ServiceProvider::class,
         TwigBridge\ServiceProvider::class,
         PragmaRX\Google2FALaravel\ServiceProvider::class,
+
 
         /*
          * More service providers.
@@ -141,14 +141,14 @@ return [
         'Twig'          => TwigBridge\Facade\Twig::class,
         'Form'          => Collective\Html\FormFacade::class,
         'Html'          => Collective\Html\HtmlFacade::class,
-        'Breadcrumbs'   => DaveJamesMiller\Breadcrumbs\Facade::class,
         'Preferences'   => \FireflyIII\Support\Facades\Preferences::class,
         'FireflyConfig' => \FireflyIII\Support\Facades\FireflyConfig::class,
         'Navigation'    => \FireflyIII\Support\Facades\Navigation::class,
         'Amount'        => \FireflyIII\Support\Facades\Amount::class,
         'Steam'         => \FireflyIII\Support\Facades\Steam::class,
         'ExpandedForm'  => \FireflyIII\Support\Facades\ExpandedForm::class,
-        'Google2FA'     => PragmaRX\Google2FA\Vendor\Laravel\Facade::class,
+        'Google2FA'     => PragmaRX\Google2FALaravel\Facade::class,
+
     ],
 
 ];

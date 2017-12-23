@@ -27,7 +27,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
-use PragmaRX\Google2FA\Contracts\Google2FA;
+use Google2FA;
 use Preferences;
 use Session;
 use View;
@@ -55,16 +55,14 @@ class PreferencesController extends Controller
     }
 
     /**
-     * @param Google2FA $google2fa
-     *
      * @return View
      */
-    public function code(Google2FA $google2fa)
+    public function code()
     {
         $domain = $this->getDomain();
-        $secret = $google2fa->generateSecretKey();
+        $secret = Google2FA::generateSecretKey();
         Session::flash('two-factor-secret', $secret);
-        $image = $google2fa->getQRCodeInline($domain, auth()->user()->email, $secret, 200);
+        $image = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret, 200);
 
         return view('preferences.code', compact('image'));
     }

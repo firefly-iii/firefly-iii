@@ -1,6 +1,6 @@
 {% extends "./layout/default" %}
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, piggyBank) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, piggyBank) }}
 {% endblock %}
 
 {% block content %}
