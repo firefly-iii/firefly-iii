@@ -26,6 +26,7 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Route;
 
 /**
+ * @CodeCoverageIgnore
  * Class RouteServiceProvider
  */
 class RouteServiceProvider extends ServiceProvider

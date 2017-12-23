@@ -445,7 +445,7 @@ Route::group(
     Route::get('json/{importJob}', ['uses' => 'Import\StatusController@json', 'as' => 'status.json']);
 
     // start a job
-    Route::any('start/{importJob}', ['uses' => 'Import\IndexController@start', 'as' => 'start']);
+    Route::post('start/{importJob}', ['uses' => 'Import\IndexController@start', 'as' => 'start']);
 
     // download config
     Route::get('download/{importJob}', ['uses' => 'Import\IndexController@download', 'as' => 'download']);
@@ -504,8 +504,8 @@ Route::group(
     Route::get('rate/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'Json\ExchangeController@getRate', 'as' => 'rate']);
 
     // intro things:
-    Route::any('intro/finished/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postFinished', 'as' => 'intro.finished']);
-    Route::any('intro/enable/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postEnable', 'as' => 'intro.enable']);
+    Route::post('intro/finished/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postFinished', 'as' => 'intro.finished']);
+    Route::post('intro/enable/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postEnable', 'as' => 'intro.enable']);
     Route::get('intro/{route}/{specificPage?}', ['uses' => 'Json\IntroController@getIntroSteps', 'as' => 'intro']);
 
 

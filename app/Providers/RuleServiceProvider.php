@@ -28,6 +28,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
+ * @CodeCoverageIgnore
  * Class RuleServiceProvider.
  */
 class RuleServiceProvider extends ServiceProvider

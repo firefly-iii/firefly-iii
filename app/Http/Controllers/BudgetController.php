@@ -276,6 +276,9 @@ class BudgetController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('info-income');
 
+        Log::debug(sprintf('infoIncome start is %s', $start->format('Y-m-d')));
+        Log::debug(sprintf('infoIncome end is %s', $end->format('Y-m-d')));
+
         if ($cache->has()) {
             // @codeCoverageIgnoreStart
             $result = $cache->get();
@@ -292,18 +295,24 @@ class BudgetController extends Controller
         $range    = Preferences::get('viewRange', '1M')->data;
         $begin    = app('navigation')->subtractPeriod($start, $range, 3);
 
+        Log::debug(sprintf('Range is %s', $range));
+        Log::debug(sprintf('infoIncome begin is %s', $begin->format('Y-m-d')));
+
         // get average amount available.
         $total        = '0';
         $count        = 0;
         $currentStart = clone $begin;
         while ($currentStart < $start) {
+            Log::debug(sprintf('Loop: currentStart is %s', $currentStart->format('Y-m-d')));
             $currentEnd   = app('navigation')->endOfPeriod($currentStart, $range);
             $total        = bcadd($total, $this->repository->getAvailableBudget($currency, $currentStart, $currentEnd));
             $currentStart = app('navigation')->addPeriod($currentStart, $range, 0);
             ++$count;
         }
+        Log::debug('Loop end');
+
         if (0 === $count) {
-            $count = 1; // @codeCoverageIgnore
+            $count = 1;
         }
         $result['available'] = bcdiv($total, strval($count));
 

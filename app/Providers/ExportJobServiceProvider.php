@@ -30,6 +30,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
+ * @CodeCoverageIgnore
  * Class ExportJobServiceProvider.
  */
 class ExportJobServiceProvider extends ServiceProvider

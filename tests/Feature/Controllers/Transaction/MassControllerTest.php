@@ -135,6 +135,16 @@ class MassControllerTest extends TestCase
                               ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
         );
 
+        // add reconcile transaction
+        $collection->push(
+            TransactionJournal::where('transaction_type_id', 5)
+                              ->whereNull('transaction_journals.deleted_at')
+                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                              ->groupBy('transaction_journals.id')
+                              ->orderBy('ct', 'DESC')
+                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
+        );
+
         // add opening balance:
         $collection->push(TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first());
         $allIds = $collection->pluck('id')->toArray();

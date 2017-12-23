@@ -24,6 +24,7 @@ namespace FireflyIII\Repositories\Journal;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -187,6 +188,16 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         return null;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Note|null
+     */
+    public function getNote(TransactionJournal $journal): ?Note
+    {
+        return $journal->notes()->first();
     }
 
     /**

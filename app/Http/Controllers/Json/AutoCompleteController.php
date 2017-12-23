@@ -29,6 +29,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Log;
 use Response;
 
 /**
@@ -81,7 +82,7 @@ class AutoCompleteController extends Controller
         $set      = $repository->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY]);
         $filtered = $set->filter(
             function (Account $account) {
-                if ($account->active) {
+                if ($account->active === true) {
                     return $account;
                 }
 
@@ -138,7 +139,7 @@ class AutoCompleteController extends Controller
         $set      = $repository->getAccountsByType([AccountType::REVENUE]);
         $filtered = $set->filter(
             function (Account $account) {
-                if ($account->active) {
+                if ($account->active === true) {
                     return $account;
                 }
 

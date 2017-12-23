@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 /**
+ * @CodeCoverageIgnore
  * Class UserFormRequest.
  */
 class UserFormRequest extends Request

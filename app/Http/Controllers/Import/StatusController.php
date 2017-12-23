@@ -56,9 +56,9 @@ class StatusController extends Controller
      */
     public function index(ImportJob $job)
     {
-        $statuses = ['configured', 'running', 'finished', 'errored'];
+        $statuses = ['configured', 'running', 'finished', 'error'];
         if (!in_array($job->status, $statuses)) {
-            return redirect(route('import.file.configure', [$job->key]));
+            return redirect(route('import.configure', [$job->key]));
         }
         $subTitle     = trans('import.status_sub_title');
         $subTitleIcon = 'fa-star';
@@ -108,7 +108,7 @@ class StatusController extends Controller
             $result['running'] = true;
         }
 
-        // TODO cannot handle 'errored'
+        // TODO cannot handle 'error'
 
         return Response::json($result);
     }

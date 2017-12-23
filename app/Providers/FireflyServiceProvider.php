@@ -69,6 +69,7 @@ use TwigBridge\Extension\Loader\Functions;
 use Validator;
 
 /**
+ * @CodeCoverageIgnore
  * Class FireflyServiceProvider.
  */
 class FireflyServiceProvider extends ServiceProvider

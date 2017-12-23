@@ -39,6 +39,7 @@ use Log;
 class EventServiceProvider extends ServiceProvider
 {
     /**
+     * @CodeCoverageIgnore
      * The event listener mappings for the application.
      *
      * @var array
@@ -82,6 +83,7 @@ class EventServiceProvider extends ServiceProvider
         ];
 
     /**
+     * @CodeCoverageIgnore
      * Register any events for your application.
      */
     public function boot()

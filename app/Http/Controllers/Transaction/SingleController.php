@@ -143,7 +143,7 @@ class SingleController extends Controller
         ];
 
         /** @var Note $note */
-        $note = $journal->notes()->first();
+        $note = $this->repository->getNote($journal);
         if (null !== $note) {
             $preFilled['notes'] = $note->text;
         }
@@ -302,7 +302,7 @@ class SingleController extends Controller
             'destination_currency'     => $foreignCurrency,
         ];
         /** @var Note $note */
-        $note = $journal->notes()->first();
+        $note = $this->repository->getNote($journal);
         if (null !== $note) {
             $preFilled['notes'] = $note->text;
         }

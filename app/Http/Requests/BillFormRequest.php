@@ -64,9 +64,9 @@ class BillFormRequest extends Request
     {
         $nameRule  = 'required|between:1,255|uniqueObjectForUser:bills,name';
         $matchRule = 'required|between:1,255|uniqueObjectForUser:bills,match';
-        if (intval($this->get('id')) > 0) {
-            $nameRule  .= ',' . intval($this->get('id'));
-            $matchRule .= ',' . intval($this->get('id'));
+        if ($this->integer('id') > 0) {
+            $nameRule  .= ',' . $this->integer('id');
+            $matchRule .= ',' . $this->integer('id');
         }
         // is OK
         $rules = [

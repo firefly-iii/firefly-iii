@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Crypt;
+use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Database\Eloquent\Model;
 use Log;
 use Storage;
@@ -33,6 +34,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class ImportJob extends Model
 {
+    /**
+     * @var array
+     */
+    public $validStatus
+        = [
+            'new',
+            'configuring',
+            'configured',
+            'running',
+            'error',
+            'finished',
+        ];
     /**
      * The attributes that should be casted to native types.
      *
@@ -45,29 +58,23 @@ class ImportJob extends Model
         ];
 
     /**
-     * @var array
-     */
-    protected $validStatus
-        = [
-            'new',
-            'initialized',
-            'configured',
-            'running',
-            'finished',
-        ];
-
-    /**
      * @param $value
      *
      * @return mixed
      *
      * @throws NotFoundHttpException
+     * @throws FireflyException
      */
     public static function routeBinder($value)
     {
         if (auth()->check()) {
+            /** @var ImportJob $model */
             $model = self::where('key', $value)->where('user_id', auth()->user()->id)->first();
             if (null !== $model) {
+                // must have valid status:
+                if (!in_array($model->status, $model->validStatus)) {
+                    throw new FireflyException(sprintf('Job with key "%s" has invalid status "%s"', $model->key, $model->status));
+                }
                 return $model;
             }
         }
@@ -112,12 +119,20 @@ class ImportJob extends Model
     }
 
     /**
-     * @param $status
+     * @param string $status
+     *
+     * @throws FireflyException
      */
-    public function change($status)
+    public function change(string $status): void
     {
-        $this->status = $status;
-        $this->save();
+        if (in_array($status, $this->validStatus)) {
+            $this->status = $status;
+            $this->save();
+
+            return;
+        }
+        throw new FireflyException(sprintf('Status "%s" is invalid for job "%s".', $status, $this->key));
+
     }
 
     /**

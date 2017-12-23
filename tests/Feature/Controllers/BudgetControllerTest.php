@@ -294,9 +294,25 @@ class BudgetControllerTest extends TestCase
         $repository = $this->mock(BudgetRepositoryInterface::class);
         $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
 
-        $data = ['amount' => 200, 'start' => '2017-01-01', 'end' => '2017-01-31'];
         $this->be($this->user());
-        $response = $this->get(route('budgets.income.info', ['20170101', '20170131']), $data);
+        $response = $this->get(route('budgets.income.info', ['20170101', '20170131']));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\BudgetController::infoIncome
+     * @dataProvider dateRangeProvider
+     * @throws \Exception
+     */
+    public function testInfoIncomeExpanded(string $range)
+    {
+        // mock stuff
+        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('budgets.income.info', ['20170301', '20170430']));
         $response->assertStatus(200);
     }
 
@@ -306,6 +322,8 @@ class BudgetControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     *
+     * @throws \Exception
      */
     public function testNoBudget(string $range)
     {

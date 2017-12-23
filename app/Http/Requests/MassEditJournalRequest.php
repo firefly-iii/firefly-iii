@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 /**
+ * @CodeCoverageIgnore
  * Class MassEditJournalRequest.
  */
 class MassEditJournalRequest extends Request

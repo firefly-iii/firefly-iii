@@ -27,6 +27,7 @@ use FireflyIII\Events\StoredTransactionJournal;
 use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -54,6 +55,13 @@ class SingleControllerTest extends TestCase
      */
     public function testCloneTransaction()
     {
+        $note       = new Note();
+        $note->id   = 5;
+        $note->text = 'I see you...';
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository->shouldReceive('getNote')->andReturn($note)->once();
+        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)->whereNull('deleted_at')->where('user_id', $this->user()->id)->first();
         $response   = $this->get(route('transactions.clone', [$withdrawal->id]));
@@ -63,6 +71,7 @@ class SingleControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::create
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::__construct
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      */
     public function testCreate()
     {
@@ -123,6 +132,14 @@ class SingleControllerTest extends TestCase
 
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
+
+        $note       = new Note();
+        $note->id   = 5;
+        $note->text = 'I see you...';
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository->shouldReceive('getNote')->andReturn($note)->once();
+        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('countTransactions')->andReturn(2);
 
         $this->be($this->user());
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)->whereNull('deleted_at')->where('user_id', $this->user()->id)->first();
@@ -192,6 +209,23 @@ class SingleControllerTest extends TestCase
     {
         $this->be($this->user());
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)
+                                        ->whereNull('transaction_journals.deleted_at')
+                                        ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                        ->groupBy('transaction_journals.id')
+                                        ->orderBy('ct', 'DESC')
+                                        ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')]);
+        $response   = $this->get(route('transactions.edit', [$withdrawal->id]));
+        $response->assertStatus(302);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
+     */
+    public function testEditReconcile()
+    {
+        $this->be($this->user());
+        $withdrawal = TransactionJournal::where('transaction_type_id', 5)
                                         ->whereNull('transaction_journals.deleted_at')
                                         ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                                         ->groupBy('transaction_journals.id')
@@ -295,8 +329,6 @@ class SingleControllerTest extends TestCase
      */
     public function testStoreSuccess()
     {
-        $this->markTestIncomplete('Mockery cannot yet handle PHP7.1 null argument method things.');
-
         // mock results:
         $repository           = $this->mock(JournalRepositoryInterface::class);
         $journal              = new TransactionJournal();

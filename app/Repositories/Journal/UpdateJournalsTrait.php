@@ -123,7 +123,7 @@ trait UpdateJournalsTrait
 
     /**
      * Update tags.
-     * 
+     *
      * @param TransactionJournal $journal
      * @param array              $array
      *

@@ -24,6 +24,7 @@ namespace FireflyIII\Http\Controllers\Import;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
 use Illuminate\Http\Request;
 use Log;
@@ -33,6 +34,25 @@ use Log;
  */
 class PrerequisitesController extends Controller
 {
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->middleware(
+            function ($request, $next) {
+                app('view')->share('mainTitleIcon', 'fa-archive');
+                app('view')->share('title', trans('firefly.import_index_title'));
+
+                return $next($request);
+            }
+        );
+        $this->middleware(IsDemoUser::class);
+    }
+
     /**
      * Once there are no prerequisites, this method will create an importjob object and
      * redirect the user to a view where this object can be used by a bank specific
@@ -47,11 +67,11 @@ class PrerequisitesController extends Controller
     public function index(string $bank)
     {
         if (true === !(config(sprintf('import.enabled.%s', $bank)))) {
-            throw new FireflyException(sprintf('Cannot import from "%s" at this time.', $bank));
+            throw new FireflyException(sprintf('Cannot import from "%s" at this time.', $bank)); // @codeCoverageIgnore
         }
         $class = strval(config(sprintf('import.prerequisites.%s', $bank)));
         if (!class_exists($class)) {
-            throw new FireflyException(sprintf('No class to handle "%s".', $bank));
+            throw new FireflyException(sprintf('No class to handle "%s".', $bank)); // @codeCoverageIgnore
         }
 
         /** @var PrerequisitesInterface $object */
@@ -61,7 +81,7 @@ class PrerequisitesController extends Controller
         if ($object->hasPrerequisites()) {
             $view       = $object->getView();
             $parameters = ['title' => strval(trans('firefly.import_index_title')), 'mainTitleIcon' => 'fa-archive'];
-            $parameters = $object->getViewParameters() + $parameters;
+            $parameters = array_merge($object->getViewParameters(), $parameters);
 
             return view($view, $parameters);
         }
@@ -88,9 +108,14 @@ class PrerequisitesController extends Controller
     public function post(Request $request, string $bank)
     {
         Log::debug(sprintf('Now in postPrerequisites for %s', $bank));
+
+        if (true === !(config(sprintf('import.enabled.%s', $bank)))) {
+            throw new FireflyException(sprintf('Cannot import from "%s" at this time.', $bank)); // @codeCoverageIgnore
+        }
+
         $class = strval(config(sprintf('import.prerequisites.%s', $bank)));
         if (!class_exists($class)) {
-            throw new FireflyException(sprintf('Cannot find class %s', $class));
+            throw new FireflyException(sprintf('Cannot find class %s', $class)); // @codeCoverageIgnore
         }
         /** @var PrerequisitesInterface $object */
         $object = app($class);
@@ -106,10 +131,8 @@ class PrerequisitesController extends Controller
 
         if ($result->count() > 0) {
             $request->session()->flash('error', $result->first());
-
-            return redirect(route('import.prerequisites', [$bank]));
         }
 
-        return redirect(route('import.create-job', [$bank]));
+        return redirect(route('import.prerequisites', [$bank]));
     }
 }

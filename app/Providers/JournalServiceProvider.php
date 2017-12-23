@@ -32,6 +32,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
+ * @CodeCoverageIgnore
  * Class JournalServiceProvider.
  */
 class JournalServiceProvider extends ServiceProvider

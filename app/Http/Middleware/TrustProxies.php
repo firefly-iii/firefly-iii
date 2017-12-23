@@ -27,6 +27,7 @@ use Illuminate\Contracts\Config\Repository;
 use Illuminate\Http\Request;
 
 /**
+ * @CodeCoverageIgnore
  * Class TrustProxies
  */
 class TrustProxies extends Middleware

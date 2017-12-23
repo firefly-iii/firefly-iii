@@ -56,8 +56,8 @@ class CategoryFormRequest extends Request
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
         $nameRule   = 'required|between:1,100|uniqueObjectForUser:categories,name';
-        if (null !== $repository->find(intval($this->get('id')))->id) {
-            $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,' . intval($this->get('id'));
+        if (null !== $repository->find($this->integer('id'))->id) {
+            $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,' . $this->integer('id');
         }
 
         // fixed

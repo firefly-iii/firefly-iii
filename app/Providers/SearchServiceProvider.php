@@ -28,6 +28,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
+ * @CodeCoverageIgnore
  * Class SearchServiceProvider.
  */
 class SearchServiceProvider extends ServiceProvider

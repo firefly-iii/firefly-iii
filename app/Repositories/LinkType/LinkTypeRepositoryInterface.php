@@ -93,6 +93,17 @@ interface LinkTypeRepositoryInterface
     public function store(array $data): LinkType;
 
     /**
+     * Store link between two journals.
+     *
+     * @param array $information
+     * @param TransactionJournal $left
+     * @param TransactionJournal $right
+     *
+     * @return mixed
+     */
+    public function storeLink(array $information, TransactionJournal $left, TransactionJournal $right): TransactionJournalLink;
+
+    /**
      * @param TransactionJournalLink $link
      *
      * @return bool

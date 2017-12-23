@@ -47,6 +47,7 @@ use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 /**
+ * @CodeCoverageIgnore
  * Class Kernel
  */
 class Kernel extends HttpKernel
