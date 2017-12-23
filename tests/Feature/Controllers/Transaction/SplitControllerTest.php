@@ -122,15 +122,15 @@ class SplitControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $this->markTestIncomplete('Mockery cannot yet handle PHP7.1 null argument method things.');
+        //$this->markTestIncomplete('Mockery cannot yet handle PHP7.1 null argument method things.');
 
         $this->session(['transactions.edit-split.uri' => 'http://localhost']);
-        $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
+        $deposit = $this->user()->transactionJournals()->where('transaction_type_id', 2)->first();
         $data    = [
             'id'                             => $deposit->id,
             'what'                           => 'deposit',
             'journal_description'            => 'Updated salary',
-            'currency_id'                    => 1,
+            'journal_currency_id'            => 1,
             'journal_destination_account_id' => 1,
             'journal_amount'                 => 1591,
             'date'                           => '2014-01-24',
@@ -158,6 +158,7 @@ class SplitControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->post(route('transactions.split.update', [$deposit->id]), $data);
         $response->assertStatus(302);
+        $response->assertRedirect(route('index'));
         $response->assertSessionHas('success');
 
         // journal is updated?
