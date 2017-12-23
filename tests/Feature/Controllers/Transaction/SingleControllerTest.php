@@ -75,9 +75,10 @@ class SingleControllerTest extends TestCase
      */
     public function testCreate()
     {
+        $accounts = $this->user()->accounts()->where('account_type_id',3)->get();
         Steam::shouldReceive('phpBytes')->andReturn(2048);
         $repository = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('getActiveAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
+        $repository->shouldReceive('getActiveAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn($accounts);
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection)->once();
         $piggyRepos = $this->mock(PiggyBankRepositoryInterface::class);
@@ -124,6 +125,7 @@ class SingleControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::isSplitJournal
      */
     public function testEdit()
     {

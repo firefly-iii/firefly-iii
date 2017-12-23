@@ -443,7 +443,7 @@ class SingleController extends Controller
         foreach ($accounts as $account) {
             $type = $account->getMeta('accountRole');
             if (0 === strlen($type)) {
-                $type = 'no_account_type';
+                $type = 'no_account_type'; // @codeCoverageIgnore
             }
             $key                        = strval(trans('firefly.opt_group_' . $type));
             $return[$key][$account->id] = $account->name;
@@ -463,7 +463,7 @@ class SingleController extends Controller
         foreach ($accounts as $account) {
             $type = $account->getMeta('accountRole');
             if (0 === strlen($type)) {
-                $type = 'no_account_type';
+                $type = 'no_account_type'; // @codeCoverageIgnore
             }
             $key                        = strval(trans('firefly.opt_group_' . $type));
             $return[$key][$account->id] = $account->name;
@@ -482,7 +482,7 @@ class SingleController extends Controller
         $count = $this->repository->countTransactions($journal);
 
         if ($count > 2) {
-            return true;
+            return true; // @codeCoverageIgnore
         }
 
         return false;
