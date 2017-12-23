@@ -76,11 +76,11 @@ return [
         FireflyIII\Providers\RouteServiceProvider::class,
 
         // own stuff:
-        //Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-        //Barryvdh\Debugbar\ServiceProvider::class,
-        DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
+//        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+//        Barryvdh\Debugbar\ServiceProvider::class,
+        DaveJamesMiller\Breadcrumbs\BreadcrumbsServiceProvider::class,
         TwigBridge\ServiceProvider::class,
-        PragmaRX\Google2FA\Vendor\Laravel\ServiceProvider::class,
+        PragmaRX\Google2FALaravel\ServiceProvider::class,
 
         /*
          * More service providers.
