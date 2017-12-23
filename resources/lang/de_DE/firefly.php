@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 return [
@@ -353,7 +352,6 @@ return [
     'rule_action_set_notes_choice'               => 'Set notes to..',
     'rule_action_set_notes'                      => 'Set notes to ":action_value"',
 
-
     'rules_have_read_warning'                  => 'Haben Sie die Warnung gelesen?',
     'apply_rule_warning'                       => 'Warnung: Das Ausführen einer Regel (Gruppe) für eine große Auswahl von Transaktionen kann sehr lange dauern, und es kann zu einer Zeitüberschreitung kommen. Wenn dies der Fall ist, wird die Regel (-Gruppe) nur auf eine unbekannte Teilmenge Ihrer Transaktionen angewendet. Dies könnte Ihre Finanzverwaltung komplett zerstören. Bitte seien Sie vorsichtig.',
 
@@ -408,9 +406,9 @@ return [
 Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'pref_home_do_show_deposits'               => 'Ja, zeige sie an',
     'successful_count'                         => 'davon :count erfolgreich',
-    'transaction_page_size_title'              => 'Einträge pro Seite',
-    'transaction_page_size_help'               => 'Jede Liste von Transaktionen zeigt maximal folgende Anzahl an Transaktionen',
-    'transaction_page_size_label'              => 'Einträge pro Seite',
+    'list_page_size_title'                     => 'Page size',
+    'list_page_size_help'                      => 'Any list of things (accounts, transactions, etc) shows at most this many per page.',
+    'list_page_size_label'                     => 'Page size',
     'between_dates'                            => '(:start und :end)',
     'pref_optional_fields_transaction'         => 'Optionale Felder für Überweisungen',
     'pref_optional_fields_transaction_help'    => 'Standardmäßig sind nicht alle Felder aktiviert, wenn eine neue Überweisung erstellt wird (wegen der Übersicht). Unten können Sie diese Felder aktivieren, wenn Sie glauben, dass Sie nützlich für Sie sind. Alle Felder die deaktiviert sind, aber bereits ausgefüllt sind, werden unabhängig von ihren Einstellung sichtbar sein.',
@@ -430,7 +428,6 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'optional_field_meta_business'             => 'Geschäftlich',
     'optional_field_attachments'               => 'Anhänge',
     'optional_field_meta_data'                 => 'Optionale Metadaten',
-
 
     // profile:
     'change_your_password'                     => 'Passwort ändern',
@@ -467,7 +464,6 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'email_changed_logout'                     => 'Sie müssen Ihre E-Mail-Adresse bestätigen, um sich anmelden zu können.',
     'login_with_new_email'                     => 'Sie können sich jetzt mit Ihrer neuen E-Mail-Adresse anmelden.',
     'login_with_old_email'                     => 'Sie können sich jetzt wieder mit Ihrer alten E-Mail-Adresse anmelden.',
-
 
     // attachments
     'nr_of_attachments'                        => 'Ein Anhang |:count Anhänge',
@@ -573,7 +569,6 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'available_amount_indication'              => 'Use these amounts to get an indication of what your total budget could be.',
     'suggested'                                => 'Vorgeschlagen',
     'average_between'                          => 'Average between :start and :end',
-
 
     // bills:
     'matching_on'                              => 'Reagiert auf',
@@ -712,15 +707,15 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'deleted_transfer'                         => 'Überweisung ":description" erfolgreich gelöscht',
     'stored_journal'                           => 'Neue Überweisung ":description" erfolgreich erstellt',
     'select_transactions'                      => 'Überweisungen auswählen',
-    'rule_group_select_transactions'           => 'Apply ":title" to transactions',
-    'rule_select_transactions'                 => 'Apply ":title" to transactions',
+    'rule_group_select_transactions'           => '":title" auf Transaktionen anwenden',
+    'rule_select_transactions'                 => '":title" auf Transaktionen anwenden',
     'stop_selection'                           => 'Auswahl von Überweisungen stoppen',
     'reconcile_selected'                       => 'Ausgleichen',
     'mass_delete_journals'                     => 'Löschen Sie eine Reihe von Überweisungen',
     'mass_edit_journals'                       => 'Bearbeiten Sie eine Reihe von Überweisungen',
     'cannot_edit_other_fields'                 => 'You cannot mass-edit other fields than the ones here, because there is no room to show them. Please follow the link and edit them by one-by-one, if you need to edit these fields.',
     'no_budget'                                => '(kein Budget)',
-    'no_budget_squared'                        => '(no budget)',
+    'no_budget_squared'                        => '(kein Budget)',
     'perm-delete-many'                         => 'Das Löschen von mehreren Elementen auf einmal kann sich störend auswirken. Bitte seien Sie vorsichtig.',
     'mass_deleted_transactions_success'        => ':amount Überweisung(en) gelöscht.',
     'mass_edited_transactions_success'         => ':amount Überweisung(en) aktualisiert',
@@ -729,7 +724,6 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'opt_group_savingAsset'                    => 'Sparkonten',
     'opt_group_sharedAsset'                    => 'Shared asset accounts',
     'opt_group_ccAsset'                        => 'Kreditkarten',
-
 
     // new user:
     'welcome'                                  => 'Willkommen bei Firefly!',
@@ -778,7 +772,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'piggyBanks'                               => 'Sparschweine',
     'bills'                                    => 'Rechnungen',
     'withdrawal'                               => 'Ausgabe',
-    'opening_balance'                          => 'Opening balance',
+    'opening_balance'                          => 'Eröffnungsbilanz',
     'deposit'                                  => 'Einnahme',
     'account'                                  => 'Konto',
     'transfer'                                 => 'Überweisung',
@@ -826,8 +820,8 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'inactive'                                 => 'Inaktiv',
     'active'                                   => 'Aktiv',
     'difference'                               => 'Unterschied',
-    'in'                                       => 'Rein',
-    'out'                                      => 'Raus',
+    'money_flowing_in'                         => 'In',
+    'money_flowing_out'                        => 'Out',
     'topX'                                     => 'top :number',
     'show_full_list'                           => 'Zeige die gesamte Liste',
     'show_only_top'                            => 'Nur die Top :number anzeigen',
@@ -987,8 +981,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'total_size'                            => 'Gesamtgröße',
     'budget_or_budgets'                     => 'Budget(s)',
     'budgets_with_limits'                   => 'Budget(s) mit konfigurierten Betrag',
-    'rule_or_rules'                         => 'Regel(n)',
-    'rulegroup_or_groups'                   => 'Regelgruppe(n)',
+    'nr_of_rules_in_total_groups'           => ':count_rules rule(s) in :count_groups rule group(s)',
     'tag_or_tags'                           => 'Tag(s)',
     'configuration_updated'                 => 'Die Konfiguration wurde aktualisiert',
     'setting_is_demo_site'                  => 'Demonstrationsseite',
@@ -1054,7 +1047,6 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     '(partially) pays for_outward'          => '(partially) pays for',
     '(partially) reimburses_outward'        => '(partially) reimburses',
 
-
     // split a transaction:
     'splits'                                => 'Geteilte',
     'add_another_split'                     => 'Eine weitere Aufteilung hinzufügen',
@@ -1073,11 +1065,11 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     // import bread crumbs and titles:
     'import'                                => 'Import',
     'import_data'                           => 'Daten importieren',
-    'import_general_index_file'             => 'Import a file',
-    'import_from_bunq'                      => 'Import from bunq',
-    'import_using_spectre'                  => 'Import using Spectre',
-    'import_using_plaid'                    => 'Import using Plaid',
-    'import_config_bread_crumb'             => 'Set up your import',
+    'import_general_index_file'             => 'Datei importieren',
+    'import_from_bunq'                      => 'Import mit bunq',
+    'import_using_spectre'                  => 'Import mit Spectre',
+    'import_using_plaid'                    => 'Import mit Plaid',
+    'import_config_bread_crumb'             => 'Import einrichten',
 
     // import index page:
     'import_index_title'                    => 'Daten in Firefly III importieren',
@@ -1132,6 +1124,4 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'no_bills_intro_default'                => 'Du hast noch keine Rechnungen. Sie können Rechnungen erstellen, um die laufenden Ausgaben, wie zum Beispiel Ihre Versicherung oder Miete, nachzuverfolgen.',
     'no_bills_imperative_default'           => 'Haben Sie regelmäßige Rechnungen? Erstellen Sie eine Rechnung und verfolgen Sie Ihre Zahlungen:',
     'no_bills_create_default'               => 'Eine Rechnung erstellen',
-
-
 ];

@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 return [
-
     // new user:
     'bank_name'                      => 'Nom de la banque',
     'bank_balance'                   => 'Solde',
@@ -89,7 +87,6 @@ return [
     'convert_Withdrawal'          => 'Convertir le retrait',
     'convert_Deposit'             => 'Convertir le dépôt',
     'convert_Transfer'            => 'Convertir le transfert',
-
 
     'amount'                     => 'Montant',
     'date'                       => 'Date',
@@ -179,12 +176,10 @@ return [
     'blocked'               => 'Est bloqué?',
     'blocked_code'          => 'Raison du blocage',
 
-
     // admin
     'domain'                => 'Domaine',
     'single_user_mode'      => 'Désactiver le formulaire d\'inscription',
     'is_demo_site'          => 'Est un site de démonstration',
-
 
     // import
     'import_file'           => 'Fichier à importer',
@@ -202,7 +197,6 @@ return [
     'public_key'            => 'Clé publique',
     'country_code'          => 'Code pays',
     'provider_code'         => 'Banque ou fournisseur de données',
-
 
     'due_date'           => 'Échéance',
     'payment_date'       => 'Date de paiement',

@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 return [
     // status of import:
@@ -35,8 +33,12 @@ return [
     'status_ready_config'             => 'Download importconfiguratie',
     'status_ready_start'              => 'Start importeren',
     'status_ready_share'              => 'Overweeg om je configuratiebestand te downloaden en te delen op de <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand-wiki</a></strong>. Hiermee kan je het andere Firefly III gebruikers weer makkelijker maken.',
+    'status_job_new'                  => 'De import is gloednieuw.',
+    'status_job_configuring'          => 'De import wordt geconfigureerd.',
+    'status_job_configured'           => 'De import is geconfigureerd.',
     'status_job_running'              => 'De import is bezig.. Momentje..',
-    'status_job_finished'             => 'The import has finished!',
+    'status_job_error'                => 'De import heeft een fout gegenereerd.',
+    'status_job_finished'             => 'Het importeren is voltooid!',
     'status_running_title'            => 'De import is bezig',
     'status_running_placeholder'      => 'Wacht even voor een update...',
     'status_finished_title'           => 'Importeren is klaar',
@@ -92,7 +94,6 @@ return [
     'csv_roles_submit'                => 'Ga verder met stap 4/4',
     'csv_roles_warning'               => 'Geef minstens de kolom aan waar het bedrag in staat. Als het even kan, ook een kolom voor de omschrijving, datum en de andere rekening.',
 
-
     // file: map data
     'file_map_title'                  => 'Importinstellingen (4/4) - Link importgegevens aan Firefly III-gegevens',
     'file_map_text'                   => 'In deze tabellen is de linkerwaarde een waarde uit je CSV bestand. Jij moet de link leggen, als mogelijk, met een waarde uit jouw database. Firefly houdt zich hier aan. Als er geen waarde is, selecteer dan ook niets.',
@@ -107,7 +108,7 @@ return [
     'column_account-id'               => 'Betaalrekening (ID gelijk aan Firefly)',
     'column_account-name'             => 'Betaalrekeningnaam',
     'column_amount'                   => 'Bedrag',
-    'column_amount_debit'             => 'Amount (debit column)',
+    'column_amount_debit'             => 'Bedrag (debetkolom)',
     'column_amount_credit'            => 'Bedrag (creditkolom)',
     'column_amount-comma-separated'   => 'Bedrag (komma as decimaalscheidingsteken)',
     'column_bill-id'                  => 'Contract (ID gelijk aan Firefly)',
@@ -129,15 +130,16 @@ return [
     'column_opposing-id'              => 'Tegenrekening (ID gelijk aan Firefly)',
     'column_external-id'              => 'Externe ID',
     'column_opposing-name'            => 'Tegenrekeningnaam',
-    'column_rabo-debit-credit'        => 'Rabobank specific debit/credit indicator',
-    'column_ing-debit-credit'         => 'ING specific debit/credit indicator',
+    'column_rabo-debit-credit'        => 'Rabobankspecifiek bij/af indicator',
+    'column_ing-debit-credit'         => 'ING-specifieke bij/af indicator',
     'column_sepa-ct-id'               => 'SEPA end-to-end transactienummer',
     'column_sepa-ct-op'               => 'SEPA tegenrekeningnummer',
-    'column_sepa-db'                  => 'SEPA Direct Debit',
+    'column_sepa-db'                  => 'SEPA "direct debet"-nummer',
     'column_tags-comma'               => 'Tags (kommagescheiden)',
     'column_tags-space'               => 'Tags (spatiegescheiden)',
     'column_account-number'           => 'Betaalrekening (rekeningnummer)',
     'column_opposing-number'          => 'Tegenrekening (rekeningnummer)',
+    'column_note'                     => 'Opmerking(en)',
 
     // bunq
     'bunq_prerequisites_title'        => 'Voorwaarden voor een import van bunq',

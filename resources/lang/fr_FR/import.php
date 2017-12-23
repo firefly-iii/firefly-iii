@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 return [
     // status of import:
@@ -35,7 +33,11 @@ return [
     'status_ready_config'             => 'Télécharger la configuration',
     'status_ready_start'              => 'Démarrer l\'importation',
     'status_ready_share'              => 'Vous pouvez télécharger votre configuration et de la partager dans le <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">centre de configuration d\'import</a></strong>. Cela permettra à d\'autres utilisateurs de Firefly III d\'importer leurs fichiers plus facilement.',
+    'status_job_new'                  => 'The job is brand new.',
+    'status_job_configuring'          => 'The import is being configured.',
+    'status_job_configured'           => 'The import is configured.',
     'status_job_running'              => 'L\'importation est en cours... Veuillez patienter...',
+    'status_job_error'                => 'The job has generated an error.',
     'status_job_finished'             => 'The import has finished!',
     'status_running_title'            => 'L\'importation est en cours d\'exécution',
     'status_running_placeholder'      => 'Attendez pour une mise à jour...',
@@ -92,7 +94,6 @@ return [
     'csv_roles_submit'                => 'Continue with step 4/4',
     'csv_roles_warning'               => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
 
-
     // file: map data
     'file_map_title'                  => 'Import setup (4/4) - Connect import data to Firefly III data',
     'file_map_text'                   => 'In the following tables, the left value shows you information found in your uploaded file. It is your task to map this value, if possible, to a value already present in your database. Firefly will stick to this mapping. If there is no value to map to, or you do not wish to map the specific value, select nothing.',
@@ -138,6 +139,7 @@ return [
     'column_tags-space'               => 'Tags (space separated)',
     'column_account-number'           => 'Asset account (account number)',
     'column_opposing-number'          => 'Opposing account (account number)',
+    'column_note'                     => 'Note(s)',
 
     // bunq
     'bunq_prerequisites_title'        => 'Prerequisites for an import from bunq',

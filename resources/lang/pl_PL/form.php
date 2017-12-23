@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 return [
-
     // new user:
     'bank_name'                      => 'Nazwa banku',
     'bank_balance'                   => 'Saldo',
@@ -57,7 +55,7 @@ return [
     'account_id'                     => 'Konto aktywów',
     'budget_id'                      => 'Budżet',
     'openingBalance'                 => 'Bilans otwarcia',
-    'tagMode'                        => 'Tag mode',
+    'tagMode'                        => 'Tryb tagów',
     'tag_position'                   => 'Lokalizacja taga',
     'virtualBalance'                 => 'Wirtualne saldo',
     'targetamount'                   => 'Kwota docelowa',
@@ -90,7 +88,6 @@ return [
     'convert_Deposit'             => 'Konwertuj wpłatę',
     'convert_Transfer'            => 'Konwertuj transfer',
 
-
     'amount'                     => 'Kwota',
     'date'                       => 'Data',
     'interest_date'              => 'Data odsetek',
@@ -101,8 +98,8 @@ return [
     'deletePermanently'          => 'Usuń trwale',
     'cancel'                     => 'Anuluj',
     'targetdate'                 => 'Data docelowa',
-    'startdate'                  => 'Start date',
-    'tag'                        => 'Tag',
+    'startdate'                  => 'Data rozpoczęcia',
+    'tag'                        => 'Znacznik',
     'under'                      => 'Poniżej',
     'symbol'                     => 'Symbol',
     'code'                       => 'Kod',
@@ -111,7 +108,7 @@ return [
     'creditCardNumber'           => 'Numer karty kredytowej',
     'has_headers'                => 'Nagłówki',
     'date_format'                => 'Format daty',
-    'specifix'                   => 'Bank- or file specific fixes',
+    'specifix'                   => 'Poprawki dla banku lub pliku',
     'attachments[]'              => 'Załączniki',
     'store_new_withdrawal'       => 'Zapisz nową wypłatę',
     'store_new_deposit'          => 'Zapisz nową wpłatę',
@@ -161,17 +158,17 @@ return [
     'journal_link_areYouSure'    => 'Czy na pewno chcesz usunąć powiązanie między <a href=":source_link">:source</a> a <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'        => 'Czy na pewno chcesz usunąć typ łącza ":name" (":inward" / ":outward")?',
     'permDeleteWarning'          => 'Usuwanie rzeczy z Firefly jest trwałe i nie można tego cofnąć.',
-    'mass_make_selection'        => 'You can still prevent items from being deleted by removing the checkbox.',
+    'mass_make_selection'        => 'Nadal można zapobiec usuwaniu plików, usuwając zaznaczenie.',
     'delete_all_permanently'     => 'Trwale usuń zaznaczone',
     'update_all_journals'        => 'Zmodyfikuj te transakcje',
-    'also_delete_transactions'   => 'The only transaction connected to this account will be deleted as well.|All :count transactions connected to this account will be deleted as well.',
-    'also_delete_connections'    => 'The only transaction linked with this link type will lose this connection.|All :count transactions linked with this link type will lose their connection.',
-    'also_delete_rules'          => 'The only rule connected to this rule group will be deleted as well.|All :count rules connected to this rule group will be deleted as well.',
-    'also_delete_piggyBanks'     => 'The only piggy bank connected to this account will be deleted as well.|All :count piggy bank connected to this account will be deleted as well.',
-    'bill_keep_transactions'     => 'The only transaction connected to this bill will not be deleted.|All :count transactions connected to this bill will spared deletion.',
-    'budget_keep_transactions'   => 'The only transaction connected to this budget will not be deleted.|All :count transactions connected to this budget will spared deletion.',
-    'category_keep_transactions' => 'The only transaction connected to this category will not be deleted.|All :count transactions connected to this category will spared deletion.',
-    'tag_keep_transactions'      => 'The only transaction connected to this tag will not be deleted.|All :count transactions connected to this tag will spared deletion.',
+    'also_delete_transactions'   => 'Jedynie transakcja związana z tym kontem zostanie również usunięta. |Wszystkie :count transakcji powiązanych z tym kontem zostanie również usunięta.',
+    'also_delete_connections'    => 'Jedynie transakcja połączona z tym typem łącza utraci to połączenie. |Wszystkie :count transakcji połączone tym typem łącza utracą swoje połączenie.',
+    'also_delete_rules'          => 'Jedynie reguła połączona z tą grupą reguł utraci to połączenie. |Wszystkie :count reguły połączone tą grupą reguł zostaną również usunięte.',
+    'also_delete_piggyBanks'     => 'Jedynie skarbonka połączona z tym kontem zostanie również usunięta. |Wszystkie :count skarbonek połączone z tym kontem zostaną usunięte.',
+    'bill_keep_transactions'     => 'Jedyna transakcja związana z tym rachunkiem nie zostanie usunięta. | Wszystkie: transakcje związane z tym rachunkiem zostaną oszczędzone.',
+    'budget_keep_transactions'   => 'Jedynie transakcja związana z tym rachunkiem nie zostanie usunięta. |Wszystkie :count transakcji połączonych z tym rachunkiem zostaną oszczędzone.',
+    'category_keep_transactions' => 'Jedynie transakcja związana z tą kategorią nie zostanie usunięta. |Wszystkie :count transakcje połączone z tą kategorią zostaną oszczędzone.',
+    'tag_keep_transactions'      => 'Jedynie transakcja połączona z tym tagiem nie zostanie usunięta. |Wszystkie :count transakcji połączonych z tym tagiem zostaną oszczędzone.',
 
     'email'                 => 'Adres email',
     'password'              => 'Hasło',
@@ -179,12 +176,10 @@ return [
     'blocked'               => 'Jest zablokowany?',
     'blocked_code'          => 'Powód blokady',
 
-
     // admin
     'domain'                => 'Domena',
     'single_user_mode'      => 'Wyłącz rejestrację użytkowników',
     'is_demo_site'          => 'Jest stroną demo',
-
 
     // import
     'import_file'           => 'Importuj plik',
@@ -193,16 +188,15 @@ return [
     'csv_comma'             => 'Przecinek (,)',
     'csv_semicolon'         => 'Średnik (;)',
     'csv_tab'               => 'Tabulator (niewidoczny)',
-    'csv_delimiter'         => 'CSV field delimiter',
+    'csv_delimiter'         => 'Ogranicznik pola CSV',
     'csv_import_account'    => 'Domyślne konto importu',
     'csv_config'            => 'Konfiguracja importu CSV',
-    'client_id'             => 'Client ID',
-    'service_secret'        => 'Service secret',
-    'app_secret'            => 'App secret',
-    'public_key'            => 'Public key',
-    'country_code'          => 'Country code',
-    'provider_code'         => 'Bank or data-provider',
-
+    'client_id'             => 'ID klienta',
+    'service_secret'        => 'Sekret usługi',
+    'app_secret'            => 'Sekret aplikacji',
+    'public_key'            => 'Klucz publiczny',
+    'country_code'          => 'Kod kraju',
+    'provider_code'         => 'Dostawca banku lub danych',
 
     'due_date'           => 'Termin realizacji',
     'payment_date'       => 'Data płatności',

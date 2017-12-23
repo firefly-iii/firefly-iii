@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 return [
@@ -42,23 +41,23 @@ return [
     'budgets_index_see_expenses_bar'        => 'Wydawanie pieniędzy powoli wypełnia ten pasek.',
     'budgets_index_navigate_periods'        => 'Przejrzyj okresy, aby łatwiej ustawić przyszłe budżety.',
     'budgets_index_new_budget'              => 'Utwórz nowe budżety zgodnie z Twoimi potrzebami.',
-    'budgets_index_list_of_budgets'         => 'Use this table to set the amounts for each budget and see how you are doing.',
+    'budgets_index_list_of_budgets'         => 'Skorzystaj z tej tabeli, aby ustawić kwoty dla każdego budżetu i sprawdź jak ci idzie.',
     'budgets_index_outro'                   => 'Aby dowiedzieć się więcej o budżetowaniu, użyj ikonki pomocy w prawym górnym rogu.',
 
     // reports (index)
-    'reports_index_intro'                   => 'Use these reports to get detailed insights in your finances.',
-    'reports_index_inputReportType'         => 'Pick a report type. Check out the help pages to see what each report shows you.',
-    'reports_index_inputAccountsSelect'     => 'You can exclude or include asset accounts as you see fit.',
-    'reports_index_inputDateRange'          => 'The selected date range is entirely up to you: from one day to 10 years.',
-    'reports_index_extra-options-box'       => 'Depending on the report you have selected, you can select extra filters and options here. Watch this box when you change report types.',
+    'reports_index_intro'                   => 'Skorzystaj z tych raportów, aby uzyskać szczegółowe informacje o swoich finansach.',
+    'reports_index_inputReportType'         => 'Wybierz typ raportu. Sprawdź stronę pomocy, aby zobaczyć, co pokazuje każdy raport.',
+    'reports_index_inputAccountsSelect'     => 'Możesz wykluczyć lub uwzględnić konta zasobów według własnego uznania.',
+    'reports_index_inputDateRange'          => 'Wybrany zakres dat zależy wyłącznie od ciebie: od jednego dnia do 10 lat.',
+    'reports_index_extra-options-box'       => 'W zależności od wybranego raportu możesz wybrać dodatkowe filtry i opcje tutaj. Obserwuj to pole, gdy zmieniasz typy raportów.',
 
     // reports (reports)
-    'reports_report_default_intro'          => 'This report will give you a quick and comprehensive overview of your finances. If you wish to see anything else, please don\'t hestitate to contact me!',
-    'reports_report_audit_intro'            => 'This report will give you detailed insights in your asset accounts.',
-    'reports_report_audit_optionsBox'       => 'Use these check boxes to show or hide the columns you are interested in.',
+    'reports_report_default_intro'          => 'Raport ten zapewni szybki i wszechstronny przegląd twoich finansów. Jeśli chcesz zobaczyć cokolwiek innego, nie wahaj się ze mną skontaktować!',
+    'reports_report_audit_intro'            => 'Ten raport zawiera szczegółowe informacje na temat kont zasobów.',
+    'reports_report_audit_optionsBox'       => 'Użyj tych pól wyboru aby pokazać lub ukryć kolumny, które cię interesują.',
 
-    'reports_report_category_intro'                  => 'This report will give you insight in one or multiple categories.',
-    'reports_report_category_pieCharts'              => 'These charts will give you insight in expenses and income per category or per account.',
+    'reports_report_category_intro'                  => 'Ten raport daje wgląd w jedną lub wiele kategorii.',
+    'reports_report_category_pieCharts'              => 'Te wykresy dają wgląd w wydatki i dochody według kategorii lub konta.',
     'reports_report_category_incomeAndExpensesChart' => 'This chart shows your expenses and income per category.',
 
     'reports_report_tag_intro'                  => 'This report will give you insight in one or multiple tags.',
@@ -110,9 +109,9 @@ return [
     // rules index
     'rules_index_intro'                                       => 'Firefly III allows you to manage rules, that will automagically be applied to any transaction you create or edit.',
     'rules_index_new_rule_group'                              => 'You can combine rules in groups for easier management.',
-    'rules_index_new_rule'                                    => 'Create as many rules as you like.',
-    'rules_index_prio_buttons'                                => 'Order them any way you see fit.',
-    'rules_index_test_buttons'                                => 'You can test your rules or apply them to existing transactions.',
+    'rules_index_new_rule'                                    => 'Twórz dowolną liczbę reguł.',
+    'rules_index_prio_buttons'                                => 'Zamów je w sposób, jaki uznasz za stosowny.',
+    'rules_index_test_buttons'                                => 'Możesz przetestować swoje zasady lub zastosować je do istniejących transakcji.',
     'rules_index_rule-triggers'                               => 'Rules have "triggers" and "actions" that you can order by drag-and-drop.',
     'rules_index_outro'                                       => 'Be sure to check out the help pages using the (?) icon in the top right!',
 

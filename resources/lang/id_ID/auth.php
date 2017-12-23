@@ -1,6 +1,6 @@
 <?php
 /**
- * passwords.php
+ * auth.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -21,10 +21,17 @@
 declare(strict_types=1);
 
 return [
-    'password' => 'Wachtwoorden moeten zes karakters lang zijn, en natuurlijk 2x hetzelfde invoeren.',
-    'user'     => 'Geen gebruiker met dat e-mailadres.',
-    'token'    => 'Ongeldig token! Sorry.',
-    'sent'     => 'Je krijgt een mailtje met een linkje om je wachtwoord te herstellen!',
-    'reset'    => 'Je wachtwoord is hersteld!',
-    'blocked'  => 'Leuk geprobeerd wel.',
+    /*
+    |--------------------------------------------------------------------------
+    | Authentication Language Lines
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines are used during authentication for various
+    | messages that we need to display to the user. You are free to modify
+    | these language lines according to your application's requirements.
+    |
+    */
+
+    'failed'   => 'Kredensial ini tidak sesuai dengan catatan kami.',
+    'throttle' => 'Terlalu banyak upaya login. Silakan coba lagi dalam :seconds detik.',
 ];

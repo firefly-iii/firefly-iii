@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 return [
@@ -30,7 +29,7 @@ return [
     'preferences'         => 'Preferencje',
     'profile'             => 'Profil',
     'changePassword'      => 'Zmień swoje hasło',
-    'change_email'        => 'Change your email address',
+    'change_email'        => 'Zmień swój adres e-mail',
     'bills'               => 'Rachunki',
     'newBill'             => 'Nowy rachunek',
     'edit_bill'           => 'Modyfikuj rachunek ":name"',
@@ -41,12 +40,12 @@ return [
     'deposit_list'        => 'Przychody, dochody oraz depozyty',
     'transfer_list'       => 'Transfery',
     'transfers_list'      => 'Transfery',
-    'reconciliation_list' => 'Reconciliations',
+    'reconciliation_list' => 'Rozrachunki',
     'create_withdrawal'   => 'Utwórz nową wypłatę',
     'create_deposit'      => 'Utwórz nową wpłatę',
     'create_transfer'     => 'Utwórz nowy transfer',
     'edit_journal'        => 'Modyfikuj transakcję ":description"',
-    'edit_reconciliation' => 'Edit ":description"',
+    'edit_reconciliation' => 'Edytuj ":description"',
     'delete_journal'      => 'Usuń transakcję ":description"',
     'tags'                => 'Tagi',
     'createTag'           => 'Utwórz nowy tag',

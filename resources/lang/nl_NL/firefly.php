@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 return [
@@ -353,7 +352,6 @@ return [
     'rule_action_set_notes_choice'               => 'Verander notitie in..',
     'rule_action_set_notes'                      => 'Verander notitie in ":action_value"',
 
-
     'rules_have_read_warning'                  => 'Heb je de waarschuwing gelezen?',
     'apply_rule_warning'                       => 'Let op! Het kan heel lang duren voor een regel(groep) is toegepast op een grote selectie transacties. Er kan een time-out optreden. Als dat gebeurt is de regel(groep) niet toegepast op alle transacties, en dat kan je administratie behoorlijk verprutsen. Wees dus voorzichtig.',
 
@@ -407,9 +405,9 @@ return [
     'pref_home_show_deposits_info'             => 'De homepagina laat al crediteuren zien. Wil je ook je debiteuren zien?',
     'pref_home_do_show_deposits'               => 'Ja, kom maar op',
     'successful_count'                         => 'waarvan :count met succes',
-    'transaction_page_size_title'              => 'Paginalengte',
-    'transaction_page_size_help'               => 'Elke lijst met transacties er op is zo lang',
-    'transaction_page_size_label'              => 'Paginalengte',
+    'list_page_size_title'                     => 'Paginalengte',
+    'list_page_size_help'                      => 'Per lijst met dingen (accounts, transacties, enz.) zie je hooguit zoveel items.',
+    'list_page_size_label'                     => 'Paginalengte',
     'between_dates'                            => '(:start en :end)',
     'pref_optional_fields_transaction'         => 'Optionele velden voor transacties',
     'pref_optional_fields_transaction_help'    => 'Standaard staan niet alle velden aan (vanwege het overzicht). Hier kan je zulke extra velden alsnog aanzetten, als je denkt dat ze handig zijn. Als je een veld uitzet, maar deze heeft wel degelijk een waarde, dan is-ie altijd zichtbaar, wat je ook doet.',
@@ -429,7 +427,6 @@ return [
     'optional_field_meta_business'             => 'Zakelijk',
     'optional_field_attachments'               => 'Bijlagen',
     'optional_field_meta_data'                 => 'Optionele meta-gegevens',
-
 
     // profile:
     'change_your_password'                     => 'Verander je wachtwoord',
@@ -466,7 +463,6 @@ return [
     'email_changed_logout'                     => 'Je kan niet inloggen tot je je emailadres bevestigd.',
     'login_with_new_email'                     => 'Je kan nu inloggen met je nieuwe emailadres.',
     'login_with_old_email'                     => 'Je kan nu weer inloggen met je oude emailadres.',
-
 
     // attachments
     'nr_of_attachments'                        => 'Eén bijlage|:count bijlagen',
@@ -572,7 +568,6 @@ return [
     'available_amount_indication'              => 'Gebruik deze bedragen om een indruk te krijgen van wat je totale budget zou kunnen zijn.',
     'suggested'                                => 'Gesuggereerd',
     'average_between'                          => 'Gemiddelde tussen :start en :end',
-
 
     // bills:
     'matching_on'                              => 'Wordt herkend',
@@ -729,7 +724,6 @@ return [
     'opt_group_sharedAsset'                    => 'Gedeelde betaalrekeningen',
     'opt_group_ccAsset'                        => 'Creditcards',
 
-
     // new user:
     'welcome'                                  => 'Welkom bij Firefly!',
     'submit'                                   => 'Invoeren',
@@ -825,8 +819,8 @@ return [
     'inactive'                                 => 'Niet actief',
     'active'                                   => 'Actief',
     'difference'                               => 'Verschil',
-    'in'                                       => 'In',
-    'out'                                      => 'Uit',
+    'money_flowing_in'                         => 'In',
+    'money_flowing_out'                        => 'Uit',
     'topX'                                     => 'top :number',
     'show_full_list'                           => 'Laat hele lijst zien',
     'show_only_top'                            => 'Alleen top :number',
@@ -986,8 +980,7 @@ return [
     'total_size'                            => 'totale grootte',
     'budget_or_budgets'                     => 'budget(ten)',
     'budgets_with_limits'                   => 'budget(ten) met een ingesteld bedrag',
-    'rule_or_rules'                         => 'regel(s)',
-    'rulegroup_or_groups'                   => 'regelgroep(en)',
+    'nr_of_rules_in_total_groups'           => ':count_rules regel(s) in :count_groups regelgroep(en)',
     'tag_or_tags'                           => 'tag(s)',
     'configuration_updated'                 => 'De configuratie is bijgewerkt',
     'setting_is_demo_site'                  => 'Demo website',
@@ -1052,7 +1045,6 @@ return [
     '(partially) refunds_outward'           => 'is een (gedeeltelijke) terugbetaling voor',
     '(partially) pays for_outward'          => 'betaalt (deels) voor',
     '(partially) reimburses_outward'        => 'vergoedt (deels)',
-
 
     // split a transaction:
     'splits'                                => 'Splitten',
@@ -1131,6 +1123,4 @@ return [
     'no_bills_intro_default'                => 'Je hebt nog geen contracten. Je kan contracten gebruiken om terugkerende uitgaven bij te houden, zoals de huur of verzekeringen.',
     'no_bills_imperative_default'           => 'Heb je zulke uitgaven? Maak dan een contract en houd de betalingen bij:',
     'no_bills_create_default'               => 'Maak een contract',
-
-
 ];

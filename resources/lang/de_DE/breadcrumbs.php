@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 return [
@@ -30,7 +29,7 @@ return [
     'preferences'         => 'Einstellungen',
     'profile'             => 'Profil',
     'changePassword'      => 'Passwort ändern',
-    'change_email'        => 'Change your email address',
+    'change_email'        => 'E-Mail Adresse ändern',
     'bills'               => 'Rechnungen',
     'newBill'             => 'Neue Rechnung',
     'edit_bill'           => 'Bearbeite Rechnung ":name"',

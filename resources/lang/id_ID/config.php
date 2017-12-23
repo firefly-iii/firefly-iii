@@ -1,6 +1,6 @@
 <?php
 /**
- * passwords.php
+ * config.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -21,10 +21,13 @@
 declare(strict_types=1);
 
 return [
-    'password' => 'Wachtwoorden moeten zes karakters lang zijn, en natuurlijk 2x hetzelfde invoeren.',
-    'user'     => 'Geen gebruiker met dat e-mailadres.',
-    'token'    => 'Ongeldig token! Sorry.',
-    'sent'     => 'Je krijgt een mailtje met een linkje om je wachtwoord te herstellen!',
-    'reset'    => 'Je wachtwoord is hersteld!',
-    'blocked'  => 'Leuk geprobeerd wel.',
+    'locale'          => 'id, Bahasa Indonesia, id_ID, id_ID.utf8, id_ID.UTF-8',
+    'month'           => '%B %Y',
+    'month_and_day'   => '%e %B %Y',
+    'date_time'       => '%e %B %Y, @ %T',
+    'specific_day'    => '%e %B %Y',
+    'week_in_year'    => 'Minggu %W, %Y',
+    'quarter_of_year' => '%B %Y',
+    'year'            => '%Y',
+    'half_year'       => '%B %Y',
 ];

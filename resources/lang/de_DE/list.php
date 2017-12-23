@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 return [
@@ -35,7 +34,7 @@ return [
     'currentBalance'          => 'Aktueller Kontostand',
     'active'                  => 'Aktiv?',
     'lastActivity'            => 'Letzte Aktivität',
-    'balanceDiff'             => 'Differenz des Kontostandes zwischen :start und :end',
+    'balanceDiff'             => 'Balance difference',
     'matchesOn'               => 'Übereinstimmung am',
     'account_type'            => 'Art des Kontos',
     'created_at'              => 'Erstellt am',
@@ -96,7 +95,7 @@ return [
     'total_amount'            => 'Gesamtbetrag',
     'sum'                     => 'Summe',
     'sum_excluding_transfers' => 'Summe (ohne Überweisungen)',
-    'sum_withdrawals'         => 'Summe der Auszahlungen',
+    'sum_withdrawals'         => 'Summe der Ausgaben',
     'sum_deposits'            => 'Summe der Einzahlungen',
     'sum_transfers'           => 'Summe der Überweisungen',
     'reconcile'               => 'Reconcile',

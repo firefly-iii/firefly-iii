@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 return [
-
     // new user:
     'bank_name'                      => 'Banknaam',
     'bank_balance'                   => 'Saldo',
@@ -89,7 +87,6 @@ return [
     'convert_Withdrawal'          => 'Verander uitgave',
     'convert_Deposit'             => 'Verander inkomsten',
     'convert_Transfer'            => 'Verander overschrijving',
-
 
     'amount'                     => 'Bedrag',
     'date'                       => 'Datum',
@@ -179,12 +176,10 @@ return [
     'blocked'               => 'Is geblokkeerd?',
     'blocked_code'          => 'Reden voor blokkade',
 
-
     // admin
     'domain'                => 'Domein',
     'single_user_mode'      => 'Registratie uitgeschakelen',
     'is_demo_site'          => 'Is demo website',
-
 
     // import
     'import_file'           => 'Importbestand',
@@ -202,7 +197,6 @@ return [
     'public_key'            => 'Publieke sleutel',
     'country_code'          => 'Landcode',
     'provider_code'         => 'Bank of gegevensprovider',
-
 
     'due_date'           => 'Vervaldatum',
     'payment_date'       => 'Betalingsdatum',
