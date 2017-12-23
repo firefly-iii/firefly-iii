@@ -74,8 +74,12 @@ This work [is licensed](https://github.com/firefly-iii/firefly-iii/blob/master/L
 
 ### Other stuff
 
-If you like Firefly and if it helps you save lots of money, why not send me [a dime for every dollar saved](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) (this is a joke, although the Paypal form works just fine, try it!)
+If you like Firefly III and if it helps you save lots of money, why not send me [a dime for every dollar saved](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) (this is a joke, although the Paypal form works just fine, try it!)
 
 If you want to contact me, please open an issue or [email me](mailto:thegrumpydictator@gmail.com).
+
+### Alternatives
+
+If you are looking for alternatives, check out [Kickball's Awesome-Selfhosted list](https://github.com/Kickball/awesome-selfhosted) which features not only Firefly III but also noteworthy alternatives such as [Silverstrike](https://github.com/agstrike/silverstrike).
 
 [![Build Status](https://travis-ci.org/firefly-iii/firefly-iii.svg?branch=master)](https://travis-ci.org/firefly-iii/firefly-iii) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/?branch=master) [![Coverage Status](https://coveralls.io/repos/github/firefly-iii/firefly-iii/badge.svg?branch=master)](https://coveralls.io/github/firefly-iii/firefly-iii?branch=master)
