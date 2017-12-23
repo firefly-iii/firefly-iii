@@ -184,7 +184,7 @@ function placeTransactions(data) {
     // any already cleared transactions must be added to / removed from selectedAmount.
     includeClearedTransactions();
 
-    difference = balanceDifference;
+    difference = balanceDifference - selectedAmount;
     updateDifference();
 
     // enable the check buttons:
