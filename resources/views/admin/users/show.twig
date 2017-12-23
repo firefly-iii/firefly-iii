@@ -115,9 +115,7 @@
                         <tr>
                             <td>{{ trans('list.rule_and_groups_count') }}</td>
                             <td>
-                                {{ information.rules }} {{ 'rule_or_rules'|_ }} {{ 'in'|_ }} {{ information.rule_groups }}
-
-                                {{ 'rulegroup_or_groups'|_ }}
+                                {{ trans('firefly.nr_of_rules_in_total_groups', {count_rules: information.rules, count_groups: information.rule_groups}) }}
                             </td>
                         </tr>
                         <tr>
