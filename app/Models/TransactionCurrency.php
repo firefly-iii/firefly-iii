@@ -55,7 +55,7 @@ class TransactionCurrency extends Model
      *
      * @return TransactionCurrency
      */
-    public static function routeBinder(self $currency)
+    public static function routeBinder(TransactionCurrency $currency)
     {
         if (auth()->check()) {
             return $currency;

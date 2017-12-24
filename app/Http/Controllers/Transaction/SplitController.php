@@ -63,6 +63,9 @@ class SplitController extends Controller
     /** @var JournalTaskerInterface */
     private $tasker;
 
+    /** @var JournalRepositoryInterface */
+    private $repository;
+
     /**
      *
      */
@@ -78,6 +81,7 @@ class SplitController extends Controller
                 $this->tasker      = app(JournalTaskerInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->currencies  = app(CurrencyRepositoryInterface::class);
+                $this->repository = app(JournalRepositoryInterface::class);
                 app('view')->share('mainTitleIcon', 'fa-share-alt');
                 app('view')->share('title', trans('firefly.split-transactions'));
 
@@ -142,18 +146,17 @@ class SplitController extends Controller
 
     /**
      * @param SplitJournalFormRequest    $request
-     * @param JournalRepositoryInterface $repository
      * @param TransactionJournal         $journal
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(SplitJournalFormRequest $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
+    public function update(SplitJournalFormRequest $request, TransactionJournal $journal)
     {
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }
         $data    = $this->arrayFromInput($request);
-        $journal = $repository->updateSplitJournal($journal, $data);
+        $journal = $this->repository->updateSplitJournal($journal, $data);
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         // save attachments:
@@ -229,7 +232,8 @@ class SplitController extends Controller
         $destinationAccounts = $journal->destinationAccountList();
         $notes               = '';
         /** @var Note $note */
-        $note = $journal->notes()->first();
+
+        $note = $this->repository->getNote($journal);
         if (null !== $note) {
             $notes = $note->text;
         }
@@ -259,6 +263,7 @@ class SplitController extends Controller
             'transactions'                   => $this->getTransactionDataFromJournal($journal),
         ];
         // update transactions array with old request data.
+
         $array['transactions'] = $this->updateWithPrevious($array['transactions'], $request->old());
 
         return $array;
@@ -346,6 +351,7 @@ class SplitController extends Controller
             return $array;
         }
         $old = $old['transactions'];
+
         foreach ($old as $index => $row) {
             if (isset($array[$index])) {
                 $array[$index] = array_merge($array[$index], $row);

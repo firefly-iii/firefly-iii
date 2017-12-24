@@ -108,7 +108,7 @@ class Tag extends Model
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public static function tagSum(self $tag): string
+    public static function tagSum(Tag $tag): string
     {
         $sum = '0';
         /** @var TransactionJournal $journal */
