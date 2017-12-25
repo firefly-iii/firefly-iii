@@ -38,9 +38,11 @@ class CurrencyCode implements BinderInterface
      */
     public static function routeBinder($value, $route)
     {
-        $currency = TransactionCurrency::where('code', $value)->first();
-        if (null !== $currency) {
-            return $currency;
+        if (auth()->check()) {
+            $currency = TransactionCurrency::where('code', $value)->first();
+            if (null !== $currency) {
+                return $currency;
+            }
         }
         throw new NotFoundHttpException;
     }

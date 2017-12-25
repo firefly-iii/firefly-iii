@@ -377,6 +377,62 @@ class BinderTest extends TestCase
      * @covers \FireflyIII\Http\Middleware\Binder::handle
      * @covers \FireflyIII\Http\Middleware\Binder::__construct
      * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\CurrencyCode::routeBinder
+     */
+    public function testCurrencyCode()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{fromCurrencyCode}', function () {
+            return 'OK';
+        }
+        );
+
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/USD');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\CurrencyCode::routeBinder
+     */
+    public function testCurrencyCodeNotFound()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{fromCurrencyCode}', function () {
+            return 'OK';
+        }
+        );
+
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/ABC');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\CurrencyCode::routeBinder
+     */
+    public function testCurrencyCodeNotLoggedIn()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{fromCurrencyCode}', function () {
+            return 'OK';
+        }
+        );
+
+        $response = $this->get('/_test/binder/EUR');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
      * @covers \FireflyIII\Models\ExportJob::routeBinder
      */
     public function testExportJob()
@@ -454,6 +510,24 @@ class BinderTest extends TestCase
      * @covers \FireflyIII\Http\Middleware\Binder::performBinding
      * @covers \FireflyIII\Models\ImportJob::routeBinder
      */
+    public function testImportJobBadStatus()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{importJob}', function () {
+            return 'OK';
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/bad-status');
+        $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Models\ImportJob::routeBinder
+     */
     public function testImportJobNotFound()
     {
         Route::middleware(Binder::class)->any(
@@ -484,27 +558,6 @@ class BinderTest extends TestCase
         $response = $this->get('/_test/binder/testImport');
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
-
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
-     * @covers \FireflyIII\Models\ImportJob::routeBinder
-     */
-    public function testImportJobBadStatus()
-    {
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{importJob}', function () {
-            return 'OK';
-        }
-        );
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/bad-status');
-        $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
-    }
-
-
 
     /**
      * @covers \FireflyIII\Http\Middleware\Binder::handle
@@ -1009,8 +1062,6 @@ class BinderTest extends TestCase
         $response = $this->get('/_test/binder/withdrawal');
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
-
-    
 
 
 }
