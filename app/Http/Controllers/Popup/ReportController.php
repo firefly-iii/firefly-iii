@@ -32,6 +32,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\Binder\AccountList;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use InvalidArgumentException;
 use Response;
 use View;
@@ -237,7 +238,7 @@ class ReportController extends Controller
     private function parseAttributes(array $attributes): array
     {
         $attributes['location'] = $attributes['location'] ?? '';
-        $attributes['accounts'] = AccountList::routeBinder($attributes['accounts'] ?? '', '');
+        $attributes['accounts'] = AccountList::routeBinder($attributes['accounts'] ?? '', new Route('get','',[]));
         try {
             $attributes['startDate'] = Carbon::createFromFormat('Ymd', $attributes['startDate']);
         } catch (InvalidArgumentException $e) {
