@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Export\ProcessorInterface;
+use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Requests\ExportFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ExportJob;
@@ -56,6 +57,7 @@ class ExportController extends Controller
                 return $next($request);
             }
         );
+        $this->middleware(IsDemoUser::class)->except(['index']);
     }
 
     /**
