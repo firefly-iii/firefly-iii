@@ -114,15 +114,17 @@ class Account extends Model
     }
 
     /**
-     * @param Account $value
+     * @param string $value
      *
      * @return Account
      */
-    public static function routeBinder(self $value)
+    public static function routeBinder(string $value): Account
     {
         if (auth()->check()) {
-            if (intval($value->user_id) === auth()->user()->id) {
-                return $value;
+            $accountId = intval($value);
+            $account   = auth()->user()->accounts()->find($accountId);
+            if (!is_null($account)) {
+                return $account;
             }
         }
         throw new NotFoundHttpException;
@@ -130,6 +132,7 @@ class Account extends Model
 
     /**
      * @return HasMany
+     * @codeCoverageIgnore
      */
     public function accountMeta(): HasMany
     {
@@ -138,6 +141,7 @@ class Account extends Model
 
     /**
      * @return BelongsTo
+     * @codeCoverageIgnore
      */
     public function accountType(): BelongsTo
     {
@@ -146,6 +150,7 @@ class Account extends Model
 
     /**
      * @return string
+     * @codeCoverageIgnore
      */
     public function getEditNameAttribute(): string
     {
@@ -159,8 +164,6 @@ class Account extends Model
     }
 
     /**
-     * FIxxME can return null.
-     *
      * @param $value
      *
      * @return string
@@ -185,6 +188,7 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param string $fieldName
      *
      * @return string
@@ -201,6 +205,7 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      *
      * @return string
@@ -285,6 +290,7 @@ class Account extends Model
 
     /**
      * @return HasMany
+     * @codeCoverageIgnore
      */
     public function piggyBanks(): HasMany
     {
@@ -292,6 +298,7 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param EloquentBuilder $query
      * @param array           $types
      */
@@ -305,6 +312,7 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param EloquentBuilder $query
      * @param string          $name
      * @param string          $value
@@ -322,7 +330,9 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
+     * @codeCoverageIgnore
      */
     public function setIbanAttribute($value)
     {
@@ -330,6 +340,7 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setNameAttribute($value)
@@ -340,15 +351,18 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
+     * @codeCoverageIgnore
      */
     public function setVirtualBalanceAttribute($value)
     {
-        $this->attributes['virtual_balance'] = strval(round($value, 12));
+        $this->attributes['virtual_balance'] = strval($value);
     }
 
     /**
      * @return HasMany
+     * @codeCoverageIgnore
      */
     public function transactions(): HasMany
     {
@@ -357,6 +371,7 @@ class Account extends Model
 
     /**
      * @return BelongsTo
+     * @codeCoverageIgnore
      */
     public function user(): BelongsTo
     {

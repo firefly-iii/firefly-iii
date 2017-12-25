@@ -52,22 +52,25 @@ class Attachment extends Model
     protected $fillable = ['attachable_id', 'attachable_type', 'user_id', 'md5', 'filename', 'mime', 'title', 'notes', 'description', 'size', 'uploaded'];
 
     /**
-     * @param Attachment $value
+     * @param string $value
      *
      * @return Attachment
      */
-    public static function routeBinder(Attachment $value)
+    public static function routeBinder(string $value): Attachment
     {
         if (auth()->check()) {
-            if (intval($value->user_id) === auth()->user()->id) {
-                return $value;
+            $attachmentId = intval($value);
+            $attachment   = auth()->user()->attachments()->find($attachmentId);
+            if (!is_null($attachment)) {
+                return $attachment;
             }
         }
         throw new NotFoundHttpException;
     }
 
     /**
-     * Get all of the owning imageable models.
+     * Get all of the owning attachable models.
+     * @codeCoverageIgnore
      *
      * @return MorphTo
      */
@@ -78,7 +81,7 @@ class Attachment extends Model
 
     /**
      * Returns the expected filename for this attachment.
-     *
+     *@codeCoverageIgnore
      * @return string
      */
     public function fileName(): string
@@ -88,7 +91,7 @@ class Attachment extends Model
 
     /**
      * @param $value
-     *
+     *@codeCoverageIgnore
      * @return null|string
      */
     public function getDescriptionAttribute($value)
@@ -102,7 +105,7 @@ class Attachment extends Model
 
     /**
      * @param $value
-     *
+     *@codeCoverageIgnore
      * @return null|string
      */
     public function getFilenameAttribute($value)
@@ -116,7 +119,7 @@ class Attachment extends Model
 
     /**
      * @param $value
-     *
+     *@codeCoverageIgnore
      * @return null|string
      */
     public function getMimeAttribute($value)
@@ -130,7 +133,7 @@ class Attachment extends Model
 
     /**
      * @param $value
-     *
+     *@codeCoverageIgnore
      * @return null|string
      */
     public function getNotesAttribute($value)
@@ -144,7 +147,7 @@ class Attachment extends Model
 
     /**
      * @param $value
-     *
+     *@codeCoverageIgnore
      * @return null|string
      */
     public function getTitleAttribute($value)
@@ -157,6 +160,7 @@ class Attachment extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param string $value
      */
     public function setDescriptionAttribute(string $value)
@@ -165,6 +169,7 @@ class Attachment extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param string $value
      */
     public function setFilenameAttribute(string $value)
@@ -173,6 +178,7 @@ class Attachment extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param string $value
      */
     public function setMimeAttribute(string $value)
@@ -181,6 +187,7 @@ class Attachment extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param string $value
      */
     public function setNotesAttribute(string $value)
@@ -189,6 +196,7 @@ class Attachment extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param string $value
      */
     public function setTitleAttribute(string $value)
@@ -197,6 +205,7 @@ class Attachment extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return BelongsTo
      */
     public function user(): BelongsTo

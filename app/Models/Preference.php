@@ -79,6 +79,7 @@ class Preference extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setDataAttribute($value)
@@ -87,6 +88,7 @@ class Preference extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

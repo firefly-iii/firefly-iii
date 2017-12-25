@@ -50,6 +50,7 @@ class PiggyBankRepetition extends Model
     protected $fillable = ['piggy_bank_id', 'startdate', 'targetdate', 'currentamount'];
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function piggyBank()
@@ -58,6 +59,7 @@ class PiggyBankRepetition extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param EloquentBuilder $query
      * @param Carbon          $start
      * @param Carbon          $target
@@ -70,6 +72,7 @@ class PiggyBankRepetition extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
@@ -92,10 +95,11 @@ class PiggyBankRepetition extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setCurrentamountAttribute($value)
     {
-        $this->attributes['currentamount'] = strval(round($value, 12));
+        $this->attributes['currentamount'] = strval($value);
     }
 }

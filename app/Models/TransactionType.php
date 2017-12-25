@@ -85,38 +85,43 @@ class TransactionType extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return bool
      */
-    public function isDeposit()
+    public function isDeposit(): bool
     {
         return self::DEPOSIT === $this->type;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return bool
      */
-    public function isOpeningBalance()
+    public function isOpeningBalance(): bool
     {
         return self::OPENING_BALANCE === $this->type;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return bool
      */
-    public function isTransfer()
+    public function isTransfer(): bool
     {
         return self::TRANSFER === $this->type;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return bool
      */
-    public function isWithdrawal()
+    public function isWithdrawal(): bool
     {
         return self::WITHDRAWAL === $this->type;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function transactionJournals()

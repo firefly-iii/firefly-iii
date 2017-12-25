@@ -44,6 +44,7 @@ class RuleTrigger extends Model
         ];
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function rule()

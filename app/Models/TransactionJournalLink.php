@@ -38,29 +38,31 @@ class TransactionJournalLink extends Model
     protected $table = 'journal_links';
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return mixed
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder($value)
+    public static function routeBinder(string $value): TransactionJournalLink
     {
         if (auth()->check()) {
-            $model = self::where('journal_links.id', $value)
-                         ->leftJoin('transaction_journals as t_a', 't_a.id', '=', 'source_id')
-                         ->leftJoin('transaction_journals as t_b', 't_b.id', '=', 'destination_id')
-                         ->where('t_a.user_id', auth()->user()->id)
-                         ->where('t_b.user_id', auth()->user()->id)
-                         ->first(['journal_links.*']);
-            if (null !== $model) {
-                return $model;
+            $linkId = intval($value);
+            $link   = self::where('journal_links.id', $linkId)
+                          ->leftJoin('transaction_journals as t_a', 't_a.id', '=', 'source_id')
+                          ->leftJoin('transaction_journals as t_b', 't_b.id', '=', 'destination_id')
+                          ->where('t_a.user_id', auth()->user()->id)
+                          ->where('t_b.user_id', auth()->user()->id)
+                          ->first(['journal_links.*']);
+            if (!is_null($link)) {
+                return $link;
             }
         }
         throw new NotFoundHttpException;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function destination()
@@ -69,6 +71,7 @@ class TransactionJournalLink extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      *
      * @return null|string
@@ -83,6 +86,7 @@ class TransactionJournalLink extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function linkType(): BelongsTo
@@ -91,6 +95,7 @@ class TransactionJournalLink extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setCommentAttribute($value): void
@@ -104,6 +109,7 @@ class TransactionJournalLink extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function source()

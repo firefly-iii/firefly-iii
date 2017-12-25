@@ -87,15 +87,17 @@ class Tag extends Model
     }
 
     /**
-     * @param Tag $value
+     * @param string $value
      *
      * @return Tag
      */
-    public static function routeBinder(Tag $value)
+    public static function routeBinder(string $value): Tag
     {
         if (auth()->check()) {
-            if (intval($value->user_id) === auth()->user()->id) {
-                return $value;
+            $tagId = intval($value);
+            $tag   = auth()->user()->tags()->find($tagId);
+            if (!is_null($tag)) {
+                return $tag;
             }
         }
         throw new NotFoundHttpException;
@@ -120,6 +122,7 @@ class Tag extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      *
      * @return string
@@ -134,6 +137,7 @@ class Tag extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      *
      * @return string
@@ -166,6 +170,7 @@ class Tag extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setDescriptionAttribute($value)
@@ -174,6 +179,7 @@ class Tag extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setTagAttribute($value)
@@ -182,6 +188,7 @@ class Tag extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function transactionJournals()
@@ -190,6 +197,7 @@ class Tag extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

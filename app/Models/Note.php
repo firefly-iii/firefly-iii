@@ -45,6 +45,7 @@ class Note extends Model
     protected $fillable = ['title', 'text'];
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public function getMarkdownAttribute(): string
@@ -55,6 +56,7 @@ class Note extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * Get all of the owning noteable models. Currently piggy bank and
      * transaction journal.
      */

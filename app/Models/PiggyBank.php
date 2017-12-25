@@ -61,21 +61,26 @@ class PiggyBank extends Model
     protected $hidden = ['targetamount_encrypted', 'encrypted'];
 
     /**
-     * @param PiggyBank $value
+     * @param string $value
      *
      * @return PiggyBank
      */
-    public static function routeBinder(PiggyBank $value)
+    public static function routeBinder(string $value): PiggyBank
     {
         if (auth()->check()) {
-            if (intval($value->account->user_id) === auth()->user()->id) {
-                return $value;
+            $piggyBankId = intval($value);
+            $piggyBank   = PiggyBank::where('piggy_banks.id', $piggyBankId)
+                                    ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
+                                    ->where('accounts.user_id', auth()->user()->id)->first(['piggy_banks.*']);
+            if (!is_null($piggyBank)) {
+                return $piggyBank;
             }
         }
         throw new NotFoundHttpException;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function account(): BelongsTo
@@ -105,6 +110,7 @@ class PiggyBank extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      *
      * @return string
@@ -162,6 +168,7 @@ class PiggyBank extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * Get all of the piggy bank's notes.
      */
     public function notes()
@@ -170,6 +177,7 @@ class PiggyBank extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function piggyBankEvents()
@@ -178,6 +186,7 @@ class PiggyBank extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function piggyBankRepetitions()
@@ -186,6 +195,7 @@ class PiggyBank extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setNameAttribute($value)
@@ -196,10 +206,11 @@ class PiggyBank extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setTargetamountAttribute($value)
     {
-        $this->attributes['targetamount'] = strval(round($value, 12));
+        $this->attributes['targetamount'] = strval($value);
     }
 }

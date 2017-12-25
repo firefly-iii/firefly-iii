@@ -49,6 +49,7 @@ class AvailableBudget extends Model
     protected $fillable = ['user_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date'];
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function transactionCurrency()
@@ -57,6 +58,7 @@ class AvailableBudget extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return BelongsTo
      */
     public function user(): BelongsTo

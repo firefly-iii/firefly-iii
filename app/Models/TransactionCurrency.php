@@ -51,19 +51,24 @@ class TransactionCurrency extends Model
     protected $fillable = ['name', 'code', 'symbol', 'decimal_places'];
 
     /**
-     * @param TransactionCurrency $currency
+     * @param string $value
      *
      * @return TransactionCurrency
      */
-    public static function routeBinder(TransactionCurrency $currency)
+    public static function routeBinder(string $value): TransactionCurrency
     {
         if (auth()->check()) {
-            return $currency;
+            $currencyId = intval($value);
+            $currency   = TransactionCurrency::find($currencyId);
+            if (!is_null($currency)) {
+                return $currency;
+            }
         }
         throw new NotFoundHttpException;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function transactionJournals()

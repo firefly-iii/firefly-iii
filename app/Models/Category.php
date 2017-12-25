@@ -87,17 +87,20 @@ class Category extends Model
      *
      * @return Category
      */
-    public static function routeBinder(Category $value)
+    public static function routeBinder(string $value): Category
     {
         if (auth()->check()) {
-            if (intval($value->user_id) === auth()->user()->id) {
-                return $value;
+            $categoryId = intval($value);
+            $category   = auth()->user()->categories()->find($categoryId);
+            if (!is_null($category)) {
+                return $category;
             }
         }
         throw new NotFoundHttpException;
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      *
      * @return string
@@ -112,6 +115,7 @@ class Category extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setNameAttribute($value)
@@ -122,6 +126,7 @@ class Category extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function transactionJournals()
@@ -130,6 +135,7 @@ class Category extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function transactions()
@@ -138,6 +144,7 @@ class Category extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return BelongsTo
      */
     public function user(): BelongsTo

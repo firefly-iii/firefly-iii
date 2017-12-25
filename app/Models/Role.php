@@ -47,6 +47,7 @@ class Role extends Model
     protected $fillable = ['name', 'display_name', 'description'];
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function users(): BelongsToMany

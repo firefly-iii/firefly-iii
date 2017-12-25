@@ -49,6 +49,7 @@ class AccountMeta extends Model
 
     /**
      * @return BelongsTo
+     * @codeCoverageIgnore
      */
     public function account(): BelongsTo
     {
@@ -58,6 +59,7 @@ class AccountMeta extends Model
     /**
      * @param $value
      *
+     * @codeCoverageIgnore
      * @return mixed
      */
     public function getDataAttribute($value)
@@ -67,6 +69,7 @@ class AccountMeta extends Model
 
     /**
      * @param $value
+     * @codeCoverageIgnore
      */
     public function setDataAttribute($value)
     {

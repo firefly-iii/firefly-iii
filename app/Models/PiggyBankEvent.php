@@ -52,6 +52,7 @@ class PiggyBankEvent extends Model
     protected $hidden = ['amount_encrypted'];
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function piggyBank()
@@ -60,14 +61,16 @@ class PiggyBankEvent extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setAmountAttribute($value)
     {
-        $this->attributes['amount'] = strval(round($value, 2));
+        $this->attributes['amount'] = strval($value);
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function transactionJournal()

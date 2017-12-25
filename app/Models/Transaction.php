@@ -107,6 +107,7 @@ class Transaction extends Model
         ];
 
     /**
+     * @codeCoverageIgnore
      * @param Builder $query
      * @param string  $table
      *
@@ -130,6 +131,7 @@ class Transaction extends Model
     use SoftDeletes, ValidatingTrait;
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function account()
@@ -138,6 +140,7 @@ class Transaction extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function budgets()
@@ -146,6 +149,7 @@ class Transaction extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function categories()
@@ -154,6 +158,7 @@ class Transaction extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function foreignCurrency()
@@ -162,6 +167,7 @@ class Transaction extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      *
      * @return float|int
@@ -172,6 +178,7 @@ class Transaction extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param Builder $query
      * @param Carbon  $date
      */
@@ -184,6 +191,7 @@ class Transaction extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param Builder $query
      * @param Carbon  $date
      */
@@ -196,6 +204,7 @@ class Transaction extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param Builder $query
      * @param array   $types
      */
@@ -212,14 +221,16 @@ class Transaction extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setAmountAttribute($value)
     {
-        $this->attributes['amount'] = strval(round($value, 12));
+        $this->attributes['amount'] = strval($value);
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function transactionCurrency()
@@ -228,6 +239,7 @@ class Transaction extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function transactionJournal()

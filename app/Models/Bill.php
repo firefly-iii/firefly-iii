@@ -69,21 +69,24 @@ class Bill extends Model
     protected $rules = ['name' => 'required|between:1,200'];
 
     /**
-     * @param Bill $value
+     * @param string $value
      *
      * @return Bill
      */
-    public static function routeBinder(Bill $value)
+    public static function routeBinder(string $value): Bill
     {
         if (auth()->check()) {
-            if (intval($value->user_id) === auth()->user()->id) {
-                return $value;
+            $billId = intval($value);
+            $bill   = auth()->user()->bills()->find($billId);
+            if (!is_null($bill)) {
+                return $bill;
             }
         }
         throw new NotFoundHttpException;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function attachments()
@@ -92,6 +95,7 @@ class Bill extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      *
      * @return string
@@ -106,6 +110,7 @@ class Bill extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      *
      * @return string
@@ -120,6 +125,7 @@ class Bill extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * Get all of the notes.
      */
     public function notes()
@@ -128,23 +134,26 @@ class Bill extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setAmountMaxAttribute($value)
     {
-        $this->attributes['amount_max'] = strval(round($value, 12));
+        $this->attributes['amount_max'] = strval($value);
     }
 
     /**
      * @param $value
+     * @codeCoverageIgnore
      */
     public function setAmountMinAttribute($value)
     {
-        $this->attributes['amount_min'] = strval(round($value, 12));
+        $this->attributes['amount_min'] = strval($value);
     }
 
     /**
      * @param $value
+     * @codeCoverageIgnore
      */
     public function setMatchAttribute($value)
     {
@@ -155,6 +164,7 @@ class Bill extends Model
 
     /**
      * @param $value
+     * @codeCoverageIgnore
      */
     public function setNameAttribute($value)
     {
@@ -164,6 +174,7 @@ class Bill extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return HasMany
      */
     public function transactionJournals(): HasMany
@@ -172,6 +183,7 @@ class Bill extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return BelongsTo
      */
     public function user(): BelongsTo

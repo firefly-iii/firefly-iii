@@ -49,6 +49,7 @@ class TransactionJournalMeta extends Model
     protected $table = 'journal_meta';
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      *
      * @return mixed
@@ -59,6 +60,7 @@ class TransactionJournalMeta extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setDataAttribute($value)
@@ -69,6 +71,7 @@ class TransactionJournalMeta extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function transactionJournal(): BelongsTo

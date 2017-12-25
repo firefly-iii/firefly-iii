@@ -35,6 +35,7 @@ class CurrencyExchangeRate extends Model
     protected $dates = ['date'];
 
     /**
+     * @codeCoverageIgnore
      * @return BelongsTo
      */
     public function fromCurrency(): BelongsTo
@@ -43,6 +44,7 @@ class CurrencyExchangeRate extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return BelongsTo
      */
     public function toCurrency(): BelongsTo
@@ -51,6 +53,7 @@ class CurrencyExchangeRate extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return BelongsTo
      */
     public function user(): BelongsTo

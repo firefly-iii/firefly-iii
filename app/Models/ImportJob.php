@@ -65,17 +65,18 @@ class ImportJob extends Model
      * @throws NotFoundHttpException
      * @throws FireflyException
      */
-    public static function routeBinder($value)
+    public static function routeBinder($value): ImportJob
     {
         if (auth()->check()) {
-            /** @var ImportJob $model */
-            $model = self::where('key', $value)->where('user_id', auth()->user()->id)->first();
-            if (null !== $model) {
+            $key       = trim($value);
+            $importJob = auth()->user()->importJobs()->where('key', $key)->first();
+            if (null !== $importJob) {
                 // must have valid status:
-                if (!in_array($model->status, $model->validStatus)) {
-                    throw new FireflyException(sprintf('Job with key "%s" has invalid status "%s"', $model->key, $model->status));
+                if (!in_array($importJob->status, $importJob->validStatus)) {
+                    throw new FireflyException(sprintf('ImportJob with key "%s" has invalid status "%s"', $importJob->key, $importJob->status));
                 }
-                return $model;
+
+                return $importJob;
             }
         }
         throw new NotFoundHttpException;
@@ -167,6 +168,7 @@ class ImportJob extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setConfigurationAttribute($value)
@@ -175,6 +177,7 @@ class ImportJob extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setExtendedStatusAttribute($value)
@@ -209,6 +212,7 @@ class ImportJob extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

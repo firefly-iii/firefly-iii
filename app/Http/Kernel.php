@@ -42,7 +42,6 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode;
 use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
-use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
@@ -85,7 +84,7 @@ class Kernel extends HttpKernel
                 StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
-                SubstituteBindings::class,
+                //SubstituteBindings::class,
             ],
 
             // MUST NOT be logged in. Does not care about 2FA or confirmation.
@@ -96,7 +95,8 @@ class Kernel extends HttpKernel
                 StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
-                SubstituteBindings::class,
+                //SubstituteBindings::class,
+                Binder::class,
                 RedirectIfAuthenticated::class,
             ],
             // MUST be logged in.
@@ -109,7 +109,8 @@ class Kernel extends HttpKernel
                 StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
-                SubstituteBindings::class,
+                //SubstituteBindings::class,
+                Binder::class,
                 Authenticate::class,
                 RedirectIfTwoFactorAuthenticated::class,
             ],
@@ -124,7 +125,8 @@ class Kernel extends HttpKernel
                 StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
-                SubstituteBindings::class,
+                //SubstituteBindings::class,
+                Binder::class,
                 Authenticate::class,
             ],
 
@@ -139,7 +141,7 @@ class Kernel extends HttpKernel
                 StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
-                SubstituteBindings::class,
+                //SubstituteBindings::class,
                 Authenticate::class,
                 AuthenticateTwoFactor::class,
                 Range::class,
@@ -157,7 +159,7 @@ class Kernel extends HttpKernel
                 StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
-                SubstituteBindings::class,
+                //SubstituteBindings::class,
                 Authenticate::class,
                 AuthenticateTwoFactor::class,
                 IsAdmin::class,
@@ -182,7 +184,7 @@ class Kernel extends HttpKernel
         = [
             'auth'       => Authenticate::class,
             'auth.basic' => AuthenticateWithBasicAuth::class,
-            'bindings'   => SubstituteBindings::class,
+            'bindings'   => Binder::class,
             'can'        => Authorize::class,
             'guest'      => RedirectIfAuthenticated::class,
             'throttle'   => ThrottleRequests::class,
