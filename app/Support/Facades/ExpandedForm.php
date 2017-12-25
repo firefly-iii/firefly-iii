@@ -25,7 +25,8 @@ namespace FireflyIII\Support\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * Class Amount.
+ * @codeCoverageIgnore
+ * Class ExpandedForm.
  */
 class ExpandedForm extends Facade
 {

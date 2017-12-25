@@ -25,6 +25,7 @@ namespace Tests\Unit\Helpers;
 
 
 use FireflyIII\Http\Middleware\Binder;
+use Illuminate\Support\Collection;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -54,6 +55,80 @@ class BinderTest extends TestCase
         $response = $this->get('/_test/binder/1');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\AccountList::routeBinder
+     */
+    public function testAccountList()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{accountList}', function (Collection $accounts) {
+            return 'count: ' . $accounts->count();
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/1,2');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $response->assertSee('count: 2');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\AccountList::routeBinder
+     */
+    public function testAccountListEmpty()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{accountList}', function (Collection $accounts) {
+            return 'count: ' . $accounts->count();
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\AccountList::routeBinder
+     */
+    public function testAccountListInvalid()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{accountList}', function (Collection $accounts) {
+            return 'count: ' . $accounts->count();
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/0,1,2');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $response->assertSee('count: 2');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\AccountList::routeBinder
+     */
+    public function testAccountListNotLoggedIn()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{accountList}', function (Collection $accounts) {
+            return 'count: ' . $accounts->count();
+        }
+        );
+        $response = $this->get('/_test/binder/1,2');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
 
     /**
      * @covers \FireflyIII\Http\Middleware\Binder::handle
@@ -91,7 +166,6 @@ class BinderTest extends TestCase
         $response = $this->get('/_test/binder/1');
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
-
 
     /**
      * @covers \FireflyIII\Http\Middleware\Binder::handle
@@ -1060,6 +1134,61 @@ class BinderTest extends TestCase
         );
 
         $response = $this->get('/_test/binder/withdrawal');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\UnfinishedJournal::routeBinder
+     */
+    public function testUnfinishedJournal()
+    {
+        $journal = $this->user()->transactionJournals()->where('completed', 0)->first();
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{unfinishedJournal}', function () {
+            return 'OK';
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/' . $journal->id);
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\UnfinishedJournal::routeBinder
+     */
+    public function testUnfinishedJournalFinished()
+    {
+        $journal = $this->user()->transactionJournals()->where('completed', 1)->first();
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{unfinishedJournal}', function () {
+            return 'OK';
+        }
+        );
+        $response = $this->get('/_test/binder/' . $journal->id);
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\UnfinishedJournal::routeBinder
+     */
+    public function testUnfinishedJournalNotLoggedIn()
+    {
+        $journal = $this->user()->transactionJournals()->where('completed', 0)->first();
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{unfinishedJournal}', function () {
+            return 'OK';
+        }
+        );
+        $response = $this->get('/_test/binder/' . $journal->id);
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
 

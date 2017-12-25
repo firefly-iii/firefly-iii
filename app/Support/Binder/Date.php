@@ -25,6 +25,7 @@ namespace FireflyIII\Support\Binder;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Helpers\FiscalHelper;
+use Illuminate\Routing\Route;
 use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -34,12 +35,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Date implements BinderInterface
 {
     /**
-     * @param $value
-     * @param $route
+     * @param string $value
+     * @param Route  $route
      *
-     * @return mixed
+     * @return Carbon
      */
-    public static function routeBinder($value, $route): Carbon
+    public static function routeBinder(string $value, Route $route): Carbon
     {
         $fiscalHelper = new FiscalHelper;
 

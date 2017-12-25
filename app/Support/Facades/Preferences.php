@@ -25,6 +25,7 @@ namespace FireflyIII\Support\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
+ * @codeCoverageIgnore
  * Class Preferences.
  */
 class Preferences extends Facade

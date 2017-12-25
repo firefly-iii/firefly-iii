@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Binder;
 
 use FireflyIII\Models\Budget;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -32,12 +33,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class BudgetList implements BinderInterface
 {
     /**
-     * @param $value
-     * @param $route
+     * @param string $value
+     * @param Route  $route
      *
-     * @return mixed
+     * @return Collection
      */
-    public static function routeBinder($value, $route): Collection
+    public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
             $ids = explode(',', $value);

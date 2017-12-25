@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Binder;
 
 use FireflyIII\Models\TransactionCurrency;
+use Illuminate\Routing\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -31,15 +32,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class CurrencyCode implements BinderInterface
 {
     /**
-     * @param $value
-     * @param $route
+     * @param string $value
+     * @param Route  $route
      *
-     * @return mixed
+     * @return TransactionCurrency
      */
-    public static function routeBinder($value, $route)
+    public static function routeBinder(string $value, Route $route): TransactionCurrency
     {
         if (auth()->check()) {
-            $currency = TransactionCurrency::where('code', $value)->first();
+            $currency = TransactionCurrency::where('code', trim($value))->first();
             if (null !== $currency) {
                 return $currency;
             }

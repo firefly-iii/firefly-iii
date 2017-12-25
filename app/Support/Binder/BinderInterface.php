@@ -22,16 +22,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 
+use Illuminate\Routing\Route;
+
 /**
  * Interface BinderInterface.
  */
 interface BinderInterface
 {
     /**
-     * @param $value
-     * @param $route
+     * @param string $value
+     * @param Route  $route
      *
      * @return mixed
      */
-    public static function routeBinder($value, $route);
+    public static function routeBinder(string $value, Route $route);
 }
