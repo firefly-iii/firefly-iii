@@ -26,7 +26,7 @@ use Illuminate\Log\LogServiceProvider as LaravelLogServiceProvider;
 use Illuminate\Log\Writer;
 
 /**
- * @CodeCoverageIgnore
+ * @codeCoverageIgnore
  * Class LogServiceProvider.
  */
 class LogServiceProvider extends LaravelLogServiceProvider

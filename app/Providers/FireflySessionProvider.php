@@ -27,7 +27,7 @@ use Illuminate\Session\SessionManager;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * @CodeCoverageIgnore
+ * @codeCoverageIgnore
  * Class FireflySessionProvider
  */
 class FireflySessionProvider extends ServiceProvider

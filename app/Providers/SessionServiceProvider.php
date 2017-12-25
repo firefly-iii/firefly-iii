@@ -26,7 +26,7 @@ use FireflyIII\Http\Middleware\StartFireflySession;
 use Illuminate\Session\SessionServiceProvider as BaseSessionServiceProvider;
 
 /**
- * @CodeCoverageIgnore
+ * @codeCoverageIgnore
  * Class SessionServiceProvider.
  */
 class SessionServiceProvider extends BaseSessionServiceProvider

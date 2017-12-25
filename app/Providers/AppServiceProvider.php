@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * @CodeCoverageIgnore
+ * @codeCoverageIgnore
  * Class AppServiceProvider.
  */
 class AppServiceProvider extends ServiceProvider
