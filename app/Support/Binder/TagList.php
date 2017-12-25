@@ -42,18 +42,27 @@ class TagList implements BinderInterface
     public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
-            $tags = explode(',', $value);
+            $list     = [];
+            $incoming = explode(',', $value);
+            foreach ($incoming as $entry) {
+                $list[] = trim($entry);
+            }
+            $list = array_unique($list);
+            if (count($list) === 0) {
+                throw new NotFoundHttpException; // @codeCoverageIgnore
+            }
             /** @var TagRepositoryInterface $repository */
             $repository = app(TagRepositoryInterface::class);
             $allTags    = $repository->get();
-            $set        = $allTags->filter(
-                function (Tag $tag) use ($tags) {
-                    return in_array($tag->tag, $tags);
+
+            $collection = $allTags->filter(
+                function (Tag $tag) use ($list) {
+                    return in_array($tag->tag, $list);
                 }
             );
 
-            if ($set->count() > 0) {
-                return $set;
+            if ($collection->count() > 0) {
+                return $collection;
             }
         }
         throw new NotFoundHttpException;

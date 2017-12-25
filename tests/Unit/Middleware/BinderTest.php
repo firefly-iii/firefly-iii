@@ -21,10 +21,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Helpers;
+namespace Tests\Unit\Middleware;
 
 
+use Carbon\Carbon;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Http\Middleware\Binder;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -128,7 +131,6 @@ class BinderTest extends TestCase
         $response = $this->get('/_test/binder/1,2');
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
-
 
     /**
      * @covers \FireflyIII\Http\Middleware\Binder::handle
@@ -358,6 +360,43 @@ class BinderTest extends TestCase
      * @covers \FireflyIII\Http\Middleware\Binder::handle
      * @covers \FireflyIII\Http\Middleware\Binder::__construct
      * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\BudgetList::routeBinder
+     */
+    public function testBudgetList()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{budgetList}', function (Collection $budgets) {
+            return 'count: ' . $budgets->count();
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/0,1,2');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $response->assertSee('count: 3');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\BudgetList::routeBinder
+     */
+    public function testBudgetListInvalid()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{budgetList}', function (Collection $budgets) {
+            return 'count: ' . $budgets->count();
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/-1');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
      * @covers \FireflyIII\Models\Budget::routeBinder
      */
     public function testBudgetNotFound()
@@ -408,6 +447,43 @@ class BinderTest extends TestCase
         $this->be($this->user());
         $response = $this->get('/_test/binder/1');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\CategoryList::routeBinder
+     */
+    public function testCategoryList()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{categoryList}', function (Collection $categories) {
+            return 'count: ' . $categories->count();
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/0,1,2');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $response->assertSee('count: 3');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\CategoryList::routeBinder
+     */
+    public function testCategoryListInvalid()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{categoryList}', function (Collection $categories) {
+            return 'count: ' . $categories->count();
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/-1');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
 
     /**
@@ -500,6 +576,183 @@ class BinderTest extends TestCase
         );
 
         $response = $this->get('/_test/binder/EUR');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\Date::routeBinder
+     */
+    public function testDate()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{date}', function (Carbon $date) {
+            return 'date: ' . $date->format('Y-m-d');
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/20170917');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $response->assertSee('date: 2017-09-17');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\Date::routeBinder
+     */
+    public function testDateCurrentMonthEnd()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{date}', function (Carbon $date) {
+            return 'date: ' . $date->format('Y-m-d');
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/currentMonthEnd');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $date = new Carbon;
+        $date->endOfMonth();
+        $response->assertSee('date: ' . $date->format('Y-m-d'));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\Date::routeBinder
+     */
+    public function testDateCurrentMonthStart()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{date}', function (Carbon $date) {
+            return 'date: ' . $date->format('Y-m-d');
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/currentMonthStart');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $date = new Carbon;
+        $date->startOfMonth();
+        $response->assertSee('date: ' . $date->format('Y-m-d'));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\Date::routeBinder
+     */
+    public function testDateCurrentYearEnd()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{date}', function (Carbon $date) {
+            return 'date: ' . $date->format('Y-m-d');
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/currentYearEnd');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $date = new Carbon;
+        $date->endOfYear();
+        $response->assertSee('date: ' . $date->format('Y-m-d'));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\Date::routeBinder
+     */
+    public function testDateCurrentYearStart()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{date}', function (Carbon $date) {
+            return 'date: ' . $date->format('Y-m-d');
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/currentYearStart');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $date = new Carbon;
+        $date->startOfYear();
+        $response->assertSee('date: ' . $date->format('Y-m-d'));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\Date::routeBinder
+     */
+    public function testDateFiscalYearEnd()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{date}', function (Carbon $date) {
+            return 'date: ' . $date->format('Y-m-d');
+        }
+        );
+
+        $date = new Carbon;
+        $date->endOfYear();
+
+        // mock fiscal helper:
+        $helper = $this->mock(FiscalHelperInterface::class);
+        $helper->shouldReceive('endOfFiscalYear')->andReturn($date)->once();
+
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/currentFiscalYearEnd');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
+        $response->assertSee('date: ' . $date->format('Y-m-d'));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\Date::routeBinder
+     */
+    public function testDateFiscalYearStart()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{date}', function (Carbon $date) {
+            return 'date: ' . $date->format('Y-m-d');
+        }
+        );
+
+        $date = new Carbon;
+        $date->startOfYear();
+
+        // mock fiscal helper:
+        $helper = $this->mock(FiscalHelperInterface::class);
+        $helper->shouldReceive('startOfFiscalYear')->andReturn($date)->once();
+
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/currentFiscalYearStart');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
+        $response->assertSee('date: ' . $date->format('Y-m-d'));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\Date::routeBinder
+     */
+    public function testDateInvalid()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{date}', function (Carbon $date) {
+            return 'date: ' . $date->format('Y-m-d');
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/fakedate');
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
 
@@ -630,6 +883,43 @@ class BinderTest extends TestCase
         );
 
         $response = $this->get('/_test/binder/testImport');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\JournalList::routeBinder
+     */
+    public function testJournalList()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{journalList}', function (Collection $journals) {
+            return 'count: ' . $journals->count();
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/1,2');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $response->assertSee('count: 2');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\JournalList::routeBinder
+     */
+    public function testJournalListEmpty()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{journalList}', function (Collection $journals) {
+            return 'count: ' . $journals->count();
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/-1');
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
 
@@ -930,6 +1220,49 @@ class BinderTest extends TestCase
         $this->be($this->user());
         $response = $this->get('/_test/binder/1');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\TagList::routeBinder
+     */
+    public function testTagList()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{tagList}', function (Collection $tags) {
+            return 'count: ' . $tags->count();
+        }
+        );
+        $tags  = $this->user()->tags()->whereIn('id', [1, 2])->get(['tags.*']);
+        $names = join(',', $tags->pluck('tag')->toArray());
+
+        $repository = $this->mock(TagRepositoryInterface::class);
+        $repository->shouldReceive('get')->once()->andReturn($tags);
+
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/' . $names);
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $response->assertSee('count: 2');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder::handle
+     * @covers \FireflyIII\Http\Middleware\Binder::__construct
+     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Support\Binder\TagList::routeBinder
+     */
+    public function testTagListEmpty()
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{tagList}', function (Collection $tags) {
+            return 'count: ' . $tags->count();
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/noblaexista');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
 
     /**

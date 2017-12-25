@@ -41,19 +41,28 @@ class CategoryList implements BinderInterface
     public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
-            $ids = explode(',', $value);
-            /** @var \Illuminate\Support\Collection $object */
-            $object = Category::whereIn('id', $ids)
-                              ->where('user_id', auth()->user()->id)
-                              ->get();
-
-            // add empty category if applicable.
-            if (in_array('0', $ids)) {
-                $object->push(new Category);
+            $list     = [];
+            $incoming = explode(',', $value);
+            foreach ($incoming as $entry) {
+                $list[] = intval($entry);
+            }
+            $list = array_unique($list);
+            if (count($list) === 0) {
+                throw new NotFoundHttpException; // @codeCoverageIgnore
             }
 
-            if ($object->count() > 0) {
-                return $object;
+            /** @var \Illuminate\Support\Collection $collection */
+            $collection = auth()->user()->categories()
+                                ->whereIn('id', $list)
+                                ->get();
+
+            // add empty category if applicable.
+            if (in_array(0, $list)) {
+                $collection->push(new Category);
+            }
+
+            if ($collection->count() > 0) {
+                return $collection;
             }
         }
         throw new NotFoundHttpException;
