@@ -38,6 +38,20 @@ interface UserRepositoryInterface
     public function all(): Collection;
 
     /**
+     * Returns the first user in the DB. Generally only works when there is just one.
+     *
+     * @return null|User
+     */
+    public function first(): ?User;
+
+    /**
+     * @param array $data
+     *
+     * @return User
+     */
+    public function store(array $data): User;
+
+    /**
      * Gives a user a role.
      *
      * @param User   $user

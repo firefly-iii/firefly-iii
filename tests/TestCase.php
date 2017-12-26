@@ -88,7 +88,17 @@ abstract class TestCase extends BaseTestCase
     /**
      * @return User
      */
-    public function emptyUser()
+    public function demoUser(): User
+    {
+        $user = User::find(4);
+
+        return $user;
+    }
+
+    /**
+     * @return User
+     */
+    public function emptyUser(): User
     {
         $user = User::find(2);
 
@@ -98,7 +108,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * @return User
      */
-    public function user()
+    public function user(): User
     {
         $user = User::find(1);
 

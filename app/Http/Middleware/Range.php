@@ -89,6 +89,9 @@ class Range
         View::share('listLength', $pref);
     }
 
+    /**
+     *
+     */
     private function configureView()
     {
         $pref = Preferences::get('language', config('firefly.default_language', 'en_US'));
@@ -103,7 +106,7 @@ class Range
 
         // send error to view if could not set money format
         if (false === $moneyResult) {
-            View::share('invalidMonetaryLocale', true);
+            View::share('invalidMonetaryLocale', true); // @codeCoverageIgnore
         }
 
         // save some formats:
