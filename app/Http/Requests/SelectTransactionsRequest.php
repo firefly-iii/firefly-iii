@@ -25,7 +25,7 @@ namespace FireflyIII\Http\Requests;
 use Carbon\Carbon;
 
 /**
- * @CodeCoverageIgnore
+ * @codeCoverageIgnore
  * Class ExportFormRequest.
  */
 class SelectTransactionsRequest extends Request

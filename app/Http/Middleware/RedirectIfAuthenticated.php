@@ -26,7 +26,7 @@ use Closure;
 use Illuminate\Support\Facades\Auth;
 
 /**
- * @CodeCoverageIgnore
+ * @codeCoverageIgnore
  * Class RedirectIfAuthenticated
  */
 class RedirectIfAuthenticated

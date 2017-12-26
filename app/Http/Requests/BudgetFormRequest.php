@@ -25,7 +25,7 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 
 /**
- * @CodeCoverageIgnore
+ * @codeCoverageIgnore
  * Class BudgetFormRequest.
  */
 class BudgetFormRequest extends Request
