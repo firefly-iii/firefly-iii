@@ -44,6 +44,7 @@ $(function () {
 
 function startExport() {
     "use strict";
+    console.log('startExport');
     hideForm();
     showLoading();
     hideError();
@@ -95,7 +96,6 @@ function showError(text) {
 function callExport() {
     "use strict";
     var data = $('#export').serialize();
-    data['_token'] = token;
 
     // call status, keep calling it until response is "finished"?
     intervalId = window.setInterval(checkStatus, 500);

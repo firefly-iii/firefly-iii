@@ -305,7 +305,7 @@ class AccountRepository implements AccountRepositoryInterface
             'user_id'         => $this->user->id,
             'account_type_id' => $accountType->id,
             'name'            => $data['name'],
-            'virtual_balance' => $data['virtualBalance'],
+            'virtual_balance' => strlen(strval($data['virtualBalance'])) === 0 ? '0' : $data['virtualBalance'],
             'active'          => true === $data['active'] ? true : false,
             'iban'            => $data['iban'],
         ];

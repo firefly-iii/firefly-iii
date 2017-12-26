@@ -46,7 +46,7 @@ final class Entry
 {
     // @formatter:off
     /**
-     * @var
+     * @var int
      */
     public $journal_id;
     /**
@@ -55,20 +55,20 @@ final class Entry
     public $transaction_id = 0;
 
     /**
-     * @var
+     * @var string
      */
     public $date;
     /**
-     * @var
+     * @var string
      */
     public $description;
 
     /**
-     * @var
+     * @var string
      */
     public $currency_code;
     /**
-     * @var
+     * @var string
      */
     public $amount;
     /**
@@ -81,94 +81,94 @@ final class Entry
     public $foreign_amount = '0';
 
     /**
-     * @var
+     * @var string
      */
     public $transaction_type;
 
     /**
-     * @var
+     * @var string
      */
     public $asset_account_id;
     /**
-     * @var
+     * @var string
      */
     public $asset_account_name;
     /**
-     * @var
+     * @var string
      */
     public $asset_account_iban;
     /**
-     * @var
+     * @var string
      */
     public $asset_account_bic;
     /**
-     * @var
+     * @var string
      */
     public $asset_account_number;
     /**
-     * @var
+     * @var string
      */
     public $asset_currency_code;
 
     /**
-     * @var
+     * @var string
      */
     public $opposing_account_id;
     /**
-     * @var
+     * @var string
      */
     public $opposing_account_name;
     /**
-     * @var
+     * @var string
      */
     public $opposing_account_iban;
     /**
-     * @var
+     * @var string
      */
     public $opposing_account_bic;
     /**
-     * @var
+     * @var string
      */
     public $opposing_account_number;
     /**
-     * @var
+     * @var string
      */
     public $opposing_currency_code;
 
     /**
-     * @var
+     * @var string
      */
     public $budget_id;
     /**
-     * @var
+     * @var string
      */
     public $budget_name;
 
     /**
-     * @var
+     * @var string
      */
     public $category_id;
     /**
-     * @var
+     * @var string
      */
     public $category_name;
 
     /**
-     * @var
+     * @var string
      */
     public $bill_id;
     /**
-     * @var
+     * @var string
      */
     public $bill_name;
 
     /**
-     * @var
+     * @var string
      */
     public $notes;
 
     /**
-     * @var
+     * @var string
      */
     public $tags;
 
