@@ -24,6 +24,7 @@ namespace FireflyIII\Import\Routine;
 
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Services\Spectre\Object\Customer;
+use FireflyIII\Services\Spectre\Request\ListLoginsRequest;
 use FireflyIII\Services\Spectre\Request\NewCustomerRequest;
 use Illuminate\Support\Collection;
 use Log;
@@ -91,7 +92,32 @@ class SpectreRoutine implements RoutineInterface
         // create customer if user does not have one:
         $customer = $this->getCustomer();
 
+        // list all logins present at Spectre
+        $logins = $this->listLogins($customer);
+
+        // use latest (depending on status, and if login exists for selected country + provider)
+        $country    = $this->job->configuration['country'];
+        $providerId = $this->job->configuration['provider'];
+        $login      = $this->filterLogins($logins, $country, $providerId);
+
+        // create new login if list is empty or no login exists.
+        if (is_null($login)) {
+            $login = $this->createLogin($customer);
+            die('new login');
+        }
+
+        echo '<pre>';
+        print_r($logins);
+        exit;
+
         return true;
+    }
+
+    /**
+     * @param Customer $customer
+     */
+    protected function createLogin(Customer $customer) {
+
     }
 
     /**
@@ -104,18 +130,22 @@ class SpectreRoutine implements RoutineInterface
 
     /**
      * @return Customer
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     protected function createCustomer(): Customer
     {
         $newCustomerRequest = new NewCustomerRequest($this->job->user);
         $newCustomerRequest->call();
-        echo '<pre>';
-        print_r($newCustomerRequest->getCustomer());
-        exit;
+        $customer = $newCustomerRequest->getCustomer();
+
+        // store customer. Not sure where. User preference? TODO
+        return $customer;
+
     }
 
     /**
      * @return Customer
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     protected function getCustomer(): Customer
     {
@@ -125,5 +155,41 @@ class SpectreRoutine implements RoutineInterface
         }
         var_dump($preference->data);
         exit;
+    }
+
+    /**
+     * Return login belonging to country and provider
+     * TODO must return Login object, not array
+     *
+     * @param array  $logins
+     * @param string $country
+     * @param int    $providerId
+     *
+     * @return array|null
+     */
+    private function filterLogins(array $logins, string $country, int $providerId): ?array
+    {
+        if (count($logins) === 0) {
+            return null;
+        }
+        foreach ($logins as $login) {
+            die('do some filter');
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array
+     */
+    private function listLogins(Customer $customer): array
+    {
+        $listLoginRequest = new ListLoginsRequest($this->job->user);
+        $listLoginRequest->setCustomer($customer);
+        $listLoginRequest->call();
+
+        $logins = $listLoginRequest->getLogins();
+
+        return $logins;
     }
 }

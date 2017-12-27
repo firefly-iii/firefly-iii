@@ -141,6 +141,9 @@ return [
     'column_opposing-number'          => 'Opposing account (account number)',
     'column_note'                     => 'Note(s)',
 
+    // prerequisites
+    'prerequisites'                   => 'Prerequisites',
+
     // bunq
     'bunq_prerequisites_title'        => 'Prerequisites for an import from bunq',
     'bunq_prerequisites_text'         => 'In order to import from bunq, you need to obtain an API key. You can do this through the app.',

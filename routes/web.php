@@ -445,7 +445,7 @@ Route::group(
     Route::get('json/{importJob}', ['uses' => 'Import\StatusController@json', 'as' => 'status.json']);
 
     // start a job
-    Route::post('start/{importJob}', ['uses' => 'Import\IndexController@start', 'as' => 'start']);
+    Route::any('start/{importJob}', ['uses' => 'Import\IndexController@start', 'as' => 'start']);
 
     // download config
     Route::get('download/{importJob}', ['uses' => 'Import\IndexController@download', 'as' => 'download']);

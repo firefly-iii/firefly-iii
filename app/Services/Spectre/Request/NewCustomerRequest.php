@@ -22,37 +22,44 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Spectre\Request;
 
+use FireflyIII\Services\Spectre\Object\Customer;
+
 /**
  * Class NewCustomerRequest
  */
 class NewCustomerRequest extends SpectreRequest
 {
-    /** @var array */
-    protected $customer = [];
+    /** @var Customer */
+    protected $customer;
 
     /**
      * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function call(): void
     {
-        $data     = [
+        $data = [
             'data' => [
                 'identifier' => 'default_ff3_customer',
             ],
         ];
-        $uri      = '/api/v3/customers/';
-        $response = $this->sendSignedSpectrePost($uri, $data);
-
+        $uri  = '/api/v3/customers/';
+        //$response = $this->sendSignedSpectrePost($uri, $data);
+        $response = ['data' => [
+            'id'         => 527858,
+            'identifier' => 'default_ff3_customer',
+            'secret'     => 'qpZjRPJRTb6mMcQgwDkssZ3fQVVDPIH04zBlkKC6MvI',
+        ],
+        ];
         // create customer:
-        $this->customer = $response['data'];
+        $this->customer = new Customer($response['data']);
 
         return;
     }
 
     /**
-     * @return array
+     * @return Customer
      */
-    public function getCustomer(): array
+    public function getCustomer(): Customer
     {
         return $this->customer;
     }

@@ -29,8 +29,6 @@ use Requests;
 use Requests_Exception;
 use Requests_Response;
 
-//use FireflyIII\Services\Bunq\Object\ServerPublicKey;
-
 /**
  * Class BunqRequest.
  */
@@ -267,7 +265,7 @@ abstract class SpectreRequest
 
         Log::debug('Final headers for spectre signed POST request:', $headers);
         try {
-            $response = Requests::get($fullUri, $headers);
+            $response = Requests::post($fullUri, $headers, $body);
         } catch (Requests_Exception $e) {
             throw new FireflyException(sprintf('Request Exception: %s', $e->getMessage()));
         }

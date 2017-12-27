@@ -1,6 +1,6 @@
 <?php
 /**
- * ListProvidersRequest.php
+ * ListLoginsRequest.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -22,29 +22,32 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Spectre\Request;
 
+use FireflyIII\Services\Spectre\Object\Customer;
 use Log;
 
 /**
- * Class ListProvidersRequest
+ * Class ListLoginsRequest
  */
-class ListProvidersRequest extends SpectreRequest
+class ListLoginsRequest extends SpectreRequest
 {
-    /**
-     * @var array
-     */
-    protected $providers = [];
+    /** @var Customer */
+    protected $customer;
+
+    /** @var array */
+    protected $logins = [];
 
     /**
-     * @throws \Exception
+     *
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function call(): void
     {
         $hasNextPage = true;
         $nextId      = 0;
         while ($hasNextPage) {
-            Log::debug(sprintf('Now calling for next_id %d', $nextId));
-            $parameters = ['include_fake_providers' => 'true', 'include_provider_fields' => 'true', 'from_id' => $nextId];
-            $uri        = '/api/v3/providers?' . http_build_query($parameters);
+            Log::debug(sprintf('Now calling list-logins for next_id %d', $nextId));
+            $parameters = ['customer_id' => $this->customer->getId(), 'from_id' => $nextId];
+            $uri        = '/api/v3/logins?' . http_build_query($parameters);
             $response   = $this->sendSignedSpectreGet($uri, []);
 
             // count entries:
@@ -61,10 +64,9 @@ class ListProvidersRequest extends SpectreRequest
             }
 
             // store providers:
-            foreach ($response['data'] as $providerArray) {
-                $providerId                   = $providerArray['id'];
-                $this->providers[$providerId] = $providerArray;
-                Log::debug(sprintf('Stored provider #%d', $providerId));
+            foreach ($response['data'] as $loginArray) {
+                var_dump($loginArray);
+                exit;
             }
         }
 
@@ -72,10 +74,28 @@ class ListProvidersRequest extends SpectreRequest
     }
 
     /**
+     * @return Customer
+     */
+    public function getCustomer(): Customer
+    {
+        return $this->customer;
+    }
+
+    /**
+     * @param Customer $customer
+     */
+    public function setCustomer(Customer $customer): void
+    {
+        $this->customer = $customer;
+    }
+
+    /**
      * @return array
      */
-    public function getProviders(): array
+    public function getLogins(): array
     {
-        return $this->providers;
+        return $this->logins;
     }
+
+
 }

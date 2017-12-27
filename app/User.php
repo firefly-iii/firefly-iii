@@ -61,6 +61,7 @@ class User extends Authenticatable
     protected $table = 'users';
 
     /**
+     * @codeCoverageIgnore
      * Link to accounts.
      *
      * @return HasMany
@@ -95,6 +96,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Link to attachments
      *
      * @return HasMany
@@ -105,6 +107,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Link to available budgets
      *
      * @return HasMany
@@ -115,6 +118,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Link to bills.
      *
      * @return HasMany
@@ -125,6 +129,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Link to budgets.
      *
      * @return HasMany
@@ -135,6 +140,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Link to categories
      *
      * @return HasMany
@@ -145,6 +151,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Link to currency exchange rates
      *
      * @return HasMany
@@ -155,6 +162,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Link to export jobs
      *
      * @return HasMany
@@ -165,6 +173,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Generates access token.
      *
      * @return string
@@ -177,6 +186,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Checks if the user has a role by its name.
      *
      * Full credit goes to: https://github.com/Zizaco/entrust
@@ -197,6 +207,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Link to import jobs.
      *
      * @return HasMany
@@ -207,6 +218,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Link to piggy banks.
      *
      * @return HasManyThrough
@@ -217,6 +229,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Link to preferences.
      *
      * @return HasMany
@@ -227,6 +240,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Link to roles.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -237,6 +251,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Link to rule groups.
      *
      * @return HasMany
@@ -247,6 +262,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Link to rules.
      *
      * @return HasMany
@@ -257,6 +273,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Send the password reset notification.
      *
      * @param string $token
@@ -269,6 +286,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Link to tags.
      *
      * @return HasMany
@@ -279,6 +297,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Link to transaction journals.
      *
      * @return HasMany
@@ -289,6 +308,7 @@ class User extends Authenticatable
     }
 
     /**
+     * @codeCoverageIgnore
      * Link to transactions.
      *
      * @return HasManyThrough

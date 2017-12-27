@@ -35,6 +35,18 @@ class Customer extends SpectreObject
     private $secret;
 
     /**
+     * Customer constructor.
+     *
+     * @param array $data
+     */
+    public function __construct(array $data)
+    {
+        $this->id         = intval($data['id']);
+        $this->identifier = $data['identifier'];
+        $this->secret     = $data['secret'];
+    }
+
+    /**
      * @return int
      */
     public function getId(): int

@@ -573,6 +573,16 @@ Breadcrumbs::register(
         $breadcrumbs->push(trans('import.config_sub_title', ['key' => $job->key]), route('import.configure', [$job->key]));
     }
 );
+
+Breadcrumbs::register(
+    'import.prerequisites',
+    function (BreadCrumbsGenerator $breadcrumbs, string $bank) {
+        $breadcrumbs->parent('import.index');
+        $breadcrumbs->push(trans('import.prerequisites'), route('import.prerequisites', [$bank]));
+    }
+);
+
+
 Breadcrumbs::register(
     'import.status',
     function (BreadCrumbsGenerator $breadcrumbs, ImportJob $job) {
@@ -580,6 +590,8 @@ Breadcrumbs::register(
         $breadcrumbs->push(trans('import.status_bread_crumb', ['key' => $job->key]), route('import.status', [$job->key]));
     }
 );
+
+
 
 // PREFERENCES
 Breadcrumbs::register(
