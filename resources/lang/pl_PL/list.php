@@ -66,7 +66,7 @@ return [
     'bill'                    => 'Rachunek',
     'withdrawal'              => 'Wypłata',
     'deposit'                 => 'Wpłata',
-    'transfer'                => 'Przenieś',
+    'transfer'                => 'Transfer',
     'type'                    => 'Typ',
     'completed'               => 'Zakończone',
     'iban'                    => 'IBAN',

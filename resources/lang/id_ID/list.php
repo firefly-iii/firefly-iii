@@ -34,7 +34,7 @@ return [
     'currentBalance'          => 'Saldo saat ini',
     'active'                  => 'Aktif?',
     'lastActivity'            => 'Aktifitas terakhir',
-    'balanceDiff'             => 'Balance difference',
+    'balanceDiff'             => 'Perbedaan saldo',
     'matchesOn'               => 'Cocok di',
     'account_type'            => 'Jenis akun',
     'created_at'              => 'Dibuat di',

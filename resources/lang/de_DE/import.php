@@ -35,7 +35,7 @@ return [
     'status_ready_share'              => 'Bitte denken Sie darüber nach ihre Konfiguration herunterzuladen und in der <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">Übersicht der Import-Einstellungen</a></strong> zu teilen. Dieses erlaubt es anderen Nutzern von Firefly III ihre Daten unkomplizierter zu importieren.',
     'status_job_new'                  => 'The job is brand new.',
     'status_job_configuring'          => 'The import is being configured.',
-    'status_job_configured'           => 'The import is configured.',
+    'status_job_configured'           => 'Der Import ist konfiguriert.',
     'status_job_running'              => 'Der Import läuft.. Bitte warten..',
     'status_job_error'                => 'The job has generated an error.',
     'status_job_finished'             => 'Der Import ist abgeschlossen!',
@@ -139,7 +139,7 @@ return [
     'column_tags-space'               => 'Tags (durch Leerzeichen getrennt)',
     'column_account-number'           => 'Bestandskonto (Kontonr.)',
     'column_opposing-number'          => 'Zielkonto (Kontonr.)',
-    'column_note'                     => 'Note(s)',
+    'column_note'                     => 'Notiz(en)',
 
     // bunq
     'bunq_prerequisites_title'        => 'Voraussetzungen für einen Import von bunq',
