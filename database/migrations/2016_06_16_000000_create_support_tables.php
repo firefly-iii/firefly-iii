@@ -160,7 +160,7 @@ class CreateSupportTables extends Migration
                     // straight from laravel
                     $table->string('email')->index();
                     $table->string('token')->index();
-                    $table->timestamp('created_at');
+                    $table->timestamp('created_at')->nullable();
                 }
             );
         }
