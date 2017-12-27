@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace FireflyIII\Import\Routine;
 
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\SpectreProvider;
 use FireflyIII\Services\Spectre\Object\Customer;
+use FireflyIII\Services\Spectre\Request\CreateLoginRequest;
 use FireflyIII\Services\Spectre\Request\ListLoginsRequest;
 use FireflyIII\Services\Spectre\Request\NewCustomerRequest;
 use Illuminate\Support\Collection;
@@ -79,6 +81,7 @@ class SpectreRoutine implements RoutineInterface
 
     /**
      *
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function run(): bool
     {
@@ -103,7 +106,8 @@ class SpectreRoutine implements RoutineInterface
         // create new login if list is empty or no login exists.
         if (is_null($login)) {
             $login = $this->createLogin($customer);
-            die('new login');
+            var_dump($login);
+            exit;
         }
 
         echo '<pre>';
@@ -111,13 +115,6 @@ class SpectreRoutine implements RoutineInterface
         exit;
 
         return true;
-    }
-
-    /**
-     * @param Customer $customer
-     */
-    protected function createLogin(Customer $customer) {
-
     }
 
     /**
@@ -144,6 +141,44 @@ class SpectreRoutine implements RoutineInterface
     }
 
     /**
+     * @param Customer $customer
+     */
+    protected function createLogin(Customer $customer)
+    {
+
+        $providerId = intval($this->job->configuration['provider']);
+        $provider   = $this->findProvider($providerId);
+
+
+        $createLoginRequest = new CreateLoginRequest($this->job->user);
+        $createLoginRequest->setCustomer($customer);
+        $createLoginRequest->setProvider($provider);
+        $createLoginRequest->setMandatoryFields($this->decrypt($this->job->configuration['mandatory-fields']));
+        $createLoginRequest->call();
+        echo '123';
+        // country code, provider code (find by spectre ID)
+        // credentials
+        // daily_refresh=true
+        // fetch_type=recent
+        // include_fake_providers=true
+        // store_credentials=true
+
+
+        var_dump($this->job->configuration);
+        exit;
+    }
+
+    /**
+     * @param int $providerId
+     *
+     * @return SpectreProvider|null
+     */
+    protected function findProvider(int $providerId): ?SpectreProvider
+    {
+        return SpectreProvider::where('spectre_id', $providerId)->first();
+    }
+
+    /**
      * @return Customer
      * @throws \FireflyIII\Exceptions\FireflyException
      */
@@ -155,6 +190,38 @@ class SpectreRoutine implements RoutineInterface
         }
         var_dump($preference->data);
         exit;
+    }
+
+    /**
+     * @param Customer $customer
+     *
+     * @return array
+     * @throws \FireflyIII\Exceptions\FireflyException
+     */
+    protected function listLogins(Customer $customer): array
+    {
+        $listLoginRequest = new ListLoginsRequest($this->job->user);
+        $listLoginRequest->setCustomer($customer);
+        $listLoginRequest->call();
+
+        $logins = $listLoginRequest->getLogins();
+
+        return $logins;
+    }
+
+    /**
+     * @param array $configuration
+     *
+     * @return array
+     */
+    private function decrypt(array $configuration): array
+    {
+        $new = [];
+        foreach ($configuration as $key => $value) {
+            $new[$key] = app('steam')->tryDecrypt($value);
+        }
+
+        return $new;
     }
 
     /**
@@ -177,19 +244,5 @@ class SpectreRoutine implements RoutineInterface
         }
 
         return null;
-    }
-
-    /**
-     * @return array
-     */
-    private function listLogins(Customer $customer): array
-    {
-        $listLoginRequest = new ListLoginsRequest($this->job->user);
-        $listLoginRequest->setCustomer($customer);
-        $listLoginRequest->call();
-
-        $logins = $listLoginRequest->getLogins();
-
-        return $logins;
     }
 }
