@@ -142,6 +142,22 @@ return [
     'invalid_locale_settings'                    => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructions how to do this</a>.',
     'quickswitch'                                => 'Quickswitch',
 
+    // check for updates:
+    'update_check_title'                         => 'Check for updates',
+    'admin_update_check_title'                   => 'Automatically check for update',
+    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact Github to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
+    'check_for_updates_permission'               => 'Firefly III can check for updates, but it needs your permission to do so. Please go to the <a href=":link">administration</a> to indicate if you would like this feature to be enabled.',
+    'updates_ask_me_later'                       => 'Ask me later',
+    'updates_do_not_check'                       => 'Do not check for updates',
+    'updates_enable_check'                       => 'Enable the check for updates',
+    'admin_update_check_now_title'               => 'Check for updates now',
+    'admin_update_check_now_explain'             => 'If you press the button, Firefly III will see if your current version is the latest.',
+    'check_for_updates_button'                   => 'Check now!',
+    'update_new_version_alert'                   => 'A new version is available. You are running v:your_version, the latest version is v:new_version.',
+    'update_current_version_alert'               => 'You are running v:version, which is the latest available release.',
+    'update_newer_version_alert'                 => 'You are running v:your_version, which is newer than the latest release, v:new_version.',
+    'update_check_error'                         => 'An error occurred while checking for updates. Please view the log files.',
+
     // search
     'search'                                     => 'Search',
     'search_query'                               => 'Query',

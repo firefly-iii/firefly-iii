@@ -845,6 +845,11 @@ Route::group(
     Route::get('', ['uses' => 'HomeController@index', 'as' => 'index']);
     Route::post('test-message', ['uses' => 'HomeController@testMessage', 'as' => 'test-message']);
 
+    // check for updates?
+    Route::get('update-check', ['uses' => 'UpdateController@index', 'as' => 'update-check']);
+    Route::post('update-check/manual', ['uses' => 'UpdateController@updateCheck', 'as' => 'update-check.manual']);
+    Route::post('update-check', ['uses' => 'UpdateController@post', 'as' => 'update-check.post']);
+
     // user manager
     Route::get('users', ['uses' => 'UserController@index', 'as' => 'users']);
     Route::get('users/edit/{user}', ['uses' => 'UserController@edit', 'as' => 'users.edit']);

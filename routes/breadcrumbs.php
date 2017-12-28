@@ -188,6 +188,13 @@ Breadcrumbs::register(
         $breadcrumbs->push(trans('firefly.instance_configuration'), route('admin.configuration.index'));
     }
 );
+Breadcrumbs::register(
+    'admin.update-check',
+    function (BreadCrumbsGenerator $breadcrumbs) {
+        $breadcrumbs->parent('admin.index');
+        $breadcrumbs->push(trans('firefly.update_check_title'), route('admin.update-check'));
+    }
+);
 
 Breadcrumbs::register(
     'admin.links.index',
