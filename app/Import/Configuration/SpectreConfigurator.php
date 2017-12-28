@@ -22,13 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Configuration;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
-use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
-use FireflyIII\Support\Import\Configuration\Spectre\InputMandatory;
-use FireflyIII\Support\Import\Configuration\Spectre\SelectCountry;
-use FireflyIII\Support\Import\Configuration\Spectre\SelectProvider;
-use Log;
 
 /**
  * Class SpectreConfigurator.
@@ -54,58 +48,35 @@ class SpectreConfigurator implements ConfiguratorInterface
      * @param array $data
      *
      * @return bool
-     *
-     * @throws FireflyException
      */
     public function configureJob(array $data): bool
     {
-        $class = $this->getConfigurationClass();
-        $job   = $this->job;
-        /** @var ConfigurationInterface $object */
-        $object = new $class($this->job);
-        $object->setJob($job);
-        $result        = $object->storeConfiguration($data);
-        $this->warning = $object->getWarningMessage();
-
-        return $result;
+        die('cannot store config');
     }
 
     /**
      * Return the data required for the next step in the job configuration.
      *
      * @return array
-     *
-     * @throws FireflyException
      */
     public function getNextData(): array
     {
-        $class = $this->getConfigurationClass();
-        $job   = $this->job;
-        /** @var ConfigurationInterface $object */
-        $object = app($class);
-        $object->setJob($job);
+        // update config to tell Firefly we've redirected the user.
+        $config                   = $this->job->configuration;
+        $config['is-redirected']  = true;
+        $this->job->configuration = $config;
+        $this->job->status        = 'configured';
+        $this->job->save();
 
-        return $object->getData();
+        return $this->job->configuration;
     }
 
     /**
      * @return string
-     *
-     * @throws FireflyException
      */
     public function getNextView(): string
     {
-        if (!$this->job->configuration['selected-country']) {
-            return 'import.spectre.select-country';
-        }
-        if (!$this->job->configuration['selected-provider']) {
-            return 'import.spectre.select-provider';
-        }
-        if (!$this->job->configuration['has-input-mandatory']) {
-            return 'import.spectre.input-fields';
-        }
-
-        throw new FireflyException('No view for state');
+        return 'import.spectre.redirect';
     }
 
     /**
@@ -123,16 +94,9 @@ class SpectreConfigurator implements ConfiguratorInterface
      */
     public function isJobConfigured(): bool
     {
-        $config                          = $this->job->configuration;
-        $config['selected-country']      = $config['selected-country'] ?? false;
-        $config['selected-provider']     = $config['selected-provider'] ?? false;
-        $config['has-input-mandatory']   = $config['has-input-mandatory'] ?? false;
-        $config['has-input-interactive'] = $config['has-input-interactive'] ?? true; // defaults to true.
-        $this->job->configuration        = $config;
-        $this->job->save();
-
-        if ($config['selected-country'] && $config['selected-provider'] && $config['has-input-mandatory'] && $config['has-input-interactive']) {
-            // give job another status
+        // job is configured (and can start) when token is empty:
+        $config = $this->job->configuration;
+        if ($config['has-token'] === false) {
             return true;
         }
 
@@ -144,45 +108,19 @@ class SpectreConfigurator implements ConfiguratorInterface
      */
     public function setJob(ImportJob $job)
     {
+        $defaultConfig = [
+            'has-token'     => false,
+            'token'         => '',
+            'token-expires' => 0,
+            'token-url'     => '',
+            'is-redirected' => false,
+
+        ];
+
+        $config             = $job->configuration;
+        $finalConfig        = array_merge($defaultConfig, $config);
+        $job->configuration = $finalConfig;
+        $job->save();
         $this->job = $job;
-        if (null === $this->job->configuration || 0 === count($this->job->configuration)) {
-            Log::debug(sprintf('Gave import job %s initial configuration.', $this->job->key));
-            $this->job->configuration = [
-                'selected-country' => false,
-            ];
-            $this->job->save();
-        }
-    }
-
-    /**
-     * @return string
-     *
-     * @throws FireflyException
-     */
-    private function getConfigurationClass(): string
-    {
-        $class = false;
-        switch (true) {
-            case !$this->job->configuration['selected-country']:
-                $class = SelectCountry::class;
-                break;
-            case !$this->job->configuration['selected-provider']:
-                $class = SelectProvider::class;
-                break;
-            case !$this->job->configuration['has-input-mandatory']:
-                $class = InputMandatory::class;
-            // no break
-            default:
-                break;
-        }
-
-        if (false === $class || 0 === strlen($class)) {
-            throw new FireflyException('Cannot handle current job state in getConfigurationClass().');
-        }
-        if (!class_exists($class)) {
-            throw new FireflyException(sprintf('Class %s does not exist in getConfigurationClass().', $class));
-        }
-
-        return $class;
     }
 }
