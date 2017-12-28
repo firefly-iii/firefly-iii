@@ -27,6 +27,7 @@ use FireflyConfig;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Services\Github\Object\Release;
 use FireflyIII\Services\Github\Request\UpdateRequest;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -72,7 +73,7 @@ class UpdateControllerTest extends TestCase
 
         FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
         FireflyConfig::shouldReceive('set')->withArgs(['permission_update_check', 1])->once()->andReturn(new Configuration);
-        FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', time()])->once()->andReturn(new Configuration);
+        FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn(new Configuration);
         $this->be($this->user());
         $response = $this->post(route('admin.update-check.post'), ['check_for_updates' => 1]);
         $response->assertSessionHas('success');
@@ -88,7 +89,7 @@ class UpdateControllerTest extends TestCase
         $falseConfig       = new Configuration;
         $falseConfig->data = false;
         FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
-        FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', time()])->once()->andReturn(new Configuration);
+        FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn(new Configuration);
 
         $version  = config('firefly.version');
         $releases = [
@@ -116,7 +117,7 @@ class UpdateControllerTest extends TestCase
         $falseConfig       = new Configuration;
         $falseConfig->data = false;
         FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
-        FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', time()])->once()->andReturn(new Configuration);
+        FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn(new Configuration);
 
         $version  = config('firefly.version');
         $releases = [
@@ -142,7 +143,7 @@ class UpdateControllerTest extends TestCase
         $falseConfig       = new Configuration;
         $falseConfig->data = false;
         FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
-        FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', time()])->once()->andReturn(new Configuration);
+        FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn(new Configuration);
 
         $version  = config('firefly.version') . '-alpha';
         $releases = [
@@ -159,24 +160,4 @@ class UpdateControllerTest extends TestCase
         $response->assertSee($version);
         $response->assertSee('which is newer than the');
     }
-
-
-
-    //    /**
-    //     * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::postIndex
-    //     */
-    //    public function testPostIndex()
-    //    {
-    //        $falseConfig       = new Configuration;
-    //        $falseConfig->data = false;
-    //
-    //        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
-    //        FireflyConfig::shouldReceive('set')->withArgs(['single_user_mode', false])->once();
-    //        FireflyConfig::shouldReceive('set')->withArgs(['is_demo_site', false])->once();
-    //
-    //        $this->be($this->user());
-    //        $response = $this->post(route('admin.configuration.index.post'));
-    //        $response->assertSessionHas('success');
-    //        $response->assertStatus(302);
-    //    }
 }
