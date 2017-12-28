@@ -34,6 +34,7 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
@@ -136,15 +137,23 @@ class CategoryController extends Controller
      *
      * @return View
      */
-    public function index(CategoryRepositoryInterface $repository)
+    public function index(Request $request, CategoryRepositoryInterface $repository)
     {
-        $categories = $repository->getCategories();
+        $page       = 0 === intval($request->get('page')) ? 1 : intval($request->get('page'));
+        $pageSize   = intval(Preferences::get('listPageSize', 50)->data);
+        $collection = $repository->getCategories();
+        $total      = $collection->count();
+        $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
 
-        $categories->each(
+        $collection->each(
             function (Category $category) use ($repository) {
                 $category->lastActivity = $repository->lastUseDate($category, new Collection);
             }
         );
+
+        // paginate categories
+        $categories = new LengthAwarePaginator($collection, $total, $pageSize, $page);
+        $categories->setPath(route('categories.index'));
 
         return view('categories.index', compact('categories'));
     }

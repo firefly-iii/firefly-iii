@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
@@ -175,11 +176,13 @@ class BudgetController extends Controller
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) complex because of while loop
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function index(string $moment = null)
+    public function index(Request $request, string $moment = null)
     {
-        $range = Preferences::get('viewRange', '1M')->data;
-        $start = session('start', new Carbon);
-        $end   = session('end', new Carbon);
+        $range    = Preferences::get('viewRange', '1M')->data;
+        $start    = session('start', new Carbon);
+        $end      = session('end', new Carbon);
+        $page     = 0 === intval($request->get('page')) ? 1 : intval($request->get('page'));
+        $pageSize = intval(Preferences::get('listPageSize', 50)->data);
 
         // make date if present:
         if (null !== $moment || 0 !== strlen(strval($moment))) {
@@ -197,6 +200,8 @@ class BudgetController extends Controller
         $prev = app('navigation')->startOfPeriod($prev, $range);
         $this->repository->cleanupBudgets();
         $budgets           = $this->repository->getActiveBudgets();
+        $total             = $budgets->count();
+        $budgets           = $budgets->slice(($page - 1) * $pageSize, $pageSize);
         $inactive          = $this->repository->getInactiveBudgets();
         $periodStart       = $start->formatLocalized($this->monthAndDayFormat);
         $periodEnd         = $end->formatLocalized($this->monthAndDayFormat);
@@ -205,6 +210,10 @@ class BudgetController extends Controller
         $available         = $this->repository->getAvailableBudget($defaultCurrency, $start, $end);
         $spent             = array_sum(array_column($budgetInformation, 'spent'));
         $budgeted          = array_sum(array_column($budgetInformation, 'budgeted'));
+
+        // paginate budgets
+        $budgets = new LengthAwarePaginator($budgets, $total, $pageSize, $page);
+        $budgets->setPath(route('budgets.index'));
 
         // select thing for last 12 periods:
         $previousLoop = [];
@@ -248,6 +257,7 @@ class BudgetController extends Controller
                 'prevText',
                 'periodStart',
                 'periodEnd',
+                'page',
                 'budgetInformation',
                 'inactive',
                 'budgets',

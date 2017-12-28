@@ -31,6 +31,7 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Preferences;
 use URL;
@@ -167,15 +168,19 @@ class BillController extends Controller
      *
      * @return View
      */
-    public function index(BillRepositoryInterface $repository)
+    public function index(Request $request, BillRepositoryInterface $repository)
     {
         /** @var Carbon $start */
         $start = session('start');
         /** @var Carbon $end */
-        $end = session('end');
+        $end        = session('end');
+        $page       = 0 === intval($request->get('page')) ? 1 : intval($request->get('page'));
+        $pageSize   = intval(Preferences::get('listPageSize', 50)->data);
+        $collection = $repository->getBills();
+        $total      = $collection->count();
+        $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
 
-        $bills = $repository->getBills();
-        $bills->each(
+        $collection->each(
             function (Bill $bill) use ($repository, $start, $end) {
                 // paid in this period?
                 $bill->paidDates = $repository->getPaidDatesInRange($bill, $start, $end);
@@ -188,6 +193,9 @@ class BillController extends Controller
                 $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, $lastPaidDate);
             }
         );
+        // paginate bills
+        $bills= new LengthAwarePaginator($collection, $total, $pageSize, $page);
+        $bills->setPath(route('bills.index'));
 
         return view('bills.index', compact('bills'));
     }

@@ -30,7 +30,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Log;
 use Preferences;
 use Response;
@@ -199,17 +199,19 @@ class PiggyBankController extends Controller
      *
      * @return View
      */
-    public function index(PiggyBankRepositoryInterface $piggyRepository)
+    public function index(Request $request, PiggyBankRepositoryInterface $piggyRepository)
     {
-        /** @var Collection $piggyBanks */
-        $piggyBanks = $piggyRepository->getPiggyBanks();
+        $collection = $piggyRepository->getPiggyBanks();
+        $total      = $collection->count();
+        $page       = 0 === intval($request->get('page')) ? 1 : intval($request->get('page'));
+        $pageSize   = intval(Preferences::get('listPageSize', 50)->data);
         /** @var Carbon $end */
         $end = session('end', Carbon::now()->endOfMonth());
 
         $accounts = [];
         Log::debug('Looping piggues');
         /** @var PiggyBank $piggyBank */
-        foreach ($piggyBanks as $piggyBank) {
+        foreach ($collection as $piggyBank) {
             $piggyBank->savedSoFar = $piggyBank->currentRelevantRep()->currentamount ?? '0';
             $piggyBank->percentage = 0 !== bccomp('0', $piggyBank->savedSoFar) ? intval($piggyBank->savedSoFar / $piggyBank->targetamount * 100) : 0;
             $piggyBank->leftToSave = bcsub($piggyBank->targetamount, strval($piggyBank->savedSoFar));
@@ -235,6 +237,11 @@ class PiggyBankController extends Controller
                 $accounts[$account->id]['leftToSave']   = bcadd($accounts[$account->id]['leftToSave'], $piggyBank->leftToSave);
             }
         }
+
+        // paginate piggy banks
+        $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
+        $piggyBanks = new LengthAwarePaginator($collection, $total, $pageSize, $page);
+        $piggyBanks->setPath(route('piggy-banks.index'));
 
         return view('piggy-banks.index', compact('piggyBanks', 'accounts'));
     }

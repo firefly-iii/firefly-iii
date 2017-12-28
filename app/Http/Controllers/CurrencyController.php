@@ -28,6 +28,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Log;
 use Preferences;
 use View;
@@ -198,12 +199,19 @@ class CurrencyController extends Controller
      */
     public function index(Request $request)
     {
-        $currencies      = $this->repository->get();
-        $currencies      = $currencies->sortBy(
+        $page       = 0 === intval($request->get('page')) ? 1 : intval($request->get('page'));
+        $pageSize   = intval(Preferences::get('listPageSize', 50)->data);
+        $collection = $this->repository->get();
+        $total      = $collection->count();
+        $collection = $collection->sortBy(
             function (TransactionCurrency $currency) {
                 return $currency->name;
             }
         );
+        $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
+        $currencies = new LengthAwarePaginator($collection, $total, $pageSize, $page);
+        $currencies->setPath(route('currencies.index'));
+
         $defaultCurrency = $this->repository->getCurrencyByPreference(Preferences::get('currencyPreference', config('firefly.default_currency', 'EUR')));
         $isOwner         = true;
         if (!$this->userRepository->hasRole(auth()->user(), 'owner')) {

@@ -83,7 +83,7 @@
             {% endif %}
         </div>
     </div>
-    {% if budgets.count == 0 and inactive.count == 0 %}
+    {% if budgets.count == 0 and inactive.count == 0 and page == 1 %}
         {% include 'partials.empty' with {what: 'default', type: 'budgets',route: route('budgets.create')} %}
         {# make FF ignore demo for now. #}
         {% set shownDemo = true %}
@@ -134,6 +134,9 @@
                     <h3 class="box-title">{{ 'budgets'|_ }}</h3>
                 </div>
                 <div class="box-body no-padding">
+                    <div style="padding-left:8px;">
+                        {{ budgets.render|raw }}
+                    </div>
                     <table class="table table-bordered table-striped sortable" id="budgetList">
                         <thead>
                         <tr>
@@ -190,6 +193,9 @@
                         {% endfor %}
                         </tbody>
                     </table>
+                    <div style="padding-left:8px;">
+                        {{ budgets.render|raw }}
+                    </div>
                 </div>
             </div>
         </div>
