@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Auth\Events\Login;
 use Log;
-use Preferences;
 
 /**
  * Class VersionCheckEventHandler
@@ -45,9 +45,13 @@ class VersionCheckEventHandler
         }
 
         /** @var User $user */
-        $user          = $event->user;
-        $permission    = Preferences::getForUser($user, 'permission_update_check', -1);
-        $lastCheckTime = Preferences::getForUser($user, 'last_update_check', time());
+        $user = $event->user;
+        if (!$user->hasRole('owner')) {
+            return;
+        }
+
+        $permission    = FireflyConfig::get('permission_update_check', -1);
+        $lastCheckTime = FireflyConfig::get('last_update_check', time());
         $now           = time();
         if ($now - $lastCheckTime->data < 604800) {
             Log::debug('Checked for updates less than a week ago.');

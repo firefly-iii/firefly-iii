@@ -30,7 +30,6 @@ use FireflyIII\Services\Github\Object\Release;
 use FireflyIII\Services\Github\Request\UpdateRequest;
 use Illuminate\Http\Request;
 use Log;
-use Preferences;
 use Response;
 use Session;
 
@@ -67,7 +66,7 @@ class UpdateController extends Controller
     {
         $subTitle     = trans('firefly.update_check_title');
         $subTitleIcon = 'fa-star';
-        $permission   = app('preferences')->get('permission_update_check', -1);
+        $permission   = app('fireflyconfig')->get('permission_update_check', -1);
         $selected     = $permission->data;
         $options      = [
             '-1' => trans('firefly.updates_ask_me_later'),
@@ -86,9 +85,8 @@ class UpdateController extends Controller
     public function post(Request $request)
     {
         $checkForUpdates = intval($request->get('check_for_updates'));
-        Preferences::set('permission_update_check', $checkForUpdates);
+        app('fireflyconfig')->set('permission_update_check', $checkForUpdates);
         Session::flash('success', strval(trans('firefly.configuration_updated')));
-        Preferences::mark();
 
         return redirect(route('admin.update-check'));
     }
@@ -109,7 +107,7 @@ class UpdateController extends Controller
             $first  = reset($releases);
             $string = '';
             $check  = version_compare($current, $first->getTitle());
-            Preferences::set('last_update_check', time());
+            app('fireflyconfig')->set('last_update_check', time());
         } catch (FireflyException $e) {
             Log::error(sprintf('Could not check for updates: %s', $e->getMessage()));
         }
