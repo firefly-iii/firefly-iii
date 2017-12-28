@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers\Admin;
 
 use Carbon\Carbon;
 use FireflyConfig;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Services\Github\Object\Release;
 use FireflyIII\Services\Github\Request\UpdateRequest;
@@ -159,5 +160,29 @@ class UpdateControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee($version);
         $response->assertSee('which is newer than the');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::updateCheck
+     */
+    public function testUpdateCheckError()
+    {
+        $falseConfig       = new Configuration;
+        $falseConfig->data = false;
+        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
+
+        $version  = config('firefly.version') . '-alpha';
+        $releases = [
+            new Release(['id' => 'x', 'title' => $version, 'content' => '', 'updated' => new Carbon]),
+        ];
+        $updater  = $this->mock(UpdateRequest::class);
+        $updater->shouldReceive('call')->andThrow(FireflyException::class, 'Something broke.');
+        $updater->shouldReceive('getReleases')->andReturn($releases);
+
+        // expect a new release (because of .1)
+        $this->be($this->user());
+        $response = $this->post(route('admin.update-check.manual'));
+        $response->assertStatus(200);
+        $response->assertSee('An error occurred while checking');
     }
 }

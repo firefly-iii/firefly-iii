@@ -112,10 +112,10 @@ class UpdateController extends Controller
             $check  = version_compare($current, $first->getTitle());
             FireflyConfig::set('last_update_check', time());
         } catch (FireflyException $e) {
-            Log::error(sprintf('Could not check for updates: %s', $e->getMessage())); // @codeCoverageIgnore
+            Log::error(sprintf('Could not check for updates: %s', $e->getMessage()));
         }
         if ($check === -2) {
-            $string = strval(trans('firefly.update_check_error')); // @codeCoverageIgnore
+            $string = strval(trans('firefly.update_check_error'));
         }
 
         if ($check === -1) {
