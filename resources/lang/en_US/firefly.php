@@ -153,7 +153,7 @@ return [
     'admin_update_check_now_title'               => 'Check for updates now',
     'admin_update_check_now_explain'             => 'If you press the button, Firefly III will see if your current version is the latest.',
     'check_for_updates_button'                   => 'Check now!',
-    'update_new_version_alert'                   => 'A new version is available. You are running v:your_version, the latest version is v:new_version.',
+    'update_new_version_alert'                   => 'A new version is available. You are running v:your_version, the latest version is v:new_version which was released on :date.',
     'update_current_version_alert'               => 'You are running v:version, which is the latest available release.',
     'update_newer_version_alert'                 => 'You are running v:your_version, which is newer than the latest release, v:new_version.',
     'update_check_error'                         => 'An error occurred while checking for updates. Please view the log files.',

@@ -72,6 +72,8 @@ class VersionCheckEventHandler
             return;
         }
 
+        // actually check for update and inform the user.
+
     }
 
 }

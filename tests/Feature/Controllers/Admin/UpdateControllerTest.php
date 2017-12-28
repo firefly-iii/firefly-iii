@@ -22,8 +22,10 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Admin;
 
+use Carbon\Carbon;
 use FireflyConfig;
 use FireflyIII\Models\Configuration;
+use FireflyIII\Services\Github\Object\Release;
 use FireflyIII\Services\Github\Request\UpdateRequest;
 use Tests\TestCase;
 
@@ -70,6 +72,7 @@ class UpdateControllerTest extends TestCase
 
         FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
         FireflyConfig::shouldReceive('set')->withArgs(['permission_update_check', 1])->once()->andReturn(new Configuration);
+        FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', time()])->once()->andReturn(new Configuration);
         $this->be($this->user());
         $response = $this->post(route('admin.update-check.post'), ['check_for_updates' => 1]);
         $response->assertSessionHas('success');
@@ -82,18 +85,79 @@ class UpdateControllerTest extends TestCase
      */
     public function testUpdateCheck()
     {
+        $falseConfig       = new Configuration;
+        $falseConfig->data = false;
+        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
+        FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', time()])->once()->andReturn(new Configuration);
 
+        $version  = config('firefly.version');
         $releases = [
-
+            new Release(['id' => 'x', 'title' => $version . '.1', 'content' => '', 'updated' => new Carbon]),
         ];
-        $updater = $this->mock(UpdateRequest::class);
+        $updater  = $this->mock(UpdateRequest::class);
         $updater->shouldReceive('call')->andReturnNull();
-        $updater->shouldReceive('getReleases')->andReturn(true);
+        $updater->shouldReceive('getReleases')->andReturn($releases);
 
-
+        // expect a new release (because of .1)
         $this->be($this->user());
         $response = $this->post(route('admin.update-check.manual'));
         $response->assertStatus(200);
+        $response->assertSee($version);
+        $response->assertSee('which was released on');
+        $response->assertSee($version . '.1');
+    }
+
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::updateCheck
+     */
+    public function testUpdateCheckCurrent()
+    {
+        $falseConfig       = new Configuration;
+        $falseConfig->data = false;
+        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
+        FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', time()])->once()->andReturn(new Configuration);
+
+        $version  = config('firefly.version');
+        $releases = [
+            new Release(['id' => 'x', 'title' => $version, 'content' => '', 'updated' => new Carbon]),
+        ];
+        $updater  = $this->mock(UpdateRequest::class);
+        $updater->shouldReceive('call')->andReturnNull();
+        $updater->shouldReceive('getReleases')->andReturn($releases);
+
+        // expect a new release (because of .1)
+        $this->be($this->user());
+        $response = $this->post(route('admin.update-check.manual'));
+        $response->assertStatus(200);
+        $response->assertSee($version);
+        $response->assertSee('the latest available release');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::updateCheck
+     */
+    public function testUpdateCheckNewer()
+    {
+        $falseConfig       = new Configuration;
+        $falseConfig->data = false;
+        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
+        FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', time()])->once()->andReturn(new Configuration);
+
+        $version  = config('firefly.version') . '-alpha';
+        $releases = [
+            new Release(['id' => 'x', 'title' => $version, 'content' => '', 'updated' => new Carbon]),
+        ];
+        $updater  = $this->mock(UpdateRequest::class);
+        $updater->shouldReceive('call')->andReturnNull();
+        $updater->shouldReceive('getReleases')->andReturn($releases);
+
+        // expect a new release (because of .1)
+        $this->be($this->user());
+        $response = $this->post(route('admin.update-check.manual'));
+        $response->assertStatus(200);
+        $response->assertSee($version);
+        $response->assertSee('which is newer than the');
     }
 
 

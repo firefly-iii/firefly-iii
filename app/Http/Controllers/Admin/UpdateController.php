@@ -112,15 +112,15 @@ class UpdateController extends Controller
             $check  = version_compare($current, $first->getTitle());
             FireflyConfig::set('last_update_check', time());
         } catch (FireflyException $e) {
-            Log::error(sprintf('Could not check for updates: %s', $e->getMessage()));
+            Log::error(sprintf('Could not check for updates: %s', $e->getMessage())); // @codeCoverageIgnore
         }
         if ($check === -2) {
-            $string = strval(trans('firefly.update_check_error'));
+            $string = strval(trans('firefly.update_check_error')); // @codeCoverageIgnore
         }
 
         if ($check === -1) {
             // there is a new FF version!
-            $string = strval(trans('firefly.update_new_version_alert', ['your_version' => $current, 'new_version' => $first->getTitle()]));
+            $string = strval(trans('firefly.update_new_version_alert', ['your_version' => $current, 'new_version' => $first->getTitle(), 'date' => $first->getUpdated()->formatLocalized($this->monthAndDayFormat)]));
         }
         if ($check === 0) {
             // you are running the current version!
