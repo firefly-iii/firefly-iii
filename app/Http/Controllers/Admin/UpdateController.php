@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
+use FireflyConfig;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
@@ -85,7 +86,7 @@ class UpdateController extends Controller
     public function post(Request $request)
     {
         $checkForUpdates = intval($request->get('check_for_updates'));
-        app('fireflyconfig')->set('permission_update_check', $checkForUpdates);
+        FireflyConfig::set('permission_update_check', $checkForUpdates);
         Session::flash('success', strval(trans('firefly.configuration_updated')));
 
         return redirect(route('admin.update-check'));
@@ -107,7 +108,7 @@ class UpdateController extends Controller
             $first  = reset($releases);
             $string = '';
             $check  = version_compare($current, $first->getTitle());
-            app('fireflyconfig')->set('last_update_check', time());
+            FireflyConfig::set('last_update_check', time());
         } catch (FireflyException $e) {
             Log::error(sprintf('Could not check for updates: %s', $e->getMessage()));
         }
