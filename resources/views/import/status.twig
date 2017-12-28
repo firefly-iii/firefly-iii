@@ -149,6 +149,7 @@
         var langImportMultiError = '{{ trans('import.status_errors_multi')|escape('js') }}';
         var jobStatusUri = '{{ route('import.status.json', [job.key]) }}';
         var jobStartUri = '{{ route('import.start', [job.key]) }}';
+        var jobConfigureUri = '{{ route('import.configure', [job.key]) }}';
         var token = '{{ csrf_token() }}';
         var job = {{ job|json_encode|raw }};
     </script>

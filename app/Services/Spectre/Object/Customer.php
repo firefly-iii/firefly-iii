@@ -93,4 +93,16 @@ class Customer extends SpectreObject
     {
         $this->secret = $secret;
     }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'id'         => $this->id,
+            'identifier' => $this->identifier,
+            'secret'     => $this->secret,
+        ];
+    }
 }

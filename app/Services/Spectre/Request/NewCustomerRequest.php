@@ -37,19 +37,13 @@ class NewCustomerRequest extends SpectreRequest
      */
     public function call(): void
     {
-        $data = [
+        $data     = [
             'data' => [
                 'identifier' => 'default_ff3_customer',
             ],
         ];
-        $uri  = '/api/v3/customers/';
-        //$response = $this->sendSignedSpectrePost($uri, $data);
-        $response = ['data' => [
-            'id'         => 527858,
-            'identifier' => 'default_ff3_customer',
-            'secret'     => 'qpZjRPJRTb6mMcQgwDkssZ3fQVVDPIH04zBlkKC6MvI',
-        ],
-        ];
+        $uri      = '/api/v3/customers/';
+        $response = $this->sendSignedSpectrePost($uri, $data);
         // create customer:
         $this->customer = new Customer($response['data']);
 
