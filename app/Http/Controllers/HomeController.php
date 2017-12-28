@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers;
 use Artisan;
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Middleware\IsDemoUser;
@@ -233,6 +234,9 @@ class HomeController extends Controller
             $set            = $collector->getJournals();
             $transactions[] = [$set, $account];
         }
+
+        // fire check update event:
+        event(new RequestedVersionCheckStatus(auth()->user()));
 
         return view(
             'index',

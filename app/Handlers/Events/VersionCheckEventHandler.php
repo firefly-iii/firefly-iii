@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Events;
 
 use FireflyConfig;
+use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\User;
 use Illuminate\Auth\Events\Login;
 use Log;
@@ -33,10 +34,11 @@ use Log;
  */
 class VersionCheckEventHandler
 {
+
     /**
-     * @param Login $event
+     * @param RequestedVersionCheckStatus $event
      */
-    public function checkForUpdates(Login $event)
+    public function checkForUpdates(RequestedVersionCheckStatus $event)
     {
         // in Sandstorm, cannot check for updates:
         $sandstorm = 1 === intval(getenv('SANDSTORM'));
