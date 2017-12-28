@@ -359,7 +359,7 @@ class ImportAccount
             'name'           => $this->accountName['value'] ?? '(no name)',
             'iban'           => $this->accountIban['value'] ?? null,
             'active'         => true,
-            'virtualBalance' => null,
+            'virtualBalance' => '0',
         ];
 
         $this->account = $this->repository->store($data);
