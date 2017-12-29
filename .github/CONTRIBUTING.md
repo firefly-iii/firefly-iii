@@ -4,7 +4,7 @@
 
 ## Feature requests
 
-I am always interested in expanding Firefly III's many features. If you are requesting a new feature, please check out the list of [often requested features](https://firefly-iii.github.io/requested-features/).
+I am always interested in expanding Firefly III's many features. If you are requesting a new feature, please check out the list of [often requested features](https://firefly-iii.org/requested-features/).
 
 ## Pull requests
 

@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, linkType) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, linkType) }}
 {% endblock %}
 {% block content %}
     <div class="row">
@@ -28,7 +28,8 @@
                                 <td>
                                     <div class="btn-group btn-group-xs">
                                         <a href="{{ route('transactions.link.delete', [link.id]) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
-                                        <a href="{{ route('transactions.link.switch', [link.id]) }}" class="btn btn-default"><i class="fa fa-fw fa-arrows-h"></i></a>
+                                        <a href="{{ route('transactions.link.switch', [link.id]) }}" class="btn btn-default"><i
+                                                    class="fa fa-fw fa-arrows-h"></i></a>
                                     </div>
                                 </td>
                                 <td data-value="{{ link.source.description }}">

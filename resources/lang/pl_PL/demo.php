@@ -1,26 +1,37 @@
 <?php
-declare(strict_types=1);
-
 /**
  * demo.php
- * Copyright (c) 2016 thegrumpydictator@gmail.com
- * This software may be modified and distributed under the terms of the Creative Commons Attribution-ShareAlike 4.0 International License.
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * See the LICENSE file for details.
+ * This file is part of Firefly III.
+ *
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+declare(strict_types=1);
 
 return [
-    'no_demo_text'                   => 'Sorry, there is no extra demo-explanation text for <abbr title=":route">this page</abbr>.',
+    'no_demo_text'                   => 'Niestety, nie ma dodatkowego tekstu wyjaśniającego demo dla <abbr title=":route">tej strony</abbr>.',
     'see_help_icon'                  => 'Jednakże ikona <i class="fa fa-question-circle"></i> w prawym górnym rogu może powiedzieć Ci więcej.',
     'index'                          => 'Witaj w <strong>Firefly III</strong>! Na tej stronie znajduje się szybki przegląd Twoich finansów. Aby uzyskać więcej informacji sprawdź Konta &rarr; <a href=":asset">Konta aktywów</a> oraz oczywiście strony <a href=":budgets">Budżety</a> oraz <a href=":reports">Raporty</a>. Lub po prostu się rozejrzyj i zobacz gdzie trafisz w końcu.',
     'accounts-index'                 => 'Konta aktywów są Twoimi osobistymi kontami bankowymi. Konta wydatków to konta na które wydajesz pieniądze takie jak sklepy oraz przyjaciele. Kona przychodów są kontami, z których otrzymujesz pieniądze takie jak twoja praca, zwrot podatków lub inne źródła przychodów. Na tej stronie możesz je modyfikować oraz usuwać.',
-    'budgets-index'                  => 'This page shows you an overview of your budgets. The top bar shows the amount that is available to be budgeted. This can be customized for any period by clicking the amount on the right. The amount you\'ve actually spent is shown in the bar below. Below that are the expenses per budget and what you\'ve budgeted for them.',
-    'reports-index-start'            => 'Firefly III supports four types of reports. Read about them by clicking on the <i class="fa fa-question-circle"></i>-icon in the top right corner.',
-    'reports-index-examples'         => 'Be sure to check out these examples: <a href=":one">a monthly financial overview</a>, <a href=":two">a yearly financial overview</a> and <a href=":three">a budget overview</a>.',
-    'currencies-index'               => 'Firefly III supports multiple currencies. Although it defaults to the Euro it can be set to the US Dollar and many other currencies. As you can see a small selection of currencies has been included but you can add your own if you wish to. Changing the default currency will not change the currency of existing transactions however: Firefly III supports the use of multiple currencies at the same time.',
-    'transactions-index'             => 'These expenses, deposits and transfers are not particularly imaginative. They have been generated automatically.',
-    'piggy-banks-index'              => 'As you can see, there are three piggy banks. Use the plus and minus buttons to influence the amount of money in each piggy bank. Click the name of the piggy bank to see the administration for each piggy bank.',
-    'import-index'                   => 'Of course, any CSV file can be imported into Firefly III',
-    'import-configure-security'      => 'Because of security concerns, your upload has been replaced with a local file.',
+    'budgets-index'                  => 'Ta strona zawiera przegląd budżetów. Górny pasek pokazuje kwotę, która jest dostępna do budżetowania. Można ją dostosować dla dowolnego okresu, klikając kwotę po prawej stronie. Kwota, którą faktycznie wydałeś, jest pokazana na pasku ponizej. Pod tym znajdują się wydatki na budżet oraz co przeznaczyłeś na nie.',
+    'reports-index-start'            => 'Firefly III obsługuje wiele typów raportów. Możesz przeczytać o nich klikając ikonę <i class="fa fa-question-circle"></i> w prawym górnym rogu.',
+    'reports-index-examples'         => 'Sprawdź te przykłady: <a href=":one">miesięczny przegląd finansowy</a>, <a href=":two">roczny przegląd finansowy</a> i <a href=":three">przegląd budżetu</a>.',
+    'currencies-index'               => 'Firefly obsługuje wiele walut. Chociaż domyślnie jest to euro, można go ustawić na dolara amerykańskiego i wiele innych walut. Jak widać niewielki wybór walut został uwzględniony, ale możesz dodać własne, jeśli chcesz. Zmiana domyślnej waluty nie zmieni waluty istniejących transakcji, jednak: Firefly III obsługuje korzystanie z wielu walut w tym samym czasie.',
+    'transactions-index'             => 'Te wydatki, depozyty i transfery nie są szczególnie pomysłowe. Zostały wygenerowane automatycznie.',
+    'piggy-banks-index'              => 'Jak widać, istnieją trzy skarbonki. Użyj przycisków plus i minus, aby wpłynąć na ilość pieniędzy w każdej skarbonce. Kliknij nazwę skarbonki, aby zobaczyć administrację każdej skarbonki.',
+    'import-index'                   => 'Oczywiście każdy plik CSV można zaimportować do Firefly III',
+    'import-configure-security'      => 'Ze względów bezpieczeństwa przesyłanie zostało zastąpione lokalnym plikiem.',
     'import-configure-configuration' => 'Konfiguracja, która widzisz poniżej jest prawidłowa dla lokalnego pliku.',
 ];

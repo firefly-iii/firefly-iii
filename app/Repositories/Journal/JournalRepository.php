@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -24,6 +24,7 @@ namespace FireflyIII\Repositories\Journal;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -99,6 +100,8 @@ class JournalRepository implements JournalRepositoryInterface
      * @param TransactionJournal $journal
      *
      * @return bool
+     *
+     * @throws \Exception
      */
     public function delete(TransactionJournal $journal): bool
     {
@@ -179,12 +182,22 @@ class JournalRepository implements JournalRepositoryInterface
     {
         /** @var Transaction $transaction */
         foreach ($journal->transactions as $transaction) {
-            if ($transaction->account->accountType->type === AccountType::ASSET) {
+            if (AccountType::ASSET === $transaction->account->accountType->type) {
                 return $transaction;
             }
         }
 
         return null;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Note|null
+     */
+    public function getNote(TransactionJournal $journal): ?Note
+    {
+        return $journal->notes()->first();
     }
 
     /**
@@ -273,6 +286,9 @@ class JournalRepository implements JournalRepositoryInterface
      * @param array $data
      *
      * @return TransactionJournal
+     *
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function store(array $data): TransactionJournal
     {
@@ -358,6 +374,11 @@ class JournalRepository implements JournalRepositoryInterface
      * @param array              $data
      *
      * @return TransactionJournal
+     *
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function update(TransactionJournal $journal, array $data): TransactionJournal
     {
@@ -410,7 +431,6 @@ class JournalRepository implements JournalRepositoryInterface
 
         return $journal;
     }
-
 
     /**
      * Same as above but for transaction journal with multiple transactions.

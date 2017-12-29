@@ -16,15 +16,19 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\User;
+use Illuminate\Support\Collection;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -36,6 +40,18 @@ use Tests\TestCase;
  */
 class ProfileControllerTest extends TestCase
 {
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\ProfileController::changeEmail()
+     */
+    public function testChangeEmail()
+    {
+        $this->be($this->user());
+        $response = $this->get(route('profile.change-email'));
+        $response->assertStatus(200);
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::changePassword
      */
@@ -49,6 +65,36 @@ class ProfileControllerTest extends TestCase
         $response = $this->get(route('profile.change-password'));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers                   \FireflyIII\Http\Controllers\ProfileController::confirmEmailChange()
+     * @expectedExceptionMessage Invalid token
+     */
+    public function testConfirmEmailChangeNoToken()
+    {
+        Preferences::shouldReceive('findByName')->withArgs(['email_change_confirm_token'])->andReturn(new Collection());
+        // email_change_confirm_token
+        $response = $this->get(route('profile.confirm-email-change', ['some-fake-token']));
+        $response->assertStatus(500);
+    }
+
+    /**
+     * @covers                   \FireflyIII\Http\Controllers\ProfileController::confirmEmailChange()
+     */
+    public function testConfirmEmailWithToken()
+    {
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('unblockUser');
+        $preference       = new Preference;
+        $preference->data = 'existing-token';
+        /** @var \stdClass $preference */
+        $preference->user = $this->user();
+        Preferences::shouldReceive('findByName')->withArgs(['email_change_confirm_token'])->andReturn(new Collection([$preference]));
+        // email_change_confirm_token
+        $response = $this->get(route('profile.confirm-email-change', ['existing-token']));
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
     }
 
     /**
@@ -69,9 +115,12 @@ class ProfileControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::index
      * @covers \FireflyIII\Http\Controllers\ProfileController::__construct
+     * @throws \Exception
      */
     public function testIndex()
     {
+        // delete access token.
+        Preference::where('user_id', $this->user()->id)->where('name', 'access_token')->delete();
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
@@ -80,6 +129,58 @@ class ProfileControllerTest extends TestCase
         $response = $this->get(route('profile.index'));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\ProfileController::postChangeEmail
+     */
+    public function testPostChangeEmail()
+    {
+        $data       = [
+            'email' => 'new@example.com',
+        ];
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('findByEmail')->once()->andReturn(null);
+        $repository->shouldReceive('changeEmail')->once()->andReturn(true);
+
+        $this->be($this->user());
+        $response = $this->post(route('profile.change-email.post'), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+        $response->assertRedirect(route('index'));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\ProfileController::postChangeEmail
+     */
+    public function testPostChangeEmailExisting()
+    {
+        $data       = [
+            'email' => 'existing@example.com',
+        ];
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('findByEmail')->once()->andReturn(new User);
+
+        $this->be($this->user());
+        $response = $this->post(route('profile.change-email.post'), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+        $response->assertRedirect(route('index'));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\ProfileController::postChangeEmail
+     */
+    public function testPostChangeEmailSame()
+    {
+        $data = [
+            'email' => $this->user()->email,
+        ];
+        $this->be($this->user());
+        $response = $this->post(route('profile.change-email.post'), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('error');
+        $response->assertRedirect(route('profile.change-email'));
     }
 
     /**
@@ -187,4 +288,92 @@ class ProfileControllerTest extends TestCase
         $response->assertRedirect(route('profile.delete-account'));
         $response->assertSessionHas('error');
     }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\ProfileController::regenerate()
+     */
+    public function testRegenerate()
+    {
+        $token        = '';
+        $currentToken = Preference::where('user_id', $this->user()->id)->where('name', 'access_token')->first();
+        if (!is_null($currentToken)) {
+            $token = $currentToken->data;
+        }
+        $this->be($this->user());
+        $response = $this->post(route('profile.regenerate'));
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+        $response->assertRedirect(route('profile.index'));
+
+        $newToken = Preference::where('user_id', $this->user()->id)->where('name', 'access_token')->first();
+        $this->assertNotEquals($newToken->data, $token);
+
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\ProfileController::undoEmailChange()
+     */
+    public function testUndoEmailChange()
+    {
+        $hash                  = hash('sha256', 'previous@example.com');
+        $tokenPreference       = new Preference;
+        $tokenPreference->data = 'token';
+        /** @var \stdClass $tokenPreference */
+        $tokenPreference->user = $this->user();
+
+        $hashPreference       = new Preference;
+        $hashPreference->data = 'previous@example.com';
+        /** @var \stdClass $hashPreference */
+        $hashPreference->user = $this->user();
+
+        Preferences::shouldReceive('findByName')->once()->andReturn(new Collection([$tokenPreference]));
+        Preferences::shouldReceive('beginsWith')->once()->andReturn(new Collection([$hashPreference]));
+
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('changeEmail')->once();
+        $repository->shouldReceive('unblockUser')->once();
+
+        $response = $this->get(route('profile.undo-email-change', ['token', $hash]));
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+        $response->assertRedirect(route('login'));
+    }
+
+    /**
+     * @covers                   \FireflyIII\Http\Controllers\ProfileController::undoEmailChange()
+     * @expectedExceptionMessage Invalid token
+     */
+    public function testUndoEmailChangeBadHash()
+    {
+        $hash                  = hash('sha256', 'previous@example.comX');
+        $tokenPreference       = new Preference;
+        $tokenPreference->data = 'token';
+        /** @var \stdClass $tokenPreference */
+        $tokenPreference->user = $this->user();
+
+        $hashPreference       = new Preference;
+        $hashPreference->data = 'previous@example.com';
+        /** @var \stdClass $hashPreference */
+        $hashPreference->user = $this->user();
+
+        Preferences::shouldReceive('findByName')->once()->andReturn(new Collection([$tokenPreference]));
+        Preferences::shouldReceive('beginsWith')->once()->andReturn(new Collection([$hashPreference]));
+
+        $response = $this->get(route('profile.undo-email-change', ['token', $hash]));
+        $response->assertStatus(500);
+    }
+
+    /**
+     * @covers                   \FireflyIII\Http\Controllers\ProfileController::undoEmailChange()
+     * @expectedExceptionMessage Invalid token
+     */
+    public function testUndoEmailChangeBadToken()
+    {
+        Preferences::shouldReceive('findByName')->once()->andReturn(new Collection);
+
+        $response = $this->get(route('profile.undo-email-change', ['token', 'some-hash']));
+        $response->assertStatus(500);
+    }
+
+
 }

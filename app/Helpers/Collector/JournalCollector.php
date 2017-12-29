@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -493,6 +493,20 @@ class JournalCollector implements JournalCollectorInterface
     public function setOffset(int $offset): JournalCollectorInterface
     {
         $this->offset = $offset;
+
+        return $this;
+    }
+
+    /**
+     * @param Collection $accounts
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setOpposingAccounts(Collection $accounts): JournalCollectorInterface
+    {
+        $this->withOpposingAccount();
+
+        $this->query->whereIn('opposing.account_id', $accounts->pluck('id')->toArray());
 
         return $this;
     }

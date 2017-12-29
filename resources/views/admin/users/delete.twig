@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, user) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, user) }}
 {% endblock %}
 
 {% block content %}
@@ -25,7 +25,8 @@
                         </p>
                     </div>
                     <div class="box-footer">
-                        <input type="submit" onclick="return confirm('{{ trans('firefly.are_you_sure')|escape('js') }}');" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger pull-right"/>
+                        <input type="submit" onclick="return confirm('{{ trans('firefly.are_you_sure')|escape('js') }}');" name="submit"
+                               value="{{ trans('form.deletePermanently') }}" class="btn btn-danger pull-right"/>
                         <a href="{{ URL.previous() }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
                     </div>
 

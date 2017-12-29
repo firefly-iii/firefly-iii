@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -57,8 +57,8 @@ class RuleController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.rules'));
-                View::share('mainTitleIcon', 'fa-random');
+                app('view')->share('title', trans('firefly.rules'));
+                app('view')->share('mainTitleIcon', 'fa-random');
 
                 return $next($request);
             }
@@ -72,6 +72,9 @@ class RuleController extends Controller
      * @param RuleGroup $ruleGroup
      *
      * @return View
+     *
+     * @throws \Throwable
+     * @throws \Throwable
      */
     public function create(Request $request, RuleGroup $ruleGroup)
     {
@@ -102,8 +105,6 @@ class RuleController extends Controller
             $this->rememberPreviousUri('rules.create.uri');
         }
         Session::forget('rules.create.fromStore');
-        Session::flash('gaEventCategory', 'rules');
-        Session::flash('gaEventAction', 'create-rule');
 
         return view(
             'rules.rule.create',
@@ -124,8 +125,6 @@ class RuleController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('rules.delete.uri');
-        Session::flash('gaEventCategory', 'rules');
-        Session::flash('gaEventAction', 'delete-rule');
 
         return view('rules.rule.delete', compact('rule', 'subTitle'));
     }
@@ -168,6 +167,11 @@ class RuleController extends Controller
      * @param Rule                    $rule
      *
      * @return View
+     *
+     * @throws \Throwable
+     * @throws \Throwable
+     * @throws \Throwable
+     * @throws \Throwable
      */
     public function edit(Request $request, RuleRepositoryInterface $repository, Rule $rule)
     {
@@ -203,8 +207,6 @@ class RuleController extends Controller
             $this->rememberPreviousUri('rules.edit.uri');
         }
         Session::forget('rules.edit.fromUpdate');
-        Session::flash('gaEventCategory', 'rules');
-        Session::flash('gaEventAction', 'edit-rule');
 
         return view(
             'rules.rule.edit',
@@ -362,6 +364,8 @@ class RuleController extends Controller
      * @param TestRuleFormRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @throws \Throwable
      */
     public function testTriggers(TestRuleFormRequest $request)
     {
@@ -369,11 +373,11 @@ class RuleController extends Controller
         $triggers = $this->getValidTriggerList($request);
 
         if (0 === count($triggers)) {
-            return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]);
+            return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 
-        $limit = config('firefly.test-triggers.limit');
-        $range = config('firefly.test-triggers.range');
+        $limit = intval(config('firefly.test-triggers.limit'));
+        $range = intval(config('firefly.test-triggers.range'));
 
         /** @var TransactionMatcher $matcher */
         $matcher = app(TransactionMatcher::class);
@@ -385,10 +389,10 @@ class RuleController extends Controller
         // Warn the user if only a subset of transactions is returned
         $warning = '';
         if (count($matchingTransactions) === $limit) {
-            $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]);
+            $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]); // @codeCoverageIgnore
         }
         if (0 === count($matchingTransactions)) {
-            $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]);
+            $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]); // @codeCoverageIgnore
         }
 
         // Return json response
@@ -409,17 +413,19 @@ class RuleController extends Controller
      * @param Rule $rule
      *
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @throws \Throwable
      */
     public function testTriggersByRule(Rule $rule)
     {
         $triggers = $rule->ruleTriggers;
 
         if (0 === count($triggers)) {
-            return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]);
+            return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 
-        $limit = config('firefly.test-triggers.limit');
-        $range = config('firefly.test-triggers.range');
+        $limit = intval(config('firefly.test-triggers.limit'));
+        $range = intval(config('firefly.test-triggers.range'));
 
         /** @var TransactionMatcher $matcher */
         $matcher = app(TransactionMatcher::class);
@@ -431,10 +437,10 @@ class RuleController extends Controller
         // Warn the user if only a subset of transactions is returned
         $warning = '';
         if (count($matchingTransactions) === $limit) {
-            $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]);
+            $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]); // @codeCoverageIgnore
         }
         if (0 === count($matchingTransactions)) {
-            $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]);
+            $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]); // @codeCoverageIgnore
         }
 
         // Return json response
@@ -533,6 +539,8 @@ class RuleController extends Controller
      * @param Rule $rule
      *
      * @return array
+     *
+     * @throws \Throwable
      */
     private function getCurrentActions(Rule $rule)
     {
@@ -561,6 +569,8 @@ class RuleController extends Controller
      * @param Rule $rule
      *
      * @return array
+     *
+     * @throws \Throwable
      */
     private function getCurrentTriggers(Rule $rule)
     {
@@ -591,6 +601,8 @@ class RuleController extends Controller
      * @param Request $request
      *
      * @return array
+     *
+     * @throws \Throwable
      */
     private function getPreviousActions(Request $request)
     {
@@ -620,6 +632,8 @@ class RuleController extends Controller
      * @param Request $request
      *
      * @return array
+     *
+     * @throws \Throwable
      */
     private function getPreviousTriggers(Request $request)
     {

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -26,8 +26,8 @@ use FireflyIII\Http\Requests\TokenFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use Google2FA;
 use Illuminate\Http\Request;
-use PragmaRX\Google2FA\Contracts\Google2FA;
 use Preferences;
 use Session;
 use View;
@@ -46,8 +46,8 @@ class PreferencesController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.preferences'));
-                View::share('mainTitleIcon', 'fa-gear');
+                app('view')->share('title', trans('firefly.preferences'));
+                app('view')->share('mainTitleIcon', 'fa-gear');
 
                 return $next($request);
             }
@@ -55,22 +55,23 @@ class PreferencesController extends Controller
     }
 
     /**
-     * @param Google2FA $google2fa
-     *
      * @return View
      */
-    public function code(Google2FA $google2fa)
+    public function code()
     {
         $domain = $this->getDomain();
-        $secret = $google2fa->generateSecretKey();
+        $secret = Google2FA::generateSecretKey();
         Session::flash('two-factor-secret', $secret);
-        $image = $google2fa->getQRCodeInline($domain, auth()->user()->email, $secret, 200);
+        $image = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret, 200);
 
         return view('preferences.code', compact('image'));
     }
 
     /**
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
+     * @throws \Exception
+     * @throws \Exception
      */
     public function deleteCode()
     {
@@ -89,19 +90,19 @@ class PreferencesController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-        $accounts            = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $viewRangePref       = Preferences::get('viewRange', '1M');
-        $viewRange           = $viewRangePref->data;
-        $frontPageAccounts   = Preferences::get('frontPageAccounts', []);
-        $language            = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
-        $transactionPageSize = Preferences::get('transactionPageSize', 50)->data;
-        $customFiscalYear    = Preferences::get('customFiscalYear', 0)->data;
-        $showDeps            = Preferences::get('showDepositsFrontpage', false)->data;
-        $fiscalYearStartStr  = Preferences::get('fiscalYearStart', '01-01')->data;
-        $fiscalYearStart     = date('Y') . '-' . $fiscalYearStartStr;
-        $tjOptionalFields    = Preferences::get('transaction_journal_optional_fields', [])->data;
-        $is2faEnabled        = Preferences::get('twoFactorAuthEnabled', 0)->data; // twoFactorAuthEnabled
-        $has2faSecret        = null !== Preferences::get('twoFactorAuthSecret'); // hasTwoFactorAuthSecret
+        $accounts           = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $viewRangePref      = Preferences::get('viewRange', '1M');
+        $viewRange          = $viewRangePref->data;
+        $frontPageAccounts  = Preferences::get('frontPageAccounts', []);
+        $language           = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
+        $listPageSize       = Preferences::get('listPageSize', 50)->data;
+        $customFiscalYear   = Preferences::get('customFiscalYear', 0)->data;
+        $showDeps           = Preferences::get('showDepositsFrontpage', false)->data;
+        $fiscalYearStartStr = Preferences::get('fiscalYearStart', '01-01')->data;
+        $fiscalYearStart    = date('Y') . '-' . $fiscalYearStartStr;
+        $tjOptionalFields   = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $is2faEnabled       = Preferences::get('twoFactorAuthEnabled', 0)->data; // twoFactorAuthEnabled
+        $has2faSecret       = null !== Preferences::get('twoFactorAuthSecret'); // hasTwoFactorAuthSecret
 
         return view(
             'preferences.index',
@@ -112,7 +113,7 @@ class PreferencesController extends Controller
                 'tjOptionalFields',
                 'viewRange',
                 'customFiscalYear',
-                'transactionPageSize',
+                'listPageSize',
                 'fiscalYearStart',
                 'is2faEnabled',
                 'has2faSecret',
@@ -173,10 +174,10 @@ class PreferencesController extends Controller
         Preferences::set('showDepositsFrontpage', $showDepositsFrontpage);
 
         // save page size:
-        Preferences::set('transactionPageSize', 50);
-        $transactionPageSize = intval($request->get('transactionPageSize'));
-        if ($transactionPageSize > 0 && $transactionPageSize < 1337) {
-            Preferences::set('transactionPageSize', $transactionPageSize);
+        Preferences::set('listPageSize', 50);
+        $listPageSize = intval($request->get('listPageSize'));
+        if ($listPageSize > 0 && $listPageSize < 1337) {
+            Preferences::set('listPageSize', $listPageSize);
         }
 
         $twoFactorAuthEnabled   = false;

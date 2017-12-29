@@ -1,7 +1,7 @@
 <?php
 /**
  * SnsDescription.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 hugovanduijn@gmail.com.
  *
  * This file is part of Firefly III.
  *
@@ -16,17 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/**
- * snsDescription.php
- * Author 2017 hugovanduijn@gmail.com.
- *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
- *
- * See the LICENSE file for details.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -60,6 +50,7 @@ class SnsDescription implements SpecificInterface
      */
     public function run(array $row): array
     {
+        $row     = array_values($row);
         $row[17] = ltrim($row[17], "'");
         $row[17] = rtrim($row[17], "'");
 

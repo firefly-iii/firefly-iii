@@ -16,17 +16,19 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\LinkType;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class LinkTypeRepository.
@@ -51,6 +53,8 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      * @param LinkType $moveTo
      *
      * @return bool
+     *
+     * @throws \Exception
      */
     public function destroy(LinkType $linkType, LinkType $moveTo): bool
     {
@@ -66,6 +70,8 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      * @param TransactionJournalLink $link
      *
      * @return bool
+     *
+     * @throws \Exception
      */
     public function destroyLink(TransactionJournalLink $link): bool
     {
@@ -151,6 +157,42 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $linkType->save();
 
         return $linkType;
+    }
+
+    /**
+     * Store link between two journals.
+     *
+     * @param array              $information
+     * @param TransactionJournal $left
+     * @param TransactionJournal $right
+     *
+     * @return mixed
+     * @throws FireflyException
+     */
+    public function storeLink(array $information, TransactionJournal $left, TransactionJournal $right): TransactionJournalLink
+    {
+        $linkType = $this->find(intval($information['link_type_id']) ?? 0);
+        if (is_null($linkType->id)) {
+            throw new FireflyException(sprintf('Link type #%d cannot be resolved to an actual link type', intval($information['link_type_id']) ?? 0));
+        }
+        $link = new TransactionJournalLink;
+        $link->linkType()->associate($linkType);
+        if ('inward' === $information['direction']) {
+            Log::debug(sprintf('Link type is inwards ("%s"), so %d is source and %d is destination.', $linkType->inward, $left->id, $right->id));
+            $link->source()->associate($left);
+            $link->destination()->associate($right);
+        }
+
+        if ('outward' === $information['direction']) {
+            Log::debug(sprintf('Link type is inwards ("%s"), so %d is source and %d is destination.', $linkType->outward, $right->id, $left->id));
+            $link->source()->associate($right);
+            $link->destination()->associate($left);
+        }
+
+        $link->comment = $link['comments'] ?? null;
+        $link->save();
+
+        return $link;
     }
 
     /**

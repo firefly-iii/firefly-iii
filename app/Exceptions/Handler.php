@@ -16,18 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
-
-/**
- * Handler.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
- *
- * See the LICENSE file for details.
- */
 
 namespace FireflyIII\Exceptions;
 
@@ -37,6 +28,9 @@ use FireflyIII\Jobs\MailError;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Request;
 
+/**
+ * Class Handler
+ */
 class Handler extends ExceptionHandler
 {
     /**
@@ -87,6 +81,8 @@ class Handler extends ExceptionHandler
      * @param \Exception $exception
      *
      * @return mixed|void
+     *
+     * @throws Exception
      */
     public function report(Exception $exception)
     {

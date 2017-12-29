@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -32,9 +32,18 @@ use Illuminate\Support\Collection;
  */
 class BalanceLine
 {
+    /**
+     *
+     */
     const ROLE_DEFAULTROLE = 1;
-    const ROLE_TAGROLE     = 2;
-    const ROLE_DIFFROLE    = 3;
+    /**
+     *
+     */
+    const ROLE_TAGROLE = 2;
+    /**
+     *
+     */
+    const ROLE_DIFFROLE = 3;
 
     /** @var Collection */
     protected $balanceEntries;

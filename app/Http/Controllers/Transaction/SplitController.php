@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -59,7 +59,8 @@ class SplitController extends Controller
 
     /** @var CurrencyRepositoryInterface */
     private $currencies;
-
+    /** @var JournalRepositoryInterface */
+    private $repository;
     /** @var JournalTaskerInterface */
     private $tasker;
 
@@ -78,8 +79,9 @@ class SplitController extends Controller
                 $this->tasker      = app(JournalTaskerInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->currencies  = app(CurrencyRepositoryInterface::class);
-                View::share('mainTitleIcon', 'fa-share-alt');
-                View::share('title', trans('firefly.split-transactions'));
+                $this->repository  = app(JournalRepositoryInterface::class);
+                app('view')->share('mainTitleIcon', 'fa-share-alt');
+                app('view')->share('title', trans('firefly.split-transactions'));
 
                 return $next($request);
             }
@@ -116,9 +118,6 @@ class SplitController extends Controller
             $accountArray[$account->id]['currency_id'] = intval($account->getMeta('currency_id'));
         }
 
-        Session::flash('gaEventCategory', 'transactions');
-        Session::flash('gaEventAction', 'edit-split-' . $preFilled['what']);
-
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('transactions.edit-split.fromUpdate')) {
             $this->rememberPreviousUri('transactions.edit-split.uri');
@@ -144,19 +143,18 @@ class SplitController extends Controller
     }
 
     /**
-     * @param SplitJournalFormRequest    $request
-     * @param JournalRepositoryInterface $repository
-     * @param TransactionJournal         $journal
+     * @param SplitJournalFormRequest $request
+     * @param TransactionJournal      $journal
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(SplitJournalFormRequest $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
+    public function update(SplitJournalFormRequest $request, TransactionJournal $journal)
     {
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }
         $data    = $this->arrayFromInput($request);
-        $journal = $repository->updateSplitJournal($journal, $data);
+        $journal = $this->repository->updateSplitJournal($journal, $data);
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         // save attachments:
@@ -232,7 +230,8 @@ class SplitController extends Controller
         $destinationAccounts = $journal->destinationAccountList();
         $notes               = '';
         /** @var Note $note */
-        $note = $journal->notes()->first();
+
+        $note = $this->repository->getNote($journal);
         if (null !== $note) {
             $notes = $note->text;
         }
@@ -262,6 +261,7 @@ class SplitController extends Controller
             'transactions'                   => $this->getTransactionDataFromJournal($journal),
         ];
         // update transactions array with old request data.
+
         $array['transactions'] = $this->updateWithPrevious($array['transactions'], $request->old());
 
         return $array;
@@ -349,6 +349,7 @@ class SplitController extends Controller
             return $array;
         }
         $old = $old['transactions'];
+
         foreach ($old as $index => $row) {
             if (isset($array[$index])) {
                 $array[$index] = array_merge($array[$index], $row);

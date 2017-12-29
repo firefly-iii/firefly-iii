@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -50,8 +50,8 @@ class AttachmentController extends Controller
         // translations:
         $this->middleware(
             function ($request, $next) {
-                View::share('mainTitleIcon', 'fa-paperclip');
-                View::share('title', trans('firefly.attachments'));
+                app('view')->share('mainTitleIcon', 'fa-paperclip');
+                app('view')->share('title', trans('firefly.attachments'));
 
                 return $next($request);
             }
@@ -59,19 +59,16 @@ class AttachmentController extends Controller
     }
 
     /**
-     * @param Request    $request
      * @param Attachment $attachment
      *
      * @return View
      */
-    public function delete(Request $request, Attachment $attachment)
+    public function delete(Attachment $attachment)
     {
         $subTitle = trans('firefly.delete_attachment', ['name' => $attachment->filename]);
 
         // put previous url in session
         $this->rememberPreviousUri('attachments.delete.uri');
-        $request->session()->flash('gaEventCategory', 'attachments');
-        $request->session()->flash('gaEventAction', 'delete-attachment');
 
         return view('attachments.delete', compact('attachment', 'subTitle'));
     }
@@ -151,6 +148,8 @@ class AttachmentController extends Controller
      * @param Attachment $attachment
      *
      * @return \Illuminate\Http\Response
+     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function preview(Attachment $attachment)
     {

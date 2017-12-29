@@ -1,15 +1,24 @@
 <?php
-declare(strict_types=1);
-
 /**
  * validation.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+declare(strict_types=1);
 
 return [
     'iban'                           => 'To nie jest prawidłowy IBAN.',
@@ -20,7 +29,7 @@ return [
     'file_already_attached'          => 'Przesłany plik ":name" jest już dołączony do tego obiektu.',
     'file_attached'                  => 'Pomyślnie wgrano plik ":name".',
     'file_invalid_mime'              => 'Plik ":name" jest typu ":mime", który nie jest akceptowany jako nowy plik do przekazania.',
-    'file_too_large'                 => 'Plik ": nazwa" jest zbyt duży.',
+    'file_too_large'                 => 'Plik ":name" jest zbyt duży.',
     'belongs_to_user'                => 'Wartość :attribute jest nieznana',
     'accepted'                       => ':attribute musi zostać zaakceptowany.',
     'bic'                            => 'To nie jest prawidłowy BIC.',
@@ -31,7 +40,7 @@ return [
     'alpha_dash'                     => ':attribute może zawierać litery, cyfry oraz myślniki.',
     'alpha_num'                      => ':attribute może zawierać jedynie litery oraz cyfry.',
     'array'                          => ':attribute musi być tablicą.',
-    'unique_for_user'                => 'Istnieje już wpis z tym: attribute.',
+    'unique_for_user'                => 'Istnieje już wpis z tym :attribute.',
     'before'                         => ':attribute musi być wcześniejszą datą w stosunku do :date.',
     'unique_object_for_user'         => 'Ta nazwa jest już w użyciu',
     'unique_account_for_user'        => 'Ta nazwa konta jest już w użyciu',

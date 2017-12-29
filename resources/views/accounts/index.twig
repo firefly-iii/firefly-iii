@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, what) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, what) }}
 {% endblock %}
 
 {% block content %}
@@ -32,7 +32,8 @@
                 </div>
             </div>
         </div>
-    {% else %}
+    {% endif %}
+    {% if accounts.count == 0 and page == 0 %}
         {% include 'partials.empty' with {what: what, type: 'accounts',route: route('accounts.create', [what])} %}
     {% endif %}
 {% endblock %}

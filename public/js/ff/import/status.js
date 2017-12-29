@@ -15,10 +15,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: jobImportUrl, langImportSingleError, langImportMultiError, jobStartUrl, langImportTimeOutError, langImportFinished, langImportFatalError */
+/** global: job, langImportSingleError, langImportMultiError, jobStartUrl, langImportTimeOutError, langImportFinished, langImportFatalError */
 
 var timeOutId;
 var startInterval = 1000;
@@ -34,21 +34,29 @@ var knownErrors = 0;
 
 $(function () {
     "use strict";
-    timeOutId = setTimeout(checkImportStatus, startInterval);
+    console.log('in start');
+    timeOutId = setTimeout(checkJobStatus, startInterval);
+
     $('.start-job').click(startJob);
+    if (job.configuration['auto-start']) {
+        console.log('Called startJob()!');
+        startJob();
+    }
 });
 
 /**
  * Downloads some JSON and responds to its content to see what the status is of the current import.
  */
-function checkImportStatus() {
-    $.getJSON(jobImportUrl).done(reportOnJobImport).fail(failedJobImport);
+function checkJobStatus() {
+    console.log('in checkJobStatus');
+    $.getJSON(jobStatusUri).done(reportOnJobStatus).fail(reportFailedJob);
 }
 
 /**
  * This method is called when the JSON query returns an error. If possible, this error is relayed to the user.
  */
-function failedJobImport(jqxhr, textStatus, error) {
+function reportFailedJob(jqxhr, textStatus, error) {
+    console.log('in reportFailedJob');
     // hide all possible boxes:
     $('.statusbox').hide();
 
@@ -67,13 +75,20 @@ function failedJobImport(jqxhr, textStatus, error) {
  *
  * @param data
  */
-function reportOnJobImport(data) {
+function reportOnJobStatus(data) {
+    console.log('in reportOnJobStatus: ' + data.status);
 
     switch (data.status) {
         case "configured":
             // job is ready. Do not check again, just show the start-box. Hide the rest.
-            $('.statusbox').hide();
-            $('.status_configured').show();
+            if (!job.configuration['auto-start']) {
+                $('.statusbox').hide();
+                $('.status_configured').show();
+            }
+            if (job.configuration['auto-start']) {
+                console.log('Job is auto start. Check status again in 500ms.');
+                timeOutId = setTimeout(checkJobStatus, interval);
+            }
             break;
         case "running":
             // job is running! Show the running box:
@@ -94,7 +109,7 @@ function reportOnJobImport(data) {
                 showStalledBox();
             } else {
                 // check again in 500ms
-                timeOutId = setTimeout(checkImportStatus, interval);
+                timeOutId = setTimeout(checkJobStatus, interval);
             }
             break;
         case "finished":
@@ -103,7 +118,26 @@ function reportOnJobImport(data) {
             // show text:
             $('#import-status-more-info').html(data.finishedText);
             break;
+        case "errored":
+            // TODO this view is not yet used.
+            // hide all possible boxes:
+            $('.statusbox').hide();
+
+            // fill in some details:
+            var errorMessage = data.error_message;
+
+            $('.fatal_error_txt').text(errorMessage);
+
+            // show the fatal error box:
+            $('.fatal_error').show();
+            break;
+        case "configuring":
+            // redirect back to configure screen.
+            console.log('Will now redirect to ' + jobConfigureUri);
+            window.location = jobConfigureUri;
+            break;
         default:
+            console.error('Cannot handle job status ' + data.status);
             break;
 
     }
@@ -144,13 +178,16 @@ function jobIsStalled(data) {
 function startJob() {
     // disable the button, add loading thing.
     $('.start-job').prop('disabled', true).text('...');
-    $.post(jobStartUrl).fail(reportOnSubmitError);
+    $.post(jobStartUri, {_token: token}).fail(reportOnSubmitError);
 
     // check status, every 500 ms.
-    timeOutId = setTimeout(checkImportStatus, startInterval);
+    timeOutId = setTimeout(checkJobStatus, startInterval);
 }
 
-function reportOnSubmitError() {
+/**
+ * When the start button fails (returns error code) this function reports. It assumes a time out.
+ */
+function reportOnSubmitError(jqxhr, textStatus, error) {
     // stop the refresh thing
     clearTimeout(timeOutId);
 
@@ -158,7 +195,7 @@ function reportOnSubmitError() {
     $('.statusbox').hide();
 
     // fill in some details:
-    var errorMessage = "Time out while waiting for job to finish.";
+    var errorMessage = "Submitting the job returned an error: " + textStatus + ' ' + error;
 
     $('.fatal_error_txt').text(errorMessage);
 

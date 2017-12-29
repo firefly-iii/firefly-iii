@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -24,6 +24,7 @@ namespace FireflyIII\Support\Binder;
 
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -33,26 +34,35 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class TagList implements BinderInterface
 {
     /**
-     * @param $value
-     * @param $route
+     * @param string $value
+     * @param Route  $route
      *
-     * @return mixed
+     * @return Collection
      */
-    public static function routeBinder($value, $route): Collection
+    public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
-            $tags = explode(',', $value);
+            $list     = [];
+            $incoming = explode(',', $value);
+            foreach ($incoming as $entry) {
+                $list[] = trim($entry);
+            }
+            $list = array_unique($list);
+            if (count($list) === 0) {
+                throw new NotFoundHttpException; // @codeCoverageIgnore
+            }
             /** @var TagRepositoryInterface $repository */
             $repository = app(TagRepositoryInterface::class);
             $allTags    = $repository->get();
-            $set        = $allTags->filter(
-                function (Tag $tag) use ($tags) {
-                    return in_array($tag->tag, $tags);
+
+            $collection = $allTags->filter(
+                function (Tag $tag) use ($list) {
+                    return in_array($tag->tag, $list);
                 }
             );
 
-            if ($set->count() > 0) {
-                return $set;
+            if ($collection->count() > 0) {
+                return $collection;
             }
         }
         throw new NotFoundHttpException;

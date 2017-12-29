@@ -1,12 +1,22 @@
 <?php
 /**
  * web.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -95,7 +105,9 @@ Route::group(
 
     // reconcile routes:
     Route::get('reconcile/{account}/index/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@reconcile', 'as' => 'reconcile']);
-    Route::get('reconcile/{account}/transactions/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@transactions', 'as' => 'reconcile.transactions']);
+    Route::get(
+        'reconcile/{account}/transactions/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@transactions', 'as' => 'reconcile.transactions']
+    );
     Route::get('reconcile/{account}/overview/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@overview', 'as' => 'reconcile.overview']);
     Route::post('reconcile/{account}/submit/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@submit', 'as' => 'reconcile.submit']);
 
@@ -215,8 +227,8 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'export', 'as' => 'export.'], function () {
     Route::get('', ['uses' => 'ExportController@index', 'as' => 'index']);
-    Route::get('status/{jobKey}', ['uses' => 'ExportController@getStatus', 'as' => 'status']);
-    Route::get('download/{jobKey}', ['uses' => 'ExportController@download', 'as' => 'download']);
+    Route::get('status/{exportJob}', ['uses' => 'ExportController@getStatus', 'as' => 'status']);
+    Route::get('download/{exportJob}', ['uses' => 'ExportController@download', 'as' => 'download']);
 
     Route::post('submit', ['uses' => 'ExportController@postIndex', 'as' => 'submit']);
 
@@ -224,7 +236,7 @@ Route::group(
 );
 
 /**
- * Chart\Account Controller
+ * Chart\Account Controller (default report)
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/account', 'as' => 'chart.account.'], function () {
@@ -245,6 +257,7 @@ Route::group(
     Route::get('expense-budget/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@expenseBudget', 'as' => 'expense-budget']);
 }
 );
+
 
 /**
  * Chart\Bill Controller
@@ -375,6 +388,19 @@ Route::group(
 );
 
 /**
+ * Chart\Expense Controller (for expense/revenue report).
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/expense', 'as' => 'chart.expense.'], function () {
+    Route::get(
+        'operations/{accountList}/{expenseList}/{start_date}/{end_date}',
+        ['uses' => 'ExpenseReportController@mainChart', 'as' => 'main']
+    );
+}
+);
+
+
+/**
  * Chart\PiggyBank Controller
  */
 Route::group(
@@ -401,27 +427,28 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'import', 'as' => 'import.'], function () {
 
-    Route::get('', ['uses' => 'ImportController@index', 'as' => 'index']);
+    Route::get('', ['uses' => 'Import\IndexController@index', 'as' => 'index']);
 
+    // import method prerequisites:
+    Route::get('prerequisites/{bank}', ['uses' => 'Import\PrerequisitesController@index', 'as' => 'prerequisites']);
+    Route::post('prerequisites/{bank}', ['uses' => 'Import\PrerequisitesController@post', 'as' => 'prerequisites.post']);
 
-    // file import
-    Route::get('file', ['uses' => 'Import\FileController@index', 'as' => 'file.index']);
-    Route::post('file/initialize', ['uses' => 'Import\FileController@initialize', 'as' => 'file.initialize']);
+    // create the job:
+    Route::get('create/{bank}', ['uses' => 'Import\IndexController@create', 'as' => 'create-job']);
 
-    Route::get('file/configure/{importJob}', ['uses' => 'Import\FileController@configure', 'as' => 'file.configure']);
-    Route::post('file/configure/{importJob}', ['uses' => 'Import\FileController@postConfigure', 'as' => 'file.process-configuration']);
+    // configure the job:
+    Route::get('configure/{importJob}', ['uses' => 'Import\ConfigurationController@index', 'as' => 'configure']);
+    Route::post('configure/{importJob}', ['uses' => 'Import\ConfigurationController@post', 'as' => 'configure.post']);
 
-    Route::get('file/download/{importJob}', ['uses' => 'Import\FileController@download', 'as' => 'file.download']);
-    Route::get('file/status/{importJob}', ['uses' => 'Import\FileController@status', 'as' => 'file.status']);
-    Route::get('file/json/{importJob}', ['uses' => 'Import\FileController@json', 'as' => 'file.json']);
-    Route::post('file/start/{importJob}', ['uses' => 'Import\FileController@start', 'as' => 'file.start']);
+    // get status of any job:
+    Route::get('status/{importJob}', ['uses' => 'Import\StatusController@index', 'as' => 'status']);
+    Route::get('json/{importJob}', ['uses' => 'Import\StatusController@json', 'as' => 'status.json']);
 
-    // banks:
-    Route::get('bank/{bank}/prerequisites', ['uses' => 'Import\BankController@prerequisites', 'as' => 'bank.prerequisites']);
-    Route::post('bank/{bank}/prerequisites', ['uses' => 'Import\BankController@postPrerequisites', 'as' => 'bank.prerequisites.post']);
+    // start a job
+    Route::any('start/{importJob}', ['uses' => 'Import\IndexController@start', 'as' => 'start']);
 
-    Route::get('bank/{bank}/form', ['uses' => 'Import\BankController@form', 'as' => 'bank.form']);
-    Route::post('bank/{bank}/form', ['uses' => 'Import\BankController@postForm', 'as' => 'bank.form.post']);
+    // download config
+    Route::get('download/{importJob}', ['uses' => 'Import\IndexController@download', 'as' => 'download']);
 }
 );
 
@@ -477,8 +504,8 @@ Route::group(
     Route::get('rate/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'Json\ExchangeController@getRate', 'as' => 'rate']);
 
     // intro things:
-    Route::any('intro/finished/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postFinished', 'as' => 'intro.finished']);
-    Route::any('intro/enable/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postEnable', 'as' => 'intro.enable']);
+    Route::post('intro/finished/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postFinished', 'as' => 'intro.finished']);
+    Route::post('intro/enable/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postEnable', 'as' => 'intro.enable']);
     Route::get('intro/{route}/{specificPage?}', ['uses' => 'Json\IntroController@getIntroSteps', 'as' => 'intro']);
 
 
@@ -567,6 +594,7 @@ Route::group(
     Route::get('category/{accountList}/{categoryList}/{start_date}/{end_date}', ['uses' => 'ReportController@categoryReport', 'as' => 'report.category']);
     Route::get('budget/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'ReportController@budgetReport', 'as' => 'report.budget']);
     Route::get('tag/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'ReportController@tagReport', 'as' => 'report.tag']);
+    Route::get('account/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ReportController@accountReport', 'as' => 'report.account']);
 
     Route::post('', ['uses' => 'ReportController@postIndex', 'as' => 'index.post']);
 }
@@ -578,6 +606,26 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/account', 'as' => 'report-data.account.'], function () {
     Route::get('general/{accountList}/{start_date}/{end_date}', ['uses' => 'AccountController@general', 'as' => 'general']);
+}
+);
+
+/**
+ * Report Data Expense / Revenue Account Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/expense', 'as' => 'report-data.expense.'], function () {
+
+    // spent per period
+    Route::get('spent/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@spent', 'as' => 'spent']);
+
+    // per category && per budget
+    Route::get('category/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@category', 'as' => 'category']);
+    Route::get('budget/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@budget', 'as' => 'budget']);
+
+    //expense earned top X
+    Route::get('expenses/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@topExpense', 'as' => 'expenses']);
+    Route::get('income/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@topIncome', 'as' => 'income']);
+
 }
 );
 
@@ -796,6 +844,11 @@ Route::group(
     // admin home
     Route::get('', ['uses' => 'HomeController@index', 'as' => 'index']);
     Route::post('test-message', ['uses' => 'HomeController@testMessage', 'as' => 'test-message']);
+
+    // check for updates?
+    Route::get('update-check', ['uses' => 'UpdateController@index', 'as' => 'update-check']);
+    Route::post('update-check/manual', ['uses' => 'UpdateController@updateCheck', 'as' => 'update-check.manual']);
+    Route::post('update-check', ['uses' => 'UpdateController@post', 'as' => 'update-check.post']);
 
     // user manager
     Route::get('users', ['uses' => 'UserController@index', 'as' => 'users']);

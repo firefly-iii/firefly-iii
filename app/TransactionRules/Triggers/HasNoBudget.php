@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -54,6 +54,7 @@ final class HasNoBudget extends AbstractTrigger implements TriggerInterface
 
     /**
      * Returns true when journal has no budget
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

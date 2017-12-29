@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -25,6 +25,9 @@ namespace FireflyIII\Services\Bunq\Object;
 use Carbon\Carbon;
 use FireflyIII\Services\Bunq\Id\DeviceServerId;
 
+/**
+ * Class DeviceServer
+ */
 class DeviceServer extends BunqObject
 {
     /** @var Carbon */
@@ -40,6 +43,11 @@ class DeviceServer extends BunqObject
     /** @var Carbon */
     private $updated;
 
+    /**
+     * DeviceServer constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         $id = new DeviceServerId();

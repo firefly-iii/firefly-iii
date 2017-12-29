@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -45,44 +45,131 @@ use FireflyIII\Models\Transaction;
 final class Entry
 {
     // @formatter:off
+    /**
+     * @var int
+     */
     public $journal_id;
+    /**
+     * @var int
+     */
     public $transaction_id = 0;
 
+    /**
+     * @var string
+     */
     public $date;
+    /**
+     * @var string
+     */
     public $description;
 
+    /**
+     * @var string
+     */
     public $currency_code;
+    /**
+     * @var string
+     */
     public $amount;
+    /**
+     * @var string
+     */
     public $foreign_currency_code = '';
-    public $foreign_amount        = '0';
+    /**
+     * @var string
+     */
+    public $foreign_amount = '0';
 
+    /**
+     * @var string
+     */
     public $transaction_type;
 
+    /**
+     * @var string
+     */
     public $asset_account_id;
+    /**
+     * @var string
+     */
     public $asset_account_name;
+    /**
+     * @var string
+     */
     public $asset_account_iban;
+    /**
+     * @var string
+     */
     public $asset_account_bic;
+    /**
+     * @var string
+     */
     public $asset_account_number;
+    /**
+     * @var string
+     */
     public $asset_currency_code;
 
+    /**
+     * @var string
+     */
     public $opposing_account_id;
+    /**
+     * @var string
+     */
     public $opposing_account_name;
+    /**
+     * @var string
+     */
     public $opposing_account_iban;
+    /**
+     * @var string
+     */
     public $opposing_account_bic;
+    /**
+     * @var string
+     */
     public $opposing_account_number;
+    /**
+     * @var string
+     */
     public $opposing_currency_code;
 
+    /**
+     * @var string
+     */
     public $budget_id;
+    /**
+     * @var string
+     */
     public $budget_name;
 
+    /**
+     * @var string
+     */
     public $category_id;
+    /**
+     * @var string
+     */
     public $category_name;
 
+    /**
+     * @var string
+     */
     public $bill_id;
+    /**
+     * @var string
+     */
     public $bill_name;
 
+    /**
+     * @var string
+     */
     public $notes;
 
+    /**
+     * @var string
+     */
     public $tags;
 
 
@@ -116,7 +203,7 @@ final class Entry
             $entry->description = $transaction->transaction_description . '(' . $transaction->description . ')';
         }
         $entry->currency_code = $transaction->transactionCurrency->code;
-        $entry->amount        = round($transaction->transaction_amount, $transaction->transactionCurrency->decimal_places);
+        $entry->amount        = strval(round($transaction->transaction_amount, $transaction->transactionCurrency->decimal_places));
 
         $entry->foreign_currency_code = null === $transaction->foreign_currency_id ? null : $transaction->foreignCurrency->code;
         $entry->foreign_amount        = null === $transaction->foreign_currency_id
@@ -129,14 +216,14 @@ final class Entry
             );
 
         $entry->transaction_type     = $transaction->transaction_type_type;
-        $entry->asset_account_id     = $transaction->account_id;
+        $entry->asset_account_id     = strval($transaction->account_id);
         $entry->asset_account_name   = app('steam')->tryDecrypt($transaction->account_name);
         $entry->asset_account_iban   = $transaction->account_iban;
         $entry->asset_account_number = $transaction->account_number;
         $entry->asset_account_bic    = $transaction->account_bic;
         $entry->asset_currency_code  = $transaction->account_currency_code;
 
-        $entry->opposing_account_id     = $transaction->opposing_account_id;
+        $entry->opposing_account_id     = strval($transaction->opposing_account_id);
         $entry->opposing_account_name   = app('steam')->tryDecrypt($transaction->opposing_account_name);
         $entry->opposing_account_iban   = $transaction->opposing_account_iban;
         $entry->opposing_account_number = $transaction->opposing_account_number;
@@ -144,7 +231,7 @@ final class Entry
         $entry->opposing_currency_code  = $transaction->opposing_currency_code;
 
         // budget
-        $entry->budget_id   = $transaction->transaction_budget_id;
+        $entry->budget_id   = strval($transaction->transaction_budget_id);
         $entry->budget_name = app('steam')->tryDecrypt($transaction->transaction_budget_name);
         if (null === $transaction->transaction_budget_id) {
             $entry->budget_id   = $transaction->transaction_journal_budget_id;
@@ -152,7 +239,7 @@ final class Entry
         }
 
         // category
-        $entry->category_id   = $transaction->transaction_category_id;
+        $entry->category_id   = strval($transaction->transaction_category_id);
         $entry->category_name = app('steam')->tryDecrypt($transaction->transaction_category_name);
         if (null === $transaction->transaction_category_id) {
             $entry->category_id   = $transaction->transaction_journal_category_id;
@@ -160,7 +247,7 @@ final class Entry
         }
 
         // budget
-        $entry->bill_id   = $transaction->bill_id;
+        $entry->bill_id   = strval($transaction->bill_id);
         $entry->bill_name = app('steam')->tryDecrypt($transaction->bill_name);
 
         $entry->tags  = $transaction->tags;

@@ -15,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /** global: accounting */
@@ -29,40 +29,37 @@
  * @param maxwidth
  * @returns {Array}
  */
-function formatLabel(str, maxwidth){
+function formatLabel(str, maxwidth) {
     var sections = [];
     var words = str.split(" ");
     var temp = "";
 
-    words.forEach(function(item, index){
-        if(temp.length > 0)
-        {
+    words.forEach(function (item, index) {
+        if (temp.length > 0) {
             var concat = temp + ' ' + item;
 
-            if(concat.length > maxwidth){
+            if (concat.length > maxwidth) {
                 sections.push(temp);
                 temp = "";
             }
-            else{
-                if(index === (words.length-1))
-                {
+            else {
+                if (index === (words.length - 1)) {
                     sections.push(concat);
                     return;
                 }
-                else{
+                else {
                     temp = concat;
                     return;
                 }
             }
         }
 
-        if(index === (words.length-1))
-        {
+        if (index === (words.length - 1)) {
             sections.push(item);
             return;
         }
 
-        if(item.length < maxwidth) {
+        if (item.length < maxwidth) {
             temp = item;
         }
         else {

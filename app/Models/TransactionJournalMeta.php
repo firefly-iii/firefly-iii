@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -49,6 +49,8 @@ class TransactionJournalMeta extends Model
     protected $table = 'journal_meta';
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return mixed
@@ -59,6 +61,8 @@ class TransactionJournalMeta extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setDataAttribute($value)
@@ -69,6 +73,7 @@ class TransactionJournalMeta extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function transactionJournal(): BelongsTo

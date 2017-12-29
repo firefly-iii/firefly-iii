@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -30,16 +30,46 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class AccountType extends Model
 {
-    const DEFAULT         = 'Default account';
-    const CASH            = 'Cash account';
-    const ASSET           = 'Asset account';
-    const EXPENSE         = 'Expense account';
-    const REVENUE         = 'Revenue account';
+    /**
+     *
+     */
+    const DEFAULT = 'Default account';
+    /**
+     *
+     */
+    const CASH = 'Cash account';
+    /**
+     *
+     */
+    const ASSET = 'Asset account';
+    /**
+     *
+     */
+    const EXPENSE = 'Expense account';
+    /**
+     *
+     */
+    const REVENUE = 'Revenue account';
+    /**
+     *
+     */
     const INITIAL_BALANCE = 'Initial balance account';
-    const BENEFICIARY     = 'Beneficiary account';
-    const IMPORT          = 'Import account';
-    const RECONCILIATION  = 'Reconciliation account';
-    const LOAN            = 'Loan';
+    /**
+     *
+     */
+    const BENEFICIARY = 'Beneficiary account';
+    /**
+     *
+     */
+    const IMPORT = 'Import account';
+    /**
+     *
+     */
+    const RECONCILIATION = 'Reconciliation account';
+    /**
+     *
+     */
+    const LOAN = 'Loan';
     /**
      * The attributes that should be casted to native types.
      *
@@ -55,6 +85,7 @@ class AccountType extends Model
 
     /**
      * @return HasMany
+     * @codeCoverageIgnore
      */
     public function accounts(): HasMany
     {

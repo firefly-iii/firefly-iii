@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -49,21 +49,24 @@ class Rule extends Model
         ];
 
     /**
-     * @param Rule $value
+     * @param string $value
      *
      * @return Rule
      */
-    public static function routeBinder(Rule $value)
+    public static function routeBinder(string $value): Rule
     {
         if (auth()->check()) {
-            if (intval($value->user_id) === auth()->user()->id) {
-                return $value;
+            $ruleId = intval($value);
+            $rule   = auth()->user()->rules()->find($ruleId);
+            if (!is_null($rule)) {
+                return $rule;
             }
         }
         throw new NotFoundHttpException;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function ruleActions()
@@ -72,6 +75,7 @@ class Rule extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function ruleGroup()
@@ -80,6 +84,7 @@ class Rule extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function ruleTriggers()
@@ -88,6 +93,7 @@ class Rule extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

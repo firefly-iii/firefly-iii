@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -64,9 +64,9 @@ class BillFormRequest extends Request
     {
         $nameRule  = 'required|between:1,255|uniqueObjectForUser:bills,name';
         $matchRule = 'required|between:1,255|uniqueObjectForUser:bills,match';
-        if (intval($this->get('id')) > 0) {
-            $nameRule  .= ',' . intval($this->get('id'));
-            $matchRule .= ',' . intval($this->get('id'));
+        if ($this->integer('id') > 0) {
+            $nameRule  .= ',' . $this->integer('id');
+            $matchRule .= ',' . $this->integer('id');
         }
         // is OK
         $rules = [

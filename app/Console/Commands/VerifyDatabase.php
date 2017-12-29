@@ -16,13 +16,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
 use Crypt;
+use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
@@ -93,6 +94,7 @@ class VerifyDatabase extends Command
         $this->repairPiggyBanks();
         $this->createLinkTypes();
         $this->createAccessTokens();
+        $this->fixDoubleAmounts();
     }
 
     /**
@@ -100,6 +102,7 @@ class VerifyDatabase extends Command
      */
     private function createAccessTokens()
     {
+        $count = 0;
         $users = User::get();
         /** @var User $user */
         foreach ($users as $user) {
@@ -108,7 +111,11 @@ class VerifyDatabase extends Command
                 $token = $user->generateAccessToken();
                 Preferences::setForUser($user, 'access_token', $token);
                 $this->line(sprintf('Generated access token for user %s', $user->email));
+                ++$count;
             }
+        }
+        if (0 === $count) {
+            $this->info('All access tokens OK!');
         }
     }
 
@@ -117,7 +124,8 @@ class VerifyDatabase extends Command
      */
     private function createLinkTypes()
     {
-        $set = [
+        $count = 0;
+        $set   = [
             'Related'       => ['relates to', 'relates to'],
             'Refund'        => ['(partially) refunds', 'is (partially) refunded by'],
             'Paid'          => ['(partially) pays for', 'is (partially) paid for by'],
@@ -130,10 +138,64 @@ class VerifyDatabase extends Command
                 $link->name    = $name;
                 $link->outward = $values[0];
                 $link->inward  = $values[1];
+                ++$count;
             }
             $link->editable = false;
             $link->save();
         }
+        if (0 === $count) {
+            $this->info('All link types OK!');
+        }
+    }
+
+    private function fixDoubleAmounts()
+    {
+        $count = 0;
+        // get invalid journals
+        $errored  = [];
+        $journals = DB::table('transactions')
+                      ->groupBy('transaction_journal_id')
+                      ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')]);
+        /** @var stdClass $entry */
+        foreach ($journals as $entry) {
+            if (0 !== bccomp(strval($entry->the_sum), '0')) {
+                $errored[] = $entry->transaction_journal_id;
+            }
+        }
+        foreach ($errored as $journalId) {
+            // select and update:
+            $res = Transaction::whereNull('deleted_at')->where('transaction_journal_id', $journalId)->groupBy('amount')->get([DB::raw('MIN(id) as first_id')]);
+            $ids = $res->pluck('first_id')->toArray();
+            DB::table('transactions')->whereIn('id', $ids)->update(['amount' => DB::raw('amount * -1')]);
+            ++$count;
+            // report about it
+            /** @var TransactionJournal $journal */
+            $journal = TransactionJournal::find($journalId);
+            if (is_null($journal)) {
+                continue;
+            }
+            if (TransactionType::OPENING_BALANCE === $journal->transactionType->type) {
+                $this->error(
+                    sprintf(
+                        'Transaction #%d was stored incorrectly. One of your asset accounts may show the wrong balance. Please visit /transactions/show/%d to verify the opening balance.',
+                        $journalId, $journalId
+                    )
+                );
+            }
+            if (TransactionType::OPENING_BALANCE !== $journal->transactionType->type) {
+                $this->error(
+                    sprintf(
+                        'Transaction #%d was stored incorrectly. Could be that the transaction shows the wrong amount. Please visit /transactions/show/%d to verify the opening balance.',
+                        $journalId, $journalId
+                    )
+                );
+            }
+        }
+        if (0 === $count) {
+            $this->info('Amount integrity OK!');
+        }
+
+        return;
     }
 
     /**
@@ -290,24 +352,29 @@ class VerifyDatabase extends Command
      */
     private function reportJournals()
     {
-        $set = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                 ->whereNotNull('transaction_journals.deleted_at')// USE THIS
-                                 ->whereNull('transactions.deleted_at')
-                                 ->whereNotNull('transactions.id')
-                                 ->get(
-                                     [
-                                         'transaction_journals.id as journal_id',
-                                         'transaction_journals.description',
-                                         'transaction_journals.deleted_at as journal_deleted',
-                                         'transactions.id as transaction_id',
-                                         'transactions.deleted_at as transaction_deleted_at',]
-                                 );
+        $count = 0;
+        $set   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                   ->whereNotNull('transaction_journals.deleted_at')// USE THIS
+                                   ->whereNull('transactions.deleted_at')
+                                   ->whereNotNull('transactions.id')
+                                   ->get(
+                                       [
+                                           'transaction_journals.id as journal_id',
+                                           'transaction_journals.description',
+                                           'transaction_journals.deleted_at as journal_deleted',
+                                           'transactions.id as transaction_id',
+                                           'transactions.deleted_at as transaction_deleted_at',]
+                                   );
         /** @var stdClass $entry */
         foreach ($set as $entry) {
             $this->error(
                 'Error: Transaction #' . $entry->transaction_id . ' should have been deleted, but has not.' .
                 ' Find it in the table called "transactions" and change the "deleted_at" field to: "' . $entry->journal_deleted . '"'
             );
+            ++$count;
+        }
+        if (0 === $count) {
+            $this->info('No orphaned transactions!');
         }
     }
 
@@ -316,15 +383,20 @@ class VerifyDatabase extends Command
      */
     private function reportNoTransactions()
     {
-        $set = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                 ->groupBy('transaction_journals.id')
-                                 ->whereNull('transactions.transaction_journal_id')
-                                 ->get(['transaction_journals.id']);
+        $count = 0;
+        $set   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                   ->groupBy('transaction_journals.id')
+                                   ->whereNull('transactions.transaction_journal_id')
+                                   ->get(['transaction_journals.id']);
 
         foreach ($set as $entry) {
             $this->error(
                 'Error: Journal #' . $entry->id . ' has zero transactions. Open table "transaction_journals" and delete the entry with id #' . $entry->id
             );
+            ++$count;
+        }
+        if (0 === $count) {
+            $this->info('No orphaned journals!');
         }
     }
 
@@ -379,6 +451,8 @@ class VerifyDatabase extends Command
             $sum = strval($user->transactions()->sum('amount'));
             if (0 !== bccomp($sum, '0')) {
                 $this->error('Error: Transactions for user #' . $user->id . ' (' . $user->email . ') are off by ' . $sum . '!');
+            } else {
+                $this->info(sprintf('Amount integrity OK for user #%d', $user->id));
             }
         }
     }

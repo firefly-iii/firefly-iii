@@ -15,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /** global: minDate, nonSelectedText, allSelectedText, filterPlaceholder */
@@ -124,10 +124,21 @@ function setOptionalFromCookies() {
     if ((readCookie('report-tags') !== null)) {
         arr = readCookie('report-tags').split(',');
         arr.forEach(function (val) {
-            $('#inputBudgets').find('option[value="' + val + '"]').prop('selected', true);
+            $('#inputTags').find('option[value="' + val + '"]').prop('selected', true);
         });
     }
     $('#inputTags').multiselect(defaultMultiSelect);
+
+    // and expense/revenue thing
+    if ((readCookie('report-exp-rev') !== null)) {
+        arr = readCookie('report-exp-rev').split(',');
+        arr.forEach(function (val) {
+            $('#inputExpRevAccounts').find('option[value="' + val + '"]').prop('selected', true);
+        });
+    }
+    $('#inputExpRevAccounts').multiselect(defaultMultiSelect);
+
+
 }
 
 function catchSubmit() {
@@ -140,6 +151,7 @@ function catchSubmit() {
     var categories = $('#inputCategories').val();
     var budgets = $('#inputBudgets').val();
     var tags = $('#inputTags').val();
+    var expRev = $('#inputExpRevAccounts').val();
 
     // remember all
     // set cookie to remember choices.
@@ -148,6 +160,7 @@ function catchSubmit() {
     createCookie('report-categories', categories, 365);
     createCookie('report-budgets', budgets, 365);
     createCookie('report-tags', tags, 365);
+    createCookie('report-exp-rev', expRev, 365);
     createCookie('report-start', moment(picker.startDate).format("YYYYMMDD"), 365);
     createCookie('report-end', moment(picker.endDate).format("YYYYMMDD"), 365);
 
@@ -164,34 +177,4 @@ function preSelectDate(e) {
 
 }
 
-
-function createCookie(name, value, days) {
-    "use strict";
-    var expires;
-
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        expires = "; expires=" + date.toGMTString();
-    } else {
-        expires = "";
-    }
-    document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=/";
-}
-
-function readCookie(name) {
-    "use strict";
-    var nameEQ = encodeURIComponent(name) + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) === ' ') {
-            c = c.substring(1, c.length);
-        }
-        if (c.indexOf(nameEQ) === 0) {
-            return decodeURIComponent(c.substring(nameEQ.length, c.length));
-        }
-    }
-    return null;
-}
 

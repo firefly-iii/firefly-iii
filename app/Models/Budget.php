@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -84,21 +84,24 @@ class Budget extends Model
     }
 
     /**
-     * @param Budget $value
+     * @param string $value
      *
      * @return Budget
      */
-    public static function routeBinder(Budget $value)
+    public static function routeBinder(string $value): Budget
     {
         if (auth()->check()) {
-            if (intval($value->user_id) === auth()->user()->id) {
-                return $value;
+            $budgetId = intval($value);
+            $budget   = auth()->user()->budgets()->find($budgetId);
+            if (!is_null($budget)) {
+                return $budget;
             }
         }
         throw new NotFoundHttpException;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function budgetlimits()
@@ -107,6 +110,8 @@ class Budget extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string
@@ -121,6 +126,8 @@ class Budget extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setNameAttribute($value)
@@ -131,6 +138,7 @@ class Budget extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function transactionJournals()
@@ -139,6 +147,7 @@ class Budget extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function transactions()
@@ -147,6 +156,7 @@ class Budget extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return BelongsTo
      */
     public function user(): BelongsTo

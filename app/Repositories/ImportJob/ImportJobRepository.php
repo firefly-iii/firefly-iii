@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -42,20 +42,16 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     private $user;
 
     /**
-     * @param string $fileType
+     * @param string $type
      *
      * @return ImportJob
      *
      * @throws FireflyException
      */
-    public function create(string $fileType): ImportJob
+    public function create(string $type): ImportJob
     {
-        $count    = 0;
-        $fileType = strtolower($fileType);
-        $keys     = array_keys(config('firefly.import_formats'));
-        if (!in_array($fileType, $keys)) {
-            throw new FireflyException(sprintf('Cannot use type "%s" for import job.', $fileType));
-        }
+        $count = 0;
+        $type  = strtolower($type);
 
         while ($count < 30) {
             $key      = Str::random(12);
@@ -63,10 +59,10 @@ class ImportJobRepository implements ImportJobRepositoryInterface
             if (null === $existing->id) {
                 $importJob = new ImportJob;
                 $importJob->user()->associate($this->user);
-                $importJob->file_type       = $fileType;
+                $importJob->file_type       = $type;
                 $importJob->key             = Str::random(12);
                 $importJob->status          = 'new';
-                $importJob->configuration   = [];
+                $importJob->configuration   = config(sprintf('import.default_config.%s', $type)) ?? [];
                 $importJob->extended_status = [
                     'steps'  => 0,
                     'done'   => 0,
@@ -80,8 +76,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
             }
             ++$count;
         }
-
-        return new ImportJob;
+        throw new FireflyException('Could not create an import job with a unique key after 30 tries.');
     }
 
     /**
@@ -130,18 +125,23 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     }
 
     /**
-     * @param ImportJob    $job
-     * @param UploadedFile $file
+     * @param ImportJob         $job
+     * @param null|UploadedFile $file
      *
-     * @return mixed
+     * @return bool
+     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    public function processFile(ImportJob $job, UploadedFile $file): bool
+    public function processFile(ImportJob $job, ?UploadedFile $file): bool
     {
+        if (is_null($file)) {
+            return false;
+        }
         /** @var UserRepositoryInterface $repository */
         $repository       = app(UserRepositoryInterface::class);
         $newName          = sprintf('%s.upload', $job->key);
         $uploaded         = new SplFileObject($file->getRealPath());
-        $content          = $uploaded->fread($uploaded->getSize());
+        $content          = trim($uploaded->fread($uploaded->getSize()));
         $contentEncrypted = Crypt::encrypt($content);
         $disk             = Storage::disk('upload');
 
@@ -176,8 +176,12 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      */
     public function setConfiguration(ImportJob $job, array $configuration): ImportJob
     {
-        $job->configuration = $configuration;
+        Log::debug(sprintf('Incoming config for job "%s" is: ', $job->key), $configuration);
+        $currentConfig      = $job->configuration;
+        $newConfig          = array_merge($currentConfig, $configuration);
+        $job->configuration = $newConfig;
         $job->save();
+        Log::debug(sprintf('Set config of job "%s" to: ', $job->key), $newConfig);
 
         return $job;
     }

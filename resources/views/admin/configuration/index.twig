@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists }}
+    {{ Breadcrumbs.render }}
 {% endblock %}
 {% block content %}
     <form action="{{ route('admin.configuration.index.post') }}" method="post" id="store" class="form-horizontal">

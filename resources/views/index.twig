@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists }}
+    {{ Breadcrumbs.render }}
 {% endblock %}
 {% block content %}
     {% include 'partials.boxes' %}
@@ -112,7 +112,8 @@
             {# EXPENSE ACCOUNTS #}
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><a href="{{ route('accounts.index',['expense']) }}" title="{{ 'expense_accounts'|_ }}">{{ 'expense_accounts'|_ }}</a></h3>
+                    <h3 class="box-title"><a href="{{ route('accounts.index',['expense']) }}" title="{{ 'expense_accounts'|_ }}">{{ 'expense_accounts'|_ }}</a>
+                    </h3>
 
                 </div>
                 <div class="box-body">
@@ -123,7 +124,8 @@
             {% if showDeps %}
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title"><a href="{{ route('accounts.index',['revenue']) }}" title="{{ 'revenue_accounts'|_ }}">{{ 'revenue_accounts'|_ }}</a></h3>
+                        <h3 class="box-title"><a href="{{ route('accounts.index',['revenue']) }}"
+                                                 title="{{ 'revenue_accounts'|_ }}">{{ 'revenue_accounts'|_ }}</a></h3>
 
                     </div>
                     <div class="box-body">
@@ -146,9 +148,9 @@
 
         <!-- render vertical line with text "today"  -->
         {% if start.lte(today) and end.gte(today) %}
-            var today = {{ today.diffInDays(start) + 1 }};
+        var today = {{ today.diffInDays(start) + 1 }};
         {% else %}
-            var today = -1;
+        var today = -1;
         {% endif %}
     </script>
 

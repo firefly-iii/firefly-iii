@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -42,7 +42,7 @@ class Bill extends Model
      * @var array
      */
     protected $casts
-                      = [
+        = [
             'created_at'      => 'datetime',
             'updated_at'      => 'datetime',
             'deleted_at'      => 'datetime',
@@ -53,28 +53,40 @@ class Bill extends Model
             'name_encrypted'  => 'boolean',
             'match_encrypted' => 'boolean',
         ];
+    /**
+     * @var array
+     */
     protected $fillable
-                      = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip',
-                         'automatch', 'active',];
+        = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip',
+           'automatch', 'active',];
+    /**
+     * @var array
+     */
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
-    protected $rules  = ['name' => 'required|between:1,200'];
+    /**
+     * @var array
+     */
+    protected $rules = ['name' => 'required|between:1,200'];
 
     /**
-     * @param Bill $value
+     * @param string $value
      *
      * @return Bill
      */
-    public static function routeBinder(Bill $value)
+    public static function routeBinder(string $value): Bill
     {
         if (auth()->check()) {
-            if (intval($value->user_id) === auth()->user()->id) {
-                return $value;
+            $billId = intval($value);
+            $bill   = auth()->user()->bills()->find($billId);
+            if (!is_null($bill)) {
+                return $bill;
             }
         }
         throw new NotFoundHttpException;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function attachments()
@@ -83,6 +95,8 @@ class Bill extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string
@@ -97,6 +111,8 @@ class Bill extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string
@@ -111,6 +127,7 @@ class Bill extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * Get all of the notes.
      */
     public function notes()
@@ -119,23 +136,29 @@ class Bill extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setAmountMaxAttribute($value)
     {
-        $this->attributes['amount_max'] = strval(round($value, 12));
+        $this->attributes['amount_max'] = strval($value);
     }
 
     /**
      * @param $value
+     *
+     * @codeCoverageIgnore
      */
     public function setAmountMinAttribute($value)
     {
-        $this->attributes['amount_min'] = strval(round($value, 12));
+        $this->attributes['amount_min'] = strval($value);
     }
 
     /**
      * @param $value
+     *
+     * @codeCoverageIgnore
      */
     public function setMatchAttribute($value)
     {
@@ -146,6 +169,8 @@ class Bill extends Model
 
     /**
      * @param $value
+     *
+     * @codeCoverageIgnore
      */
     public function setNameAttribute($value)
     {
@@ -155,6 +180,7 @@ class Bill extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return HasMany
      */
     public function transactionJournals(): HasMany
@@ -163,6 +189,7 @@ class Bill extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return BelongsTo
      */
     public function user(): BelongsTo

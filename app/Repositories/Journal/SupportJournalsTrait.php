@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -119,6 +119,9 @@ trait SupportJournalsTrait
      * @param array $data
      *
      * @return array
+     *
+     * @throws FireflyException
+     * @throws FireflyException
      */
     protected function storeDepositAccounts(User $user, array $data): array
     {
@@ -165,6 +168,9 @@ trait SupportJournalsTrait
      * @param array $data
      *
      * @return array
+     *
+     * @throws FireflyException
+     * @throws FireflyException
      */
     protected function storeWithdrawalAccounts(User $user, array $data): array
     {

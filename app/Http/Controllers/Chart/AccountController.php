@@ -16,14 +16,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -38,7 +37,6 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Log;
-use Navigation;
 use Preferences;
 use Response;
 use Steam;
@@ -342,13 +340,11 @@ class AccountController extends Controller
      * @param Carbon  $start
      *
      * @return \Illuminate\Http\JsonResponse
-     *
-     * @throws FireflyException
      */
     public function period(Account $account, Carbon $start)
     {
         $range = Preferences::get('viewRange', '1M')->data;
-        $end   = Navigation::endOfPeriod($start, $range);
+        $end   = app('navigation')->endOfPeriod($start, $range);
         $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);

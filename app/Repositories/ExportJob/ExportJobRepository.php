@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -53,6 +53,8 @@ class ExportJobRepository implements ExportJobRepositoryInterface
 
     /**
      * @return bool
+     *
+     * @throws \Exception
      */
     public function cleanup(): bool
     {
@@ -137,6 +139,8 @@ class ExportJobRepository implements ExportJobRepositoryInterface
      * @param ExportJob $job
      *
      * @return string
+     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function getContent(ExportJob $job): string
     {

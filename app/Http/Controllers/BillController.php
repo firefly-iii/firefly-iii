@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -31,6 +31,7 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Preferences;
 use URL;
@@ -58,8 +59,8 @@ class BillController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.bills'));
-                View::share('mainTitleIcon', 'fa-calendar-o');
+                app('view')->share('title', trans('firefly.bills'));
+                app('view')->share('mainTitleIcon', 'fa-calendar-o');
                 $this->attachments = app(AttachmentHelperInterface::class);
 
                 return $next($request);
@@ -85,24 +86,19 @@ class BillController extends Controller
             $this->rememberPreviousUri('bills.create.uri');
         }
         $request->session()->forget('bills.create.fromStore');
-        $request->session()->flash('gaEventCategory', 'bills');
-        $request->session()->flash('gaEventAction', 'create');
 
         return view('bills.create', compact('periods', 'subTitle'));
     }
 
     /**
-     * @param Request $request
-     * @param Bill    $bill
+     * @param Bill $bill
      *
      * @return View
      */
-    public function delete(Request $request, Bill $bill)
+    public function delete(Bill $bill)
     {
         // put previous url in session
         $this->rememberPreviousUri('bills.delete.uri');
-        $request->session()->flash('gaEventCategory', 'bills');
-        $request->session()->flash('gaEventAction', 'delete');
         $subTitle = trans('firefly.delete_bill', ['name' => $bill->name]);
 
         return view('bills.delete', compact('bill', 'subTitle'));
@@ -162,8 +158,6 @@ class BillController extends Controller
         $request->session()->flash('preFilled', $preFilled);
 
         $request->session()->forget('bills.edit.fromUpdate');
-        $request->session()->flash('gaEventCategory', 'bills');
-        $request->session()->flash('gaEventAction', 'edit');
 
         return view('bills.edit', compact('subTitle', 'periods', 'bill'));
     }
@@ -173,15 +167,19 @@ class BillController extends Controller
      *
      * @return View
      */
-    public function index(BillRepositoryInterface $repository)
+    public function index(Request $request, BillRepositoryInterface $repository)
     {
         /** @var Carbon $start */
         $start = session('start');
         /** @var Carbon $end */
-        $end = session('end');
+        $end        = session('end');
+        $page       = 0 === intval($request->get('page')) ? 1 : intval($request->get('page'));
+        $pageSize   = intval(Preferences::get('listPageSize', 50)->data);
+        $collection = $repository->getBills();
+        $total      = $collection->count();
+        $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
 
-        $bills = $repository->getBills();
-        $bills->each(
+        $collection->each(
             function (Bill $bill) use ($repository, $start, $end) {
                 // paid in this period?
                 $bill->paidDates = $repository->getPaidDatesInRange($bill, $start, $end);
@@ -194,6 +192,9 @@ class BillController extends Controller
                 $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, $lastPaidDate);
             }
         );
+        // paginate bills
+        $bills = new LengthAwarePaginator($collection, $total, $pageSize, $page);
+        $bills->setPath(route('bills.index'));
 
         return view('bills.index', compact('bills'));
     }
@@ -235,12 +236,12 @@ class BillController extends Controller
     public function show(Request $request, BillRepositoryInterface $repository, Bill $bill)
     {
         /** @var Carbon $date */
-        $date           = session('start');
+        $date = session('start');
         /** @var Carbon $end */
         $end            = session('end');
         $year           = $date->year;
         $page           = intval($request->get('page'));
-        $pageSize       = intval(Preferences::get('transactionPageSize', 50)->data);
+        $pageSize       = intval(Preferences::get('listPageSize', 50)->data);
         $yearAverage    = $repository->getYearAverage($bill, $date);
         $overallAverage = $repository->getOverallAverage($bill);
 
@@ -251,7 +252,6 @@ class BillController extends Controller
                   ->withCategoryInformation();
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath(route('bills.show', [$bill->id]));
-
 
         $bill->paidDates = $repository->getPaidDatesInRange($bill, $date, $end);
         $bill->payDates  = $repository->getPayDatesInRange($bill, $date, $end);
@@ -280,14 +280,13 @@ class BillController extends Controller
         $request->session()->flash('success', strval(trans('firefly.stored_new_bill', ['name' => $bill->name])));
         Preferences::mark();
 
-
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         $this->attachments->saveAttachmentsForModel($bill, $files);
 
         // flash messages
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
         if (1 === intval($request->get('create_another'))) {
@@ -323,7 +322,7 @@ class BillController extends Controller
 
         // flash messages
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
         if (1 === intval($request->get('return_to_edit'))) {
@@ -347,8 +346,8 @@ class BillController extends Controller
      */
     private function lastPaidDate(Collection $dates, Carbon $default): Carbon
     {
-        if ($dates->count() === 0) {
-            return $default;
+        if (0 === $dates->count()) {
+            return $default; // @codeCoverageIgnore
         }
         $latest = $dates->first();
         /** @var Carbon $date */
@@ -359,6 +358,5 @@ class BillController extends Controller
         }
 
         return $latest;
-
     }
 }

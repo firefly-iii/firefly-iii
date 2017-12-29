@@ -15,10 +15,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: infoIncomeUri, spent, budgeted, available, currencySymbol, budgetIndexUri, updateIncomeUri, periodStart, periodEnd, budgetAmountUri, accounting */
+/** global: infoIncomeUri, token, spent, budgeted, available, currencySymbol, budgetIndexUri, updateIncomeUri, periodStart, periodEnd, budgetAmountUri, accounting */
 /**
  *
  */
@@ -104,7 +104,7 @@ function updateBudgetedAmounts(e) {
     var target = $(e.target);
     var id = target.data('id');
     var leftCell = $('td[class$="left"][data-id="' + id + '"]');
-    var link = $('a[data-id="'+id+'"][class="budget-link"]');
+    var link = $('a[data-id="' + id + '"][class="budget-link"]');
     var value = target.val();
     var original = target.data('original');
 
@@ -112,7 +112,7 @@ function updateBudgetedAmounts(e) {
     target.prop('disabled', true);
 
     // replace link (for now)
-    link.attr('href','#');
+    link.attr('href', '#');
 
     // replace "left" with spinner.
     leftCell.empty().html('<i class="fa fa-fw fa-spin fa-spinner"></i>');
@@ -120,7 +120,7 @@ function updateBudgetedAmounts(e) {
     // send a post to Firefly to update the amount:
     var newUri = budgetAmountUri.replace("REPLACE", id);
 
-    $.post(newUri, {amount: value, start: periodStart, end: periodEnd}).done(function (data) {
+    $.post(newUri, {amount: value, start: periodStart, end: periodEnd, _token: token}).done(function (data) {
 
         // difference between new value and original value
         var difference = value - original;

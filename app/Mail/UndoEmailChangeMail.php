@@ -16,12 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
-
 
 namespace FireflyIII\Mail;
 
@@ -36,7 +33,7 @@ class UndoEmailChangeMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /** @var string IP address of user*/
+    /** @var string IP address of user */
     public $ipAddress;
     /** @var string New email address */
     public $newEmail;

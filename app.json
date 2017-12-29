@@ -2,7 +2,7 @@
   "name": "Firefly III",
   "description": "A free and open source personal finances manager",
   "repository": "https://github.com/firefly-iii/firefly-iii",
-  "website": "https://firefly-iii.github.io/",
+  "website": "https://firefly-iii.org/",
   "logo": "https://raw.githubusercontent.com/firefly-iii/firefly-iii/master/public/mstile-150x150.png",
   "keywords": [
     "finance",

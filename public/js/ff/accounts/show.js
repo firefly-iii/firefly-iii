@@ -15,10 +15,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: chartUri, incomeCategoryUri, expenseCategoryUri, expenseBudgetUri */
+/** global: chartUri, incomeCategoryUri, expenseCategoryUri, expenseBudgetUri, token */
 
 var fixHelper = function (e, tr) {
     "use strict";
@@ -96,7 +96,7 @@ function sortStop(event, ui) {
     });
 
     // do extra animation when done?
-    $.post('transactions/reorder', {items: submit, date: thisDate});
+    $.post('transactions/reorder', {items: submit, date: thisDate, _token: token});
 
     current.animate({backgroundColor: "#5cb85c"}, 200, function () {
         $(this).animate({backgroundColor: originalBG}, 200);

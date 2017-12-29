@@ -1,18 +1,26 @@
 <?php
-declare(strict_types=1);
-
 /**
  * form.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+declare(strict_types=1);
 
 return [
-
     // new user:
     'bank_name'                      => 'Name der Bank',
     'bank_balance'                   => 'Kontostand',
@@ -79,7 +87,6 @@ return [
     'convert_Withdrawal'          => 'Ändere zu Abhebung',
     'convert_Deposit'             => 'Ändere zu Einzahlung',
     'convert_Transfer'            => 'Ändere zu Überweisung',
-
 
     'amount'                     => 'Betrag',
     'date'                       => 'Datum',
@@ -162,6 +169,7 @@ return [
     'budget_keep_transactions'   => 'Die eine Überweisung, die mit diesem Budget verknüpft ist, wird nicht gelöscht. | Keines der :count Budgets, die mit dieser Rechnung verknüpft sind, werden gelöscht.',
     'category_keep_transactions' => 'Die eine Überweisungen, die mit dieser Kategorie verknüpft ist, wird nicht gelöscht. | Keine der :count Kategorien, die mit dieser Rechnung verknüpft sind, werden gelöscht.',
     'tag_keep_transactions'      => 'Die einzige Überweisung, die mit diesem Tag verknüpft ist, wird nicht gelöscht. | Keiner der :count Tags, die mit dieser Rechnung verknüpft sind, werden gelöscht.',
+    'check_for_updates'          => 'Check for updates',
 
     'email'                 => 'E-Mail Adresse',
     'password'              => 'Passwort',
@@ -169,12 +177,10 @@ return [
     'blocked'               => 'Ist blockiert?',
     'blocked_code'          => 'Grund für Block',
 
-
     // admin
     'domain'                => 'Domain',
     'single_user_mode'      => 'Registrierung deaktivieren',
     'is_demo_site'          => 'Ist eine Demonstrationsseite',
-
 
     // import
     'import_file'           => 'Datei importieren',
@@ -186,7 +192,12 @@ return [
     'csv_delimiter'         => 'CSV-Trennzeichen',
     'csv_import_account'    => 'Standard Import-Konto',
     'csv_config'            => 'CSV-Import Einstellungen',
-
+    'client_id'             => 'Client-ID',
+    'service_secret'        => 'Service secret',
+    'app_secret'            => 'App-Secret',
+    'public_key'            => 'Öffentlicher Schlüssel',
+    'country_code'          => 'Ländercode',
+    'provider_code'         => 'Bank oder Datenanbieter',
 
     'due_date'           => 'Fälligkeitstermin',
     'payment_date'       => 'Zahlungsdatum',

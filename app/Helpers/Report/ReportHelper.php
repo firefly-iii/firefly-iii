@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -79,12 +79,12 @@ class ReportHelper implements ReportHelperInterface
         /** @var Bill $bill */
         foreach ($bills as $bill) {
             $expectedDates = $repository->getPayDatesInRange($bill, $start, $end);
-            foreach($expectedDates as $payDate) {
+            foreach ($expectedDates as $payDate) {
                 $endOfPayPeriod = app('navigation')->endOfX($payDate, $bill->repeat_freq, null);
 
-                $collector  = app(JournalCollectorInterface::class);
+                $collector = app(JournalCollectorInterface::class);
                 $collector->setAccounts($accounts)->setRange($payDate, $endOfPayPeriod)->setBills($bills);
-                $journals   = $collector->getJournals();
+                $journals = $collector->getJournals();
 
                 $billLine = new BillLine;
                 $billLine->setBill($bill);

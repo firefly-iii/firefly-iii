@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists }}
+    {{ Breadcrumbs.render }}
 {% endblock %}
 {% block content %}
     <div class="row">
@@ -27,8 +27,10 @@
                                 <td>
                                     {% if linkType.editable %}
                                         <div class="btn-group btn-group-xs">
-                                            <a class="btn btn-default btn-xs" href="{{ route('admin.links.edit',linkType.id) }}"><i class="fa fa-fw fa-pencil"></i></a>
-                                            <a class="btn btn-danger btn-xs" href="{{ route('admin.links.delete',linkType.id) }}"><i class="fa fa-fw fa-trash-o"></i></a>
+                                            <a class="btn btn-default btn-xs" href="{{ route('admin.links.edit',linkType.id) }}"><i
+                                                        class="fa fa-fw fa-pencil"></i></a>
+                                            <a class="btn btn-danger btn-xs" href="{{ route('admin.links.delete',linkType.id) }}"><i
+                                                        class="fa fa-fw fa-trash-o"></i></a>
                                         </div>
                                     {% endif %}
                                 </td>

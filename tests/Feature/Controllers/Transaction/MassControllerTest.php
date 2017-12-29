@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -128,6 +128,16 @@ class MassControllerTest extends TestCase
         // add withdrawal (with multiple destinations)
         $collection->push(
             TransactionJournal::where('transaction_type_id', 1)
+                              ->whereNull('transaction_journals.deleted_at')
+                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                              ->groupBy('transaction_journals.id')
+                              ->orderBy('ct', 'DESC')
+                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
+        );
+
+        // add reconcile transaction
+        $collection->push(
+            TransactionJournal::where('transaction_type_id', 5)
                               ->whereNull('transaction_journals.deleted_at')
                               ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                               ->groupBy('transaction_journals.id')

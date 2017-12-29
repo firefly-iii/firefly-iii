@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -32,8 +32,8 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\ExportJob;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -114,7 +114,7 @@ class ExpandedProcessor implements ProcessorInterface
         $notes       = $this->getNotes($ids);
         $tags        = $this->getTags($ids);
         /** @var array $ibans */
-        $ibans      = $this->getIbans($assetIds) + $this->getIbans($opposingIds);
+        $ibans      = array_merge($this->getIbans($assetIds), $this->getIbans($opposingIds));
         $currencies = $this->getAccountCurrencies($ibans);
         $transactions->each(
             function (Transaction $transaction) use ($notes, $tags, $ibans, $currencies) {
@@ -173,6 +173,7 @@ class ExpandedProcessor implements ProcessorInterface
      * @return bool
      *
      * @throws FireflyException
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function createZipFile(): bool
     {
@@ -309,17 +310,16 @@ class ExpandedProcessor implements ProcessorInterface
     private function getNotes(array $array): array
     {
         $array  = array_unique($array);
-        $set    = TransactionJournalMeta::whereIn('journal_meta.transaction_journal_id', $array)
-                                        ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
-                                        ->where('transaction_journals.user_id', $this->job->user_id)
-                                        ->where('journal_meta.name', 'notes')->get(
-                ['journal_meta.transaction_journal_id', 'journal_meta.data', 'journal_meta.id']
-            );
+        $notes  = Note::where('notes.noteable_type', 'FireflyIII\\Models\\TransactionJournal')
+                      ->whereIn('notes.noteable_id', $array)
+                      ->get(['notes.*']);
         $return = [];
-        /** @var TransactionJournalMeta $meta */
-        foreach ($set as $meta) {
-            $id          = intval($meta->transaction_journal_id);
-            $return[$id] = $meta->data;
+        /** @var Note $note */
+        foreach ($notes as $note) {
+            if (strlen(trim(strval($note->text))) > 0) {
+                $id          = intval($note->noteable_id);
+                $return[$id] = $note->text;
+            }
         }
 
         return $return;

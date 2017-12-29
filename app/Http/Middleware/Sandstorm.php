@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -25,10 +25,10 @@ namespace FireflyIII\Http\Middleware;
 use Auth;
 use Closure;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Role;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\Request;
+use Log;
 use View;
 
 /**
@@ -63,7 +63,8 @@ class Sandstorm
             /** @var UserRepositoryInterface $repository */
             $repository = app(UserRepositoryInterface::class);
             $userId     = strval($request->header('X-Sandstorm-User-Id'));
-            $count      = $repository->count();
+            Log::debug(sprintf('Sandstorm user ID is "%s"', $userId));
+            $count = $repository->count();
 
             // if there already is one user in this instance, we assume this is
             // the "main" user. Firefly's nature does not allow other users to
@@ -72,7 +73,7 @@ class Sandstorm
             // and any other differences there may be between these users.
             if (1 === $count && strlen($userId) > 0) {
                 // login as first user user.
-                $user = User::first();
+                $user = $repository->first();
                 Auth::guard($guard)->login($user);
                 View::share('SANDSTORM_ANON', false);
 
@@ -92,7 +93,7 @@ class Sandstorm
                 // create new user.
                 $email = $userId . '@firefly';
                 /** @var User $user */
-                $user = User::create(
+                $user = $repository->store(
                     [
                         'email'    => $email,
                         'password' => str_random(16),
@@ -101,9 +102,10 @@ class Sandstorm
                 Auth::guard($guard)->login($user);
 
                 // also make the user an admin
-                $admin = Role::where('name', 'owner')->first();
-                $user->attachRole($admin);
-                $user->save();
+                $repository->attachRole($user, 'owner');
+
+                // share value.
+                View::share('SANDSTORM_ANON', false);
 
                 return $next($request);
             }
@@ -116,6 +118,14 @@ class Sandstorm
                 throw new FireflyException('Your Firefly III installation has more than one user, which is weird.');
             }
         }
+        // if in Sandstorm, user logged in, still must check if user is anon.
+        $userId = strval($request->header('X-Sandstorm-User-Id'));
+        if (strlen($userId) === 0) {
+            View::share('SANDSTORM_ANON', true);
+
+            return $next($request);
+        }
+        View::share('SANDSTORM_ANON', false);
 
         return $next($request);
     }

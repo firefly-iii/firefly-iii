@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -42,10 +42,14 @@ class AccountMeta extends Model
         ];
     /** @var array */
     protected $fillable = ['account_id', 'name', 'data'];
-    protected $table    = 'account_meta';
+    /**
+     * @var string
+     */
+    protected $table = 'account_meta';
 
     /**
      * @return BelongsTo
+     * @codeCoverageIgnore
      */
     public function account(): BelongsTo
     {
@@ -55,6 +59,7 @@ class AccountMeta extends Model
     /**
      * @param $value
      *
+     * @codeCoverageIgnore
      * @return mixed
      */
     public function getDataAttribute($value)
@@ -64,6 +69,8 @@ class AccountMeta extends Model
 
     /**
      * @param $value
+     *
+     * @codeCoverageIgnore
      */
     public function setDataAttribute($value)
     {

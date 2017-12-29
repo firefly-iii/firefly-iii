@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -47,25 +47,27 @@ class BudgetLimit extends Model
     protected $dates = ['start_date', 'end_date'];
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return mixed
      */
-    public static function routeBinder($value)
+    public static function routeBinder(string $value): BudgetLimit
     {
         if (auth()->check()) {
-            $object = self::where('budget_limits.id', $value)
-                          ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-                          ->where('budgets.user_id', auth()->user()->id)
-                          ->first(['budget_limits.*']);
-            if ($object) {
-                return $object;
+            $budgetLimitId = intval($value);
+            $budgetLimit   = self::where('budget_limits.id', $budgetLimitId)
+                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                                 ->where('budgets.user_id', auth()->user()->id)
+                                 ->first(['budget_limits.*']);
+            if (!is_null($budgetLimit)) {
+                return $budgetLimit;
             }
         }
         throw new NotFoundHttpException;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function budget()
@@ -74,6 +76,8 @@ class BudgetLimit extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setAmountAttribute($value)

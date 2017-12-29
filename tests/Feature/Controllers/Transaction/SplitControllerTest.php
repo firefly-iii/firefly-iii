@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers\Transaction;
 
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -48,6 +49,7 @@ class SplitControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::__construct
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::arrayFromJournal
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::updateWithPrevious
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromJournal
      */
     public function testEdit()
@@ -76,6 +78,90 @@ class SplitControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::__construct
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::arrayFromJournal
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::updateWithPrevious
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromJournal
+     */
+    public function testEditOldInput()
+    {
+        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepository  = $this->mock(AccountRepositoryInterface::class);
+        $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
+        $deposit            = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
+        $destination        = $deposit->transactions()->where('amount', '>', 0)->first();
+        $account            = $destination->account;
+        $transactions       = factory(Transaction::class, 3)->make();
+        $tasker             = $this->mock(JournalTaskerInterface::class);
+
+        $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
+        $accountRepository->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])
+                          ->andReturn(new Collection([$account]))->once();
+        $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
+        $tasker->shouldReceive('getTransactionsOverview')->andReturn($transactions->toArray());
+
+        $old = [
+            'transactions' => [
+                [
+                    'transaction_currency_id'     => 1,
+                    'transaction_currency_code'   => 'AB',
+                    'transaction_currency_symbol' => 'X',
+                    'foreign_amount'              => '0',
+                    'foreign_currency_id'         => 2,
+                    'foreign_currency_code'       => 'CD',
+                    'foreign_currency_symbol'     => 'Y',
+                ],
+                [
+                    'transaction_currency_id'     => 1,
+                    'transaction_currency_code'   => 'AB',
+                    'transaction_currency_symbol' => 'X',
+                    'foreign_amount'              => '0',
+                    'foreign_currency_id'         => 2,
+                    'foreign_currency_code'       => 'CD',
+                    'foreign_currency_symbol'     => 'Y',
+                ],
+                [
+                    'transaction_currency_id'     => 1,
+                    'transaction_currency_code'   => 'AB',
+                    'transaction_currency_symbol' => 'X',
+                    'foreign_amount'              => '0',
+                    'foreign_currency_id'         => 2,
+                    'foreign_currency_code'       => 'CD',
+                    'foreign_currency_symbol'     => 'Y',
+                ],
+                [
+                    'transaction_currency_id'     => 1,
+                    'transaction_currency_code'   => 'AB',
+                    'transaction_currency_symbol' => 'X',
+                    'foreign_amount'              => '0',
+                    'foreign_currency_id'         => 2,
+                    'foreign_currency_code'       => 'CD',
+                    'foreign_currency_symbol'     => 'Y',
+                ],
+                [
+                    'transaction_currency_id'     => 1,
+                    'transaction_currency_code'   => 'AB',
+                    'transaction_currency_symbol' => 'X',
+                    'foreign_amount'              => '0',
+                    'foreign_currency_id'         => 2,
+                    'foreign_currency_code'       => 'CD',
+                    'foreign_currency_symbol'     => 'Y',
+                ],
+
+            ],
+        ];
+        $this->session(['_old_input' => $old]);
+
+        $this->be($this->user());
+        $response = $this->get(route('transactions.split.edit', [$deposit->id]));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
      */
     public function testEditOpeningBalance()
     {
@@ -89,6 +175,7 @@ class SplitControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::__construct
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::arrayFromJournal
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::updateWithPrevious
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromJournal
      */
     public function testEditSingle()
@@ -96,11 +183,18 @@ class SplitControllerTest extends TestCase
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepository  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
+        $repository         = $this->mock(JournalRepositoryInterface::class);
+        $note               = new Note();
+        $note->id           = 1;
+        $note->text         = 'Hallo';
         $transactions       = factory(Transaction::class, 1)->make();
         $tasker             = $this->mock(JournalTaskerInterface::class);
         $deposit            = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
         $destination        = $deposit->transactions()->where('amount', '>', 0)->first();
         $account            = $destination->account;
+
+        $repository->shouldReceive('getNote')->andReturn($note);
+        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
         $accountRepository->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])
@@ -122,15 +216,13 @@ class SplitControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $this->markTestIncomplete('Mockery cannot yet handle PHP7.1 null argument method things.');
-
         $this->session(['transactions.edit-split.uri' => 'http://localhost']);
-        $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
+        $deposit = $this->user()->transactionJournals()->where('transaction_type_id', 2)->first();
         $data    = [
             'id'                             => $deposit->id,
             'what'                           => 'deposit',
             'journal_description'            => 'Updated salary',
-            'currency_id'                    => 1,
+            'journal_currency_id'            => 1,
             'journal_destination_account_id' => 1,
             'journal_amount'                 => 1591,
             'date'                           => '2014-01-24',
@@ -158,6 +250,7 @@ class SplitControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->post(route('transactions.split.update', [$deposit->id]), $data);
         $response->assertStatus(302);
+        $response->assertRedirect(route('index'));
         $response->assertSessionHas('success');
 
         // journal is updated?
@@ -170,13 +263,30 @@ class SplitControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::update
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::isOpeningBalance
      */
     public function testUpdateOpeningBalance()
     {
         $this->session(['transactions.edit-split.uri' => 'http://localhost']);
         $opening = TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first();
         $data    = [
-            'id' => $opening->id,
+            'id'                             => $opening->id,
+            'what'                           => 'deposit',
+            'journal_description'            => 'Updated salary',
+            'journal_currency_id'            => 1,
+            'journal_destination_account_id' => 1,
+            'journal_amount'                 => 1591,
+            'date'                           => '2014-01-24',
+            'tags'                           => '',
+            'transactions'                   => [
+                [
+                    'description'             => 'Split #1',
+                    'source_account_name'     => 'Job',
+                    'transaction_currency_id' => 1,
+                    'amount'                  => 1591,
+                    'category'                => '',
+                ],
+            ],
         ];
         $this->be($this->user());
         $response = $this->post(route('transactions.split.update', [$opening->id]), $data);

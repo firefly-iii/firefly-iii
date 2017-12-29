@@ -15,10 +15,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: searchQuery,searchUri */
+/** global: searchQuery,searchUri,token */
 
 
 
@@ -29,7 +29,7 @@ $(function () {
 });
 
 function startSearch(query) {
-    $.post(searchUri, {query: query}).done(presentSearchResults).fail(searchFailure);
+    $.post(searchUri, {query: query, _token: token}).done(presentSearchResults).fail(searchFailure);
 }
 
 function searchFailure() {

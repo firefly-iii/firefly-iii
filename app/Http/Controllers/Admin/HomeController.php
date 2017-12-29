@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -24,6 +24,8 @@ namespace FireflyIII\Http\Controllers\Admin;
 
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Http\Middleware\IsDemoUser;
+use FireflyIII\Http\Middleware\IsSandStormUser;
 use Illuminate\Http\Request;
 use Log;
 use Session;
@@ -33,6 +35,16 @@ use Session;
  */
 class HomeController extends Controller
 {
+    /**
+     * ConfigurationController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware(IsDemoUser::class)->except(['index']);
+        $this->middleware(IsSandStormUser::class)->except(['index']);
+    }
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */

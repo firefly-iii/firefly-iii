@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -61,6 +61,9 @@ class BunqInformation implements InformationInterface
      * color: any associated color.
      *
      * @return array
+     *
+     * @throws FireflyException
+     * @throws \Exception
      */
     public function getAccounts(): array
     {
@@ -113,6 +116,8 @@ class BunqInformation implements InformationInterface
 
     /**
      * @param SessionToken $sessionToken
+     *
+     * @throws \Exception
      */
     private function closeSession(SessionToken $sessionToken): void
     {
@@ -135,6 +140,8 @@ class BunqInformation implements InformationInterface
      * @param int          $userId
      *
      * @return Collection
+     *
+     * @throws \Exception
      */
     private function getMonetaryAccounts(SessionToken $sessionToken, int $userId): Collection
     {
@@ -159,6 +166,7 @@ class BunqInformation implements InformationInterface
      * @return int
      *
      * @throws FireflyException
+     * @throws \Exception
      */
     private function getUserInformation(SessionToken $sessionToken): int
     {
@@ -185,6 +193,8 @@ class BunqInformation implements InformationInterface
 
     /**
      * @return SessionToken
+     *
+     * @throws \Exception
      */
     private function startSession(): SessionToken
     {

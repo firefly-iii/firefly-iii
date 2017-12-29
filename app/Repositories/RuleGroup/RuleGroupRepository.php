@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -49,6 +49,9 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      * @param RuleGroup|null $moveTo
      *
      * @return bool
+     *
+     * @throws \Exception
+     * @throws \Exception
      */
     public function destroy(RuleGroup $ruleGroup, ?RuleGroup $moveTo): bool
     {

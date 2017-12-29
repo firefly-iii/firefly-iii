@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -36,9 +36,9 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
-use Navigation;
 use Preferences;
 use Steam;
 use View;
@@ -60,8 +60,8 @@ class AccountController extends Controller
         // translations:
         $this->middleware(
             function ($request, $next) {
-                View::share('mainTitleIcon', 'fa-credit-card');
-                View::share('title', trans('firefly.accounts'));
+                app('view')->share('mainTitleIcon', 'fa-credit-card');
+                app('view')->share('title', trans('firefly.accounts'));
 
                 return $next($request);
             }
@@ -96,20 +96,17 @@ class AccountController extends Controller
             $this->rememberPreviousUri('accounts.create.uri');
         }
         $request->session()->forget('accounts.create.fromStore');
-        $request->session()->flash('gaEventCategory', 'accounts');
-        $request->session()->flash('gaEventAction', 'create-' . $what);
 
         return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'currencySelectList', 'allCurrencies', 'roles'));
     }
 
     /**
-     * @param Request                    $request
      * @param AccountRepositoryInterface $repository
      * @param Account                    $account
      *
      * @return View
      */
-    public function delete(Request $request, AccountRepositoryInterface $repository, Account $account)
+    public function delete(AccountRepositoryInterface $repository, Account $account)
     {
         $typeName    = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
@@ -118,8 +115,6 @@ class AccountController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('accounts.delete.uri');
-        $request->session()->flash('gaEventCategory', 'accounts');
-        $request->session()->flash('gaEventAction', 'delete-' . $typeName);
 
         return view('accounts.delete', compact('account', 'subTitle', 'accountList'));
     }
@@ -156,6 +151,10 @@ class AccountController extends Controller
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @return View
+     *
+     * @throws FireflyException
+     * @throws FireflyException
+     * @throws FireflyException
      */
     public function edit(Request $request, Account $account)
     {
@@ -198,8 +197,6 @@ class AccountController extends Controller
             'currency_id'          => $currency->id,
         ];
         $request->session()->flash('preFilled', $preFilled);
-        $request->session()->flash('gaEventCategory', 'accounts');
-        $request->session()->flash('gaEventAction', 'edit-' . $what);
 
         return view(
             'accounts.edit',
@@ -218,18 +215,24 @@ class AccountController extends Controller
     }
 
     /**
+     * @param Request                    $request
      * @param AccountRepositoryInterface $repository
      * @param string                     $what
      *
      * @return View
      */
-    public function index(AccountRepositoryInterface $repository, string $what)
+    public function index(Request $request, AccountRepositoryInterface $repository, string $what)
     {
         $what         = $what ?? 'asset';
         $subTitle     = trans('firefly.' . $what . '_accounts');
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
         $types        = config('firefly.accountTypesByIdentifier.' . $what);
-        $accounts     = $repository->getAccountsByType($types);
+        $collection   = $repository->getAccountsByType($types);
+        $total        = $collection->count();
+        $page         = 0 === intval($request->get('page')) ? 1 : intval($request->get('page'));
+        $pageSize     = intval(Preferences::get('listPageSize', 50)->data);
+        $accounts     = $collection->slice(($page - 1) * $pageSize, $pageSize);
+        unset($collection);
         /** @var Carbon $start */
         $start = clone session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
@@ -250,7 +253,11 @@ class AccountController extends Controller
             }
         );
 
-        return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'accounts'));
+        // make paginator:
+        $accounts = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
+        $accounts->setPath(route('accounts.index', [$what]));
+
+        return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
     }
 
     /**
@@ -265,6 +272,8 @@ class AccountController extends Controller
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // long and complex but not that excessively so.
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     * @throws FireflyException
      */
     public function show(Request $request, JournalRepositoryInterface $repository, Account $account, string $moment = '')
     {
@@ -276,7 +285,7 @@ class AccountController extends Controller
         $range         = Preferences::get('viewRange', '1M')->data;
         $subTitleIcon  = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $page          = intval($request->get('page'));
-        $pageSize      = intval(Preferences::get('transactionPageSize', 50)->data);
+        $pageSize      = intval(Preferences::get('listPageSize', 50)->data);
         $chartUri      = route('chart.account.single', [$account->id]);
         $start         = null;
         $end           = null;
@@ -299,7 +308,7 @@ class AccountController extends Controller
         // prep for "specific date" view.
         if (strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
-            $end      = Navigation::endOfPeriod($start, $range);
+            $end      = app('navigation')->endOfPeriod($start, $range);
             $fStart   = $start->formatLocalized($this->monthAndDayFormat);
             $fEnd     = $end->formatLocalized($this->monthAndDayFormat);
             $subTitle = trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
@@ -309,8 +318,8 @@ class AccountController extends Controller
 
         // prep for current period view
         if (0 === strlen($moment)) {
-            $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
-            $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
+            $start    = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
+            $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
             $fStart   = $start->formatLocalized($this->monthAndDayFormat);
             $fEnd     = $end->formatLocalized($this->monthAndDayFormat);
             $subTitle = trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
@@ -423,8 +432,8 @@ class AccountController extends Controller
         $repository = app(AccountRepositoryInterface::class);
         $start      = $repository->oldestJournalDate($account);
         $range      = Preferences::get('viewRange', '1M')->data;
-        $start      = Navigation::startOfPeriod($start, $range);
-        $end        = Navigation::endOfX(new Carbon, $range, null);
+        $start      = app('navigation')->startOfPeriod($start, $range);
+        $end        = app('navigation')->endOfX(new Carbon, $range, null);
         $entries    = new Collection;
         $count      = 0;
         // properties for cache
@@ -440,8 +449,8 @@ class AccountController extends Controller
 
         Log::debug('Going to get period expenses and incomes.');
         while ($end >= $start && $count < 90) {
-            $end        = Navigation::startOfPeriod($end, $range);
-            $currentEnd = Navigation::endOfPeriod($end, $range);
+            $end        = app('navigation')->startOfPeriod($end, $range);
+            $currentEnd = app('navigation')->endOfPeriod($end, $range);
 
             // try a collector for income:
             /** @var JournalCollectorInterface $collector */
@@ -455,7 +464,7 @@ class AccountController extends Controller
             $collector->setAccounts(new Collection([$account]))->setRange($end, $currentEnd)->setTypes([TransactionType::WITHDRAWAL])->withOpposingAccount();
             $spent    = strval($collector->getJournals()->sum('transaction_amount'));
             $dateStr  = $end->format('Y-m-d');
-            $dateName = Navigation::periodShow($end, $range);
+            $dateName = app('navigation')->periodShow($end, $range);
             $entries->push(
                 [
                     'string' => $dateStr,
@@ -464,7 +473,7 @@ class AccountController extends Controller
                     'earned' => $earned,
                     'date'   => clone $end,]
             );
-            $end = Navigation::subtractPeriod($end, $range, 1);
+            $end = app('navigation')->subtractPeriod($end, $range, 1);
             ++$count;
         }
         $cache->store($entries);

@@ -1,15 +1,24 @@
 <?php
-declare(strict_types=1);
-
 /**
  * firefly.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+declare(strict_types=1);
 
 return [
     // general stuff:
@@ -132,6 +141,22 @@ return [
     'invalid_server_configuration'               => 'Invalid server configuration',
     'invalid_locale_settings'                    => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructions how to do this</a>.',
     'quickswitch'                                => 'Quickswitch',
+
+    // check for updates:
+    'update_check_title'                         => 'Check for updates',
+    'admin_update_check_title'                   => 'Automatically check for update',
+    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact Github to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
+    'check_for_updates_permission'               => 'Firefly III can check for updates, but it needs your permission to do so. Please go to the <a href=":link">administration</a> to indicate if you would like this feature to be enabled.',
+    'updates_ask_me_later'                       => 'Ask me later',
+    'updates_do_not_check'                       => 'Do not check for updates',
+    'updates_enable_check'                       => 'Enable the check for updates',
+    'admin_update_check_now_title'               => 'Check for updates now',
+    'admin_update_check_now_explain'             => 'If you press the button, Firefly III will see if your current version is the latest.',
+    'check_for_updates_button'                   => 'Check now!',
+    'update_new_version_alert'                   => 'A new version is available. You are running v:your_version, the latest version is v:new_version which was released on :date.',
+    'update_current_version_alert'               => 'You are running v:version, which is the latest available release.',
+    'update_newer_version_alert'                 => 'You are running v:your_version, which is newer than the latest release, v:new_version.',
+    'update_check_error'                         => 'An error occurred while checking for updates. Please view the log files.',
 
     // search
     'search'                                     => 'Search',
@@ -343,7 +368,6 @@ return [
     'rule_action_set_notes_choice'               => 'Set notes to..',
     'rule_action_set_notes'                      => 'Set notes to ":action_value"',
 
-
     'rules_have_read_warning'                  => 'Have you read the warning?',
     'apply_rule_warning'                       => 'Warning: running a rule(group) on a large selection of transactions could take ages, and it could time-out. If it does, the rule(group) will only be applied to an unknown subset of your transactions. This might leave your financial administration in tatters. Please be careful.',
 
@@ -397,9 +421,9 @@ return [
     'pref_home_show_deposits_info'             => 'The home screen already shows your expense accounts. Should it also show your revenue accounts?',
     'pref_home_do_show_deposits'               => 'Yes, show them',
     'successful_count'                         => 'of which :count successful',
-    'transaction_page_size_title'              => 'Page size',
-    'transaction_page_size_help'               => 'Any list of transactions shows at most this many transactions',
-    'transaction_page_size_label'              => 'Page size',
+    'list_page_size_title'                     => 'Page size',
+    'list_page_size_help'                      => 'Any list of things (accounts, transactions, etc) shows at most this many per page.',
+    'list_page_size_label'                     => 'Page size',
     'between_dates'                            => '(:start and :end)',
     'pref_optional_fields_transaction'         => 'Optional fields for transactions',
     'pref_optional_fields_transaction_help'    => 'By default not all fields are enabled when creating a new transaction (because of the clutter). Below, you can enable these fields if you think they could be useful for you. Of course, any field that is disabled, but already filled in, will be visible regardless of the setting.',
@@ -419,7 +443,6 @@ return [
     'optional_field_meta_business'             => 'Business',
     'optional_field_attachments'               => 'Attachments',
     'optional_field_meta_data'                 => 'Optional meta data',
-
 
     // profile:
     'change_your_password'                     => 'Change your password',
@@ -456,7 +479,6 @@ return [
     'email_changed_logout'                     => 'Until you verify your email address, you cannot login.',
     'login_with_new_email'                     => 'You can now login with your new email address.',
     'login_with_old_email'                     => 'You can now login with your old email address again.',
-
 
     // attachments
     'nr_of_attachments'                        => 'One attachment|:count attachments',
@@ -562,7 +584,6 @@ return [
     'available_amount_indication'              => 'Use these amounts to get an indication of what your total budget could be.',
     'suggested'                                => 'Suggested',
     'average_between'                          => 'Average between :start and :end',
-
 
     // bills:
     'matching_on'                              => 'Matching on',
@@ -701,12 +722,15 @@ return [
     'deleted_transfer'                         => 'Successfully deleted transfer ":description"',
     'stored_journal'                           => 'Successfully created new transaction ":description"',
     'select_transactions'                      => 'Select transactions',
+    'rule_group_select_transactions'           => 'Apply ":title" to transactions',
+    'rule_select_transactions'                 => 'Apply ":title" to transactions',
     'stop_selection'                           => 'Stop selecting transactions',
     'reconcile_selected'                       => 'Reconcile',
     'mass_delete_journals'                     => 'Delete a number of transactions',
     'mass_edit_journals'                       => 'Edit a number of transactions',
     'cannot_edit_other_fields'                 => 'You cannot mass-edit other fields than the ones here, because there is no room to show them. Please follow the link and edit them by one-by-one, if you need to edit these fields.',
     'no_budget'                                => 'none',
+    'no_budget_squared'                        => '(no budget)',
     'perm-delete-many'                         => 'Deleting many items in one go can be very disruptive. Please be cautious.',
     'mass_deleted_transactions_success'        => 'Deleted :amount transaction(s).',
     'mass_edited_transactions_success'         => 'Updated :amount transaction(s)',
@@ -715,7 +739,6 @@ return [
     'opt_group_savingAsset'                    => 'Savings accounts',
     'opt_group_sharedAsset'                    => 'Shared asset accounts',
     'opt_group_ccAsset'                        => 'Credit cards',
-
 
     // new user:
     'welcome'                                  => 'Welcome to Firefly!',
@@ -764,6 +787,7 @@ return [
     'piggyBanks'                               => 'Piggy banks',
     'bills'                                    => 'Bills',
     'withdrawal'                               => 'Withdrawal',
+    'opening_balance'                          => 'Opening balance',
     'deposit'                                  => 'Deposit',
     'account'                                  => 'Account',
     'transfer'                                 => 'Transfer',
@@ -786,6 +810,7 @@ return [
     'report_default'                           => 'Default financial report between :start and :end',
     'report_audit'                             => 'Transaction history overview between :start and :end',
     'report_category'                          => 'Category report between :start and :end',
+    'report_account'                           => 'Expense/revenue account report between :start and :end',
     'report_budget'                            => 'Budget report between :start and :end',
     'report_tag'                               => 'Tag report between :start and :end',
     'quick_link_reports'                       => 'Quick links',
@@ -810,8 +835,8 @@ return [
     'inactive'                                 => 'Inactive',
     'active'                                   => 'Active',
     'difference'                               => 'Difference',
-    'in'                                       => 'In',
-    'out'                                      => 'Out',
+    'money_flowing_in'                         => 'In',
+    'money_flowing_out'                        => 'Out',
     'topX'                                     => 'top :number',
     'show_full_list'                           => 'Show entire list',
     'show_only_top'                            => 'Show only top :number',
@@ -821,6 +846,7 @@ return [
     'report_type_category'                     => 'Category report',
     'report_type_budget'                       => 'Budget report',
     'report_type_tag'                          => 'Tag report',
+    'report_type_account'                      => 'Expense/revenue account report',
     'more_info_help'                           => 'More information about these types of reports can be found in the help pages. Press the (?) icon in the top right corner.',
     'report_included_accounts'                 => 'Included accounts',
     'report_date_range'                        => 'Date range',
@@ -872,7 +898,10 @@ return [
     'account_role_ccAsset'                     => 'Credit card',
     'budget_chart_click'                       => 'Please click on a budget name in the table above to see a chart.',
     'category_chart_click'                     => 'Please click on a category name in the table above to see a chart.',
-
+    'in_out_accounts'                          => 'Earned and spent per combination',
+    'in_out_per_category'                      => 'Earned and spent per category',
+    'out_per_budget'                           => 'Spent per budget',
+    'select_expense_revenue'                   => 'Select expense/revenue account',
 
     // charts:
     'chart'                                    => 'Chart',
@@ -884,7 +913,6 @@ return [
     'earned'                                   => 'Earned',
     'overspent'                                => 'Overspent',
     'left'                                     => 'Left',
-    'no_budget'                                => '(no budget)',
     'max-amount'                               => 'Maximum amount',
     'min-amount'                               => 'Minumum amount',
     'journal-amount'                           => 'Current bill entry',
@@ -968,8 +996,7 @@ return [
     'total_size'                            => 'total size',
     'budget_or_budgets'                     => 'budget(s)',
     'budgets_with_limits'                   => 'budget(s) with configured amount',
-    'rule_or_rules'                         => 'rule(s)',
-    'rulegroup_or_groups'                   => 'rule group(s)',
+    'nr_of_rules_in_total_groups'           => ':count_rules rule(s) in :count_groups rule group(s)',
     'tag_or_tags'                           => 'tag(s)',
     'configuration_updated'                 => 'The configuration has been updated',
     'setting_is_demo_site'                  => 'Demo site',
@@ -1035,7 +1062,6 @@ return [
     '(partially) pays for_outward'          => '(partially) pays for',
     '(partially) reimburses_outward'        => '(partially) reimburses',
 
-
     // split a transaction:
     'splits'                                => 'Splits',
     'add_another_split'                     => 'Add another split',
@@ -1054,49 +1080,16 @@ return [
     // import bread crumbs and titles:
     'import'                                => 'Import',
     'import_data'                           => 'Import data',
+    'import_general_index_file'             => 'Import a file',
+    'import_from_bunq'                      => 'Import from bunq',
+    'import_using_spectre'                  => 'Import using Spectre',
+    'import_using_plaid'                    => 'Import using Plaid',
+    'import_config_bread_crumb'             => 'Set up your import',
 
     // import index page:
     'import_index_title'                    => 'Import data into Firefly III',
     'import_index_sub_title'                => 'Index',
     'import_general_index_intro'            => 'Welcome to Firefly\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
-    'import_general_index_csv_file'         => 'Import a (CSV) file',
-    'import_index_intro'                    => 'This routine will help you import files from your bank into Firefly III. Please check out the help pages in the top right corner.',
-    'import_index_file'                     => 'Select your file',
-    'import_index_config'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration file</a>.',
-    'import_index_type'                     => 'Select the type of file you will upload',
-    'import_index_start'                    => 'Start importing',
-    'import_file'                           => 'Import a file',
-
-    // supported file types:
-    'import_file_type_csv'                  => 'CSV (comma separated values)',
-
-    // import configuration routine:
-    'import_config_sub_title'               => 'Set up your import file',
-    'import_config_bread_crumb'             => 'Set up your import file',
-
-    // import status page:
-    'import_status_bread_crumb'             => 'Import status',
-    'import_status_sub_title'               => 'Import status',
-    'import_status_wait_title'              => 'Please hold...',
-    'import_status_wait_text'               => 'This box will disappear in a moment.',
-    'import_status_ready_title'             => 'Import is ready to start',
-    'import_status_ready_text'              => 'The import is ready to start. All the configuration you needed to do has been done. Please download the configuration file. It will help you with the import should it not go as planned. To actually run the import, you can either execute the following command in your console, or run the web-based import. Depending on your configuration, the console import will give you more feedback.',
-    'import_status_ready_config'            => 'Download configuration',
-    'import_status_ready_start'             => 'Start the import',
-    'import_status_ready_share'             => 'Please consider downloading your configuration and sharing it at the <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">import configuration center</a></strong>. This will allow other users of Firefly III to import their files more easily.',
-    'import_status_running_title'           => 'The import is running',
-    'import_status_running_placeholder'     => 'Please hold for an update...',
-    'import_status_errors_title'            => 'Errors during the import',
-    'import_status_errors_single'           => 'An error has occured during the import. It does not appear to be fatal.',
-    'import_status_errors_multi'            => 'Some errors occured during the import. These do not appear to be fatal.',
-    'import_status_fatal_title'             => 'A fatal error occurred',
-    'import_status_fatal_text'              => 'A fatal error occurred, which the import-routine cannot recover from. Please see the explanation in red below.',
-    'import_status_fatal_more'              => 'If the error is a time-out, the import will have stopped half-way. For some server configurations, it is merely the server that stopped while the import keeps running in the background. To verify this, check out the log files. If the problem persists, consider importing over the command line instead.',
-    'import_status_finished_title'          => 'Import routine finished',
-    'import_status_finished_text'           => 'The import routine has imported your file.',
-    'import_status_finished_job'            => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
-    'import_status_job_running'             => 'The import is running...',
-    'import_with_key'                       => 'Import with key \':key\'',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',
@@ -1146,6 +1139,4 @@ return [
     'no_bills_intro_default'                => 'You have no bills yet. You can create bills to keep track of regular expenses, like your rent or insurance.',
     'no_bills_imperative_default'           => 'Do you have such regular bills? Create a bill and keep track of your payments:',
     'no_bills_create_default'               => 'Create a bill',
-
-
 ];

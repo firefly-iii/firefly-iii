@@ -1,18 +1,26 @@
 <?php
-declare(strict_types=1);
-
 /**
  * form.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+declare(strict_types=1);
 
 return [
-
     // new user:
     'bank_name'                      => 'Banknaam',
     'bank_balance'                   => 'Saldo',
@@ -79,7 +87,6 @@ return [
     'convert_Withdrawal'          => 'Verander uitgave',
     'convert_Deposit'             => 'Verander inkomsten',
     'convert_Transfer'            => 'Verander overschrijving',
-
 
     'amount'                     => 'Bedrag',
     'date'                       => 'Datum',
@@ -162,6 +169,7 @@ return [
     'budget_keep_transactions'   => 'De transactie verbonden aan dit budget blijft bewaard.|De :count transacties verbonden aan dit budget blijven bewaard.',
     'category_keep_transactions' => 'De transactie verbonden aan deze categorie blijft bewaard.|De :count transacties verbonden aan deze categorie blijven bewaard.',
     'tag_keep_transactions'      => 'De transactie verbonden aan deze tag blijft bewaard.|De :count transacties verbonden aan deze tag blijven bewaard.',
+    'check_for_updates'          => 'Op updates controleren',
 
     'email'                 => 'E-mailadres',
     'password'              => 'Wachtwoord',
@@ -169,12 +177,10 @@ return [
     'blocked'               => 'Is geblokkeerd?',
     'blocked_code'          => 'Reden voor blokkade',
 
-
     // admin
     'domain'                => 'Domein',
     'single_user_mode'      => 'Registratie uitgeschakelen',
     'is_demo_site'          => 'Is demo website',
-
 
     // import
     'import_file'           => 'Importbestand',
@@ -186,7 +192,12 @@ return [
     'csv_delimiter'         => 'CSV scheidingsteken',
     'csv_import_account'    => 'Standaard rekening voor importeren',
     'csv_config'            => 'Configuratiebestand',
-
+    'client_id'             => 'Client ID',
+    'service_secret'        => 'Service secret',
+    'app_secret'            => 'App secret',
+    'public_key'            => 'Publieke sleutel',
+    'country_code'          => 'Landcode',
+    'provider_code'         => 'Bank of gegevensprovider',
 
     'due_date'           => 'Vervaldatum',
     'payment_date'       => 'Betalingsdatum',

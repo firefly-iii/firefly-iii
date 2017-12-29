@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -36,6 +36,8 @@ class FrontpageController extends Controller
      * @param PiggyBankRepositoryInterface $repository
      *
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @throws \Throwable
      */
     public function piggyBanks(PiggyBankRepositoryInterface $repository)
     {

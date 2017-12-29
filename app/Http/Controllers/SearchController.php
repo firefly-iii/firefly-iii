@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -43,8 +43,8 @@ class SearchController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('mainTitleIcon', 'fa-search');
-                View::share('title', trans('firefly.search'));
+                app('view')->share('mainTitleIcon', 'fa-search');
+                app('view')->share('title', trans('firefly.search'));
 
                 return $next($request);
             }
@@ -69,6 +69,14 @@ class SearchController extends Controller
         return view('search.index', compact('query', 'fullQuery', 'subTitle'));
     }
 
+    /**
+     * @param Request         $request
+     * @param SearchInterface $searcher
+     *
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @throws \Throwable
+     */
     public function search(Request $request, SearchInterface $searcher)
     {
         $fullQuery    = strval($request->get('query'));
@@ -79,7 +87,7 @@ class SearchController extends Controller
         $cache->addProperty($fullQuery);
 
         if ($cache->has()) {
-            $transactions = $cache->get();
+            $transactions = $cache->get(); // @codeCoverageIgnore
         }
 
         if (!$cache->has()) {

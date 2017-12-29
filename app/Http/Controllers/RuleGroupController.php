@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -50,8 +50,8 @@ class RuleGroupController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.rules'));
-                View::share('mainTitleIcon', 'fa-random');
+                app('view')->share('title', trans('firefly.rules'));
+                app('view')->share('mainTitleIcon', 'fa-random');
 
                 return $next($request);
             }
@@ -71,8 +71,6 @@ class RuleGroupController extends Controller
             $this->rememberPreviousUri('rule-groups.create.uri');
         }
         Session::forget('rule-groups.create.fromStore');
-        Session::flash('gaEventCategory', 'rules');
-        Session::flash('gaEventAction', 'create-rule-group');
 
         return view('rules.rule-group.create', compact('subTitleIcon', 'subTitle'));
     }
@@ -92,8 +90,6 @@ class RuleGroupController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('rule-groups.delete.uri');
-        Session::flash('gaEventCategory', 'rules');
-        Session::flash('gaEventAction', 'delete-rule-group');
 
         return view('rules.rule-group.delete', compact('ruleGroup', 'subTitle', 'ruleGroupList'));
     }
@@ -145,8 +141,6 @@ class RuleGroupController extends Controller
             $this->rememberPreviousUri('rule-groups.edit.uri');
         }
         Session::forget('rule-groups.edit.fromUpdate');
-        Session::flash('gaEventCategory', 'rules');
-        Session::flash('gaEventAction', 'edit-rule-group');
 
         return view('rules.rule-group.edit', compact('ruleGroup', 'subTitle'));
     }

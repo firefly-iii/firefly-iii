@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -33,11 +33,26 @@ class TransactionType extends Model
 {
     use SoftDeletes;
 
-    const WITHDRAWAL      = 'Withdrawal';
-    const DEPOSIT         = 'Deposit';
-    const TRANSFER        = 'Transfer';
+    /**
+     *
+     */
+    const WITHDRAWAL = 'Withdrawal';
+    /**
+     *
+     */
+    const DEPOSIT = 'Deposit';
+    /**
+     *
+     */
+    const TRANSFER = 'Transfer';
+    /**
+     *
+     */
     const OPENING_BALANCE = 'Opening balance';
-    const RECONCILIATION  = 'Reconciliation';
+    /**
+     *
+     */
+    const RECONCILIATION = 'Reconciliation';
     /**
      * The attributes that should be casted to native types.
      *
@@ -70,38 +85,43 @@ class TransactionType extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return bool
      */
-    public function isDeposit()
+    public function isDeposit(): bool
     {
         return self::DEPOSIT === $this->type;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return bool
      */
-    public function isOpeningBalance()
+    public function isOpeningBalance(): bool
     {
         return self::OPENING_BALANCE === $this->type;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return bool
      */
-    public function isTransfer()
+    public function isTransfer(): bool
     {
         return self::TRANSFER === $this->type;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return bool
      */
-    public function isWithdrawal()
+    public function isWithdrawal(): bool
     {
         return self::WITHDRAWAL === $this->type;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function transactionJournals()

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -51,6 +51,9 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @return bool
+     *
+     * @throws \Exception
+     * @throws \Exception
      */
     public function cleanupBudgets(): bool
     {
@@ -123,6 +126,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Budget $budget
      *
      * @return bool
+     *
+     * @throws \Exception
      */
     public function destroy(Budget $budget): bool
     {
@@ -604,6 +609,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param string $amount
      *
      * @return BudgetLimit
+     *
+     * @throws \Exception
      */
     public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): BudgetLimit
     {

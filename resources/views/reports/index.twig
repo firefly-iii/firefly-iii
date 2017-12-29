@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
 {% endblock %}
 
 {% block content %}
@@ -29,6 +29,7 @@
                                     <option label="{{ 'report_type_budget'|_ }}" value="budget">{{ 'report_type_budget'|_ }}</option>
                                     <option label="{{ 'report_type_category'|_ }}" value="category">{{ 'report_type_category'|_ }}</option>
                                     <option label="{{ 'report_type_tag'|_ }}" value="tag">{{ 'report_type_tag'|_ }}</option>
+                                    <option label="{{ 'report_type_account'|_ }}" value="account">{{ 'report_type_account'|_ }}</option>
                                 </select>
                             </div>
                         </div>
@@ -178,5 +179,6 @@
         var filterPlaceholder = "{{ trans('firefly.multi_select_filter_placeholder')|escape('js') }}";
     </script>
     <script type="text/javascript" src="js/lib/bootstrap-multiselect.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/reports/all.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="js/ff/reports/index.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

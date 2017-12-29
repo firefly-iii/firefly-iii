@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -81,7 +81,7 @@ class AutoCompleteController extends Controller
         $set      = $repository->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY]);
         $filtered = $set->filter(
             function (Account $account) {
-                if ($account->active) {
+                if ($account->active === true) {
                     return $account;
                 }
 
@@ -138,7 +138,7 @@ class AutoCompleteController extends Controller
         $set      = $repository->getAccountsByType([AccountType::REVENUE]);
         $filtered = $set->filter(
             function (Account $account) {
-                if ($account->active) {
+                if ($account->active === true) {
                     return $account;
                 }
 

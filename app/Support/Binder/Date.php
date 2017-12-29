@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -24,7 +24,8 @@ namespace FireflyIII\Support\Binder;
 
 use Carbon\Carbon;
 use Exception;
-use FireflyIII\Helpers\FiscalHelper;
+use FireflyIII\Helpers\FiscalHelperInterface;
+use Illuminate\Routing\Route;
 use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -34,14 +35,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Date implements BinderInterface
 {
     /**
-     * @param $value
-     * @param $route
+     * @param string $value
+     * @param Route  $route
      *
-     * @return mixed
+     * @return Carbon
      */
-    public static function routeBinder($value, $route): Carbon
+    public static function routeBinder(string $value, Route $route): Carbon
     {
-        $fiscalHelper = new FiscalHelper;
+        /** @var FiscalHelperInterface $fiscalHelper */
+        $fiscalHelper = app(FiscalHelperInterface::class);
 
         switch ($value) {
             default:

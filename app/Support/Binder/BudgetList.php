@@ -16,13 +16,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 
 use FireflyIII\Models\Budget;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -32,28 +33,37 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class BudgetList implements BinderInterface
 {
     /**
-     * @param $value
-     * @param $route
+     * @param string $value
+     * @param Route  $route
      *
-     * @return mixed
+     * @return Collection
      */
-    public static function routeBinder($value, $route): Collection
+    public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
-            $ids = explode(',', $value);
-            /** @var \Illuminate\Support\Collection $object */
-            $object = Budget::where('active', 1)
-                            ->whereIn('id', $ids)
-                            ->where('user_id', auth()->user()->id)
-                            ->get();
-
-            // add empty budget if applicable.
-            if (in_array('0', $ids)) {
-                $object->push(new Budget);
+            $list     = [];
+            $incoming = explode(',', $value);
+            foreach ($incoming as $entry) {
+                $list[] = intval($entry);
+            }
+            $list = array_unique($list);
+            if (count($list) === 0) {
+                throw new NotFoundHttpException; // @codeCoverageIgnore
             }
 
-            if ($object->count() > 0) {
-                return $object;
+            /** @var \Illuminate\Support\Collection $collection */
+            $collection = auth()->user()->budgets()
+                                ->where('active', 1)
+                                ->whereIn('id', $list)
+                                ->get();
+
+            // add empty budget if applicable.
+            if (in_array(0, $list)) {
+                $collection->push(new Budget);
+            }
+
+            if ($collection->count() > 0) {
+                return $collection;
             }
         }
         throw new NotFoundHttpException;

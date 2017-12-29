@@ -16,13 +16,15 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Http\Middleware\IsDemoUser;
+use FireflyIII\Http\Middleware\IsSandStormUser;
 use FireflyIII\Http\Requests\ConfigurationRequest;
 use FireflyIII\Support\Facades\FireflyConfig;
 use Preferences;
@@ -44,12 +46,14 @@ class ConfigurationController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', strval(trans('firefly.administration')));
-                View::share('mainTitleIcon', 'fa-hand-spock-o');
+                app('view')->share('title', strval(trans('firefly.administration')));
+                app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
 
                 return $next($request);
             }
         );
+        $this->middleware(IsDemoUser::class)->except(['index']);
+        $this->middleware(IsSandStormUser::class);
     }
 
     /**

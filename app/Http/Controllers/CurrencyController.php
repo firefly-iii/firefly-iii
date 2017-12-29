@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -28,6 +28,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Log;
 use Preferences;
 use View;
@@ -52,8 +53,8 @@ class CurrencyController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.currencies'));
-                View::share('mainTitleIcon', 'fa-usd');
+                app('view')->share('title', trans('firefly.currencies'));
+                app('view')->share('mainTitleIcon', 'fa-usd');
                 $this->repository     = app(CurrencyRepositoryInterface::class);
                 $this->userRepository = app(UserRepositoryInterface::class);
 
@@ -83,8 +84,6 @@ class CurrencyController extends Controller
             $this->rememberPreviousUri('currencies.create.uri');
         }
         $request->session()->forget('currencies.create.fromStore');
-        $request->session()->flash('gaEventCategory', 'currency');
-        $request->session()->flash('gaEventAction', 'create');
 
         return view('currencies.create', compact('subTitleIcon', 'subTitle'));
     }
@@ -131,8 +130,6 @@ class CurrencyController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('currencies.delete.uri');
-        $request->session()->flash('gaEventCategory', 'currency');
-        $request->session()->flash('gaEventAction', 'delete');
         $subTitle = trans('form.delete_currency', ['name' => $currency->name]);
 
         return view('currencies.delete', compact('currency', 'subTitle'));
@@ -191,8 +188,6 @@ class CurrencyController extends Controller
             $this->rememberPreviousUri('currencies.edit.uri');
         }
         $request->session()->forget('currencies.edit.fromUpdate');
-        $request->session()->flash('gaEventCategory', 'currency');
-        $request->session()->flash('gaEventAction', 'edit');
 
         return view('currencies.edit', compact('currency', 'subTitle', 'subTitleIcon'));
     }
@@ -204,12 +199,19 @@ class CurrencyController extends Controller
      */
     public function index(Request $request)
     {
-        $currencies      = $this->repository->get();
-        $currencies      = $currencies->sortBy(
+        $page       = 0 === intval($request->get('page')) ? 1 : intval($request->get('page'));
+        $pageSize   = intval(Preferences::get('listPageSize', 50)->data);
+        $collection = $this->repository->get();
+        $total      = $collection->count();
+        $collection = $collection->sortBy(
             function (TransactionCurrency $currency) {
                 return $currency->name;
             }
         );
+        $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
+        $currencies = new LengthAwarePaginator($collection, $total, $pageSize, $page);
+        $currencies->setPath(route('currencies.index'));
+
         $defaultCurrency = $this->repository->getCurrencyByPreference(Preferences::get('currencyPreference', config('firefly.default_currency', 'EUR')));
         $isOwner         = true;
         if (!$this->userRepository->hasRole(auth()->user(), 'owner')) {

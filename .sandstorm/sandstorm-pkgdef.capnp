@@ -15,8 +15,8 @@ const pkgdef :Spk.PackageDefinition = (
 
   manifest = (
     appTitle = (defaultText = "Firefly III"),
-    appVersion = 5,
-    appMarketingVersion = (defaultText = "4.6.11.1"),
+    appVersion = 6,
+    appMarketingVersion = (defaultText = "4.6.12"),
 
     actions = [
       # Define your "new document" handlers here.
@@ -41,7 +41,7 @@ const pkgdef :Spk.PackageDefinition = (
         market = (png = (dpi1x = embed "app-graphics/firefly-iii-150.png"))
       ),
 
-      website = "https://firefly-iii.github.io/",
+      website = "https://firefly-iii.org/",
       codeUrl = "https://github.com/firefly-iii/firefly-iii",
       license = (openSource = gpl3),
       # The license this package is distributed under.  See

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -29,6 +29,7 @@ use FireflyIII\Models\TransactionJournal;
  * This class will be magical!
  *
  * Class AbstractTrigger
+ * @method triggered
  */
 class AbstractTrigger
 {
@@ -42,15 +43,6 @@ class AbstractTrigger
     protected $trigger;
     /** @var string Trigger value */
     protected $triggerValue;
-
-    /**
-     * AbstractTrigger constructor.
-     *
-     * @codeCoverageIgnore
-     */
-    private function __construct()
-    {
-    }
 
     /**
      * Make a new trigger from the value given in the string.
@@ -73,6 +65,7 @@ class AbstractTrigger
 
     /**
      * Make a new trigger from the rule trigger in the parameter
+     *
      * @codeCoverageIgnore
      *
      * @param RuleTrigger $trigger

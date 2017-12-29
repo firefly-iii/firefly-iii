@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -143,6 +143,16 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     {
         $this->end = $date;
 
+        return $this;
+    }
+
+    /**
+     * @param Collection $expense
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setExpense(Collection $expense): ReportGeneratorInterface
+    {
         return $this;
     }
 

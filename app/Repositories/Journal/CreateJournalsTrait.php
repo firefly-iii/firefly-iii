@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -42,6 +42,8 @@ use Log;
 trait CreateJournalsTrait
 {
     /**
+     * Store accounts found in parent class.
+     *
      * @param User            $user
      * @param TransactionType $type
      * @param array           $data
@@ -78,6 +80,8 @@ trait CreateJournalsTrait
     }
 
     /**
+     * Store a budget if found.
+     *
      * @param Transaction $transaction
      * @param int         $budgetId
      */
@@ -91,6 +95,8 @@ trait CreateJournalsTrait
     }
 
     /**
+     * Store category if found.
+     *
      * @param Transaction $transaction
      * @param string      $category
      */
@@ -161,6 +167,8 @@ trait CreateJournalsTrait
     }
 
     /**
+     * Store a transaction.
+     *
      * @param array $data
      *
      * @return Transaction
@@ -202,6 +210,8 @@ trait CreateJournalsTrait
     }
 
     /**
+     * Update note for journal.
+     *
      * @param TransactionJournal $journal
      * @param string             $note
      *

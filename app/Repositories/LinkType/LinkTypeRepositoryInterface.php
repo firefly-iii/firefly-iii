@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -91,6 +91,17 @@ interface LinkTypeRepositoryInterface
      * @return LinkType
      */
     public function store(array $data): LinkType;
+
+    /**
+     * Store link between two journals.
+     *
+     * @param array              $information
+     * @param TransactionJournal $left
+     * @param TransactionJournal $right
+     *
+     * @return mixed
+     */
+    public function storeLink(array $information, TransactionJournal $left, TransactionJournal $right): TransactionJournalLink;
 
     /**
      * @param TransactionJournalLink $link

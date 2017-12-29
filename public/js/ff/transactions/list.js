@@ -15,10 +15,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: edit_selected_txt, delete_selected_txt */
+/** global: edit_selected_txt, delete_selected_txt, token */
 
 /**
  *
@@ -71,7 +71,7 @@ function goToReconcile() {
         baseHref = bases[0].href;
     }
 
-    $.post(baseHref + 'transactions/reconcile', {transactions: ids}).done(function () {
+    $.post(baseHref + 'transactions/reconcile', {transactions: ids, _token: token}).done(function () {
         window.location.reload(true);
     }).fail(function () {
         alert('Could not reconcile transactions: please check the logs and try again later.');

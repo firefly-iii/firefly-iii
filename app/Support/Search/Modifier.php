@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -24,11 +24,13 @@ namespace FireflyIII\Support\Search;
 
 use Carbon\Carbon;
 use Exception;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use Log;
 use Steam;
 
+/**
+ * Class Modifier
+ */
 class Modifier
 {
     /**
@@ -52,11 +54,10 @@ class Modifier
     /**
      * @param array       $modifier
      * @param Transaction $transaction
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
      * @return bool
      *
-     * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public static function apply(array $modifier, Transaction $transaction): bool
     {

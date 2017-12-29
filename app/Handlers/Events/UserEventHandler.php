@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -76,6 +76,7 @@ class UserEventHandler
     {
         Log::debug('In checkSingleUserIsAdmin');
 
+        /** @var User $user */
         $user  = $event->user;
         $count = User::count();
 
@@ -86,7 +87,7 @@ class UserEventHandler
             return true;
         }
         // user is only user but has admin role
-        if ($count === 1 && $user->hasRole('owner')) {
+        if (1 === $count && $user->hasRole('owner')) {
             Log::debug(sprintf('User #%d is only user but has role owner so all is well.', $user->id));
 
             return true;

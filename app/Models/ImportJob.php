@@ -16,13 +16,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
 use Crypt;
+use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Database\Eloquent\Model;
 use Log;
 use Storage;
@@ -34,6 +35,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ImportJob extends Model
 {
     /**
+     * @var array
+     */
+    public $validStatus
+        = [
+            'new',
+            'configuring',
+            'configured',
+            'running',
+            'error',
+            'finished',
+        ];
+    /**
      * The attributes that should be casted to native types.
      *
      * @var array
@@ -44,28 +57,26 @@ class ImportJob extends Model
             'updated_at' => 'datetime',
         ];
 
-    protected $validStatus
-        = [
-            'new',
-            'initialized',
-            'configured',
-            'running',
-            'finished',
-        ];
-
     /**
      * @param $value
      *
      * @return mixed
      *
      * @throws NotFoundHttpException
+     * @throws FireflyException
      */
-    public static function routeBinder($value)
+    public static function routeBinder($value): ImportJob
     {
         if (auth()->check()) {
-            $model = self::where('key', $value)->where('user_id', auth()->user()->id)->first();
-            if (null !== $model) {
-                return $model;
+            $key       = trim($value);
+            $importJob = auth()->user()->importJobs()->where('key', $key)->first();
+            if (null !== $importJob) {
+                // must have valid status:
+                if (!in_array($importJob->status, $importJob->validStatus)) {
+                    throw new FireflyException(sprintf('ImportJob with key "%s" has invalid status "%s"', $importJob->key, $importJob->status));
+                }
+
+                return $importJob;
             }
         }
         throw new NotFoundHttpException;
@@ -109,12 +120,21 @@ class ImportJob extends Model
     }
 
     /**
-     * @param $status
+     * @param string $status
+     *
+     * @throws FireflyException
      */
-    public function change($status)
+    public function change(string $status): void
     {
-        $this->status = $status;
-        $this->save();
+        if (in_array($status, $this->validStatus)) {
+            Log::debug(sprintf('Job status set (in model) to "%s"', $status));
+            $this->status = $status;
+            $this->save();
+
+            return;
+        }
+        throw new FireflyException(sprintf('Status "%s" is invalid for job "%s".', $status, $this->key));
+
     }
 
     /**
@@ -149,6 +169,8 @@ class ImportJob extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setConfigurationAttribute($value)
@@ -157,6 +179,8 @@ class ImportJob extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setExtendedStatusAttribute($value)
@@ -176,6 +200,8 @@ class ImportJob extends Model
 
     /**
      * @return string
+     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function uploadFileContents(): string
     {
@@ -189,6 +215,7 @@ class ImportJob extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

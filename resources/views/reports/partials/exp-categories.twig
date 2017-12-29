@@ -1,0 +1,41 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th style="width:50%;" data-defaultsign="az" data-defaultsort="asc">{{ 'category'|_ }}</th>
+        <th style="width:25%;" data-defaultsign="_19">{{ 'spent'|_ }}</th>
+        <th style="width:25%;" data-defaultsign="_19">{{ 'earned'|_ }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for categoryId, entry in together %}
+        <tr>
+            <td data-value="{% if entry.category == null %}zzzzzzzzzzz{% else %}{{ entry.category }}{% endif %}">
+                {% if entry.category == null %}
+                    <a href="{{ route('categories.no-category') }}">{{ 'noCategory'|_ }}</a>
+                {% else %}
+                    <a href="{{ route('categories.show', categoryId) }}">{{ entry.category }}</a>
+
+                {% endif %}
+            </td>
+            <td data-value="{{ entry.spent.grand_total }}">
+                {% if entry.spent.per_currency|length ==0 %}
+                    {{ '0'|formatAmount }}
+                {% else %}
+                    {% for expense in entry.spent.per_currency %}
+                        {{ formatAmountBySymbol(expense.sum, expense.currency.symbol, expense.currency.dp) }}<br/>
+                    {% endfor %}
+                {% endif %}
+            </td>
+            <td data-value="{{ entry.earned.grand_total }}">
+                {% if entry.earned.per_currency|length ==0 %}
+                    {{ '0'|formatAmount }}
+                {% else %}
+                    {% for income in entry.earned.per_currency %}
+                        {{ formatAmountBySymbol(income.sum, income.currency.symbol, income.currency.dp) }}<br/>
+                    {% endfor %}
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

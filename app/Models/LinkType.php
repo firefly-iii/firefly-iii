@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -50,21 +50,26 @@ class LinkType extends Model
     /**
      * @param $value
      *
-     * @return mixed
+     * @return LinkType
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder($value)
+    public static function routeBinder(string $value): LinkType
     {
         if (auth()->check()) {
-            $model = self::where('id', $value)->first();
-            if (null !== $model) {
-                return $model;
+            $linkTypeId = intval($value);
+            $linkType   = self::find($linkTypeId);
+            if (null !== $linkType) {
+                return $linkType;
             }
         }
         throw new NotFoundHttpException;
     }
 
+    /**
+     * @codeCoverageIgnore
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function transactionJournalLinks()
     {
         return $this->hasMany(TransactionJournalLink::class);

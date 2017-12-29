@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -34,9 +34,9 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
-use Navigation;
 use Preferences;
 use Steam;
 use View;
@@ -55,8 +55,8 @@ class CategoryController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', trans('firefly.categories'));
-                View::share('mainTitleIcon', 'fa-bar-chart');
+                app('view')->share('title', trans('firefly.categories'));
+                app('view')->share('mainTitleIcon', 'fa-bar-chart');
 
                 return $next($request);
             }
@@ -74,27 +74,22 @@ class CategoryController extends Controller
             $this->rememberPreviousUri('categories.create.uri');
         }
         $request->session()->forget('categories.create.fromStore');
-        $request->session()->flash('gaEventCategory', 'categories');
-        $request->session()->flash('gaEventAction', 'create');
         $subTitle = trans('firefly.create_new_category');
 
         return view('categories.create', compact('subTitle'));
     }
 
     /**
-     * @param Request  $request
      * @param Category $category
      *
      * @return View
      */
-    public function delete(Request $request, Category $category)
+    public function delete(Category $category)
     {
         $subTitle = trans('firefly.delete_category', ['name' => $category->name]);
 
         // put previous url in session
         $this->rememberPreviousUri('categories.delete.uri');
-        $request->session()->flash('gaEventCategory', 'categories');
-        $request->session()->flash('gaEventAction', 'delete');
 
         return view('categories.delete', compact('category', 'subTitle'));
     }
@@ -132,8 +127,6 @@ class CategoryController extends Controller
             $this->rememberPreviousUri('categories.edit.uri');
         }
         $request->session()->forget('categories.edit.fromUpdate');
-        $request->session()->flash('gaEventCategory', 'categories');
-        $request->session()->flash('gaEventAction', 'edit');
 
         return view('categories.edit', compact('category', 'subTitle'));
     }
@@ -143,15 +136,23 @@ class CategoryController extends Controller
      *
      * @return View
      */
-    public function index(CategoryRepositoryInterface $repository)
+    public function index(Request $request, CategoryRepositoryInterface $repository)
     {
-        $categories = $repository->getCategories();
+        $page       = 0 === intval($request->get('page')) ? 1 : intval($request->get('page'));
+        $pageSize   = intval(Preferences::get('listPageSize', 50)->data);
+        $collection = $repository->getCategories();
+        $total      = $collection->count();
+        $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
 
-        $categories->each(
+        $collection->each(
             function (Category $category) use ($repository) {
                 $category->lastActivity = $repository->lastUseDate($category, new Collection);
             }
         );
+
+        // paginate categories
+        $categories = new LengthAwarePaginator($collection, $total, $pageSize, $page);
+        $categories->setPath(route('categories.index'));
 
         return view('categories.index', compact('categories'));
     }
@@ -171,7 +172,7 @@ class CategoryController extends Controller
         $end      = null;
         $periods  = new Collection;
         $page     = intval($request->get('page'));
-        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
+        $pageSize = intval(Preferences::get('listPageSize', 50)->data);
 
         // prep for "all" view.
         if ('all' === $moment) {
@@ -184,7 +185,7 @@ class CategoryController extends Controller
         // prep for "specific date" view.
         if (strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
-            $end      = Navigation::endOfPeriod($start, $range);
+            $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
                 'firefly.without_category_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -194,8 +195,8 @@ class CategoryController extends Controller
 
         // prep for current period
         if (0 === strlen($moment)) {
-            $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
-            $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
+            $start    = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
+            $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
             $periods  = $this->getNoCategoryPeriodOverview();
             $subTitle = trans(
                 'firefly.without_category_between',
@@ -228,11 +229,12 @@ class CategoryController extends Controller
         $subTitle     = $category->name;
         $subTitleIcon = 'fa-bar-chart';
         $page         = intval($request->get('page'));
-        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
+        $pageSize     = intval(Preferences::get('listPageSize', 50)->data);
         $range        = Preferences::get('viewRange', '1M')->data;
         $start        = null;
         $end          = null;
         $periods      = new Collection;
+        $path         = route('categories.show', [$category->id]);
 
         // prep for "all" view.
         if ('all' === $moment) {
@@ -241,26 +243,28 @@ class CategoryController extends Controller
             /** @var Carbon $start */
             $start = null === $first ? new Carbon : $first;
             $end   = new Carbon;
+            $path  = route('categories.show', [$category->id, 'all']);
         }
 
         // prep for "specific date" view.
         if (strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
-            $end      = Navigation::endOfPeriod($start, $range);
+            $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
                 'firefly.journals_in_period_for_category',
                 ['name'  => $category->name,
                  'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat),]
             );
             $periods  = $this->getPeriodOverview($category);
+            $path     = route('categories.show', [$category->id, $moment]);
         }
 
         // prep for current period
         if (0 === strlen($moment)) {
             /** @var Carbon $start */
-            $start = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
+            $start = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
             /** @var Carbon $end */
-            $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
+            $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
             $periods  = $this->getPeriodOverview($category);
             $subTitle = trans(
                 'firefly.journals_in_period_for_category',
@@ -275,7 +279,7 @@ class CategoryController extends Controller
                   ->setCategory($category)->withBudgetInformation()->withCategoryInformation();
         $collector->removeFilter(InternalTransferFilter::class);
         $transactions = $collector->getPaginatedJournals();
-        $transactions->setPath(route('categories.show', [$category->id]));
+        $transactions->setPath($path);
 
         return view('categories.show', compact('category', 'moment', 'transactions', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
@@ -340,8 +344,8 @@ class CategoryController extends Controller
         $first      = $repository->first();
         $start      = $first->date ?? new Carbon;
         $range      = Preferences::get('viewRange', '1M')->data;
-        $start      = Navigation::startOfPeriod($start, $range);
-        $end        = Navigation::endOfX(new Carbon, $range, null);
+        $start      = app('navigation')->startOfPeriod($start, $range);
+        $end        = app('navigation')->endOfX(new Carbon, $range, null);
         $entries    = new Collection;
 
         // properties for cache
@@ -357,8 +361,8 @@ class CategoryController extends Controller
         Log::debug(sprintf('Going to get period expenses and incomes between %s and %s.', $start->format('Y-m-d'), $end->format('Y-m-d')));
         while ($end >= $start) {
             Log::debug('Loop!');
-            $end        = Navigation::startOfPeriod($end, $range);
-            $currentEnd = Navigation::endOfPeriod($end, $range);
+            $end        = app('navigation')->startOfPeriod($end, $range);
+            $currentEnd = app('navigation')->endOfPeriod($end, $range);
 
             // count journals without category in this period:
             /** @var JournalCollectorInterface $collector */
@@ -389,7 +393,7 @@ class CategoryController extends Controller
             $earned = $collector->getJournals()->sum('transaction_amount');
 
             $dateStr  = $end->format('Y-m-d');
-            $dateName = Navigation::periodShow($end, $range);
+            $dateName = app('navigation')->periodShow($end, $range);
             $entries->push(
                 [
                     'string'      => $dateStr,
@@ -401,7 +405,7 @@ class CategoryController extends Controller
                     'date'        => clone $end,
                 ]
             );
-            $end = Navigation::subtractPeriod($end, $range, 1);
+            $end = app('navigation')->subtractPeriod($end, $range, 1);
         }
         Log::debug('End of loops');
         $cache->store($entries);
@@ -423,11 +427,11 @@ class CategoryController extends Controller
         $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $first             = $repository->firstUseDate($category);
         if (null === $first) {
-            $first = new Carbon;
+            $first = new Carbon; // @codeCoverageIgnore
         }
         $range   = Preferences::get('viewRange', '1M')->data;
-        $first   = Navigation::startOfPeriod($first, $range);
-        $end     = Navigation::endOfX(new Carbon, $range, null);
+        $first   = app('navigation')->startOfPeriod($first, $range);
+        $end     = app('navigation')->endOfX(new Carbon, $range, null);
         $entries = new Collection;
         $count   = 0;
 
@@ -442,12 +446,12 @@ class CategoryController extends Controller
             return $cache->get(); // @codeCoverageIgnore
         }
         while ($end >= $first && $count < 90) {
-            $end        = Navigation::startOfPeriod($end, $range);
-            $currentEnd = Navigation::endOfPeriod($end, $range);
+            $end        = app('navigation')->startOfPeriod($end, $range);
+            $currentEnd = app('navigation')->endOfPeriod($end, $range);
             $spent      = $repository->spentInPeriod(new Collection([$category]), $accounts, $end, $currentEnd);
             $earned     = $repository->earnedInPeriod(new Collection([$category]), $accounts, $end, $currentEnd);
             $dateStr    = $end->format('Y-m-d');
-            $dateName   = Navigation::periodShow($end, $range);
+            $dateName   = app('navigation')->periodShow($end, $range);
 
             // amount transferred
             /** @var JournalCollectorInterface $collector */
@@ -468,7 +472,7 @@ class CategoryController extends Controller
                     'date'        => clone $end,
                 ]
             );
-            $end = Navigation::subtractPeriod($end, $range, 1);
+            $end = app('navigation')->subtractPeriod($end, $range, 1);
             ++$count;
         }
         $cache->store($entries);

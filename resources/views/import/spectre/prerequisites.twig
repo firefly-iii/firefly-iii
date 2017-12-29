@@ -1,0 +1,58 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <form class="form-horizontal" action="{{ route('import.prerequisites.post',['spectre']) }}" method="post">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ trans('import.spectre_prerequisites_title') }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <p>
+                                    {{ trans('import.spectre_prerequisites_text')|raw }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-8">
+                                {{ ExpandedForm.text('client_id') }}
+                                {{ ExpandedForm.text('service_secret') }}
+                                {{ ExpandedForm.text('app_secret') }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <p>{{ trans('import.spectre_enter_pub_key')|raw }}</p>
+                                <div class="form-group" id="pub_key_holder">
+                                    <label for="ffInput_pub_key_holder" class="col-sm-4 control-label">{{ trans('form.public_key') }}</label>
+
+                                    <div class="col-sm-8">
+                                        <textarea class="form-control"
+                                                  rows="10"
+                                                  id="ffInput_pub_key_holder" name="pub_key_holder" contenteditable="false">{{ publicKey }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <button type="submit" class="btn pull-right btn-success">
+                                {{ ('submit')|_ }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+        </form>
+    </div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}
+{% block styles %}
+{% endblock %}

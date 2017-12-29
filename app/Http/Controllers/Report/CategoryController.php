@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -28,7 +28,6 @@ use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Navigation;
 
 /**
  * Class CategoryController.
@@ -41,6 +40,8 @@ class CategoryController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
+     *
+     * @throws \Throwable
      */
     public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -58,7 +59,7 @@ class CategoryController extends Controller
         $data       = $repository->periodExpenses($categories, $accounts, $start, $end);
         $data[0]    = $repository->periodExpensesNoCategory($accounts, $start, $end);
         $report     = $this->filterReport($data);
-        $periods    = Navigation::listOfPeriods($start, $end);
+        $periods    = app('navigation')->listOfPeriods($start, $end);
         $result     = view('reports.partials.category-period', compact('report', 'periods'))->render();
 
         $cache->store($result);
@@ -72,6 +73,8 @@ class CategoryController extends Controller
      * @param Collection $accounts
      *
      * @return string
+     *
+     * @throws \Throwable
      */
     public function income(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -89,7 +92,7 @@ class CategoryController extends Controller
         $data       = $repository->periodIncome($categories, $accounts, $start, $end);
         $data[0]    = $repository->periodIncomeNoCategory($accounts, $start, $end);
         $report     = $this->filterReport($data);
-        $periods    = Navigation::listOfPeriods($start, $end);
+        $periods    = app('navigation')->listOfPeriods($start, $end);
         $result     = view('reports.partials.category-period', compact('report', 'periods'))->render();
 
         $cache->store($result);
@@ -105,6 +108,8 @@ class CategoryController extends Controller
      * @return mixed|string
      *
      * @internal param ReportHelperInterface $helper
+     *
+     * @throws \Throwable
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end)
     {

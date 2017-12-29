@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -48,6 +48,8 @@ class BillRepository implements BillRepositoryInterface
      * @param Bill $bill
      *
      * @return bool
+     *
+     * @throws \Exception
      */
     public function destroy(Bill $bill): bool
     {
@@ -390,6 +392,9 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $date
      *
      * @return \Carbon\Carbon
+     *
+     * @throws \FireflyIII\Support\Facades\FireflyException
+     * @throws \FireflyIII\Support\Facades\FireflyException
      */
     public function nextDateMatch(Bill $bill, Carbon $date): Carbon
     {
@@ -427,6 +432,10 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $date
      *
      * @return Carbon
+     *
+     * @throws \FireflyIII\Support\Facades\FireflyException
+     * @throws \FireflyIII\Support\Facades\FireflyException
+     * @throws \FireflyIII\Support\Facades\FireflyException
      */
     public function nextExpectedMatch(Bill $bill, Carbon $date): Carbon
     {
@@ -610,10 +619,9 @@ class BillRepository implements BillRepositoryInterface
         return $wordMatch;
     }
 
-
     /**
-     * @param Bill $bill
-     * @param string             $note
+     * @param Bill   $bill
+     * @param string $note
      *
      * @return bool
      */

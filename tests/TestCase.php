@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -42,6 +42,8 @@ abstract class TestCase extends BaseTestCase
     /**
      * @param User   $user
      * @param string $range
+     *
+     * @throws \Exception
      */
     public function changeDateRange(User $user, $range)
     {
@@ -86,7 +88,17 @@ abstract class TestCase extends BaseTestCase
     /**
      * @return User
      */
-    public function emptyUser()
+    public function demoUser(): User
+    {
+        $user = User::find(4);
+
+        return $user;
+    }
+
+    /**
+     * @return User
+     */
+    public function emptyUser(): User
     {
         $user = User::find(2);
 
@@ -96,7 +108,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * @return User
      */
-    public function user()
+    public function user(): User
     {
         $user = User::find(1);
 

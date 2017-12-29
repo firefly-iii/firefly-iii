@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists }}
+    {{ Breadcrumbs.render }}
 {% endblock %}
 {% block content %}
     <div class="row">
@@ -20,26 +20,50 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-lg-8">
-                            <p>
-                                {# file import #}
-                                <a href="{{ route('import.file.index') }}" class="btn btn-app">
-                                    <i class="fa fa-file-text-o"></i>
-                                    {{ 'import_general_index_csv_file'|_ }}
+                        {# file import #}
+                        {% if routines.file == true %}
+                            <div class="col-lg-1 text-center">
+                                <a href="{{ route('import.prerequisites', ['file']) }}">
+                                    <img src="images/logos/file.png" alt="{{ 'import_general_index_file'|_ }}"/><br/>
+                                    {{ 'import_general_index_file'|_ }}
                                 </a>
-                                {# bunq import #}
-                                {#
-                                <a href="{{ route('import.bank.prerequisites', ['bunq']) }}" class="btn btn-app">
-                                    <img src="images/logos/bunq.png" alt="bunq"/><br />
-                                    Import from bunq
+                            </div>
+                        {% endif %}
+
+                        {# bunq import #}
+                        {% if routines.bunq == true %}
+                            <div class="col-lg-1 text-center">
+                                <a href="{{ route('import.prerequisites', ['bunq']) }}">
+                                    <img src="images/logos/bunq.png" alt="{{ 'import_from_bunq'|_ }}"/><br/>
+                                    {{ 'import_from_bunq'|_ }}
                                 </a>
-                                #}
-                            </p>
-                        </div>
+                            </div>
+                        {% endif %}
+
+                        {# import from Spectre #}
+                        {% if routines.spectre == true %}
+                            <div class="col-lg-1 text-center">
+                                <a href="{{ route('import.prerequisites', ['spectre']) }}">
+                                    <img src="images/logos/spectre.png" alt="{{ 'import_using_spectre'|_ }}"/><br/>
+                                    {{ 'import_using_spectre'|_ }}
+                                </a>
+                            </div>
+                        {% endif %}
+
+                        {# import from Plaid #}
+                        {% if routines.plaid == true %}
+                            <div class="col-lg-1 text-center">
+                                <a href="{{ route('import.prerequisites', ['plaid']) }}">
+                                    <img src="images/logos/plaid.png" alt="{{ 'import_using_plaid'|_ }}"/><br/>
+                                    {{ 'import_using_plaid'|_ }}
+                                </a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 {% endblock %}
 {% block scripts %}

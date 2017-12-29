@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, accountIds, start, end) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, accountIds, start, end) }}
 {% endblock %}
 
 {% block content %}
@@ -171,6 +171,7 @@
         var accountChartUri = '{{ route('chart.account.report', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
     </script>
+    <script type="text/javascript" src="js/ff/reports/all.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="js/ff/reports/default/all.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="js/ff/reports/default/month.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

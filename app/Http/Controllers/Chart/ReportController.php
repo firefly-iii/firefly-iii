@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -29,7 +29,6 @@ use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Log;
-use Navigation;
 use Response;
 use Steam;
 
@@ -89,7 +88,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Shows income and expense, debet/credit: operations.
+     * Shows income and expense, debit/credit: operations.
      *
      * @param Collection $accounts
      * @param Carbon     $start
@@ -109,7 +108,7 @@ class ReportController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
         Log::debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
-        $format    = Navigation::preferredCarbonLocalizedFormat($start, $end);
+        $format    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
         $source    = $this->getChartData($accounts, $start, $end);
         $chartData = [
             [
@@ -144,7 +143,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Shows sum income and expense, debet/credit: operations.
+     * Shows sum income and expense, debit/credit: operations.
      *
      * @param Carbon     $start
      * @param Carbon     $end
@@ -256,7 +255,7 @@ class ReportController extends Controller
         $tasker = app(AccountTaskerInterface::class);
 
         while ($currentStart <= $end) {
-            $currentEnd = Navigation::endOfPeriod($currentStart, '1M');
+            $currentEnd = app('navigation')->endOfPeriod($currentStart, '1M');
             $earned     = strval(
                 array_sum(
                     array_map(
@@ -282,7 +281,7 @@ class ReportController extends Controller
             $label               = $currentStart->format('Y-m') . '-01';
             $spentArray[$label]  = bcmul($spent, '-1');
             $earnedArray[$label] = $earned;
-            $currentStart        = Navigation::addPeriod($currentStart, '1M', 0);
+            $currentStart        = app('navigation')->addPeriod($currentStart, '1M', 0);
         }
         $result = [
             'spent'  => $spentArray,

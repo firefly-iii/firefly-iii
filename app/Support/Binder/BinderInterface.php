@@ -16,11 +16,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
+
+use Illuminate\Routing\Route;
 
 /**
  * Interface BinderInterface.
@@ -28,10 +30,10 @@ namespace FireflyIII\Support\Binder;
 interface BinderInterface
 {
     /**
-     * @param $value
-     * @param $route
+     * @param string $value
+     * @param Route  $route
      *
      * @return mixed
      */
-    public static function routeBinder($value, $route);
+    public static function routeBinder(string $value, Route $route);
 }

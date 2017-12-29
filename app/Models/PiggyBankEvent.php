@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -41,11 +41,18 @@ class PiggyBankEvent extends Model
             'date'       => 'datetime',
         ];
     /** @var array */
-    protected $dates    = ['date'];
+    protected $dates = ['date'];
+    /**
+     * @var array
+     */
     protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'amount'];
-    protected $hidden   = ['amount_encrypted'];
+    /**
+     * @var array
+     */
+    protected $hidden = ['amount_encrypted'];
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function piggyBank()
@@ -54,14 +61,17 @@ class PiggyBankEvent extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setAmountAttribute($value)
     {
-        $this->attributes['amount'] = strval(round($value, 2));
+        $this->attributes['amount'] = strval($value);
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function transactionJournal()

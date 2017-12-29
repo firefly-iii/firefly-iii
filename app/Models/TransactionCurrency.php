@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -51,19 +51,24 @@ class TransactionCurrency extends Model
     protected $fillable = ['name', 'code', 'symbol', 'decimal_places'];
 
     /**
-     * @param TransactionCurrency $currency
+     * @param string $value
      *
      * @return TransactionCurrency
      */
-    public static function routeBinder(self $currency)
+    public static function routeBinder(string $value): TransactionCurrency
     {
         if (auth()->check()) {
-            return $currency;
+            $currencyId = intval($value);
+            $currency   = self::find($currencyId);
+            if (!is_null($currency)) {
+                return $currency;
+            }
         }
         throw new NotFoundHttpException;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function transactionJournals()

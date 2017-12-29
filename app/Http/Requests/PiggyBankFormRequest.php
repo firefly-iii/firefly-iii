@@ -16,13 +16,11 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
-
-use Carbon\Carbon;
 
 /**
  * Class PiggyBankFormRequest.
@@ -59,8 +57,8 @@ class PiggyBankFormRequest extends Request
     public function rules()
     {
         $nameRule = 'required|between:1,255|uniquePiggyBankForUser';
-        if (intval($this->get('id'))) {
-            $nameRule = 'required|between:1,255|uniquePiggyBankForUser:' . intval($this->get('id'));
+        if ($this->integer('id')) {
+            $nameRule = 'required|between:1,255|uniquePiggyBankForUser:' . $this->integer('id');
         }
 
         $rules = [

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -106,6 +106,13 @@ interface UserRepositoryInterface
     public function findByEmail(string $email): ?User;
 
     /**
+     * Returns the first user in the DB. Generally only works when there is just one.
+     *
+     * @return null|User
+     */
+    public function first(): ?User;
+
+    /**
      * Return basic user information.
      *
      * @param User $user
@@ -121,6 +128,18 @@ interface UserRepositoryInterface
      * @return bool
      */
     public function hasRole(User $user, string $role): bool;
+
+    /**
+     * @param array $data
+     *
+     * @return User
+     */
+    public function store(array $data): User;
+
+    /**
+     * @param User $user
+     */
+    public function unblockUser(User $user): void;
 
     /**
      * This updates the users email address. Same as changeEmail just without most logging. This makes sure that the undo/confirm routine can't catch this one.

@@ -1,7 +1,7 @@
 <?php
 /**
  * TriggerFactory.php
- * Copyright (C) 2016 Robert Horlings.
+ * Copyright (C) 2017 Robert Horlings.
  *
  * This file is part of Firefly III.
  *
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -49,6 +49,8 @@ class TriggerFactory
      * @param RuleTrigger $trigger
      *
      * @return AbstractTrigger
+     *
+     * @throws FireflyException
      */
     public static function getTrigger(RuleTrigger $trigger)
     {

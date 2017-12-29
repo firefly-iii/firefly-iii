@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -161,6 +161,13 @@ interface JournalCollectorInterface
     public function setOffset(int $offset): JournalCollectorInterface;
 
     /**
+     * @param Collection $accounts
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setOpposingAccounts(Collection $accounts): JournalCollectorInterface;
+
+    /**
      * @param int $page
      *
      * @return JournalCollectorInterface
@@ -196,6 +203,11 @@ interface JournalCollectorInterface
      */
     public function setTypes(array $types): JournalCollectorInterface;
 
+    /**
+     * @param User $user
+     *
+     * @return mixed
+     */
     public function setUser(User $user);
 
     /**

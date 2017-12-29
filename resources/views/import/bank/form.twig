@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists }}
+    {{ Breadcrumbs.render }}
 {% endblock %}
 {% block content %}
     <div class="row">
@@ -34,13 +34,13 @@
                                     {% for remoteAccount in remoteAccounts %}
                                         <tr>
                                             <td>
-                                                <input type="checkbox" name="do_import[{{ remoteAccount.id }}]" checked id="do_import_{{ remoteAccount.id }}" />
+                                                <input type="checkbox" name="do_import[{{ remoteAccount.id }}]" checked id="do_import_{{ remoteAccount.id }}"/>
                                             </td>
                                             <td>
                                                 <strong {% if remoteAccount.color !='' %} style="color:{{ remoteAccount.color }}"{% endif %}>
                                                     {{ remoteAccount.name }}
                                                 </strong>
-                                                <br />{{ remoteAccount.number }}
+                                                <br/>{{ remoteAccount.number }}
                                             </td>
                                             <td>
                                                 {{ remoteAccount.currency }}

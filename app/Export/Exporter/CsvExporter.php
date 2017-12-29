@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -24,7 +24,7 @@ namespace FireflyIII\Export\Exporter;
 
 use FireflyIII\Export\Entry\Entry;
 use League\Csv\Writer;
-use SplFileObject;
+use Storage;
 
 /**
  * Class CsvExporter.
@@ -52,6 +52,8 @@ class CsvExporter extends BasicExporter implements ExporterInterface
 
     /**
      * @return bool
+     *
+     * @throws \TypeError
      */
     public function run(): bool
     {
@@ -60,8 +62,11 @@ class CsvExporter extends BasicExporter implements ExporterInterface
 
         // necessary for CSV writer:
         $fullPath = storage_path('export') . DIRECTORY_SEPARATOR . $this->fileName;
-        $writer   = Writer::createFromPath(new SplFileObject($fullPath, 'a+'), 'w');
-        $rows     = [];
+
+
+        //we create the CSV into memory
+        $writer = Writer::createFromPath($fullPath);
+        $rows   = [];
 
         // get field names for header row:
         $first   = $this->getEntries()->first();
@@ -88,5 +93,8 @@ class CsvExporter extends BasicExporter implements ExporterInterface
     private function tempFile()
     {
         $this->fileName = $this->job->key . '-records.csv';
+        // touch file in export directory:
+        $disk = Storage::disk('export');
+        $disk->put($this->fileName, '');
     }
 }

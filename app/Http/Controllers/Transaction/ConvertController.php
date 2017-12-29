@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -55,8 +55,8 @@ class ConvertController extends Controller
             function ($request, $next) {
                 $this->accounts = app(AccountRepositoryInterface::class);
 
-                View::share('title', trans('firefly.transactions'));
-                View::share('mainTitleIcon', 'fa-exchange');
+                app('view')->share('title', trans('firefly.transactions'));
+                app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 return $next($request);
             }
@@ -128,6 +128,9 @@ class ConvertController extends Controller
      * @param TransactionJournal         $journal
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
+     * @throws FireflyException
+     * @throws FireflyException
      */
     public function postIndex(Request $request, JournalRepositoryInterface $repository, TransactionType $destinationType, TransactionJournal $journal)
     {

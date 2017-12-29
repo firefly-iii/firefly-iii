@@ -16,14 +16,15 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Logging\CommandHandler;
-use FireflyIII\Import\Routine\ImportRoutine;
+use FireflyIII\Import\Routine\RoutineInterface;
 use FireflyIII\Models\ImportJob;
 use Illuminate\Console\Command;
 use Illuminate\Support\MessageBag;
@@ -58,6 +59,8 @@ class Import extends Command
 
     /**
      * Run the import routine.
+     *
+     * @throws FireflyException
      */
     public function handle()
     {
@@ -81,17 +84,27 @@ class Import extends Command
         $handler = new CommandHandler($this);
         $monolog->pushHandler($handler);
 
-        /** @var ImportRoutine $routine */
-        $routine = app(ImportRoutine::class);
+        // actually start job:
+        $type = 'csv' === $job->file_type ? 'file' : $job->file_type;
+        $key = sprintf('import.routine.%s', $type);
+        $className = config($key);
+        if (null === $className || !class_exists($className)) {
+            throw new FireflyException(sprintf('Cannot find import routine class for job of type "%s".', $type)); // @codeCoverageIgnore
+        }
+
+        /** @var RoutineInterface $routine */
+        $routine = app($className);
         $routine->setJob($job);
         $routine->run();
 
         /** @var MessageBag $error */
-        foreach ($routine->errors as $index => $error) {
+        foreach ($routine->getErrors() as $index => $error) {
             $this->error(sprintf('Error importing line #%d: %s', $index, $error));
         }
 
-        $this->line(sprintf('The import has finished. %d transactions have been imported out of %d records.', $routine->journals->count(), $routine->lines));
+        $this->line(
+            sprintf('The import has finished. %d transactions have been imported out of %d records.', $routine->getJournals()->count(), $routine->getLines())
+        );
 
         return;
     }

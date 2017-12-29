@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
+/** global: token */
 var fixHelper = function (e, tr) {
     "use strict";
     var $originals = tr.children();
@@ -115,11 +115,11 @@ function sortStop(event, ui) {
 
     });
     if (parent.hasClass('rule-triggers')) {
-        $.post('rules/trigger/order/' + ruleId, {triggers: entries}).fail(function () {
+        $.post('rules/trigger/order/' + ruleId, {triggers: entries, _token: token}).fail(function () {
             alert('Could not re-order rule triggers. Please refresh the page.');
         });
     } else {
-        $.post('rules/action/order/' + ruleId, {actions: entries}).fail(function () {
+        $.post('rules/action/order/' + ruleId, {actions: entries, _token: token}).fail(function () {
             alert('Could not re-order rule actions. Please refresh the page.');
         });
 

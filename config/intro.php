@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -37,7 +37,7 @@ return [
     ],
     // accounts: create
     'accounts_create'                => [
-        'iban' => ['element' => '#ffInput_iban'],
+        'iban'  => ['element' => '#ffInput_iban'],
     ],
     // extra text for asset account creation.
     'accounts_create_asset'          => [

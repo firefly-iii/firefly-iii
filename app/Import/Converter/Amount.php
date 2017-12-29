@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -25,7 +25,7 @@ namespace FireflyIII\Import\Converter;
 use Log;
 
 /**
- * Class RabobankDebetCredit.
+ * Class Amount.
  */
 class Amount implements ConverterInterface
 {
@@ -64,6 +64,18 @@ class Amount implements ConverterInterface
         if ($len > 1 && ('.' === $value[$altPosition] || ',' === $value[$altPosition])) {
             $decimal = $value[$altPosition];
             Log::debug(sprintf('Alternate search resulted in "%s" for decimal sign.', $decimal));
+        }
+
+        // decimal character still null? Search from the left for '.',',' or ' '.
+        if (is_null($decimal)) {
+            Log::debug('Decimal is still NULL, probably number with >2 decimals. Search for a dot.');
+            $res = strrpos($value, '.');
+            if (!(false === $res)) {
+                // blandly assume this is the one.
+                Log::debug(sprintf('Searched from the left for "." in amount "%s", assume this is the decimal sign.', $value));
+                $decimal = '.';
+            }
+            unset($options, $res);
         }
 
         // if decimal is dot, replace all comma's and spaces with nothing. then parse as float (round to 4 pos)

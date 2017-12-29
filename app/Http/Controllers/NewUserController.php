@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -56,8 +56,8 @@ class NewUserController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-        View::share('title', trans('firefly.welcome'));
-        View::share('mainTitleIcon', 'fa-fire');
+        app('view')->share('title', trans('firefly.welcome'));
+        app('view')->share('mainTitleIcon', 'fa-fire');
 
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);
@@ -114,7 +114,7 @@ class NewUserController extends Controller
             'virtualBalance'     => 0,
             'active'             => true,
             'accountRole'        => 'defaultAsset',
-            'openingBalance'     => round($request->input('bank_balance'), 12),
+            'openingBalance'     => $request->input('bank_balance'),
             'openingBalanceDate' => new Carbon,
             'currency_id'        => intval($request->input('amount_currency_id_bank_balance')),
         ];
@@ -139,7 +139,7 @@ class NewUserController extends Controller
             'virtualBalance'     => 0,
             'active'             => true,
             'accountRole'        => 'savingAsset',
-            'openingBalance'     => round($request->input('savings_balance'), 12),
+            'openingBalance'     => $request->input('savings_balance'),
             'openingBalanceDate' => new Carbon,
             'currency_id'        => intval($request->input('amount_currency_id_bank_balance')),
         ];

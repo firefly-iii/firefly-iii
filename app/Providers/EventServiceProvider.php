@@ -16,13 +16,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
 use FireflyIII\Events\RegisteredUser;
+use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
@@ -39,6 +40,7 @@ use Log;
 class EventServiceProvider extends ServiceProvider
 {
     /**
+     * @codeCoverageIgnore
      * The event listener mappings for the application.
      *
      * @var array
@@ -53,6 +55,10 @@ class EventServiceProvider extends ServiceProvider
             // is a User related event.
             Login::class                                  => [
                 'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
+
+            ],
+            RequestedVersionCheckStatus::class            => [
+                'FireflyIII\Handlers\Events\VersionCheckEventHandler@checkForUpdates',
             ],
 
             // is a User related event.
@@ -82,6 +88,7 @@ class EventServiceProvider extends ServiceProvider
         ];
 
     /**
+     * @codeCoverageIgnore
      * Register any events for your application.
      */
     public function boot()

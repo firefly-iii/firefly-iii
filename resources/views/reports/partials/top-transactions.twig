@@ -1,0 +1,25 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsign="az">{{ 'account'|_ }}</th>
+        <th data-defaultsign="az">{{ 'description'|_ }}</th>
+        <th data-defaultsign="month">{{ 'date'|_ }}</th>
+        <th style="width:25%;" class="hidden-xs" data-defaultsign="_19">{{ 'amount'|_ }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for transaction in sorted %}
+        <tr>
+            <td data-value="{{ transaction.opposing_account_name }}">
+                <a href="{{ route('accounts.show',transaction.opposing_account_id) }}">{{ transaction.opposing_account_name }}</a>
+            </td>
+            <td data-value="{{ transaction.description }}">{{ transaction.description }}</td>
+            <td data-value="{{ transaction.date.format('Y-m-d') }}">
+                {{ transaction.date.formatLocalized(monthAndDayFormat) }}
+            </td>
+            <td style="text-align: right;" data-value="{{ transaction.transaction_amount }}"><span
+                        style="margin-right:5px;">{{ transaction|transactionAmount }}</span></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -32,6 +32,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\Binder\AccountList;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use InvalidArgumentException;
 use Response;
 use View;
@@ -81,6 +82,11 @@ class ReportController extends Controller
      * @return \Illuminate\Http\JsonResponse
      *
      * @throws FireflyException
+     * @throws \Throwable
+     * @throws \Throwable
+     * @throws \Throwable
+     * @throws \Throwable
+     * @throws \Throwable
      */
     public function general(Request $request)
     {
@@ -119,6 +125,7 @@ class ReportController extends Controller
      * @return string
      *
      * @throws FireflyException
+     * @throws \Throwable
      */
     private function balanceAmount(array $attributes): string
     {
@@ -156,7 +163,7 @@ class ReportController extends Controller
      *
      * @return string
      *
-     * @throws FireflyException
+     * @throws \Throwable
      */
     private function budgetSpentAmount(array $attributes): string
     {
@@ -170,11 +177,11 @@ class ReportController extends Controller
     /**
      * Returns all expenses in category in range.
      *
-     * @param $attributes
+     * @param array $attributes
      *
      * @return string
      *
-     * @throws FireflyException
+     * @throws \Throwable
      */
     private function categoryEntry(array $attributes): string
     {
@@ -188,11 +195,11 @@ class ReportController extends Controller
     /**
      * Returns all the expenses that went to the given expense account.
      *
-     * @param $attributes
+     * @param array $attributes
      *
      * @return string
      *
-     * @throws FireflyException
+     * @throws \Throwable
      */
     private function expenseEntry(array $attributes): string
     {
@@ -206,11 +213,11 @@ class ReportController extends Controller
     /**
      * Returns all the incomes that went to the given asset account.
      *
-     * @param $attributes
+     * @param array $attributes
      *
      * @return string
      *
-     * @throws FireflyException
+     * @throws \Throwable
      */
     private function incomeEntry(array $attributes): string
     {
@@ -231,7 +238,7 @@ class ReportController extends Controller
     private function parseAttributes(array $attributes): array
     {
         $attributes['location'] = $attributes['location'] ?? '';
-        $attributes['accounts'] = AccountList::routeBinder($attributes['accounts'] ?? '', '');
+        $attributes['accounts'] = AccountList::routeBinder($attributes['accounts'] ?? '', new Route('get', '', []));
         try {
             $attributes['startDate'] = Carbon::createFromFormat('Ymd', $attributes['startDate']);
         } catch (InvalidArgumentException $e) {

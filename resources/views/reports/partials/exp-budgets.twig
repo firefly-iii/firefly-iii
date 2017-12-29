@@ -1,0 +1,30 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th style="width:66%;" data-defaultsign="az" data-defaultsort="asc">{{ 'category'|_ }}</th>
+        <th style="width:34%;" data-defaultsign="_19">{{ 'spent'|_ }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for budgetId, entry in together %}
+        <tr>
+            <td data-value="{% if entry.budget == null %}zzzzzzzzzzz{% else %}{{ entry.budget }}{% endif %}">
+                {% if entry.budget == null %}
+                    <a href="{{ route('budgets.no-budget') }}">{{ 'no_budget_squared'|_ }}</a>
+                {% else %}
+                    <a href="{{ route('budgets.show', budgetId) }}">{{ entry.budget }}</a>
+                {% endif %}
+            </td>
+            <td data-value="{{ entry.spent.grand_total }}">
+                {% if entry.spent.per_currency|length ==0 %}
+                    {{ '0'|formatAmount }}
+                {% else %}
+                    {% for expense in entry.spent.per_currency %}
+                        {{ formatAmountBySymbol(expense.sum, expense.currency.symbol, expense.currency.dp) }}<br/>
+                    {% endfor %}
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

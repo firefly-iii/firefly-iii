@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
+/** global: token */
 $(function () {
     "use strict";
     $('#help').click(showHelp);
@@ -50,7 +50,7 @@ function showHelp(e) {
 }
 
 function enableGuidance(route, specialPage) {
-    $.post('json/intro/enable/' + route + '/' + specialPage).done(function (data) {
+    $.post('json/intro/enable/' + route + '/' + specialPage, {_token: token}).done(function (data) {
         alert(data.message);
     }).fail(function () {
         alert('Could not re-enable introduction.');

@@ -1,15 +1,24 @@
 <?php
-declare(strict_types=1);
-
 /**
  * firefly.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+declare(strict_types=1);
 
 return [
     // general stuff:
@@ -71,7 +80,7 @@ return [
     'source_accounts'                            => 'Herkunftskonto',
     'destination_accounts'                       => 'Zielkonto',
     'user_id_is'                                 => 'Ihre Benutzerkennung ist <strong>:user</strong>',
-    'field_supports_markdown'                    => 'Diese Feld unterstützt <a href="https://en.support.wordpress.com/markdown-quick-reference/"> Abschlag </a>.',
+    'field_supports_markdown'                    => 'Dieses Feld unterstützt <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
     'need_more_help'                             => 'Wenn Sie Hilfe beim Bedienen von Firefly III brauchen, <a href="https://github.com/firefly-iii/firefly-iii/issues">erstellen Sie ein Ticket auf Github</a>.',
     'reenable_intro_text'                        => 'Sie können auch <a href="#" id="reenableGuidance">die Einführung</a> wieder aktivieren.',
     'intro_boxes_after_refresh'                  => 'Die Einführungsfelder werden wieder angezeigt, wenn Sie die Seite aktualisieren.',
@@ -132,6 +141,22 @@ return [
     'invalid_server_configuration'               => 'Ungültige Serverkonfiguration',
     'invalid_locale_settings'                    => 'Firefly III kann keine Geldbeträge formatieren, da auf Ihrem Server die erforderlichen Pakete fehlen. Es gibt <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">eine Anleitung</a>, wie dies behoben werden kann.',
     'quickswitch'                                => 'Schnellauswahl',
+
+    // check for updates:
+    'update_check_title'                         => 'Check for updates',
+    'admin_update_check_title'                   => 'Automatically check for update',
+    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact Github to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
+    'check_for_updates_permission'               => 'Firefly III can check for updates, but it needs your permission to do so. Please go to the <a href=":link">administration</a> to indicate if you would like this feature to be enabled.',
+    'updates_ask_me_later'                       => 'Ask me later',
+    'updates_do_not_check'                       => 'Do not check for updates',
+    'updates_enable_check'                       => 'Enable the check for updates',
+    'admin_update_check_now_title'               => 'Check for updates now',
+    'admin_update_check_now_explain'             => 'If you press the button, Firefly III will see if your current version is the latest.',
+    'check_for_updates_button'                   => 'Check now!',
+    'update_new_version_alert'                   => 'A new version is available. You are running v:your_version, the latest version is v:new_version which was released on :date.',
+    'update_current_version_alert'               => 'You are running v:version, which is the latest available release.',
+    'update_newer_version_alert'                 => 'You are running v:your_version, which is newer than the latest release, v:new_version.',
+    'update_check_error'                         => 'An error occurred while checking for updates. Please view the log files.',
 
     // search
     'search'                                     => 'Suche',
@@ -233,14 +258,14 @@ return [
     'warning_transaction_subset'                 => 'Aus Performancegründen ist diese Liste auf :max_num_transactions Überweisungen limitiert und zeigt möglicherweise nur einen Teil dieser an',
     'warning_no_matching_transactions'           => 'Keine übereinstimmenden Überweisungen gefunden. Aus Kapazitätsgründen werden nur die letzten :num_transactions Überweisungen überprüft.',
     'warning_no_valid_triggers'                  => 'Keine gültigen Trigger gefunden.',
-    'apply_rule_selection'                       => 'Übernehmen Sie die Regel ": title" auf eine Auswahl Ihrer Transaktionen',
-    'apply_rule_selection_intro'                 => 'Regeln wie ": title" werden in der Regel nur auf neue oder aktualisierte Transaktionen angewandt, aber Sie können die Regel auch auf eine Auswahl Ihrer bestehenden Transaktionen anwenden. Dies kann nützlich sein, wenn Sie eine Regel aktualisiert haben und Sie die Änderungen benötigen, auf andere Transaktionen zu aktualisieren.',
+    'apply_rule_selection'                       => 'Übernehmen Sie die Regel ":title" auf eine Auswahl Ihrer Transaktionen',
+    'apply_rule_selection_intro'                 => 'Regeln wie ":title" werden in der Regel nur auf neue oder aktualisierte Transaktionen angewandt, aber Sie können die Regel auch auf eine Auswahl Ihrer bestehenden Transaktionen anwenden. Dies kann nützlich sein, wenn Sie eine Regel aktualisiert haben und Sie die Änderungen benötigen, auf andere Transaktionen zu aktualisieren.',
     'include_transactions_from_accounts'         => 'Überweisungen von diesem Konto einbeziehen',
-    'applied_rule_selection'                     => 'Regel ": Titel" wurde auf Ihre Auswahl angewendet.',
+    'applied_rule_selection'                     => 'Regel ":title" wurde auf Ihre Auswahl angewendet.',
     'execute'                                    => 'Ausführen',
-    'apply_rule_group_selection'                 => 'Anwenden der Regelgruppe ": title" auf eine Auswahl Ihrer Transaktionen',
-    'apply_rule_group_selection_intro'           => 'Regelgruppen wie ": title" werden in der Regel nur auf neue oder aktualisierte Transaktionen angewandt, aber Sie können die Gruppe auch auf eine Auswahl Ihrer bestehenden Transaktionen anwenden. Dies kann nützlich sein, wenn Sie eine Gruppe aktualisiert haben und Sie die Änderungen benötigen, auf andere Transaktionen zu aktualisieren.',
-    'applied_rule_group_selection'               => 'Regelgruppe ": title" wurde auf Ihre Auswahl angewendet.',
+    'apply_rule_group_selection'                 => 'Anwenden der Regelgruppe ":title" auf eine Auswahl Ihrer Transaktionen',
+    'apply_rule_group_selection_intro'           => 'Regelgruppen wie ":title" werden in der Regel nur auf neue oder aktualisierte Transaktionen angewandt, aber Sie können die Gruppe auch auf eine Auswahl Ihrer bestehenden Transaktionen anwenden. Dies kann nützlich sein, wenn Sie eine Gruppe aktualisiert haben und Sie die Änderungen benötigen, auf andere Transaktionen zu aktualisieren.',
+    'applied_rule_group_selection'               => 'Regelgruppe ":title" wurde auf Ihre Auswahl angewendet.',
 
     // actions and triggers
     'rule_trigger_user_action'                   => 'Die Nutzeraktion ist ":trigger_value"',
@@ -261,7 +286,7 @@ return [
     'rule_trigger_to_account_contains_choice'    => 'Zielkonto enthält..',
     'rule_trigger_to_account_contains'           => 'Zielkonto enthält ":trigger_value"',
     'rule_trigger_transaction_type_choice'       => 'Überweisung ist vom Typ..',
-    'rule_trigger_transaction_type'              => 'Transaktion ist vom Typ ": Trigger_value"',
+    'rule_trigger_transaction_type'              => 'Transaktion ist vom Typ ":trigger_value"',
     'rule_trigger_category_is_choice'            => 'Kategorie ist..',
     'rule_trigger_category_is'                   => 'Kategorie ist ":trigger_value"',
     'rule_trigger_amount_less_choice'            => 'Betrag ist geringer als..',
@@ -343,7 +368,6 @@ return [
     'rule_action_set_notes_choice'               => 'Set notes to..',
     'rule_action_set_notes'                      => 'Set notes to ":action_value"',
 
-
     'rules_have_read_warning'                  => 'Haben Sie die Warnung gelesen?',
     'apply_rule_warning'                       => 'Warnung: Das Ausführen einer Regel (Gruppe) für eine große Auswahl von Transaktionen kann sehr lange dauern, und es kann zu einer Zeitüberschreitung kommen. Wenn dies der Fall ist, wird die Regel (-Gruppe) nur auf eine unbekannte Teilmenge Ihrer Transaktionen angewendet. Dies könnte Ihre Finanzverwaltung komplett zerstören. Bitte seien Sie vorsichtig.',
 
@@ -398,9 +422,9 @@ return [
 Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'pref_home_do_show_deposits'               => 'Ja, zeige sie an',
     'successful_count'                         => 'davon :count erfolgreich',
-    'transaction_page_size_title'              => 'Einträge pro Seite',
-    'transaction_page_size_help'               => 'Jede Liste von Transaktionen zeigt maximal folgende Anzahl an Transaktionen',
-    'transaction_page_size_label'              => 'Einträge pro Seite',
+    'list_page_size_title'                     => 'Einträge pro Seite',
+    'list_page_size_help'                      => 'Any list of things (accounts, transactions, etc) shows at most this many per page.',
+    'list_page_size_label'                     => 'Einträge pro Seite',
     'between_dates'                            => '(:start und :end)',
     'pref_optional_fields_transaction'         => 'Optionale Felder für Überweisungen',
     'pref_optional_fields_transaction_help'    => 'Standardmäßig sind nicht alle Felder aktiviert, wenn eine neue Überweisung erstellt wird (wegen der Übersicht). Unten können Sie diese Felder aktivieren, wenn Sie glauben, dass Sie nützlich für Sie sind. Alle Felder die deaktiviert sind, aber bereits ausgefüllt sind, werden unabhängig von ihren Einstellung sichtbar sein.',
@@ -420,7 +444,6 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'optional_field_meta_business'             => 'Geschäftlich',
     'optional_field_attachments'               => 'Anhänge',
     'optional_field_meta_data'                 => 'Optionale Metadaten',
-
 
     // profile:
     'change_your_password'                     => 'Passwort ändern',
@@ -443,7 +466,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'secure_pw_history'                        => 'Im August 2017 veröffentlichte die bekannte Sicherheitsforscherin Troy Hunt eine Liste von 306 Millionen gestohlenen Passwörtern. Diese Passwörter wurden während der Einbrüche bei Firmen wie LinkedIn, Adobe und NeoPets (und vielen mehr) gestohlen.',
     'secure_pw_check_box'                      => 'Wenn Sie das Kontrollkästchen aktivieren, wird Firefly III den SHA1-Hash Ihres Passworts an <a href="https://www.troyhunt.com/introducing-306-million-freely-downloadable-pwned-passwords/">die Website von Troy Hunt</a> senden, um zu sehen, ob es auf der Liste steht. Dies verhindert, dass Sie unsichere Passwörter verwenden, was in der aktuellen <a href="https://pages.nist.gov/800-63-3/sp800-63b.html">NIST-Sonderveröffentlichung</a> zu diesem Thema empfohlen wird.',
     'secure_pw_sha1'                           => 'Aber ich dachte, dass SHA1 schon geknackt wurde?',
-    'secure_pw_hash_speed'                     => 'Ja, aber nicht in diesem Zusammenhang. Wie Sie auf <a href="https://shattered.io/"> auf der Website, die erklärt, wie SHA1 gebrochen wurde, lesen können</a>, ist es jetzt etwas leichter, eine "Kollision" zu finden: eine andere Zeichenfolge, die zu demselben SHA1-Hash führt. Es dauert nur mehr 10.000 Jahre mit einer Single-GPU-Maschine.',
+    'secure_pw_hash_speed'                     => 'Ja, aber nicht in diesem Zusammenhang. Wie Sie auf <a href="https://shattered.io/">auf der Website, die erklärt, wie SHA1 gebrochen wurde, lesen können</a>, ist es jetzt etwas leichter, eine "Kollision" zu finden: eine andere Zeichenfolge, die zu demselben SHA1-Hash führt. Es dauert nur mehr 10.000 Jahre mit einer Single-GPU-Maschine.',
     'secure_pw_hash_security'                  => 'Diese Kollision wäre nicht gleich Ihrem Passwort, noch wäre es nützlich auf (einer Seite wie) Firefly III. Diese Anwendung verwendet SHA1 nicht zur Passwortüberprüfung. Es ist also sicher, dieses Kästchen zu aktivieren. Ihr Passwort wird gehasht und über HTTPS übertragen.',
     'secure_pw_should'                         => 'Soll ich die Box ankreuzen?',
     'secure_pw_long_password'                  => 'Wenn Sie gerade ein langes, Single-Use-Passwort für Firefly III mit einem Kennwortgenerator generiert haben: <strong>Nein</strong>.',
@@ -457,7 +480,6 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'email_changed_logout'                     => 'Sie müssen Ihre E-Mail-Adresse bestätigen, um sich anmelden zu können.',
     'login_with_new_email'                     => 'Sie können sich jetzt mit Ihrer neuen E-Mail-Adresse anmelden.',
     'login_with_old_email'                     => 'Sie können sich jetzt wieder mit Ihrer alten E-Mail-Adresse anmelden.',
-
 
     // attachments
     'nr_of_attachments'                        => 'Ein Anhang |:count Anhänge',
@@ -563,7 +585,6 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'available_amount_indication'              => 'Use these amounts to get an indication of what your total budget could be.',
     'suggested'                                => 'Vorgeschlagen',
     'average_between'                          => 'Average between :start and :end',
-
 
     // bills:
     'matching_on'                              => 'Reagiert auf',
@@ -702,12 +723,15 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'deleted_transfer'                         => 'Überweisung ":description" erfolgreich gelöscht',
     'stored_journal'                           => 'Neue Überweisung ":description" erfolgreich erstellt',
     'select_transactions'                      => 'Überweisungen auswählen',
+    'rule_group_select_transactions'           => '":title" auf Transaktionen anwenden',
+    'rule_select_transactions'                 => '":title" auf Transaktionen anwenden',
     'stop_selection'                           => 'Auswahl von Überweisungen stoppen',
     'reconcile_selected'                       => 'Ausgleichen',
     'mass_delete_journals'                     => 'Löschen Sie eine Reihe von Überweisungen',
     'mass_edit_journals'                       => 'Bearbeiten Sie eine Reihe von Überweisungen',
     'cannot_edit_other_fields'                 => 'You cannot mass-edit other fields than the ones here, because there is no room to show them. Please follow the link and edit them by one-by-one, if you need to edit these fields.',
     'no_budget'                                => '(kein Budget)',
+    'no_budget_squared'                        => '(kein Budget)',
     'perm-delete-many'                         => 'Das Löschen von mehreren Elementen auf einmal kann sich störend auswirken. Bitte seien Sie vorsichtig.',
     'mass_deleted_transactions_success'        => ':amount Überweisung(en) gelöscht.',
     'mass_edited_transactions_success'         => ':amount Überweisung(en) aktualisiert',
@@ -716,7 +740,6 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'opt_group_savingAsset'                    => 'Sparkonten',
     'opt_group_sharedAsset'                    => 'Shared asset accounts',
     'opt_group_ccAsset'                        => 'Kreditkarten',
-
 
     // new user:
     'welcome'                                  => 'Willkommen bei Firefly!',
@@ -765,6 +788,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'piggyBanks'                               => 'Sparschweine',
     'bills'                                    => 'Rechnungen',
     'withdrawal'                               => 'Ausgabe',
+    'opening_balance'                          => 'Eröffnungsbilanz',
     'deposit'                                  => 'Einnahme',
     'account'                                  => 'Konto',
     'transfer'                                 => 'Überweisung',
@@ -787,6 +811,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'report_default'                           => 'Default financial report between :start and :end',
     'report_audit'                             => 'Transaction history overview between :start and :end',
     'report_category'                          => 'Category report between :start and :end',
+    'report_account'                           => 'Expense/revenue account report between :start and :end',
     'report_budget'                            => 'Budget report between :start and :end',
     'report_tag'                               => 'Tag report between :start and :end',
     'quick_link_reports'                       => 'Schnellzugriff',
@@ -811,8 +836,8 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'inactive'                                 => 'Inaktiv',
     'active'                                   => 'Aktiv',
     'difference'                               => 'Unterschied',
-    'in'                                       => 'Rein',
-    'out'                                      => 'Raus',
+    'money_flowing_in'                         => 'In',
+    'money_flowing_out'                        => 'Out',
     'topX'                                     => 'top :number',
     'show_full_list'                           => 'Zeige die gesamte Liste',
     'show_only_top'                            => 'Nur die Top :number anzeigen',
@@ -822,6 +847,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'report_type_category'                     => 'Kategorie-Bericht',
     'report_type_budget'                       => 'Budgetbericht',
     'report_type_tag'                          => 'Tag report',
+    'report_type_account'                      => 'Expense/revenue account report',
     'more_info_help'                           => 'Weitere Informationen über diese Art von Berichten finden Sie in der Hilfe. Drücken Sie hierfür das (?)-Symbol in der oberen rechten Ecke.',
     'report_included_accounts'                 => 'Eingezogene Konten',
     'report_date_range'                        => 'Zeitraum',
@@ -873,7 +899,10 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'account_role_ccAsset'                     => 'Kreditkarte',
     'budget_chart_click'                       => 'Klicken Sie auf einen Budgetnamen in der obigen Tabelle, um ein Diagramm anzuzeigen.',
     'category_chart_click'                     => 'Klicken Sie auf einen Kategorienamen in der obigen Tabelle, um ein Diagramm zu sehen.',
-
+    'in_out_accounts'                          => 'Earned and spent per combination',
+    'in_out_per_category'                      => 'Earned and spent per category',
+    'out_per_budget'                           => 'Spent per budget',
+    'select_expense_revenue'                   => 'Select expense/revenue account',
 
     // charts:
     'chart'                                    => 'Diagram',
@@ -885,7 +914,6 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'earned'                                   => 'Verdient',
     'overspent'                                => 'Zuviel ausgegeben',
     'left'                                     => 'Übrig',
-    'no_budget'                                => '(no budget)',
     'max-amount'                               => 'Höchstbetrag',
     'min-amount'                               => 'Mindestbetrag',
     'journal-amount'                           => 'Aktueller Rechnungseintrag',
@@ -969,8 +997,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'total_size'                            => 'Gesamtgröße',
     'budget_or_budgets'                     => 'Budget(s)',
     'budgets_with_limits'                   => 'Budget(s) mit konfigurierten Betrag',
-    'rule_or_rules'                         => 'Regel(n)',
-    'rulegroup_or_groups'                   => 'Regelgruppe(n)',
+    'nr_of_rules_in_total_groups'           => ':count_rules rule(s) in :count_groups rule group(s)',
     'tag_or_tags'                           => 'Tag(s)',
     'configuration_updated'                 => 'Die Konfiguration wurde aktualisiert',
     'setting_is_demo_site'                  => 'Demonstrationsseite',
@@ -1036,7 +1063,6 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     '(partially) pays for_outward'          => '(partially) pays for',
     '(partially) reimburses_outward'        => '(partially) reimburses',
 
-
     // split a transaction:
     'splits'                                => 'Geteilte',
     'add_another_split'                     => 'Eine weitere Aufteilung hinzufügen',
@@ -1055,49 +1081,16 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     // import bread crumbs and titles:
     'import'                                => 'Import',
     'import_data'                           => 'Daten importieren',
+    'import_general_index_file'             => 'Datei importieren',
+    'import_from_bunq'                      => 'Import mit bunq',
+    'import_using_spectre'                  => 'Import mit Spectre',
+    'import_using_plaid'                    => 'Import mit Plaid',
+    'import_config_bread_crumb'             => 'Import einrichten',
 
     // import index page:
     'import_index_title'                    => 'Daten in Firefly III importieren',
     'import_index_sub_title'                => 'Index',
     'import_general_index_intro'            => 'Willkommen beim Importassistenten von Firefly. Es gibt einige Möglichkeiten, Daten in Firefly III zu importieren, die hier als Schaltflächen angezeigt werden.',
-    'import_general_index_csv_file'         => 'Importiere eine (CSV) Datei',
-    'import_index_intro'                    => 'Dieser Assistent hilft Ihnen, Dateien von Ihrer Bank in Firefly III zu importieren. Bitte sehen Sie sich die Hilfeseiten in der oberen rechten Ecke an.',
-    'import_index_file'                     => 'Datei auswählen',
-    'import_index_config'                   => 'Wenn Sie bereits zuvor Daten in Firefly III importiert haben, haben Sie eventuell eine Kofigurationsdatei, welche einige Einstellungen für Sie voreinstellt. Für einige Banken haben andere Nutzer freundlicherweise bereits ihre <a href="https://github.com/firefly-iii/import-configurations/wiki">Konfigurationsdatei</a> zur Verfügung gestellt.',
-    'import_index_type'                     => 'Wählen Sie den Typ der hochgeladenen Datei',
-    'import_index_start'                    => 'Import starten',
-    'import_file'                           => 'Datei importieren',
-
-    // supported file types:
-    'import_file_type_csv'                  => 'CSV (Kommagetrennte Werte)',
-
-    // import configuration routine:
-    'import_config_sub_title'               => 'Set up your import file',
-    'import_config_bread_crumb'             => 'Set up your import file',
-
-    // import status page:
-    'import_status_bread_crumb'             => 'Importstatus',
-    'import_status_sub_title'               => 'Importstatus',
-    'import_status_wait_title'              => 'Bitte warten...',
-    'import_status_wait_text'               => 'Diese Box wird gleich verschwinden.',
-    'import_status_ready_title'             => 'Der Import ist startbereit',
-    'import_status_ready_text'              => 'Der Import ist bereit zu starten. Alle Einstellungen wurden von Ihnen erledigt. Bitte laden Sie die Konfigurationsdatei herunter. Diese wird Ihnen beim Import helfen, sollte dieser nicht wie gewünscht verlaufen. Um den Import tatsächlich zu starten führen Sie den folgenden Befehl in der Konsole aus oder nutzen Sie den Web-basierten Import. Abhängig von ihrer Konfiguration wird Ihnen der Konsolenimport mehr Rückmeldungen geben.',
-    'import_status_ready_config'            => 'Konfigurationsdatei herunterladen',
-    'import_status_ready_start'             => 'Starte den Import',
-    'import_status_ready_share'             => 'Bitte denken Sie darüber nach ihre Konfiguration herunterzuladen und in der <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">Sammlung an Import-Einstellungen</a></strong> zu teilen. Dieses erlaubt es anderen Nutzern von Firefly III ihre Daten einfacher zu importieren.',
-    'import_status_running_title'           => 'Der Import läuft',
-    'import_status_running_placeholder'     => 'Bitte warten Sie auf eine Aktualisierung...',
-    'import_status_errors_title'            => 'Fehler beim Import',
-    'import_status_errors_single'           => 'Beim Import ist ein Fehler aufgetreten. Dieser scheint aber nicht schwerwiegend zu sein.',
-    'import_status_errors_multi'            => 'Beim Import sind einige Fehler aufgetreten. Diese scheinen aber nicht schwerwiegend zu sein.',
-    'import_status_fatal_title'             => 'Ein schwerwiegender Fehler ist aufgetreten',
-    'import_status_fatal_text'              => 'Es ist ein schwerwiegender Fehler aufgetreten und die Importroutine kann nicht fortgeführt werden. Bitte sehen Sie sich die Erklärung in rot unten an.',
-    'import_status_fatal_more'              => 'Wenn der Fehler eine Zeitüberschreitung ist, wird der Import mittendrin gestoppt. Bei einigen Serverkonfigurationen wird lediglich der Server gestoppt, während der Import im Hintergrund ausgeführt wird. Um dies zu überprüfen, überprüfen Sie die Protokolldateien. Wenn das Problem weiterhin besteht, sollten Sie stattdessen den Import über die Befehlszeile in Erwägung ziehen.',
-    'import_status_finished_title'          => 'Importassistent abgeschlossen',
-    'import_status_finished_text'           => 'Der Importassistenten hat Ihre Datei importiert.',
-    'import_status_finished_job'            => 'Die importierten Transaktionen finden Sie im Tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">: tag</a>.',
-    'import_status_job_running'             => 'Der Import läuft...',
-    'import_with_key'                       => 'Import with key \':key\'',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Diese Funktion ist nicht verfügbar, wenn Sie Firefly III in einer Sandstorm.io-Umgebung verwenden.',
@@ -1147,6 +1140,4 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'no_bills_intro_default'                => 'Du hast noch keine Rechnungen. Sie können Rechnungen erstellen, um die laufenden Ausgaben, wie zum Beispiel Ihre Versicherung oder Miete, nachzuverfolgen.',
     'no_bills_imperative_default'           => 'Haben Sie regelmäßige Rechnungen? Erstellen Sie eine Rechnung und verfolgen Sie Ihre Zahlungen:',
     'no_bills_create_default'               => 'Eine Rechnung erstellen',
-
-
 ];

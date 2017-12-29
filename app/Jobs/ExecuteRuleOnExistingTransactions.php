@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -91,6 +91,14 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     public function setEndDate(Carbon $date)
     {
         $this->endDate = $date;
+    }
+
+    /**
+     * @return Rule
+     */
+    public function getRule(): Rule
+    {
+        return $this->rule;
     }
 
     /**

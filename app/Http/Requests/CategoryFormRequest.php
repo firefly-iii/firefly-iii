@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -56,8 +56,8 @@ class CategoryFormRequest extends Request
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
         $nameRule   = 'required|between:1,100|uniqueObjectForUser:categories,name';
-        if (null !== $repository->find(intval($this->get('id')))->id) {
-            $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,' . intval($this->get('id'));
+        if (null !== $repository->find($this->integer('id'))->id) {
+            $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,' . $this->integer('id');
         }
 
         // fixed

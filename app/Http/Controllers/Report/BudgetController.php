@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -28,7 +28,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Navigation;
 
 /**
  * Class BudgetController.
@@ -42,6 +41,8 @@ class BudgetController extends Controller
      * @param Carbon                      $end
      *
      * @return mixed|string
+     *
+     * @throws \Throwable
      */
     public function general(BudgetReportHelperInterface $helper, Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -69,6 +70,8 @@ class BudgetController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
+     *
+     * @throws \Throwable
      */
     public function period(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -88,7 +91,7 @@ class BudgetController extends Controller
         $data       = $repository->getBudgetPeriodReport($budgets, $accounts, $start, $end);
         $data[0]    = $repository->getNoBudgetPeriodReport($accounts, $start, $end); // append report data for "no budget"
         $report     = $this->filterBudgetPeriodReport($data);
-        $periods    = Navigation::listOfPeriods($start, $end);
+        $periods    = app('navigation')->listOfPeriods($start, $end);
 
         $result = view('reports.partials.budget-period', compact('report', 'periods'))->render();
         $cache->store($result);

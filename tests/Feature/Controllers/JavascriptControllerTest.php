@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -83,6 +83,23 @@ class JavascriptControllerTest extends TestCase
     {
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('javascript.variables'));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\JavascriptController::variables
+     * @covers       \FireflyIII\Http\Controllers\JavascriptController::getDateRangeConfig
+     *
+     * @param string $range
+     *
+     * @dataProvider dateRangeProvider
+     */
+    public function testVariablesCustom(string $range)
+    {
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->session(['is_custom_range' => true]);
         $response = $this->get(route('javascript.variables'));
         $response->assertStatus(200);
     }

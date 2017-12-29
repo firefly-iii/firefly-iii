@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -29,10 +29,19 @@ use Carbon\Carbon;
  */
 class UserCompany extends BunqObject
 {
+    /**
+     * @var
+     */
     private $addressMain;
+    /**
+     * @var
+     */
     private $addressPostal;
     /** @var array */
     private $aliases = [];
+    /**
+     * @var
+     */
     private $avatar;
     /** @var string */
     private $cocNumber = '';
@@ -40,7 +49,13 @@ class UserCompany extends BunqObject
     private $counterBankIban = '';
     /** @var Carbon */
     private $created;
+    /**
+     * @var
+     */
     private $dailyLimit;
+    /**
+     * @var
+     */
     private $directorAlias;
     /** @var string */
     private $displayName = '';

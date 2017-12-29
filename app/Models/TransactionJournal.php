@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -83,21 +83,20 @@ class TransactionJournal extends Model
         ];
 
     /**
-     * @param $value
+     * @param string $value
      *
-     * @return mixed
-     *
-     * @throws NotFoundHttpException
+     * @return TransactionJournal
      */
-    public static function routeBinder($value)
+    public static function routeBinder(string $value): TransactionJournal
     {
         if (auth()->check()) {
-            $object = self::where('transaction_journals.id', $value)
-                          ->with('transactionType')
-                          ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                          ->where('user_id', auth()->user()->id)->first(['transaction_journals.*']);
-            if (null !== $object) {
-                return $object;
+            $journalId = intval($value);
+            $journal   = auth()->user()->transactionJournals()->where('transaction_journals.id', $journalId)
+                               ->with('transactionType')
+                               ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                               ->first(['transaction_journals.*']);
+            if (!is_null($journal)) {
+                return $journal;
             }
         }
 
@@ -105,6 +104,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function attachments()
@@ -113,6 +113,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function bill()
@@ -121,6 +122,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function budgets(): BelongsToMany
@@ -129,6 +131,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function categories(): BelongsToMany
@@ -137,6 +140,8 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param string $name
      *
      * @return bool
@@ -149,6 +154,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return HasMany
      */
     public function destinationJournalLinks(): HasMany
@@ -157,6 +163,8 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string
@@ -171,6 +179,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     *
      * @param string $name
      *
      * @return string
@@ -206,6 +215,8 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param string $name
      *
      * @return bool
@@ -216,6 +227,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return bool
      */
     public function isDeposit(): bool
@@ -228,6 +240,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return bool
      */
     public function isOpeningBalance(): bool
@@ -240,6 +253,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return bool
      */
     public function isTransfer(): bool
@@ -252,6 +266,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return bool
      */
     public function isWithdrawal(): bool
@@ -264,6 +279,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * Get all of the notes.
      */
     public function notes()
@@ -272,6 +288,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function piggyBankEvents(): HasMany
@@ -280,6 +297,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * Save the model to the database.
      *
      * @param array $options
@@ -295,6 +313,8 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
@@ -306,6 +326,8 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
@@ -317,6 +339,8 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      */
     public function scopeSortCorrectly(EloquentBuilder $query)
@@ -327,6 +351,8 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param array           $types
      */
@@ -341,6 +367,8 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setDescriptionAttribute($value)
@@ -388,6 +416,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return HasMany
      */
     public function sourceJournalLinks(): HasMany
@@ -396,6 +425,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function tags()
@@ -404,6 +434,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function transactionCurrency()
@@ -412,6 +443,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return HasMany
      */
     public function transactionJournalMeta(): HasMany
@@ -420,6 +452,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function transactionType()
@@ -428,6 +461,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return HasMany
      */
     public function transactions(): HasMany
@@ -436,6 +470,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

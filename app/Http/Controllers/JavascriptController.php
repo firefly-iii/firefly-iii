@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -30,7 +30,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Http\Request;
 use Log;
-use Navigation;
 use Preferences;
 
 /**
@@ -88,7 +87,9 @@ class JavascriptController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param Request                     $request
+     * @param AccountRepositoryInterface  $repository
+     * @param CurrencyRepositoryInterface $currencyRepository
      *
      * @return \Illuminate\Http\Response
      */
@@ -139,33 +140,42 @@ class JavascriptController extends Controller
         $end       = session('end');
         $first     = session('first');
         $title     = sprintf('%s - %s', $start->formatLocalized($this->monthAndDayFormat), $end->formatLocalized($this->monthAndDayFormat));
-        $isCustom  = session('is_custom_range');
+        $isCustom  = true === session('is_custom_range', false);
+        $today     = new Carbon;
         $ranges    = [
             // first range is the current range:
             $title => [$start, $end],
         ];
         Log::debug(sprintf('viewRange is %s', $viewRange));
+        Log::debug(sprintf('isCustom is %s', var_export($isCustom, true)));
 
         // when current range is a custom range, add the current period as the next range.
         if ($isCustom) {
             Log::debug('Custom is true.');
-            $index             = Navigation::periodShow($start, $viewRange);
-            $customPeriodStart = Navigation::startOfPeriod($start, $viewRange);
-            $customPeriodEnd   = Navigation::endOfPeriod($customPeriodStart, $viewRange);
+            $index             = app('navigation')->periodShow($start, $viewRange);
+            $customPeriodStart = app('navigation')->startOfPeriod($start, $viewRange);
+            $customPeriodEnd   = app('navigation')->endOfPeriod($customPeriodStart, $viewRange);
             $ranges[$index]    = [$customPeriodStart, $customPeriodEnd];
         }
         // then add previous range and next range
-        $previousDate   = Navigation::subtractPeriod($start, $viewRange);
-        $index          = Navigation::periodShow($previousDate, $viewRange);
-        $previousStart  = Navigation::startOfPeriod($previousDate, $viewRange);
-        $previousEnd    = Navigation::endOfPeriod($previousStart, $viewRange);
+        $previousDate   = app('navigation')->subtractPeriod($start, $viewRange);
+        $index          = app('navigation')->periodShow($previousDate, $viewRange);
+        $previousStart  = app('navigation')->startOfPeriod($previousDate, $viewRange);
+        $previousEnd    = app('navigation')->endOfPeriod($previousStart, $viewRange);
         $ranges[$index] = [$previousStart, $previousEnd];
 
-        $nextDate       = Navigation::addPeriod($start, $viewRange, 0);
-        $index          = Navigation::periodShow($nextDate, $viewRange);
-        $nextStart      = Navigation::startOfPeriod($nextDate, $viewRange);
-        $nextEnd        = Navigation::endOfPeriod($nextStart, $viewRange);
+        $nextDate       = app('navigation')->addPeriod($start, $viewRange, 0);
+        $index          = app('navigation')->periodShow($nextDate, $viewRange);
+        $nextStart      = app('navigation')->startOfPeriod($nextDate, $viewRange);
+        $nextEnd        = app('navigation')->endOfPeriod($nextStart, $viewRange);
         $ranges[$index] = [$nextStart, $nextEnd];
+
+        // today:
+        $todayStart = app('navigation')->startOfPeriod($today, $viewRange);
+        $todayEnd   = app('navigation')->endOfPeriod($todayStart, $viewRange);
+        if ($todayStart->ne($start) || $todayEnd->ne($end)) {
+            $ranges[ucfirst(strval(trans('firefly.today')))] = [$todayStart, $todayEnd];
+        }
 
         // everything
         $index          = strval(trans('firefly.everything'));

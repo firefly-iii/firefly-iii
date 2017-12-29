@@ -16,24 +16,19 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
-
-/**
- * RouteServiceProvider.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
- *
- * See the LICENSE file for details.
- */
 
 namespace FireflyIII\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
+/**
+ * @codeCoverageIgnore
+ * Class RouteServiceProvider
+ */
 class RouteServiceProvider extends ServiceProvider
 {
     /**

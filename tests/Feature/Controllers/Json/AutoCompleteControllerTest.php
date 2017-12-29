@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -41,14 +41,19 @@ class AutoCompleteControllerTest extends TestCase
      */
     public function testAllAccounts()
     {
+        // mock stuff
+        $accountA     = factory(Account::class)->make();
+        $collection   = new Collection([$accountA]);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('getAccountsByType')
                      ->withArgs([[AccountType::REVENUE, AccountType::EXPENSE, AccountType::BENEFICIARY, AccountType::DEFAULT, AccountType::ASSET]])
-                     ->andReturn(new Collection);
+                     ->andReturn($collection);
 
         $this->be($this->user());
         $response = $this->get(route('json.all-accounts'));
         $response->assertStatus(200);
+        $response->assertExactJson([$accountA->name]);
+
     }
 
     /**
@@ -72,18 +77,39 @@ class AutoCompleteControllerTest extends TestCase
     public function testExpenseAccounts()
     {
         // mock stuff
-        $account      = factory(Account::class)->make();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $accountA         = factory(Account::class)->make();
+        $accountB         = factory(Account::class)->make();
+        $accountA->active = true;
+        $accountB->active = false;
+        $collection       = new Collection([$accountA, $accountB]);
+        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::EXPENSE, AccountType::BENEFICIARY]])->once()->andReturn(
-            new Collection([$account])
-        );
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::EXPENSE, AccountType::BENEFICIARY]])->once()->andReturn($collection);
 
         $this->be($this->user());
         $response = $this->get(route('json.expense-accounts'));
         $response->assertStatus(200);
-        $response->assertExactJson([$account->name]);
+        $response->assertExactJson([$accountA->name]);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::journalsWithId
+     */
+    public function testJournalsWithId()
+    {
+        $journal             = $this->user()->transactionJournals()->where('id', '!=', 1)->first();
+        $journal->journal_id = $journal->id;
+        $collection          = new Collection([$journal]);
+        $collector           = $this->mock(JournalCollectorInterface::class);
+        $collector->shouldReceive('setLimit')->withArgs([400])->andReturnSelf();
+        $collector->shouldReceive('setPage')->withArgs([1])->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn($collection);
+
+        $this->be($this->user());
+        $response = $this->get(route('json.journals-with-id', [1]));
+        $response->assertStatus(200);
+        $response->assertExactJson([['id' => $journal->id, 'name' => $journal->id . ': ' . $journal->description]]);
     }
 
     /**
@@ -92,18 +118,20 @@ class AutoCompleteControllerTest extends TestCase
     public function testRevenueAccounts()
     {
         // mock stuff
-        $account      = factory(Account::class)->make();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $accountA         = factory(Account::class)->make();
+        $accountB         = factory(Account::class)->make();
+        $accountA->active = true;
+        $accountB->active = false;
+        $collection       = new Collection([$accountA, $accountB]);
+        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::REVENUE]])->once()->andReturn(
-            new Collection([$account])
-        );
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::REVENUE]])->once()->andReturn($collection);
 
         $this->be($this->user());
         $response = $this->get(route('json.revenue-accounts'));
         $response->assertStatus(200);
-        $response->assertExactJson([$account->name]);
+        $response->assertExactJson([$accountA->name]);
     }
 
     /**

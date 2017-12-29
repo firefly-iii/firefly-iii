@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -83,21 +83,25 @@ class Category extends Model
     }
 
     /**
-     * @param Category $value
+     * @param string $value
      *
      * @return Category
      */
-    public static function routeBinder(Category $value)
+    public static function routeBinder(string $value): Category
     {
         if (auth()->check()) {
-            if (intval($value->user_id) === auth()->user()->id) {
-                return $value;
+            $categoryId = intval($value);
+            $category   = auth()->user()->categories()->find($categoryId);
+            if (!is_null($category)) {
+                return $category;
             }
         }
         throw new NotFoundHttpException;
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string
@@ -112,6 +116,8 @@ class Category extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setNameAttribute($value)
@@ -122,6 +128,7 @@ class Category extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function transactionJournals()
@@ -130,6 +137,7 @@ class Category extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function transactions()
@@ -138,6 +146,7 @@ class Category extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return BelongsTo
      */
     public function user(): BelongsTo

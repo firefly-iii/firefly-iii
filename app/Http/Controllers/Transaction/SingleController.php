@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -89,14 +89,19 @@ class SingleController extends Controller
                 $this->currency    = app(CurrencyRepositoryInterface::class);
                 $this->repository  = app(JournalRepositoryInterface::class);
 
-                View::share('title', trans('firefly.transactions'));
-                View::share('mainTitleIcon', 'fa-repeat');
+                app('view')->share('title', trans('firefly.transactions'));
+                app('view')->share('mainTitleIcon', 'fa-repeat');
 
                 return $next($request);
             }
         );
     }
 
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function cloneTransaction(TransactionJournal $journal)
     {
         $source       = $journal->sourceAccountList()->first();
@@ -138,7 +143,7 @@ class SingleController extends Controller
         ];
 
         /** @var Note $note */
-        $note = $journal->notes()->first();
+        $note = $this->repository->getNote($journal);
         if (null !== $note) {
             $preFilled['notes'] = $note->text;
         }
@@ -149,7 +154,8 @@ class SingleController extends Controller
     }
 
     /**
-     * @param string $what
+     * @param Request $request
+     * @param string  $what
      *
      * @return View
      */
@@ -173,8 +179,6 @@ class SingleController extends Controller
             $this->rememberPreviousUri('transactions.create.uri');
         }
         Session::forget('transactions.create.fromStore');
-        Session::flash('gaEventCategory', 'transactions');
-        Session::flash('gaEventAction', 'create-' . $what);
 
         asort($piggies);
 
@@ -205,8 +209,6 @@ class SingleController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('transactions.delete.uri');
-        Session::flash('gaEventCategory', 'transactions');
-        Session::flash('gaEventAction', 'delete-' . $what);
 
         return view('transactions.single.delete', compact('journal', 'subTitle', 'what'));
     }
@@ -255,7 +257,7 @@ class SingleController extends Controller
         $assetAccounts = $this->groupedAccountList();
         $budgetList    = ExpandedForm::makeSelectListWithEmpty($this->budgets->getBudgets());
 
-        if ($journal->transactionType->type === TransactionType::RECONCILIATION) {
+        if (TransactionType::RECONCILIATION === $journal->transactionType->type) {
             return redirect(route('accounts.reconcile.edit', [$journal->id]));
         }
 
@@ -300,7 +302,7 @@ class SingleController extends Controller
             'destination_currency'     => $foreignCurrency,
         ];
         /** @var Note $note */
-        $note = $journal->notes()->first();
+        $note = $this->repository->getNote($journal);
         if (null !== $note) {
             $preFilled['notes'] = $note->text;
         }
@@ -313,8 +315,6 @@ class SingleController extends Controller
         }
 
         Session::flash('preFilled', $preFilled);
-        Session::flash('gaEventCategory', 'transactions');
-        Session::flash('gaEventAction', 'edit-' . $what);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('transactions.edit.fromUpdate')) {
@@ -443,7 +443,7 @@ class SingleController extends Controller
         foreach ($accounts as $account) {
             $type = $account->getMeta('accountRole');
             if (0 === strlen($type)) {
-                $type = 'no_account_type';
+                $type = 'no_account_type'; // @codeCoverageIgnore
             }
             $key                        = strval(trans('firefly.opt_group_' . $type));
             $return[$key][$account->id] = $account->name;
@@ -463,7 +463,7 @@ class SingleController extends Controller
         foreach ($accounts as $account) {
             $type = $account->getMeta('accountRole');
             if (0 === strlen($type)) {
-                $type = 'no_account_type';
+                $type = 'no_account_type'; // @codeCoverageIgnore
             }
             $key                        = strval(trans('firefly.opt_group_' . $type));
             $return[$key][$account->id] = $account->name;
@@ -482,7 +482,7 @@ class SingleController extends Controller
         $count = $this->repository->countTransactions($journal);
 
         if ($count > 2) {
-            return true;
+            return true; // @codeCoverageIgnore
         }
 
         return false;

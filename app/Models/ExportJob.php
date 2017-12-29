@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -41,24 +41,27 @@ class ExportJob extends Model
         ];
 
     /**
-     * @param $value
+     * @param string $value
      *
-     * @return mixed
+     * @return ExportJob
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder($value)
+    public static function routeBinder(string $value): ExportJob
     {
         if (auth()->check()) {
-            $model = self::where('key', $value)->where('user_id', auth()->user()->id)->first();
-            if (null !== $model) {
-                return $model;
+            $key       = trim($value);
+            $exportJob = auth()->user()->exportJobs()->where('key', $key)->first();
+            if (null !== $exportJob) {
+                return $exportJob;
             }
         }
         throw new NotFoundHttpException;
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param $status
      */
     public function change($status)
@@ -68,6 +71,7 @@ class ExportJob extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

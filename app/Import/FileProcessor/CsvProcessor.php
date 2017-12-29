@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -70,6 +70,9 @@ class CsvProcessor implements FileProcessorInterface
      * Does the actual job.
      *
      * @return bool
+     *
+     * @throws \League\Csv\Exception
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function run(): bool
     {
@@ -80,6 +83,7 @@ class CsvProcessor implements FileProcessorInterface
         Log::debug(sprintf('Number of entries: %d', $entries->count()));
         $notImported = $entries->filter(
             function (array $row, int $index) {
+                $row = array_values($row);
                 if ($this->rowAlreadyImported($row)) {
                     $message = sprintf('Row #%d has already been imported.', $index);
                     $this->job->addError($index, $message);
@@ -158,6 +162,10 @@ class CsvProcessor implements FileProcessorInterface
 
     /**
      * @return Iterator
+     *
+     * @throws \League\Csv\Exception
+     * @throws \League\Csv\Exception
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     private function getImportArray(): Iterator
     {
@@ -169,9 +177,11 @@ class CsvProcessor implements FileProcessorInterface
             $delimiter = "\t";
         }
         $reader->setDelimiter($delimiter);
-        $start   = $config['has-headers'] ? 1 : 0;
-        $results = $reader->setOffset($start)->fetch();
-        Log::debug(sprintf('Created a CSV reader starting at offset %d', $start));
+        if ($config['has-headers']) {
+            $reader->setHeaderOffset(0);
+        }
+        $results = $reader->getRecords();
+        Log::debug('Created a CSV reader.');
 
         return $results;
     }
@@ -239,6 +249,7 @@ class CsvProcessor implements FileProcessorInterface
      */
     private function importRow(int $index, array $row): ImportJournal
     {
+        $row = array_values($row);
         Log::debug(sprintf('Now at row %d', $index));
         $row  = $this->specifics($row);
         $hash = $this->getRowHash($row);
@@ -252,7 +263,7 @@ class CsvProcessor implements FileProcessorInterface
          * @var string $value
          */
         foreach ($row as $rowIndex => $value) {
-            $value = trim($value);
+            $value = trim(strval($value));
             if (strlen($value) > 0) {
                 $annotated = $this->annotateValue($rowIndex, $value);
                 Log::debug('Annotated value', $annotated);
@@ -271,6 +282,8 @@ class CsvProcessor implements FileProcessorInterface
      * @param array $array
      *
      * @return bool
+     *
+     * @throws FireflyException
      */
     private function rowAlreadyImported(array $array): bool
     {
@@ -299,7 +312,7 @@ class CsvProcessor implements FileProcessorInterface
     private function specifics(array $row): array
     {
         $config = $this->job->configuration;
-        $names  = array_keys($config['specifics']);
+        $names  = array_keys($config['specifics'] ?? []);
         foreach ($names as $name) {
             if (!in_array($name, $this->validSpecifics)) {
                 throw new FireflyException(sprintf('"%s" is not a valid class name', $name));

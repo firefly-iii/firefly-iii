@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, tag, moment, start, end) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, tag, moment, start, end) }}
 {% endblock %}
 
 {% block content %}
@@ -29,22 +29,22 @@
                 <div class="box-body no-padding">
                     <table class="table table-bordered">
                         {% if tag.description %}
-                        <tr>
-                            <td>
-                                {{ trans('list.description') }}
-                            </td>
-                            <td>{{ tag.description }}</td>
-                        </tr>
+                            <tr>
+                                <td>
+                                    {{ trans('list.description') }}
+                                </td>
+                                <td>{{ tag.description }}</td>
+                            </tr>
                         {% endif %}
                         {% if tag.date %}
-                        <tr>
-                            <td>
-                                {{ trans('list.date') }}
-                            </td>
-                            <td>
-                                {{ tag.date.formatLocalized(monthAndDayFormat) }}
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>
+                                    {{ trans('list.date') }}
+                                </td>
+                                <td>
+                                    {{ tag.date.formatLocalized(monthAndDayFormat) }}
+                                </td>
+                            </tr>
                         {% endif %}
                         <tr>
                             <td>{{ trans('list.sum') }}</td>
@@ -196,7 +196,7 @@
 
 {% endblock %}
 {% block styles %}
-    <link rel="stylesheet" href="lib/leaflet/leaflet.css?v={{ FF_VERSION }}" />
+    <link rel="stylesheet" href="lib/leaflet/leaflet.css?v={{ FF_VERSION }}"/>
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">

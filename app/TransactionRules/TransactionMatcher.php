@@ -1,7 +1,7 @@
 <?php
 /**
  * TransactionMatcher.php
- * Copyright (C) 2016 Robert Horlings.
+ * Copyright (C) 2017 Robert Horlings.
  *
  * This file is part of Firefly III.
  *
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -109,6 +109,7 @@ class TransactionMatcher
 
     /**
      * Return limit
+     *
      * @return int
      */
     public function getLimit(): int
@@ -132,6 +133,7 @@ class TransactionMatcher
 
     /**
      * Get range
+     *
      * @return int
      */
     public function getRange(): int
@@ -155,6 +157,7 @@ class TransactionMatcher
 
     /**
      * Get triggers
+     *
      * @return array
      */
     public function getTriggers(): array

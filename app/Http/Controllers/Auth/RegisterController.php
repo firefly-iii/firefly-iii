@@ -16,18 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
-
-/**
- * RegisterController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
- *
- * See the LICENSE file for details.
- */
 
 namespace FireflyIII\Http\Controllers\Auth;
 
@@ -40,19 +31,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Session;
 
+/**
+ * @codeCoverageIgnore
+ * Class RegisterController
+ *
+ * This controller handles the registration of new users as well as their
+ * validation and creation. By default this controller uses a trait to
+ * provide this functionality without requiring any additional code.
+ */
 class RegisterController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
-
     use RegistersUsers;
 
     /**

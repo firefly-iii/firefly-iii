@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -28,39 +28,25 @@ declare(strict_types=1);
  */
 
 return [
-    'configuration'              => [
+    'configuration'  => [
         'single_user_mode' => true,
         'is_demo_site'     => false,
     ],
-    'encryption'                 => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
-    'version'                    => '4.6.11.1',
-    'maxUploadSize'              => 15242880,
-    'allowedMimes'               => ['image/png', 'image/jpeg', 'application/pdf','text/plain'],
-    'list_length'                => 10,
-    'export_formats'             => [
+    'encryption'     => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
+    'version'        => '4.6.12',
+    'maxUploadSize'  => 15242880,
+    'allowedMimes'   => ['image/png', 'image/jpeg', 'application/pdf', 'text/plain'],
+    'list_length'    => 10,
+    'export_formats' => [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
     ],
-    'import_formats'             => [
-        'csv' => 'FireflyIII\Import\Configurator\CsvConfigurator',
-    ],
-    'import_configurators'       => [
-        'csv' => 'FireflyIII\Import\Configurator\CsvConfigurator',
-    ],
-    'import_processors'          => [
-        'csv' => 'FireflyIII\Import\FileProcessor\CsvProcessor',
-    ],
-    'import_pre'                 => [
-        'bunq' => 'FireflyIII\Support\Import\Prerequisites\BunqPrerequisites',
-    ],
-    'import_info'                => [
-        'bunq' => 'FireflyIII\Support\Import\Information\BunqInformation',
-    ],
-    'import_transactions'        => [
-        'bunq' => 'FireflyIII\Support\Import\Transactions\BunqTransactions',
-    ],
-    'bunq'                       => [
+    'bunq'           => [
         'server' => 'https://sandbox.public.api.bunq.com',
     ],
+    'spectre'        => [
+        'server' => 'https://www.saltedge.com',
+    ],
+
     'default_export_format'      => 'csv',
     'default_import_format'      => 'csv',
     'bill_periods'               => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
@@ -128,9 +114,10 @@ return [
     'languages'                  => [
         // completed languages
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English'],
-        'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],
         'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],
         'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'],
+        'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'],
+        'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],
         'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '],
 
         // incomplete languages:
@@ -159,34 +146,38 @@ return [
 
     ],
     'bindables'                  => [
-        'account'           => 'FireflyIII\Models\Account',
-        'attachment'        => 'FireflyIII\Models\Attachment',
-        'bill'              => 'FireflyIII\Models\Bill',
-        'budget'            => 'FireflyIII\Models\Budget',
-        'category'          => 'FireflyIII\Models\Category',
-        'transaction_type'  => 'FireflyIII\Models\TransactionType',
+        // models
+        'account'           => \FireflyIII\Models\Account::class,
+        'attachment'        => \FireflyIII\Models\Attachment::class,
+        'bill'              => \FireflyIII\Models\Bill::class,
+        'budget'            => \FireflyIII\Models\Budget::class,
+        'category'          => \FireflyIII\Models\Category::class,
+        'linkType'          => \FireflyIII\Models\LinkType::class,
+        'transaction_type'  => \FireflyIII\Models\TransactionType::class,
         'journalLink'       => \FireflyIII\Models\TransactionJournalLink::class,
-        'currency'          => 'FireflyIII\Models\TransactionCurrency',
-        'fromCurrencyCode'  => 'FireflyIII\Support\Binder\CurrencyCode',
-        'toCurrencyCode'    => 'FireflyIII\Support\Binder\CurrencyCode',
-        'limitrepetition'   => 'FireflyIII\Models\LimitRepetition',
-        'budgetlimit'       => 'FireflyIII\Models\BudgetLimit',
-        'piggyBank'         => 'FireflyIII\Models\PiggyBank',
-        'tj'                => 'FireflyIII\Models\TransactionJournal',
-        'unfinishedJournal' => 'FireflyIII\Support\Binder\UnfinishedJournal',
-        'tag'               => 'FireflyIII\Models\Tag',
-        'rule'              => 'FireflyIII\Models\Rule',
-        'ruleGroup'         => 'FireflyIII\Models\RuleGroup',
-        'jobKey'            => 'FireflyIII\Models\ExportJob',
-        'importJob'         => 'FireflyIII\Models\ImportJob',
-        'accountList'       => 'FireflyIII\Support\Binder\AccountList',
-        'budgetList'        => 'FireflyIII\Support\Binder\BudgetList',
-        'journalList'       => 'FireflyIII\Support\Binder\JournalList',
-        'categoryList'      => 'FireflyIII\Support\Binder\CategoryList',
-        'tagList'           => 'FireflyIII\Support\Binder\TagList',
-        'start_date'        => 'FireflyIII\Support\Binder\Date',
-        'end_date'          => 'FireflyIII\Support\Binder\Date',
-        'date'              => 'FireflyIII\Support\Binder\Date',
+        'currency'          => \FireflyIII\Models\TransactionCurrency::class,
+        'budgetlimit'       => \FireflyIII\Models\BudgetLimit::class,
+        'piggyBank'         => \FireflyIII\Models\PiggyBank::class,
+        'tj'                => \FireflyIII\Models\TransactionJournal::class,
+        'tag'               => \FireflyIII\Models\Tag::class,
+        'rule'              => \FireflyIII\Models\Rule::class,
+        'ruleGroup'         => \FireflyIII\Models\RuleGroup::class,
+        'exportJob'         => \FireflyIII\Models\ExportJob::class,
+        'importJob'         => \FireflyIII\Models\ImportJob::class,
+
+        // binders
+        'fromCurrencyCode'  => \FireflyIII\Support\Binder\CurrencyCode::class,
+        'toCurrencyCode'    => \FireflyIII\Support\Binder\CurrencyCode::class,
+        'unfinishedJournal' => \FireflyIII\Support\Binder\UnfinishedJournal::class,
+        'accountList'       => \FireflyIII\Support\Binder\AccountList::class,
+        'expenseList'       => \FireflyIII\Support\Binder\AccountList::class,
+        'budgetList'        => \FireflyIII\Support\Binder\BudgetList::class,
+        'journalList'       => \FireflyIII\Support\Binder\JournalList::class,
+        'categoryList'      => \FireflyIII\Support\Binder\CategoryList::class,
+        'tagList'           => \FireflyIII\Support\Binder\TagList::class,
+        'start_date'        => \FireflyIII\Support\Binder\Date::class,
+        'end_date'          => \FireflyIII\Support\Binder\Date::class,
+        'date'              => \FireflyIII\Support\Binder\Date::class,
     ],
     'rule-triggers'              => [
         'user_action'           => 'FireflyIII\TransactionRules\Triggers\UserAction',

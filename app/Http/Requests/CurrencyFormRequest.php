@@ -16,14 +16,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
 /**
- * Class BillFormRequest.
+ * Class CurrencyFormRequest.
  */
 class CurrencyFormRequest extends Request
 {
@@ -61,7 +61,7 @@ class CurrencyFormRequest extends Request
             'symbol'         => 'required|min:1|max:8|unique:transaction_currencies,symbol',
             'decimal_places' => 'required|min:0|max:12|numeric',
         ];
-        if (intval($this->get('id')) > 0) {
+        if ($this->integer('id') > 0) {
             $rules = [
                 'name'           => 'required|max:48|min:1',
                 'code'           => 'required|min:3|max:3',

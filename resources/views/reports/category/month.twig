@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, accountIds, categoryIds, start, end) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, accountIds, categoryIds, start, end) }}
 {% endblock %}
 
 {% block content %}
@@ -397,7 +397,7 @@
     </script>
 
 
-    <script type="text/javascript" src="js/ff/reports/category/all.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/reports/all.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="js/ff/reports/category/month.js?v={{ FF_VERSION }}"></script>
 
 {% endblock %}

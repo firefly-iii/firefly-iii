@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Export\ProcessorInterface;
+use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Requests\ExportFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ExportJob;
@@ -50,12 +51,13 @@ class ExportController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('mainTitleIcon', 'fa-file-archive-o');
-                View::share('title', trans('firefly.export_and_backup_data'));
+                app('view')->share('mainTitleIcon', 'fa-file-archive-o');
+                app('view')->share('title', trans('firefly.export_and_backup_data'));
 
                 return $next($request);
             }
         );
+        $this->middleware(IsDemoUser::class)->except(['index']);
     }
 
     /**

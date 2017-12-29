@@ -16,14 +16,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
 
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -98,6 +98,13 @@ interface JournalRepositoryInterface
      * @return Transaction|null
      */
     public function getAssetTransaction(TransactionJournal $journal): ?Transaction;
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Note|null
+     */
+    public function getNote(TransactionJournal $journal): ?Note;
 
     /**
      * @return Collection

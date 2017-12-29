@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -40,6 +40,8 @@ class OperationsController extends Controller
      * @param Carbon                 $end
      *
      * @return mixed|string
+     *
+     * @throws \Throwable
      */
     public function expenses(AccountTaskerInterface $tasker, Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -67,6 +69,8 @@ class OperationsController extends Controller
      * @param Carbon                 $end
      *
      * @return string
+     *
+     * @throws \Throwable
      */
     public function income(AccountTaskerInterface $tasker, Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -95,6 +99,8 @@ class OperationsController extends Controller
      * @param Carbon                 $end
      *
      * @return mixed|string
+     *
+     * @throws \Throwable
      */
     public function operations(AccountTaskerInterface $tasker, Collection $accounts, Carbon $start, Carbon $end)
     {

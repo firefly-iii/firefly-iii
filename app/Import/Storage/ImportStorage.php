@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -45,11 +45,11 @@ class ImportStorage
     public $errors;
     /** @var Collection */
     public $journals;
-        /** @var BillRepositoryInterface */
+    /** @var BillRepositoryInterface */
     protected $billRepository; // yes, hard coded
     /** @var Collection */
     protected $bills;
-/** @var int */
+    /** @var int */
     protected $defaultCurrencyId = 1;
     /** @var ImportJob */
     protected $job;
@@ -96,11 +96,11 @@ class ImportStorage
         $config                  = $job->configuration;
         $this->applyRules        = $config['apply_rules'] ?? false;
         $this->matchBills        = $config['match_bills'] ?? false;
-        if ($this->applyRules === true) {
+        if (true === $this->applyRules) {
             Log::debug('applyRules seems to be true, get the rules.');
             $this->rules = $this->getRules();
         }
-        if ($this->matchBills === true) {
+        if (true === $this->matchBills) {
             Log::debug('matchBills seems to be true, get the bills');
             $this->bills          = $this->getBills();
             $this->billRepository = app(BillRepositoryInterface::class);
@@ -226,22 +226,21 @@ class ImportStorage
         $this->job->addStepsDone(1);
 
         // run rules if config calls for it:
-        if ($this->applyRules === true) {
+        if (true === $this->applyRules) {
             Log::info('Will apply rules to this journal.');
             $this->applyRules($journal);
         }
-        if (!($this->applyRules === true)) {
+        if (!(true === $this->applyRules)) {
             Log::info('Will NOT apply rules to this journal.');
         }
 
         // match bills if config calls for it.
-        if ($this->matchBills === true) {
-            //$this->/applyRules($journal);
+        if (true === $this->matchBills) {
             Log::info('Cannot match bills (yet).');
             $this->matchBills($journal);
         }
 
-        if (!($this->matchBills === true)) {
+        if (!(true === $this->matchBills)) {
             Log::info('Cannot match bills (yet), but do not have to.');
         }
 

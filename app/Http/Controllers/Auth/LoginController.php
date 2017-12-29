@@ -16,18 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
-
-/**
- * LoginController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
- *
- * See the LICENSE file for details.
- */
 
 namespace FireflyIII\Http\Controllers\Auth;
 
@@ -40,19 +31,16 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Schema;
 
+/**
+ * @codeCoverageIgnore
+ * Class LoginController
+ *
+ * This controller handles authenticating users for the application and
+ * redirecting them to your home screen. The controller uses a trait
+ * to conveniently provide its functionality to your applications.
+ */
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
     use AuthenticatesUsers;
 
     /**
@@ -76,7 +64,9 @@ class LoginController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response|void
+     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function login(Request $request)
     {
@@ -112,7 +102,7 @@ class LoginController extends Controller
      * @param Request   $request
      * @param CookieJar $cookieJar
      *
-     * @return $this
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function logout(Request $request, CookieJar $cookieJar)
     {
@@ -127,7 +117,7 @@ class LoginController extends Controller
     /**
      * Show the application's login form.
      *
-     * @param Request   $request
+     * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */

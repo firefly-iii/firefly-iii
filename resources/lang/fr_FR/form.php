@@ -1,18 +1,26 @@
 <?php
-declare(strict_types=1);
-
 /**
  * form.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+declare(strict_types=1);
 
 return [
-
     // new user:
     'bank_name'                      => 'Nom de la banque',
     'bank_balance'                   => 'Solde',
@@ -80,7 +88,6 @@ return [
     'convert_Deposit'             => 'Convertir le dépôt',
     'convert_Transfer'            => 'Convertir le transfert',
 
-
     'amount'                     => 'Montant',
     'date'                       => 'Date',
     'interest_date'              => 'Date de l’intérêt',
@@ -137,7 +144,7 @@ return [
     'delete_user'                => 'Supprimer l\'utilisateur ":email"',
     'user_areYouSure'            => 'Si vous supprimez l\'utilisateur ":email", tout disparaitra. Il n\'y a pas d\'annulation, de "dé-suppression" ou quoi que ce soit de la sorte. Si vous supprimez votre propre compte, vous n\'aurez plus accès à cette instance de Firefly III.',
     'attachment_areYouSure'      => 'Êtes-vous sûr de vouloir supprimer la pièce jointe nommée ":name" ?',
-    'account_areYouSure'         => 'Êtes-vous sûr de vouloir supprimer le compte nommé ": ame" ?',
+    'account_areYouSure'         => 'Êtes-vous sûr de vouloir supprimer le compte nommé ":name" ?',
     'bill_areYouSure'            => 'Êtes-vous sûr de vouloir supprimer la facture nommée ":name" ?',
     'rule_areYouSure'            => 'Êtes-vous sûr de vouloir supprimer la règle intitulée ":title" ?',
     'ruleGroup_areYouSure'       => 'Êtes-vous sûr de vouloir supprimer le groupe de règles intitulé ":title" ?',
@@ -162,6 +169,7 @@ return [
     'budget_keep_transactions'   => 'La seule opération liée à ce budget ne sera pas supprimée.|Les :count opérations liées à ce budget ne seront pas supprimées.',
     'category_keep_transactions' => 'La seule opération liée à cette catégorie ne sera pas supprimée.|Les :count opérations liées à cette catégorie ne seront pas supprimées.',
     'tag_keep_transactions'      => 'La seule opération liée à ce tag ne sera pas supprimée.|Les :count opérations liées à ce tag ne seront pas supprimées.',
+    'check_for_updates'          => 'Check for updates',
 
     'email'                 => 'Adresse Email',
     'password'              => 'Mot de passe',
@@ -169,12 +177,10 @@ return [
     'blocked'               => 'Est bloqué?',
     'blocked_code'          => 'Raison du blocage',
 
-
     // admin
     'domain'                => 'Domaine',
     'single_user_mode'      => 'Désactiver le formulaire d\'inscription',
     'is_demo_site'          => 'Est un site de démonstration',
-
 
     // import
     'import_file'           => 'Fichier à importer',
@@ -186,7 +192,12 @@ return [
     'csv_delimiter'         => 'Délimiteur de champ CSV',
     'csv_import_account'    => 'Compte d’importation par défaut',
     'csv_config'            => 'Configuration d\'importation CSV',
-
+    'client_id'             => 'Identifiant',
+    'service_secret'        => 'Service secret',
+    'app_secret'            => 'App secret',
+    'public_key'            => 'Clé publique',
+    'country_code'          => 'Code pays',
+    'provider_code'         => 'Banque ou fournisseur de données',
 
     'due_date'           => 'Échéance',
     'payment_date'       => 'Date de paiement',

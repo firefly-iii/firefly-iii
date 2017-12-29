@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, destinationType, journal) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, destinationType, journal) }}
 {% endblock %}
 
 {% block content %}
@@ -53,13 +53,13 @@
                         {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
                             <p><em>
                                     {{ trans('firefly.convert_explanation_withdrawal_deposit',
-                                    {
-                                        amount: positiveAmount|formatAmount,
-                                        sourceRoute: route('accounts.show', [sourceAccount.id]),
-                                        sourceName: sourceAccount.name,
-                                        destinationRoute: route('accounts.show', [destinationAccount.id]),
-                                        destinationName: destinationAccount.name,
-                                    })|raw }}
+                                        {
+                                            amount: positiveAmount|formatAmount,
+                                            sourceRoute: route('accounts.show', [sourceAccount.id]),
+                                            sourceName: sourceAccount.name,
+                                            destinationRoute: route('accounts.show', [destinationAccount.id]),
+                                            destinationName: destinationAccount.name,
+                                        })|raw }}
                                 </em>
                             </p>
                             <p><em>
@@ -77,13 +77,13 @@
                         {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
                             <p><em>
                                     {{ trans('firefly.convert_explanation_withdrawal_transfer',
-                                    {
-                                        amount: positiveAmount|formatAmount,
-                                        sourceRoute: route('accounts.show', [sourceAccount.id]),
-                                        sourceName: sourceAccount.name,
-                                        destinationRoute: route('accounts.show', [destinationAccount.id]),
-                                        destinationName: destinationAccount.name,
-                                    })|raw }}
+                                        {
+                                            amount: positiveAmount|formatAmount,
+                                            sourceRoute: route('accounts.show', [sourceAccount.id]),
+                                            sourceName: sourceAccount.name,
+                                            destinationRoute: route('accounts.show', [destinationAccount.id]),
+                                            destinationName: destinationAccount.name,
+                                        })|raw }}
                                 </em></p>
 
                             <p>
@@ -102,13 +102,13 @@
                             <p>
                                 <em>
                                     {{ trans('firefly.convert_explanation_deposit_withdrawal',
-                                    {
-                                        amount: positiveAmount|formatAmount,
-                                        sourceRoute: route('accounts.show', [sourceAccount.id]),
-                                        sourceName: sourceAccount.name,
-                                        destinationRoute: route('accounts.show', [destinationAccount.id]),
-                                        destinationName: destinationAccount.name,
-                                    })|raw }}
+                                        {
+                                            amount: positiveAmount|formatAmount,
+                                            sourceRoute: route('accounts.show', [sourceAccount.id]),
+                                            sourceName: sourceAccount.name,
+                                            destinationRoute: route('accounts.show', [destinationAccount.id]),
+                                            destinationName: destinationAccount.name,
+                                        })|raw }}
                                 </em>
                             </p>
                             <p>
@@ -131,13 +131,13 @@
                             <p>
                                 <em>
                                     {{ trans('firefly.convert_explanation_deposit_transfer',
-                                    {
-                                        amount: positiveAmount|formatAmount,
-                                        sourceRoute: route('accounts.show', [sourceAccount.id]),
-                                        sourceName: sourceAccount.name,
-                                        destinationRoute: route('accounts.show', [destinationAccount.id]),
-                                        destinationName: destinationAccount.name,
-                                    })|raw }}
+                                        {
+                                            amount: positiveAmount|formatAmount,
+                                            sourceRoute: route('accounts.show', [sourceAccount.id]),
+                                            sourceName: sourceAccount.name,
+                                            destinationRoute: route('accounts.show', [destinationAccount.id]),
+                                            destinationName: destinationAccount.name,
+                                        })|raw }}
                                 </em>
                             </p>
                             <p>
@@ -156,13 +156,13 @@
                             <p>
                                 <em>
                                     {{ trans('firefly.convert_explanation_transfer_withdrawal',
-                                    {
-                                        amount: positiveAmount|formatAmount,
-                                        sourceRoute: route('accounts.show', [sourceAccount.id]),
-                                        sourceName: sourceAccount.name,
-                                        destinationRoute: route('accounts.show', [destinationAccount.id]),
-                                        destinationName: destinationAccount.name,
-                                    })|raw }}
+                                        {
+                                            amount: positiveAmount|formatAmount,
+                                            sourceRoute: route('accounts.show', [sourceAccount.id]),
+                                            sourceName: sourceAccount.name,
+                                            destinationRoute: route('accounts.show', [destinationAccount.id]),
+                                            destinationName: destinationAccount.name,
+                                        })|raw }}
                                 </em>
                             </p>
 
@@ -183,13 +183,13 @@
                             <p>
                                 <em>
                                     {{ trans('firefly.convert_explanation_transfer_deposit',
-                                    {
-                                        amount: positiveAmount|formatAmount,
-                                        sourceRoute: route('accounts.show', [sourceAccount.id]),
-                                        sourceName: sourceAccount.name,
-                                        destinationRoute: route('accounts.show', [destinationAccount.id]),
-                                        destinationName: destinationAccount.name,
-                                    })|raw }}
+                                        {
+                                            amount: positiveAmount|formatAmount,
+                                            sourceRoute: route('accounts.show', [sourceAccount.id]),
+                                            sourceName: sourceAccount.name,
+                                            destinationRoute: route('accounts.show', [destinationAccount.id]),
+                                            destinationName: destinationAccount.name,
+                                        })|raw }}
                                 </em>
                             </p>
 

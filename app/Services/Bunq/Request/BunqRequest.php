@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -42,8 +42,11 @@ abstract class BunqRequest
     private $privateKey = '';
     /** @var string */
     private $server = '';
+    /**
+     * @var array
+     */
     private $upperCaseHeaders
-                    = [
+        = [
             'x-bunq-client-response-id' => 'X-Bunq-Client-Response-Id',
             'x-bunq-client-request-id'  => 'X-Bunq-Client-Request-Id',
         ];
@@ -160,6 +163,9 @@ abstract class BunqRequest
         return $result;
     }
 
+    /**
+     * @return array
+     */
     protected function getDefaultHeaders(): array
     {
         $userAgent = sprintf('FireflyIII v%s', config('firefly.version'));
@@ -324,6 +330,8 @@ abstract class BunqRequest
      * @param array  $headers
      *
      * @return array
+     *
+     * @throws Exception
      */
     protected function sendUnsignedBunqDelete(string $uri, array $headers): array
     {
@@ -353,6 +361,8 @@ abstract class BunqRequest
      * @param array  $headers
      *
      * @return array
+     *
+     * @throws Exception
      */
     protected function sendUnsignedBunqPost(string $uri, array $data, array $headers): array
     {
