@@ -57,6 +57,12 @@ class UseEncryption extends Command
      */
     public function handle()
     {
+        if (config('firefly.encryption') === true) {
+            $this->info('Firefly III configuration calls for encrypted data.');
+        }
+        if (config('firefly.encryption') === false) {
+            $this->info('Firefly III configuration calls for unencrypted data.');
+        }
         $this->handleObjects('Account', 'name', 'encrypted');
         $this->handleObjects('Bill', 'name', 'name_encrypted');
         $this->handleObjects('Bill', 'match', 'match_encrypted');
@@ -76,7 +82,7 @@ class UseEncryption extends Command
     public function handleObjects(string $class, string $field, string $indicator)
     {
         $fqn     = sprintf('FireflyIII\Models\%s', $class);
-        $encrypt = config('firefly.encryption') ? 0 : 1;
+        $encrypt = config('firefly.encryption') === true ? 0 : 1;
         $set     = $fqn::where($indicator, $encrypt)->get();
 
         foreach ($set as $entry) {
