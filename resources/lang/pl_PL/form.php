@@ -169,6 +169,7 @@ return [
     'budget_keep_transactions'   => 'Jedynie transakcja związana z tym rachunkiem nie zostanie usunięta. |Wszystkie :count transakcji połączonych z tym rachunkiem zostaną oszczędzone.',
     'category_keep_transactions' => 'Jedynie transakcja związana z tą kategorią nie zostanie usunięta. |Wszystkie :count transakcje połączone z tą kategorią zostaną oszczędzone.',
     'tag_keep_transactions'      => 'Jedynie transakcja połączona z tym tagiem nie zostanie usunięta. |Wszystkie :count transakcji połączonych z tym tagiem zostaną oszczędzone.',
+    'check_for_updates'          => 'Check for updates',
 
     'email'                 => 'Adres email',
     'password'              => 'Hasło',

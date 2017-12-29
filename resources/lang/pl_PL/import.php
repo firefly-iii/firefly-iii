@@ -141,6 +141,9 @@ return [
     'column_opposing-number'          => 'Konto przeciwne (numer konta)',
     'column_note'                     => 'Uwagi',
 
+    // prerequisites
+    'prerequisites'                   => 'Prerequisites',
+
     // bunq
     'bunq_prerequisites_title'        => 'Wymagania wstępne dla importu z bunq',
     'bunq_prerequisites_text'         => 'Aby zaimportować z bunq, musisz uzyskać klucz API. Możesz to zrobić za pomocą aplikacji.',

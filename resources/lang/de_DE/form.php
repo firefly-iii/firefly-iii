@@ -169,6 +169,7 @@ return [
     'budget_keep_transactions'   => 'Die eine Überweisung, die mit diesem Budget verknüpft ist, wird nicht gelöscht. | Keines der :count Budgets, die mit dieser Rechnung verknüpft sind, werden gelöscht.',
     'category_keep_transactions' => 'Die eine Überweisungen, die mit dieser Kategorie verknüpft ist, wird nicht gelöscht. | Keine der :count Kategorien, die mit dieser Rechnung verknüpft sind, werden gelöscht.',
     'tag_keep_transactions'      => 'Die einzige Überweisung, die mit diesem Tag verknüpft ist, wird nicht gelöscht. | Keiner der :count Tags, die mit dieser Rechnung verknüpft sind, werden gelöscht.',
+    'check_for_updates'          => 'Check for updates',
 
     'email'                 => 'E-Mail Adresse',
     'password'              => 'Passwort',

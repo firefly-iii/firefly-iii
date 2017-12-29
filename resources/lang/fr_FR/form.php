@@ -169,6 +169,7 @@ return [
     'budget_keep_transactions'   => 'La seule opération liée à ce budget ne sera pas supprimée.|Les :count opérations liées à ce budget ne seront pas supprimées.',
     'category_keep_transactions' => 'La seule opération liée à cette catégorie ne sera pas supprimée.|Les :count opérations liées à cette catégorie ne seront pas supprimées.',
     'tag_keep_transactions'      => 'La seule opération liée à ce tag ne sera pas supprimée.|Les :count opérations liées à ce tag ne seront pas supprimées.',
+    'check_for_updates'          => 'Check for updates',
 
     'email'                 => 'Adresse Email',
     'password'              => 'Mot de passe',

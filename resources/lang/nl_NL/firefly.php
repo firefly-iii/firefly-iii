@@ -142,6 +142,22 @@ return [
     'invalid_locale_settings'                    => 'Firefly III kan geldbedragen niet goed weergeven omdat je server de vereiste software mist. Er zijn <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructies hoe dit te doen</a>.',
     'quickswitch'                                => 'Quickswitch',
 
+    // check for updates:
+    'update_check_title'                         => 'Op updates controleren',
+    'admin_update_check_title'                   => 'Controleer automatisch op updates',
+    'admin_update_check_explain'                 => 'Firefly III kan automatisch op updates controleren. Wanneer je deze instelling inschakelt, neemt Firefly III contact op met Github om te kijken of er een nieuwe versie van Firefly III beschikbaar is. Wanneer dit het geval is, ontvang je een melding. Je kan deze melding testen met de knop aan de rechterkant. Geef hieronder aan of je Firefly III wilt laten controleren op updates.',
+    'check_for_updates_permission'               => 'Firefly III kan controleren op updates, maar heeft hiervoor je toestemming nodig. Ga naar <a href=":link">de admin</a> om aan te geven of deze functie moet worden ingeschakeld.',
+    'updates_ask_me_later'                       => 'Later vragen',
+    'updates_do_not_check'                       => 'Niet controleren op nieuwe versies',
+    'updates_enable_check'                       => 'Controleren op nieuwe versies',
+    'admin_update_check_now_title'               => 'Op updates controleren',
+    'admin_update_check_now_explain'             => 'Als u op de knop drukt, kijkt Firefly III of je huidige versie de nieuwste is.',
+    'check_for_updates_button'                   => 'Controleer nu!',
+    'update_new_version_alert'                   => 'Er is een nieuwe versie beschikbaar. Je gebruikt v:your_version, de nieuwste versie is v:new_version die werd uitgebracht op :date.',
+    'update_current_version_alert'               => 'Je gebruikt v:version, de nieuwste beschikbare versie.',
+    'update_newer_version_alert'                 => 'Je gebruikt v:your_version, wat nieuwer is dan de nieuwste versie, v:new_version.',
+    'update_check_error'                         => 'Er is een fout opgetreden bij het controleren op updates. Bekijk de logbestanden.',
+
     // search
     'search'                                     => 'Zoeken',
     'search_query'                               => 'Zoekopdracht',

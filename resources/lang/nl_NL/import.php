@@ -141,6 +141,9 @@ return [
     'column_opposing-number'          => 'Tegenrekening (rekeningnummer)',
     'column_note'                     => 'Opmerking(en)',
 
+    // prerequisites
+    'prerequisites'                   => 'Prerequisites',
+
     // bunq
     'bunq_prerequisites_title'        => 'Voorwaarden voor een import van bunq',
     'bunq_prerequisites_text'         => 'Om transacties bij bunq te importeren heb je een API sleutel nodig. Dit kan via de app.',
