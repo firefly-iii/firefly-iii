@@ -32,7 +32,7 @@ return [
     'status_ready_noconfig_text'      => 'Impor sudah siap dimulai. Semua konfigurasi yang perlu Anda lakukan sudah selesai. Untuk benar-benar menjalankan impor, Anda dapat menjalankan perintah berikut di konsol Anda, atau menjalankan impor berbasis web. Bergantung pada konfigurasi Anda, impor konsol akan memberi Anda lebih banyak umpan balik.',
     'status_ready_config'             => 'Download konfigurasi',
     'status_ready_start'              => 'Mulai impor',
-    'status_ready_share'              => 'Harap pertimbangkan untuk mendownload konfigurasi Anda dan membagikannya di <strong> <a href="https://github.com/firefly-iii/import-configurations/wiki"> pusat konfigurasi impor </a> </ strong>. Ini akan memungkinkan pengguna Firefly III lainnya untuk mengimpor file mereka dengan lebih mudah.',
+    'status_ready_share'              => 'Harap pertimbangkan untuk mendownload konfigurasi Anda dan membagikannya di <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">pusat konfigurasi impor</a></strong>. Ini akan memungkinkan pengguna Firefly III lainnya untuk mengimpor file mereka dengan lebih mudah.',
     'status_job_new'                  => 'Pekerjaan itu baru.',
     'status_job_configuring'          => 'Impor sedang dikonfigurasi.',
     'status_job_configured'           => 'Impor dikonfigurasi.',
@@ -49,8 +49,8 @@ return [
     'status_bread_crumb'              => 'Status impor',
     'status_sub_title'                => 'Status impor',
     'config_sub_title'                => 'Siapkan impor Anda',
-    'status_finished_job'             => 'Transaksi yang diimpor dapat ditemukan di tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">: tag </a>.',
-    'import_with_key'                 => 'Impor dengan kunci \': kunci\'',
+    'status_finished_job'             => 'Transaksi yang diimpor dapat ditemukan di tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+    'import_with_key'                 => 'Impor dengan kunci \':key\'',
 
     // file: upload something:
     'file_upload_title'               => 'Impor setup (1/4) - Upload file Anda',
@@ -70,7 +70,7 @@ return [
     'csv_initial_box'                 => 'Penyiapan impor CSV dasar',
     'csv_initial_box_title'           => 'Opsi penyiapan impor CSV dasar',
     'csv_initial_header_help'         => 'Centang kotak ini jika baris pertama file CSV Anda adalah judul kolom.',
-    'csv_initial_date_help'           => 'Format waktu tanggal di CSV Anda. Ikuti format seperti <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters"> laman ini </a> menunjukkan. Nilai default akan mengurai tanggal yang terlihat seperti ini:: dateExample.',
+    'csv_initial_date_help'           => 'Format waktu tanggal di CSV Anda. Ikuti format seperti <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">laman ini</a> menunjukkan. Nilai default akan mengurai tanggal yang terlihat seperti ini: :dateExample.',
     'csv_initial_delimiter_help'      => 'Pilih pembatas lapangan yang digunakan dalam file masukan Anda. Jika tidak yakin, koma adalah pilihan teraman.',
     'csv_initial_import_account_help' => 'Jika file CSV TIDAK berisi informasi tentang akun aset Anda, gunakan dropdown ini untuk memilih akun mana yang menjadi tempat transaksi di CSV.',
     'csv_initial_submit'              => 'Lanjutkan dengan langkah 3/4',
@@ -141,6 +141,9 @@ return [
     'column_opposing-number'          => 'Akun lawan (nomor rekening)',
     'column_note'                     => 'Catatan (s)',
 
+    // prerequisites
+    'prerequisites'                   => 'Prerequisites',
+
     // bunq
     'bunq_prerequisites_title'        => 'Prasyarat untuk impor dari bunq',
     'bunq_prerequisites_text'         => 'Untuk mengimpor dari bunq, Anda perlu mendapatkan kunci API. Anda bisa melakukan ini melalui aplikasi.',
@@ -153,8 +156,8 @@ return [
     'spectre_select_country_title'    => 'Pilih negara',
     'spectre_select_country_text'     => 'Firefly III memiliki banyak pilihan bank dan lokasi dari mana Spectre dapat mendownload data transaksional. Bank-bank ini diurutkan berdasarkan negara. Tolong jangan sampai ada "Negara Palsu" saat Anda ingin menguji sesuatu. Jika Anda ingin mengimpor dari alat keuangan lainnya, mohon gunakan negara imajiner yang disebut "aplikasi keuangan lainnya". Secara default, momok hanya memungkinkan Anda mendownload data dari bank palsu. Pastikan status Anda "Langsung" di <a href="https://www.saltedge.com/clients/dashboard"> Dasbor </a> jika ingin men-download dari bank sebenarnya.',
     'spectre_select_provider_title'   => 'Pilih bank',
-    'spectre_select_provider_text'    => 'Momok mendukung bank atau layanan keuangan berikut yang dikelompokkan di bawah <em>: country </ em>. Silakan pilih yang ingin Anda impor.',
+    'spectre_select_provider_text'    => 'Momok mendukung bank atau layanan keuangan berikut yang dikelompokkan di bawah <em>:country</em>. Silakan pilih yang ingin Anda impor.',
     'spectre_input_fields_title'      => 'Masukkan bidang wajib',
-    'spectre_input_fields_text'       => 'Bidang berikut diamanatkan oleh ": provider" (dari: negara).',
+    'spectre_input_fields_text'       => 'Bidang berikut diamanatkan oleh ":provider" (dari :country).',
     'spectre_instructions_english'    => 'Petunjuk ini diberikan oleh momok untuk convencience Anda. Mereka berbahasa Inggris:',
 ];
