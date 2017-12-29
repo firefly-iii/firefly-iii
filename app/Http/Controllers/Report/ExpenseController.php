@@ -231,7 +231,7 @@ class ExpenseController extends Controller
         $cache->addProperty($accounts->pluck('id')->toArray());
         $cache->addProperty($expense->pluck('id')->toArray());
         if ($cache->has()) {
-            //return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
         $combined = $this->combineAccounts($expense);
         $all      = new Collection;

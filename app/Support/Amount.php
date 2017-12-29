@@ -202,7 +202,7 @@ class Amount
     /**
      * @return \FireflyIII\Models\TransactionCurrency
      *
-     * @throws FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function getDefaultCurrency(): TransactionCurrency
     {
@@ -216,7 +216,7 @@ class Amount
      *
      * @return \FireflyIII\Models\TransactionCurrency
      *
-     * @throws FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function getDefaultCurrencyByUser(User $user): TransactionCurrency
     {

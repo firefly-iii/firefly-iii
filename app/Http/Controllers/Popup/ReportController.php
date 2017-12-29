@@ -238,7 +238,7 @@ class ReportController extends Controller
     private function parseAttributes(array $attributes): array
     {
         $attributes['location'] = $attributes['location'] ?? '';
-        $attributes['accounts'] = AccountList::routeBinder($attributes['accounts'] ?? '', new Route('get','',[]));
+        $attributes['accounts'] = AccountList::routeBinder($attributes['accounts'] ?? '', new Route('get', '', []));
         try {
             $attributes['startDate'] = Carbon::createFromFormat('Ymd', $attributes['startDate']);
         } catch (InvalidArgumentException $e) {

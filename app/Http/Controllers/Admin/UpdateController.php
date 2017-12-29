@@ -102,14 +102,15 @@ class UpdateController extends Controller
         /** @var UpdateRequest $request */
         $request = app(UpdateRequest::class);
         $check   = -2;
+        $first   = new Release(['id' => '0', 'title' => '0', 'updated' => '2017-01-01', 'content' => '']);
+        $string  = '';
         try {
             $request->call();
             $releases = $request->getReleases();
             // first entry should be the latest entry:
             /** @var Release $first */
-            $first  = reset($releases);
-            $string = '';
-            $check  = version_compare($current, $first->getTitle());
+            $first = reset($releases);
+            $check = version_compare($current, $first->getTitle());
             FireflyConfig::set('last_update_check', time());
         } catch (FireflyException $e) {
             Log::error(sprintf('Could not check for updates: %s', $e->getMessage()));
@@ -120,7 +121,12 @@ class UpdateController extends Controller
 
         if ($check === -1) {
             // there is a new FF version!
-            $string = strval(trans('firefly.update_new_version_alert', ['your_version' => $current, 'new_version' => $first->getTitle(), 'date' => $first->getUpdated()->formatLocalized($this->monthAndDayFormat)]));
+            $string = strval(
+                trans(
+                    'firefly.update_new_version_alert',
+                    ['your_version' => $current, 'new_version' => $first->getTitle(), 'date' => $first->getUpdated()->formatLocalized($this->monthAndDayFormat)]
+                )
+            );
         }
         if ($check === 0) {
             // you are running the current version!

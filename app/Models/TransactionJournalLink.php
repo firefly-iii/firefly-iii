@@ -72,6 +72,7 @@ class TransactionJournalLink extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return null|string
@@ -96,6 +97,7 @@ class TransactionJournalLink extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setCommentAttribute($value): void

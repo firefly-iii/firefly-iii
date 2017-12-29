@@ -40,8 +40,6 @@ abstract class SpectreRequest
      * @var int
      */
     protected $expiresAt = 0;
-    /** @var ServerPublicKey */
-    protected $serverPublicKey;
     /** @var string */
     protected $serviceSecret = '';
     /** @var string */
@@ -105,22 +103,6 @@ abstract class SpectreRequest
     }
 
     /**
-     * @return ServerPublicKey
-     */
-    public function getServerPublicKey(): ServerPublicKey
-    {
-        return $this->serverPublicKey;
-    }
-
-    /**
-     * @param ServerPublicKey $serverPublicKey
-     */
-    public function setServerPublicKey(ServerPublicKey $serverPublicKey)
-    {
-        $this->serverPublicKey = $serverPublicKey;
-    }
-
-    /**
      * @return string
      */
     public function getServiceSecret(): string
@@ -145,14 +127,6 @@ abstract class SpectreRequest
     }
 
     /**
-     * @param string $secret
-     */
-    public function setSecret(string $secret)
-    {
-        $this->secret = $secret;
-    }
-
-    /**
      * @param string $method
      * @param string $uri
      * @param string $data
@@ -169,8 +143,6 @@ abstract class SpectreRequest
         if ('get' === strtolower($method) || 'delete' === strtolower($method)) {
             $data = '';
         }
-        // base64(sha1_signature(private_key, "Expires-at|request_method|original_url|post_body|md5_of_uploaded_file|")))
-        // Prepare the signature
         $toSign = $this->expiresAt . '|' . strtoupper($method) . '|' . $uri . '|' . $data . ''; // no file so no content there.
         Log::debug(sprintf('String to sign: "%s"', $toSign));
         $signature = '';

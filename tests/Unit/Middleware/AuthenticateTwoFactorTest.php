@@ -104,6 +104,39 @@ class AuthenticateTwoFactorTest extends TestCase
     }
 
     /**
+     * tests for user with 2FA and secret and cookie. Continue to page.
+     *
+     * 2FA enabled: true
+     * 2FA secret : 'abcde'
+     * cookie     : false
+     *
+     *
+     * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor::handle
+     */
+    public function testMiddlewareTwoFAAuthed()
+    {
+        $this->withoutExceptionHandling();
+        $user          = $this->user();
+        $user->blocked = 0;
+        $this->be($user);
+
+        // pref for has 2fa is true
+        $preference       = new Preference;
+        $preference->data = true;
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->once()->andReturn($preference);
+
+        // pref for twoFactorAuthSecret
+        $secret       = new Preference;
+        $secret->data = 'SomeSecret';
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->once()->andReturn($secret);
+
+        // no cookie
+        $cookie   = ['twoFactorAuthenticated' => 'true'];
+        $response = $this->call('GET', '/_test/authenticate', [], $cookie);
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    /**
      * tests for user with 2FA but no secret. 2FA is not fired.
      *
      * 2FA enabled: true
@@ -167,40 +200,6 @@ class AuthenticateTwoFactorTest extends TestCase
         $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
         $response->assertRedirect(route('two-factor.index'));
     }
-
-    /**
-     * tests for user with 2FA and secret and cookie. Continue to page.
-     *
-     * 2FA enabled: true
-     * 2FA secret : 'abcde'
-     * cookie     : false
-     *
-     *
-     * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor::handle
-     */
-    public function testMiddlewareTwoFAAuthed()
-    {
-        $this->withoutExceptionHandling();
-        $user          = $this->user();
-        $user->blocked = 0;
-        $this->be($user);
-
-        // pref for has 2fa is true
-        $preference       = new Preference;
-        $preference->data = true;
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->once()->andReturn($preference);
-
-        // pref for twoFactorAuthSecret
-        $secret       = new Preference;
-        $secret->data = 'SomeSecret';
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->once()->andReturn($secret);
-
-        // no cookie
-        $cookie   = ['twoFactorAuthenticated' => 'true'];
-        $response = $this->call('GET', '/_test/authenticate', [], $cookie);
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-    }
-
 
     /**
      * Set up test

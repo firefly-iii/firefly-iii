@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
 
-use FireflyIII\Models\LinkType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -67,6 +66,31 @@ class LinkControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::store
      */
+    public function testStore()
+    {
+        $repository   = $this->mock(LinkTypeRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $data         = [
+            'link_other' => 8,
+            'link_type'  => '1_inward',
+        ];
+
+        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('find')->andReturn(new TransactionJournal);
+        $repository->shouldReceive('findLink')->andReturn(false);
+        $repository->shouldReceive('storeLink')->andReturn(new TransactionJournalLink);
+
+        $this->be($this->user());
+        $response = $this->post(route('transactions.link.store', [1]), $data);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+        $response->assertRedirect(route('transactions.show', [1]));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::store
+     */
     public function testStoreAlreadyLinked()
     {
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
@@ -91,32 +115,6 @@ class LinkControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::store
      */
-    public function testStore()
-    {
-        $repository   = $this->mock(LinkTypeRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $data         = [
-            'link_other' => 8,
-            'link_type'  => '1_inward',
-        ];
-
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
-        $journalRepos->shouldReceive('find')->andReturn(new TransactionJournal);
-        $repository->shouldReceive('findLink')->andReturn(false);
-        $repository->shouldReceive('storeLink')->andReturn(new TransactionJournalLink);
-
-        $this->be($this->user());
-        $response = $this->post(route('transactions.link.store', [1]), $data);
-
-        $response->assertStatus(302);
-        $response->assertSessionHas('success');
-        $response->assertRedirect(route('transactions.show', [1]));
-    }
-
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::store
-     */
     public function testStoreInvalid()
     {
         $data = [
@@ -136,7 +134,7 @@ class LinkControllerTest extends TestCase
      */
     public function testSwitchLink()
     {
-        $repository   = $this->mock(LinkTypeRepositoryInterface::class);
+        $repository = $this->mock(LinkTypeRepositoryInterface::class);
         $repository->shouldReceive('switchLink')->andReturn(false);
         $this->be($this->user());
         $response = $this->get(route('transactions.link.switch', [1]));

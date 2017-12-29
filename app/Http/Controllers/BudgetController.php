@@ -118,12 +118,11 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param Budget  $budget
+     * @param Budget $budget
      *
      * @return View
      */
-    public function delete(Request $request, Budget $budget)
+    public function delete(Budget $budget)
     {
         $subTitle = trans('firefly.delete_budget', ['name' => $budget->name]);
 

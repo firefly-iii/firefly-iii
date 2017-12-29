@@ -80,6 +80,7 @@ class Preference extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setDataAttribute($value)

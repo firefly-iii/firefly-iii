@@ -108,6 +108,7 @@ class Transaction extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param Builder $query
      * @param string  $table
      *
@@ -168,6 +169,7 @@ class Transaction extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return float|int
@@ -179,6 +181,7 @@ class Transaction extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param Builder $query
      * @param Carbon  $date
      */
@@ -192,6 +195,7 @@ class Transaction extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param Builder $query
      * @param Carbon  $date
      */
@@ -205,6 +209,7 @@ class Transaction extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param Builder $query
      * @param array   $types
      */
@@ -222,6 +227,7 @@ class Transaction extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setAmountAttribute($value)

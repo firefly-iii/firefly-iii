@@ -75,7 +75,7 @@ class SingleControllerTest extends TestCase
      */
     public function testCreate()
     {
-        $accounts = $this->user()->accounts()->where('account_type_id',3)->get();
+        $accounts = $this->user()->accounts()->where('account_type_id', 3)->get();
         Steam::shouldReceive('phpBytes')->andReturn(2048);
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('getActiveAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn($accounts);
@@ -207,10 +207,10 @@ class SingleControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
-    public function testEditRedirect()
+    public function testEditReconcile()
     {
         $this->be($this->user());
-        $withdrawal = TransactionJournal::where('transaction_type_id', 1)
+        $withdrawal = TransactionJournal::where('transaction_type_id', 5)
                                         ->whereNull('transaction_journals.deleted_at')
                                         ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                                         ->groupBy('transaction_journals.id')
@@ -224,10 +224,10 @@ class SingleControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
-    public function testEditReconcile()
+    public function testEditRedirect()
     {
         $this->be($this->user());
-        $withdrawal = TransactionJournal::where('transaction_type_id', 5)
+        $withdrawal = TransactionJournal::where('transaction_type_id', 1)
                                         ->whereNull('transaction_journals.deleted_at')
                                         ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                                         ->groupBy('transaction_journals.id')

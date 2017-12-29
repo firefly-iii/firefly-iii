@@ -60,6 +60,7 @@ class PiggyBankRepetition extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param Carbon          $start
      * @param Carbon          $target
@@ -73,6 +74,7 @@ class PiggyBankRepetition extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
@@ -96,6 +98,7 @@ class PiggyBankRepetition extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setCurrentamountAttribute($value)

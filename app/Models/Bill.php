@@ -96,6 +96,7 @@ class Bill extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string
@@ -111,6 +112,7 @@ class Bill extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string
@@ -135,6 +137,7 @@ class Bill extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setAmountMaxAttribute($value)
@@ -144,6 +147,7 @@ class Bill extends Model
 
     /**
      * @param $value
+     *
      * @codeCoverageIgnore
      */
     public function setAmountMinAttribute($value)
@@ -153,6 +157,7 @@ class Bill extends Model
 
     /**
      * @param $value
+     *
      * @codeCoverageIgnore
      */
     public function setMatchAttribute($value)
@@ -164,6 +169,7 @@ class Bill extends Model
 
     /**
      * @param $value
+     *
      * @codeCoverageIgnore
      */
     public function setNameAttribute($value)

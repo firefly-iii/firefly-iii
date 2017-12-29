@@ -61,6 +61,7 @@ class ExportJob extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $status
      */
     public function change($status)

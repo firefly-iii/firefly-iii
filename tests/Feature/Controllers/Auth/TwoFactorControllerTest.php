@@ -118,7 +118,7 @@ class TwoFactorControllerTest extends TestCase
      */
     public function testPostIndex()
     {
-        $data   = ['code' => '123456'];
+        $data = ['code' => '123456'];
         Google2FA::shouldReceive('verifyKey')->andReturn(true)->once();
         $this->session(['remember_login' => true]);
 

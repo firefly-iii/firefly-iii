@@ -64,7 +64,7 @@ class StatusControllerTest extends TestCase
      */
     public function testStatusFinished()
     {
-        $tag = $this->user()->tags()->first();
+        $tag        = $this->user()->tags()->first();
         $repository = $this->mock(TagRepositoryInterface::class);
         $repository->shouldReceive('find')->andReturn($tag);
         $this->be($this->user());

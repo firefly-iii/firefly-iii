@@ -141,6 +141,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param string $name
      *
      * @return bool
@@ -163,6 +164,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string
@@ -214,6 +216,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param string $name
      *
      * @return bool
@@ -311,6 +314,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
@@ -323,6 +327,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
@@ -335,6 +340,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      */
     public function scopeSortCorrectly(EloquentBuilder $query)
@@ -346,6 +352,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param array           $types
      */
@@ -361,6 +368,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setDescriptionAttribute($value)

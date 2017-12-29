@@ -1,7 +1,7 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th  style="width:50%;" data-defaultsign="az" data-defaultsort="asc">{{ 'category'|_ }}</th>
+        <th style="width:50%;" data-defaultsign="az" data-defaultsort="asc">{{ 'category'|_ }}</th>
         <th style="width:25%;" data-defaultsign="_19">{{ 'spent'|_ }}</th>
         <th style="width:25%;" data-defaultsign="_19">{{ 'earned'|_ }}</th>
     </tr>
@@ -22,7 +22,7 @@
                     {{ '0'|formatAmount }}
                 {% else %}
                     {% for expense in entry.spent.per_currency %}
-                        {{ formatAmountBySymbol(expense.sum, expense.currency.symbol, expense.currency.dp) }}<br />
+                        {{ formatAmountBySymbol(expense.sum, expense.currency.symbol, expense.currency.dp) }}<br/>
                     {% endfor %}
                 {% endif %}
             </td>
@@ -31,7 +31,7 @@
                     {{ '0'|formatAmount }}
                 {% else %}
                     {% for income in entry.earned.per_currency %}
-                        {{ formatAmountBySymbol(income.sum, income.currency.symbol, income.currency.dp) }}<br />
+                        {{ formatAmountBySymbol(income.sum, income.currency.symbol, income.currency.dp) }}<br/>
                     {% endfor %}
                 {% endif %}
             </td>

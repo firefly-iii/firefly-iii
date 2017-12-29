@@ -26,7 +26,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -53,13 +52,6 @@ interface JournalRepositoryInterface
      * @return int
      */
     public function countTransactions(TransactionJournal $journal): int;
-
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return Note|null
-     */
-    public function getNote(TransactionJournal $journal): ?Note;
 
     /**
      * Deletes a journal.
@@ -106,6 +98,13 @@ interface JournalRepositoryInterface
      * @return Transaction|null
      */
     public function getAssetTransaction(TransactionJournal $journal): ?Transaction;
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Note|null
+     */
+    public function getNote(TransactionJournal $journal): ?Note;
 
     /**
      * @return Collection

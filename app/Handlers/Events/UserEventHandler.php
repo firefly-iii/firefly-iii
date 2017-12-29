@@ -76,6 +76,7 @@ class UserEventHandler
     {
         Log::debug('In checkSingleUserIsAdmin');
 
+        /** @var User $user */
         $user  = $event->user;
         $count = User::count();
 

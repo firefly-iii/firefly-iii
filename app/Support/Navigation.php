@@ -473,6 +473,7 @@ class Navigation
             $date->subMonths($subtract);
             Log::debug(sprintf('%s is in modifier map with value %d, execute subMonths with argument %d', $repeatFreq, $modifierMap[$repeatFreq], $subtract));
             Log::debug(sprintf('subtractPeriod: resulting date is %s', $date->format('Y-m-d')));
+
             return $date;
         }
         // a custom range requires the session start

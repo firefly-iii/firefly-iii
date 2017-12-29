@@ -44,20 +44,20 @@ class INGDebitCreditTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Converter\INGDebitCredit::convert()
      */
-    public function testConvertBij()
+    public function testConvertAnything()
     {
         $converter = new INGDebitCredit;
-        $result    = $converter->convert('Bij');
+        $result    = $converter->convert('9083jkdkj');
         $this->assertEquals(1, $result);
     }
 
     /**
      * @covers \FireflyIII\Import\Converter\INGDebitCredit::convert()
      */
-    public function testConvertAnything()
+    public function testConvertBij()
     {
         $converter = new INGDebitCredit;
-        $result    = $converter->convert('9083jkdkj');
+        $result    = $converter->convert('Bij');
         $this->assertEquals(1, $result);
     }
 }

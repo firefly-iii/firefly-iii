@@ -59,7 +59,7 @@ class TransactionCurrency extends Model
     {
         if (auth()->check()) {
             $currencyId = intval($value);
-            $currency   = TransactionCurrency::find($currencyId);
+            $currency   = self::find($currencyId);
             if (!is_null($currency)) {
                 return $currency;
             }

@@ -1,4 +1,3 @@
-
 <table class="table table-hover sortable">
     <thead>
     <tr>
@@ -12,19 +11,19 @@
         <tr>
             <td data-value="{{ name }}">{{ name }}</td>
             <td data-value="{{ amounts.spent.grand_sum }}">
-                {% if amounts.spent.per_currency|length == 0%}
+                {% if amounts.spent.per_currency|length == 0 %}
                     {{ '0'|formatAmount }}
                 {% endif %}
                 {% for expense in amounts.spent.per_currency %}
-                    {{ formatAmountBySymbol(expense.sum, expense.currency.symbol, expense.currency.dp) }}<br />
+                    {{ formatAmountBySymbol(expense.sum, expense.currency.symbol, expense.currency.dp) }}<br/>
                 {% endfor %}
             </td>
             <td data-value="{{ amounts.earned.grand_sum }}">
-                {% if amounts.earned.per_currency|length == 0%}
+                {% if amounts.earned.per_currency|length == 0 %}
                     {{ '0'|formatAmount }}
                 {% endif %}
                 {% for income in amounts.earned.per_currency %}
-                    {{ formatAmountBySymbol(income.sum, income.currency.symbol, income.currency.dp) }}<br />
+                    {{ formatAmountBySymbol(income.sum, income.currency.symbol, income.currency.dp) }}<br/>
                 {% endfor %}
             </td>
         </tr>

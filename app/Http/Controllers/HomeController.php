@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers;
 use Artisan;
 use Carbon\Carbon;
 use DB;
+use Exception;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
@@ -39,7 +40,6 @@ use Illuminate\Support\Collection;
 use Log;
 use Monolog\Handler\RotatingFileHandler;
 use Preferences;
-use ReflectionException;
 use Response;
 use Route as RouteFacade;
 use View;
@@ -186,7 +186,7 @@ class HomeController extends Controller
         Log::debug('Call twig:clean...');
         try {
             Artisan::call('twig:clean');
-        } catch (ReflectionException $e) {
+        } catch (Exception $e) {
             // dont care
         }
         Log::debug('Call view:clear...');

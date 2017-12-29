@@ -190,7 +190,7 @@ class AccountRepository implements AccountRepositoryInterface
         // update the account:
         $account->name            = $data['name'];
         $account->active          = $data['active'];
-        $account->virtual_balance = trim($data['virtualBalance']) === '' ? '0': $data['virtualBalance'];
+        $account->virtual_balance = trim($data['virtualBalance']) === '' ? '0' : $data['virtualBalance'];
         $account->iban            = $data['iban'];
         $account->save();
 

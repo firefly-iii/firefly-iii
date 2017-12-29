@@ -18,7 +18,7 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: chartUri, incomeCategoryUri, expenseCategoryUri, expenseBudgetUri */
+/** global: chartUri, incomeCategoryUri, expenseCategoryUri, expenseBudgetUri, token */
 
 var fixHelper = function (e, tr) {
     "use strict";

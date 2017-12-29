@@ -48,7 +48,7 @@ $(function () {
         }).addTo(mymap);
 
         if (doPlaceMarker) {
-            var marker = L.marker([latitude, longitude]).addTo(mymap);
+            L.marker([latitude, longitude]).addTo(mymap);
         }
     }
 });

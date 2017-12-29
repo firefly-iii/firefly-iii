@@ -36,16 +36,6 @@ class IsDemoUserTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\IsDemoUser::handle
      */
-    public function testMiddlewareNotAuthenticated()
-    {
-        $this->withoutExceptionHandling();
-        $response = $this->get('/_test/is-demo');
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\IsDemoUser::handle
-     */
     public function testMiddlewareAuthenticated()
     {
         $this->withoutExceptionHandling();
@@ -66,6 +56,16 @@ class IsDemoUserTest extends TestCase
         $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
         $response->assertSessionHas('warning', strval(trans('firefly.not_available_demo_user')));
         $response->assertRedirect(route('index'));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\IsDemoUser::handle
+     */
+    public function testMiddlewareNotAuthenticated()
+    {
+        $this->withoutExceptionHandling();
+        $response = $this->get('/_test/is-demo');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 
     /**

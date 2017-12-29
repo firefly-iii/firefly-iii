@@ -26,7 +26,6 @@ namespace FireflyIII\Handlers\Events;
 use FireflyConfig;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\User;
-use Illuminate\Auth\Events\Login;
 use Log;
 
 /**

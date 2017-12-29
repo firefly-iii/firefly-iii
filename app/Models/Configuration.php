@@ -49,6 +49,7 @@ class Configuration extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return mixed
@@ -60,6 +61,7 @@ class Configuration extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setDataAttribute($value)

@@ -35,13 +35,13 @@
                         {{ 'explain_access_token'|_ }}
                     </p>
                     <p>
-                        <input id="token" type="text" class="form-control" name="token" value="{{ accessToken.data }}" size="32" maxlength="32" readonly />
+                        <input id="token" type="text" class="form-control" name="token" value="{{ accessToken.data }}" size="32" maxlength="32" readonly/>
 
                     </p>
                     <p>
-                        <form action="{{ route('profile.regenerate') }}" method="post">
+                    <form action="{{ route('profile.regenerate') }}" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-                            <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-refresh"></i> {{ 'regenerate_access_token'|_ }}</button>
+                        <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-refresh"></i> {{ 'regenerate_access_token'|_ }}</button>
                     </form>
                     </p>
                 </div>

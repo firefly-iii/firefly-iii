@@ -108,8 +108,6 @@ class StatusController extends Controller
             $result['running'] = true;
         }
 
-        // TODO cannot handle 'error'
-
         return Response::json($result);
     }
 }

@@ -50,6 +50,7 @@ class TransactionJournalMeta extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return mixed
@@ -61,6 +62,7 @@ class TransactionJournalMeta extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setDataAttribute($value)

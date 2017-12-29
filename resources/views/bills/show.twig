@@ -86,12 +86,12 @@
                 </div>
                 <div class="box-body no-padding">
                     {% if bill.notes.count == 1 %}
-                    <table class="table">
+                        <table class="table">
                             <tr>
                                 <td>{{ trans('list.notes') }}</td>
                                 <td>{{ bill.notes.first.text|markdown }}</td>
                             </tr>
-                    </table>
+                        </table>
                     {% endif %}
                 </div>
 

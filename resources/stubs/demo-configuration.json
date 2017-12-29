@@ -1,37 +1,37 @@
 {
-    "has-headers": true,
-    "date-format": "Y-m-d",
-    "delimiter": ",",
-    "import-account": 1,
-    "specifics": [],
-    "column-count": 7,
-    "column-roles": [
-        "account-iban",
-        "opposing-name",
-        "amount",
-        "date-transaction",
-        "description",
-        "category-name",
-        "budget-name"
-    ],
-    "column-do-mapping": [
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false
-    ],
-    "column-roles-complete": false,
-    "column-mapping-config": {
-        "0": {
-            "NL11XOLA6707795988": 1,
-            "NL81RCQZ7160379858": 3
-        },
-        "1": [],
-        "5": [],
-        "6": []
+  "has-headers": true,
+  "date-format": "Y-m-d",
+  "delimiter": ",",
+  "import-account": 1,
+  "specifics": [],
+  "column-count": 7,
+  "column-roles": [
+    "account-iban",
+    "opposing-name",
+    "amount",
+    "date-transaction",
+    "description",
+    "category-name",
+    "budget-name"
+  ],
+  "column-do-mapping": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "column-roles-complete": false,
+  "column-mapping-config": {
+    "0": {
+      "NL11XOLA6707795988": 1,
+      "NL81RCQZ7160379858": 3
     },
-    "column-mapping-complete": false
+    "1": [],
+    "5": [],
+    "6": []
+  },
+  "column-mapping-complete": false
 }

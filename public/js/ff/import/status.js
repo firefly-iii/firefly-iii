@@ -18,7 +18,7 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: langImportSingleError, langImportMultiError, jobStartUrl, langImportTimeOutError, langImportFinished, langImportFatalError */
+/** global: job, langImportSingleError, langImportMultiError, jobStartUrl, langImportTimeOutError, langImportFinished, langImportFatalError */
 
 var timeOutId;
 var startInterval = 1000;

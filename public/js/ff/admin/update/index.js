@@ -18,6 +18,8 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/** global: updateCheckUri */
+
 $(function () {
     "use strict";
 
@@ -31,7 +33,7 @@ function checkUpdate() {
     // do post update check:
     $.post(updateCheckUri).done(function (data) {
         alert(data.result);
-    }).fail(function() {
+    }).fail(function () {
         alert('Error while checking.');
     });
 

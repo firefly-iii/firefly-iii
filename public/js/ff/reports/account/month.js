@@ -1,4 +1,3 @@
-
 /*
  * month.js
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,10 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
+/** global: spentUri, categoryUri, budgetUri, expenseUri, incomeUri, mainUri  */
 $(function () {
     "use strict";
-    drawChart();
+    doubleYChart(mainUri, 'in-out-chart');
 
     loadAjaxPartial('inOutAccounts', spentUri);
     loadAjaxPartial('inOutCategory', categoryUri);
@@ -31,9 +30,3 @@ $(function () {
 
 });
 
-function drawChart() {
-    "use strict";
-
-    // month view:
-    doubleYChart(mainUri, 'in-out-chart');
-}

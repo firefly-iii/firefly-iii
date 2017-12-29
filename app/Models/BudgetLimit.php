@@ -77,6 +77,7 @@ class BudgetLimit extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setAmountAttribute($value)

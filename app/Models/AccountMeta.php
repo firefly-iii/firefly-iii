@@ -69,6 +69,7 @@ class AccountMeta extends Model
 
     /**
      * @param $value
+     *
      * @codeCoverageIgnore
      */
     public function setDataAttribute($value)
