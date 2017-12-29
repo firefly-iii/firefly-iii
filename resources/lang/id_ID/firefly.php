@@ -949,7 +949,7 @@ return [
     'max_amount_add'            => 'Jumlah maksimum yang bisa Anda tambahkan adalah',
     'max_amount_remove'         => 'Jumlah maksimal yang bisa Anda hapus adalah',
     'update_piggy_button'       => 'Update celengan',
-    'update_piggy_title'        => 'Update piggy bank ": nama"',
+    'update_piggy_title'        => 'Update piggy bank ":name"',
     'updated_piggy_bank'        => 'Diperbarui piggy bank ":name"',
     'details'                   => 'Rincian',
     'events'                    => 'Acara',
