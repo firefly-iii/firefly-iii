@@ -144,7 +144,7 @@ return [
     'delete_user'                => 'Supprimer l\'utilisateur ":email"',
     'user_areYouSure'            => 'Si vous supprimez l\'utilisateur ":email", tout disparaitra. Il n\'y a pas d\'annulation, de "dé-suppression" ou quoi que ce soit de la sorte. Si vous supprimez votre propre compte, vous n\'aurez plus accès à cette instance de Firefly III.',
     'attachment_areYouSure'      => 'Êtes-vous sûr de vouloir supprimer la pièce jointe nommée ":name" ?',
-    'account_areYouSure'         => 'Êtes-vous sûr de vouloir supprimer le compte nommé ":name" ?',
+    'account_areYouSure'         => 'Êtes-vous sûr de vouloir supprimer le compte nommé ": ame" ?',
     'bill_areYouSure'            => 'Êtes-vous sûr de vouloir supprimer la facture nommée ":name" ?',
     'rule_areYouSure'            => 'Êtes-vous sûr de vouloir supprimer la règle intitulée ":title" ?',
     'ruleGroup_areYouSure'       => 'Êtes-vous sûr de vouloir supprimer le groupe de règles intitulé ":title" ?',

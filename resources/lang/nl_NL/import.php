@@ -52,7 +52,7 @@ return [
     'status_finished_job'             => 'De geimporteerde transacties kan je vinden onder tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
     'import_with_key'                 => 'Import met code \':key\'',
 
-    // file: upload something:
+    // file, upload something
     'file_upload_title'               => 'Importinstellingen (1/4) - Upload je bestand',
     'file_upload_text'                => 'Deze pagina\'s helpen je bestanden van je bank te importeren in Firefly III. Gebruik de hulp-pagina\'s linksboven voor meer informatie.',
     'file_upload_fields'              => 'Velden',
@@ -61,10 +61,10 @@ return [
     'file_upload_type_help'           => 'Selecteer het type bestand dat je zal uploaden',
     'file_upload_submit'              => 'Bestanden uploaden',
 
-    // file: upload types
+    // file, upload types
     'import_file_type_csv'            => 'CSV (kommagescheiden waardes)',
 
-    // file: initial config for CSV
+    // file, initial config for CSV
     'csv_initial_title'               => 'Importinstellingen (2/4) - Algemene CVS importinstellingen',
     'csv_initial_text'                => 'Om je bestand goed te kunnen importeren moet je deze opties verifiëren.',
     'csv_initial_box'                 => 'Algemene CVS importinstellingen',
@@ -75,13 +75,13 @@ return [
     'csv_initial_import_account_help' => 'Als jouw CSV bestand geen referenties bevat naar jouw rekening(en), geef dan hier aan om welke rekening het gaat.',
     'csv_initial_submit'              => 'Ga verder met stap 3/4',
 
-    // file: new options:
+    // file, new options:
     'file_apply_rules_title'          => 'Regels toepassen',
     'file_apply_rules_description'    => 'Past regels toe tijdens de import. Dit vertraagt de import behoorlijk.',
     'file_match_bills_title'          => 'Match contracten',
     'file_match_bills_description'    => 'Checkt of bestaande contracten matchen met nieuwe uitgaves. Dit vertraagt de import behoorlijk.',
 
-    // file: roles config
+    // file, roles config
     'csv_roles_title'                 => 'Importinstellingen (3/4) - rol van elke kolom definiëren',
     'csv_roles_text'                  => 'Elke kolom in je CSV-bestand bevat bepaalde gegevens. Gelieve aan te geven wat voor soort gegevens de import-routine kan verwachten. De optie "maak een link" betekent dat u elke vermelding in die kolom linkt aan een waarde uit je database. Een vaak gelinkte kolom is die met de IBAN-code van de tegenrekening. Die kan je dan linken aan de IBAN in jouw database.',
     'csv_roles_table'                 => 'Tabel',
@@ -94,7 +94,7 @@ return [
     'csv_roles_submit'                => 'Ga verder met stap 4/4',
     'csv_roles_warning'               => 'Geef minstens de kolom aan waar het bedrag in staat. Als het even kan, ook een kolom voor de omschrijving, datum en de andere rekening.',
 
-    // file: map data
+    // file, map data
     'file_map_title'                  => 'Importinstellingen (4/4) - Link importgegevens aan Firefly III-gegevens',
     'file_map_text'                   => 'In deze tabellen is de linkerwaarde een waarde uit je CSV bestand. Jij moet de link leggen, als mogelijk, met een waarde uit jouw database. Firefly houdt zich hier aan. Als er geen waarde is, selecteer dan ook niets.',
     'file_map_field_value'            => 'Veldwaarde',
@@ -142,13 +142,13 @@ return [
     'column_note'                     => 'Opmerking(en)',
 
     // prerequisites
-    'prerequisites'                   => 'Prerequisites',
+    'prerequisites'                   => 'Vereisten',
 
     // bunq
     'bunq_prerequisites_title'        => 'Voorwaarden voor een import van bunq',
     'bunq_prerequisites_text'         => 'Om transacties bij bunq te importeren heb je een API sleutel nodig. Dit kan via de app.',
 
-    // Spectre:
+    // Spectre
     'spectre_title'                   => 'Importeer via Spectre',
     'spectre_prerequisites_title'     => 'Voorwaarden voor een import via Spectre',
     'spectre_prerequisites_text'      => 'Als je gegevens wilt importeren via de Spectre API, moet je een aantal geheime codes bezitten. Ze zijn te vinden op <a href="https://www.saltedge.com/clients/profile/secrets">de secrets pagina</a>.',

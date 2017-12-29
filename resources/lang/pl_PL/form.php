@@ -165,11 +165,11 @@ return [
     'also_delete_connections'    => 'Jedynie transakcja połączona z tym typem łącza utraci to połączenie. |Wszystkie :count transakcji połączone tym typem łącza utracą swoje połączenie.',
     'also_delete_rules'          => 'Jedynie reguła połączona z tą grupą reguł utraci to połączenie. |Wszystkie :count reguły połączone tą grupą reguł zostaną również usunięte.',
     'also_delete_piggyBanks'     => 'Jedynie skarbonka połączona z tym kontem zostanie również usunięta. |Wszystkie :count skarbonek połączone z tym kontem zostaną usunięte.',
-    'bill_keep_transactions'     => 'Jedyna transakcja związana z tym rachunkiem nie zostanie usunięta. | Wszystkie: transakcje związane z tym rachunkiem zostaną oszczędzone.',
+    'bill_keep_transactions'     => 'Jedyna transakcja związana z tym rachunkiem nie zostanie usunięta. | Wszystkie :count transakcje związane z tym rachunkiem zostaną oszczędzone.',
     'budget_keep_transactions'   => 'Jedynie transakcja związana z tym rachunkiem nie zostanie usunięta. |Wszystkie :count transakcji połączonych z tym rachunkiem zostaną oszczędzone.',
     'category_keep_transactions' => 'Jedynie transakcja związana z tą kategorią nie zostanie usunięta. |Wszystkie :count transakcje połączone z tą kategorią zostaną oszczędzone.',
     'tag_keep_transactions'      => 'Jedynie transakcja połączona z tym tagiem nie zostanie usunięta. |Wszystkie :count transakcji połączonych z tym tagiem zostaną oszczędzone.',
-    'check_for_updates'          => 'Check for updates',
+    'check_for_updates'          => 'Sprawdź aktualizacje',
 
     'email'                 => 'Adres email',
     'password'              => 'Hasło',

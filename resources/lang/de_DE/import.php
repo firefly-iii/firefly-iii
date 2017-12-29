@@ -49,10 +49,10 @@ return [
     'status_bread_crumb'              => 'Importstatus',
     'status_sub_title'                => 'Importstatus',
     'config_sub_title'                => 'Import einrichten',
-    'status_finished_job'             => 'Die importierten Transaktionen finden Sie im Tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">: tag</a>.',
+    'status_finished_job'             => 'Die importierten Transaktionen finden Sie im Tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
     'import_with_key'                 => 'Import mit Schlüssel \':key\'',
 
-    // file: upload something:
+    // file, upload something
     'file_upload_title'               => 'Import-Setup (1/4) - Laden Sie Ihre Datei hoch',
     'file_upload_text'                => 'Dieser Assistent hilft Ihnen, Dateien von Ihrer Bank in Firefly III zu importieren. Bitte sehen Sie sich die Hilfeseiten in der oberen rechten Ecke an.',
     'file_upload_fields'              => 'Felder',
@@ -61,10 +61,10 @@ return [
     'file_upload_type_help'           => 'Wählen Sie den Typ der hochzuladenden Datei',
     'file_upload_submit'              => 'Dateien hochladen',
 
-    // file: upload types
+    // file, upload types
     'import_file_type_csv'            => 'CSV (Kommagetrennte Werte)',
 
-    // file: initial config for CSV
+    // file, initial config for CSV
     'csv_initial_title'               => 'Import Einrichten (2/4) - Grundlegende Einstellungen',
     'csv_initial_text'                => 'Um Ihre Datei korrekt importieren zu können, überprüfen Sie bitte die folgenden Optionen.',
     'csv_initial_box'                 => 'Standard CSV Importeinstellungen',
@@ -75,13 +75,13 @@ return [
     'csv_initial_import_account_help' => 'Wenn ihre CSV-Datei KEINE Informationen über ihre Girokonten enthält, nutzen Sie bitte diese Dropdown-Liste um anzugeben, zu welchem Girokonto die Transaktionen in der CSV-Datei gehören.',
     'csv_initial_submit'              => 'Fortfahren mit Schritt 3/4',
 
-    // file: new options:
+    // file, new options:
     'file_apply_rules_title'          => 'Regeln anwenden',
     'file_apply_rules_description'    => 'Regeln anwenden. Beachten Sie, dass dadurch der Import erheblich verlangsamt wird.',
     'file_match_bills_title'          => 'Rechnungen zuordnen',
     'file_match_bills_description'    => 'Ordnen Sie Ihre Rechnungen den neu erstellten Ausgaben zu. Beachten Sie, dass dadurch der Import erheblich verlangsamt wird.',
 
-    // file: roles config
+    // file, roles config
     'csv_roles_title'                 => 'Import Einrichten (3/4) - Jeder Spalte eine Rolle zuordnen',
     'csv_roles_text'                  => 'Jede Spalte in Ihrer CSV-Datei enthält bestimmte Daten. Bitte geben Sie an, welche Art von Daten enthalten sind. Die Option "Daten zuordnen" bedeutet, dass jeder Eintrag in der Spalte mit einem Wert aus Ihrer der Datenbank ersetzt wird. Eine oft zugeordnete Spalte ist die Spalte, welche die IBAN des fremden Kontos enthält. Diese können leicht mit bereits angelegten IBANs in Ihrer Datenbank verglichen werden.',
     'csv_roles_table'                 => 'Tabelle',
@@ -94,7 +94,7 @@ return [
     'csv_roles_submit'                => 'Fortfahren mit Schritt 4/4',
     'csv_roles_warning'               => 'Markieren Sie zumindest eine Spalte als Betragsspalte. Es empfiehlt sich auch, eine Spalte für die Beschreibung, das Datum und das Gegenkonto auszuwählen.',
 
-    // file: map data
+    // file, map data
     'file_map_title'                  => 'Import Einrichten (4/4) - Import mit bereits vorhandenen Daten verknüpfen',
     'file_map_text'                   => 'In den folgenden Tabellen zeigt der linke Wert Informationen, die sich in Ihrer hochgeladenen Datei befinden. Es ist Ihre Aufgabe, diesen Wert, wenn möglich, einem bereits in der Datenbank vorhandenen zuzuordnen. Firefly wird sich an diese Zuordnung halten. Wenn kein Wert für die Zuordnung vorhanden ist oder Sie den bestimmten Wert nicht abbilden möchten, wählen Sie nichts aus.',
     'file_map_field_value'            => 'Feldwert',
@@ -148,7 +148,7 @@ return [
     'bunq_prerequisites_title'        => 'Voraussetzungen für einen Import von bunq',
     'bunq_prerequisites_text'         => 'Um aus bunq importieren zu können, benötigen Sie einen API-Schlüssel. Sie können diesen in der App bekommen.',
 
-    // Spectre:
+    // Spectre
     'spectre_title'                   => 'Importieren mit Spectre',
     'spectre_prerequisites_title'     => 'Voraussetzungen für einen Import von Spectre',
     'spectre_prerequisites_text'      => 'Um Daten mithilfe der Spectre-API zu importieren, müssen Sie einige Daten angeben. Sie sind auf der <a href="https://www.saltedge.com/clients/profile/secrets">secrets</a>-Seite zu finden.',
