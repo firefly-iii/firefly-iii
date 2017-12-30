@@ -92,7 +92,9 @@ return [
     'csv_roles_column'                => 'Kolom',
     'csv_roles_no_example_data'       => 'Geen voorbeeldgegevens',
     'csv_roles_submit'                => 'Ga verder met stap 4/4',
-    'csv_roles_warning'               => 'Geef minstens de kolom aan waar het bedrag in staat. Als het even kan, ook een kolom voor de omschrijving, datum en de andere rekening.',
+
+    // not csv, but normal warning
+    'roles_warning'                   => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
 
     // file, map data
     'file_map_title'                  => 'Importinstellingen (4/4) - Link importgegevens aan Firefly III-gegevens',
@@ -153,11 +155,4 @@ return [
     'spectre_prerequisites_title'     => 'Voorwaarden voor een import via Spectre',
     'spectre_prerequisites_text'      => 'Als je gegevens wilt importeren via de Spectre API, moet je een aantal geheime codes bezitten. Ze zijn te vinden op <a href="https://www.saltedge.com/clients/profile/secrets">de secrets pagina</a>.',
     'spectre_enter_pub_key'           => 'Het importeren werkt alleen als je deze publieke sleutel op uw <a href="https://www.saltedge.com/clients/security/edit">security pagina</a> invoert.',
-    'spectre_select_country_title'    => 'Selecteer een land',
-    'spectre_select_country_text'     => 'Firefly III bevat een groot aantal banken en sites waaruit Spectre transactiegegevens voor je kan downloaden. Deze banken zijn gesorteerd per land. Let op: er is een "Fake Country" voor wanneer je dingen wilt testen. Als je uit andere financiële apps wilt importeren, gebruik dan het denkbeeldige land "Andere financiële applicaties". In Spectre kun je standaard alleen gegevens van nep-banken downloaden. Zorg ervoor dat je status "Live" is op je <a href="https://www.saltedge.com/clients/dashboard">Dashboard</a> als je wilt downloaden van echte banken.',
-    'spectre_select_provider_title'   => 'Selecteer een bank',
-    'spectre_select_provider_text'    => 'Spectre ondersteunt de volgende banken of financiële apps onder <em>:country</em>. Kies degene waaruit je wilt importeren.',
-    'spectre_input_fields_title'      => 'Verplichte velden',
-    'spectre_input_fields_text'       => 'De volgende velden zijn verplicht voor ":provider" (uit :country).',
-    'spectre_instructions_english'    => 'Deze instructies worden door Spectre verstrekt. Ze zijn in het Engels:',
 ];

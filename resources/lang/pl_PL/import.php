@@ -92,7 +92,9 @@ return [
     'csv_roles_column'                => 'Kolumna',
     'csv_roles_no_example_data'       => 'Brak dostępnych przykładowych danych',
     'csv_roles_submit'                => 'Przejdź do kroku 4/4',
-    'csv_roles_warning'               => 'Zaznacz jedną z kolumn jako kolumnę z kwotami. Wskazane jest również wybranie kolumny dla opisu, daty oraz konta przeciwnego.',
+
+    // not csv, but normal warning
+    'roles_warning'                   => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
 
     // file, map data
     'file_map_title'                  => 'Ustawienia importu (4/4) - Połącz dane importu z danymi Firefly III',
@@ -153,11 +155,4 @@ return [
     'spectre_prerequisites_title'     => 'Wymagania wstępne do importowania za pomocą Spectre',
     'spectre_prerequisites_text'      => 'Aby importować dane za pomocą interfejsu Spectre API, musisz udowodnić pewne sekrety. Można je znaleźć na <a href="https://www.saltedge.com/clients/profile/secrets">stronie sekretów</a>.',
     'spectre_enter_pub_key'           => 'Importowanie będzie działać tylko po wpisaniu tego klucza publicznego na <a href="https://www.saltedge.com/clients/security/edit">stronie zabezpieczeń</a>.',
-    'spectre_select_country_title'    => 'Wybierz kraj',
-    'spectre_select_country_text'     => 'Firefly III ma duży wybór banków i stron, z których Spectre może pobierać dane transakcyjne. Te banki są sortowane według krajów. Proszę nie pamiętać, że istnieje "Fałszywy Kraj", gdy chce się coś przetestować. Jeśli chcesz importować z innych narzędzi finansowych, użyj wyimaginowanego kraju o nazwie "Inne aplikacje finansowe". Domyślnie Spectre pozwala tylko pobierać dane z fałszywych banków. Upewnij się, że Twój status jest "Na żywo" na Twojej<a href="https://www.saltedge.com/clients/dashboard">desce rozdzielczej</a>, jeśli chcesz pobierać z prawdziwych banków.',
-    'spectre_select_provider_title'   => 'Wybierz swój bank',
-    'spectre_select_provider_text'    => 'Spectre obsługuje następujące banki lub usługi finansowe pogrupowane pod <em>:country</em>. Wybierz ten, z którego chcesz importować.',
-    'spectre_input_fields_title'      => 'Wprowadź obowiązkowe pola',
-    'spectre_input_fields_text'       => 'Następujące pola są wymagane przez ":provider" (z: :country).',
-    'spectre_instructions_english'    => 'Instrukcje te są dostarczane przez Spectre dla Państwa komfortu. Są one w języku angielskim:',
 ];

@@ -89,6 +89,7 @@ return [
     'budget_count'            => 'Liczba budżetów',
     'rule_and_groups_count'   => 'Liczba reguł i grup reguł',
     'tags_count'              => 'Liczba tagów',
+    'tags'                    => 'Tags',
     'inward'                  => 'Opis wewnętrzny',
     'outward'                 => 'Opis zewnętrzny',
     'number_of_transactions'  => 'Liczba transakcji',
