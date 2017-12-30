@@ -797,8 +797,8 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Transaction', 'prefix' => 'transactions/bulk', 'as' => 'transactions.bulk.'], function () {
-    Route::get('edit/journalList}', ['uses' => 'MassController@editBulk', 'as' => 'edit']);
-    Route::post('update', ['uses' => 'MassController@updateBulk', 'as' => 'update']);
+    Route::get('edit/{journalList}', ['uses' => 'BulkController@edit', 'as' => 'edit']);
+    Route::post('update', ['uses' => 'BulkController@update', 'as' => 'update']);
 }
 );
 
