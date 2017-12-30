@@ -341,7 +341,7 @@ class MassController extends Controller
         $journalIds = $request->get('journals');
         $count      = 0;
         if (is_array($journalIds)) {
-            $repository->updateBulk($journalIds, $request->get('category'), $request->get('tags'));
+            $count = $repository->updateBulk($journalIds, $request->get('category'), $request->get('tags'));
         }
         Preferences::mark();
         Session::flash('success', trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
