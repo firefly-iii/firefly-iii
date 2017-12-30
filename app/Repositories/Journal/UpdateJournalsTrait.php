@@ -37,6 +37,7 @@ use Log;
  */
 trait UpdateJournalsTrait
 {
+
     /**
      * When the user edits a split journal, each line is missing crucial data:.
      *
@@ -121,47 +122,5 @@ trait UpdateJournalsTrait
         $transaction->save();
     }
 
-    /**
-     * Update tags.
-     *
-     * @param TransactionJournal $journal
-     * @param array              $array
-     *
-     * @return bool
-     */
-    protected function updateTags(TransactionJournal $journal, array $array): bool
-    {
-        // create tag repository
-        /** @var TagRepositoryInterface $tagRepository */
-        $tagRepository = app(TagRepositoryInterface::class);
 
-        // find or create all tags:
-        $tags = [];
-        $ids  = [];
-        foreach ($array as $name) {
-            if (strlen(trim($name)) > 0) {
-                $tag    = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
-                $tags[] = $tag;
-                $ids[]  = $tag->id;
-            }
-        }
-
-        // delete all tags connected to journal not in this array:
-        if (count($ids) > 0) {
-            DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->whereNotIn('tag_id', $ids)->delete();
-        }
-        // if count is zero, delete them all:
-        if (0 === count($ids)) {
-            DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->delete();
-        }
-
-        // connect each tag to journal (if not yet connected):
-        /** @var Tag $tag */
-        foreach ($tags as $tag) {
-            Log::debug(sprintf('Will try to connect tag #%d to journal #%d.', $tag->id, $journal->id));
-            $tagRepository->connect($journal, $tag);
-        }
-
-        return true;
-    }
 }

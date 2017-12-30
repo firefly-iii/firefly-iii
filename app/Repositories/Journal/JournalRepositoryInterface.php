@@ -161,13 +161,20 @@ interface JournalRepositoryInterface
     public function update(TransactionJournal $journal, array $data): TransactionJournal;
 
     /**
-     * @param array       $journals
-     * @param var         $category
-     * @param var         $tags
+     * @param TransactionJournal $journal
+     * @param int                $budgetId
      *
-     * @return int
+     * @return TransactionJournal
      */
-    public function updateBulk(array $journals, $category, $tags): int;
+    public function updateBudget(TransactionJournal $journal, int $budgetId): TransactionJournal;
+
+    /**
+     * @param TransactionJournal $journal
+     * @param string             $category
+     *
+     * @return TransactionJournal
+     */
+    public function updateCategory(TransactionJournal $journal, string $category): TransactionJournal;
 
     /**
      * @param TransactionJournal $journal
@@ -176,4 +183,12 @@ interface JournalRepositoryInterface
      * @return TransactionJournal
      */
     public function updateSplitJournal(TransactionJournal $journal, array $data): TransactionJournal;
+
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $tags
+     *
+     * @return bool
+     */
+    public function updateTags(TransactionJournal $journal, array $tags): bool;
 }

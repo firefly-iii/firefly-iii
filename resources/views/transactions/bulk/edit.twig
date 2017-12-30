@@ -5,14 +5,8 @@
 {% endblock %}
 
 {% block content %}
-    <form method="POST" action="{{ route('transactions.mass.update-bulk') }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
+    <form method="POST" action="{{ route('transactions.bulk.update') }}" accept-charset="UTF-8" class="form-horizontal" id="update">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
-        {% for journal in journals %}
-            {% if journal.transaction_count == 2 %}
-                <input type="hidden" name="journals[]" value="{{ journal.id }}"/>
-            {% endif %}
-        {% endfor %}
-
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="box box-default">
@@ -38,6 +32,8 @@
                                     </thead>
                                     <tbody>
                                     {% for journal in journals %}
+                                    {% if journal.transaction_count == 2 %}
+                                        <input type="hidden" name="journals[]" value="{{ journal.id }}"/>
                                         <tr>
                                             <td>
                                                 <a href="{{ route('transactions.show', [journal.id]) }}">
@@ -63,6 +59,7 @@
                                                 {% endfor %}
                                             </td>
                                         </tr>
+                                    {% endif %}
                                     {% endfor %}
                                     </tbody>
                                 </table>

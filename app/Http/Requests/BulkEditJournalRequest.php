@@ -1,6 +1,6 @@
 <?php
 /**
- * MassEditJournalRequest.php
+ * BulkEditJournalRequest.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -25,7 +25,7 @@ namespace FireflyIII\Http\Requests;
 /**
  * Class MassEditBulkJournalRequest.
  */
-class MassEditBulkJournalRequest extends Request
+class BulkEditJournalRequest extends Request
 {
     /**
      * @return bool
@@ -41,8 +41,10 @@ class MassEditBulkJournalRequest extends Request
      */
     public function rules()
     {
-        // fixed
 
-        return [];
+        // fixed
+        return [
+            'journals.*' => 'required|belongsToUser:transaction_journals,id',
+        ];
     }
 }

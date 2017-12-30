@@ -100,6 +100,7 @@ trait SupportJournalsTrait
             $budget = Budget::find($budgetId);
             $journal->budgets()->save($budget);
         }
+        $journal->touch();
     }
 
     /**
@@ -112,6 +113,7 @@ trait SupportJournalsTrait
             $category = Category::firstOrCreateEncrypted(['name' => $category, 'user_id' => $journal->user_id]);
             $journal->categories()->save($category);
         }
+        $journal->touch();
     }
 
     /**

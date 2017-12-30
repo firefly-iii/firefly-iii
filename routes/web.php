@@ -787,7 +787,6 @@ Route::group(
     Route::get('edit/bulk/{journalList}', ['uses' => 'MassController@editBulk', 'as' => 'edit-bulk']);
     Route::get('delete/{journalList}', ['uses' => 'MassController@delete', 'as' => 'delete']);
     Route::post('update', ['uses' => 'MassController@update', 'as' => 'update']);
-    Route::post('update/bulk', ['uses' => 'MassController@updateBulk', 'as' => 'update-bulk']);
     Route::post('destroy', ['uses' => 'MassController@destroy', 'as' => 'destroy']);
 }
 );

@@ -26,12 +26,14 @@ namespace FireflyIII\Http\Controllers\Transaction;
 
 use ExpandedForm;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Http\Requests\MassEditBulkJournalRequest;
+use FireflyIII\Http\Requests\BulkEditJournalRequest;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Log;
 use Preferences;
 use Session;
 use View;
@@ -65,7 +67,7 @@ class BulkController extends Controller
      *
      * @return View
      */
-    public function edit(Collection $journals)
+    public function edit(Request $request, Collection $journals)
     {
 
         $subTitle = trans('firefly.mass_bulk_journals');
@@ -101,11 +103,11 @@ class BulkController extends Controller
         }
 
         if (count($messages) > 0) {
-            Session::flash('info', $messages);
+            $request->session()->flash('info', $messages);
         }
 
         // put previous url in session
-        $this->rememberPreviousUri('transactions.mass-edit-bulk.uri');
+        $this->rememberPreviousUri('transactions.bulk-edit.uri');
 
         // get list of budgets:
         /** @var BudgetRepositoryInterface $repository */
@@ -119,33 +121,58 @@ class BulkController extends Controller
         );
 
         if (0 === $filtered->count()) {
-            Session::flash('error', trans('firefly.no_edit_multiple_left'));
+            $request->session()->flash('error', trans('firefly.no_edit_multiple_left'));
         }
 
         $journals = $filtered;
 
-        return view('transactions.bulk.edit', compact('journals', 'subTitle','budgetList'));
+        return view('transactions.bulk.edit', compact('journals', 'subTitle', 'budgetList'));
     }
 
 
     /**
-     * @param MassEditBulkJournalRequest $request
+     * @param BulkEditJournalRequest     $request
      * @param JournalRepositoryInterface $repository
      *
      * @return mixed
      */
-    public function updateBulk(MassEditBulkJournalRequest $request, JournalRepositoryInterface $repository)
+    public function update(BulkEditJournalRequest $request, JournalRepositoryInterface $repository)
     {
-        $journalIds = $request->get('journals');
-        $count      = 0;
+        $journalIds     = $request->get('journals');
+        $ignoreCategory = intval($request->get('ignore_category')) === 1;
+        $ignoreBudget   = intval($request->get('ignore_budget')) === 1;
+        $ignoreTags     = intval($request->get('ignore_tags')) === 1;
+        $count = 0;
         if (is_array($journalIds)) {
-            $count = $repository->updateBulk($journalIds, $request->get('category'), $request->get('tags'));
+            foreach ($journalIds as $journalId) {
+                $journal = $repository->find(intval($journalId));
+                if (!is_null($journal)) {
+                    $count++;
+                    Log::debug(sprintf('Found journal #%d', $journal->id));
+                    // update category if not told to ignore
+                    if ($ignoreCategory === false) {
+                        Log::debug(sprintf('Set category to %s', $request->string('category')));
+                        $repository->updateCategory($journal, $request->string('category'));
+                    }
+                    // update budget if not told to ignore (and is withdrawal)
+                    if ($ignoreBudget === false) {
+                        Log::debug(sprintf('Set budget to %d', $request->integer('budget_id')));
+                        $repository->updateBudget($journal, $request->integer('budget_id'));
+                    }
+                    if ($ignoreTags === false) {
+                        Log::debug(sprintf('Set tags to %s', $request->string('budget_id')));
+                        $repository->updateTags($journal, explode(',', $request->string('tags')));
+                    }
+                    // update tags if not told to ignore (and is withdrawal)
+                }
+            }
         }
+
         Preferences::mark();
-        Session::flash('success', trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
+        $request->session()->flash('success', trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:
-        return redirect($this->getPreviousUri('transactions.mass-edit-bulk.uri'));
+        return redirect($this->getPreviousUri('transactions.bulk-edit.uri'));
     }
 
 }
