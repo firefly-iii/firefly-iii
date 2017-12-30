@@ -740,7 +740,6 @@ return [
     'opt_group_savingAsset'                    => 'Savings accounts',
     'opt_group_sharedAsset'                    => 'Shared asset accounts',
     'opt_group_ccAsset'                        => 'Credit cards',
-    'mass_edit_bulk'                           => 'Bulk edit',
 
     // new user:
     'welcome'                                  => 'Welcome to Firefly!',
