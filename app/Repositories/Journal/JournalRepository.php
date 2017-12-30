@@ -24,7 +24,9 @@ namespace FireflyIII\Repositories\Journal;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -430,6 +432,47 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         return $journal;
+    }
+
+    /**
+     * @param array       $journals
+     * @param var         $category
+     * @param var         $tags
+     *
+     * @return int
+     */
+    public function updateBulk(array $journals, $category, $tags): int
+    {
+        $count = 0;
+        foreach ($journals as $journalId) {
+            $journal = $this->find(intval($journalId));
+            if ($journal) {
+                // update category:
+                if (isset($category)) {
+                    $categoryToReplace = Category::firstOrCreateEncrypted(['name' => strval($category), 'user_id' => $journal->user->id]);
+                    $journal->categories()->sync([$categoryToReplace->id]);
+                    /** @var Transaction $transaction */
+                    foreach ($journal->transactions()->getResults() as $transaction) {
+                        $transaction->categories()->sync([$categoryToReplace->id]);
+                        $transaction->touch();
+                    }
+                }
+
+                // update tags:
+                if (isset($tags)) {
+                    $tagsToReplace = [];
+                    foreach (explode(',', strval($tags)) as $tag) {
+                        array_push($tagsToReplace, Tag::firstOrCreateEncrypted(['tag' => $tag, 'user_id' => $journal->user->id])->id);
+                    }
+                    $journal->tags()->sync($tagsToReplace);
+                }
+
+                $journal->touch();
+                ++$count;
+            }
+        }
+
+        return $count;
     }
 
     /**

@@ -18,7 +18,7 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: edit_selected_txt, delete_selected_txt, token */
+/** global: edit_selected_txt, edit_bulk_selected_txt, delete_selected_txt, token */
 
 /**
  *
@@ -45,6 +45,8 @@ $(document).ready(function () {
 
     // click the edit button:
     $('.mass_edit').click(goToMassEdit);
+    // click the edit button:
+    $('.mass_edit_bulk').click(goToMassBulkEdit);
     // click the delete button:
     $('.mass_delete').click(goToMassDelete);
     // click reconcile button
@@ -104,6 +106,26 @@ function goToMassEdit() {
  *
  * @returns {boolean}
  */
+function goToMassBulkEdit() {
+    "use strict";
+    var checkedArray = getCheckboxes();
+
+    // go to specially crafted URL:
+    var bases = document.getElementsByTagName('base');
+    var baseHref = null;
+
+    if (bases.length > 0) {
+        baseHref = bases[0].href;
+    }
+
+    window.location.href = baseHref + '/transactions/mass/edit/bulk/' + checkedArray;
+    return false;
+}
+
+/**
+ *
+ * @returns {boolean}
+ */
 function goToMassDelete() {
     "use strict";
     var checkedArray = getCheckboxes();
@@ -144,6 +166,7 @@ function countChecked() {
     var checked = $('.select_all_single:checked').length;
     if (checked > 0) {
         $('.mass_edit span').text(edit_selected_txt + ' (' + checked + ')');
+        $('.mass_edit_bulk span').text(edit_bulk_selected_txt + ' (' + checked + ')');
         $('.mass_delete span').text(delete_selected_txt + ' (' + checked + ')');
 
         // get amount for the transactions:
