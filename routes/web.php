@@ -793,6 +793,16 @@ Route::group(
 );
 
 /**
+ * Transaction Bulk Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Transaction', 'prefix' => 'transactions/bulk', 'as' => 'transactions.bulk.'], function () {
+    Route::get('edit/journalList}', ['uses' => 'MassController@editBulk', 'as' => 'edit']);
+    Route::post('update', ['uses' => 'MassController@updateBulk', 'as' => 'update']);
+}
+);
+
+/**
  * Transaction Split Controller
  */
 Route::group(
