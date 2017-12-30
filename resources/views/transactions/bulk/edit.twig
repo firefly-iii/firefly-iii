@@ -79,13 +79,31 @@
                                         <td>
                                             <input class="form-control" placeholder="" name="category" type="text" value="">
                                         </td>
+                                        <td>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input name="ignore_category" type="checkbox" value="1">
+                                                    {{ 'no_bulk_category'|_ }}
+                                                </label>
+                                            </div>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>{{ trans('list.budget') }}</th>
                                         <td>
                                             <select class="form-control" name="budget_id">
-                                                <option value="0">(none)</option>
+                                                {% for id, budget in budgetList %}
+                                                    <option value="{{ id }}" label="{{ budget }}">{{ budget }}</option>
+                                                {% endfor %}
                                             </select>
+                                        </td>
+                                        <td>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input name="ignore_budget" type="checkbox" value="1">
+                                                    {{ 'no_bulk_budget'|_ }}
+                                                </label>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
@@ -93,7 +111,16 @@
                                         <td>
                                             <input class="form-control" placeholder="" name="tags" type="text" value="">
                                         </td>
+                                        <td>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input name="ignore_tags" type="checkbox" value="1">
+                                                    {{ 'no_bulk_tags'|_ }}
+                                                </label>
+                                            </div>
+                                        </td>
                                     </tr>
+
                                 </table>
                             </div>
                         </div>

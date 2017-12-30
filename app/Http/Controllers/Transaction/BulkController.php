@@ -24,10 +24,12 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Transaction;
 
 
+use ExpandedForm;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\MassEditBulkJournalRequest;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Preferences;
@@ -65,8 +67,8 @@ class BulkController extends Controller
      */
     public function edit(Collection $journals)
     {
-        $subTitle = trans('firefly.mass_bulk_journals');
 
+        $subTitle = trans('firefly.mass_bulk_journals');
 
         // skip transactions that have multiple destinations, multiple sources or are an opening balance.
         $filtered = new Collection;
@@ -104,9 +106,11 @@ class BulkController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('transactions.mass-edit-bulk.uri');
-        Session::flash('gaEventCategory', 'transactions');
-        Session::flash('gaEventAction', 'mass-edit-bulk');
 
+        // get list of budgets:
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app(BudgetRepositoryInterface::class);
+        $budgetList = ExpandedForm::makeSelectListWithEmpty($repository->getActiveBudgets());
         // collect some useful meta data for the mass edit:
         $filtered->each(
             function (TransactionJournal $journal) {
@@ -120,7 +124,7 @@ class BulkController extends Controller
 
         $journals = $filtered;
 
-        return view('transactions.bulk.edit', compact('journals', 'subTitle'));
+        return view('transactions.bulk.edit', compact('journals', 'subTitle','budgetList'));
     }
 
 
