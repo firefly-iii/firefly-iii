@@ -39,6 +39,25 @@ use View;
  */
 class BulkController extends Controller
 {
+
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->middleware(
+            function ($request, $next) {
+                app('view')->share('title', trans('firefly.transactions'));
+                app('view')->share('mainTitleIcon', 'fa-repeat');
+
+                return $next($request);
+            }
+        );
+    }
+
     /**
      * @param Collection $journals
      *
@@ -46,7 +65,8 @@ class BulkController extends Controller
      */
     public function edit(Collection $journals)
     {
-        $subTitle = trans('firefly.mass_edit_bulk_journals');
+        $subTitle = trans('firefly.mass_bulk_journals');
+
 
         // skip transactions that have multiple destinations, multiple sources or are an opening balance.
         $filtered = new Collection;
@@ -100,7 +120,7 @@ class BulkController extends Controller
 
         $journals = $filtered;
 
-        return view('transactions.mass.edit-bulk', compact('journals', 'subTitle'));
+        return view('transactions.bulk.edit', compact('journals', 'subTitle'));
     }
 
 
