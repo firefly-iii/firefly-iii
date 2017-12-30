@@ -36,8 +36,7 @@
     <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
         <div class="mass_button_options btn-group btn-group" style="display:none;">
             <a href="#" class="btn btn-default mass_edit"><i class="fa fa-fw fa-pencil"></i> <span>{{ 'edit'|_ }}</span></a>
-            <a href="#" class="btn btn-default mass_edit_bulk"><span>{{ 'mass_edit_bulk'|_ }}</span></a>
-            {#<a href="#" class="btn btn-default mass_reconcile"><i class="fa fa-fw fa-check"></i> <span>{{ 'reconcile_selected'|_ }} (<i class="fa fa-spinner fa-spin"></i>)</span></a>#}
+            <a href="#" class="btn btn-default bulk_edit"><span>{{ 'bulk_edit'|_ }}</span></a>
             <a href="#" class="btn btn-danger mass_delete"><i class="fa fa-fw fa-trash"></i> <span>{{ 'delete'|_ }}</span></a>
         </div>
 
@@ -67,6 +66,6 @@
 </div>
 <script type="text/javascript">
     var edit_selected_txt = "{{ trans('firefly.edit')|escape('js') }}";
-    var edit_bulk_selected_txt = "{{ trans('firefly.mass_edit_bulk')|escape('js') }}";
+    var edit_bulk_selected_txt = "{{ trans('firefly.bulk_edit')|escape('js') }}";
     var delete_selected_txt = "{{ trans('firefly.delete')|escape('js') }}";
 </script>
