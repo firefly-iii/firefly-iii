@@ -162,6 +162,15 @@ interface JournalRepositoryInterface
     public function update(TransactionJournal $journal, array $data): TransactionJournal;
 
     /**
+     * @param array       $journals
+     * @param var         $category
+     * @param var         $tags
+     *
+     * @return int
+     */
+    public function updateBulk(array $journals, $category, $tags): int;
+
+    /**
      * @param TransactionJournal $journal
      * @param array              $data
      *

@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\MassDeleteJournalRequest;
 use FireflyIII\Http\Requests\MassEditJournalRequest;
+use FireflyIII\Http\Requests\MassEditBulkJournalRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -131,7 +132,7 @@ class MassController extends Controller
         // skip transactions that have multiple destinations, multiple sources or are an opening balance.
         $filtered = new Collection;
         $messages = [];
-        // @var TransactionJournal
+        /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $sources      = $journal->sourceAccountList();
             $destinations = $journal->destinationAccountList();
@@ -201,6 +202,70 @@ class MassController extends Controller
     }
 
     /**
+     * @param Collection $journals
+     *
+     * @return View
+     */
+    public function editBulk(Collection $journals)
+    {
+        $subTitle = trans('firefly.mass_edit_bulk_journals');
+
+        // skip transactions that have multiple destinations, multiple sources or are an opening balance.
+        $filtered = new Collection;
+        $messages = [];
+        /** @var TransactionJournal $journal */
+        foreach ($journals as $journal) {
+            $sources      = $journal->sourceAccountList();
+            $destinations = $journal->destinationAccountList();
+            if ($sources->count() > 1) {
+                $messages[] = trans('firefly.cannot_edit_multiple_source', ['description' => $journal->description, 'id' => $journal->id]);
+                continue;
+            }
+
+            if ($destinations->count() > 1) {
+                $messages[] = trans('firefly.cannot_edit_multiple_dest', ['description' => $journal->description, 'id' => $journal->id]);
+                continue;
+            }
+            if (TransactionType::OPENING_BALANCE === $journal->transactionType->type) {
+                $messages[] = trans('firefly.cannot_edit_opening_balance');
+                continue;
+            }
+
+            // cannot edit reconciled transactions / journals:
+            if ($journal->transactions->first()->reconciled) {
+                $messages[] = trans('firefly.cannot_edit_reconciled', ['description' => $journal->description, 'id' => $journal->id]);
+                continue;
+            }
+
+            $filtered->push($journal);
+        }
+
+        if (count($messages) > 0) {
+            Session::flash('info', $messages);
+        }
+
+        // put previous url in session
+        $this->rememberPreviousUri('transactions.mass-edit-bulk.uri');
+        Session::flash('gaEventCategory', 'transactions');
+        Session::flash('gaEventAction', 'mass-edit-bulk');
+
+        // collect some useful meta data for the mass edit:
+        $filtered->each(
+            function (TransactionJournal $journal) {
+                $journal->transaction_count     = $journal->transactions()->count();
+            }
+        );
+
+        if (0 === $filtered->count()) {
+            Session::flash('error', trans('firefly.no_edit_multiple_left'));
+        }
+
+        $journals = $filtered;
+
+        return view('transactions.mass.edit-bulk', compact('journals', 'subTitle'));
+    }
+
+    /**
      * @param MassEditJournalRequest     $request
      * @param JournalRepositoryInterface $repository
      *
@@ -263,5 +328,25 @@ class MassController extends Controller
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-edit.uri'));
+    }
+
+    /**
+     * @param MassEditBulkJournalRequest    $request
+     * @param JournalRepositoryInterface    $repository
+     *
+     * @return mixed
+     */
+    public function updateBulk(MassEditBulkJournalRequest $request, JournalRepositoryInterface $repository)
+    {
+        $journalIds = $request->get('journals');
+        $count      = 0;
+        if (is_array($journalIds)) {
+            $repository->updateBulk($journalIds, $request->get('category'), $request->get('tags'));
+        }
+        Preferences::mark();
+        Session::flash('success', trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
+
+        // redirect to previous URL:
+        return redirect($this->getPreviousUri('transactions.mass-edit-bulk.uri'));
     }
 }
