@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Providers;
 
 use FireflyIII\Events\RegisteredUser;
+use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
@@ -54,6 +55,9 @@ class EventServiceProvider extends ServiceProvider
             // is a User related event.
             Login::class                                  => [
                 'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
+
+            ],
+            RequestedVersionCheckStatus::class            => [
                 'FireflyIII\Handlers\Events\VersionCheckEventHandler@checkForUpdates',
             ],
 

@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Routine;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
-use FireflyIII\Models\SpectreProvider;
 use FireflyIII\Services\Spectre\Object\Customer;
-use FireflyIII\Services\Spectre\Request\CreateLoginRequest;
-use FireflyIII\Services\Spectre\Request\ListLoginsRequest;
+use FireflyIII\Services\Spectre\Object\Token;
+use FireflyIII\Services\Spectre\Request\CreateTokenRequest;
 use FireflyIII\Services\Spectre\Request\NewCustomerRequest;
 use Illuminate\Support\Collection;
 use Log;
@@ -90,31 +90,48 @@ class SpectreRoutine implements RoutineInterface
 
             return false;
         }
-        set_time_limit(0);
         Log::info(sprintf('Start with import job %s using Spectre.', $this->job->key));
-        // create customer if user does not have one:
-        $customer = $this->getCustomer();
+        set_time_limit(0);
 
-        // list all logins present at Spectre
-        $logins = $this->listLogins($customer);
+        // check if job has token first!
+        $config   = $this->job->configuration;
+        $hasToken = $config['has-token'] ?? false;
+        if ($hasToken === false) {
+            Log::debug('Job has no token');
+            // create customer if user does not have one:
+            $customer = $this->getCustomer();
+            Log::debug(sprintf('Customer ID is %s', $customer->getId()));
+            // use customer to request a token:
+            $uri   = route('import.status', [$this->job->key]);
+            $token = $this->getToken($customer, $uri);
+            Log::debug(sprintf('Token is %s', $token->getToken()));
 
-        // use latest (depending on status, and if login exists for selected country + provider)
-        $country    = $this->job->configuration['country'];
-        $providerId = $this->job->configuration['provider'];
-        $login      = $this->filterLogins($logins, $country, $providerId);
+            // update job, give it the token:
+            $config                   = $this->job->configuration;
+            $config['has-token']      = true;
+            $config['token']          = $token->getToken();
+            $config['token-expires']  = $token->getExpiresAt()->format('U');
+            $config['token-url']      = $token->getConnectUrl();
+            $this->job->configuration = $config;
 
-        // create new login if list is empty or no login exists.
-        if (is_null($login)) {
-            $login = $this->createLogin($customer);
-            var_dump($login);
-            exit;
+            Log::debug('Job config is now', $config);
+
+            // update job, set status to "configuring".
+            $this->job->status = 'configuring';
+            $this->job->save();
+            Log::debug(sprintf('Job status is now %s', $this->job->status));
+
+            return true;
+        }
+        $isRedirected = $config['is-redirected'] ?? false;
+        if ($isRedirected === true) {
+            // assume user has "used" the token.
+            // ...
+            // now what?
+            throw new FireflyException('Application cannot handle this.');
         }
 
-        echo '<pre>';
-        print_r($logins);
-        exit;
-
-        return true;
+        throw new FireflyException('Application cannot handle this.');
     }
 
     /**
@@ -135,47 +152,10 @@ class SpectreRoutine implements RoutineInterface
         $newCustomerRequest->call();
         $customer = $newCustomerRequest->getCustomer();
 
-        // store customer. Not sure where. User preference? TODO
+        Preferences::setForUser($this->job->user, 'spectre_customer', $customer->toArray());
+
         return $customer;
 
-    }
-
-    /**
-     * @param Customer $customer
-     */
-    protected function createLogin(Customer $customer)
-    {
-
-        $providerId = intval($this->job->configuration['provider']);
-        $provider   = $this->findProvider($providerId);
-
-
-        $createLoginRequest = new CreateLoginRequest($this->job->user);
-        $createLoginRequest->setCustomer($customer);
-        $createLoginRequest->setProvider($provider);
-        $createLoginRequest->setMandatoryFields($this->decrypt($this->job->configuration['mandatory-fields']));
-        $createLoginRequest->call();
-        echo '123';
-        // country code, provider code (find by spectre ID)
-        // credentials
-        // daily_refresh=true
-        // fetch_type=recent
-        // include_fake_providers=true
-        // store_credentials=true
-
-
-        var_dump($this->job->configuration);
-        exit;
-    }
-
-    /**
-     * @param int $providerId
-     *
-     * @return SpectreProvider|null
-     */
-    protected function findProvider(int $providerId): ?SpectreProvider
-    {
-        return SpectreProvider::where('spectre_id', $providerId)->first();
     }
 
     /**
@@ -188,61 +168,27 @@ class SpectreRoutine implements RoutineInterface
         if (is_null($preference)) {
             return $this->createCustomer();
         }
-        var_dump($preference->data);
-        exit;
+        $customer = new Customer($preference->data);
+
+        return $customer;
     }
 
     /**
      * @param Customer $customer
+     * @param string   $returnUri
      *
-     * @return array
+     * @return Token
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    protected function listLogins(Customer $customer): array
+    protected function getToken(Customer $customer, string $returnUri): Token
     {
-        $listLoginRequest = new ListLoginsRequest($this->job->user);
-        $listLoginRequest->setCustomer($customer);
-        $listLoginRequest->call();
+        $request = new CreateTokenRequest($this->job->user);
+        $request->setUri($returnUri);
+        $request->setCustomer($customer);
+        $request->call();
+        Log::debug('Call to get token is finished');
 
-        $logins = $listLoginRequest->getLogins();
+        return $request->getToken();
 
-        return $logins;
-    }
-
-    /**
-     * @param array $configuration
-     *
-     * @return array
-     */
-    private function decrypt(array $configuration): array
-    {
-        $new = [];
-        foreach ($configuration as $key => $value) {
-            $new[$key] = app('steam')->tryDecrypt($value);
-        }
-
-        return $new;
-    }
-
-    /**
-     * Return login belonging to country and provider
-     * TODO must return Login object, not array
-     *
-     * @param array  $logins
-     * @param string $country
-     * @param int    $providerId
-     *
-     * @return array|null
-     */
-    private function filterLogins(array $logins, string $country, int $providerId): ?array
-    {
-        if (count($logins) === 0) {
-            return null;
-        }
-        foreach ($logins as $login) {
-            die('do some filter');
-        }
-
-        return null;
     }
 }

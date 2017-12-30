@@ -252,7 +252,7 @@ trait FindAccountsTrait
             'accountType'    => 'reconcile',
             'name'           => $name,
             'iban'           => null,
-            'virtualBalance' => null,
+            'virtualBalance' => '0',
             'active'         => true,
         ];
         $account = $this->storeAccount($data);

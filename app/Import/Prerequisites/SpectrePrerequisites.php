@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Prerequisites;
 
-use FireflyIII\Jobs\GetSpectreProviders;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;
 use Illuminate\Http\Request;
@@ -85,10 +84,6 @@ class SpectrePrerequisites implements PrerequisitesInterface
             }
         }
         Log::debug('All prerequisites are here!');
-
-        // at this point, check if all providers are present. Providers are shared amongst
-        // users in a multi-user environment.
-        GetSpectreProviders::dispatch($this->user);
 
         return false;
     }

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Helpers;
 
-use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Middleware\IsSandStormUser;
 use Route;
 use Symfony\Component\HttpFoundation\Response;

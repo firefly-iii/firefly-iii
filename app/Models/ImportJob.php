@@ -127,6 +127,7 @@ class ImportJob extends Model
     public function change(string $status): void
     {
         if (in_array($status, $this->validStatus)) {
+            Log::debug(sprintf('Job status set (in model) to "%s"', $status));
             $this->status = $status;
             $this->save();
 
@@ -169,6 +170,7 @@ class ImportJob extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setConfigurationAttribute($value)
@@ -178,6 +180,7 @@ class ImportJob extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setExtendedStatusAttribute($value)

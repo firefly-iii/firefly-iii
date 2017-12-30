@@ -46,6 +46,7 @@ class IntroController
         $specificSteps = $this->getSpecificSteps($route, $specificPage);
         if (0 === count($specificSteps)) {
             Log::debug(sprintf('No specific steps for route "%s" and page "%s"', $route, $specificPage));
+
             return Response::json($steps);
         }
         if ($this->hasOutroStep($route)) {

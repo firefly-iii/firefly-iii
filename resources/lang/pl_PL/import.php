@@ -49,10 +49,10 @@ return [
     'status_bread_crumb'              => 'Status importu',
     'status_sub_title'                => 'Status importu',
     'config_sub_title'                => 'Skonfiguruj import',
-    'status_finished_job'             => 'Zaimportowane transakcje można znaleźć w tagu <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">: tag</a>.',
+    'status_finished_job'             => 'Zaimportowane transakcje można znaleźć w tagu <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
     'import_with_key'                 => 'Import z kluczem \':key\'',
 
-    // file: upload something:
+    // file, upload something
     'file_upload_title'               => 'Konfiguracja importu (1/4) - Prześlij swój plik',
     'file_upload_text'                => 'Ta procedura pomoże Ci importować pliki z twojego banku do Firefly III. Sprawdź stronę pomocy w prawym górnym rogu.',
     'file_upload_fields'              => 'Pola',
@@ -61,10 +61,10 @@ return [
     'file_upload_type_help'           => 'Wybierz typ pliku, który będziesz przesyłać',
     'file_upload_submit'              => 'Prześlij pliki',
 
-    // file: upload types
+    // file, upload types
     'import_file_type_csv'            => 'CSV (wartości oddzielone przecinkami)',
 
-    // file: initial config for CSV
+    // file, initial config for CSV
     'csv_initial_title'               => 'Konfiguracja importu (2/4) - Podstawowa konfiguracja importu CSV',
     'csv_initial_text'                => 'Aby móc poprawnie zaimportować plik, sprawdź poprawność poniższych opcji.',
     'csv_initial_box'                 => 'Podstawowa konfiguracja importu CSV',
@@ -75,13 +75,13 @@ return [
     'csv_initial_import_account_help' => 'Jeśli Twój plik CSV NIE zawiera informacji o Twoich kontach aktywów, użyj tego menu, aby wybrać, do którego konta należą transakcje w pliku CSV.',
     'csv_initial_submit'              => 'Przejdź do kroku 3/4',
 
-    // file: new options:
+    // file, new options:
     'file_apply_rules_title'          => 'Zastosuj reguły',
     'file_apply_rules_description'    => 'Zastosuj swoje zasady. Zwróć uwagę, że znacznie spowalnia to imprtowanie.',
     'file_match_bills_title'          => 'Dopasuj rachunki',
     'file_match_bills_description'    => 'Dopasuj swoje rachunki do nowo utworzonych wypłat. Zwróć uwagę, że znacznie spowalnia to importowanie.',
 
-    // file: roles config
+    // file, roles config
     'csv_roles_title'                 => 'Konfiguracja importu (3/4) - Zdefiniuj rolę każdej kolumny',
     'csv_roles_text'                  => 'Każda kolumna w pliku CSV zawiera określone dane. Proszę wskazać, jakiego rodzaju danych importer powinien oczekiwać. Opcja "mapowania" danych oznacza, że każdy wpis znaleziony w kolumnie zostanie połączony z wartością w bazie danych. Często odwzorowywana kolumna to kolumna zawierająca numer IBAN konta przeciwnego. Można go łatwo dopasować do obecnego numeru IBAN w bazie danych.',
     'csv_roles_table'                 => 'Tabela',
@@ -94,7 +94,7 @@ return [
     'csv_roles_submit'                => 'Przejdź do kroku 4/4',
     'csv_roles_warning'               => 'Zaznacz jedną z kolumn jako kolumnę z kwotami. Wskazane jest również wybranie kolumny dla opisu, daty oraz konta przeciwnego.',
 
-    // file: map data
+    // file, map data
     'file_map_title'                  => 'Ustawienia importu (4/4) - Połącz dane importu z danymi Firefly III',
     'file_map_text'                   => 'W poniższych tabelach lewa wartość pokazuje informacje znalezione w przesłanym pliku. Twoim zadaniem jest zamapowanie tej wartości, jeśli to możliwe, na wartość już obecną w bazie danych. Firefly będzie trzymać się tego mapowania. Jeśli nie ma wartości do odwzorowania lub nie chcesz mapować określonej wartości, nie wybieraj niczego.',
     'file_map_field_value'            => 'Wartość pola',
@@ -141,11 +141,14 @@ return [
     'column_opposing-number'          => 'Konto przeciwne (numer konta)',
     'column_note'                     => 'Uwagi',
 
+    // prerequisites
+    'prerequisites'                   => 'Wymagania',
+
     // bunq
     'bunq_prerequisites_title'        => 'Wymagania wstępne dla importu z bunq',
     'bunq_prerequisites_text'         => 'Aby zaimportować z bunq, musisz uzyskać klucz API. Możesz to zrobić za pomocą aplikacji.',
 
-    // Spectre:
+    // Spectre
     'spectre_title'                   => 'Importuj za pomocą Spectre',
     'spectre_prerequisites_title'     => 'Wymagania wstępne do importowania za pomocą Spectre',
     'spectre_prerequisites_text'      => 'Aby importować dane za pomocą interfejsu Spectre API, musisz udowodnić pewne sekrety. Można je znaleźć na <a href="https://www.saltedge.com/clients/profile/secrets">stronie sekretów</a>.',

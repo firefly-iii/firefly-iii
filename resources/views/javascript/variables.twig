@@ -1,4 +1,3 @@
-
 // date ranges
 var ranges = {}
 {% for title, range in dateRangeConfig.ranges %}
@@ -7,22 +6,22 @@ var ranges = {}
 
 // date range meta configuration
 var dateRangeMeta = {
-    title: "{{ dateRangeTitle }}",
-    uri: "{{ route('daterange') }}",
-    labels: {
-        apply: "{{ 'apply'|_ }}",
-        cancel: "{{ 'cancel'|_ }}",
-        from: "{{ 'from'|_ }}",
-        to: "{{ 'to'|_ }}",
-        customRange: "{{ 'customRange'|_ }}"
-    }
+title: "{{ dateRangeTitle }}",
+uri: "{{ route('daterange') }}",
+labels: {
+apply: "{{ 'apply'|_ }}",
+cancel: "{{ 'cancel'|_ }}",
+from: "{{ 'from'|_ }}",
+to: "{{ 'to'|_ }}",
+customRange: "{{ 'customRange'|_ }}"
+}
 };
 
 // date range actual configuration:
 var dateRangeConfig = {
-    startDate: moment("{{ dateRangeConfig.start }}"),
-    endDate: moment("{{ dateRangeConfig.end }}"),
-    ranges: ranges
+startDate: moment("{{ dateRangeConfig.start }}"),
+endDate: moment("{{ dateRangeConfig.end }}"),
+ranges: ranges
 
 };
 

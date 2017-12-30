@@ -175,6 +175,8 @@ class CategoryControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     *
+     * @throws \Exception
      */
     public function testNoCategoryAll(string $range)
     {

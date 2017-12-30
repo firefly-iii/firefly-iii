@@ -24,8 +24,6 @@ namespace FireflyIII\Export\Exporter;
 
 use FireflyIII\Export\Entry\Entry;
 use League\Csv\Writer;
-use SplFileObject;
-use SplTempFileObject;
 use Storage;
 
 /**
@@ -66,12 +64,9 @@ class CsvExporter extends BasicExporter implements ExporterInterface
         $fullPath = storage_path('export') . DIRECTORY_SEPARATOR . $this->fileName;
 
 
-
         //we create the CSV into memory
-        //$writer = Writer::createFromFileObject(new SplTempFileObject());
         $writer = Writer::createFromPath($fullPath);
-        //$writer   = Writer::createFromPath(new SplFileObject($fullPath, 'a+'), 'w');
-        $rows     = [];
+        $rows   = [];
 
         // get field names for header row:
         $first   = $this->getEntries()->first();
@@ -91,8 +86,6 @@ class CsvExporter extends BasicExporter implements ExporterInterface
             $rows[] = $line;
         }
         $writer->insertAll($rows);
-        //$writer->output($fullPath);
-        //$writer->
 
         return true;
     }
@@ -102,6 +95,6 @@ class CsvExporter extends BasicExporter implements ExporterInterface
         $this->fileName = $this->job->key . '-records.csv';
         // touch file in export directory:
         $disk = Storage::disk('export');
-        $disk->put($this->fileName,'');
+        $disk->put($this->fileName, '');
     }
 }

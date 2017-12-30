@@ -60,7 +60,7 @@ class PrerequisitesController extends Controller
      *
      * @param string $bank
      *
-     * @return \Illuminate\Http\RedirectResponse|null
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse
      *
      * @throws FireflyException
      */

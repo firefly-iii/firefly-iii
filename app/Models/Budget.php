@@ -84,7 +84,7 @@ class Budget extends Model
     }
 
     /**
-     * @param Budget $value
+     * @param string $value
      *
      * @return Budget
      */
@@ -111,6 +111,7 @@ class Budget extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string
@@ -126,6 +127,7 @@ class Budget extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setNameAttribute($value)

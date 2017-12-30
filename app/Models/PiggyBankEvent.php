@@ -62,6 +62,7 @@ class PiggyBankEvent extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setAmountAttribute($value)

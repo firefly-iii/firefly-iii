@@ -18,7 +18,7 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: langImportSingleError, langImportMultiError, jobStartUrl, langImportTimeOutError, langImportFinished, langImportFatalError */
+/** global: job, langImportSingleError, langImportMultiError, jobStartUrl, langImportTimeOutError, langImportFinished, langImportFatalError */
 
 var timeOutId;
 var startInterval = 1000;
@@ -34,10 +34,12 @@ var knownErrors = 0;
 
 $(function () {
     "use strict";
+    console.log('in start');
     timeOutId = setTimeout(checkJobStatus, startInterval);
 
     $('.start-job').click(startJob);
     if (job.configuration['auto-start']) {
+        console.log('Called startJob()!');
         startJob();
     }
 });
@@ -46,6 +48,7 @@ $(function () {
  * Downloads some JSON and responds to its content to see what the status is of the current import.
  */
 function checkJobStatus() {
+    console.log('in checkJobStatus');
     $.getJSON(jobStatusUri).done(reportOnJobStatus).fail(reportFailedJob);
 }
 
@@ -53,6 +56,7 @@ function checkJobStatus() {
  * This method is called when the JSON query returns an error. If possible, this error is relayed to the user.
  */
 function reportFailedJob(jqxhr, textStatus, error) {
+    console.log('in reportFailedJob');
     // hide all possible boxes:
     $('.statusbox').hide();
 
@@ -72,6 +76,7 @@ function reportFailedJob(jqxhr, textStatus, error) {
  * @param data
  */
 function reportOnJobStatus(data) {
+    console.log('in reportOnJobStatus: ' + data.status);
 
     switch (data.status) {
         case "configured":
@@ -79,6 +84,10 @@ function reportOnJobStatus(data) {
             if (!job.configuration['auto-start']) {
                 $('.statusbox').hide();
                 $('.status_configured').show();
+            }
+            if (job.configuration['auto-start']) {
+                console.log('Job is auto start. Check status again in 500ms.');
+                timeOutId = setTimeout(checkJobStatus, interval);
             }
             break;
         case "running":
@@ -122,7 +131,13 @@ function reportOnJobStatus(data) {
             // show the fatal error box:
             $('.fatal_error').show();
             break;
+        case "configuring":
+            // redirect back to configure screen.
+            console.log('Will now redirect to ' + jobConfigureUri);
+            window.location = jobConfigureUri;
+            break;
         default:
+            console.error('Cannot handle job status ' + data.status);
             break;
 
     }

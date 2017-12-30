@@ -64,7 +64,7 @@ class LoginController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response|void
+     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
      *
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -102,7 +102,7 @@ class LoginController extends Controller
      * @param Request   $request
      * @param CookieJar $cookieJar
      *
-     * @return $this
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function logout(Request $request, CookieJar $cookieJar)
     {

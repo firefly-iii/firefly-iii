@@ -236,7 +236,6 @@ class ImportStorage
 
         // match bills if config calls for it.
         if (true === $this->matchBills) {
-            //$this->/applyRules($journal);
             Log::info('Cannot match bills (yet).');
             $this->matchBills($journal);
         }

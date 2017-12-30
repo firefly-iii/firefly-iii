@@ -190,7 +190,7 @@ class AccountRepository implements AccountRepositoryInterface
         // update the account:
         $account->name            = $data['name'];
         $account->active          = $data['active'];
-        $account->virtual_balance = $data['virtualBalance'];
+        $account->virtual_balance = trim($data['virtualBalance']) === '' ? '0' : $data['virtualBalance'];
         $account->iban            = $data['iban'];
         $account->save();
 
@@ -424,7 +424,7 @@ class AccountRepository implements AccountRepositoryInterface
             'name'           => $name . ' initial balance',
             'active'         => false,
             'iban'           => '',
-            'virtualBalance' => 0,
+            'virtualBalance' => '0',
         ];
         Log::debug('Going to create an opening balance opposing account.');
 

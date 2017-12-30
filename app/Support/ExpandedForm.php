@@ -25,6 +25,7 @@ namespace FireflyIII\Support;
 use Amount as Amt;
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use RuntimeException;
@@ -36,11 +37,12 @@ use Session;
 class ExpandedForm
 {
     /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
      *
      * @return string
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function amount(string $name, $value = null, array $options = []): string
     {
@@ -53,6 +55,7 @@ class ExpandedForm
      * @param array $options
      *
      * @return string
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function amountSmall(string $name, $value = null, array $options = []): string
     {
@@ -65,6 +68,8 @@ class ExpandedForm
      * @param array $options
      *
      * @return string
+     * @throws \FireflyIII\Exceptions\FireflyException
+     *
      */
     public function balance(string $name, $value = null, array $options = []): string
     {
@@ -594,8 +599,7 @@ class ExpandedForm
      *
      * @return string
      *
-     * @throws \Throwable
-     * @throws Facades\FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function currencyField(string $name, string $view, $value = null, array $options = []): string
     {

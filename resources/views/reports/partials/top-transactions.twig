@@ -17,7 +17,8 @@
             <td data-value="{{ transaction.date.format('Y-m-d') }}">
                 {{ transaction.date.formatLocalized(monthAndDayFormat) }}
             </td>
-            <td style="text-align: right;" data-value="{{ transaction.transaction_amount }}"><span style="margin-right:5px;">{{ transaction|transactionAmount }}</span></td>
+            <td style="text-align: right;" data-value="{{ transaction.transaction_amount }}"><span
+                        style="margin-right:5px;">{{ transaction|transactionAmount }}</span></td>
         </tr>
     {% endfor %}
     </tbody>

@@ -58,17 +58,6 @@ class IsAdminTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\IsAdmin::handle
      */
-    public function testMiddlewareOwner()
-    {
-        $this->be($this->user());
-        $this->withoutExceptionHandling();
-        $response = $this->get('/_test/is-admin');
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\IsAdmin::handle
-     */
     public function testMiddlewareNotOwner()
     {
         $this->withoutExceptionHandling();
@@ -76,6 +65,17 @@ class IsAdminTest extends TestCase
         $response = $this->get('/_test/is-admin');
         $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
         $response->assertRedirect(route('home'));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\IsAdmin::handle
+     */
+    public function testMiddlewareOwner()
+    {
+        $this->be($this->user());
+        $this->withoutExceptionHandling();
+        $response = $this->get('/_test/is-admin');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 
     /**

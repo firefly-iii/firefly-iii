@@ -150,7 +150,9 @@ class CreateImport extends Command
                 $this->error(sprintf('Error importing line #%d: %s', $index, $error));
             }
             $this->line(
-                sprintf('The import has finished. %d transactions have been imported out of %d records.', $routine->getJournals()->count(), $routine->lines)
+                sprintf(
+                    'The import has finished. %d transactions have been imported out of %d records.', $routine->getJournals()->count(), $routine->getLines()
+                )
             );
         }
 

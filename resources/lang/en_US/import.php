@@ -52,7 +52,7 @@ return [
     'status_finished_job'             => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
     'import_with_key'                 => 'Import with key \':key\'',
 
-    // file: upload something:
+    // file, upload something
     'file_upload_title'               => 'Import setup (1/4) - Upload your file',
     'file_upload_text'                => 'This routine will help you import files from your bank into Firefly III. Please check out the help pages in the top right corner.',
     'file_upload_fields'              => 'Fields',
@@ -61,10 +61,10 @@ return [
     'file_upload_type_help'           => 'Select the type of file you will upload',
     'file_upload_submit'              => 'Upload files',
 
-    // file: upload types
+    // file, upload types
     'import_file_type_csv'            => 'CSV (comma separated values)',
 
-    // file: initial config for CSV
+    // file, initial config for CSV
     'csv_initial_title'               => 'Import setup (2/4) - Basic CSV import setup',
     'csv_initial_text'                => 'To be able to import your file correctly, please validate the options below.',
     'csv_initial_box'                 => 'Basic CSV import setup',
@@ -75,13 +75,13 @@ return [
     'csv_initial_import_account_help' => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
     'csv_initial_submit'              => 'Continue with step 3/4',
 
-    // file: new options:
+    // file, new options:
     'file_apply_rules_title'          => 'Apply rules',
     'file_apply_rules_description'    => 'Apply your rules. Note that this slows the import significantly.',
     'file_match_bills_title'          => 'Match bills',
     'file_match_bills_description'    => 'Match your bills to newly created withdrawals. Note that this slows the import significantly.',
 
-    // file: roles config
+    // file, roles config
     'csv_roles_title'                 => 'Import setup (3/4) - Define each column\'s role',
     'csv_roles_text'                  => 'Each column in your CSV file contains certain data. Please indicate what kind of data the importer should expect. The option to "map" data means that you will link each entry found in the column to a value in your database. An often mapped column is the column that contains the IBAN of the opposing account. That can be easily matched to IBAN\'s present in your database already.',
     'csv_roles_table'                 => 'Table',
@@ -94,7 +94,7 @@ return [
     'csv_roles_submit'                => 'Continue with step 4/4',
     'csv_roles_warning'               => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
 
-    // file: map data
+    // file, map data
     'file_map_title'                  => 'Import setup (4/4) - Connect import data to Firefly III data',
     'file_map_text'                   => 'In the following tables, the left value shows you information found in your uploaded file. It is your task to map this value, if possible, to a value already present in your database. Firefly will stick to this mapping. If there is no value to map to, or you do not wish to map the specific value, select nothing.',
     'file_map_field_value'            => 'Field value',
@@ -148,7 +148,7 @@ return [
     'bunq_prerequisites_title'        => 'Prerequisites for an import from bunq',
     'bunq_prerequisites_text'         => 'In order to import from bunq, you need to obtain an API key. You can do this through the app.',
 
-    // Spectre:
+    // Spectre
     'spectre_title'                   => 'Import using Spectre',
     'spectre_prerequisites_title'     => 'Prerequisites for an import using Spectre',
     'spectre_prerequisites_text'      => 'In order to import data using the Spectre API, you need to prove some secrets. They can be found on the <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',

@@ -27,10 +27,10 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use Google2FA;
 use Illuminate\Support\Collection;
 use Preferences;
 use Tests\TestCase;
-use Google2FA;
 
 /**
  * Class PreferencesControllerTest

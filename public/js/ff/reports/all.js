@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
+/** global: startDate, endDate, accountIds */
 function loadAjaxPartial(holder, uri) {
     "use strict";
     $.get(uri).done(function (data) {

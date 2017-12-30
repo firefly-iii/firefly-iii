@@ -59,12 +59,10 @@ class SplitController extends Controller
 
     /** @var CurrencyRepositoryInterface */
     private $currencies;
-
-    /** @var JournalTaskerInterface */
-    private $tasker;
-
     /** @var JournalRepositoryInterface */
     private $repository;
+    /** @var JournalTaskerInterface */
+    private $tasker;
 
     /**
      *
@@ -81,7 +79,7 @@ class SplitController extends Controller
                 $this->tasker      = app(JournalTaskerInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->currencies  = app(CurrencyRepositoryInterface::class);
-                $this->repository = app(JournalRepositoryInterface::class);
+                $this->repository  = app(JournalRepositoryInterface::class);
                 app('view')->share('mainTitleIcon', 'fa-share-alt');
                 app('view')->share('title', trans('firefly.split-transactions'));
 
@@ -145,8 +143,8 @@ class SplitController extends Controller
     }
 
     /**
-     * @param SplitJournalFormRequest    $request
-     * @param TransactionJournal         $journal
+     * @param SplitJournalFormRequest $request
+     * @param TransactionJournal      $journal
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */

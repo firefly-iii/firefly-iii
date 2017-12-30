@@ -15,7 +15,7 @@
                 <input type="hidden" name="startBalance" value="{{ startBalance }}"/>
                 <input type="hidden" name="endBalance" value="{{ endBalance }}"/>
                 {% for id in transactionIds %}
-                    <input type="hidden" name="transactions[]" value="{{ id }}" />
+                    <input type="hidden" name="transactions[]" value="{{ id }}"/>
                 {% endfor %}
 
                 <table class="table table-striped table-bordered">
@@ -33,14 +33,14 @@
                     </tr>
                     <tr>
                         <td>{{ 'submitted_end_balance'|_ }} (date)</td>
-                        <td>{{ formatAmountByAccount(account, endBalance)}}</td>
+                        <td>{{ formatAmountByAccount(account, endBalance) }}</td>
                     </tr>
 
                     <tr>
                         <td>{{ 'difference'|_ }}</td>
                         <td>
                             {{ formatAmountByAccount(account, difference) }}
-                            <input type="hidden" name="difference" value="{{ difference }}" />
+                            <input type="hidden" name="difference" value="{{ difference }}"/>
                         </td>
 
                     </tr>
@@ -60,36 +60,36 @@
                     <input type="hidden" name="reconcile" value="nothing">
                 {% endif %}
                 {% if diffCompare != 0 %}
-                <div class="form-group">
-                    <div class="col-lg-12">
-                        <div class="radio">
-                            <label>
+                    <div class="form-group">
+                        <div class="col-lg-12">
+                            <div class="radio">
+                                <label>
 
-                                <input type="radio" name="reconcile" value="create">
-                                {% if diffCompare > 0 %}
-                                    {{ trans('firefly.create_neg_reconcile_transaction', {amount: formatAmountByAccount(account, (difference*-1))})|raw }}
-                                {% endif %}
-                                {% if diffCompare < 0 %}
-                                    {{ trans('firefly.create_pos_reconcile_transaction', {amount: formatAmountByAccount(account, (difference*-1))})|raw }}
-                                {% endif %}
-                            </label>
+                                    <input type="radio" name="reconcile" value="create">
+                                    {% if diffCompare > 0 %}
+                                        {{ trans('firefly.create_neg_reconcile_transaction', {amount: formatAmountByAccount(account, (difference*-1))})|raw }}
+                                    {% endif %}
+                                    {% if diffCompare < 0 %}
+                                        {{ trans('firefly.create_pos_reconcile_transaction', {amount: formatAmountByAccount(account, (difference*-1))})|raw }}
+                                    {% endif %}
+                                </label>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <div class="col-lg-12">
-                        <div class="radio">
-                            <label>
-                                <input type="radio" checked name="reconcile" value="nothing"> {{ 'reconcile_do_nothing'|_ }}
-                            </label>
+                    <div class="form-group">
+                        <div class="col-lg-12">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" checked name="reconcile" value="nothing"> {{ 'reconcile_do_nothing'|_ }}
+                                </label>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <p>
-                    {{ 'reconcile_go_back'|_ }}
-                </p>
+                    <p>
+                        {{ 'reconcile_go_back'|_ }}
+                    </p>
                 {% endif %}
             </div>
             <div class="modal-footer">

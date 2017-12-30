@@ -1,6 +1,6 @@
 <?php
 /**
- * Login.php
+ * RequestedVersionCheckStatus.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -21,12 +21,32 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Services\Spectre\Object;
+namespace FireflyIII\Events;
+
+use FireflyIII\User;
+use Illuminate\Queue\SerializesModels;
+
 
 /**
- * Class Login
+ * Class RequestedVersionCheckStatus
  */
-class Login extends SpectreObject
+class RequestedVersionCheckStatus extends Event
 {
+    use SerializesModels;
 
+    /**
+     * @var User
+     */
+    public $user;
+
+    /**
+     * Create a new event instance. This event is triggered when Firefly III wants to know
+     * what the deal is with the version checker.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
 }

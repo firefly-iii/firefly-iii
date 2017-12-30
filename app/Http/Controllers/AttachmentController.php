@@ -59,12 +59,11 @@ class AttachmentController extends Controller
     }
 
     /**
-     * @param Request    $request
      * @param Attachment $attachment
      *
      * @return View
      */
-    public function delete(Request $request, Attachment $attachment)
+    public function delete(Attachment $attachment)
     {
         $subTitle = trans('firefly.delete_attachment', ['name' => $attachment->filename]);
 

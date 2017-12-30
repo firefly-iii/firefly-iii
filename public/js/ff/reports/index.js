@@ -139,7 +139,6 @@ function setOptionalFromCookies() {
     $('#inputExpRevAccounts').multiselect(defaultMultiSelect);
 
 
-
 }
 
 function catchSubmit() {
@@ -161,7 +160,7 @@ function catchSubmit() {
     createCookie('report-categories', categories, 365);
     createCookie('report-budgets', budgets, 365);
     createCookie('report-tags', tags, 365);
-    createCookie('report-exp-rev', expRev   , 365);
+    createCookie('report-exp-rev', expRev, 365);
     createCookie('report-start', moment(picker.startDate).format("YYYYMMDD"), 365);
     createCookie('report-end', moment(picker.endDate).format("YYYYMMDD"), 365);
 

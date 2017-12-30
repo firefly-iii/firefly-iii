@@ -92,7 +92,6 @@ function storeReconcile() {
         transactions: ids,
         cleared: cleared,
     };
-    console.log
     var uri = overviewUri.replace('%start%', $('input[name="start_date"]').val()).replace('%end%', $('input[name="end_date"]').val());
 
 

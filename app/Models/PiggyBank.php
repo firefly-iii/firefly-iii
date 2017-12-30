@@ -69,9 +69,9 @@ class PiggyBank extends Model
     {
         if (auth()->check()) {
             $piggyBankId = intval($value);
-            $piggyBank   = PiggyBank::where('piggy_banks.id', $piggyBankId)
-                                    ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
-                                    ->where('accounts.user_id', auth()->user()->id)->first(['piggy_banks.*']);
+            $piggyBank   = self::where('piggy_banks.id', $piggyBankId)
+                               ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
+                               ->where('accounts.user_id', auth()->user()->id)->first(['piggy_banks.*']);
             if (!is_null($piggyBank)) {
                 return $piggyBank;
             }
@@ -111,6 +111,7 @@ class PiggyBank extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string
@@ -196,6 +197,7 @@ class PiggyBank extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setNameAttribute($value)
@@ -207,6 +209,7 @@ class PiggyBank extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setTargetamountAttribute($value)

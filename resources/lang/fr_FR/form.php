@@ -144,7 +144,7 @@ return [
     'delete_user'                => 'Supprimer l\'utilisateur ":email"',
     'user_areYouSure'            => 'Si vous supprimez l\'utilisateur ":email", tout disparaitra. Il n\'y a pas d\'annulation, de "dé-suppression" ou quoi que ce soit de la sorte. Si vous supprimez votre propre compte, vous n\'aurez plus accès à cette instance de Firefly III.',
     'attachment_areYouSure'      => 'Êtes-vous sûr de vouloir supprimer la pièce jointe nommée ":name" ?',
-    'account_areYouSure'         => 'Êtes-vous sûr de vouloir supprimer le compte nommé ": ame" ?',
+    'account_areYouSure'         => 'Êtes-vous sûr de vouloir supprimer le compte nommé ":name" ?',
     'bill_areYouSure'            => 'Êtes-vous sûr de vouloir supprimer la facture nommée ":name" ?',
     'rule_areYouSure'            => 'Êtes-vous sûr de vouloir supprimer la règle intitulée ":title" ?',
     'ruleGroup_areYouSure'       => 'Êtes-vous sûr de vouloir supprimer le groupe de règles intitulé ":title" ?',
@@ -169,6 +169,7 @@ return [
     'budget_keep_transactions'   => 'La seule opération liée à ce budget ne sera pas supprimée.|Les :count opérations liées à ce budget ne seront pas supprimées.',
     'category_keep_transactions' => 'La seule opération liée à cette catégorie ne sera pas supprimée.|Les :count opérations liées à cette catégorie ne seront pas supprimées.',
     'tag_keep_transactions'      => 'La seule opération liée à ce tag ne sera pas supprimée.|Les :count opérations liées à ce tag ne seront pas supprimées.',
+    'check_for_updates'          => 'Check for updates',
 
     'email'                 => 'Adresse Email',
     'password'              => 'Mot de passe',

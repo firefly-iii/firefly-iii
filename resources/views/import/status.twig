@@ -63,22 +63,22 @@
                     </p>
                     <div class="row">
                         {% if job.configuration['has-config-file'] != false %}
-                        <div class="col-lg-4">
-                            <a href="{{ route('import.download', [job.key]) }}" class="btn btn-default"><i
-                                        class="fa fa-fw fa-download"></i> {{ trans('import.status_ready_config') }}</a>
-                        </div>
+                            <div class="col-lg-4">
+                                <a href="{{ route('import.download', [job.key]) }}" class="btn btn-default"><i
+                                            class="fa fa-fw fa-download"></i> {{ trans('import.status_ready_config') }}</a>
+                            </div>
                         {% endif %}
                         <div class="col-lg-4">
                             <button class="btn btn-success start-job"><i class="fa fa-fw fa-gears"></i> {{ trans('import.status_ready_start') }}</button>
                         </div>
                     </div>
                     {% if job.configuration['has-config-file'] != false %}
-                    <p>
-                        &nbsp;
-                    </p>
-                    <p class="text-info">
-                        {{ trans('import.status_ready_share')|raw }}
-                    </p>
+                        <p>
+                            &nbsp;
+                        </p>
+                        <p class="text-info">
+                            {{ trans('import.status_ready_share')|raw }}
+                        </p>
                     {% endif %}
                 </div>
             </div>
@@ -149,6 +149,7 @@
         var langImportMultiError = '{{ trans('import.status_errors_multi')|escape('js') }}';
         var jobStatusUri = '{{ route('import.status.json', [job.key]) }}';
         var jobStartUri = '{{ route('import.start', [job.key]) }}';
+        var jobConfigureUri = '{{ route('import.configure', [job.key]) }}';
         var token = '{{ csrf_token() }}';
         var job = {{ job|json_encode|raw }};
     </script>

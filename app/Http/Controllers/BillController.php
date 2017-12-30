@@ -91,12 +91,11 @@ class BillController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param Bill    $bill
+     * @param Bill $bill
      *
      * @return View
      */
-    public function delete(Request $request, Bill $bill)
+    public function delete(Bill $bill)
     {
         // put previous url in session
         $this->rememberPreviousUri('bills.delete.uri');
@@ -194,7 +193,7 @@ class BillController extends Controller
             }
         );
         // paginate bills
-        $bills= new LengthAwarePaginator($collection, $total, $pageSize, $page);
+        $bills = new LengthAwarePaginator($collection, $total, $pageSize, $page);
         $bills->setPath(route('bills.index'));
 
         return view('bills.index', compact('bills'));

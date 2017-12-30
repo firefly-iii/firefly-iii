@@ -63,6 +63,7 @@ class BunqInformation implements InformationInterface
      * @return array
      *
      * @throws FireflyException
+     * @throws \Exception
      */
     public function getAccounts(): array
     {

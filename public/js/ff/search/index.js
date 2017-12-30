@@ -18,7 +18,7 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: searchQuery,searchUri */
+/** global: searchQuery,searchUri,token */
 
 
 

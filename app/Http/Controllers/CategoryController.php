@@ -80,12 +80,11 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param Request  $request
      * @param Category $category
      *
      * @return View
      */
-    public function delete(Request $request, Category $category)
+    public function delete(Category $category)
     {
         $subTitle = trans('firefly.delete_category', ['name' => $category->name]);
 

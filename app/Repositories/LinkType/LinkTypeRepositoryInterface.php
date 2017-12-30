@@ -95,7 +95,7 @@ interface LinkTypeRepositoryInterface
     /**
      * Store link between two journals.
      *
-     * @param array $information
+     * @param array              $information
      * @param TransactionJournal $left
      * @param TransactionJournal $right
      *

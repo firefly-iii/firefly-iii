@@ -101,13 +101,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Request                    $request
      * @param AccountRepositoryInterface $repository
      * @param Account                    $account
      *
      * @return View
      */
-    public function delete(Request $request, AccountRepositoryInterface $repository, Account $account)
+    public function delete(AccountRepositoryInterface $repository, Account $account)
     {
         $typeName    = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);

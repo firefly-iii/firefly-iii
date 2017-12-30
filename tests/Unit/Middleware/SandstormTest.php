@@ -54,6 +54,21 @@ class SandstormTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\Sandstorm::handle
      */
+    public function testMiddlewareAnonLoggedIn()
+    {
+        putenv('SANDSTORM=1');
+
+        $this->be($this->user());
+        $response = $this->get('/_test/sandstorm');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $response->assertSee('sandstorm-anon: true');
+
+        putenv('SANDSTORM=0');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Sandstorm::handle
+     */
     public function testMiddlewareAnonUser()
     {
         putenv('SANDSTORM=1');
@@ -79,21 +94,6 @@ class SandstormTest extends TestCase
         $response = $this->get('/_test/sandstorm', ['X-Sandstorm-User-Id' => 'abcd']);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $response->assertSee('sandstorm-anon: false');
-
-        putenv('SANDSTORM=0');
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Sandstorm::handle
-     */
-    public function testMiddlewareAnonLoggedIn()
-    {
-        putenv('SANDSTORM=1');
-
-        $this->be($this->user());
-        $response = $this->get('/_test/sandstorm');
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $response->assertSee('sandstorm-anon: true');
 
         putenv('SANDSTORM=0');
     }

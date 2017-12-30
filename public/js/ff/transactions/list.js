@@ -18,7 +18,7 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: edit_selected_txt, edit_bulk_selected_txt, delete_selected_txt */
+/** global: edit_selected_txt, edit_bulk_selected_txt, delete_selected_txt, token */
 
 /**
  *

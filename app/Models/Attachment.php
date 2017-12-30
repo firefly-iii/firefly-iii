@@ -70,6 +70,7 @@ class Attachment extends Model
 
     /**
      * Get all of the owning attachable models.
+     *
      * @codeCoverageIgnore
      *
      * @return MorphTo
@@ -81,7 +82,8 @@ class Attachment extends Model
 
     /**
      * Returns the expected filename for this attachment.
-     *@codeCoverageIgnore
+     *
+     * @codeCoverageIgnore
      * @return string
      */
     public function fileName(): string
@@ -91,7 +93,8 @@ class Attachment extends Model
 
     /**
      * @param $value
-     *@codeCoverageIgnore
+     *
+     * @codeCoverageIgnore
      * @return null|string
      */
     public function getDescriptionAttribute($value)
@@ -105,7 +108,8 @@ class Attachment extends Model
 
     /**
      * @param $value
-     *@codeCoverageIgnore
+     *
+     * @codeCoverageIgnore
      * @return null|string
      */
     public function getFilenameAttribute($value)
@@ -119,7 +123,8 @@ class Attachment extends Model
 
     /**
      * @param $value
-     *@codeCoverageIgnore
+     *
+     * @codeCoverageIgnore
      * @return null|string
      */
     public function getMimeAttribute($value)
@@ -133,7 +138,8 @@ class Attachment extends Model
 
     /**
      * @param $value
-     *@codeCoverageIgnore
+     *
+     * @codeCoverageIgnore
      * @return null|string
      */
     public function getNotesAttribute($value)
@@ -147,7 +153,8 @@ class Attachment extends Model
 
     /**
      * @param $value
-     *@codeCoverageIgnore
+     *
+     * @codeCoverageIgnore
      * @return null|string
      */
     public function getTitleAttribute($value)
@@ -161,6 +168,7 @@ class Attachment extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param string $value
      */
     public function setDescriptionAttribute(string $value)
@@ -170,6 +178,7 @@ class Attachment extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param string $value
      */
     public function setFilenameAttribute(string $value)
@@ -179,6 +188,7 @@ class Attachment extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param string $value
      */
     public function setMimeAttribute(string $value)
@@ -188,6 +198,7 @@ class Attachment extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param string $value
      */
     public function setNotesAttribute(string $value)
@@ -197,6 +208,7 @@ class Attachment extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param string $value
      */
     public function setTitleAttribute(string $value)

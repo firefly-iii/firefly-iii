@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
+use FireflyConfig;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
@@ -30,7 +31,6 @@ use FireflyIII\Services\Github\Object\Release;
 use FireflyIII\Services\Github\Request\UpdateRequest;
 use Illuminate\Http\Request;
 use Log;
-use Preferences;
 use Response;
 use Session;
 
@@ -67,7 +67,7 @@ class UpdateController extends Controller
     {
         $subTitle     = trans('firefly.update_check_title');
         $subTitleIcon = 'fa-star';
-        $permission   = app('preferences')->get('permission_update_check', -1);
+        $permission   = app('fireflyconfig')->get('permission_update_check', -1);
         $selected     = $permission->data;
         $options      = [
             '-1' => trans('firefly.updates_ask_me_later'),
@@ -86,9 +86,9 @@ class UpdateController extends Controller
     public function post(Request $request)
     {
         $checkForUpdates = intval($request->get('check_for_updates'));
-        Preferences::set('permission_update_check', $checkForUpdates);
+        FireflyConfig::set('permission_update_check', $checkForUpdates);
+        FireflyConfig::set('last_update_check', time());
         Session::flash('success', strval(trans('firefly.configuration_updated')));
-        Preferences::mark();
 
         return redirect(route('admin.update-check'));
     }
@@ -99,17 +99,19 @@ class UpdateController extends Controller
     public function updateCheck()
     {
         $current = config('firefly.version');
-        $request = new UpdateRequest();
+        /** @var UpdateRequest $request */
+        $request = app(UpdateRequest::class);
         $check   = -2;
+        $first   = new Release(['id' => '0', 'title' => '0', 'updated' => '2017-01-01', 'content' => '']);
+        $string  = '';
         try {
             $request->call();
             $releases = $request->getReleases();
             // first entry should be the latest entry:
             /** @var Release $first */
-            $first  = reset($releases);
-            $string = '';
-            $check  = version_compare($current, $first->getTitle());
-            Preferences::set('last_update_check', time());
+            $first = reset($releases);
+            $check = version_compare($current, $first->getTitle());
+            FireflyConfig::set('last_update_check', time());
         } catch (FireflyException $e) {
             Log::error(sprintf('Could not check for updates: %s', $e->getMessage()));
         }
@@ -119,7 +121,12 @@ class UpdateController extends Controller
 
         if ($check === -1) {
             // there is a new FF version!
-            $string = strval(trans('firefly.update_new_version_alert', ['your_version' => $current, 'new_version' => $first->getTitle()]));
+            $string = strval(
+                trans(
+                    'firefly.update_new_version_alert',
+                    ['your_version' => $current, 'new_version' => $first->getTitle(), 'date' => $first->getUpdated()->formatLocalized($this->monthAndDayFormat)]
+                )
+            );
         }
         if ($check === 0) {
             // you are running the current version!

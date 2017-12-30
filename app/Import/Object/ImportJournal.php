@@ -330,6 +330,7 @@ class ImportJournal
      */
     private function selectAmountInput()
     {
+        $info           = [];
         $converterClass = '';
         if (!is_null($this->amount)) {
             Log::debug('Amount value is not NULL, assume this is the correct value.');
