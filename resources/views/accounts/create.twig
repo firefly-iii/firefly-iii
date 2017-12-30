@@ -44,6 +44,7 @@
                             {{ ExpandedForm.select('accountRole', roles,null,{'helpText' : 'asset_account_role_help'|_}) }}
                             {{ ExpandedForm.nonSelectableBalance('virtualBalance') }}
                         {% endif %}
+                        {{ ExpandedForm.textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
 
                     </div>
                 </div>

@@ -29,6 +29,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -176,6 +177,11 @@ class AccountRepository implements AccountRepositoryInterface
         }
         $this->deleteInitialBalance($newAccount);
 
+        // update note:
+        if (isset($data['notes'])) {
+            $this->updateNote($newAccount, $data['notes']);
+        }
+
         return $newAccount;
     }
 
@@ -198,6 +204,12 @@ class AccountRepository implements AccountRepositoryInterface
         if ($this->validOpeningBalanceData($data)) {
             $this->updateInitialBalance($account, $data);
         }
+
+        // update note:
+        if (isset($data['notes']) && null !== $data['notes']) {
+            $this->updateNote($account, strval($data['notes']));
+        }
+
 
         return $account;
     }
@@ -505,6 +517,33 @@ class AccountRepository implements AccountRepositoryInterface
                 );
             }
         }
+    }
+
+    /**
+     * @param Account $account
+     * @param string  $note
+     *
+     * @return bool
+     */
+    protected function updateNote(Account $account, string $note): bool
+    {
+        if (0 === strlen($note)) {
+            $dbNote = $account->notes()->first();
+            if (null !== $dbNote) {
+                $dbNote->delete();
+            }
+
+            return true;
+        }
+        $dbNote = $account->notes()->first();
+        if (null === $dbNote) {
+            $dbNote = new Note();
+            $dbNote->noteable()->associate($account);
+        }
+        $dbNote->text = trim($note);
+        $dbNote->save();
+
+        return true;
     }
 
     /**

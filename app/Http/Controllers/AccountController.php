@@ -29,6 +29,7 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -195,7 +196,15 @@ class AccountController extends Controller
             'openingBalance'       => $openingBalanceAmount,
             'virtualBalance'       => $account->virtual_balance,
             'currency_id'          => $currency->id,
+            'notes' => '',
         ];
+        /** @var Note $note */
+        $note = $account->notes()->first();
+        if (null !== $note) {
+            $preFilled['notes'] = $note->text;
+        }
+
+
         $request->session()->flash('preFilled', $preFilled);
 
         return view(

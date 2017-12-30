@@ -132,7 +132,7 @@ class Bill extends Model
      */
     public function notes()
     {
-        return $this->morphMany('FireflyIII\Models\Note', 'noteable');
+        return $this->morphMany(Note::class, 'noteable');
     }
 
     /**

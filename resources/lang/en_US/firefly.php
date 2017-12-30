@@ -746,6 +746,7 @@ return [
     'opt_group_savingAsset'                    => 'Savings accounts',
     'opt_group_sharedAsset'                    => 'Shared asset accounts',
     'opt_group_ccAsset'                        => 'Credit cards',
+    'notes'                                    => 'Notes',
 
     // new user:
     'welcome'                                  => 'Welcome to Firefly!',

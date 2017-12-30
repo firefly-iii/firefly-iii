@@ -57,6 +57,7 @@ class AccountFormRequest extends Request
             'openingBalanceDate'   => $this->date('openingBalanceDate'),
             'ccType'               => $this->string('ccType'),
             'ccMonthlyPaymentDate' => $this->string('ccMonthlyPaymentDate'),
+            'notes'                => $this->string('notes'),
         ];
     }
 

@@ -48,6 +48,7 @@
                         {{ ExpandedForm.nonSelectableBalance('virtualBalance',null, {'currency' : currency }) }}
 
                     {% endif %}
+                    {{ ExpandedForm.textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
                     {{ ExpandedForm.checkbox('active','1') }}
                 </div>
             </div>
