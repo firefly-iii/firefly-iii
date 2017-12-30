@@ -728,6 +728,7 @@ return [
     'reconcile_selected'                       => 'Reconcile',
     'mass_delete_journals'                     => 'Delete a number of transactions',
     'mass_edit_journals'                       => 'Edit a number of transactions',
+    'mass_edit_bulk_journals'                  => 'Bulk edit',
     'cannot_edit_other_fields'                 => 'You cannot mass-edit other fields than the ones here, because there is no room to show them. Please follow the link and edit them by one-by-one, if you need to edit these fields.',
     'no_budget'                                => 'none',
     'no_budget_squared'                        => '(no budget)',
@@ -739,6 +740,7 @@ return [
     'opt_group_savingAsset'                    => 'Savings accounts',
     'opt_group_sharedAsset'                    => 'Shared asset accounts',
     'opt_group_ccAsset'                        => 'Credit cards',
+    'mass_edit_bulk'                           => 'Bulk edit',
 
     // new user:
     'welcome'                                  => 'Welcome to Firefly!',

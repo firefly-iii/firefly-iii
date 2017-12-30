@@ -784,8 +784,10 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Transaction', 'prefix' => 'transactions/mass', 'as' => 'transactions.mass.'], function () {
     Route::get('edit/{journalList}', ['uses' => 'MassController@edit', 'as' => 'edit']);
+    Route::get('edit/bulk/{journalList}', ['uses' => 'MassController@editBulk', 'as' => 'edit-bulk']);
     Route::get('delete/{journalList}', ['uses' => 'MassController@delete', 'as' => 'delete']);
     Route::post('update', ['uses' => 'MassController@update', 'as' => 'update']);
+    Route::post('update/bulk', ['uses' => 'MassController@updateBulk', 'as' => 'update-bulk']);
     Route::post('destroy', ['uses' => 'MassController@destroy', 'as' => 'destroy']);
 }
 );
