@@ -43,44 +43,13 @@ $(document).ready(function () {
         countChecked();
     });
 
-    // click the edit button:
+    // click the mass edit button:
     $('.mass_edit').click(goToMassEdit);
-    // click the edit button:
-    $('.mass_edit_bulk').click(goToMassBulkEdit);
+    // click the bulk edit button:
+    $('.bulk_edit').click(goToBulkEdit);
     // click the delete button:
     $('.mass_delete').click(goToMassDelete);
-    // click reconcile button
-    // $('.mass_reconcile').click(goToReconcile);
 });
-
-/**
- *
- * @returns {boolean}
- */
-function goToReconcile() {
-
-    var checked = $('.select_all_single:checked');
-    var ids = [];
-    $.each(checked, function (i, v) {
-        ids.push(parseInt($(v).data('transaction')));
-    });
-
-    // go to specially crafted URL:
-    var bases = document.getElementsByTagName('base');
-    var baseHref = null;
-
-    if (bases.length > 0) {
-        baseHref = bases[0].href;
-    }
-
-    $.post(baseHref + 'transactions/reconcile', {transactions: ids, _token: token}).done(function () {
-        window.location.reload(true);
-    }).fail(function () {
-        alert('Could not reconcile transactions: please check the logs and try again later.');
-    });
-
-    return false;
-}
 
 /**
  *
@@ -106,7 +75,7 @@ function goToMassEdit() {
  *
  * @returns {boolean}
  */
-function goToMassBulkEdit() {
+function goToBulkEdit() {
     "use strict";
     var checkedArray = getCheckboxes();
 
@@ -118,7 +87,7 @@ function goToMassBulkEdit() {
         baseHref = bases[0].href;
     }
 
-    window.location.href = baseHref + '/transactions/mass/edit/bulk/' + checkedArray;
+    window.location.href = baseHref + '/transactions/bulk/edit/' + checkedArray;
     return false;
 }
 
@@ -166,7 +135,7 @@ function countChecked() {
     var checked = $('.select_all_single:checked').length;
     if (checked > 0) {
         $('.mass_edit span').text(edit_selected_txt + ' (' + checked + ')');
-        $('.mass_edit_bulk span').text(edit_bulk_selected_txt + ' (' + checked + ')');
+        $('.bulk_edit span').text(edit_bulk_selected_txt + ' (' + checked + ')');
         $('.mass_delete span').text(delete_selected_txt + ' (' + checked + ')');
 
         // get amount for the transactions:
