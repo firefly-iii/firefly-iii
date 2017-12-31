@@ -24,7 +24,6 @@ namespace FireflyIII\Http\Controllers;
 
 use Artisan;
 use Carbon\Carbon;
-use DB;
 use Exception;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Exceptions\FireflyException;
@@ -38,7 +37,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Log;
-use Monolog\Handler\RotatingFileHandler;
 use Preferences;
 use Response;
 use Route as RouteFacade;
@@ -98,59 +96,6 @@ class HomeController extends Controller
         return Response::json(['ok' => 'ok']);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function displayDebug(Request $request)
-    {
-        $phpVersion     = str_replace('~', '\~', PHP_VERSION);
-        $phpOs          = php_uname();
-        $interface      = PHP_SAPI;
-        $now            = Carbon::create()->format('Y-m-d H:i:s e');
-        $extensions     = join(', ', get_loaded_extensions());
-        $drivers        = join(', ', DB::availableDrivers());
-        $currentDriver  = DB::getDriverName();
-        $userAgent      = $request->header('user-agent');
-        $isSandstorm    = var_export(env('IS_SANDSTORM', 'unknown'), true);
-        $isDocker       = var_export(env('IS_DOCKER', 'unknown'), true);
-        $trustedProxies = env('TRUSTED_PROXIES', '(none)');
-
-        // get latest log file:
-        $logger     = Log::getMonolog();
-        $handlers   = $logger->getHandlers();
-        $logContent = '';
-        foreach ($handlers as $handler) {
-            if ($handler instanceof RotatingFileHandler) {
-                $logFile = $handler->getUrl();
-                if (null !== $logFile) {
-                    $logContent = file_get_contents($logFile);
-                }
-            }
-        }
-        // last few lines
-        $logContent = 'Truncated from this point <----|' . substr($logContent, -4096);
-
-        return view(
-            'debug',
-            compact(
-                'phpVersion',
-                'extensions',
-                'carbon',
-                'now',
-                'drivers',
-                'currentDriver',
-                'userAgent',
-                'phpOs',
-                'interface',
-                'logContent',
-                'isDocker',
-                'isSandstorm',
-                'trustedProxies'
-            )
-        );
-    }
 
     /**
      * @throws FireflyException
