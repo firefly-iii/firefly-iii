@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 return [
-    // status of import:
+    // status of  import:
     'status_wait_title'               => 'Lütfen bekleyin...',
     'status_wait_text'                => 'Bu kutu bir dakika içinde kaybolacak.',
     'status_fatal_title'              => 'Önemli bir hata oluştu',
