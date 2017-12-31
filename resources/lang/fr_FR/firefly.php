@@ -746,6 +746,7 @@ return [
     'opt_group_savingAsset'                    => 'Comptes d\'épargne',
     'opt_group_sharedAsset'                    => 'Comptes d\'actifs partagés',
     'opt_group_ccAsset'                        => 'Cartes de crédit',
+    'notes'                                    => 'Notes',
 
     // new user:
     'welcome'                                  => 'Bienvenue sur Firefly !',

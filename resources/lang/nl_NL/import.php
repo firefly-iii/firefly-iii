@@ -94,7 +94,7 @@ return [
     'csv_roles_submit'                => 'Ga verder met stap 4/4',
 
     // not csv, but normal warning
-    'roles_warning'                   => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
+    'roles_warning'                   => 'Geef minstens de kolom aan waar het bedrag in staat. Als het even kan, ook een kolom voor de omschrijving, datum en de andere rekening.',
 
     // file, map data
     'file_map_title'                  => 'Importinstellingen (4/4) - Link importgegevens aan Firefly III-gegevens',

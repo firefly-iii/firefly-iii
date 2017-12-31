@@ -94,7 +94,7 @@ return [
     'csv_roles_submit'                => 'Przejdź do kroku 4/4',
 
     // not csv, but normal warning
-    'roles_warning'                   => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
+    'roles_warning'                   => 'Zaznacz jedną z kolumn jako kolumnę z kwotami. Wskazane jest również wybranie kolumny dla opisu, daty oraz konta przeciwnego.',
 
     // file, map data
     'file_map_title'                  => 'Ustawienia importu (4/4) - Połącz dane importu z danymi Firefly III',

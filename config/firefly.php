@@ -33,7 +33,7 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'     => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
-    'version'        => '4.6.12',
+    'version'        => '4.7.0',
     'maxUploadSize'  => 15242880,
     'allowedMimes'   => ['image/png', 'image/jpeg', 'application/pdf', 'text/plain'],
     'list_length'    => 10,
@@ -119,6 +119,7 @@ return [
         'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],
         'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '],
+        'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'],
 
         // incomplete languages:
         //'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'],
@@ -126,7 +127,7 @@ return [
         //'es_ES' => ['name_locale' => 'Spanish', 'name_english' => 'Spanish'],
         //'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'],
         //'sl_SI' => ['name_locale' => 'Slovenščina', 'name_english' => 'Slovenian'],
-        //'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'],
+        //
     ],
     'transactionTypesByWhat'     => [
         'expenses'   => ['Withdrawal'],

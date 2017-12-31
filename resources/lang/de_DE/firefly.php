@@ -747,6 +747,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'opt_group_savingAsset'                    => 'Sparkonten',
     'opt_group_sharedAsset'                    => 'Shared asset accounts',
     'opt_group_ccAsset'                        => 'Kreditkarten',
+    'notes'                                    => 'Notes',
 
     // new user:
     'welcome'                                  => 'Willkommen bei Firefly!',

@@ -746,6 +746,7 @@ return [
     'opt_group_savingAsset'                    => 'Menyimpan akun',
     'opt_group_sharedAsset'                    => 'Akun aset bersama',
     'opt_group_ccAsset'                        => 'Kartu kredit',
+    'notes'                                    => 'Notes',
 
     // new user:
     'welcome'                                  => 'Selamat datang di Firefly!',
