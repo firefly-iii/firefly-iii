@@ -72,7 +72,7 @@ class MassController extends Controller
         // put previous url in session
         $this->rememberPreviousUri('transactions.mass-delete.uri');
 
-        return view('transactions.mass-delete', compact('journals', 'subTitle'));
+        return view('transactions.mass.delete', compact('journals', 'subTitle'));
     }
 
     /**
