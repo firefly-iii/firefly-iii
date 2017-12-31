@@ -1,6 +1,6 @@
 <?php
 /**
- * MassControllerTest.php
+ * BulkControllerTest.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -23,94 +23,50 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Transaction;
 
 use DB;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
+use Mockery;
 use Tests\TestCase;
 
 /**
- * Class MassControllerTest
+ * Class BulkControllerTest
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class MassControllerTest extends TestCase
+class BulkControllerTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::delete
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::__construct
-     */
-    public function testDelete()
-    {
-        $withdrawals = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->take(2)->get()->pluck('id')->toArray();
-        $this->be($this->user());
-        $response = $this->get(route('transactions.mass.delete', $withdrawals));
-        $response->assertStatus(200);
-        $response->assertSee('Delete a number of transactions');
-        // has bread crumb
-        $response->assertSee('<ol class="breadcrumb">');
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::destroy
-     */
-    public function testDestroy()
-    {
-        $deposits   = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->take(2)->get();
-        $depositIds = $deposits->pluck('id')->toArray();
-
-        // mock deletion:
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('find')->andReturnValues([$deposits[0], $deposits[1]])->times(2);
-        $repository->shouldReceive('delete')->times(2);
-
-        $this->session(['transactions.mass-delete.uri' => 'http://localhost']);
-
-        $data = [
-            'confirm_mass_delete' => $depositIds,
-        ];
-        $this->be($this->user());
-        $response = $this->post(route('transactions.mass.destroy'), $data);
-        $response->assertSessionHas('success');
-        $response->assertStatus(302);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\BulkController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\BulkController::__construct
      */
     public function testEdit()
     {
         // mock stuff:
-        $repository = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
-
-        // mock more stuff:
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
+        $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection);
 
-        $transfers = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(2)->get()->pluck('id')->toArray();
+        $transfers = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(4)->get()->pluck('id')->toArray();
 
         $this->be($this->user());
-        $response = $this->get(route('transactions.mass.edit', $transfers));
+        $response = $this->get(route('transactions.bulk.edit', $transfers));
         $response->assertStatus(200);
-        $response->assertSee('Edit a number of transactions');
+        $response->assertSee('Bulk edit a number of transactions');
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\BulkController::edit
      */
     public function testEditMultiple()
     {
         // mock stuff:
-        $repository = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
+        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection);
 
         // default transactions
         $collection = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(2)->get();
@@ -148,11 +104,12 @@ class MassControllerTest extends TestCase
         // add opening balance:
         $collection->push(TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first());
         $allIds = $collection->pluck('id')->toArray();
-        $route  = route('transactions.mass.edit', join(',', $allIds));
+        $route  = route('transactions.bulk.edit', join(',', $allIds));
         $this->be($this->user());
         $response = $this->get($route);
         $response->assertStatus(200);
-        $response->assertSee('Edit a number of transactions');
+        $response->assertSee('Bulk edit a number of transactions');
+        $response->assertSessionHas('info');
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
         $response->assertSee('marked as reconciled');
@@ -161,16 +118,28 @@ class MassControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\BulkController::edit
      */
     public function testEditMultipleNothingLeft()
     {
         // mock stuff:
-        $repository = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
+        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection);
 
         // default transactions
         $collection = new Collection;
+
+        // add deposit (with multiple sources)
+        $collection->push(
+            TransactionJournal::where('transaction_type_id', 2)
+                              ->whereNull('transaction_journals.deleted_at')
+                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                              ->groupBy('transaction_journals.id')
+                              ->orderBy('ct', 'DESC')
+                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
+        );
+
+        // add withdrawal (with multiple destinations)
         $collection->push(
             TransactionJournal::where('transaction_type_id', 1)
                               ->whereNull('transaction_journals.deleted_at')
@@ -179,47 +148,70 @@ class MassControllerTest extends TestCase
                               ->orderBy('ct', 'DESC')
                               ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
         );
-        $allIds = $collection->pluck('id')->toArray();
 
+        // add reconcile transaction
+        $collection->push(
+            TransactionJournal::where('transaction_type_id', 5)
+                              ->whereNull('transaction_journals.deleted_at')
+                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                              ->groupBy('transaction_journals.id')
+                              ->orderBy('ct', 'DESC')
+                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
+        );
+
+        // add opening balance:
+        $collection->push(TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first());
+        $allIds = $collection->pluck('id')->toArray();
+        $route  = route('transactions.bulk.edit', join(',', $allIds));
         $this->be($this->user());
-        $response = $this->get(route('transactions.mass.edit', join(',', $allIds)));
+        $response = $this->get($route);
         $response->assertStatus(200);
-        $response->assertSee('Edit a number of transactions');
-        $response->assertSessionHas('error','You have selected no valid transactions to edit.');
+        $response->assertSee('Bulk edit a number of transactions');
+        $response->assertSessionHas('info');
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
+        $response->assertSessionHas('error', 'You have selected no valid transactions to edit.');
+        $response->assertSee('marked as reconciled');
+        $response->assertSee('multiple source accounts');
+        $response->assertSee('multiple destination accounts');
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::update
+     * @covers \FireflyIII\Http\Controllers\Transaction\BulkController::update
      */
     public function testUpdate()
     {
-        $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)
-                                     ->whereNull('deleted_at')
-                                     ->first();
-        // mock stuff
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('update')->once();
-        $repository->shouldReceive('find')->once()->andReturn($deposit);
 
-        $this->session(['transactions.mass-edit.uri' => 'http://localhost']);
+        $tags       = ['a', 'b', 'c'];
+        $collection = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->take(4)->get();
+        $allIds     = $collection->pluck('id')->toArray();
 
         $data = [
-            'journals'                                  => [$deposit->id],
-            'description'                               => [$deposit->id => 'Updated salary thing'],
-            'amount'                                    => [$deposit->id => 1600],
-            'amount_currency_id_amount_' . $deposit->id => 1,
-            'date'                                      => [$deposit->id => '2014-07-24'],
-            'source_account_name'                       => [$deposit->id => 'Job'],
-            'destination_account_id'                    => [$deposit->id => 1],
-            'category'                                  => [$deposit->id => 'Salary'],
+            'category'  => 'Some new category',
+            'budget_id' => 1,
+            'tags'      => 'a,b,c',
+            'journals'  => $allIds,
         ];
 
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('find')->times(4)->andReturn(new TransactionJournal);
+
+        $repository->shouldReceive('updateCategory')->times(4)->andReturn(new TransactionJournal())
+            ->withArgs([Mockery::any(), $data['category']]);
+
+        $repository->shouldReceive('updateBudget')->times(4)->andReturn(new TransactionJournal())
+                   ->withArgs([Mockery::any(), $data['budget_id']]);
+
+        $repository->shouldReceive('updateTags')->times(4)->andReturn(true)
+                   ->withArgs([Mockery::any(), $tags]);
+
+
+
+        $route = route('transactions.bulk.update');
         $this->be($this->user());
-        $response = $this->post(route('transactions.mass.update', [$deposit->id]), $data);
-        $response->assertSessionHas('success');
+        $response = $this->post($route, $data);
         $response->assertStatus(302);
+        $response->assertSessionHas('success');
     }
 }

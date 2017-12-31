@@ -79,7 +79,7 @@
                                         <td>
                                             <div class="checkbox">
                                                 <label>
-                                                    <input name="ignore_category" type="checkbox" value="1">
+                                                    <input name="ignore_category" type="checkbox" value="1" checked>
                                                     {{ 'no_bulk_category'|_ }}
                                                 </label>
                                             </div>
@@ -97,7 +97,7 @@
                                         <td>
                                             <div class="checkbox">
                                                 <label>
-                                                    <input name="ignore_budget" type="checkbox" value="1">
+                                                    <input name="ignore_budget" type="checkbox" value="1" checked>
                                                     {{ 'no_bulk_budget'|_ }}
                                                 </label>
                                             </div>
@@ -111,7 +111,7 @@
                                         <td>
                                             <div class="checkbox">
                                                 <label>
-                                                    <input name="ignore_tags" type="checkbox" value="1">
+                                                    <input name="ignore_tags" type="checkbox" value="1" checked>
                                                     {{ 'no_bulk_tags'|_ }}
                                                 </label>
                                             </div>
@@ -121,24 +121,6 @@
                                 </table>
                             </div>
                         </div>
-                        <!--
-                        <table class="table table-striped table-condensed">
-                            <tr>
-                                <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.category') }}</th>
-                                <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.tags') }}</th>
-                            </tr>
-                            <tr>
-                                {# category #}
-                                <td>
-
-                                </td>
-                                {# tags #}
-                                <td>
-
-                                </td>
-                            </tr>
-                        </table>
-                        -->
                     </div>
                     <div class="box-footer">
                         {% if journals.count > 0 %}

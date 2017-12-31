@@ -88,6 +88,16 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param Account $account
+     *
+     * @return Note|null
+     */
+    public function getNote(Account $account): ?Note
+    {
+        return $account->notes()->first();
+    }
+
+    /**
      * Returns the date of the very last transaction in this account.
      *
      * @param Account $account
