@@ -31,6 +31,7 @@
  */
 function formatLabel(str, maxwidth) {
     var sections = [];
+    str = String(str);
     var words = str.split(" ");
     var temp = "";
 
