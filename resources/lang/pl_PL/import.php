@@ -25,13 +25,13 @@ return [
     'status_wait_title'               => 'Proszę czekać...',
     'status_wait_text'                => 'To pole za chwilę zniknie.',
     'status_fatal_title'              => 'Wystąpił błąd krytyczny',
-    'status_fatal_text'               => 'Wystąpił błąd krytyczny, którego procedura importu nie może odzyskać. Zobacz wyjaśnienie na czerwono poniżej.',
+    'status_fatal_text'               => 'Wystąpił błąd krytyczny, którego procedura importu nie może naprawić. Zobacz wyjaśnienie na czerwono poniżej.',
     'status_fatal_more'               => 'Jeśli przekroczono limit czasu, import zostanie zatrzymany w połowie. W przypadku niektórych konfiguracji serwerów, jedynie serwer przestał odpowiadać podczas gdy importowanie nadal działa w tle. Aby to zweryfikować, należy sprawdzić pliki dziennika. Jeśli problem będzie się powtarzał, należy rozważyć Importowanie poprzez konsolę.',
     'status_ready_title'              => 'Import jest gotowy do uruchomienia',
-    'status_ready_text'               => 'Import jest gotowy do uruchomienia. Cała konfiguracja, którą musisz wykonać, została wykonana. Proszę pobierz plik konfiguracyjny. Pomoże ci w imporcie, jeśli nie pójdzie zgodnie z planem. Aby faktycznie uruchomić import, możesz wykonać następujące polecenie w konsoli lub uruchomić importowanie przez Internet. W zależności od konfiguracji import przez konsolę daje więcej informacji zwrotnych.',
-    'status_ready_noconfig_text'      => 'Import jest gotowy do uruchomienia. Cała konfiguracja, którą musisz wykonać, została wykonana. Aby faktycznie uruchomić import, możesz wykonać następujące polecenie w konsoli lub uruchomić importowanie przez Internet. W zależności od konfiguracji import przez konsolę daje więcej informacji zwrotnych.',
+    'status_ready_text'               => 'Import jest gotowy do uruchomienia. Cała konfiguracja, którą musisz wykonać, została wykonana. Proszę pobierz plik konfiguracyjny. Pomoże Ci w imporcie, jeśli nie pójdzie zgodnie z planem. Aby faktycznie uruchomić import, możesz wykonać następujące polecenie w konsoli lub uruchomić importowanie przez przeglądarkę www. W zależności od konfiguracji import przez konsolę daje więcej informacji zwrotnych.',
+    'status_ready_noconfig_text'      => 'Import jest gotowy do uruchomienia. Cała konfiguracja, którą musisz wykonać, została wykonana. Aby faktycznie uruchomić import, możesz wykonać następujące polecenie w konsoli lub uruchomić importowanie przez przeglądarkę www. W zależności od konfiguracji import przez konsolę daje więcej informacji zwrotnych.',
     'status_ready_config'             => 'Pobierz konfigurację',
-    'status_ready_start'              => 'Rozpocznij import',
+    'status_ready_start'              => 'Rozpocznij Importowanie',
     'status_ready_share'              => 'Rozważ pobranie konfiguracji i udostępnienie jej w <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">centrum konfiguracyjnym portali</a></strong>. Umożliwi to innym użytkownikom Firefly III łatwiejsze importowanie plików.',
     'status_job_new'                  => 'Zadanie jest zupełnie nowe.',
     'status_job_configuring'          => 'Import jest konfigurowany.',
@@ -45,7 +45,7 @@ return [
     'status_finished_text'            => 'Twoje dane zostały zaimportowane.',
     'status_errors_title'             => 'Błędy podczas importowania',
     'status_errors_single'            => 'Wystąpił błąd podczas importowania. Nie wydaje się być krytyczny.',
-    'status_errors_multi'             => 'Wystąpił błąd podczas importowania. Nie wydaje się być krytyczny.',
+    'status_errors_multi'             => 'Wystąpiły błędy podczas importowania. Nie wydają się być krytyczne.',
     'status_bread_crumb'              => 'Status importu',
     'status_sub_title'                => 'Status importu',
     'config_sub_title'                => 'Skonfiguruj import',
@@ -77,9 +77,9 @@ return [
 
     // file, new options:
     'file_apply_rules_title'          => 'Zastosuj reguły',
-    'file_apply_rules_description'    => 'Zastosuj swoje zasady. Zwróć uwagę, że znacznie spowalnia to imprtowanie.',
+    'file_apply_rules_description'    => 'Zastosuj swoje reguły. Zwróć uwagę, że to znacznie spowalnia importowanie.',
     'file_match_bills_title'          => 'Dopasuj rachunki',
-    'file_match_bills_description'    => 'Dopasuj swoje rachunki do nowo utworzonych wypłat. Zwróć uwagę, że znacznie spowalnia to importowanie.',
+    'file_match_bills_description'    => 'Dopasuj swoje rachunki do nowo utworzonych wypłat. Zwróć uwagę, że to znacznie spowalnia importowanie.',
 
     // file, roles config
     'csv_roles_title'                 => 'Konfiguracja importu (3/4) - Zdefiniuj rolę każdej kolumny',
@@ -90,7 +90,7 @@ return [
     'csv_roles_column_role'           => 'Znaczenie danych w kolumnie',
     'csv_roles_do_map_value'          => 'Zmapuj te wartości',
     'csv_roles_column'                => 'Kolumna',
-    'csv_roles_no_example_data'       => 'Brak dostępnych przykładowych danych',
+    'csv_roles_no_example_data'       => 'Brak przykładowych danych',
     'csv_roles_submit'                => 'Przejdź do kroku 4/4',
 
     // not csv, but normal warning
@@ -106,7 +106,7 @@ return [
 
     // map things.
     'column__ignore'                  => '(zignoruj tę kolumnę)',
-    'column_account-iban'             => 'Rachunek aktywów (IBAN)',
+    'column_account-iban'             => 'Konto aktywów (IBAN)',
     'column_account-id'               => 'ID konta aktywów (taki sam jak w Firefly)',
     'column_account-name'             => 'Konto aktywów (nazwa)',
     'column_amount'                   => 'Kwota',
@@ -124,24 +124,24 @@ return [
     'column_currency-name'            => 'Nazwa waluty (taka sama jak w Firefly)',
     'column_currency-symbol'          => 'Symbol waluty (taki sam jak w Firefly)',
     'column_date-interest'            => 'Data obliczenia odsetek',
-    'column_date-book'                => 'Data rezerwacji transakcji',
-    'column_date-process'             => 'Data rezerwacji transkacji',
+    'column_date-book'                => 'Data księgowania transakcji',
+    'column_date-process'             => 'Data przetworzenia transakcji',
     'column_date-transaction'         => 'Data',
     'column_description'              => 'Opis',
     'column_opposing-iban'            => 'Przeciwstawne konto (IBAN)',
-    'column_opposing-id'              => 'Przeciwstawne konto (takie same jak w Firefly)',
+    'column_opposing-id'              => 'ID przeciwstawnego konta (takie same jak w Firefly)',
     'column_external-id'              => 'Zewnętrzne ID',
     'column_opposing-name'            => 'Przeciwstawne konto (nazwa)',
-    'column_rabo-debit-credit'        => 'Rabobank określony wskaźnik obciążenia/kredytu',
+    'column_rabo-debit-credit'        => 'Specyficzny wskaźnik obciążenia/kredytu Rabobank',
     'column_ing-debit-credit'         => 'Specyficzny wskaźnik obciążenia/kredytu ING',
     'column_sepa-ct-id'               => 'SEPA transferu od końca do końca ID',
     'column_sepa-ct-op'               => 'SEPA przelew na przeciwne konto',
     'column_sepa-db'                  => 'SEPA polecenie zapłaty',
-    'column_tags-comma'               => 'Tagi (oddzielaj przecinkami)',
+    'column_tags-comma'               => 'Tagi (oddzielone przecinkami)',
     'column_tags-space'               => 'Tagi (oddzielone spacjami)',
     'column_account-number'           => 'Konto aktywów (numer konta)',
     'column_opposing-number'          => 'Konto przeciwne (numer konta)',
-    'column_note'                     => 'Uwagi',
+    'column_note'                     => 'Notatki',
 
     // prerequisites
     'prerequisites'                   => 'Wymagania',
@@ -153,6 +153,6 @@ return [
     // Spectre
     'spectre_title'                   => 'Importuj za pomocą Spectre',
     'spectre_prerequisites_title'     => 'Wymagania wstępne do importowania za pomocą Spectre',
-    'spectre_prerequisites_text'      => 'Aby importować dane za pomocą interfejsu Spectre API, musisz udowodnić pewne sekrety. Można je znaleźć na <a href="https://www.saltedge.com/clients/profile/secrets">stronie sekretów</a>.',
+    'spectre_prerequisites_text'      => 'Aby importować dane za pomocą interfejsu Spectre API, musisz dostarczyć pewnych sekretów. Można je znaleźć na <a href="https://www.saltedge.com/clients/profile/secrets">stronie sekretów</a>.',
     'spectre_enter_pub_key'           => 'Importowanie będzie działać tylko po wpisaniu tego klucza publicznego na <a href="https://www.saltedge.com/clients/security/edit">stronie zabezpieczeń</a>.',
 ];

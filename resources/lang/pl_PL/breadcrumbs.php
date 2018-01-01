@@ -40,7 +40,7 @@ return [
     'deposit_list'        => 'Przychody, dochody oraz depozyty',
     'transfer_list'       => 'Transfery',
     'transfers_list'      => 'Transfery',
-    'reconciliation_list' => 'Rozrachunki',
+    'reconciliation_list' => 'Uzgodnienia',
     'create_withdrawal'   => 'Utwórz nową wypłatę',
     'create_deposit'      => 'Utwórz nową wpłatę',
     'create_transfer'     => 'Utwórz nowy transfer',

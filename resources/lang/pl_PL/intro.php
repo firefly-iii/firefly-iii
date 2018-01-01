@@ -53,81 +53,81 @@ return [
 
     // reports (reports)
     'reports_report_default_intro'          => 'Raport ten zapewni szybki i wszechstronny przegląd twoich finansów. Jeśli chcesz zobaczyć cokolwiek innego, nie wahaj się ze mną skontaktować!',
-    'reports_report_audit_intro'            => 'Ten raport zawiera szczegółowe informacje na temat kont zasobów.',
-    'reports_report_audit_optionsBox'       => 'Użyj tych pól wyboru aby pokazać lub ukryć kolumny, które cię interesują.',
+    'reports_report_audit_intro'            => 'Ten raport zawiera szczegółowe informacje na temat kont aktywów.',
+    'reports_report_audit_optionsBox'       => 'Użyj tych pól wyboru aby pokazać lub ukryć kolumny, które Cię interesują.',
 
     'reports_report_category_intro'                  => 'Ten raport daje wgląd w jedną lub wiele kategorii.',
     'reports_report_category_pieCharts'              => 'Te wykresy dają wgląd w wydatki i dochody według kategorii lub konta.',
-    'reports_report_category_incomeAndExpensesChart' => 'This chart shows your expenses and income per category.',
+    'reports_report_category_incomeAndExpensesChart' => 'Ten wykres pokazuje twoje wydatki i dochody według kategorii.',
 
-    'reports_report_tag_intro'                  => 'This report will give you insight in one or multiple tags.',
-    'reports_report_tag_pieCharts'              => 'These charts will give you insight in expenses and income per tag, account, category or budget.',
-    'reports_report_tag_incomeAndExpensesChart' => 'This chart shows your expenses and income per tag.',
+    'reports_report_tag_intro'                  => 'Ten raport daje wgląd w jeden lub wiele tagów.',
+    'reports_report_tag_pieCharts'              => 'Te wykresy dają wgląd w wydatki i dochody według tagu, konta, kategorii lub budżetu.',
+    'reports_report_tag_incomeAndExpensesChart' => 'Ten wykres pokazuje Twoje wydatki i dochody według tagu.',
 
-    'reports_report_budget_intro'                             => 'This report will give you insight in one or multiple budgets.',
-    'reports_report_budget_pieCharts'                         => 'These charts will give you insight in expenses per budget or per account.',
-    'reports_report_budget_incomeAndExpensesChart'            => 'This chart shows your expenses per budget.',
+    'reports_report_budget_intro'                             => 'Ten raport daje wgląd w jeden lub wiele budżetów.',
+    'reports_report_budget_pieCharts'                         => 'Te wykresy dają wgląd w wydatki według budżetu lub konta.',
+    'reports_report_budget_incomeAndExpensesChart'            => 'Ten wykres pokazuje twoje wydatki według budżetu.',
 
     // create transaction
-    'transactions_create_switch_box'                          => 'Use these buttons to quickly switch the type of transaction you wish to save.',
-    'transactions_create_ffInput_category'                    => 'You can freely type in this field. Previously created categories will be suggested.',
-    'transactions_create_withdrawal_ffInput_budget'           => 'Link your withdrawal to a budget for better financial control.',
-    'transactions_create_withdrawal_currency_dropdown_amount' => 'Use this dropdown when your withdrawal is in another currency.',
-    'transactions_create_deposit_currency_dropdown_amount'    => 'Use this dropdown when your deposit is in another currency.',
-    'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Select a piggy bank and link this transfer to your savings.',
+    'transactions_create_switch_box'                          => 'Użyj tych przycisków, aby szybko przełączyć typ transakcji, którą chcesz zapisać.',
+    'transactions_create_ffInput_category'                    => 'Możesz swobodnie pisać w tym polu. Wcześniej utworzone kategorie zostaną zaproponowane.',
+    'transactions_create_withdrawal_ffInput_budget'           => 'Połącz swoje wypłaty z budżetem, aby uzyskać lepszą kontrolę finansową.',
+    'transactions_create_withdrawal_currency_dropdown_amount' => 'Użyj tego menu, gdy wypłata jest w innej walucie.',
+    'transactions_create_deposit_currency_dropdown_amount'    => 'Użyj tego menu, gdy depozyt jest w innej walucie.',
+    'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Wybierz skarbonkę i połącz ten przelew z oszczędnościami.',
 
     // piggy banks index:
-    'piggy-banks_index_saved'                                 => 'This field shows you how much you\'ve saved in each piggy bank.',
-    'piggy-banks_index_button'                                => 'Next to this progress bar are two buttons (+ and -) to add or remove money from each piggy bank.',
-    'piggy-banks_index_accountStatus'                         => 'For each asset account with at least one piggy bank the status is listed in this table.',
+    'piggy-banks_index_saved'                                 => 'To pole pokazuje, ile zaoszczędziłeś w każdej skarbonce.',
+    'piggy-banks_index_button'                                => 'Obok tego paska postępu znajdują się dwa przyciski (+ oraz -) do dodawania lub usuwania pieniędzy z każdej skarbonki.',
+    'piggy-banks_index_accountStatus'                         => 'Dla każdego konta aktywów z co najmniej jedną skarbonką status jest pokazany w tej tabeli.',
 
     // create piggy
-    'piggy-banks_create_name'                                 => 'What is your goal? A new couch, a camera, money for emergencies?',
-    'piggy-banks_create_date'                                 => 'You can set a target date or a deadline for your piggy bank.',
+    'piggy-banks_create_name'                                 => 'Jaki jest twój cel? Nowa kanapa, aparat fotograficzny, pieniądze na nagłe wypadki?',
+    'piggy-banks_create_date'                                 => 'Możesz ustawić docelową datę lub termin dla swojej skarbonki.',
 
     // show piggy
-    'piggy-banks_show_piggyChart'                             => 'This chart will show the history of this piggy bank.',
+    'piggy-banks_show_piggyChart'                             => 'Ten wykres pokaże historię Twojej skarbonki.',
     'piggy-banks_show_piggyDetails'                           => 'Niektóre szczegóły dotyczące skarbonki',
-    'piggy-banks_show_piggyEvents'                            => 'Any additions or removals are also listed here.',
+    'piggy-banks_show_piggyEvents'                            => 'Wszelkie dodatki lub usunięcia są również tutaj wymienione.',
 
     // bill index
-    'bills_index_paid_in_period'                              => 'This field indicates when the bill was last paid.',
-    'bills_index_expected_in_period'                          => 'This field indicates for each bill if and when the next bill is expected to hit.',
+    'bills_index_paid_in_period'                              => 'To pole wskazuje, kiedy rachunek został ostatnio opłacony.',
+    'bills_index_expected_in_period'                          => 'To pole wskazuje dla każdego rachunku, czy i kiedy oczekuje się następnego rachunku.',
 
     // show bill
-    'bills_show_billInfo'                                     => 'This table shows some general information about this bill.',
-    'bills_show_billButtons'                                  => 'Use this button to re-scan old transactions so they will be matched to this bill.',
-    'bills_show_billChart'                                    => 'This chart shows the transactions linked to this bill.',
+    'bills_show_billInfo'                                     => 'Ta tabela pokazuje ogólne informacje na temat tego rachunku.',
+    'bills_show_billButtons'                                  => 'Użyj tego przycisku, aby ponownie przeskanować stare transakcje, aby dopasować je do tego rachunku.',
+    'bills_show_billChart'                                    => 'Ten wykres pokazuje transakcje powiązane z tym rachunkiem.',
 
     // create bill
-    'bills_create_name'                                       => 'Use a descriptive name such as "Rent" or "Health insurance".',
-    'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
-    'bills_create_amount_min_holder'                          => 'Select a minimum and maximum amount for this bill.',
-    'bills_create_repeat_freq_holder'                         => 'Most bills repeat monthly, but you can set another frequency here.',
-    'bills_create_skip_holder'                                => 'If a bill repeats every 2 weeks for example, the "skip"-field should be set to "1" to skip every other week.',
+    'bills_create_name'                                       => 'Użyj opisowej nazwy, takiej jak "Czynsz" lub "Ubezpieczenie zdrowotne".',
+    'bills_create_match'                                      => 'Aby dopasować transakcje, użyj zwrotów z tych transakcji lub konta wydatków. Wszystkie słowa muszą pasować.',
+    'bills_create_amount_min_holder'                          => 'Wybierz minimalną i maksymalną kwotę dla tego rachunku.',
+    'bills_create_repeat_freq_holder'                         => 'Większość rachunków powtarza się co miesiąc, ale możesz ustawić inną częstotliwość tutaj.',
+    'bills_create_skip_holder'                                => 'Jeśli rachunek powtarza się co 2 tygodnie, pole "Pomiń" powinno być ustawione na "1", aby pominąć co drugi tydzień.',
 
     // rules index
-    'rules_index_intro'                                       => 'Firefly III allows you to manage rules, that will automagically be applied to any transaction you create or edit.',
-    'rules_index_new_rule_group'                              => 'You can combine rules in groups for easier management.',
+    'rules_index_intro'                                       => 'Firefly III pozwala zarządzać regułami, które automatycznie zostaną zastosowane do każdej transakcji, którą tworzysz lub edytujesz.',
+    'rules_index_new_rule_group'                              => 'Możesz łączyć reguły w grupach, aby ułatwić zarządzanie.',
     'rules_index_new_rule'                                    => 'Twórz dowolną liczbę reguł.',
-    'rules_index_prio_buttons'                                => 'Zamów je w sposób, jaki uznasz za stosowny.',
-    'rules_index_test_buttons'                                => 'Możesz przetestować swoje zasady lub zastosować je do istniejących transakcji.',
-    'rules_index_rule-triggers'                               => 'Rules have "triggers" and "actions" that you can order by drag-and-drop.',
-    'rules_index_outro'                                       => 'Be sure to check out the help pages using the (?) icon in the top right!',
+    'rules_index_prio_buttons'                                => 'Szereguj je w dowolny sposób, jaki uznasz za stosowny.',
+    'rules_index_test_buttons'                                => 'Możesz przetestować swoje reguły lub zastosować je do istniejących transakcji.',
+    'rules_index_rule-triggers'                               => 'Reguły mają "wyzwalacze" i "akcje", które można szeregować poprzez przeciąganie i upuszczanie.',
+    'rules_index_outro'                                       => 'Koniecznie sprawdź strony pomocy używając ikony (?) w prawym górnym rogu!',
 
     // create rule:
-    'rules_create_mandatory'                                  => 'Choose a descriptive title, and set when the rule should be fired.',
-    'rules_create_ruletriggerholder'                          => 'Add as many triggers as you like, but remember that ALL triggers must match before any actions are fired.',
-    'rules_create_test_rule_triggers'                         => 'Use this button to see which transactions would match your rule.',
+    'rules_create_mandatory'                                  => 'Wybierz opisowy tytuł i ustaw, kiedy reguła ma zostać uruchomiona.',
+    'rules_create_ruletriggerholder'                          => 'Dodaj tyle wyzwalaczy, ile zechcesz, ale pamiętaj, że WSZYSTKIE wyzwalacze muszą pasować do transakcji przed uruchomieniem jakichkolwiek akcji.',
+    'rules_create_test_rule_triggers'                         => 'Użyj tego przycisku, aby zobaczyć, które transakcje pasują do Twojej reguły.',
     'rules_create_actions'                                    => 'Ustaw tak wiele akcji, jak chcesz.',
 
     // preferences
     'preferences_index_tabs'                                  => 'Więcej opcji dostępne są za tymi kartami.',
 
     // currencies
-    'currencies_index_intro'                                  => 'Firefly III supports multiple currencies, which you can change on this page.',
-    'currencies_index_default'                                => 'Firefly III has one default currency. You can always switch of course using these buttons.',
+    'currencies_index_intro'                                  => 'Firefly III obsługuje wiele walut, które możesz zmienić na tej stronie.',
+    'currencies_index_default'                                => 'Firefly III ma jedną domyślną walutę. Zawsze możesz ją przełączyć używając tych przycisków.',
 
     // create currency
-    'currencies_create_code'                                  => 'This code should be ISO compliant (Google it for your new currency).',
+    'currencies_create_code'                                  => 'Ten kod powinien być zgodny z normą ISO (poszukaj go w Google dla Twojej nowej waluty).',
 ];
