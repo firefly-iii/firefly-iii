@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 return [
-    // status of  import:
+    // status of import:
     'status_wait_title'               => 'Lütfen bekleyin...',
     'status_wait_text'                => 'Bu kutu bir dakika içinde kaybolacak.',
     'status_fatal_title'              => 'Önemli bir hata oluştu',
@@ -50,7 +50,7 @@ return [
     'status_sub_title'                => 'Aktarma durumu',
     'config_sub_title'                => 'Hesabınızı oluşturunuz',
     'status_finished_job'             => 'İçe aktarılan işlemler <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">etiket</a> etiketinde bulunabilirler.',
-    'import_with_key'                 => ':key ile içe aktarın',
+    'import_with_key'                 => '\':key\' ile içe aktarın',
 
     // file, upload something
     'file_upload_title'               => 'Ayarları aktar (1/4) - Dosyalarınızı yükelyin',
