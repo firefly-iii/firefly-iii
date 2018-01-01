@@ -15,10 +15,14 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 | Variable | Content |
 | --- | --- |
 | FF version | {{ FF_VERSION }} |
+| App environment | {{ appEnv }} |
+| App debug mode | {{ appDebug }} |
+| App logging | {{ appLogLevel }}, {{ appLog }} |
 | PHP version | {{ phpVersion }} |
+| Display errors | {{ displayErrors }} |
+| Error reporting | {{ errorReporting }} |
 | Host | {{ phpOs }} |
 | Interface | {{ interface }} |
-| Loaded extensions | {{ extensions }} |
 | UserID | {{ Auth.user.id }} |
 | DB drivers | {{ drivers }} |
 | Current driver | {{ currentDriver }} |
@@ -28,7 +32,8 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 | Is Docker (.env) | {{ isDocker }} |
 | Trusted proxies (.env) | {{ trustedProxies }} |
 | User agent | {{ userAgent }} |
-
+| Loaded extensions | {{ extensions }} |
+| Installed packages | {% for package in packages %}{{ package.name }}@{{ package.version }}, {% endfor %} |
 </textarea>
 
 <p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;color:#a00;">

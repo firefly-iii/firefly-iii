@@ -87,16 +87,6 @@ class HomeControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\HomeController::displayDebug()
-     */
-    public function testDisplayDebug()
-    {
-        $this->be($this->user());
-        $response = $this->get(route('debug'));
-        $response->assertStatus(200);
-    }
-
-    /**
      * @covers \FireflyIII\Http\Controllers\HomeController::displayError
      */
     public function testDisplayError()
