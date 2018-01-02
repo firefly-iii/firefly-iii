@@ -411,10 +411,12 @@ class UpgradeDatabase extends Command
         if ($transaction->transaction_currency_id !== $currency->id && null === $transaction->foreign_amount) {
             Log::debug(
                 sprintf(
-                    'Transaction #%d has a currency setting (#%d) that should be #%d. Amount remains %s, currency is changed.',
+                    'Transaction #%d has a currency setting (#%d) (%s) that should be #%d (%s). Amount remains %s, currency is changed.',
                     $transaction->id,
                     $transaction->transaction_currency_id,
+                    $this->var_dump_ret($transaction->transaction_currency_id),
                     $currency->id,
+                    $this->var_dump_ret($currency->id),
                     $transaction->amount
                 )
             );
@@ -500,4 +502,18 @@ class UpgradeDatabase extends Command
 
         return;
     }
+
+    /**
+     * @param null $mixed
+     *
+     * @return string
+     */
+    private function var_dump_ret($mixed = null): string {
+        ob_start();
+        var_dump($mixed);
+        $content = ob_get_contents();
+        ob_end_clean();
+        return $content;
+    }
+
 }
