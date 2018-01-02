@@ -146,6 +146,7 @@ class UpgradeDatabase extends Command
 
                 // both 0? set to default currency:
                 if (0 === $accountCurrency && 0 === $obCurrency) {
+                    AccountMeta::where('account_id', $account->id)->where('name', 'currency_id')->forceDelete();
                     AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $defaultCurrency->id]);
                     $this->line(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $defaultCurrencyCode));
 
@@ -508,11 +509,13 @@ class UpgradeDatabase extends Command
      *
      * @return string
      */
-    private function var_dump_ret($mixed = null): string {
+    private function var_dump_ret($mixed = null): string
+    {
         ob_start();
         var_dump($mixed);
         $content = ob_get_contents();
         ob_end_clean();
+
         return $content;
     }
 

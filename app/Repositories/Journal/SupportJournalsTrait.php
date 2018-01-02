@@ -249,6 +249,10 @@ trait SupportJournalsTrait
             case TransactionType::WITHDRAWAL:
                 // continue:
                 $nativeCurrencyId = intval($accounts[$check]->getMeta('currency_id'));
+                if ($nativeCurrencyId === 0) {
+                    // fall back to given ID (not everybody upgrades nicely).
+                    $nativeCurrencyId = $submittedCurrencyId;
+                }
 
                 // does not match? Then user has submitted amount in a foreign currency:
                 if ($nativeCurrencyId !== $submittedCurrencyId) {
