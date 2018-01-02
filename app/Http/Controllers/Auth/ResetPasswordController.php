@@ -22,8 +22,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
+use FireflyConfig;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\User;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Illuminate\Http\Request;
 
 /**
  * @codeCoverageIgnore
@@ -51,5 +54,29 @@ class ResetPasswordController extends Controller
     {
         parent::__construct();
         $this->middleware('guest');
+    }
+
+    /**
+     * Display the password reset view for the given token.
+     *
+     * If no token is present, display the link request form.
+     *
+     * @param  Request     $request
+     * @param  string|null $token
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function showResetForm(Request $request, $token = null)
+    {
+        // is allowed to?
+        $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $userCount         = User::count();
+        $allowRegistration = true;
+        if (true === $singleUserMode && $userCount > 0) {
+            $allowRegistration = false;
+        }
+        return view('auth.passwords.reset')->with(
+            ['token' => $token, 'email' => $request->email, 'allowRegistration' => $allowRegistration]
+        );
     }
 }

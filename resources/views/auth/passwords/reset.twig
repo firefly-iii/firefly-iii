@@ -4,7 +4,7 @@
 
     {% if errors|length > 0 %}
         <div class="alert alert-danger">
-            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <strong>{{ 'flash_error'|_ }}</strong> {{ 'problems_with_input'|_ }}<br><br>
             <ul>
                 {% for error in errors.all %}
                     <li>{{ error }}</li>
@@ -14,36 +14,36 @@
     {% endif %}
 
     <div class="register-box-body">
-        <p class="login-box-msg">Reset your password</p>
+        <p class="login-box-msg">{{ 'reset_password'|_ }}</p>
         <form method="POST" action="{{ url('/password/reset') }}">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="token" value="{{ token }}">
 
             <div class="form-group has-feedback">
-                <input type="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="Email"/>
+                <input type="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="{{ trans('form.email') }}"/>
             </div>
 
             <div class="form-group has-feedback">
-                <input type="password" class="form-control" placeholder="Password" name="password"/>
+                <input type="password" class="form-control" placeholder="{{ trans('form.password') }}" name="password"/>
             </div>
 
             <div class="form-group has-feedback">
-                <input type="password" class="form-control" placeholder="Password (again)" name="password_confirmation"/>
+                <input type="password" class="form-control" placeholder="{{ trans('form.password_confirmation') }}" name="password_confirmation"/>
             </div>
 
 
             <div class="row">
                 <div class="col-xs-12">
-                    <button type="submit" class="btn btn-primary pull-right btn-flat">Reset Password</button>
+                    <button type="submit" class="btn btn-primary pull-right btn-flat">{{ 'button_reset_password'|_ }}</button>
                 </div>
                 <!-- /.col -->
             </div>
 
         </form>
 
-        <a href="{{ URL.to('/login') }}">I want to login</a><br>
-        {% if Config.get('auth.allow_register') %}
-            <a href="{{ route('register') }}" class="text-center">Register a new account</a><br>
+        <a href="{{ URL.to('/login') }}">{{ 'want_to_login'|_ }}</a><br>
+        {% if allowRegistration %}
+            <a href="{{ route('register') }}" class="text-center">{{ 'register_new_account'|_ }}</a><br>
         {% endif %}
     </div><!-- /.form-box -->
 

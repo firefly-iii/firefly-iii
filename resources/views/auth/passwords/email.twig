@@ -11,7 +11,7 @@
 
     {% if errors|length > 0 %}
         <div class="alert alert-danger">
-            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <strong>{{ 'flash_error'|_ }}</strong> {{ 'problems_with_input'|_ }}<br><br>
             <ul>
                 {% for error in errors.all %}
                     <li>{{ error }}</li>
@@ -28,19 +28,19 @@
                 {{ session('status') }}
             </p>
         {% else %}
-            <p class="login-box-msg">Reset your password</p>
+            <p class="login-box-msg">{{ 'reset_password'|_ }}</p>
 
             <form role="form" method="POST" action="{{ URL.to('/password/email') }}">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
                 <div class="form-group has-feedback">
-                    <input type="email" class="form-control" name="email" placeholder="Email"/>
+                    <input type="email" class="form-control" name="email" placeholder="{{ trans('form.email') }}"/>
                 </div>
 
                 <div class="row">
                     <!-- /.col -->
                     <div class="col-xs-12">
-                        <button type="submit" class="btn btn-primary btn-flat pull-right">Reset</button>
+                        <button type="submit" class="btn btn-primary btn-flat pull-right">{{ 'reset_button'|_ }}</button>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -48,10 +48,9 @@
             </form>
 
         {% endif %}
-
-        <a href="{{ URL.to('/login') }}">I want to login</a><br>
-        {% if Config.get('auth.allow_register') %}
-            <a href="{{ route('register') }}" class="text-center">Register a new account</a><br>
+        <a href="{{ URL.to('/login') }}">{{ 'want_to_login'|_ }}</a><br>
+        {% if allowRegistration %}
+            <a href="{{ route('register') }}" class="text-center">{{ 'register_new_account'|_ }}</a><br>
         {% endif %}
 
     </div><!-- /.login-box-body -->

@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
+use FireflyConfig;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\User;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
 /**
@@ -42,6 +44,24 @@ class ForgotPasswordController extends Controller
     */
 
     use SendsPasswordResetEmails;
+
+    /**
+     * Display the form to request a password reset link.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showLinkRequestForm()
+    {
+        // is allowed to?
+        $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $userCount         = User::count();
+        $allowRegistration = true;
+        if (true === $singleUserMode && $userCount > 0) {
+            $allowRegistration = false;
+        }
+
+        return view('auth.passwords.email')->with(compact('allowRegistration'));
+    }
 
     /**
      * Create a new controller instance.
