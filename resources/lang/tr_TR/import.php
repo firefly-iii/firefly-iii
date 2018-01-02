@@ -153,6 +153,6 @@ return [
     // Spectre
     'spectre_title'                   => 'Spectre kullanarak içe aktar',
     'spectre_prerequisites_title'     => 'Spectre kullanarak içe aktarma için ön koşullar',
-    'spectre_prerequisites_text'      => 'Spectre API\'sini kullanarak verileri içe aktarabilmek için bazı sırlara sahip olmanız gerekmektedir. Bunları <a href="https://www.saltedge.com/clients/profile/secrets">sırlar sayfasında</a> bulunabilirsiniz.',
+    'spectre_prerequisites_text'      => 'In order to import data using the Spectre API, you must provide Firefly III with two secret values. They can be found on the <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
     'spectre_enter_pub_key'           => 'Alma işlemi sadece bu ortak anahtarı <a href="https://www.saltedge.com/clients/security/edit">güvenlik sayfası</a>na girdiğinizde çalışacaktır.',
 ];

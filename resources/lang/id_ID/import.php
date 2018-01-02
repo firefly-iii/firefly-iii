@@ -153,6 +153,6 @@ return [
     // Spectre
     'spectre_title'                   => 'Impor menggunakan momok',
     'spectre_prerequisites_title'     => 'Prasyarat untuk impor menggunakan momok',
-    'spectre_prerequisites_text'      => 'Untuk mengimpor data menggunakan API momok, Anda perlu membuktikan beberapa rahasia. Mereka dapat ditemukan di <a href="https://www.saltedge.com/clients/profile/secrets">halaman rahasia</a>.',
+    'spectre_prerequisites_text'      => 'In order to import data using the Spectre API, you must provide Firefly III with two secret values. They can be found on the <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
     'spectre_enter_pub_key'           => 'Impor hanya akan berfungsi saat Anda memasukkan kunci publik ini di <a href="https://www.saltedge.com/clients/security/edit">halaman keamanan</a> Anda.',
 ];

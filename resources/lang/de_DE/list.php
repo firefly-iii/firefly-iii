@@ -75,7 +75,7 @@ return [
     'registered_at'           => 'Registriert am',
     'is_blocked'              => 'Ist blockiert',
     'is_admin'                => 'Ist Admin',
-    'has_two_factor'          => 'Hat 2FA',
+    'has_two_factor'          => 'Nutzt 2FA',
     'blocked_code'            => 'Blockcode',
     'source_account'          => 'Quellkonto',
     'destination_account'     => 'Zielkonto',

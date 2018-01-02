@@ -153,6 +153,6 @@ return [
     // Spectre
     'spectre_title'                   => 'Importuj za pomocą Spectre',
     'spectre_prerequisites_title'     => 'Wymagania wstępne do importowania za pomocą Spectre',
-    'spectre_prerequisites_text'      => 'Aby importować dane za pomocą interfejsu Spectre API, musisz dostarczyć pewnych sekretów. Można je znaleźć na <a href="https://www.saltedge.com/clients/profile/secrets">stronie sekretów</a>.',
+    'spectre_prerequisites_text'      => 'Aby importować dane za pomocą interfejsu Spectre API, musisz dostarczyć Firefly III dwie sekretne wartości. Można je znaleźć na <a href="https://www.saltedge.com/clients/profile/secrets">stronie sekretów</a>.',
     'spectre_enter_pub_key'           => 'Importowanie będzie działać tylko po wpisaniu tego klucza publicznego na <a href="https://www.saltedge.com/clients/security/edit">stronie zabezpieczeń</a>.',
 ];
