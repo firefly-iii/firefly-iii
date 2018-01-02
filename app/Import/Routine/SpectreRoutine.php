@@ -24,9 +24,13 @@ namespace FireflyIII\Import\Routine;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Services\Spectre\Exception\DuplicatedCustomerException;
 use FireflyIII\Services\Spectre\Object\Customer;
+use FireflyIII\Services\Spectre\Object\Login;
 use FireflyIII\Services\Spectre\Object\Token;
 use FireflyIII\Services\Spectre\Request\CreateTokenRequest;
+use FireflyIII\Services\Spectre\Request\ListCustomersRequest;
+use FireflyIII\Services\Spectre\Request\ListLoginsRequest;
 use FireflyIII\Services\Spectre\Request\NewCustomerRequest;
 use Illuminate\Support\Collection;
 use Log;
@@ -82,13 +86,13 @@ class SpectreRoutine implements RoutineInterface
     /**
      *
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
      */
     public function run(): bool
     {
         if ('configured' !== $this->job->status) {
-            Log::error(sprintf('Job %s is in state "%s" so it cannot be started.', $this->job->key, $this->job->status));
-
-            return false;
+            //Log::error(sprintf('Job %s is in state "%s" so it cannot be started.', $this->job->key, $this->job->status));
+            //return false;
         }
         Log::info(sprintf('Start with import job %s using Spectre.', $this->job->key));
         set_time_limit(0);
@@ -125,9 +129,49 @@ class SpectreRoutine implements RoutineInterface
         }
         $isRedirected = $config['is-redirected'] ?? false;
         if ($isRedirected === true) {
+            // update job to say it's running
+            $extended                   = $this->job->extended_status;
+            $this->job->status          = 'running';
+            $extended['steps']          = 100;
+            $extended['done']           = 1;
+            $this->job->extended_status = $extended;
+            $this->job->save();
+        }
+        // is job running?
+        if ($this->job->status === 'running') {
+
+            // list all logins:
+            $customer = $this->getCustomer();
+            $request  = new ListLoginsRequest($this->job->user);
+            $request->setCustomer($customer);
+            $request->call();
+            $logins = $request->getLogins();
+            /** @var Login $final */
+            $final = null;
+            // loop logins, find the latest with no error in it:
+            $time = 0;
+            /** @var Login $login */
+            foreach($logins as $login) {
+                $attempt = $login->getLastAttempt();
+                $attemptTime = intval($attempt->getCreatedAt()->format('U'));
+                if($attemptTime > $time && is_null($attempt->getFailErrorClass())) {
+                    $time = $attemptTime;
+                    $final = $login;
+                }
+            }
+            if(is_null($final)) {
+                throw new FireflyException('No valid login attempt found.');
+            }
+            var_dump($final);
+
+            //var_dump($logins);
+            exit;
+
             // assume user has "used" the token.
             // ...
             // now what?
+            Log::debug('Token has been used. User was redirected. Now check status with Spectre and respond?');
+
             throw new FireflyException('Application cannot handle this.');
         }
 
@@ -145,12 +189,31 @@ class SpectreRoutine implements RoutineInterface
     /**
      * @return Customer
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
      */
     protected function createCustomer(): Customer
     {
         $newCustomerRequest = new NewCustomerRequest($this->job->user);
-        $newCustomerRequest->call();
-        $customer = $newCustomerRequest->getCustomer();
+        $customer           = null;
+        try {
+            $newCustomerRequest->call();
+            $customer = $newCustomerRequest->getCustomer();
+        } catch (DuplicatedCustomerException $e) {
+            // already exists, must fetch customer instead.
+            Log::warning('Customer exists already for user, fetch it.');
+        }
+        if (is_null($customer)) {
+            $getCustomerRequest = new ListCustomersRequest($this->job->user);
+            $getCustomerRequest->call();
+            $customers = $getCustomerRequest->getCustomers();
+            /** @var Customer $current */
+            foreach ($customers as $current) {
+                if ($current->getIdentifier() === 'default_ff3_customer') {
+                    $customer = $current;
+                    break;
+                }
+            }
+        }
 
         Preferences::setForUser($this->job->user, 'spectre_customer', $customer->toArray());
 
@@ -160,15 +223,26 @@ class SpectreRoutine implements RoutineInterface
 
     /**
      * @return Customer
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
+     * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
      */
     protected function getCustomer(): Customer
     {
-        $preference = Preferences::getForUser($this->job->user, 'spectre_customer', null);
-        if (is_null($preference)) {
-            return $this->createCustomer();
+        $config = $this->job->configuration;
+        if (!is_null($config['customer'])) {
+            $customer = new Customer($config['customer']);
+
+            return $customer;
         }
-        $customer = new Customer($preference->data);
+
+        $customer                 = $this->createCustomer();
+        $config['customer']       = [
+            'id'         => $customer->getId(),
+            'identifier' => $customer->getIdentifier(),
+            'secret'     => $customer->getSecret(),
+        ];
+        $this->job->configuration = $config;
+        $this->job->save();
 
         return $customer;
     }
@@ -179,6 +253,7 @@ class SpectreRoutine implements RoutineInterface
      *
      * @return Token
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
      */
     protected function getToken(Customer $customer, string $returnUri): Token
     {

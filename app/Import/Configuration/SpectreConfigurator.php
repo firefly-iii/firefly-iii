@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Import\Configuration;
 
 use FireflyIII\Models\ImportJob;
+use Log;
 
 /**
  * Class SpectreConfigurator.
@@ -61,7 +62,8 @@ class SpectreConfigurator implements ConfiguratorInterface
      */
     public function getNextData(): array
     {
-        // update config to tell Firefly we've redirected the user.
+        Log::debug('in getNextData(), user will be redirected next.');
+        // update config to tell Firefly the user is redirected.
         $config                   = $this->job->configuration;
         $config['is-redirected']  = true;
         $this->job->configuration = $config;
@@ -76,6 +78,9 @@ class SpectreConfigurator implements ConfiguratorInterface
      */
     public function getNextView(): string
     {
+        Log::debug('Send user redirect view');
+
+        // sends the user to spectre.
         return 'import.spectre.redirect';
     }
 
@@ -94,11 +99,15 @@ class SpectreConfigurator implements ConfiguratorInterface
      */
     public function isJobConfigured(): bool
     {
+        Log::debug('in isJobConfigured');
         // job is configured (and can start) when token is empty:
         $config = $this->job->configuration;
-        if ($config['has-token'] === false) {
+        if ($config['has-token'] === false && $config['is-redirected'] === true) {
+            Log::debug('has-token is false, is-redirected is true, return true');
+
             return true;
         }
+        Log::debug('return false');
 
         return false;
     }
@@ -114,6 +123,8 @@ class SpectreConfigurator implements ConfiguratorInterface
             'token-expires' => 0,
             'token-url'     => '',
             'is-redirected' => false,
+            'customer'      => null,
+            'login'         => null,
 
         ];
 

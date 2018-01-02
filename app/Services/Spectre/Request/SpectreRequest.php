@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Spectre\Request;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Services\Spectre\Exception\DuplicatedCustomerException;
+use FireflyIII\Services\Spectre\Exception\SpectreException;
 use FireflyIII\User;
 use Log;
 use Requests;
@@ -179,6 +181,7 @@ abstract class SpectreRequest
      * @return array
      *
      * @throws FireflyException
+     * @throws SpectreException
      */
     protected function sendSignedSpectreGet(string $uri, array $data): array
     {
@@ -222,6 +225,7 @@ abstract class SpectreRequest
      * @return array
      *
      * @throws FireflyException
+     * @throws SpectreException
      */
     protected function sendSignedSpectrePost(string $uri, array $data): array
     {
@@ -255,15 +259,21 @@ abstract class SpectreRequest
      * @param Requests_Response $response
      *
      * @throws FireflyException
+     * @throws SpectreException
      */
     private function detectError(Requests_Response $response): void
     {
         $body  = $response->body;
         $array = json_decode($body, true);
         if (isset($array['error_class'])) {
-            $message = $array['error_message'] ?? '(no message)';
+            $message    = $array['error_message'] ?? '(no message)';
+            $errorClass = $array['error_class'];
+            $class      = sprintf('\\FireflyIII\\Services\\Spectre\Exception\\%sException', $errorClass);
+            if (class_exists($class)) {
+                throw new $class($message);
+            }
 
-            throw new FireflyException(sprintf('Error of class %s: %s', $array['error_class'], $message));
+            throw new FireflyException(sprintf('Error of class %s: %s', $errorClass, $message));
         }
 
         $statusCode = intval($response->status_code);
