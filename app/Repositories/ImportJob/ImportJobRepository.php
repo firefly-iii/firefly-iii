@@ -62,7 +62,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
                 $importJob->file_type       = $type;
                 $importJob->key             = Str::random(12);
                 $importJob->status          = 'new';
-                $importJob->configuration   = config(sprintf('import.default_config.%s', $type)) ?? [];
+                $importJob->configuration   = [];
                 $importJob->extended_status = [
                     'steps'  => 0,
                     'done'   => 0,

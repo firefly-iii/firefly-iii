@@ -43,10 +43,11 @@ class FileConfigurator implements ConfiguratorInterface
     private $warning = '';
 
     /**
-     * ConfiguratorInterface constructor.
+     * FileConfigurator constructor.
      */
     public function __construct()
     {
+        Log::debug('Created FileConfigurator');
     }
 
     /**
@@ -140,8 +141,11 @@ class FileConfigurator implements ConfiguratorInterface
             && $config['column-mapping-complete']
             && $config['has-file-upload']
         ) {
+            Log::debug('isJobConfigured returns true');
+
             return true;
         }
+        Log::debug('isJobConfigured returns false');
 
         return false;
     }
@@ -152,11 +156,27 @@ class FileConfigurator implements ConfiguratorInterface
     public function setJob(ImportJob $job)
     {
         $this->job = $job;
-        if (null === $this->job->configuration || 0 === count($this->job->configuration)) {
-            Log::debug(sprintf('Gave import job %s initial configuration.', $this->job->key));
-            $this->job->configuration = config('csv.default_config');
-            $this->job->save();
-        }
+        // give job default config:
+        $defaultConfig            = [
+            'initial-config-complete' => false,
+            'has-headers'             => false, // assume
+            'date-format'             => 'Ymd', // assume
+            'delimiter'               => ',', // assume
+            'import-account'          => 0, // none,
+            'specifics'               => [], // none
+            'column-count'            => 0, // unknown
+            'column-roles'            => [], // unknown
+            'column-do-mapping'       => [], // not yet set which columns must be mapped
+            'column-roles-complete'   => false, // not yet configured roles for columns
+            'column-mapping-config'   => [], // no mapping made yet.
+            'column-mapping-complete' => false, // so mapping is not complete.
+            'apply-rules'             => true,
+            'match-bills'             => false,
+        ];
+        $config                   = $this->job->configuration ?? [];
+        $finalConfig              = array_merge($defaultConfig, $config);
+        $this->job->configuration = $finalConfig;
+        $this->job->save();
     }
 
     /**
@@ -166,12 +186,15 @@ class FileConfigurator implements ConfiguratorInterface
      */
     private function getConfigurationClass(): string
     {
+
         $class = false;
         switch (true) {
             case !$this->job->configuration['has-file-upload']:
                 $class = Upload::class;
                 break;
             case !$this->job->configuration['initial-config-complete']:
+                Log::debug(sprintf('Class is %s', Initial::class));
+                Log::debug(sprintf('initial-config-complete is %s', var_export($this->job->configuration['initial-config-complete'], true)));
                 $class = Initial::class;
                 break;
             case !$this->job->configuration['column-roles-complete']:
@@ -190,6 +213,7 @@ class FileConfigurator implements ConfiguratorInterface
         if (!class_exists($class)) {
             throw new FireflyException(sprintf('Class %s does not exist in getConfigurationClass().', $class));
         }
+        Log::debug(sprintf('Configuration class is "%s"', $class));
 
         return $class;
     }

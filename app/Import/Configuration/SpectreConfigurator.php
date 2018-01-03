@@ -66,6 +66,7 @@ class SpectreConfigurator implements ConfiguratorInterface
         // update config to tell Firefly the user is redirected.
         $config                   = $this->job->configuration;
         $config['is-redirected']  = true;
+        $config['stage']          = 'redirected';
         $this->job->configuration = $config;
         $this->job->status        = 'configured';
         $this->job->save();
@@ -117,7 +118,7 @@ class SpectreConfigurator implements ConfiguratorInterface
      */
     public function setJob(ImportJob $job)
     {
-        $defaultConfig = [
+        $defaultConfig           = [
             'has-token'     => false,
             'token'         => '',
             'token-expires' => 0,
@@ -125,12 +126,17 @@ class SpectreConfigurator implements ConfiguratorInterface
             'is-redirected' => false,
             'customer'      => null,
             'login'         => null,
-
+            'stage'         => 'initial',
+            'accounts'      => [],
         ];
+        $extendedStatus          = $job->extended_status;
+        $extendedStatus['steps'] = 100;
 
-        $config             = $job->configuration;
-        $finalConfig        = array_merge($defaultConfig, $config);
-        $job->configuration = $finalConfig;
+
+        $config               = $job->configuration;
+        $finalConfig          = array_merge($defaultConfig, $config);
+        $job->configuration   = $finalConfig;
+        $job->extended_status = $extendedStatus;
         $job->save();
         $this->job = $job;
     }

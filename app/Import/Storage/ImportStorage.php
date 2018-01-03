@@ -94,8 +94,8 @@ class ImportStorage
         $this->defaultCurrencyId = $currency->id;
         $this->transfers         = $this->getTransfers();
         $config                  = $job->configuration;
-        $this->applyRules        = $config['apply_rules'] ?? false;
-        $this->matchBills        = $config['match_bills'] ?? false;
+        $this->applyRules        = $config['apply-rules'] ?? false;
+        $this->matchBills        = $config['match-bills'] ?? false;
         if (true === $this->applyRules) {
             Log::debug('applyRules seems to be true, get the rules.');
             $this->rules = $this->getRules();

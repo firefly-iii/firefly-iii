@@ -111,22 +111,28 @@ class Initial implements ConfigurationInterface
      */
     public function storeConfiguration(array $data): bool
     {
+        Log::debug('Now in Initial::storeConfiguration()');
+
+        // get config from job:
+        $config = $this->job->configuration;
+
+        // find import account:
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $importId   = $data['csv_import_account'] ?? 0;
-        $account    = $repository->find(intval($importId));
+        $importId   = intval($data['csv_import_account'] ?? 0);
+        $account    = $repository->find($importId);
 
-        $hasHeaders                        = isset($data['has_headers']) && 1 === intval($data['has_headers']) ? true : false;
-        $config                            = $this->job->configuration;
+        // set "headers":
         $config['initial-config-complete'] = true;
-        $config['has-headers']             = $hasHeaders;
+        $config['has-headers']             = intval($data['has_headers'] ?? 0) === 1;
         $config['date-format']             = $data['date_format'];
         $config['delimiter']               = $data['csv_delimiter'];
         $config['delimiter']               = 'tab' === $config['delimiter'] ? "\t" : $config['delimiter'];
-        $config['apply_rules']             = isset($data['apply_rules']) && 1 === intval($data['apply_rules']) ? true : false;
-        $config['match_bills']             = isset($data['match_bills']) && 1 === intval($data['match_bills']) ? true : false;
+        $config['apply-rules']             = intval($data['apply_rules'] ?? 0) === 1;
+        $config['match-bills']             = intval($data['match_bills'] ?? 0) === 1;
 
         Log::debug('Entered import account.', ['id' => $importId]);
+
 
         if (null !== $account->id) {
             Log::debug('Found account.', ['id' => $account->id, 'name' => $account->name]);
@@ -137,7 +143,9 @@ class Initial implements ConfigurationInterface
             Log::error('Could not find anything for csv_import_account.', ['id' => $importId]);
         }
 
-        $config                   = $this->storeSpecifics($data, $config);
+        $config = $this->storeSpecifics($data, $config);
+        Log::debug('Final config is ', $config);
+
         $this->job->configuration = $config;
         $this->job->save();
 

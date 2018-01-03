@@ -24,6 +24,7 @@ namespace FireflyIII\Import\Routine;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Services\Spectre\Exception\DuplicatedCustomerException;
 use FireflyIII\Services\Spectre\Object\Customer;
 use FireflyIII\Services\Spectre\Object\Login;
@@ -49,6 +50,9 @@ class SpectreRoutine implements RoutineInterface
     public $lines = 0;
     /** @var ImportJob */
     private $job;
+
+    /** @var ImportJobRepositoryInterface */
+    private $repository;
 
     /**
      * ImportRoutine constructor.
@@ -84,16 +88,33 @@ class SpectreRoutine implements RoutineInterface
     }
 
     /**
+     * A Spectre job that ends up here is either "configured" or "running", and will be set to "running"
+     * when it is "configured".
+     *
+     * Job has several stages, stored in extended status key 'stage'
+     *
+     * initial: just begun, nothing happened. action: get a customer and a token. Next status: has-token
+     * has-token: redirect user to sandstorm, make user login. set job to: user-logged-in
+     * user-logged-in: customer has an attempt. action: analyse/get attempt and go for next status.
+     *                 if attempt failed: job status is error, save a warning somewhere?
+     *                 if success, try to get accounts. Save in config key 'accounts'. set status: have-accounts and "configuring"
+     *
+     * If job is "configuring" and stage "have-accounts" then present the accounts and make user link them to
+     * own asset accounts. Store this mapping, set config to "have-account-mapping" and job status configured".
+     *
+     * have-account-mapping: start downloading transactions?
+     *
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
      */
     public function run(): bool
     {
-        if ('configured' !== $this->job->status) {
-            //Log::error(sprintf('Job %s is in state "%s" so it cannot be started.', $this->job->key, $this->job->status));
-            //return false;
+        if ('configured' === $this->job->status) {
+            $this->repository->updateStatus($this->job,'running');
         }
+
+
         Log::info(sprintf('Start with import job %s using Spectre.', $this->job->key));
         set_time_limit(0);
 
@@ -184,6 +205,8 @@ class SpectreRoutine implements RoutineInterface
     public function setJob(ImportJob $job)
     {
         $this->job = $job;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
     }
 
     /**
