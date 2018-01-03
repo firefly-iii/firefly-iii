@@ -33,7 +33,7 @@
             </div>
         </div>
     {% endif %}
-    {% if accounts.count == 0 and page == 0 %}
+    {% if accounts.count == 0 and page == 1 %}
         {% include 'partials.empty' with {what: what, type: 'accounts',route: route('accounts.create', [what])} %}
     {% endif %}
 {% endblock %}

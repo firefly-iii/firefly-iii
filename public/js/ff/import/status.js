@@ -174,14 +174,20 @@ function jobIsStalled(data) {
 
 /**
  * This function tells Firefly start the job. It will also initialize a re-check in 500ms time.
+ * Only when job is in "configured" state.
  */
 function startJob() {
-    // disable the button, add loading thing.
-    $('.start-job').prop('disabled', true).text('...');
-    $.post(jobStartUri, {_token: token}).fail(reportOnSubmitError);
+    if (job.status === "configured") {
+        console.log("Job auto started!");
+        // disable the button, add loading thing.
+        $('.start-job').prop('disabled', true).text('...');
+        $.post(jobStartUri, {_token: token}).fail(reportOnSubmitError);
 
-    // check status, every 500 ms.
-    timeOutId = setTimeout(checkJobStatus, startInterval);
+        // check status, every 500 ms.
+        timeOutId = setTimeout(checkJobStatus, startInterval);
+        return;
+    }
+    console.log("Job not auto started because state is " + job.status);
 }
 
 /**

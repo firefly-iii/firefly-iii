@@ -172,6 +172,7 @@ class FileConfigurator implements ConfiguratorInterface
             'column-mapping-complete' => false, // so mapping is not complete.
             'apply-rules'             => true,
             'match-bills'             => false,
+            'auto-start'              => false,
         ];
         $config                   = $this->job->configuration ?? [];
         $finalConfig              = array_merge($defaultConfig, $config);

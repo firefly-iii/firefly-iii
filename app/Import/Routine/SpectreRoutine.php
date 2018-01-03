@@ -26,12 +26,16 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Services\Spectre\Exception\DuplicatedCustomerException;
+use FireflyIII\Services\Spectre\Exception\SpectreException;
+use FireflyIII\Services\Spectre\Object\Account;
 use FireflyIII\Services\Spectre\Object\Customer;
 use FireflyIII\Services\Spectre\Object\Login;
 use FireflyIII\Services\Spectre\Object\Token;
 use FireflyIII\Services\Spectre\Request\CreateTokenRequest;
+use FireflyIII\Services\Spectre\Request\ListAccountsRequest;
 use FireflyIII\Services\Spectre\Request\ListCustomersRequest;
 use FireflyIII\Services\Spectre\Request\ListLoginsRequest;
+use FireflyIII\Services\Spectre\Request\ListTransactionsRequest;
 use FireflyIII\Services\Spectre\Request\NewCustomerRequest;
 use Illuminate\Support\Collection;
 use Log;
@@ -99,6 +103,8 @@ class SpectreRoutine implements RoutineInterface
      *                 if attempt failed: job status is error, save a warning somewhere?
      *                 if success, try to get accounts. Save in config key 'accounts'. set status: have-accounts and "configuring"
      *
+     * have-accounts: make user link accounts and select accounts to import from.
+     *
      * If job is "configuring" and stage "have-accounts" then present the accounts and make user link them to
      * own asset accounts. Store this mapping, set config to "have-account-mapping" and job status configured".
      *
@@ -111,90 +117,35 @@ class SpectreRoutine implements RoutineInterface
     public function run(): bool
     {
         if ('configured' === $this->job->status) {
-            $this->repository->updateStatus($this->job,'running');
+            $this->repository->updateStatus($this->job, 'running');
         }
-
-
         Log::info(sprintf('Start with import job %s using Spectre.', $this->job->key));
         set_time_limit(0);
 
         // check if job has token first!
-        $config   = $this->job->configuration;
-        $hasToken = $config['has-token'] ?? false;
-        if ($hasToken === false) {
-            Log::debug('Job has no token');
-            // create customer if user does not have one:
-            $customer = $this->getCustomer();
-            Log::debug(sprintf('Customer ID is %s', $customer->getId()));
-            // use customer to request a token:
-            $uri   = route('import.status', [$this->job->key]);
-            $token = $this->getToken($customer, $uri);
-            Log::debug(sprintf('Token is %s', $token->getToken()));
+        $config = $this->job->configuration;
+        $stage  = $config['stage'];
 
-            // update job, give it the token:
-            $config                   = $this->job->configuration;
-            $config['has-token']      = true;
-            $config['token']          = $token->getToken();
-            $config['token-expires']  = $token->getExpiresAt()->format('U');
-            $config['token-url']      = $token->getConnectUrl();
-            $this->job->configuration = $config;
-
-            Log::debug('Job config is now', $config);
-
-            // update job, set status to "configuring".
-            $this->job->status = 'configuring';
-            $this->job->save();
-            Log::debug(sprintf('Job status is now %s', $this->job->status));
-
-            return true;
+        switch ($stage) {
+            case 'initial':
+                // get customer and token:
+                $this->runStageInitial();
+                break;
+            case 'has-token':
+                // import routine does nothing at this point:
+                break;
+            case 'user-logged-in':
+                $this->runStageLoggedIn();
+                break;
+            case 'have-account-mapping':
+                $this->runStageHaveMapping();
+                break;
+            default:
+                throw new FireflyException(sprintf('Cannot handle stage %s', $stage));
         }
-        $isRedirected = $config['is-redirected'] ?? false;
-        if ($isRedirected === true) {
-            // update job to say it's running
-            $extended                   = $this->job->extended_status;
-            $this->job->status          = 'running';
-            $extended['steps']          = 100;
-            $extended['done']           = 1;
-            $this->job->extended_status = $extended;
-            $this->job->save();
-        }
-        // is job running?
-        if ($this->job->status === 'running') {
 
-            // list all logins:
-            $customer = $this->getCustomer();
-            $request  = new ListLoginsRequest($this->job->user);
-            $request->setCustomer($customer);
-            $request->call();
-            $logins = $request->getLogins();
-            /** @var Login $final */
-            $final = null;
-            // loop logins, find the latest with no error in it:
-            $time = 0;
-            /** @var Login $login */
-            foreach($logins as $login) {
-                $attempt = $login->getLastAttempt();
-                $attemptTime = intval($attempt->getCreatedAt()->format('U'));
-                if($attemptTime > $time && is_null($attempt->getFailErrorClass())) {
-                    $time = $attemptTime;
-                    $final = $login;
-                }
-            }
-            if(is_null($final)) {
-                throw new FireflyException('No valid login attempt found.');
-            }
-            var_dump($final);
-
-            //var_dump($logins);
-            exit;
-
-            // assume user has "used" the token.
-            // ...
-            // now what?
-            Log::debug('Token has been used. User was redirected. Now check status with Spectre and respond?');
-
-            throw new FireflyException('Application cannot handle this.');
-        }
+        var_dump($config);
+        exit;
 
         throw new FireflyException('Application cannot handle this.');
     }
@@ -204,7 +155,7 @@ class SpectreRoutine implements RoutineInterface
      */
     public function setJob(ImportJob $job)
     {
-        $this->job = $job;
+        $this->job        = $job;
         $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($job->user);
     }
@@ -288,5 +239,125 @@ class SpectreRoutine implements RoutineInterface
 
         return $request->getToken();
 
+    }
+
+    /**
+     * @throws FireflyException
+     * @throws SpectreException
+     */
+    protected function runStageInitial(): void
+    {
+        Log::debug('In runStageInitial()');
+
+        // create customer if user does not have one:
+        $customer = $this->getCustomer();
+        Log::debug(sprintf('Customer ID is %s', $customer->getId()));
+
+        // use customer to request a token:
+        $uri   = route('import.status', [$this->job->key]);
+        $token = $this->getToken($customer, $uri);
+        Log::debug(sprintf('Token is %s', $token->getToken()));
+
+        // update job, give it the token:
+        $config                   = $this->job->configuration;
+        $config['has-token']      = true;
+        $config['token']          = $token->getToken();
+        $config['token-expires']  = $token->getExpiresAt()->format('U');
+        $config['token-url']      = $token->getConnectUrl();
+        $config['stage']          = 'has-token';
+        $this->job->configuration = $config;
+
+        Log::debug('Job config is now', $config);
+
+        // update job, set status to "configuring".
+        $this->job->status = 'configuring';
+        $this->job->save();
+        Log::debug(sprintf('Job status is now %s', $this->job->status));
+    }
+
+    /**
+     * @throws FireflyException
+     * @throws SpectreException
+     */
+    protected function runStageLoggedIn(): void
+    {
+        Log::debug('In runStageLoggedIn');
+        // list all logins:
+        $customer = $this->getCustomer();
+        $request  = new ListLoginsRequest($this->job->user);
+        $request->setCustomer($customer);
+        $request->call();
+        $logins = $request->getLogins();
+        /** @var Login $final */
+        $final = null;
+        // loop logins, find the latest with no error in it:
+        $time = 0;
+        /** @var Login $login */
+        foreach ($logins as $login) {
+            $attempt     = $login->getLastAttempt();
+            $attemptTime = intval($attempt->getCreatedAt()->format('U'));
+            if ($attemptTime > $time && is_null($attempt->getFailErrorClass())) {
+                $time  = $attemptTime;
+                $final = $login;
+            }
+        }
+        if (is_null($final)) {
+            throw new FireflyException('No valid login attempt found.');
+        }
+
+        // list the users accounts using this login.
+        $accountRequest = new ListAccountsRequest($this->job->user);
+        $accountRequest->setLogin($login);
+        $accountRequest->call();
+        $accounts = $accountRequest->getAccounts();
+
+        // store accounts in job:
+        $all = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $all[] = $account->toArray();
+        }
+
+        // update job:
+        $config                   = $this->job->configuration;
+        $config['accounts']       = $all;
+        $config['login']          = $login->toArray();
+        $config['stage']          = 'have-accounts';
+        $this->job->configuration = $config;
+        $this->job->status        = 'configuring';
+        $this->job->save();
+
+        return;
+    }
+
+    /**
+     *
+     */
+    private function runStageHaveMapping()
+    {
+        // for each spectre account id in 'account-mappings'.
+        // find FF account
+        // get transactions.
+        // import?!
+        $config   = $this->job->configuration;
+        $accounts = $config['accounts'] ?? [];
+        /** @var array $accountArray */
+        foreach ($accounts as $accountArray) {
+            $account  = new Account($accountArray);
+            $importId = intval($config['accounts-mapped'][$account->getid()] ?? 0);
+            $doImport = $importId !== 0 ? true : false;
+            if (!$doImport) {
+                continue;
+            }
+            // import into account
+            $listTransactionsRequest = new ListTransactionsRequest($this->job->user);
+            $listTransactionsRequest->setAccount($account);
+            $listTransactionsRequest->call();
+            $transactions = $listTransactionsRequest->getTransactions();
+            var_dump($transactions);exit;
+
+        }
+        var_dump($config);
+        exit;
     }
 }

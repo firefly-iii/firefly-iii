@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Configuration;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Support\Import\Configuration\Spectre\HaveAccounts;
 use Log;
 
 /**
@@ -52,7 +54,29 @@ class SpectreConfigurator implements ConfiguratorInterface
      */
     public function configureJob(array $data): bool
     {
-        die('cannot store config');
+        $config = $this->job->configuration;
+        $stage  = $config['stage'];
+        $status = $this->job->status;
+        Log::debug(sprintf('in getNextData(), for stage "%s".', $stage));
+        switch ($stage) {
+            case 'have-accounts':
+                /** @var HaveAccounts $class */
+                $class = app(HaveAccounts::class);
+                $class->setJob($this->job);
+                $class->storeConfiguration($data);
+
+                // update job for next step and set to "configured".
+                $config                   = $this->job->configuration;
+                $config['stage']          = 'have-account-mapping';
+                $this->job->configuration = $config;
+                $this->job->status        = 'configured';
+                $this->job->save();
+                return true;
+                break;
+            default:
+                throw new FireflyException(sprintf('Cannot store configuration when job is in state "%s"', $stage));
+                break;
+        }
     }
 
     /**
@@ -62,13 +86,34 @@ class SpectreConfigurator implements ConfiguratorInterface
      */
     public function getNextData(): array
     {
-        Log::debug('in getNextData(), user will be redirected next.');
-        // update config to tell Firefly the user is redirected.
-        $config                   = $this->job->configuration;
-        $config['is-redirected']  = true;
-        $config['stage']          = 'redirected';
+        $config = $this->job->configuration;
+        $stage  = $config['stage'];
+        $status = $this->job->status;
+        Log::debug(sprintf('in getNextData(), for stage "%s".', $stage));
+        switch ($stage) {
+            case 'has-token':
+                // simply redirect to Spectre.
+                $config['is-redirected'] = true;
+                $config['stage']         = 'user-logged-in';
+                $status                  = 'configured';
+                break;
+            case 'have-accounts':
+                // use special class:
+                /** @var HaveAccounts $class */
+                $class = app(HaveAccounts::class);
+                $class->setJob($this->job);
+                $data = $class->getData();
+
+                return $data;
+            default:
+                return [];
+                break;
+
+        }
+
+        // update config and status:
         $this->job->configuration = $config;
-        $this->job->status        = 'configured';
+        $this->job->status        = $status;
         $this->job->save();
 
         return $this->job->configuration;
@@ -79,10 +124,22 @@ class SpectreConfigurator implements ConfiguratorInterface
      */
     public function getNextView(): string
     {
-        Log::debug('Send user redirect view');
+        $config = $this->job->configuration;
+        $stage  = $config['stage'];
+        Log::debug(sprintf('in getNextView(), for stage "%s".', $stage));
+        switch ($stage) {
+            case 'has-token':
+                // redirect to Spectre.
+                return 'import.spectre.redirect';
+                break;
+            case 'have-accounts':
+                return 'import.spectre.accounts';
+                break;
+            default:
+                return '';
+                break;
 
-        // sends the user to spectre.
-        return 'import.spectre.redirect';
+        }
     }
 
     /**
@@ -100,17 +157,20 @@ class SpectreConfigurator implements ConfiguratorInterface
      */
     public function isJobConfigured(): bool
     {
-        Log::debug('in isJobConfigured');
-        // job is configured (and can start) when token is empty:
         $config = $this->job->configuration;
-        if ($config['has-token'] === false && $config['is-redirected'] === true) {
-            Log::debug('has-token is false, is-redirected is true, return true');
+        $stage  = $config['stage'];
+        Log::debug(sprintf('in isJobConfigured(), for stage "%s".', $stage));
+        switch ($stage) {
+            case 'has-token':
+            case 'have-accounts':
+                Log::debug('isJobConfigured returns false');
 
-            return true;
+                return false;
+            default:
+                Log::debug('isJobConfigured returns true');
+
+                return true;
         }
-        Log::debug('return false');
-
-        return false;
     }
 
     /**
@@ -119,15 +179,17 @@ class SpectreConfigurator implements ConfiguratorInterface
     public function setJob(ImportJob $job)
     {
         $defaultConfig           = [
-            'has-token'     => false,
-            'token'         => '',
-            'token-expires' => 0,
-            'token-url'     => '',
-            'is-redirected' => false,
-            'customer'      => null,
-            'login'         => null,
-            'stage'         => 'initial',
-            'accounts'      => [],
+            'has-token'       => false,
+            'token'           => '',
+            'token-expires'   => 0,
+            'token-url'       => '',
+            'is-redirected'   => false,
+            'customer'        => null,
+            'login'           => null,
+            'stage'           => 'initial',
+            'accounts'        => '',
+            'accounts-mapped' => '',
+            'auto-start'      => true,
         ];
         $extendedStatus          = $job->extended_status;
         $extendedStatus['steps'] = 100;

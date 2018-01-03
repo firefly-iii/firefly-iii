@@ -97,11 +97,49 @@ class Login extends SpectreObject
     }
 
     /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
      * @return Attempt
      */
     public function getLastAttempt(): Attempt
     {
         return $this->lastAttempt;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        $array = [
+            'consent_given_at'          => $this->consentGivenAt->toIso8601String(),
+            'consent_types'             => $this->consentTypes,
+            'country_code'              => $this->countryCode,
+            'created_at'                => $this->createdAt->toIso8601String(),
+            'updated_at'                => $this->updatedAt->toIso8601String(),
+            'customer_id'               => $this->customerId,
+            'daily_refresh'             => $this->dailyRefresh,
+            'holder_info'               => $this->holderInfo->toArray(),
+            'id'                        => $this->id,
+            'last_attempt'              => $this->lastAttempt->toArray(),
+            'last_success_at'           => $this->lastSuccessAt->toIso8601String(),
+            'next_refresh_possible_at'  => $this->nextRefreshPossibleAt,
+            'provider_code'             => $this->providerCode,
+            'provider_id'               => $this->providerId,
+            'provider_name'             => $this->providerName,
+            'show_consent_confirmation' => $this->showConsentConfirmation,
+            'status'                    => $this->status,
+            'store_credentials'         => $this->storeCredentials,
+
+        ];
+
+        return $array;
     }
 
 

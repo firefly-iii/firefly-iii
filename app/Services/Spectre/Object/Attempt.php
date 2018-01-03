@@ -163,6 +163,46 @@ class Attempt extends SpectreObject
         return $this->failMessage;
     }
 
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        $array = [
+            'api_mode'                  => $this->apiMode,
+            'api_version'               => $this->apiVersion,
+            'automatic_fetch'           => $this->automaticFetch,
+            'categorize'                => $this->categorize,
+            'created_at'                => $this->createdAt->toIso8601String(),
+            'consent_given_at'          => $this->consentGivenAt->toIso8601String(),
+            'consent_types'             => $this->consentTypes,
+            'custom_fields'             => $this->customFields,
+            'daily_refresh'             => $this->dailyRefresh,
+            'device_type'               => $this->deviceType,
+            'user_agent'                => $this->userAgent,
+            'remote_ip'                 => $this->remoteIp,
+            'exclude_accounts'          => $this->excludeAccounts,
+            'fail_at'                   => $this->failAt->toIso8601String(),
+            'fail_error_class'          => $this->failErrorClass,
+            'fail_message'              => $this->failMessage,
+            'fetch_type'                => $this->fetchType,
+            'finished'                  => $this->finished,
+            'finished_recent'           => $this->finishedRecent,
+            'from_date'                 => $this->fromDate->toIso8601String(),
+            'id'                        => $this->id,
+            'interactive'               => $this->interactive,
+            'locale'                    => $this->locale,
+            'partial'                   => $this->partial,
+            'show_consent_confirmation' => $this->showConsentInformation,
+            'stages'                    => $this->stages,
+            'store_credentials'         => $this->storeCredentials,
+            'success_at'                => $this->successAt->toIso8601String(),
+            'to_date'                   => $this->toDate->toIso8601String(),
+            'updated_at'                => $this->updatedAt->toIso8601String(),
+        ];
+
+        return $array;
+    }
 
 
 }

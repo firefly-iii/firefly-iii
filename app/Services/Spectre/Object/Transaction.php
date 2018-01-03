@@ -1,6 +1,6 @@
 <?php
 /**
- * Holder.php
+ * Transaction.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -24,25 +24,18 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Spectre\Object;
 
 /**
- * Class Holder
+ * Class Transaction
  */
-class Holder extends SpectreObject
+class Transaction extends SpectreObject
 {
     /**
-     * Holder constructor.
+     * Transaction constructor.
      *
      * @param array $data
      */
-    public function __construct(array $data)
-    {
-
+    public function __construct(array $data) {
+        var_dump($data);
+        exit;
     }
 
-    /**
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return [];
-    }
 }
