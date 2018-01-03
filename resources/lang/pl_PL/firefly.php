@@ -141,6 +141,16 @@ return [
     'invalid_server_configuration'               => 'Nieprawidłowa konfiguracja serwera',
     'invalid_locale_settings'                    => 'Firefly III nie może sformatować kwot, ponieważ brakuje wymaganych pakietów na Twoim serwerze. Sprawdź<a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instrukcje jak je zainstalować</a> (po angielsku).',
     'quickswitch'                                => 'Szybki przełącznik',
+    'sign_in_to_start'                           => 'Zaloguj się, aby rozpocząć sesję',
+    'sign_in'                                    => 'Zaloguj',
+    'register_new_account'                       => 'Zarejestruj nowe konto',
+    'forgot_my_password'                         => 'Nie pamiętam hasła',
+    'problems_with_input'                        => 'Wystąpił problem z wprowadzonymi danymi.',
+    'reset_password'                             => 'Zresetuj swoje hasło',
+    'button_reset_password'                      => 'Zresetuj hasło',
+    'reset_button'                               => 'Zresetuj',
+    'want_to_login'                              => 'Chcę się zalogować',
+    'button_register'                            => 'Zarejestruj',
 
     // check for updates:
     'update_check_title'                         => 'Sprawdź aktualizacje',
@@ -612,6 +622,7 @@ return [
     'bill_expected_between'                    => 'Oczekiwano między :start a :end',
     'bill_will_automatch'                      => 'Rachunek będzie automatycznie powiązany z pasującymi transakcjami',
     'skips_over'                               => 'pomija',
+
 
     // accounts:
     'details_for_asset'                        => 'Szczegóły konta aktywów ":name"',

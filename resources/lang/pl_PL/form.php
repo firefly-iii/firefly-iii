@@ -78,6 +78,7 @@ return [
     'new_email_address'              => 'Nowy adres e-mail',
     'verification'                   => 'Weryfikacja',
     'api_key'                        => 'Klucz API',
+    'remember_me'                    => 'Zapamiętaj mnie',
 
     'source_account_asset'        => 'Konto źródłowe (konto aktywów)',
     'destination_account_expense' => 'Konto docelowe (konto wydatków)',

@@ -141,6 +141,16 @@ return [
     'invalid_server_configuration'               => 'Ungültige Serverkonfiguration',
     'invalid_locale_settings'                    => 'Firefly III kann keine Geldbeträge formatieren, da auf Ihrem Server die erforderlichen Pakete fehlen. Es gibt <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">eine Anleitung</a>, wie dies behoben werden kann.',
     'quickswitch'                                => 'Schnellauswahl',
+    'sign_in_to_start'                           => 'Sign in to start your session',
+    'sign_in'                                    => 'Sign in',
+    'register_new_account'                       => 'Register a new account',
+    'forgot_my_password'                         => 'I forgot my password',
+    'problems_with_input'                        => 'There were some problems with your input.',
+    'reset_password'                             => 'Reset your password',
+    'button_reset_password'                      => 'Reset password',
+    'reset_button'                               => 'Reset',
+    'want_to_login'                              => 'I want to login',
+    'button_register'                            => 'Register',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',
@@ -613,6 +623,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'bill_expected_between'                    => 'Expected between :start and :end',
     'bill_will_automatch'                      => 'Rechnung wird automatisch mit passenden Transaktionen verknüpft',
     'skips_over'                               => 'skips over',
+
 
     // accounts:
     'details_for_asset'                        => 'Details für Girokonto ":name"',

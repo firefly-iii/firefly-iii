@@ -78,6 +78,7 @@ return [
     'new_email_address'              => 'Nieuw emailadres',
     'verification'                   => 'Verificatie',
     'api_key'                        => 'API sleutel',
+    'remember_me'                    => 'Remember me',
 
     'source_account_asset'        => 'Bronrekening (betaalrekening)',
     'destination_account_expense' => 'Doelrekening (crediteur)',

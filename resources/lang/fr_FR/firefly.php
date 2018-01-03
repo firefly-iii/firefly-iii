@@ -141,6 +141,16 @@ return [
     'invalid_server_configuration'               => 'Configuration de serveur invalide',
     'invalid_locale_settings'                    => 'Firefly III ne parvient pas à formater les montants monétaires car il manque des paquets logiciels sur votre serveur. Voici <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">des instructions sur comment procéder</a>.',
     'quickswitch'                                => 'Changement rapide',
+    'sign_in_to_start'                           => 'Sign in to start your session',
+    'sign_in'                                    => 'Sign in',
+    'register_new_account'                       => 'Register a new account',
+    'forgot_my_password'                         => 'I forgot my password',
+    'problems_with_input'                        => 'There were some problems with your input.',
+    'reset_password'                             => 'Reset your password',
+    'button_reset_password'                      => 'Reset password',
+    'reset_button'                               => 'Reset',
+    'want_to_login'                              => 'I want to login',
+    'button_register'                            => 'Register',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',
@@ -612,6 +622,7 @@ return [
     'bill_expected_between'                    => 'Attendu entre le :start et le :end',
     'bill_will_automatch'                      => 'La facture sera automatiquement liée aux transactions correspondantes',
     'skips_over'                               => 'saute',
+
 
     // accounts:
     'details_for_asset'                        => 'Détails pour le compte d’actif ":name"',

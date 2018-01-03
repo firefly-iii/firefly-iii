@@ -141,6 +141,16 @@ return [
     'invalid_server_configuration'               => 'Ongeldige serverconfiguratie',
     'invalid_locale_settings'                    => 'Firefly III kan geldbedragen niet goed weergeven omdat je server de vereiste software mist. Er zijn <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructies hoe dit te doen</a>.',
     'quickswitch'                                => 'Quickswitch',
+    'sign_in_to_start'                           => 'Sign in to start your session',
+    'sign_in'                                    => 'Sign in',
+    'register_new_account'                       => 'Register a new account',
+    'forgot_my_password'                         => 'I forgot my password',
+    'problems_with_input'                        => 'There were some problems with your input.',
+    'reset_password'                             => 'Reset your password',
+    'button_reset_password'                      => 'Reset password',
+    'reset_button'                               => 'Reset',
+    'want_to_login'                              => 'I want to login',
+    'button_register'                            => 'Register',
 
     // check for updates:
     'update_check_title'                         => 'Op updates controleren',
@@ -612,6 +622,7 @@ return [
     'bill_expected_between'                    => 'Verwacht tussen :start en :end',
     'bill_will_automatch'                      => 'Waar van toepassing wordt dit contract automatisch gekoppeld aan transacties',
     'skips_over'                               => 'slaat over',
+
 
     // accounts:
     'details_for_asset'                        => 'Overzicht voor betaalrekening ":name"',
