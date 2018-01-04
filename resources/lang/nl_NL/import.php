@@ -103,6 +103,7 @@ return [
     'file_map_field_mapped_to'        => 'Gelinkt aan',
     'map_do_not_map'                  => '(niet linken)',
     'file_map_submit'                 => 'Start importeren',
+    'file_nothing_to_map'             => 'There is no data present in your file that you can map to existing values. Please press "Start the import" to continue.',
 
     // map things.
     'column__ignore'                  => '(negeer deze kolom)',

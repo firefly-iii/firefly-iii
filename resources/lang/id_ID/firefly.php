@@ -141,6 +141,16 @@ return [
     'invalid_server_configuration'               => 'Konfigurasi server tidak valid',
     'invalid_locale_settings'                    => 'Firefly III tidak dapat memformat jumlah uang karena server Anda kehilangan paket yang dibutuhkan. Ada <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructions bagaimana melakukan ini</a>.',
     'quickswitch'                                => 'Quickswitch',
+    'sign_in_to_start'                           => 'Sign in to start your session',
+    'sign_in'                                    => 'Sign in',
+    'register_new_account'                       => 'Register a new account',
+    'forgot_my_password'                         => 'I forgot my password',
+    'problems_with_input'                        => 'There were some problems with your input.',
+    'reset_password'                             => 'Reset your password',
+    'button_reset_password'                      => 'Reset password',
+    'reset_button'                               => 'Reset',
+    'want_to_login'                              => 'I want to login',
+    'button_register'                            => 'Register',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',
@@ -612,6 +622,7 @@ return [
     'bill_expected_between'                    => 'Diharapkan antara :start dan :end',
     'bill_will_automatch'                      => 'Tagihan akan secara otomatis terhubung ke transaksi yang sesuai',
     'skips_over'                               => 'melompati',
+
 
     // accounts:
     'details_for_asset'                        => 'Rincian akun aset ":name"',

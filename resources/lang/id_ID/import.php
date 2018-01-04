@@ -103,6 +103,7 @@ return [
     'file_map_field_mapped_to'        => 'Dipetakan ke',
     'map_do_not_map'                  => '(jangan memetakan)',
     'file_map_submit'                 => 'Mulai impor',
+    'file_nothing_to_map'             => 'There is no data present in your file that you can map to existing values. Please press "Start the import" to continue.',
 
     // map things.
     'column__ignore'                  => '(abaikan kolom ini)',

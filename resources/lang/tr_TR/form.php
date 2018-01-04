@@ -78,6 +78,7 @@ return [
     'new_email_address'              => 'Yeni e-posta adresi',
     'verification'                   => 'Doğrulama',
     'api_key'                        => 'API anahtarı',
+    'remember_me'                    => 'Remember me',
 
     'source_account_asset'        => 'Kaynak Hesabı (varlık hesabı)',
     'destination_account_expense' => 'Hedef Hesap (gider hesabı)',

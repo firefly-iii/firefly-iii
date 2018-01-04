@@ -21,12 +21,12 @@
 declare(strict_types=1);
 
 return [
-    'locale'          => 'tr, Turkish, tr_TR, tr_TR.utf8, tr_TR.S.UTF-8',
-    'month'           => '%B %Y',
-    'month_and_day'   => '%e %B %Y',
-    'date_time'       => '%e %B %Y, @ %T',
-    'specific_day'    => '%e %B %Y',
-    'week_in_year'    => '%W. hafta, %Y',
-    'year'            => '%Y',
-    'half_year'       => '%B %Y',
+    'locale'        => 'tr, Turkish, tr_TR, tr_TR.utf8, tr_TR.S.UTF-8',
+    'month'         => '%B %Y',
+    'month_and_day' => '%e %B %Y',
+    'date_time'     => '%e %B %Y, @ %T',
+    'specific_day'  => '%e %B %Y',
+    'week_in_year'  => '%W. hafta, %Y',
+    'year'          => '%Y',
+    'half_year'     => '%B %Y',
 ];

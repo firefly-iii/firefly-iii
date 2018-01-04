@@ -141,6 +141,16 @@ return [
     'invalid_server_configuration'               => 'Geçersiz sunucu yapılandırması',
     'invalid_locale_settings'                    => 'Firefly III parasal tutarları biçimlendiremiyor çünkü gerekli paketler sunucunuzda yok. <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">Bunun nasıl yapıldığıyla ilgili talimatlar</a> var.',
     'quickswitch'                                => 'Hızlı anahtar',
+    'sign_in_to_start'                           => 'Sign in to start your session',
+    'sign_in'                                    => 'Sign in',
+    'register_new_account'                       => 'Register a new account',
+    'forgot_my_password'                         => 'I forgot my password',
+    'problems_with_input'                        => 'There were some problems with your input.',
+    'reset_password'                             => 'Reset your password',
+    'button_reset_password'                      => 'Reset password',
+    'reset_button'                               => 'Reset',
+    'want_to_login'                              => 'I want to login',
+    'button_register'                            => 'Register',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',
@@ -613,6 +623,7 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'bill_expected_between'                    => ':start ve :end arasında beklenen',
     'bill_will_automatch'                      => 'Fatura uygun işlemlere otomatik olarak bağlandı',
     'skips_over'                               => 'atla',
+
 
     // accounts:
     'details_for_asset'                        => '":name" Varlık hesabı ayrıntıları',

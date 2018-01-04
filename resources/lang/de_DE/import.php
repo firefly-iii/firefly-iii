@@ -103,6 +103,7 @@ return [
     'file_map_field_mapped_to'        => 'Zugeordnet zu',
     'map_do_not_map'                  => '(keine Zuordnung)',
     'file_map_submit'                 => 'Starte den Import',
+    'file_nothing_to_map'             => 'There is no data present in your file that you can map to existing values. Please press "Start the import" to continue.',
 
     // map things.
     'column__ignore'                  => '(diese Spalte ignorieren)',
