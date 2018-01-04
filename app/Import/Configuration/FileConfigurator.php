@@ -170,6 +170,7 @@ class FileConfigurator implements ConfiguratorInterface
             'column-roles-complete'   => false, // not yet configured roles for columns
             'column-mapping-config'   => [], // no mapping made yet.
             'column-mapping-complete' => false, // so mapping is not complete.
+            'has-config-file'         => true,
             'apply-rules'             => true,
             'match-bills'             => false,
             'auto-start'              => false,

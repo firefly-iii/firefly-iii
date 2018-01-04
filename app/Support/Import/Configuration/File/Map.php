@@ -106,6 +106,10 @@ class Map implements ConfigurationInterface
         foreach ($setIndexes as $index) {
             $this->data[$index]['values'] = array_unique($this->data[$index]['values']);
             asort($this->data[$index]['values']);
+            // if the count of this array is zero, there is nothing to map.
+            if(count($this->data[$index]['values']) === 0) {
+                unset($this->data[$index]);
+            }
         }
         unset($setIndexes);
 
