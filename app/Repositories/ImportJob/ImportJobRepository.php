@@ -225,4 +225,17 @@ class ImportJobRepository implements ImportJobRepositoryInterface
 
         return $job;
     }
+
+    /**
+     * Return import file content.
+     *
+     * @param ImportJob $job
+     *
+     * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    public function uploadFileContents(ImportJob $job): string
+    {
+        return $job->uploadFileContents();
+    }
 }

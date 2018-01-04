@@ -50,7 +50,10 @@ class SnsDescription implements SpecificInterface
      */
     public function run(array $row): array
     {
-        $row     = array_values($row);
+        $row = array_values($row);
+        if (!isset($row[17])) {
+            return $row;
+        }
         $row[17] = ltrim($row[17], "'");
         $row[17] = rtrim($row[17], "'");
 

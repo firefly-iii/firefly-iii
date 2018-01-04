@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Configuration\File;
 
-use ExpandedForm;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 use Log;
 
@@ -34,33 +34,30 @@ use Log;
  */
 class UploadConfig implements ConfigurationInterface
 {
+    /** @var AccountRepositoryInterface */
+    private $accountRepository;
     /**
      * @var ImportJob
      */
     private $job;
+    /** @var ImportJobRepositoryInterface */
+    private $repository;
 
     /**
      * @return array
      */
     public function getData(): array
     {
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $delimiters        = [
+        $accounts              = $this->accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $delimiters            = [
             ','   => trans('form.csv_comma'),
             ';'   => trans('form.csv_semicolon'),
             'tab' => trans('form.csv_tab'),
         ];
-
-        // update job with default date format:
-        $config = $this->job->configuration;
-        if (!isset($config['date-format'])) {
-            $config['date-format']    = 'Ymd';
-            $this->job->configuration = $config;
-            $this->job->save();
-        }
-        $specifics = [];
+        $config                = $this->getConfig();
+        $config['date-format'] = $config['date-format'] ?? 'Ymd';
+        $specifics             = [];
+        $this->saveConfig($config);
 
         // collect specifics.
         foreach (config('csv.import_specifics') as $name => $className) {
@@ -71,7 +68,7 @@ class UploadConfig implements ConfigurationInterface
         }
 
         $data = [
-            'accounts'   => ExpandedForm::makeSelectList($accounts),
+            'accounts'   => app('expandedform')->makeSelectList($accounts),
             'specifix'   => [],
             'delimiters' => $delimiters,
             'specifics'  => $specifics,
@@ -97,7 +94,11 @@ class UploadConfig implements ConfigurationInterface
      */
     public function setJob(ImportJob $job): ConfigurationInterface
     {
-        $this->job = $job;
+        $this->job               = $job;
+        $this->repository        = app(ImportJobRepositoryInterface::class);
+        $this->accountRepository = app(AccountRepositoryInterface::class);
+        $this->repository->setUser($job->user);
+        $this->accountRepository->setUser($job->user);
 
         return $this;
     }
@@ -112,24 +113,17 @@ class UploadConfig implements ConfigurationInterface
     public function storeConfiguration(array $data): bool
     {
         Log::debug('Now in Initial::storeConfiguration()');
-
-        // get config from job:
-        $config = $this->job->configuration;
-
-        // find import account:
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $importId   = intval($data['csv_import_account'] ?? 0);
-        $account    = $repository->find($importId);
+        $config    = $this->getConfig();
+        $importId  = intval($data['csv_import_account'] ?? 0);
+        $account   = $this->accountRepository->find($importId);
+        $delimiter = strval($data['csv_delimiter']);
 
         // set "headers":
-        $config['initial-config-complete'] = true;
-        $config['has-headers']             = intval($data['has_headers'] ?? 0) === 1;
-        $config['date-format']             = $data['date_format'];
-        $config['delimiter']               = $data['csv_delimiter'];
-        $config['delimiter']               = 'tab' === $config['delimiter'] ? "\t" : $config['delimiter'];
-        $config['apply-rules']             = intval($data['apply_rules'] ?? 0) === 1;
-        $config['match-bills']             = intval($data['match_bills'] ?? 0) === 1;
+        $config['has-headers'] = intval($data['has_headers'] ?? 0) === 1;
+        $config['date-format'] = strval($data['date_format']);
+        $config['delimiter']   = 'tab' === $delimiter ? "\t" : $config['delimiter'];
+        $config['apply-rules'] = intval($data['apply_rules'] ?? 0) === 1;
+        $config['match-bills'] = intval($data['match_bills'] ?? 0) === 1;
 
         Log::debug('Entered import account.', ['id' => $importId]);
 
@@ -146,10 +140,30 @@ class UploadConfig implements ConfigurationInterface
         $config = $this->storeSpecifics($data, $config);
         Log::debug('Final config is ', $config);
 
-        $this->job->configuration = $config;
-        $this->job->save();
+        // onto the next stage!
+
+        $config['stage'] = 'roles';
+        $this->saveConfig($config);
 
         return true;
+    }
+
+    /**
+     * Short hand method.
+     *
+     * @return array
+     */
+    private function getConfig(): array
+    {
+        return $this->repository->getConfiguration($this->job);
+    }
+
+    /**
+     * @param array $array
+     */
+    private function saveConfig(array $array)
+    {
+        $this->repository->setConfiguration($this->job, $array);
     }
 
     /**

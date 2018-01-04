@@ -49,7 +49,7 @@
                                     <div class="col-sm-8">
                                         <div class="checkbox"><label>
                                                 {{ Form.checkbox('apply_rules', '1',
-                                                    job.configuration.apply_rules == '1', {'id': 'apply_rules_label'}) }}
+                                                    job.configuration['apply-rules'] == true, {'id': 'apply_rules_label'}) }}
                                                 {{ trans('import.file_apply_rules_description') }}
                                             </label>
                                         </div>
@@ -63,7 +63,7 @@
                                     <div class="col-sm-8">
                                         <div class="checkbox"><label>
                                                 {{ Form.checkbox('match_bills', '1',
-                                                    job.configuration.match_bills == '1', {'id': 'match_bills_label'}) }}
+                                                    job.configuration['match-bills'] == true, {'id': 'match_bills_label'}) }}
                                                 {{ trans('import.file_match_bills_description') }}
                                             </label>
                                         </div>

@@ -27,6 +27,7 @@ use FireflyIII\Import\Mapper\MapperInterface;
 use FireflyIII\Import\MapperPreProcess\PreProcessorInterface;
 use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 use League\Csv\Reader;
 use League\Csv\Statement;
@@ -37,12 +38,12 @@ use Log;
  */
 class Map implements ConfigurationInterface
 {
-    /** @var array */
-    private $configuration = [];
     /** @var array that holds each column to be mapped by the user */
     private $data = [];
     /** @var ImportJob */
     private $job;
+    /** @var ImportJobRepositoryInterface */
+    private $repository;
     /** @var array */
     private $validSpecifics = [];
 
@@ -55,16 +56,16 @@ class Map implements ConfigurationInterface
      */
     public function getData(): array
     {
-        $this->configuration = $this->job->configuration;
         $this->getMappableColumns();
 
         // in order to actually map we also need all possible values from the CSV file.
-        $content = $this->job->uploadFileContents();
+        $config  = $this->getConfig();
+        $content = $this->repository->uploadFileContents($this->job);
         $offset  = 0;
         /** @var Reader $reader */
         $reader = Reader::createFromString($content);
-        $reader->setDelimiter($this->configuration['delimiter']);
-        if ($this->configuration['has-headers']) {
+        $reader->setDelimiter($config['delimiter']);
+        if ($config['has-headers']) {
             $offset = 1;
         }
         $stmt                 = (new Statement)->offset($offset);
@@ -107,7 +108,7 @@ class Map implements ConfigurationInterface
             $this->data[$index]['values'] = array_unique($this->data[$index]['values']);
             asort($this->data[$index]['values']);
             // if the count of this array is zero, there is nothing to map.
-            if(count($this->data[$index]['values']) === 0) {
+            if (count($this->data[$index]['values']) === 0) {
                 unset($this->data[$index]);
             }
         }
@@ -140,7 +141,9 @@ class Map implements ConfigurationInterface
      */
     public function setJob(ImportJob $job): ConfigurationInterface
     {
-        $this->job = $job;
+        $this->job        = $job;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
 
         return $this;
     }
@@ -154,7 +157,8 @@ class Map implements ConfigurationInterface
      */
     public function storeConfiguration(array $data): bool
     {
-        $config = $this->job->configuration;
+        $config = $this->getConfig();
+
         if (isset($data['mapping'])) {
             foreach ($data['mapping'] as $index => $data) {
                 $config['column-mapping-config'][$index] = [];
@@ -168,9 +172,8 @@ class Map implements ConfigurationInterface
         }
 
         // set thing to be completed.
-        $config['column-mapping-complete'] = true;
-        $this->job->configuration          = $config;
-        $this->job->save();
+        $config['stage'] = 'ready';
+        $this->saveConfig($config);
 
         return true;
     }
@@ -185,9 +188,19 @@ class Map implements ConfigurationInterface
         $mapperClass = config('csv.import_roles.' . $column . '.mapper');
         $mapperName  = sprintf('\\FireflyIII\\Import\Mapper\\%s', $mapperClass);
         /** @var MapperInterface $mapper */
-        $mapper = new $mapperName;
+        $mapper = app($mapperName);
 
         return $mapper;
+    }
+
+    /**
+     * Short hand method.
+     *
+     * @return array
+     */
+    private function getConfig(): array
+    {
+        return $this->repository->getConfiguration($this->job);
     }
 
     /**
@@ -197,8 +210,7 @@ class Map implements ConfigurationInterface
      */
     private function getMappableColumns(): bool
     {
-        $config = $this->job->configuration;
-
+        $config = $this->getConfig();
         /**
          * @var int
          * @var bool $mustBeMapped
@@ -250,8 +262,9 @@ class Map implements ConfigurationInterface
     {
         // run specifics here:
         // and this is the point where the specifix go to work.
-        $specifics = $this->job->configuration['specifics'] ?? [];
-        $names = array_keys($specifics);
+        $config    = $this->getConfig();
+        $specifics = $config['specifics'] ?? [];
+        $names     = array_keys($specifics);
         foreach ($names as $name) {
             if (!in_array($name, $this->validSpecifics)) {
                 throw new FireflyException(sprintf('"%s" is not a valid class name', $name));
@@ -265,6 +278,14 @@ class Map implements ConfigurationInterface
         }
 
         return $row;
+    }
+
+    /**
+     * @param array $array
+     */
+    private function saveConfig(array $array)
+    {
+        $this->repository->setConfiguration($this->job, $array);
     }
 
     /**

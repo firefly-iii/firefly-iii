@@ -39,6 +39,15 @@ interface ImportJobRepositoryInterface
     public function create(string $type): ImportJob;
 
     /**
+     * Return import file content.
+     *
+     * @param ImportJob $job
+     *
+     * @return string
+     */
+    public function uploadFileContents(ImportJob $job): string;
+
+    /**
      * @param string $key
      *
      * @return ImportJob

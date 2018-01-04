@@ -35,8 +35,16 @@ class Initial implements ConfigurationInterface
     /** @var ImportJob */
     private $job;
 
+    /** @var ImportJobRepositoryInterface */
+    private $repository;
+
     /** @var string */
     private $warning = '';
+
+    public function __construct()
+    {
+        Log::debug('Constructed Initial.');
+    }
 
     /**
      * Get the data necessary to show the configuration screen.
@@ -75,7 +83,9 @@ class Initial implements ConfigurationInterface
      */
     public function setJob(ImportJob $job): ConfigurationInterface
     {
-        $this->job = $job;
+        $this->job        = $job;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
 
         return $this;
     }
@@ -90,27 +100,43 @@ class Initial implements ConfigurationInterface
     public function storeConfiguration(array $data): bool
     {
         Log::debug('Now in storeConfiguration for file Upload.');
-        /** @var ImportJobRepositoryInterface $repository */
-        $repository          = app(ImportJobRepositoryInterface::class);
-        $type                = $data['import_file_type'] ?? 'unknown';
-        $config              = $this->job->configuration;
-        $config['file-type'] = in_array($type, config('import.options.file.import_formats')) ? $type : 'unknown';
-        $repository->setConfiguration($this->job, $config);
-        $uploaded = $repository->processFile($this->job, $data['import_file'] ?? null);
-        $this->job->save();
+        $config              = $this->getConfig();
+        $type                = $data['import_file_type'] ?? 'csv'; // assume it's a CSV file.
+        $config['file-type'] = in_array($type, config('import.options.file.import_formats')) ? $type : 'csv';
+
+        // update config:
+        $this->repository->setConfiguration($this->job, $config);
+
+        // make repository process file:
+        $uploaded = $this->repository->processFile($this->job, $data['import_file'] ?? null);
         Log::debug(sprintf('Result of upload is %s', var_export($uploaded, true)));
+
         // process config, if present:
         if (isset($data['configuration_file'])) {
-            $repository->processConfiguration($this->job, $data['configuration_file']);
+            $this->repository->processConfiguration($this->job, $data['configuration_file']);
         }
-        $config                    = $this->job->configuration;
-        $config['has-file-upload'] = $uploaded;
-        $repository->setConfiguration($this->job, $config);
 
         if (false === $uploaded) {
             $this->warning = 'No valid upload.';
+
+            return true;
         }
 
+        // if file was upload safely, assume we can go to the next stage:
+        $config          = $this->getConfig();
+        $config['stage'] = 'upload-config';
+        $this->repository->setConfiguration($this->job, $config);
+
         return true;
+    }
+
+    /**
+     * Short hand method.
+     *
+     * @return array
+     */
+    private function getConfig(): array
+    {
+        return $this->repository->getConfiguration($this->job);
     }
 }

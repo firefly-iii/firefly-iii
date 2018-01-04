@@ -50,6 +50,7 @@ class FileConfigurator implements ConfiguratorInterface
             'column-roles'          => [], // unknown
             'column-do-mapping'     => [], // not yet set which columns must be mapped
             'column-mapping-config' => [], // no mapping made yet.
+            'file-type'             => 'csv', // assume
             'has-config-file'       => true,
             'apply-rules'           => true,
             'match-bills'           => false,
@@ -132,7 +133,7 @@ class FileConfigurator implements ConfiguratorInterface
         }
         $config = $this->getConfig();
         $stage  = $config['stage'] ?? 'initial';
-        switch($stage) {
+        switch ($stage) {
             case 'initial': // has nothing, no file upload or anything.
                 return 'import.file.initial';
             case 'upload-config': // has file, needs file config.
@@ -189,7 +190,10 @@ class FileConfigurator implements ConfiguratorInterface
         $this->job        = $job;
         $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($job->user);
-        $this->repository->setConfiguration($job, $this->defaultConfig);
+
+        $config    = $this->getConfig();
+        $newConfig = array_merge($this->defaultConfig, $config);
+        $this->repository->setConfiguration($job, $newConfig);
     }
 
     /**
