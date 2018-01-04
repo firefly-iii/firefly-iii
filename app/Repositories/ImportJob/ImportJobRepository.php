@@ -86,12 +86,30 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      */
     public function findByKey(string $key): ImportJob
     {
+        /** @var ImportJob $result */
         $result = $this->user->importJobs()->where('key', $key)->first(['import_jobs.*']);
         if (null === $result) {
             return new ImportJob;
         }
 
         return $result;
+    }
+
+    /**
+     * Return configuration of job.
+     *
+     * @param ImportJob $job
+     *
+     * @return array
+     */
+    public function getConfiguration(ImportJob $job): array
+    {
+        $config = $job->configuration;
+        if (is_array($config)) {
+            return $config;
+        }
+
+        return [];
     }
 
     /**

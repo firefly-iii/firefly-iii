@@ -46,6 +46,15 @@ interface ImportJobRepositoryInterface
     public function findByKey(string $key): ImportJob;
 
     /**
+     * Return configuration of job.
+     *
+     * @param ImportJob $job
+     *
+     * @return array
+     */
+    public function getConfiguration(ImportJob $job): array;
+
+    /**
      * @param ImportJob    $job
      * @param UploadedFile $file
      *

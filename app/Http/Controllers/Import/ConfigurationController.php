@@ -78,7 +78,9 @@ class ConfigurationController extends Controller
 
             return redirect(route('import.status', [$job->key]));
         }
+
         $this->repository->updateStatus($job, 'configuring');
+
         $view         = $configurator->getNextView();
         $data         = $configurator->getNextData();
         $subTitle     = trans('firefly.import_config_bread_crumb');
