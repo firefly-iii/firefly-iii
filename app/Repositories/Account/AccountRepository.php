@@ -567,13 +567,15 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function updateOpeningBalanceJournal(Account $account, TransactionJournal $journal, array $data): bool
     {
-        $date       = $data['openingBalanceDate'];
-        $amount     = strval($data['openingBalance']);
-        $currencyId = intval($data['currency_id']);
+        $date           = $data['openingBalanceDate'];
+        $amount         = strval($data['openingBalance']);
+        $negativeAmount = bcmul($amount, '-1');
+        $currencyId     = intval($data['currency_id']);
 
-        Log::debug(sprintf('Submitted amount for opening balance to update is %s', $amount));
+        Log::debug(sprintf('Submitted amount for opening balance to update is "%s"', $amount));
 
         if (0 === bccomp($amount, '0')) {
+            Log::notice(sprintf('Amount "%s" is zero, delete opening balance.', $amount));
             $journal->delete();
 
             return true;
@@ -583,18 +585,18 @@ class AccountRepository implements AccountRepositoryInterface
         $journal->date                    = $date;
         $journal->transaction_currency_id = $currencyId;
         $journal->save();
+
         // update transactions:
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
-            if ($account->id === $transaction->account_id) {
-                Log::debug(sprintf('Will change transaction #%d amount from %s to %s', $transaction->id, $transaction->amount, $amount));
+            if (intval($account->id) === intval($transaction->account_id)) {
+                Log::debug(sprintf('Will (eq) change transaction #%d amount from "%s" to "%s"', $transaction->id, $transaction->amount, $amount));
                 $transaction->amount                  = $amount;
                 $transaction->transaction_currency_id = $currencyId;
                 $transaction->save();
             }
-            if ($account->id !== $transaction->account_id) {
-                $negativeAmount = bcmul($amount, '-1');
-                Log::debug(sprintf('Will change transaction #%d amount from %s to %s', $transaction->id, $transaction->amount, $negativeAmount));
+            if (!(intval($account->id) === intval($transaction->account_id))) {
+                Log::debug(sprintf('Will (neq) change transaction #%d amount from "%s" to "%s"', $transaction->id, $transaction->amount, $negativeAmount));
                 $transaction->amount                  = $negativeAmount;
                 $transaction->transaction_currency_id = $currencyId;
                 $transaction->save();
