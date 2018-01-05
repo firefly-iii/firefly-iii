@@ -108,6 +108,8 @@ class DebugController extends Controller
     }
 
     /**
+     * Some common combinations.
+     *
      * @param int $value
      *
      * @return string
@@ -115,13 +117,19 @@ class DebugController extends Controller
     protected function errorReporting(int $value): string
     {
         $array = [
-            -1 => 'ALL errors',
+            -1                                                             => 'ALL errors',
+            E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED                  => 'E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED',
+            E_ALL                                                          => 'E_ALL',
+            E_ALL & ~E_DEPRECATED & ~E_STRICT                              => 'E_ALL & ~E_DEPRECATED & ~E_STRICT',
+            E_ALL & ~E_NOTICE                                              => 'E_ALL & ~E_NOTICE',
+            E_ALL & ~E_NOTICE & ~E_STRICT                                  => 'E_ALL & ~E_NOTICE & ~E_STRICT',
+            E_COMPILE_ERROR | E_RECOVERABLE_ERROR | E_ERROR | E_CORE_ERROR => 'E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR',
         ];
         if (isset($array[$value])) {
             return $array[$value];
         }
 
-        return strval($value);
+        return strval($value); // @codeCoverageIgnore
     }
 
     /**

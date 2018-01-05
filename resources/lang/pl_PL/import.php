@@ -103,7 +103,7 @@ return [
     'file_map_field_mapped_to'        => 'Zmapowane do',
     'map_do_not_map'                  => '(nie mapuj)',
     'file_map_submit'                 => 'Rozpocznij import',
-    'file_nothing_to_map'             => 'There is no data present in your file that you can map to existing values. Please press "Start the import" to continue.',
+    'file_nothing_to_map'             => 'W twoim pliku nie ma danych, które można by odwzorować na istniejące wartości. Naciśnij "Rozpocznij import", aby kontynuować.',
 
     // map things.
     'column__ignore'                  => '(zignoruj tę kolumnę)',
