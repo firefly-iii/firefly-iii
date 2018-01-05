@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\ImportJob;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Str;
@@ -40,6 +41,37 @@ class ImportJobRepository implements ImportJobRepositoryInterface
 {
     /** @var User */
     private $user;
+
+    /**
+     * @param ImportJob $job
+     * @param int       $steps
+     *
+     * @return ImportJob
+     */
+    public function addStepsDone(ImportJob $job, int $steps = 1): ImportJob
+    {
+        $job->addStepsDone($steps);
+
+        return $job;
+    }
+
+    /**
+     * Return number of imported rows with this hash value.
+     *
+     * @param string $hash
+     *
+     * @return int
+     */
+    public function countByHash(string $hash): int
+    {
+        $json  = json_encode($hash);
+        $count = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+                                       ->where('data', $json)
+                                       ->where('name', 'importHash')
+                                       ->count();
+
+        return intval($count);
+    }
 
     /**
      * @param string $type
@@ -107,6 +139,23 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $config = $job->configuration;
         if (is_array($config)) {
             return $config;
+        }
+
+        return [];
+    }
+
+    /**
+     * Return extended status of job.
+     *
+     * @param ImportJob $job
+     *
+     * @return array
+     */
+    public function getExtendedStatus(ImportJob $job): array
+    {
+        $status = $job->extended_status;
+        if (is_array($status)) {
+            return $status;
         }
 
         return [];
@@ -200,6 +249,24 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $job->configuration = $newConfig;
         $job->save();
         Log::debug(sprintf('Set config of job "%s" to: ', $job->key), $newConfig);
+
+        return $job;
+    }
+
+    /**
+     * @param ImportJob $job
+     * @param array     $array
+     *
+     * @return ImportJob
+     */
+    public function setExtendedStatus(ImportJob $job, array $array): ImportJob
+    {
+        Log::debug(sprintf('Incoming extended status for job "%s" is: ', $job->key), $array);
+        $currentStatus        = $job->extended_status;
+        $newStatus            = array_merge($currentStatus, $array);
+        $job->extended_status = $newStatus;
+        $job->save();
+        Log::debug(sprintf('Set extended status of job "%s" to: ', $job->key), $newStatus);
 
         return $job;
     }

@@ -32,6 +32,7 @@ class AmountTest extends TestCase
 {
     /**
      * @covers \FireflyIII\Import\Converter\Amount::convert()
+     * @covers \FireflyIII\Import\Converter\Amount::stripAmount()
      */
     public function testConvert()
     {

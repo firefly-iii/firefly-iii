@@ -42,11 +42,10 @@ class Tags implements MapperInterface
 
         /** @var Tag $tag */
         foreach ($result as $tag) {
-            $list[$tag->id] = $tag->tag;
+            $tagId        = intval($tag->id);
+            $list[$tagId] = $tag->tag;
         }
-        asort($list);
-
-        $list = [0 => trans('import.map_do_not_map')] + $list;
+        $list = array_merge([0 => trans('import.map_do_not_map')], $list);
 
         return $list;
     }

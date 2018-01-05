@@ -42,11 +42,10 @@ class Categories implements MapperInterface
 
         /** @var Category $category */
         foreach ($result as $category) {
-            $list[$category->id] = $category->name;
+            $categoryId        = intval($category->id);
+            $list[$categoryId] = $category->name;
         }
-        asort($list);
-
-        $list = [0 => trans('import.map_do_not_map')] + $list;
+        $list = array_merge([0 => trans('import.map_do_not_map')], $list);
 
         return $list;
     }

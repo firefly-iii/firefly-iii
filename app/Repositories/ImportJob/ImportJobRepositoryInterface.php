@@ -32,20 +32,28 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 interface ImportJobRepositoryInterface
 {
     /**
+     * @param ImportJob $job
+     * @param int       $steps
+     *
+     * @return ImportJob
+     */
+    public function addStepsDone(ImportJob $job, int $steps = 1): ImportJob;
+
+    /**
+     * Return number of imported rows with this hash value.
+     *
+     * @param string $hash
+     *
+     * @return int
+     */
+    public function countByHash(string $hash): int;
+
+    /**
      * @param string $type
      *
      * @return ImportJob
      */
     public function create(string $type): ImportJob;
-
-    /**
-     * Return import file content.
-     *
-     * @param ImportJob $job
-     *
-     * @return string
-     */
-    public function uploadFileContents(ImportJob $job): string;
 
     /**
      * @param string $key
@@ -62,6 +70,15 @@ interface ImportJobRepositoryInterface
      * @return array
      */
     public function getConfiguration(ImportJob $job): array;
+
+    /**
+     * Return extended status of job.
+     *
+     * @param ImportJob $job
+     *
+     * @return array
+     */
+    public function getExtendedStatus(ImportJob $job): array;
 
     /**
      * @param ImportJob    $job
@@ -88,6 +105,14 @@ interface ImportJobRepositoryInterface
     public function setConfiguration(ImportJob $job, array $configuration): ImportJob;
 
     /**
+     * @param ImportJob $job
+     * @param array     $array
+     *
+     * @return void
+     */
+    public function setExtendedStatus(ImportJob $job, array $array): ImportJob;
+
+    /**
      * @param User $user
      */
     public function setUser(User $user);
@@ -99,4 +124,13 @@ interface ImportJobRepositoryInterface
      * @return ImportJob
      */
     public function updateStatus(ImportJob $job, string $status): ImportJob;
+
+    /**
+     * Return import file content.
+     *
+     * @param ImportJob $job
+     *
+     * @return string
+     */
+    public function uploadFileContents(ImportJob $job): string;
 }

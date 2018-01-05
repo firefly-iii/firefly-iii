@@ -42,11 +42,10 @@ class Bills implements MapperInterface
 
         /** @var Bill $bill */
         foreach ($result as $bill) {
-            $list[$bill->id] = $bill->name . ' [' . $bill->match . ']';
+            $billId        = intval($bill->id);
+            $list[$billId] = $bill->name . ' [' . $bill->match . ']';
         }
-        asort($list);
-
-        $list = [0 => trans('import.map_do_not_map')] + $list;
+        $list = array_merge([0 => trans('import.map_do_not_map')], $list);
 
         return $list;
     }

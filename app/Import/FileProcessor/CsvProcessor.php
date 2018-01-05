@@ -26,7 +26,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Object\ImportJournal;
 use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\ImportJob;
-use FireflyIII\Models\TransactionJournalMeta;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Support\Collection;
 use Iterator;
 use League\Csv\Reader;
@@ -43,6 +43,8 @@ class CsvProcessor implements FileProcessorInterface
     private $job;
     /** @var Collection */
     private $objects;
+    /** @var ImportJobRepositoryInterface */
+    private $repository;
     /** @var array */
     private $validConverters = [];
     /** @var array */
@@ -60,9 +62,14 @@ class CsvProcessor implements FileProcessorInterface
 
     /**
      * @return Collection
+     * @throws FireflyException
      */
     public function getObjects(): Collection
     {
+        if (is_null($this->job)) {
+            throw new FireflyException('Cannot call getObjects() without a job.');
+        }
+
         return $this->objects;
     }
 
@@ -73,9 +80,13 @@ class CsvProcessor implements FileProcessorInterface
      *
      * @throws \League\Csv\Exception
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws FireflyException
      */
     public function run(): bool
     {
+        if (is_null($this->job)) {
+            throw new FireflyException('Cannot call run() without a job.');
+        }
         Log::debug('Now in CsvProcessor run(). Job is now running...');
 
         $entries = new Collection($this->getImportArray());
@@ -86,8 +97,8 @@ class CsvProcessor implements FileProcessorInterface
                 $row = array_values($row);
                 if ($this->rowAlreadyImported($row)) {
                     $message = sprintf('Row #%d has already been imported.', $index);
-                    $this->job->addError($index, $message);
-                    $this->job->addStepsDone(5); // all steps.
+                    $this->repository->addStepsDone($this->job, 5);
+                    $this->addError($index, $message);
                     Log::info($message);
 
                     return null;
@@ -99,21 +110,32 @@ class CsvProcessor implements FileProcessorInterface
         Log::debug(sprintf('Number of entries left: %d', $notImported->count()));
 
         // set (new) number of steps:
-        $status                     = $this->job->extended_status;
-        $status['steps']            = $notImported->count() * 5;
-        $this->job->extended_status = $status;
-        $this->job->save();
-        Log::debug(sprintf('Number of steps: %d', $notImported->count() * 5));
+        $extended          = $this->getExtendedStatus();
+        $steps             = $notImported->count() * 5;
+        $extended['steps'] = $steps;
+        $this->setExtendedStatus($extended);
+        Log::debug(sprintf('Number of steps: %d', $steps));
 
         $notImported->each(
             function (array $row, int $index) {
                 $journal = $this->importRow($index, $row);
                 $this->objects->push($journal);
-                $this->job->addStepsDone(1);
+                $this->repository->addStepsDone($this->job, 1);
             }
         );
 
         return true;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * Shorthand method
+     *
+     * @param array $array
+     */
+    public function setExtendedStatus(array $array)
+    {
+        $this->repository->setExtendedStatus($this->job, $array);
     }
 
     /**
@@ -125,9 +147,28 @@ class CsvProcessor implements FileProcessorInterface
      */
     public function setJob(ImportJob $job): FileProcessorInterface
     {
-        $this->job = $job;
+        $this->job        = $job;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
 
         return $this;
+    }
+
+    /**
+     * Shorthand method.
+     *
+     * @codeCoverageIgnore
+     *
+     * @param int    $index
+     * @param string $message
+     */
+    private function addError(int $index, string $message): void
+    {
+        $extended                     = $this->getExtendedStatus();
+        $extended['errors'][$index][] = $message;
+        $this->setExtendedStatus($extended);
+
+        return;
     }
 
     /**
@@ -142,7 +183,7 @@ class CsvProcessor implements FileProcessorInterface
      */
     private function annotateValue(int $index, string $value)
     {
-        $config = $this->job->configuration;
+        $config = $this->getConfig();
         $role   = $config['column-roles'][$index] ?? '_ignore';
         $mapped = $config['column-mapping-config'][$index][$value] ?? null;
 
@@ -161,6 +202,29 @@ class CsvProcessor implements FileProcessorInterface
     }
 
     /**
+     * @codeCoverageIgnore
+     * Shorthand method.
+     *
+     * @return array
+     */
+    private function getConfig(): array
+    {
+        return $this->repository->getConfiguration($this->job);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * Shorthand method.
+     *
+     * @return array
+     */
+    private function getExtendedStatus(): array
+    {
+        return $this->repository->getExtendedStatus($this->job);
+    }
+
+
+    /**
      * @return Iterator
      *
      * @throws \League\Csv\Exception
@@ -169,16 +233,17 @@ class CsvProcessor implements FileProcessorInterface
      */
     private function getImportArray(): Iterator
     {
-        $content   = $this->job->uploadFileContents();
-        $config    = $this->job->configuration;
-        $reader    = Reader::createFromString($content);
-        $delimiter = $config['delimiter'];
+        $content    = $this->repository->uploadFileContents($this->job);
+        $config     = $this->getConfig();
+        $reader     = Reader::createFromString($content);
+        $delimiter  = $config['delimiter'] ?? ',';
+        $hasHeaders = isset($config['has-headers']) ? $config['has-headers'] : false;
         if ('tab' === $delimiter) {
-            $delimiter = "\t";
+            $delimiter = "\t"; // @codeCoverageIgnore
         }
         $reader->setDelimiter($delimiter);
-        if ($config['has-headers']) {
-            $reader->setHeaderOffset(0);
+        if ($hasHeaders) {
+            $reader->setHeaderOffset(0); // @codeCoverageIgnore
         }
         $results = $reader->getRecords();
         Log::debug('Created a CSV reader.');
@@ -191,6 +256,7 @@ class CsvProcessor implements FileProcessorInterface
      *
      * @param int $jsonError
      *
+     * @codeCoverageIgnore
      * @return string
      */
     private function getJsonError(int $jsonError): string
@@ -230,7 +296,7 @@ class CsvProcessor implements FileProcessorInterface
         $jsonError = json_last_error();
 
         if (false === $json) {
-            throw new FireflyException(sprintf('Error while encoding JSON for CSV row: %s', $this->getJsonError($jsonError)));
+            throw new FireflyException(sprintf('Error while encoding JSON for CSV row: %s', $this->getJsonError($jsonError)));  // @codeCoverageIgnore
         }
         $hash = hash('sha256', $json);
 
@@ -251,8 +317,9 @@ class CsvProcessor implements FileProcessorInterface
     {
         $row = array_values($row);
         Log::debug(sprintf('Now at row %d', $index));
-        $row  = $this->specifics($row);
-        $hash = $this->getRowHash($row);
+        $row    = $this->specifics($row);
+        $hash   = $this->getRowHash($row);
+        $config = $this->getConfig();
 
         $journal = new ImportJournal;
         $journal->setUser($this->job->user);
@@ -271,7 +338,8 @@ class CsvProcessor implements FileProcessorInterface
             }
         }
         // set some extra info:
-        $journal->asset->setDefaultAccountId($this->job->configuration['import-account']);
+        $importAccount = intval($config['import-account'] ?? 0);
+        $journal->asset->setDefaultAccountId($importAccount);
 
         return $journal;
     }
@@ -288,12 +356,8 @@ class CsvProcessor implements FileProcessorInterface
     private function rowAlreadyImported(array $array): bool
     {
         $hash  = $this->getRowHash($array);
-        $json  = json_encode($hash);
-        $entry = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
-                                       ->where('data', $json)
-                                       ->where('name', 'importHash')
-                                       ->first();
-        if (null !== $entry) {
+        $count = $this->repository->countByHash($hash);
+        if ($count > 0) {
             return true;
         }
 
