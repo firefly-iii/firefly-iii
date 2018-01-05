@@ -91,7 +91,7 @@ class FileConfigurator implements ConfiguratorInterface
         $class = $this->getConfigurationClass();
         $job   = $this->job;
         /** @var ConfigurationInterface $object */
-        $object = new $class($this->job);
+        $object = app($class);
         $object->setJob($job);
         $result        = $object->storeConfiguration($data);
         $this->warning = $object->getWarningMessage();
@@ -187,6 +187,7 @@ class FileConfigurator implements ConfiguratorInterface
      */
     public function setJob(ImportJob $job)
     {
+        Log::debug(sprintf('FileConfigurator::setJob(#%d: %s)', $job->id, $job->key));
         $this->job        = $job;
         $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($job->user);
@@ -236,10 +237,10 @@ class FileConfigurator implements ConfiguratorInterface
         }
 
         if (false === $class || 0 === strlen($class)) {
-            throw new FireflyException('Cannot handle current job state in getConfigurationClass().');
+            throw new FireflyException(sprintf('Cannot handle job stage "%s" in getConfigurationClass().', $stage));
         }
         if (!class_exists($class)) {
-            throw new FireflyException(sprintf('Class %s does not exist in getConfigurationClass().', $class));
+            throw new FireflyException(sprintf('Class %s does not exist in getConfigurationClass().', $class)); // @codeCoverageIgnore
         }
         Log::debug(sprintf('Configuration class is "%s"', $class));
 
