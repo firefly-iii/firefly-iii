@@ -37,6 +37,10 @@ Register for a free Heroku account and instantly run Firefly III on your very ow
 
 You can find Firefly III in [the Sandstorm.io marketplace](https://apps.sandstorm.io/app/uws252ya9mep4t77tevn85333xzsgrpgth8q4y1rhknn1hammw70). You can run it on your own installation or on Oasis.
 
+### Other options
+
+Firefly III is also available as a package on [https://softaculous.com/](Softaculous) and [AMPPS](https://www.ampps.com/).
+
 ## More about Firefly III
 
 Personal financial management is pretty difficult, and everybody has their own approach to it.
