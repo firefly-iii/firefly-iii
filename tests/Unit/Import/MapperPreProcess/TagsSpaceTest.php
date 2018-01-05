@@ -1,7 +1,7 @@
 <?php
 /**
- * TagsComma.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * TagsSpaceTest.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,27 +18,32 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace FireflyIII\Import\MapperPreProcess;
+namespace Tests\Unit\Import\MapperPreProcess;
+
+use FireflyIII\Import\MapperPreProcess\TagsComma;
+use FireflyIII\Import\MapperPreProcess\TagsSpace;
+use Tests\TestCase;
 
 /**
- * Class TagsComma.
+ * Class TagsSpaceTest
  */
-class TagsComma implements PreProcessorInterface
+class TagsSpaceTest extends TestCase
 {
-    /**
-     * @param string $value
-     *
-     * @return array
-     */
-    public function run(string $value): array
-    {
-        $set    = explode(',', $value);
-        $set    = array_map('trim', $set);
-        $set    = array_filter($set, 'strlen');
-        $return = array_values($set);
 
-        return $return;
+    /**
+     * \FireflyIII\Import\MapperPreProcess\TagsSpace::run
+     */
+    public function testBasic()
+    {
+        $input  = 'some tags with  spaces,and without  ';
+        $output = ['some', 'tags', 'with', 'spaces,and', 'without'];
+        $mapper = new TagsSpace();
+        $result = $mapper->run($input);
+
+        $this->assertEquals($output, $result);
     }
+
 }
