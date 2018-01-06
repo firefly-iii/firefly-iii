@@ -41,11 +41,11 @@ class BillsTest extends TestCase
     public function testGetMapBasic()
     {
         $one        = new Bill();
-        $one->id    = 1;
+        $one->id    = 5;
         $one->name  = 'Something';
         $one->match = 'hi,bye';
         $two        = new Account;
-        $two->id    = 2;
+        $two->id    = 9;
         $two->name  = 'Else';
         $two->match = 'match';
         $collection = new Collection([$one, $two]);
@@ -59,8 +59,8 @@ class BillsTest extends TestCase
         // assert this is what the result looks like:
         $result = [
             0 => strval(trans('import.map_do_not_map')),
-            1 => 'Something [hi,bye]',
-            2 => 'Else [match]',
+            9 => 'Else [match]',
+            5 => 'Something [hi,bye]',
         ];
         $this->assertEquals($result, $mapping);
     }

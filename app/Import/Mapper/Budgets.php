@@ -45,7 +45,8 @@ class Budgets implements MapperInterface
             $budgetId        = intval($budget->id);
             $list[$budgetId] = $budget->name;
         }
-        $list = array_merge([0 => trans('import.map_do_not_map')], $list);
+        asort($list);
+        $list = [0 => trans('import.map_do_not_map')] + $list;
 
         return $list;
     }

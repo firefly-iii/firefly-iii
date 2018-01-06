@@ -40,10 +40,10 @@ class BudgetsTest extends TestCase
     public function testGetMapBasic()
     {
         $one        = new Budget;
-        $one->id    = 1;
+        $one->id    = 8;
         $one->name  = 'Something';
         $two        = new Budget;
-        $two->id    = 2;
+        $two->id    = 4;
         $two->name  = 'Else';
         $collection = new Collection([$one, $two]);
 
@@ -56,8 +56,9 @@ class BudgetsTest extends TestCase
         // assert this is what the result looks like:
         $result = [
             0 => strval(trans('import.map_do_not_map')),
-            1 => 'Something',
-            2 => 'Else',
+            4 => 'Else',
+            8 => 'Something',
+
         ];
         $this->assertEquals($result, $mapping);
     }

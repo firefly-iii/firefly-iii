@@ -41,11 +41,11 @@ class AssetAccountIbansTest extends TestCase
     public function testGetMapBasic()
     {
         $one        = new Account;
-        $one->id    = 1;
+        $one->id    = 17;
         $one->name  = 'Something';
         $one->iban  = 'IBAN';
         $two        = new Account;
-        $two->id    = 2;
+        $two->id    = 53;
         $two->name  = 'Else';
         $collection = new Collection([$one, $two]);
 
@@ -58,8 +58,8 @@ class AssetAccountIbansTest extends TestCase
         // assert this is what the result looks like:
         $result = [
             0 => strval(trans('import.map_do_not_map')),
-            1 => 'IBAN (Something)',
-            2 => 'Else',
+            53 => 'Else',
+            17 => 'IBAN (Something)',
         ];
         $this->assertEquals($result, $mapping);
     }

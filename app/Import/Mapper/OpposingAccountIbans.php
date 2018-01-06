@@ -59,8 +59,9 @@ class OpposingAccountIbans implements MapperInterface
                 $list[$accountId] = $account->name;
             }
         }
-        $list = array_merge($topList, $list);
-        $list = array_merge([0 => trans('import.map_do_not_map')], $list);
+        $list = $topList + $list;
+        asort($list);
+        $list = [0 => trans('import.map_do_not_map')] + $list;
 
         return $list;
     }

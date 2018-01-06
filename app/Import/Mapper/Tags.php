@@ -45,7 +45,8 @@ class Tags implements MapperInterface
             $tagId        = intval($tag->id);
             $list[$tagId] = $tag->tag;
         }
-        $list = array_merge([0 => trans('import.map_do_not_map')], $list);
+        asort($list);
+        $list = [0 => trans('import.map_do_not_map')] + $list;
 
         return $list;
     }

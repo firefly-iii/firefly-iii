@@ -45,7 +45,8 @@ class Bills implements MapperInterface
             $billId        = intval($bill->id);
             $list[$billId] = $bill->name . ' [' . $bill->match . ']';
         }
-        $list = array_merge([0 => trans('import.map_do_not_map')], $list);
+        asort($list);
+        $list = [0 => trans('import.map_do_not_map')] + $list;
 
         return $list;
     }

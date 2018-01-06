@@ -41,11 +41,11 @@ class OpposingAccountsTest extends TestCase
     public function testGetMapBasic()
     {
         $one        = new Account;
-        $one->id    = 1;
+        $one->id    = 13;
         $one->name  = 'Something';
         $one->iban  = 'IBAN';
         $two        = new Account;
-        $two->id    = 2;
+        $two->id    = 9;
         $two->name  = 'Else';
         $collection = new Collection([$one, $two]);
 
@@ -59,9 +59,9 @@ class OpposingAccountsTest extends TestCase
         $this->assertCount(3, $mapping);
         // assert this is what the result looks like:
         $result = [
-            0 => strval(trans('import.map_do_not_map')),
-            1 => 'Something (IBAN)',
-            2 => 'Else',
+            0  => strval(trans('import.map_do_not_map')),
+            9  => 'Else',
+            13 => 'Something (IBAN)',
         ];
         $this->assertEquals($result, $mapping);
     }

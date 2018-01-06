@@ -40,10 +40,10 @@ class CategoriesTest extends TestCase
     public function testGetMapBasic()
     {
         $one        = new Category;
-        $one->id    = 1;
+        $one->id    = 9;
         $one->name  = 'Something';
         $two        = new Category;
-        $two->id    = 2;
+        $two->id    = 17;
         $two->name  = 'Else';
         $collection = new Collection([$one, $two]);
 
@@ -55,9 +55,10 @@ class CategoriesTest extends TestCase
         $this->assertCount(3, $mapping);
         // assert this is what the result looks like:
         $result = [
-            0 => strval(trans('import.map_do_not_map')),
-            1 => 'Something',
-            2 => 'Else',
+            0  => strval(trans('import.map_do_not_map')),
+            17 => 'Else',
+            9  => 'Something',
+
         ];
         $this->assertEquals($result, $mapping);
     }

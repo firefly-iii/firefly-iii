@@ -40,10 +40,10 @@ class TagsTest extends TestCase
     public function testGetMapBasic()
     {
         $one        = new Tag;
-        $one->id    = 1;
+        $one->id    = 12;
         $one->tag   = 'Something';
         $two        = new Tag;
-        $two->id    = 2;
+        $two->id    = 14;
         $two->tag   = 'Else';
         $collection = new Collection([$one, $two]);
 
@@ -55,9 +55,9 @@ class TagsTest extends TestCase
         $this->assertCount(3, $mapping);
         // assert this is what the result looks like:
         $result = [
-            0 => strval(trans('import.map_do_not_map')),
-            1 => 'Something',
-            2 => 'Else',
+            0  => strval(trans('import.map_do_not_map')),
+            14 => 'Else',
+            12 => 'Something',
         ];
         $this->assertEquals($result, $mapping);
     }

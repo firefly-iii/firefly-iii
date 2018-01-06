@@ -40,11 +40,11 @@ class TransactionCurrenciesTest extends TestCase
     public function testGetMapBasic()
     {
         $one        = new TransactionCurrency;
-        $one->id    = 1;
+        $one->id    = 9;
         $one->name  = 'Something';
         $one->code  = 'ABC';
         $two        = new TransactionCurrency;
-        $two->id    = 2;
+        $two->id    = 11;
         $two->name  = 'Else';
         $two->code  = 'DEF';
         $collection = new Collection([$one, $two]);
@@ -57,9 +57,10 @@ class TransactionCurrenciesTest extends TestCase
         $this->assertCount(3, $mapping);
         // assert this is what the result looks like:
         $result = [
-            0 => strval(trans('import.map_do_not_map')),
-            1 => 'Something (ABC)',
-            2 => 'Else (DEF)',
+            0  => strval(trans('import.map_do_not_map')),
+            11 => 'Else (DEF)',
+            9  => 'Something (ABC)',
+
         ];
         $this->assertEquals($result, $mapping);
     }
