@@ -57,7 +57,7 @@ class OpposingAccounts implements MapperInterface
             }
             $list[$accountId] = $name;
         }
-        $list = array_merge([0 => trans('import.map_do_not_map')], $list);
+        $list = ["0" => trans('import.map_do_not_map')] + $list;
 
         return $list;
     }
