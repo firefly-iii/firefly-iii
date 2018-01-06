@@ -63,6 +63,7 @@ class DebugController extends Controller
         $appLog         = env('APP_LOG', '');
         $appLogLevel    = env('APP_LOG_LEVEL', '');
         $packages       = $this->collectPackages();
+        $cacheDriver    = env('CACHE_DRIVER', 'unknown');
 
 
         // get latest log file:
@@ -100,6 +101,7 @@ class DebugController extends Controller
                 'phpOs',
                 'interface',
                 'logContent',
+                'cacheDriver',
                 'isDocker',
                 'isSandstorm',
                 'trustedProxies'
