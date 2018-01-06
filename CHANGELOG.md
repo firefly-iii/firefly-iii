@@ -2,6 +2,28 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.6.13] - 2018-01-06
+### Added
+- [Issue 1074](https://github.com/firefly-iii/firefly-iii/issues/1074), suggested by [MacPaille](https://github.com/MacPaille)
+- [Issue 1077](https://github.com/firefly-iii/firefly-iii/issues/1077), suggested by [wtercato](https://github.com/wtercato)
+- Bulk edit of transactions thanks to [vicmosin](https://github.com/vicmosin) ([issue 1078](https://github.com/firefly-iii/firefly-iii/issues/1078))
+- Support for Turkish.
+- [Issue 1090](https://github.com/firefly-iii/firefly-iii/issues/1090), suggested by [Findus23](https://github.com/Findus23)
+- [Issue 1097](https://github.com/firefly-iii/firefly-iii/issues/1097), suggested by [kelvinhammond](https://github.com/kelvinhammond)
+- [Issue 1093](https://github.com/firefly-iii/firefly-iii/issues/1093), suggested by [jinformatique](https://github.com/jinformatique)
+- [Issue 1098](https://github.com/firefly-iii/firefly-iii/issues/1098), suggested by [Nik-vr](https://github.com/Nik-vr)
+
+### Fixed
+- [Issue 972](https://github.com/firefly-iii/firefly-iii/issues/972), reported by [pjotrvdh](https://github.com/pjotrvdh)
+- [Issue 1079](https://github.com/firefly-iii/firefly-iii/issues/1079), reported by [gavu](https://github.com/gavu)
+- [Issue 1080](https://github.com/firefly-iii/firefly-iii/issues/1080), reported by [zjean](https://github.com/zjean)
+- [Issue 1083](https://github.com/firefly-iii/firefly-iii/issues/1083), reported by [skuzzle](https://github.com/skuzzle)
+- [Issue 1085](https://github.com/firefly-iii/firefly-iii/issues/1085), reported by [nicoschreiner](https://github.com/nicoschreiner)
+- [Issue 1087](https://github.com/firefly-iii/firefly-iii/issues/1087), reported by [4oo4](https://github.com/4oo4)
+- [Issue 1089](https://github.com/firefly-iii/firefly-iii/issues/1089), reported by [robin5210](https://github.com/robin5210)
+- [Issue 1092](https://github.com/firefly-iii/firefly-iii/issues/1092), reported by [kelvinhammond](https://github.com/kelvinhammond)
+- [Issue 1096](https://github.com/firefly-iii/firefly-iii/issues/1096), reported by [wtercato](https://github.com/wtercato)
+
 ## [4.6.12] - 2017-12-31
 ### Added
 - Support for Indonesian.
@@ -16,7 +38,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 1047](https://github.com/firefly-iii/firefly-iii/issues/1047), as reported by [pkoziol](https://github.com/pkoziol)
 - [Issue 1048](https://github.com/firefly-iii/firefly-iii/issues/1048), as reported by [webence](https://github.com/webence)
 - [Issue 1049](https://github.com/firefly-iii/firefly-iii/issues/1049), as reported by [nicoschreiner](https://github.com/nicoschreiner) 
-- [Issue 1015](https://github.com/firefly-iii/firefly-iii/issues/1015), as reporterd by a user on Tweakers.net
+- [Issue 1015](https://github.com/firefly-iii/firefly-iii/issues/1015), as reported by a user on Tweakers.net
 - [Issue 1056](https://github.com/firefly-iii/firefly-iii/issues/1056), as reported by [repercussion](https://github.com/repercussion) 
 - [Issue 1061](https://github.com/firefly-iii/firefly-iii/issues/1061), as reported by [Meizikyn](https://github.com/Meizikyn)
 - [Issue 1045](https://github.com/firefly-iii/firefly-iii/issues/1045), as reported by [gavu](https://github.com/gavu)
@@ -53,7 +75,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Reconciliation of accounts ([issue 736](https://github.com/firefly-iii/firefly-iii/issues/736)), as requested by [kristophr](https://github.com/kristophr) and several others
 
 ### Changed
-- Extended currency list, as suggested by @emuhendis in [issue 994](https://github.com/firefly-iii/firefly-iii/issues/994)
+- Extended currency list, as suggested by [emuhendis](https://github.com/emuhendis) in [issue 994](https://github.com/firefly-iii/firefly-iii/issues/994)
 - [Issue 996](https://github.com/firefly-iii/firefly-iii/issues/996) as suggested by [dp87](https://github.com/dp87)
 
 ### Removed
@@ -78,7 +100,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 1025](https://github.com/firefly-iii/firefly-iii/issues/1025), reported by [gavu](https://github.com/gavu)
 
 
-## [4.6.10] - 2017-11-xx
+## [4.6.10] - 2017-11-03
 ### Added
 - Greatly expanded Docker support thanks to [alazare619](https://github.com/alazare619)
 - [Issue 967](https://github.com/firefly-iii/firefly-iii/issues/967), thanks to [Aquariu](https://github.com/Aquariu)
@@ -353,8 +375,8 @@ This will be the last release to support PHP 7.0.
 - Can now make rules for attachments, see [issue 608](https://github.com/firefly-iii/firefly-iii/issues/608), as suggested by [dzaikos](https://github.com/dzaikos).
 
 ### Fixed
-- Fixed [issue 629](https://github.com/firefly-iii/firefly-iii/issues/629), reported by @forcaeluz
-- Fixed [issue 630](https://github.com/firefly-iii/firefly-iii/issues/630), reported by @welbert
+- Fixed [issue 629](https://github.com/firefly-iii/firefly-iii/issues/629), reported by [forcaeluz](https://github.com/forcaeluz)
+- Fixed [issue 630](https://github.com/firefly-iii/firefly-iii/issues/630), reported by [welbert](https://github.com/welbert)
 - And more various bug fixes.
 
 ## [4.3.8] - 2017-04-08
