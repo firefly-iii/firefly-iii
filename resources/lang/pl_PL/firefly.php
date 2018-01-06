@@ -701,6 +701,7 @@ return [
     'selected_transactions'                    => 'Wybrane transakcje (:count)',
     'already_cleared_transactions'             => 'Transakcje uzgodnione wcześniej (:count)',
     'submitted_end_balance'                    => 'Przesłane saldo końcowe',
+    'initial_balance_description'              => 'Saldo początkowe dla ":account"',
 
     // categories:
     'new_category'                             => 'Nowa kategoria',

@@ -33,7 +33,7 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'     => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
-    'version'        => '4.7.0',
+    'version'        => '4.6.13',
     'maxUploadSize'  => 15242880,
     'allowedMimes'   => ['image/png', 'image/jpeg', 'application/pdf', 'text/plain'],
     'list_length'    => 10,
