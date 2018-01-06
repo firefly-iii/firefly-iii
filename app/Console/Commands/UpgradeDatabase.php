@@ -415,9 +415,9 @@ class UpgradeDatabase extends Command
                     'Transaction #%d has a currency setting (#%d) (%s) that should be #%d (%s). Amount remains %s, currency is changed.',
                     $transaction->id,
                     $transaction->transaction_currency_id,
-                    $this->var_dump_ret($transaction->transaction_currency_id),
+                    $this->var_dump_ret(intval($transaction->transaction_currency_id)),
                     $currency->id,
-                    $this->var_dump_ret($currency->id),
+                    $this->var_dump_ret(intval($currency->id)),
                     $transaction->amount
                 )
             );
