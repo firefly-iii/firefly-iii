@@ -209,6 +209,7 @@ class ImportJob extends Model
         $disk             = Storage::disk('upload');
         $encryptedContent = $disk->get($fileName);
         $content          = Crypt::decrypt($encryptedContent);
+        $content          = trim($content);
         Log::debug(sprintf('Content size is %d bytes.', strlen($content)));
 
         return $content;
