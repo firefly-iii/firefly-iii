@@ -398,7 +398,7 @@ class AccountRepository implements AccountRepositoryInterface
                 'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
                 'transaction_currency_id' => $currencyId,
-                'description'             => 'Initial balance for "' . $account->name . '"',
+                'description'             => strval(trans('firefly.initial_balance_description', ['account' => $account->name])),
                 'completed'               => true,
                 'date'                    => $data['openingBalanceDate'],
             ]
