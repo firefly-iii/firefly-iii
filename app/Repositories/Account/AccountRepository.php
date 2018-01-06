@@ -88,6 +88,18 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Return account type by string.
+     *
+     * @param string $type
+     *
+     * @return AccountType|null
+     */
+    public function getAccountType(string $type): ?AccountType
+    {
+        return AccountType::whereType($type)->first();
+    }
+
+    /**
      * @param Account $account
      *
      * @return Note|null
