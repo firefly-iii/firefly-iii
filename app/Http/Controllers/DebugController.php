@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Http\Middleware\IsDemoUser;
 use Illuminate\Http\Request;
 use Log;
 use Monolog\Handler\RotatingFileHandler;
@@ -34,6 +35,15 @@ use Monolog\Handler\RotatingFileHandler;
  */
 class DebugController extends Controller
 {
+    /**
+     * HomeController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware(IsDemoUser::class);
+    }
+
 
     /**
      * @param Request $request
