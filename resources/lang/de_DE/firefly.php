@@ -702,6 +702,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'selected_transactions'                    => 'Selected transactions (:count)',
     'already_cleared_transactions'             => 'Already cleared transactions (:count)',
     'submitted_end_balance'                    => 'Submitted end balance',
+    'initial_balance_description'              => 'Initial balance for ":account"',
 
     // categories:
     'new_category'                             => 'Neue Kategorie',

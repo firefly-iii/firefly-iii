@@ -701,6 +701,7 @@ return [
     'selected_transactions'                    => 'Transaksi yang dipilih (:count)',
     'already_cleared_transactions'             => 'Sudah dibersihkan transaksi (:count)',
     'submitted_end_balance'                    => 'Saldo akhir yang dikirim',
+    'initial_balance_description'              => 'Initial balance for ":account"',
 
     // categories:
     'new_category'                             => 'Kategori baru',

@@ -702,6 +702,7 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'selected_transactions'                    => 'Seçilen İşlemler (:count)',
     'already_cleared_transactions'             => 'Halihazırda temizlenmiş işlemler (:count)',
     'submitted_end_balance'                    => 'Gönderilen bitiş bakiyesi',
+    'initial_balance_description'              => 'Initial balance for ":account"',
 
     // categories:
     'new_category'                             => 'Yeni Kategori',

@@ -701,6 +701,7 @@ return [
     'selected_transactions'                    => 'Transactions sélectionnées ( :count)',
     'already_cleared_transactions'             => 'Transactions déjà effacées ( :count)',
     'submitted_end_balance'                    => 'Solde final soumis',
+    'initial_balance_description'              => 'Initial balance for ":account"',
 
     // categories:
     'new_category'                             => 'Nouvelle catégorie',

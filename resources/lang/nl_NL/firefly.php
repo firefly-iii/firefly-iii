@@ -701,6 +701,7 @@ return [
     'selected_transactions'                    => 'Geselecteerde transacties (:count)',
     'already_cleared_transactions'             => 'Al afgestemde transacties (:count)',
     'submitted_end_balance'                    => 'Ingevoerd eindsaldo',
+    'initial_balance_description'              => 'Startsaldo voor ":account"',
 
     // categories:
     'new_category'                             => 'Nieuwe categorie',
