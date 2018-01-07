@@ -25,7 +25,7 @@ return [
     'enabled'       => [
         'file'    => true,
         'bunq'    => false,
-        'spectre' => true,
+        'spectre' => false,
         'plaid'   => false,
     ],
     'prerequisites' => [
