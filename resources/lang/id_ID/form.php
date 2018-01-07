@@ -78,6 +78,7 @@ return [
     'new_email_address'              => 'Alamat email baru',
     'verification'                   => 'Verifikasi',
     'api_key'                        => 'Kunci API',
+    'remember_me'                    => 'Remember me',
 
     'source_account_asset'        => 'Akun sumber (akun aset)',
     'destination_account_expense' => 'Akun tujuan (akun pengeluaran)',

@@ -78,7 +78,9 @@ class ConfigurationController extends Controller
 
             return redirect(route('import.status', [$job->key]));
         }
+
         $this->repository->updateStatus($job, 'configuring');
+
         $view         = $configurator->getNextView();
         $data         = $configurator->getNextData();
         $subTitle     = trans('firefly.import_config_bread_crumb');
@@ -135,6 +137,7 @@ class ConfigurationController extends Controller
         if (null === $className || !class_exists($className)) {
             throw new FireflyException(sprintf('Cannot find configurator class for job of type "%s".', $type)); // @codeCoverageIgnore
         }
+        Log::debug(sprintf('Going to create class "%s"', $className));
         /** @var ConfiguratorInterface $configurator */
         $configurator = app($className);
         $configurator->setJob($job);

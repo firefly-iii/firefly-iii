@@ -24,6 +24,7 @@ namespace FireflyIII\Support\Import\Configuration\File;
 
 use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 use League\Csv\Reader;
 use League\Csv\Statement;
@@ -40,7 +41,8 @@ class Roles implements ConfigurationInterface
     private $data = [];
     /** @var ImportJob */
     private $job;
-
+    /** @var ImportJobRepositoryInterface */
+    private $repository;
     /** @var string */
     private $warning = '';
 
@@ -54,8 +56,8 @@ class Roles implements ConfigurationInterface
      */
     public function getData(): array
     {
-        $config  = $this->job->configuration;
-        $content = $this->job->uploadFileContents();
+        $content = $this->repository->uploadFileContents($this->job);
+        $config  = $this->getConfig();
         $headers = [];
         $offset  = 0;
         // create CSV reader.
@@ -112,7 +114,9 @@ class Roles implements ConfigurationInterface
      */
     public function setJob(ImportJob $job): ConfigurationInterface
     {
-        $this->job = $job;
+        $this->job        = $job;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
 
         return $this;
     }
@@ -127,24 +131,38 @@ class Roles implements ConfigurationInterface
     public function storeConfiguration(array $data): bool
     {
         Log::debug('Now in storeConfiguration of Roles.');
-        $config = $this->job->configuration;
+        $config = $this->getConfig();
         $count  = $config['column-count'];
         for ($i = 0; $i < $count; ++$i) {
             $role                            = $data['role'][$i] ?? '_ignore';
             $mapping                         = isset($data['map'][$i]) && $data['map'][$i] === '1' ? true : false;
             $config['column-roles'][$i]      = $role;
             $config['column-do-mapping'][$i] = $mapping;
-            Log::debug(sprintf('Column %d has been given role %s', $i, $role));
+            Log::debug(sprintf('Column %d has been given role %s (mapping: %s)', $i, $role, var_export($mapping, true)));
         }
 
-        $this->job->configuration = $config;
-        $this->job->save();
-
+        $this->saveConfig($config);
         $this->ignoreUnmappableColumns();
         $this->setRolesComplete();
+
+        $config          = $this->getConfig();
+        $config['stage'] = 'map';
+        $this->saveConfig($config);
+
         $this->isMappingNecessary();
 
+
         return true;
+    }
+
+    /**
+     * Short hand method.
+     *
+     * @return array
+     */
+    private function getConfig(): array
+    {
+        return $this->repository->getConfiguration($this->job);
     }
 
     /**
@@ -165,11 +183,12 @@ class Roles implements ConfigurationInterface
      */
     private function ignoreUnmappableColumns(): bool
     {
-        $config = $this->job->configuration;
+        $config = $this->getConfig();
         $count  = $config['column-count'];
         for ($i = 0; $i < $count; ++$i) {
             $role    = $config['column-roles'][$i] ?? '_ignore';
             $mapping = $config['column-do-mapping'][$i] ?? false;
+            Log::debug(sprintf('Role for column %d is %s, and mapping is %s', $i, $role, var_export($mapping, true)));
 
             if ('_ignore' === $role && true === $mapping) {
                 $mapping = false;
@@ -177,9 +196,7 @@ class Roles implements ConfigurationInterface
             }
             $config['column-do-mapping'][$i] = $mapping;
         }
-
-        $this->job->configuration = $config;
-        $this->job->save();
+        $this->saveConfig($config);
 
         return true;
     }
@@ -189,7 +206,7 @@ class Roles implements ConfigurationInterface
      */
     private function isMappingNecessary()
     {
-        $config     = $this->job->configuration;
+        $config     = $this->getConfig();
         $count      = $config['column-count'];
         $toBeMapped = 0;
         for ($i = 0; $i < $count; ++$i) {
@@ -200,11 +217,10 @@ class Roles implements ConfigurationInterface
         }
         Log::debug(sprintf('Found %d columns that need mapping.', $toBeMapped));
         if (0 === $toBeMapped) {
-            // skip setting of map, because none need to be mapped:
-            $config['column-mapping-complete'] = true;
-            $this->job->configuration          = $config;
-            $this->job->save();
+            $config['stage'] = 'ready';
         }
+
+        $this->saveConfig($config);
 
         return true;
     }
@@ -248,7 +264,9 @@ class Roles implements ConfigurationInterface
      */
     private function processSpecifics(array $row): array
     {
-        $names = array_keys($this->job->configuration['specifics'] ?? []);
+        $config    = $this->getConfig();
+        $specifics = $config['specifics'] ?? [];
+        $names     = array_keys($specifics);
         foreach ($names as $name) {
             /** @var SpecificInterface $specific */
             $specific = app('FireflyIII\Import\Specifics\\' . $name);
@@ -259,11 +277,19 @@ class Roles implements ConfigurationInterface
     }
 
     /**
+     * @param array $array
+     */
+    private function saveConfig(array $array)
+    {
+        $this->repository->setConfiguration($this->job, $array);
+    }
+
+    /**
      * @return bool
      */
     private function setRolesComplete(): bool
     {
-        $config    = $this->job->configuration;
+        $config    = $this->getConfig();
         $count     = $config['column-count'];
         $assigned  = 0;
         $hasAmount = false;
@@ -278,13 +304,12 @@ class Roles implements ConfigurationInterface
         }
         if ($assigned > 0 && $hasAmount) {
             $config['column-roles-complete'] = true;
-            $this->job->configuration        = $config;
-            $this->job->save();
-            $this->warning = '';
+            $this->warning                   = '';
         }
         if (0 === $assigned || !$hasAmount) {
             $this->warning = strval(trans('import.roles_warning'));
         }
+        $this->saveConfig($config);
 
         return true;
     }
@@ -294,11 +319,10 @@ class Roles implements ConfigurationInterface
      */
     private function updateColumCount(): bool
     {
-        $config                   = $this->job->configuration;
-        $count                    = $this->data['total'];
-        $config['column-count']   = $count;
-        $this->job->configuration = $config;
-        $this->job->save();
+        $config                 = $this->getConfig();
+        $count                  = $this->data['total'];
+        $config['column-count'] = $count;
+        $this->saveConfig($config);
 
         return true;
     }

@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\MassDeleteJournalRequest;
 use FireflyIII\Http\Requests\MassEditJournalRequest;
+use FireflyIII\Http\Requests\MassEditBulkJournalRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -71,7 +72,7 @@ class MassController extends Controller
         // put previous url in session
         $this->rememberPreviousUri('transactions.mass-delete.uri');
 
-        return view('transactions.mass-delete', compact('journals', 'subTitle'));
+        return view('transactions.mass.delete', compact('journals', 'subTitle'));
     }
 
     /**
@@ -131,7 +132,7 @@ class MassController extends Controller
         // skip transactions that have multiple destinations, multiple sources or are an opening balance.
         $filtered = new Collection;
         $messages = [];
-        // @var TransactionJournal
+        /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $sources      = $journal->sourceAccountList();
             $destinations = $journal->destinationAccountList();
@@ -213,7 +214,7 @@ class MassController extends Controller
         if (is_array($journalIds)) {
             foreach ($journalIds as $journalId) {
                 $journal = $repository->find(intval($journalId));
-                if ($journal) {
+                if (!is_null($journal)) {
                     // get optional fields:
                     $what              = strtolower($journal->transactionTypeStr());
                     $sourceAccountId   = $request->get('source_account_id')[$journal->id] ?? 0;
@@ -264,4 +265,5 @@ class MassController extends Controller
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-edit.uri'));
     }
+
 }

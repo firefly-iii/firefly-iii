@@ -92,7 +92,9 @@ return [
     'csv_roles_column'                => 'Kolom',
     'csv_roles_no_example_data'       => 'Tidak ada data contoh yang tersedia',
     'csv_roles_submit'                => 'Lanjutkan dengan langkah 4/4',
-    'csv_roles_warning'               => 'Paling tidak, tandai satu kolom sebagai kolom jumlah. Sebaiknya pilih juga kolom untuk deskripsi, tanggal dan akun lawan.',
+
+    // not csv, but normal warning
+    'roles_warning'                   => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
 
     // file, map data
     'file_map_title'                  => 'Pengaturan impor (4/4) - Sambungkan data impor ke data Firefly III',
@@ -101,6 +103,7 @@ return [
     'file_map_field_mapped_to'        => 'Dipetakan ke',
     'map_do_not_map'                  => '(jangan memetakan)',
     'file_map_submit'                 => 'Mulai impor',
+    'file_nothing_to_map'             => 'There is no data present in your file that you can map to existing values. Please press "Start the import" to continue.',
 
     // map things.
     'column__ignore'                  => '(abaikan kolom ini)',
@@ -151,13 +154,6 @@ return [
     // Spectre
     'spectre_title'                   => 'Impor menggunakan momok',
     'spectre_prerequisites_title'     => 'Prasyarat untuk impor menggunakan momok',
-    'spectre_prerequisites_text'      => 'Untuk mengimpor data menggunakan API momok, Anda perlu membuktikan beberapa rahasia. Mereka dapat ditemukan di <a href="https://www.saltedge.com/clients/profile/secrets">halaman rahasia</a>.',
+    'spectre_prerequisites_text'      => 'In order to import data using the Spectre API, you must provide Firefly III with two secret values. They can be found on the <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
     'spectre_enter_pub_key'           => 'Impor hanya akan berfungsi saat Anda memasukkan kunci publik ini di <a href="https://www.saltedge.com/clients/security/edit">halaman keamanan</a> Anda.',
-    'spectre_select_country_title'    => 'Pilih negara',
-    'spectre_select_country_text'     => 'Firefly III memiliki banyak pilihan bank dan lokasi dari mana Spectre dapat mendownload data transaksional. Bank-bank ini diurutkan berdasarkan negara. Tolong jangan sampai ada "Negara Palsu" saat Anda ingin menguji sesuatu. Jika Anda ingin mengimpor dari alat keuangan lainnya, mohon gunakan negara imajiner yang disebut "aplikasi keuangan lainnya". Secara default, momok hanya memungkinkan Anda mendownload data dari bank palsu. Pastikan status Anda "Langsung" di <a href="https://www.saltedge.com/clients/dashboard">Dasbor</a> jika ingin men-download dari bank sebenarnya.',
-    'spectre_select_provider_title'   => 'Pilih bank',
-    'spectre_select_provider_text'    => 'Momok mendukung bank atau layanan keuangan berikut yang dikelompokkan di bawah <em>:country</em>. Silakan pilih yang ingin Anda impor.',
-    'spectre_input_fields_title'      => 'Masukkan bidang wajib',
-    'spectre_input_fields_text'       => 'Bidang berikut diamanatkan oleh ":provider" (dari :country).',
-    'spectre_instructions_english'    => 'Petunjuk ini diberikan oleh momok untuk convencience Anda. Mereka berbahasa Inggris:',
 ];

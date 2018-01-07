@@ -38,6 +38,7 @@ class SingleCacheProperties extends CacheProperties
         $this->properties = new Collection;
         if (auth()->check()) {
             $this->addProperty(auth()->user()->id);
+            $this->addProperty(app('preferences')->lastActivity());
         }
     }
 }

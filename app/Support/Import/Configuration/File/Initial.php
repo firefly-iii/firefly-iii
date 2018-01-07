@@ -22,62 +22,48 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Configuration\File;
 
-use ExpandedForm;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 use Log;
 
 /**
- * Class CsvInitial.
+ * Class Initial.
  */
 class Initial implements ConfigurationInterface
 {
-    /**
-     * @var ImportJob
-     */
+    /** @var ImportJob */
     private $job;
 
+    /** @var ImportJobRepositoryInterface */
+    private $repository;
+
+    /** @var string */
+    private $warning = '';
+
+    public function __construct()
+    {
+        Log::debug('Constructed Initial.');
+    }
+
     /**
+     * Get the data necessary to show the configuration screen.
+     *
      * @return array
      */
     public function getData(): array
     {
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $delimiters        = [
-            ','   => trans('form.csv_comma'),
-            ';'   => trans('form.csv_semicolon'),
-            'tab' => trans('form.csv_tab'),
-        ];
+        $importFileTypes   = [];
+        $defaultImportType = config('import.options.file.default_import_format');
 
-        // update job with default date format:
-        $config = $this->job->configuration;
-        if (!isset($config['date-format'])) {
-            $config['date-format']    = 'Ymd';
-            $this->job->configuration = $config;
-            $this->job->save();
-        }
-        $specifics = [];
-
-        // collect specifics.
-        foreach (config('csv.import_specifics') as $name => $className) {
-            $specifics[$name] = [
-                'name'        => $className::getName(),
-                'description' => $className::getDescription(),
-            ];
+        foreach (config('import.options.file.import_formats') as $type) {
+            $importFileTypes[$type] = trans('import.import_file_type_' . $type);
         }
 
-        $data = [
-            'accounts'   => ExpandedForm::makeSelectList($accounts),
-            'specifix'   => [],
-            'delimiters' => $delimiters,
-            'specifics'  => $specifics,
+        return [
+            'default_type' => $defaultImportType,
+            'file_types'   => $importFileTypes,
         ];
-
-        return $data;
     }
 
     /**
@@ -87,7 +73,7 @@ class Initial implements ConfigurationInterface
      */
     public function getWarningMessage(): string
     {
-        return '';
+        return $this->warning;
     }
 
     /**
@@ -97,7 +83,9 @@ class Initial implements ConfigurationInterface
      */
     public function setJob(ImportJob $job): ConfigurationInterface
     {
-        $this->job = $job;
+        $this->job        = $job;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
 
         return $this;
     }
@@ -111,59 +99,44 @@ class Initial implements ConfigurationInterface
      */
     public function storeConfiguration(array $data): bool
     {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $importId   = $data['csv_import_account'] ?? 0;
-        $account    = $repository->find(intval($importId));
+        Log::debug('Now in storeConfiguration for file Upload.');
+        $config              = $this->getConfig();
+        $type                = $data['import_file_type'] ?? 'csv'; // assume it's a CSV file.
+        $config['file-type'] = in_array($type, config('import.options.file.import_formats')) ? $type : 'csv';
 
-        $hasHeaders                        = isset($data['has_headers']) && 1 === intval($data['has_headers']) ? true : false;
-        $config                            = $this->job->configuration;
-        $config['initial-config-complete'] = true;
-        $config['has-headers']             = $hasHeaders;
-        $config['date-format']             = $data['date_format'];
-        $config['delimiter']               = $data['csv_delimiter'];
-        $config['delimiter']               = 'tab' === $config['delimiter'] ? "\t" : $config['delimiter'];
-        $config['apply_rules']             = isset($data['apply_rules']) && 1 === intval($data['apply_rules']) ? true : false;
-        $config['match_bills']             = isset($data['match_bills']) && 1 === intval($data['match_bills']) ? true : false;
+        // update config:
+        $this->repository->setConfiguration($this->job, $config);
 
-        Log::debug('Entered import account.', ['id' => $importId]);
+        // make repository process file:
+        $uploaded = $this->repository->processFile($this->job, $data['import_file'] ?? null);
+        Log::debug(sprintf('Result of upload is %s', var_export($uploaded, true)));
 
-        if (null !== $account->id) {
-            Log::debug('Found account.', ['id' => $account->id, 'name' => $account->name]);
-            $config['import-account'] = $account->id;
+        // process config, if present:
+        if (isset($data['configuration_file'])) {
+            $this->repository->processConfiguration($this->job, $data['configuration_file']);
         }
 
-        if (null === $account->id) {
-            Log::error('Could not find anything for csv_import_account.', ['id' => $importId]);
+        if (false === $uploaded) {
+            $this->warning = 'No valid upload.';
+
+            return true;
         }
 
-        $config                   = $this->storeSpecifics($data, $config);
-        $this->job->configuration = $config;
-        $this->job->save();
+        // if file was upload safely, assume we can go to the next stage:
+        $config          = $this->getConfig();
+        $config['stage'] = 'upload-config';
+        $this->repository->setConfiguration($this->job, $config);
 
         return true;
     }
 
     /**
-     * @param array $data
-     * @param array $config
+     * Short hand method.
      *
      * @return array
      */
-    private function storeSpecifics(array $data, array $config): array
+    private function getConfig(): array
     {
-        // loop specifics.
-        if (isset($data['specifics']) && is_array($data['specifics'])) {
-            $names = array_keys($data['specifics']);
-            foreach ($names as $name) {
-                // verify their content.
-                $className = sprintf('FireflyIII\Import\Specifics\%s', $name);
-                if (class_exists($className)) {
-                    $config['specifics'][$name] = 1;
-                }
-            }
-        }
-
-        return $config;
+        return $this->repository->getConfiguration($this->job);
     }
 }

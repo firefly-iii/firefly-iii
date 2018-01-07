@@ -141,6 +141,16 @@ return [
     'invalid_server_configuration'               => 'Nieprawidłowa konfiguracja serwera',
     'invalid_locale_settings'                    => 'Firefly III nie może sformatować kwot, ponieważ brakuje wymaganych pakietów na Twoim serwerze. Sprawdź<a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instrukcje jak je zainstalować</a> (po angielsku).',
     'quickswitch'                                => 'Szybki przełącznik',
+    'sign_in_to_start'                           => 'Zaloguj się, aby rozpocząć sesję',
+    'sign_in'                                    => 'Zaloguj',
+    'register_new_account'                       => 'Zarejestruj nowe konto',
+    'forgot_my_password'                         => 'Nie pamiętam hasła',
+    'problems_with_input'                        => 'Wystąpił problem z wprowadzonymi danymi.',
+    'reset_password'                             => 'Zresetuj swoje hasło',
+    'button_reset_password'                      => 'Zresetuj hasło',
+    'reset_button'                               => 'Zresetuj',
+    'want_to_login'                              => 'Chcę się zalogować',
+    'button_register'                            => 'Zarejestruj',
 
     // check for updates:
     'update_check_title'                         => 'Sprawdź aktualizacje',
@@ -191,7 +201,7 @@ return [
     'include_old_uploads_help'                   => 'Firefly III nie wyrzuca oryginalnych plików CSV zaimportowanych w przeszłości. Możesz uwzględnić je w eksporcie.',
     'do_export'                                  => 'Eksportuj',
     'export_status_never_started'                => 'Eksport nie został jeszcze rozpoczęty',
-    'export_status_make_exporter'                => 'Creating exporter thing...',
+    'export_status_make_exporter'                => 'Tworzenie rzeczy dla eksportera...',
     'export_status_collecting_journals'          => 'Zbieranie Twoich transakcji...',
     'export_status_collected_journals'           => 'Zebrano twoje transakcje!',
     'export_status_converting_to_export_format'  => 'Konwertowanie Twoich transakcji...',
@@ -613,6 +623,7 @@ return [
     'bill_will_automatch'                      => 'Rachunek będzie automatycznie powiązany z pasującymi transakcjami',
     'skips_over'                               => 'pomija',
 
+
     // accounts:
     'details_for_asset'                        => 'Szczegóły konta aktywów ":name"',
     'details_for_expense'                      => 'Szczegóły konta wydatków ":name"',
@@ -690,6 +701,7 @@ return [
     'selected_transactions'                    => 'Wybrane transakcje (:count)',
     'already_cleared_transactions'             => 'Transakcje uzgodnione wcześniej (:count)',
     'submitted_end_balance'                    => 'Przesłane saldo końcowe',
+    'initial_balance_description'              => 'Saldo początkowe dla ":account"',
 
     // categories:
     'new_category'                             => 'Nowa kategoria',
@@ -728,6 +740,13 @@ return [
     'reconcile_selected'                       => 'Uzgodnij',
     'mass_delete_journals'                     => 'Usuń wiele transakcji',
     'mass_edit_journals'                       => 'Modyfikuj wiele transakcji',
+    'mass_bulk_journals'                       => 'Hurtowa edycja wielu transakcji',
+    'mass_bulk_journals_explain'               => 'Jeśli nie chcesz modyfikować transakcji jedna po drugiej za pomocą funkcji masowej edycji, możesz zaktualizować je za jednym razem. Po prostu wybierz preferowaną kategorię, tag(i) lub budżet w poniższych polach i wszystkie transakcje z tabeli zostaną zaktualizowane.',
+    'bulk_set_new_values'                      => 'Użyj pól poniżej, aby ustawić nowe wartości. Jeżeli zostawisz je puste, zostaną wyczyszczone dla wszystkich transakcji. Pamiętaj także, że budżet zostanie ustawiony tylko dla wypłat.',
+    'no_bulk_category'                         => 'Nie aktualizuj kategorii',
+    'no_bulk_budget'                           => 'Nie aktualizuj budżetu',
+    'no_bulk_tags'                             => 'Nie aktualizuj tagów',
+    'bulk_edit'                                => 'Hurtowa edycja',
     'cannot_edit_other_fields'                 => 'Nie możesz masowo modyfikować innych pól niż te tutaj, ponieważ nie ma miejsca, aby je pokazać. Proszę użyć ikony edycji i edytować je jedno po drugim, jeśli chcesz edytować te pola.',
     'no_budget'                                => '(bez budżetu)',
     'no_budget_squared'                        => '(brak budżetu)',
@@ -739,6 +758,7 @@ return [
     'opt_group_savingAsset'                    => 'Konta oszczędnościowe',
     'opt_group_sharedAsset'                    => 'Współdzielone konta aktywów',
     'opt_group_ccAsset'                        => 'Karty kredytowe',
+    'notes'                                    => 'Notatki',
 
     // new user:
     'welcome'                                  => 'Witaj w Firefly!',
@@ -837,9 +857,9 @@ return [
     'difference'                               => 'Różnica',
     'money_flowing_in'                         => 'Przychodzące',
     'money_flowing_out'                        => 'Wychodzące',
-    'topX'                                     => 'top :number',
+    'topX'                                     => 'czołówka :number',
     'show_full_list'                           => 'Pokaż całą listę',
-    'show_only_top'                            => 'Show only top :number',
+    'show_only_top'                            => 'Pokazuj tylko czołową :number',
     'report_type'                              => 'Typ raportu',
     'report_type_default'                      => 'Domyślny raport finansowy',
     'report_type_audit'                        => 'Przegląd historii transakcji (audyt)',
@@ -1070,10 +1090,10 @@ return [
     'split_this_withdrawal'                 => 'Podziel tą wypłatę',
     'split_this_deposit'                    => 'Podziel tą wpłatę',
     'split_this_transfer'                   => 'Podziel ten transfer',
-    'cannot_edit_multiple_source'           => 'Nie można edytować podzielonej transakcji #:id z opisem ":description", ponieważ zawiera ona wiele kont źródłowych.',
-    'cannot_edit_multiple_dest'             => 'Nie można edytować podzielonej transakcji #:id z opisem ":description", ponieważ zawiera ona wiele kont docelowych.',
-    'cannot_edit_reconciled'                => 'Nie można edytować transakcji #:id z opisem ":description", ponieważ została ona zaznaczona jako uzgodniona.',
-    'cannot_edit_opening_balance'           => 'Nie możesz edytować wstępnego salda konta.',
+    'cannot_edit_multiple_source'           => 'Nie możesz edytować podzielonej transakcji #:id z opisem ":description", ponieważ zawiera ona wiele kont źródłowych.',
+    'cannot_edit_multiple_dest'             => 'Nie możesz edytować podzielonej transakcji #:id z opisem ":description", ponieważ zawiera ona wiele kont docelowych.',
+    'cannot_edit_reconciled'                => 'Nie możesz edytować transakcji #:id z opisem ":description", ponieważ została ona zaznaczona jako uzgodniona.',
+    'cannot_edit_opening_balance'           => 'Nie możesz edytować salda otwarcia konta.',
     'no_edit_multiple_left'                 => 'Nie wybrałeś żadnych poprawnych transakcji do edycji.',
     'cannot_convert_split_journal'          => 'Nie można przekonwertować podzielonej transakcji',
 

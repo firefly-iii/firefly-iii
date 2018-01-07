@@ -99,7 +99,7 @@
   },
   "scripts": {
     "pre-install-cmd": [
-      "if [ -z ${DYNO+x} ]; then echo Not in Heroku environment.; else php -r \"file_exists('.env') || copy('.env.heroku', '.env');\"; fi"
+      "@php -r \"if (!(getenv('DYNO'))===false){file_exists('.env') || copy('.env.heroku', '.env');}\""
     ],
     "post-root-package-install": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

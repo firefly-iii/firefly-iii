@@ -990,6 +990,25 @@ Breadcrumbs::register(
     }
 );
 
+// BULK EDIT
+Breadcrumbs::register(
+    'transactions.bulk.edit',
+    function (BreadCrumbsGenerator $breadcrumbs, Collection $journals): void {
+        if ($journals->count() > 0) {
+            $journalIds = $journals->pluck('id')->toArray();
+            $what       = strtolower($journals->first()->transactionType->type);
+            $breadcrumbs->parent('transactions.index', $what, '(nothing)', new Carbon, new Carbon);
+            $breadcrumbs->push(trans('firefly.mass_bulk_journals'), route('transactions.bulk.edit', $journalIds));
+
+            return;
+        }
+
+        $breadcrumbs->parent('index');
+
+        return;
+    }
+);
+
 // SPLIT
 Breadcrumbs::register(
     'transactions.split.edit',

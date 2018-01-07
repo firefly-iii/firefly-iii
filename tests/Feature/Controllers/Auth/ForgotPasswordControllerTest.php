@@ -41,7 +41,7 @@ class ForgotPasswordControllerTest extends TestCase
     public function testSendResetLinkEmail()
     {
         $repository = $this->mock(UserRepositoryInterface::class);
-        $repository->shouldReceive('hasRole')->andReturn(false);
+        $repository->shouldReceive('hasRole')->andReturn(false)->once();
         $data = [
             'email' => 'thegrumpydictator@gmail.com',
         ];
@@ -57,7 +57,7 @@ class ForgotPasswordControllerTest extends TestCase
     public function testSendResetLinkEmailDemo()
     {
         $repository = $this->mock(UserRepositoryInterface::class);
-        $repository->shouldReceive('hasRole')->andReturn(true);
+        $repository->shouldReceive('hasRole')->andReturn(true)->once();
         $data = [
             'email' => 'thegrumpydictator@gmail.com',
         ];

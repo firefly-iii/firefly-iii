@@ -32,6 +32,7 @@ class AmountTest extends TestCase
 {
     /**
      * @covers \FireflyIII\Import\Converter\Amount::convert()
+     * @covers \FireflyIII\Import\Converter\Amount::stripAmount()
      */
     public function testConvert()
     {
@@ -150,6 +151,11 @@ class AmountTest extends TestCase
             '0.115'                   => '0.115',
             '-0.115'                  => '-0.115',
             '1.33'                    => '1.33',
+            '$1.23'                   => '1.23',
+            '€1,44'                   => '1.44',
+            '(33.52)'                 => '-33.52',
+            '€(63.12)'                => '-63.12',
+            '($182.77)'                => '-182.77',
         ];
         foreach ($values as $value => $expected) {
             $converter = new Amount;

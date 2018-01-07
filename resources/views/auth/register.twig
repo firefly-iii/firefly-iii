@@ -4,7 +4,7 @@
 
     {% if errors|length > 0 %}
         <div class="alert alert-danger">
-            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <strong>{{ 'flash_error'|_ }}</strong> {{ 'problems_with_input'|_ }}<br><br>
             <ul>
                 {% for error in errors.all %}
                     <li>{{ error }}</li>
@@ -16,42 +16,38 @@
 
 
     <div class="register-box-body">
-        <p class="login-box-msg">Register a new account</p>
-        {% if isDemoSite %}
-            <p class="text-info login-box-msg">Please note that an account on this site will only
-                work for one (1) month.</p>
-        {% endif %}
+        <p class="login-box-msg">{{ 'register_new_account'|_ }}</p>
 
         <form id="register" method="POST" action="{{ URL.to('/register') }}">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
             <div class="form-group has-feedback">
-                <input type="email" name="email" value="{{ email }}" class="form-control" placeholder="Email"/>
+                <input type="email" name="email" value="{{ email }}" class="form-control" placeholder="{{ trans('form.email') }}"/>
             </div>
             <div class="form-group has-feedback">
-                <input type="password" class="form-control" placeholder="Password" name="password"/>
+                <input type="password" class="form-control" placeholder="{{ trans('form.password') }}" name="password"/>
             </div>
             <div class="form-group has-feedback">
-                <input type="password" class="form-control" placeholder="Retype password" name="password_confirmation"/>
+                <input type="password" class="form-control" placeholder="{{ trans('form.password_confirmation') }}" name="password_confirmation"/>
             </div>
             <div class="row">
                 <div class="col-xs-8">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="verify_password" value="1"> Verify password
-                            (<a data-toggle="modal" data-target="#passwordModal" href="#passwordModal">what's this?</a>)
+                            <input type="checkbox" name="verify_password" value="1"> {{ trans('form.verify_password') }}<br />
+                            <a data-toggle="modal" data-target="#passwordModal" href="#passwordModal">{{ 'what_is_pw_security'|_ }}</a>
                         </label>
                     </div>
                 </div>
                 <div class="col-xs-4">
-                    <button class="btn btn-primary pull-right btn-flat">Register</button>
+                    <button class="btn btn-primary pull-right btn-flat">{{ 'button_register'|_ }}</button>
                 </div>
                 <!-- /.col -->
             </div>
         </form>
 
-        <a href="{{ URL.to('/login') }}">I want to login</a><br>
-        <a href="{{ URL.to('/password/reset') }}">I forgot my password</a>
+        <a href="{{ URL.to('/login') }}">{{ 'want_to_login'|_ }}</a><br>
+        <a href="{{ URL.to('/password/reset') }}">{{ 'forgot_my_password'|_ }}</a>
     </div><!-- /.form-box -->
 
     {% include 'partials.password-modal' %}

@@ -24,11 +24,12 @@ namespace FireflyIII\Import\Configuration;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 use FireflyIII\Support\Import\Configuration\File\Initial;
 use FireflyIII\Support\Import\Configuration\File\Map;
 use FireflyIII\Support\Import\Configuration\File\Roles;
-use FireflyIII\Support\Import\Configuration\File\Upload;
+use FireflyIII\Support\Import\Configuration\File\UploadConfig;
 use Log;
 
 /**
@@ -36,17 +37,41 @@ use Log;
  */
 class FileConfigurator implements ConfiguratorInterface
 {
+    /** @var array */
+    private $defaultConfig
+        = [
+            'stage'                 => 'initial',
+            'has-headers'           => false, // assume
+            'date-format'           => 'Ymd', // assume
+            'delimiter'             => ',', // assume
+            'import-account'        => 0, // none,
+            'specifics'             => [], // none
+            'column-count'          => 0, // unknown
+            'column-roles'          => [], // unknown
+            'column-do-mapping'     => [], // not yet set which columns must be mapped
+            'column-mapping-config' => [], // no mapping made yet.
+            'file-type'             => 'csv', // assume
+            'has-config-file'       => true,
+            'apply-rules'           => true,
+            'match-bills'           => false,
+            'auto-start'            => false,
+        ];
     /** @var ImportJob */
     private $job;
+    /** @var ImportJobRepositoryInterface */
+    private $repository;
 
+
+    // give job default config:
     /** @var string */
     private $warning = '';
 
     /**
-     * ConfiguratorInterface constructor.
+     * FileConfigurator constructor.
      */
     public function __construct()
     {
+        Log::debug('Created FileConfigurator');
     }
 
     /**
@@ -60,10 +85,13 @@ class FileConfigurator implements ConfiguratorInterface
      */
     public function configureJob(array $data): bool
     {
+        if (is_null($this->job)) {
+            throw new FireflyException('Cannot call configureJob() without a job.');
+        }
         $class = $this->getConfigurationClass();
         $job   = $this->job;
         /** @var ConfigurationInterface $object */
-        $object = new $class($this->job);
+        $object = app($class);
         $object->setJob($job);
         $result        = $object->storeConfiguration($data);
         $this->warning = $object->getWarningMessage();
@@ -80,6 +108,10 @@ class FileConfigurator implements ConfiguratorInterface
      */
     public function getNextData(): array
     {
+        if (is_null($this->job)) {
+            throw new FireflyException('Cannot call getNextData() without a job.');
+        }
+
         $class = $this->getConfigurationClass();
         $job   = $this->job;
         /** @var ConfigurationInterface $object */
@@ -96,52 +128,56 @@ class FileConfigurator implements ConfiguratorInterface
      */
     public function getNextView(): string
     {
-        if (!$this->job->configuration['has-file-upload']) {
-            return 'import.file.upload';
+        if (is_null($this->job)) {
+            throw new FireflyException('Cannot call getNextView() without a job.');
         }
-        if (!$this->job->configuration['initial-config-complete']) {
-            return 'import.file.initial';
+        $config = $this->getConfig();
+        $stage  = $config['stage'] ?? 'initial';
+        switch ($stage) {
+            case 'initial': // has nothing, no file upload or anything.
+                return 'import.file.initial';
+            case 'upload-config': // has file, needs file config.
+                return 'import.file.upload-config';
+            case 'roles': // has configured file, needs roles.
+                return 'import.file.roles';
+            case 'map': // has roles, needs mapping.
+                return 'import.file.map';
         }
-        if (!$this->job->configuration['column-roles-complete']) {
-            return 'import.file.roles';
-        }
-        if (!$this->job->configuration['column-mapping-complete']) {
-            return 'import.file.map';
-        }
-
-        throw new FireflyException('No view for state');
+        throw new FireflyException(sprintf('No view for stage "%s"', $stage));
     }
 
     /**
      * Return possible warning to user.
      *
      * @return string
+     * @throws FireflyException
      */
     public function getWarningMessage(): string
     {
+        if (is_null($this->job)) {
+            throw new FireflyException('Cannot call getWarningMessage() without a job.');
+        }
+
         return $this->warning;
     }
 
     /**
      * @return bool
+     * @throws FireflyException
      */
     public function isJobConfigured(): bool
     {
-        $config                            = $this->job->configuration;
-        $config['has-file-upload']         = $config['has-file-upload'] ?? false;
-        $config['initial-config-complete'] = $config['initial-config-complete'] ?? false;
-        $config['column-roles-complete']   = $config['column-roles-complete'] ?? false;
-        $config['column-mapping-complete'] = $config['column-mapping-complete'] ?? false;
-        $this->job->configuration          = $config;
-        $this->job->save();
+        if (is_null($this->job)) {
+            throw new FireflyException('Cannot call isJobConfigured() without a job.');
+        }
+        $config = $this->getConfig();
+        $stage  = $config['stage'] ?? 'initial';
+        if ($stage === 'ready') {
+            Log::debug('isJobConfigured returns true');
 
-        if ($config['initial-config-complete']
-            && $config['column-roles-complete']
-            && $config['column-mapping-complete']
-            && $config['has-file-upload']
-        ) {
             return true;
         }
+        Log::debug('isJobConfigured returns false');
 
         return false;
     }
@@ -151,12 +187,24 @@ class FileConfigurator implements ConfiguratorInterface
      */
     public function setJob(ImportJob $job)
     {
-        $this->job = $job;
-        if (null === $this->job->configuration || 0 === count($this->job->configuration)) {
-            Log::debug(sprintf('Gave import job %s initial configuration.', $this->job->key));
-            $this->job->configuration = config('csv.default_config');
-            $this->job->save();
-        }
+        Log::debug(sprintf('FileConfigurator::setJob(#%d: %s)', $job->id, $job->key));
+        $this->job        = $job;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
+
+        $config    = $this->getConfig();
+        $newConfig = array_merge($this->defaultConfig, $config);
+        $this->repository->setConfiguration($job, $newConfig);
+    }
+
+    /**
+     * Short hand method.
+     *
+     * @return array
+     */
+    private function getConfig(): array
+    {
+        return $this->repository->getConfiguration($this->job);
     }
 
     /**
@@ -166,18 +214,22 @@ class FileConfigurator implements ConfiguratorInterface
      */
     private function getConfigurationClass(): string
     {
-        $class = false;
-        switch (true) {
-            case !$this->job->configuration['has-file-upload']:
-                $class = Upload::class;
-                break;
-            case !$this->job->configuration['initial-config-complete']:
+        $config = $this->getConfig();
+        $stage  = $config['stage'] ?? 'initial';
+        $class  = false;
+        Log::debug(sprintf('Now in getConfigurationClass() for stage "%s"', $stage));
+
+        switch ($stage) {
+            case 'initial': // has nothing, no file upload or anything.
                 $class = Initial::class;
                 break;
-            case !$this->job->configuration['column-roles-complete']:
+            case 'upload-config': // has file, needs file config.
+                $class = UploadConfig::class;
+                break;
+            case 'roles': // has configured file, needs roles.
                 $class = Roles::class;
                 break;
-            case !$this->job->configuration['column-mapping-complete']:
+            case 'map': // has roles, needs mapping.
                 $class = Map::class;
                 break;
             default:
@@ -185,11 +237,12 @@ class FileConfigurator implements ConfiguratorInterface
         }
 
         if (false === $class || 0 === strlen($class)) {
-            throw new FireflyException('Cannot handle current job state in getConfigurationClass().');
+            throw new FireflyException(sprintf('Cannot handle job stage "%s" in getConfigurationClass().', $stage));
         }
         if (!class_exists($class)) {
-            throw new FireflyException(sprintf('Class %s does not exist in getConfigurationClass().', $class));
+            throw new FireflyException(sprintf('Class %s does not exist in getConfigurationClass().', $class)); // @codeCoverageIgnore
         }
+        Log::debug(sprintf('Configuration class is "%s"', $class));
 
         return $class;
     }

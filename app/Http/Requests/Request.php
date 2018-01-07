@@ -143,7 +143,7 @@ class Request extends FormRequest
      *
      * @return int
      */
-    protected function integer(string $field): int
+    public function integer(string $field): int
     {
         return intval($this->get($field));
     }

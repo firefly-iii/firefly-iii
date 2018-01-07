@@ -141,6 +141,16 @@ return [
     'invalid_server_configuration'               => 'Configuration de serveur invalide',
     'invalid_locale_settings'                    => 'Firefly III ne parvient pas à formater les montants monétaires car il manque des paquets logiciels sur votre serveur. Voici <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">des instructions sur comment procéder</a>.',
     'quickswitch'                                => 'Changement rapide',
+    'sign_in_to_start'                           => 'Sign in to start your session',
+    'sign_in'                                    => 'Sign in',
+    'register_new_account'                       => 'Register a new account',
+    'forgot_my_password'                         => 'I forgot my password',
+    'problems_with_input'                        => 'There were some problems with your input.',
+    'reset_password'                             => 'Reset your password',
+    'button_reset_password'                      => 'Reset password',
+    'reset_button'                               => 'Reset',
+    'want_to_login'                              => 'I want to login',
+    'button_register'                            => 'Register',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',
@@ -613,6 +623,7 @@ return [
     'bill_will_automatch'                      => 'La facture sera automatiquement liée aux transactions correspondantes',
     'skips_over'                               => 'saute',
 
+
     // accounts:
     'details_for_asset'                        => 'Détails pour le compte d’actif ":name"',
     'details_for_expense'                      => 'Détails du compte de dépenses ":name"',
@@ -690,6 +701,7 @@ return [
     'selected_transactions'                    => 'Transactions sélectionnées ( :count)',
     'already_cleared_transactions'             => 'Transactions déjà effacées ( :count)',
     'submitted_end_balance'                    => 'Solde final soumis',
+    'initial_balance_description'              => 'Initial balance for ":account"',
 
     // categories:
     'new_category'                             => 'Nouvelle catégorie',
@@ -728,6 +740,13 @@ return [
     'reconcile_selected'                       => 'Rapproché',
     'mass_delete_journals'                     => 'Supprimer un certain nombre de transactions',
     'mass_edit_journals'                       => 'Modifier un certain nombre d’opérations',
+    'mass_bulk_journals'                       => 'Bulk edit a number of transactions',
+    'mass_bulk_journals_explain'               => 'If you do not want to change your transactions one-by-one using the mass-edit function, you can update them in one go. Simply select the preferred category, tag(s) or budget in the fields below, and all the transactions in the table will be updated.',
+    'bulk_set_new_values'                      => 'Use the inputs below to set new values. If you leave them empty, they will be made empty for all. Also, note that only withdrawals will be given a budget.',
+    'no_bulk_category'                         => 'Don\'t update category',
+    'no_bulk_budget'                           => 'Don\'t update budget',
+    'no_bulk_tags'                             => 'Don\'t update tag(s)',
+    'bulk_edit'                                => 'Bulk edit',
     'cannot_edit_other_fields'                 => 'Vous ne pouvez pas modifier en masse d\'autres champs que ceux-ci, car il n’y a pas de place pour tous les montrer. S’il vous plaît suivez le lien et modifiez les par un par un, si vous devez modifier ces champs.',
     'no_budget'                                => '(pas de budget)',
     'no_budget_squared'                        => '(pas de budget)',
@@ -739,6 +758,7 @@ return [
     'opt_group_savingAsset'                    => 'Comptes d\'épargne',
     'opt_group_sharedAsset'                    => 'Comptes d\'actifs partagés',
     'opt_group_ccAsset'                        => 'Cartes de crédit',
+    'notes'                                    => 'Notes',
 
     // new user:
     'welcome'                                  => 'Bienvenue sur Firefly !',

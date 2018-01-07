@@ -141,6 +141,16 @@ return [
     'invalid_server_configuration'               => 'Ongeldige serverconfiguratie',
     'invalid_locale_settings'                    => 'Firefly III kan geldbedragen niet goed weergeven omdat je server de vereiste software mist. Er zijn <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructies hoe dit te doen</a>.',
     'quickswitch'                                => 'Quickswitch',
+    'sign_in_to_start'                           => 'Login om te beginnen',
+    'sign_in'                                    => 'Inloggen',
+    'register_new_account'                       => 'Registreer een nieuw account',
+    'forgot_my_password'                         => 'Ik ben mijn wachtwoord vergeten',
+    'problems_with_input'                        => 'Er zijn wat problemen met je input.',
+    'reset_password'                             => 'Je wachtwoord resetten',
+    'button_reset_password'                      => 'Reset wachtwoord',
+    'reset_button'                               => 'Reset',
+    'want_to_login'                              => 'Ik wil inloggen',
+    'button_register'                            => 'Registreren',
 
     // check for updates:
     'update_check_title'                         => 'Op updates controleren',
@@ -613,6 +623,7 @@ return [
     'bill_will_automatch'                      => 'Waar van toepassing wordt dit contract automatisch gekoppeld aan transacties',
     'skips_over'                               => 'slaat over',
 
+
     // accounts:
     'details_for_asset'                        => 'Overzicht voor betaalrekening ":name"',
     'details_for_expense'                      => 'Overzicht voor crediteur ":name"',
@@ -690,6 +701,7 @@ return [
     'selected_transactions'                    => 'Geselecteerde transacties (:count)',
     'already_cleared_transactions'             => 'Al afgestemde transacties (:count)',
     'submitted_end_balance'                    => 'Ingevoerd eindsaldo',
+    'initial_balance_description'              => 'Startsaldo voor ":account"',
 
     // categories:
     'new_category'                             => 'Nieuwe categorie',
@@ -728,6 +740,13 @@ return [
     'reconcile_selected'                       => 'Verrekenen',
     'mass_delete_journals'                     => 'Verwijder een aantal transacties',
     'mass_edit_journals'                       => 'Wijzig een aantal transacties',
+    'mass_bulk_journals'                       => 'Wijzig een aantal transacties in bulk',
+    'mass_bulk_journals_explain'               => 'Als je je transacties niet één voor één wilt wijzigen met de daarvoor bestemde functie, kan je ze ook allemaal in één keer wijzigen. Selecteer de gewenste categorie, budget of tag(s) hieronder en alle transacties in de tabel zullen deze waarde krijgen.',
+    'bulk_set_new_values'                      => 'Gebruik de velden hieronder voor nieuwe waarden. Als je ze leeg laat, worden ze leeggemaakt voor alle gebruikers. Denk eraan dat alleen uitgaven een budget kunnen krijgen.',
+    'no_bulk_category'                         => 'Update categorie niet',
+    'no_bulk_budget'                           => 'Update budget niet',
+    'no_bulk_tags'                             => 'Update tag(s) niet',
+    'bulk_edit'                                => 'Wijzig in bulk',
     'cannot_edit_other_fields'                 => 'Je kan andere velden dan de velden die je hier ziet niet groepsgewijs wijzigen. Er is geen ruimte om ze te laten zien. Als je deze velden toch wilt wijzigen, volg dan de link naast de transactie en wijzig ze stuk voor stuk.',
     'no_budget'                                => '(geen budget)',
     'no_budget_squared'                        => '(geen budget)',
@@ -739,6 +758,7 @@ return [
     'opt_group_savingAsset'                    => 'Spaarrekeningen',
     'opt_group_sharedAsset'                    => 'Gedeelde betaalrekeningen',
     'opt_group_ccAsset'                        => 'Creditcards',
+    'notes'                                    => 'Notities',
 
     // new user:
     'welcome'                                  => 'Welkom bij Firefly!',

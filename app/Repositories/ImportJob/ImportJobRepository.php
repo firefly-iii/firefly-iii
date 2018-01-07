@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\ImportJob;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Str;
@@ -40,6 +41,37 @@ class ImportJobRepository implements ImportJobRepositoryInterface
 {
     /** @var User */
     private $user;
+
+    /**
+     * @param ImportJob $job
+     * @param int       $steps
+     *
+     * @return ImportJob
+     */
+    public function addStepsDone(ImportJob $job, int $steps = 1): ImportJob
+    {
+        $job->addStepsDone($steps);
+
+        return $job;
+    }
+
+    /**
+     * Return number of imported rows with this hash value.
+     *
+     * @param string $hash
+     *
+     * @return int
+     */
+    public function countByHash(string $hash): int
+    {
+        $json  = json_encode($hash);
+        $count = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+                                       ->where('data', $json)
+                                       ->where('name', 'importHash')
+                                       ->count();
+
+        return intval($count);
+    }
 
     /**
      * @param string $type
@@ -62,7 +94,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
                 $importJob->file_type       = $type;
                 $importJob->key             = Str::random(12);
                 $importJob->status          = 'new';
-                $importJob->configuration   = config(sprintf('import.default_config.%s', $type)) ?? [];
+                $importJob->configuration   = [];
                 $importJob->extended_status = [
                     'steps'  => 0,
                     'done'   => 0,
@@ -86,12 +118,47 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      */
     public function findByKey(string $key): ImportJob
     {
+        /** @var ImportJob $result */
         $result = $this->user->importJobs()->where('key', $key)->first(['import_jobs.*']);
         if (null === $result) {
             return new ImportJob;
         }
 
         return $result;
+    }
+
+    /**
+     * Return configuration of job.
+     *
+     * @param ImportJob $job
+     *
+     * @return array
+     */
+    public function getConfiguration(ImportJob $job): array
+    {
+        $config = $job->configuration;
+        if (is_array($config)) {
+            return $config;
+        }
+
+        return [];
+    }
+
+    /**
+     * Return extended status of job.
+     *
+     * @param ImportJob $job
+     *
+     * @return array
+     */
+    public function getExtendedStatus(ImportJob $job): array
+    {
+        $status = $job->extended_status;
+        if (is_array($status)) {
+            return $status;
+        }
+
+        return [];
     }
 
     /**
@@ -187,6 +254,30 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     }
 
     /**
+     * @param ImportJob $job
+     * @param array     $array
+     *
+     * @return ImportJob
+     */
+    public function setExtendedStatus(ImportJob $job, array $array): ImportJob
+    {
+        // remove 'errors' because it gets larger and larger and larger...
+        $display = $array;
+        unset($display['errors']);
+        Log::debug(sprintf('Incoming extended status for job "%s" is (except errors): ', $job->key), $display);
+        $currentStatus        = $job->extended_status;
+        $newStatus            = array_merge($currentStatus, $array);
+        $job->extended_status = $newStatus;
+        $job->save();
+
+        // remove 'errors' because it gets larger and larger and larger...
+        unset($newStatus['errors']);
+        Log::debug(sprintf('Set extended status of job "%s" to (except errors): ', $job->key), $newStatus);
+
+        return $job;
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user)
@@ -206,5 +297,18 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $job->save();
 
         return $job;
+    }
+
+    /**
+     * Return import file content.
+     *
+     * @param ImportJob $job
+     *
+     * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    public function uploadFileContents(ImportJob $job): string
+    {
+        return $job->uploadFileContents();
     }
 }

@@ -65,10 +65,10 @@ class ReportControllerTest extends TestCase
         $generator->shouldReceive('setEndDate')->once();
         $generator->shouldReceive('setAccounts')->once();
         $generator->shouldReceive('setExpense')->once();
-        $generator->shouldReceive('generate')->andReturn('here-be-report')->once();
+        $generator->shouldReceive('generate')->once()->andReturn('here-be-report');
 
         $this->be($this->user());
-        $response = $this->get(route('reports.report.account', [1, 2, '20160101', '20160131']));
+        $response = $this->get(route('reports.report.account', [1, 2, '20160101', '20161231']));
         $response->assertStatus(200);
     }
 
@@ -84,10 +84,10 @@ class ReportControllerTest extends TestCase
         $generator->shouldReceive('setStartDate')->once();
         $generator->shouldReceive('setEndDate')->once();
         $generator->shouldReceive('setAccounts')->once();
-        $generator->shouldReceive('generate')->andReturn('here-be-report')->once();
+        $generator->shouldReceive('generate')->once()->andReturn('here-be-report');
 
         $this->be($this->user());
-        $response = $this->get(route('reports.report.audit', [1, '20160101', '20160131']));
+        $response = $this->get(route('reports.report.audit', [1, '20160101', '20161231']));
         $response->assertStatus(200);
     }
 
@@ -103,10 +103,10 @@ class ReportControllerTest extends TestCase
         $generator->shouldReceive('setEndDate')->once();
         $generator->shouldReceive('setAccounts')->once();
         $generator->shouldReceive('setBudgets')->once();
-        $generator->shouldReceive('generate')->andReturn('here-be-report')->once();
+        $generator->shouldReceive('generate')->once()->andReturn('here-be-report');
 
         $this->be($this->user());
-        $response = $this->get(route('reports.report.budget', [1, 1, '20160101', '20160131']));
+        $response = $this->get(route('reports.report.budget', [1, 1, '20160101', '20161231']));
         $response->assertStatus(200);
     }
 
@@ -122,10 +122,10 @@ class ReportControllerTest extends TestCase
         $generator->shouldReceive('setEndDate')->once();
         $generator->shouldReceive('setAccounts')->once();
         $generator->shouldReceive('setCategories')->once();
-        $generator->shouldReceive('generate')->andReturn('here-be-report')->once();
+        $generator->shouldReceive('generate')->once()->andReturn('here-be-report');
 
         $this->be($this->user());
-        $response = $this->get(route('reports.report.category', [1, 1, '20160101', '20160131']));
+        $response = $this->get(route('reports.report.category', [1, 1, '20160101', '20161231']));
         $response->assertStatus(200);
     }
 
@@ -140,10 +140,10 @@ class ReportControllerTest extends TestCase
         $generator->shouldReceive('setStartDate')->once();
         $generator->shouldReceive('setEndDate')->once();
         $generator->shouldReceive('setAccounts')->once();
-        $generator->shouldReceive('generate')->andReturn('here-be-report')->once();
+        $generator->shouldReceive('generate')->once()->andReturn('here-be-report');
 
         $this->be($this->user());
-        $response = $this->get(route('reports.report.default', [1, '20160101', '20160131']));
+        $response = $this->get(route('reports.report.default', [1, '20160101', '20161231']));
         $response->assertStatus(200);
     }
 
@@ -511,10 +511,10 @@ class ReportControllerTest extends TestCase
         $generator->shouldReceive('setEndDate')->once();
         $generator->shouldReceive('setAccounts')->once();
         $generator->shouldReceive('setTags')->once();
-        $generator->shouldReceive('generate')->andReturn('here-be-report');
+        $generator->shouldReceive('generate')->once()->andReturn('here-be-report');
 
         $this->be($this->user());
-        $response = $this->get(route('reports.report.tag', [1, 'TagJanuary', '20160101', '20160131']));
+        $response = $this->get(route('reports.report.tag', [1, 'TagJanuary', '20160101', '20161231']));
         $response->assertStatus(200);
     }
 }

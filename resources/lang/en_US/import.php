@@ -92,7 +92,9 @@ return [
     'csv_roles_column'                => 'Column',
     'csv_roles_no_example_data'       => 'No example data available',
     'csv_roles_submit'                => 'Continue with step 4/4',
-    'csv_roles_warning'               => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
+
+    // not csv, but normal warning
+    'roles_warning'                   => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
 
     // file, map data
     'file_map_title'                  => 'Import setup (4/4) - Connect import data to Firefly III data',
@@ -101,6 +103,7 @@ return [
     'file_map_field_mapped_to'        => 'Mapped to',
     'map_do_not_map'                  => '(do not map)',
     'file_map_submit'                 => 'Start the import',
+    'file_nothing_to_map'             => 'There is no data present in your file that you can map to existing values. Please press "Start the import" to continue.',
 
     // map things.
     'column__ignore'                  => '(ignore this column)',
@@ -151,13 +154,6 @@ return [
     // Spectre
     'spectre_title'                   => 'Import using Spectre',
     'spectre_prerequisites_title'     => 'Prerequisites for an import using Spectre',
-    'spectre_prerequisites_text'      => 'In order to import data using the Spectre API, you need to prove some secrets. They can be found on the <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
+    'spectre_prerequisites_text'      => 'In order to import data using the Spectre API, you must provide Firefly III with two secret values. They can be found on the <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
     'spectre_enter_pub_key'           => 'The import will only work when you enter this public key on your <a href="https://www.saltedge.com/clients/security/edit">security page</a>.',
-    'spectre_select_country_title'    => 'Select a country',
-    'spectre_select_country_text'     => 'Firefly III has a large selection of banks and sites from which Spectre can download transactional data. These banks are sorted by country. Please not that there is a "Fake Country" for when you wish to test something. If you wish to import from other financial tools, please use the imaginary country called "Other financial applications". By default, Spectre only allows you to download data from fake banks. Make sure your status is "Live" on your <a href="https://www.saltedge.com/clients/dashboard">Dashboard</a> if you wish to download from real banks.',
-    'spectre_select_provider_title'   => 'Select a bank',
-    'spectre_select_provider_text'    => 'Spectre supports the following banks or financial services grouped under <em>:country</em>. Please pick the one you wish to import from.',
-    'spectre_input_fields_title'      => 'Input mandatory fields',
-    'spectre_input_fields_text'       => 'The following fields are mandated by ":provider" (from :country).',
-    'spectre_instructions_english'    => 'These instructions are provided by Spectre for your convencience. They are in English:',
 ];

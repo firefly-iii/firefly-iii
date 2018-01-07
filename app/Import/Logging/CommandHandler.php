@@ -26,6 +26,7 @@ use Illuminate\Console\Command;
 use Monolog\Handler\AbstractProcessingHandler;
 
 /**
+ * @codeCoverageIgnore
  * Class CommandHandler.
  */
 class CommandHandler extends AbstractProcessingHandler

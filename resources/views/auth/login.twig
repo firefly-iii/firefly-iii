@@ -29,7 +29,7 @@
                 <div class="alert alert-danger alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert"><span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
                     </button>
-                    <strong>Error!</strong> {{ errors.get('email')[0] }}
+                    <strong>{{ 'flash_error'|_ }}!</strong> {{ errors.get('email')[0] }}
                 </div>
             </div>
         </div>
@@ -48,36 +48,36 @@
     {% endif %}
 
     <div class="login-box-body">
-        <p class="login-box-msg">Sign in to start your session</p>
+        <p class="login-box-msg">{{ 'sign_in_to_start'|_ }}</p>
 
         <form action="{{ URL.to('/login') }}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
             <div class="form-group has-feedback">
-                <input type="email" name="email" value="{{ email }}" class="form-control" placeholder="Email"/>
+                <input type="email" name="email" value="{{ email }}" class="form-control" placeholder="{{ trans('form.email') }}"/>
             </div>
             <div class="form-group has-feedback">
-                <input type="password" name="password" class="form-control" placeholder="Password"/>
+                <input type="password" name="password" class="form-control" placeholder="{{ trans('form.password') }}"/>
             </div>
             <div class="row">
                 <div class="col-xs-8">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="remember" {% if remember %}checked="checked"{% endif %} value="1"> Remember Me
+                            <input type="checkbox" name="remember" {% if remember %}checked="checked"{% endif %} value="1"> {{ trans('form.remember_me') }}
                         </label>
                     </div>
                 </div>
                 <!-- /.col -->
                 <div class="col-xs-4">
-                    <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">{{ 'sign_in'|_ }}</button>
                 </div>
                 <!-- /.col -->
             </div>
         </form>
         {% if allowRegistration %}
-            <a href="{{ URL.to('/register') }}" class="text-center">Register a new account</a><br>
+            <a href="{{ URL.to('/register') }}" class="text-center">{{ 'register_new_account'|_ }}</a><br>
         {% endif %}
-        <a href="{{ URL.to('/password/reset') }}">I forgot my password</a>
+        <a href="{{ URL.to('/password/reset') }}">{{ 'forgot_my_password'|_ }}</a>
     </div>
     <!-- /.login-box-body -->
 {% endblock %}

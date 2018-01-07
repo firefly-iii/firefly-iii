@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Object;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -74,6 +75,7 @@ class ImportAccount
 
     /**
      * @return Account
+     * @throws FireflyException
      */
     public function getAccount(): Account
     {
@@ -85,6 +87,7 @@ class ImportAccount
     }
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public function getExpectedType(): string
@@ -93,6 +96,8 @@ class ImportAccount
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param string $expectedType
      */
     public function setExpectedType(string $expectedType)
@@ -101,6 +106,8 @@ class ImportAccount
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param array $accountIban
      */
     public function setAccountIban(array $accountIban)
@@ -109,6 +116,8 @@ class ImportAccount
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param array $value
      */
     public function setAccountId(array $value)
@@ -117,6 +126,8 @@ class ImportAccount
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param array $accountName
      */
     public function setAccountName(array $accountName)
@@ -125,6 +136,8 @@ class ImportAccount
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param array $accountNumber
      */
     public function setAccountNumber(array $accountNumber)
@@ -133,6 +146,8 @@ class ImportAccount
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param int $defaultAccountId
      */
     public function setDefaultAccountId(int $defaultAccountId)
@@ -141,6 +156,8 @@ class ImportAccount
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param int $forbiddenAccountId
      */
     public function setForbiddenAccountId(int $forbiddenAccountId)
@@ -149,6 +166,8 @@ class ImportAccount
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param User $user
      */
     public function setUser(User $user)
@@ -158,20 +177,21 @@ class ImportAccount
     }
 
     /**
-     * @return Account
+     * @return Account|null
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function findExistingObject(): Account
+    private function findExistingObject(): ?Account
     {
         Log::debug('In findExistingObject() for Account');
         // 0: determin account type:
         /** @var AccountType $accountType */
-        $accountType = AccountType::whereType($this->expectedType)->first();
+        $accountType = $this->repository->getAccountType($this->expectedType);
 
         // 1: find by ID, iban or name (and type)
         if (3 === count($this->accountId)) {
             Log::debug(sprintf('Finding account of type %d and ID %d', $accountType->id, $this->accountId['value']));
             /** @var Account $account */
+
             $account = $this->user->accounts()->where('id', '!=', $this->forbiddenAccountId)->where('account_type_id', $accountType->id)->where(
                 'id',
                 $this->accountId['value']
@@ -233,13 +253,13 @@ class ImportAccount
         // 4: do not search by account number.
         Log::debug('Found NO existing accounts.');
 
-        return new Account;
+        return null;
     }
 
     /**
-     * @return Account
+     * @return Account|null
      */
-    private function findMappedObject(): Account
+    private function findMappedObject(): ?Account
     {
         Log::debug('In findMappedObject() for Account');
         $fields = ['accountId', 'accountIban', 'accountNumber', 'accountName'];
@@ -248,7 +268,7 @@ class ImportAccount
             Log::debug(sprintf('Find mapped account based on field "%s" with value', $field), $array);
             // check if a pre-mapped object exists.
             $mapped = $this->getMappedObject($array);
-            if (null !== $mapped->id) {
+            if (null !== $mapped) {
                 Log::debug(sprintf('Found account #%d!', $mapped->id));
 
                 return $mapped;
@@ -256,38 +276,38 @@ class ImportAccount
         }
         Log::debug('Found no account on mapped data or no map present.');
 
-        return new Account;
+        return null;
     }
 
     /**
      * @param array $array
      *
-     * @return Account
+     * @return Account|null
      */
-    private function getMappedObject(array $array): Account
+    private function getMappedObject(array $array): ?Account
     {
         Log::debug('In getMappedObject() for Account');
         if (0 === count($array)) {
             Log::debug('Array is empty, nothing will come of this.');
 
-            return new Account;
+            return null;
         }
 
         if (array_key_exists('mapped', $array) && null === $array['mapped']) {
             Log::debug(sprintf('No map present for value "%s". Return NULL.', $array['value']));
 
-            return new Account;
+            return null;
         }
 
         Log::debug('Finding a mapped account based on', $array);
 
-        $search  = intval($array['mapped']);
+        $search  = intval($array['mapped'] ?? 0);
         $account = $this->repository->find($search);
 
         if (null === $account->id) {
             Log::error(sprintf('There is no account with id #%d. Invalid mapping will be ignored!', $search));
 
-            return new Account;
+            return null;
         }
         // must be of the same type
         // except when mapped is an asset, then it's fair game.
@@ -302,7 +322,7 @@ class ImportAccount
                 )
             );
 
-            return new Account;
+            return null;
         }
 
         Log::debug(sprintf('Found account! #%d ("%s"). Return it', $account->id, $account->name));
@@ -312,19 +332,26 @@ class ImportAccount
 
     /**
      * @return bool
+     * @throws FireflyException
      */
     private function store(): bool
     {
+        if (is_null($this->user)) {
+            throw new FireflyException('ImportAccount cannot continue without user.');
+        }
+        if ((is_null($this->defaultAccountId) || intval($this->defaultAccountId) === 0) && AccountType::ASSET === $this->expectedType) {
+            throw new FireflyException('ImportAccount cannot continue without a default account to fall back on.');
+        }
         // 1: find mapped object:
         $mapped = $this->findMappedObject();
-        if (null !== $mapped->id) {
+        if (null !== $mapped) {
             $this->account = $mapped;
 
             return true;
         }
         // 2: find existing by given values:
         $found = $this->findExistingObject();
-        if (null !== $found->id) {
+        if (null !== $found) {
             $this->account = $found;
 
             return true;
@@ -335,7 +362,7 @@ class ImportAccount
         $oldExpectedType    = $this->expectedType;
         $this->expectedType = AccountType::ASSET;
         $found              = $this->findExistingObject();
-        if (null !== $found->id) {
+        if (null !== $found) {
             Log::debug('Found asset account!');
             $this->account = $found;
 

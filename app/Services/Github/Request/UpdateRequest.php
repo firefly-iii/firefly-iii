@@ -32,7 +32,7 @@ use SimpleXMLElement;
 /**
  * Class UpdateRequest
  */
-class UpdateRequest implements GitHubRequest
+class UpdateRequest implements GithubRequest
 {
     /** @var array */
     private $releases = [];

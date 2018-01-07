@@ -1,0 +1,14 @@
+# Optional: force HTTPS:
+# <IfModule mod_rewrite.c>
+#	RewriteEngine On
+#	RewriteCond %{HTTPS} off
+#	RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R,L]
+# </IfModule>
+
+# To hide directory listing
+Options All -Indexes
+
+# To prevent access to .env and other files
+<Files .*>
+    Deny from all
+</Files>

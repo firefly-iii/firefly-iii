@@ -50,18 +50,17 @@ class OpposingAccountIbans implements MapperInterface
 
         /** @var Account $account */
         foreach ($set as $account) {
-            $iban = $account->iban ?? '';
+            $iban      = $account->iban ?? '';
+            $accountId = intval($account->id);
             if (strlen($iban) > 0) {
-                $topList[$account->id] = $account->iban . ' (' . $account->name . ')';
+                $topList[$accountId] = $account->iban . ' (' . $account->name . ')';
             }
             if (0 === strlen($iban)) {
-                $list[$account->id] = $account->name;
+                $list[$accountId] = $account->name;
             }
         }
-        asort($topList);
-        asort($list);
-
         $list = $topList + $list;
+        asort($list);
         $list = [0 => trans('import.map_do_not_map')] + $list;
 
         return $list;

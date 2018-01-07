@@ -24,6 +24,8 @@ namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -84,6 +86,15 @@ interface AccountRepositoryInterface
     public function findByName(string $name, array $types): Account;
 
     /**
+     * Return account type by string.
+     *
+     * @param string $type
+     *
+     * @return AccountType|null
+     */
+    public function getAccountType(string $type): ?AccountType;
+
+    /**
      * @param array $accountIds
      *
      * @return Collection
@@ -108,6 +119,13 @@ interface AccountRepositoryInterface
      * @return Account
      */
     public function getCashAccount(): Account;
+
+    /**
+     * @param Account $account
+     *
+     * @return Note|null
+     */
+    public function getNote(Account $account): ?Note;
 
     /**
      * Find or create the opposing reconciliation account.

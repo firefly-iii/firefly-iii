@@ -141,6 +141,16 @@ return [
     'invalid_server_configuration'               => 'Invalid server configuration',
     'invalid_locale_settings'                    => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructions how to do this</a>.',
     'quickswitch'                                => 'Quickswitch',
+    'sign_in_to_start'                           => 'Sign in to start your session',
+    'sign_in'                                    => 'Sign in',
+    'register_new_account'                       => 'Register a new account',
+    'forgot_my_password'                         => 'I forgot my password',
+    'problems_with_input'                        => 'There were some problems with your input.',
+    'reset_password'                             => 'Reset your password',
+    'button_reset_password'                      => 'Reset password',
+    'reset_button'                               => 'Reset',
+    'want_to_login'                              => 'I want to login',
+    'button_register'                            => 'Register',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',
@@ -613,6 +623,7 @@ return [
     'bill_will_automatch'                      => 'Bill will automatically linked to matching transactions',
     'skips_over'                               => 'skips over',
 
+
     // accounts:
     'details_for_asset'                        => 'Details for asset account ":name"',
     'details_for_expense'                      => 'Details for expense account ":name"',
@@ -690,6 +701,7 @@ return [
     'selected_transactions'                    => 'Selected transactions (:count)',
     'already_cleared_transactions'             => 'Already cleared transactions (:count)',
     'submitted_end_balance'                    => 'Submitted end balance',
+    'initial_balance_description'              => 'Initial balance for ":account"',
 
     // categories:
     'new_category'                             => 'New category',
@@ -728,6 +740,13 @@ return [
     'reconcile_selected'                       => 'Reconcile',
     'mass_delete_journals'                     => 'Delete a number of transactions',
     'mass_edit_journals'                       => 'Edit a number of transactions',
+    'mass_bulk_journals'                       => 'Bulk edit a number of transactions',
+    'mass_bulk_journals_explain'               => 'If you do not want to change your transactions one-by-one using the mass-edit function, you can update them in one go. Simply select the preferred category, tag(s) or budget in the fields below, and all the transactions in the table will be updated.',
+    'bulk_set_new_values'                      => 'Use the inputs below to set new values. If you leave them empty, they will be made empty for all. Also, note that only withdrawals will be given a budget.',
+    'no_bulk_category'                         => 'Don\'t update category',
+    'no_bulk_budget'                           => 'Don\'t update budget',
+    'no_bulk_tags'                             => 'Don\'t update tag(s)',
+    'bulk_edit'                                => 'Bulk edit',
     'cannot_edit_other_fields'                 => 'You cannot mass-edit other fields than the ones here, because there is no room to show them. Please follow the link and edit them by one-by-one, if you need to edit these fields.',
     'no_budget'                                => 'none',
     'no_budget_squared'                        => '(no budget)',
@@ -739,6 +758,7 @@ return [
     'opt_group_savingAsset'                    => 'Savings accounts',
     'opt_group_sharedAsset'                    => 'Shared asset accounts',
     'opt_group_ccAsset'                        => 'Credit cards',
+    'notes'                                    => 'Notes',
 
     // new user:
     'welcome'                                  => 'Welcome to Firefly!',

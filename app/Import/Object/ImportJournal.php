@@ -302,6 +302,10 @@ class ImportJournal
         if (0 === count($info)) {
             throw new FireflyException('No amount information for this row.');
         }
+        $class = $info['class'] ?? '';
+        if (strlen($class) === 0) {
+            throw new FireflyException('No amount information (conversion class) for this row.');
+        }
 
         Log::debug(sprintf('Converter class is %s', $info['class']));
         /** @var ConverterInterface $amountConverter */

@@ -89,6 +89,7 @@ return [
     'budget_count'            => 'Jumlah anggaran',
     'rule_and_groups_count'   => 'Jumlah aturan dan kelompok aturan',
     'tags_count'              => 'Jumlah label',
+    'tags'                    => 'Tags',
     'inward'                  => 'Deskripsi dalam',
     'outward'                 => 'Deskripsi luar',
     'number_of_transactions'  => 'Jumlah transaksi',

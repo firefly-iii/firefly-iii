@@ -89,6 +89,7 @@ return [
     'budget_count'            => 'Aantal budgetten',
     'rule_and_groups_count'   => 'Aantal regels en regelgroepen',
     'tags_count'              => 'Aantal tags',
+    'tags'                    => 'Tags',
     'inward'                  => 'Binnenwaartse beschrijving',
     'outward'                 => 'Buitenwaartse beschrijving',
     'number_of_transactions'  => 'Aantal transacties',

@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -114,12 +115,16 @@ class AccountControllerTest extends TestCase
      */
     public function testEdit()
     {
+        $note = new Note();
+        $note->text = 'This is a test';
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('get')->andReturn(new Collection);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('find')->once()->andReturn(new TransactionCurrency());
+        $accountRepos->shouldReceive('getNote')->andReturn($note)->once();
 
         $this->be($this->user());
         $account  = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
@@ -127,6 +132,7 @@ class AccountControllerTest extends TestCase
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
+        $response->assertSee($note->text);
     }
 
     /**

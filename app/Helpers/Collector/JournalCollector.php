@@ -773,7 +773,8 @@ class JournalCollector implements JournalCollectorInterface
 
             $this->query->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
             $this->query->leftJoin('categories as transaction_categories', 'transaction_categories.id', '=', 'category_transaction.category_id');
-
+            $this->query->whereNull('transaction_journal_categories.deleted_at');
+            $this->query->whereNull('transaction_categories.deleted_at');
             $this->fields[] = 'category_transaction_journal.category_id as transaction_journal_category_id';
             $this->fields[] = 'transaction_journal_categories.encrypted as transaction_journal_category_encrypted';
             $this->fields[] = 'transaction_journal_categories.name as transaction_journal_category_name';

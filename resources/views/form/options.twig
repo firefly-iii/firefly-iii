@@ -5,7 +5,7 @@
         </label>
 
         <div class="col-sm-8">
-            <div class="radio">
+            <div class="checkbox">
                 <label>
                     {{ Form.checkbox('create_another', '1', false, {'id': name ~ '_return_to_form'}) }}
                     {{ trans('form.returnHereExplanation') }}
@@ -23,7 +23,7 @@
         </label>
 
         <div class="col-sm-8">
-            <div class="radio"><label>
+            <div class="checkbox"><label>
                     {{ Form.checkbox('return_to_edit', '1', old('return_to_edit') == '1', {'id': name ~ '_return_to_edit'}) }}
                     {{ trans('form.returnHereUpdateExplanation') }}
                 </label>
@@ -38,7 +38,7 @@
         </label>
 
         <div class="col-sm-8">
-            <div class="radio"><label>
+            <div class="checkbox"><label>
                     {{ Form.checkbox('split_journal', '1', old('split_journal') == '1', {'id': name ~ 'split'}) }}
                     {{ trans('form.split_journal_explanation') }}
                 </label>

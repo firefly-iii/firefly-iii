@@ -155,6 +155,9 @@ class MassControllerTest extends TestCase
         $response->assertSee('Edit a number of transactions');
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
+        $response->assertSee('marked as reconciled');
+        $response->assertSee('multiple source accounts');
+        $response->assertSee('multiple destination accounts');
     }
 
     /**
@@ -182,6 +185,7 @@ class MassControllerTest extends TestCase
         $response = $this->get(route('transactions.mass.edit', join(',', $allIds)));
         $response->assertStatus(200);
         $response->assertSee('Edit a number of transactions');
+        $response->assertSessionHas('error','You have selected no valid transactions to edit.');
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
     }

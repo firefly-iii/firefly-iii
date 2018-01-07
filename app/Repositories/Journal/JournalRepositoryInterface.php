@@ -162,9 +162,33 @@ interface JournalRepositoryInterface
 
     /**
      * @param TransactionJournal $journal
+     * @param int                $budgetId
+     *
+     * @return TransactionJournal
+     */
+    public function updateBudget(TransactionJournal $journal, int $budgetId): TransactionJournal;
+
+    /**
+     * @param TransactionJournal $journal
+     * @param string             $category
+     *
+     * @return TransactionJournal
+     */
+    public function updateCategory(TransactionJournal $journal, string $category): TransactionJournal;
+
+    /**
+     * @param TransactionJournal $journal
      * @param array              $data
      *
      * @return TransactionJournal
      */
     public function updateSplitJournal(TransactionJournal $journal, array $data): TransactionJournal;
+
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $tags
+     *
+     * @return bool
+     */
+    public function updateTags(TransactionJournal $journal, array $tags): bool;
 }

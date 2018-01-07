@@ -1,0 +1,111 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, job) }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ trans('import.csv_initial_title') }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {{ trans('import.csv_initial_text') }}
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <form class="form-horizontal" action="{{ route('import.configure.post', job.key) }}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ trans('import.csv_initial_box_title') }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <h4>{{ 'mandatoryFields'|_ }}</h4>
+                                {{ ExpandedForm.checkbox('has_headers',1,job.configuration['has-headers'],{helpText: trans('import.csv_initial_header_help')}) }}
+                                {{ ExpandedForm.text('date_format',job.configuration['date-format'],{helpText: trans('import.csv_initial_date_help', {dateExample: phpdate('Ymd')}) }) }}
+                                {{ ExpandedForm.select('csv_delimiter', data.delimiters, job.configuration['delimiter'], {helpText: trans('import.csv_initial_delimiter_help') } ) }}
+                                {{ ExpandedForm.select('csv_import_account', data.accounts, job.configuration['import-account'], {helpText: trans('import.csv_initial_import_account_help')} ) }}
+
+                                <h4>{{ 'optionalFields'|_ }}</h4>
+                                <div class="form-group">
+                                    <label for="apply_rules_label" class="col-sm-4 control-label">
+                                        {{ trans('import.file_apply_rules_title') }}
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <div class="checkbox"><label>
+                                                {{ Form.checkbox('apply_rules', '1',
+                                                    job.configuration['apply-rules'] == true, {'id': 'apply_rules_label'}) }}
+                                                {{ trans('import.file_apply_rules_description') }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="match_bills_label" class="col-sm-4 control-label">
+                                        {{ trans('import.file_match_bills_title') }}
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <div class="checkbox"><label>
+                                                {{ Form.checkbox('match_bills', '1',
+                                                    job.configuration['match-bills'] == true, {'id': 'match_bills_label'}) }}
+                                                {{ trans('import.file_match_bills_description') }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {% for type, specific in data.specifics %}
+                                    <div class="form-group">
+                                        <label for="{{ type }}_label" class="col-sm-4 control-label">
+                                            {{ specific.name }}
+                                        </label>
+
+                                        <div class="col-sm-8">
+                                            <div class="checkbox"><label>
+                                                    {{ Form.checkbox('specifics['~type~']', '1',
+                                                        job.configuration.specifics[type] == '1', {'id': type ~ '_label'}) }}
+                                                    {{ specific.description }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box">
+                    <div class="box-body">
+                        <button type="submit" class="pull-right btn btn-success">
+                            {{ trans('import.csv_initial_submit') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+
+
+{% endblock %}

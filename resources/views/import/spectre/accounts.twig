@@ -1,0 +1,88 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <form class="form-horizontal" action="{{ route('import.configure.post',[job.key]) }}" method="post">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ trans('import.spectre_accounts_title') }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <p>
+                                    {{ trans('import.spectre_accounts_text')|raw }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>{{ trans('list.account_on_spectre') }}</th>
+                                        <th>{{ trans('list.account') }}</th>
+                                        <th>{{ trans('list.do_import') }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for account in data.config.accounts %}
+                                        <tr>
+                                            <td>
+                                                <input type="hidden" name="spectre_account_id[]" value="{{ account.id }}" />
+                                                {{ account.nature|capitalize }} "<strong>{{ account.name }}</strong>" ({{ formatAmountBySymbol(account.balance, account.currency_code~' ') }})<br />
+                                                {% for name, value in account.extra %}
+                                                    {% if not value is iterable and name != 'sort_code' and name !='current_date' and name != 'available_amount' and name !='current_time' and name != 'last_posted_transaction_id' %}
+                                                        {{ name|capitalize }}: {{ value }}<br />
+                                                    {% endif %}
+                                                    {% if name == 'available_amount' %}
+                                                        Available amount: {{ formatAmountBySymbol(value, account.currency_code~' ') }}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                <select class="form-control" name="import[{{ account.id }}]">
+                                                    {% for id,name in account.options %}
+                                                        <option value="{{ id }}" label="{{ name }}">{{ name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" value="1" name="do_import[{{ account.id }}]" checked>
+                                                        {{ 'spectre_do_import'|_ }}
+                                                    </label>
+                                                </div>
+
+                                            </td>
+                                        </tr>
+
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+
+
+
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <button type="submit" class="btn pull-right btn-success">
+                                {{ ('submit')|_ }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+        </form>
+    </div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}
+{% block styles %}
+{% endblock %}

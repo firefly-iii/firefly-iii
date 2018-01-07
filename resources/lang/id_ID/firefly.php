@@ -141,6 +141,16 @@ return [
     'invalid_server_configuration'               => 'Konfigurasi server tidak valid',
     'invalid_locale_settings'                    => 'Firefly III tidak dapat memformat jumlah uang karena server Anda kehilangan paket yang dibutuhkan. Ada <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructions bagaimana melakukan ini</a>.',
     'quickswitch'                                => 'Quickswitch',
+    'sign_in_to_start'                           => 'Sign in to start your session',
+    'sign_in'                                    => 'Sign in',
+    'register_new_account'                       => 'Register a new account',
+    'forgot_my_password'                         => 'I forgot my password',
+    'problems_with_input'                        => 'There were some problems with your input.',
+    'reset_password'                             => 'Reset your password',
+    'button_reset_password'                      => 'Reset password',
+    'reset_button'                               => 'Reset',
+    'want_to_login'                              => 'I want to login',
+    'button_register'                            => 'Register',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',
@@ -613,6 +623,7 @@ return [
     'bill_will_automatch'                      => 'Tagihan akan secara otomatis terhubung ke transaksi yang sesuai',
     'skips_over'                               => 'melompati',
 
+
     // accounts:
     'details_for_asset'                        => 'Rincian akun aset ":name"',
     'details_for_expense'                      => 'Rincian untuk akun biaya ":name"',
@@ -690,6 +701,7 @@ return [
     'selected_transactions'                    => 'Transaksi yang dipilih (:count)',
     'already_cleared_transactions'             => 'Sudah dibersihkan transaksi (:count)',
     'submitted_end_balance'                    => 'Saldo akhir yang dikirim',
+    'initial_balance_description'              => 'Initial balance for ":account"',
 
     // categories:
     'new_category'                             => 'Kategori baru',
@@ -728,6 +740,13 @@ return [
     'reconcile_selected'                       => 'Mendamaikan',
     'mass_delete_journals'                     => 'Hapus sejumlah transaksi',
     'mass_edit_journals'                       => 'Edit sejumlah transaksi',
+    'mass_bulk_journals'                       => 'Bulk edit a number of transactions',
+    'mass_bulk_journals_explain'               => 'If you do not want to change your transactions one-by-one using the mass-edit function, you can update them in one go. Simply select the preferred category, tag(s) or budget in the fields below, and all the transactions in the table will be updated.',
+    'bulk_set_new_values'                      => 'Use the inputs below to set new values. If you leave them empty, they will be made empty for all. Also, note that only withdrawals will be given a budget.',
+    'no_bulk_category'                         => 'Don\'t update category',
+    'no_bulk_budget'                           => 'Don\'t update budget',
+    'no_bulk_tags'                             => 'Don\'t update tag(s)',
+    'bulk_edit'                                => 'Bulk edit',
     'cannot_edit_other_fields'                 => 'Anda tidak bisa menyunting bidang lain dari yang lain di sini, karena tidak ada ruang untuk ditunjukkan kepada mereka. Ikuti tautan dan edit dengan satu per satu, jika Anda perlu mengedit bidang ini.',
     'no_budget'                                => '(no budget)',
     'no_budget_squared'                        => '(tidak ada anggaran)',
@@ -739,6 +758,7 @@ return [
     'opt_group_savingAsset'                    => 'Menyimpan akun',
     'opt_group_sharedAsset'                    => 'Akun aset bersama',
     'opt_group_ccAsset'                        => 'Kartu kredit',
+    'notes'                                    => 'Notes',
 
     // new user:
     'welcome'                                  => 'Selamat datang di Firefly!',

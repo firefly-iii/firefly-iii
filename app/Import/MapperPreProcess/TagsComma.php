@@ -34,6 +34,11 @@ class TagsComma implements PreProcessorInterface
      */
     public function run(string $value): array
     {
-        return explode(',', $value);
+        $set    = explode(',', $value);
+        $set    = array_map('trim', $set);
+        $set    = array_filter($set, 'strlen');
+        $return = array_values($set);
+
+        return $return;
     }
 }

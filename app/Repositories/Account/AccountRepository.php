@@ -29,6 +29,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -84,6 +85,28 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return true;
+    }
+
+    /**
+     * Return account type by string.
+     *
+     * @param string $type
+     *
+     * @return AccountType|null
+     */
+    public function getAccountType(string $type): ?AccountType
+    {
+        return AccountType::whereType($type)->first();
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return Note|null
+     */
+    public function getNote(Account $account): ?Note
+    {
+        return $account->notes()->first();
     }
 
     /**
@@ -176,6 +199,11 @@ class AccountRepository implements AccountRepositoryInterface
         }
         $this->deleteInitialBalance($newAccount);
 
+        // update note:
+        if (isset($data['notes'])) {
+            $this->updateNote($newAccount, $data['notes']);
+        }
+
         return $newAccount;
     }
 
@@ -198,6 +226,12 @@ class AccountRepository implements AccountRepositoryInterface
         if ($this->validOpeningBalanceData($data)) {
             $this->updateInitialBalance($account, $data);
         }
+
+        // update note:
+        if (isset($data['notes']) && null !== $data['notes']) {
+            $this->updateNote($account, strval($data['notes']));
+        }
+
 
         return $account;
     }
@@ -364,7 +398,7 @@ class AccountRepository implements AccountRepositoryInterface
                 'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
                 'transaction_currency_id' => $currencyId,
-                'description'             => 'Initial balance for "' . $account->name . '"',
+                'description'             => strval(trans('firefly.initial_balance_description', ['account' => $account->name])),
                 'completed'               => true,
                 'date'                    => $data['openingBalanceDate'],
             ]
@@ -508,6 +542,33 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param Account $account
+     * @param string  $note
+     *
+     * @return bool
+     */
+    protected function updateNote(Account $account, string $note): bool
+    {
+        if (0 === strlen($note)) {
+            $dbNote = $account->notes()->first();
+            if (null !== $dbNote) {
+                $dbNote->delete();
+            }
+
+            return true;
+        }
+        $dbNote = $account->notes()->first();
+        if (null === $dbNote) {
+            $dbNote = new Note();
+            $dbNote->noteable()->associate($account);
+        }
+        $dbNote->text = trim($note);
+        $dbNote->save();
+
+        return true;
+    }
+
+    /**
      * @param Account            $account
      * @param TransactionJournal $journal
      * @param array              $data
@@ -518,13 +579,15 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function updateOpeningBalanceJournal(Account $account, TransactionJournal $journal, array $data): bool
     {
-        $date       = $data['openingBalanceDate'];
-        $amount     = strval($data['openingBalance']);
-        $currencyId = intval($data['currency_id']);
+        $date           = $data['openingBalanceDate'];
+        $amount         = strval($data['openingBalance']);
+        $negativeAmount = bcmul($amount, '-1');
+        $currencyId     = intval($data['currency_id']);
 
-        Log::debug(sprintf('Submitted amount for opening balance to update is %s', $amount));
+        Log::debug(sprintf('Submitted amount for opening balance to update is "%s"', $amount));
 
         if (0 === bccomp($amount, '0')) {
+            Log::notice(sprintf('Amount "%s" is zero, delete opening balance.', $amount));
             $journal->delete();
 
             return true;
@@ -534,18 +597,18 @@ class AccountRepository implements AccountRepositoryInterface
         $journal->date                    = $date;
         $journal->transaction_currency_id = $currencyId;
         $journal->save();
+
         // update transactions:
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
-            if ($account->id === $transaction->account_id) {
-                Log::debug(sprintf('Will change transaction #%d amount from %s to %s', $transaction->id, $transaction->amount, $amount));
+            if (intval($account->id) === intval($transaction->account_id)) {
+                Log::debug(sprintf('Will (eq) change transaction #%d amount from "%s" to "%s"', $transaction->id, $transaction->amount, $amount));
                 $transaction->amount                  = $amount;
                 $transaction->transaction_currency_id = $currencyId;
                 $transaction->save();
             }
-            if ($account->id !== $transaction->account_id) {
-                $negativeAmount = bcmul($amount, '-1');
-                Log::debug(sprintf('Will change transaction #%d amount from %s to %s', $transaction->id, $transaction->amount, $negativeAmount));
+            if (!(intval($account->id) === intval($transaction->account_id))) {
+                Log::debug(sprintf('Will (neq) change transaction #%d amount from "%s" to "%s"', $transaction->id, $transaction->amount, $negativeAmount));
                 $transaction->amount                  = $negativeAmount;
                 $transaction->transaction_currency_id = $currencyId;
                 $transaction->save();

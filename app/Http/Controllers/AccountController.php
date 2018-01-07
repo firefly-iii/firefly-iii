@@ -29,6 +29,7 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -156,14 +157,14 @@ class AccountController extends Controller
      * @throws FireflyException
      * @throws FireflyException
      */
-    public function edit(Request $request, Account $account)
+    public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
     {
-        /** @var CurrencyRepositoryInterface $repository */
-        $repository         = app(CurrencyRepositoryInterface::class);
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos      = app(CurrencyRepositoryInterface::class);
         $what               = config('firefly.shortNamesByFullName')[$account->accountType->type];
         $subTitle           = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
         $subTitleIcon       = config('firefly.subIconsByIdentifier.' . $what);
-        $allCurrencies      = $repository->get();
+        $allCurrencies      = $currencyRepos->get();
         $currencySelectList = ExpandedForm::makeSelectList($allCurrencies);
         $roles              = [];
         foreach (config('firefly.accountRoles') as $role) {
@@ -183,7 +184,7 @@ class AccountController extends Controller
         $openingBalanceAmount = '0' === $account->getOpeningBalanceAmount() ? '' : $openingBalanceAmount;
         $openingBalanceDate   = $account->getOpeningBalanceDate();
         $openingBalanceDate   = 1900 === $openingBalanceDate->year ? null : $openingBalanceDate->format('Y-m-d');
-        $currency             = $repository->find(intval($account->getMeta('currency_id')));
+        $currency             = $currencyRepos->find(intval($account->getMeta('currency_id')));
 
         $preFilled = [
             'accountNumber'        => $account->getMeta('accountNumber'),
@@ -195,7 +196,15 @@ class AccountController extends Controller
             'openingBalance'       => $openingBalanceAmount,
             'virtualBalance'       => $account->virtual_balance,
             'currency_id'          => $currency->id,
+            'notes'                => '',
         ];
+        /** @var Note $note */
+        $note = $repository->getNote($account);
+        if (null !== $note) {
+            $preFilled['notes'] = $note->text;
+        }
+
+
         $request->session()->flash('preFilled', $preFilled);
 
         return view(

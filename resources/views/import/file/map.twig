@@ -17,6 +17,11 @@
                     <p>
                         {{ trans('import.file_map_text') }}
                     </p>
+                    {% if data|length == 0 %}
+                        <p class="text-danger">
+                            {{ trans('import.file_nothing_to_map') }}
+                        </p>
+                    {% endif %}
                 </div>
             </div>
 
@@ -24,6 +29,8 @@
     </div>
     <form action="{{ route('import.configure.post', job.key) }}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+
+
 
         {% for field in data %}
             <div class="row">

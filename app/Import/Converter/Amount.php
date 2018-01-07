@@ -45,8 +45,10 @@ class Amount implements ConverterInterface
         if (null === $value) {
             return '0';
         }
-        $value = strval($value);
         Log::debug(sprintf('Start with amount "%s"', $value));
+        $original        = $value;
+        $value           = strval($value);
+        $value           = $this->stripAmount($value);
         $len             = strlen($value);
         $decimalPosition = $len - 3;
         $altPosition     = $len - 2;
@@ -81,27 +83,43 @@ class Amount implements ConverterInterface
         // if decimal is dot, replace all comma's and spaces with nothing. then parse as float (round to 4 pos)
         if ('.' === $decimal) {
             $search   = [',', ' '];
-            $oldValue = $value;
             $value    = str_replace($search, '', $value);
-            Log::debug(sprintf('Converted amount from "%s" to "%s".', $oldValue, $value));
+            Log::debug(sprintf('Converted amount from "%s" to "%s".', $original, $value));
         }
         if (',' === $decimal) {
             $search   = ['.', ' '];
-            $oldValue = $value;
             $value    = str_replace($search, '', $value);
             $value    = str_replace(',', '.', $value);
-            Log::debug(sprintf('Converted amount from "%s" to "%s".', $oldValue, $value));
+            Log::debug(sprintf('Converted amount from "%s" to "%s".', $original, $value));
         }
         if (null === $decimal) {
             // replace all:
             $search   = ['.', ' ', ','];
-            $oldValue = $value;
             $value    = str_replace($search, '', $value);
-            Log::debug(sprintf('No decimal character found. Converted amount from "%s" to "%s".', $oldValue, $value));
+            Log::debug(sprintf('No decimal character found. Converted amount from "%s" to "%s".', $original, $value));
         }
 
         $number = strval(number_format(round(floatval($value), 12), 12, '.', ''));
 
         return $number;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return string
+     */
+    private function stripAmount(string $value): string
+    {
+        $str = preg_replace('/[^\-\(\)\.\,0-9 ]/', '', $value);
+        $len = strlen($str);
+        if ($str{0} === '(' && $str{$len - 1} === ')') {
+            $str = '-' . substr($str, 1, ($len - 2));
+        }
+
+        Log::debug(sprintf('Stripped "%s" away to "%s"', $value, $str));
+
+        return $str;
+
     }
 }

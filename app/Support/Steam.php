@@ -72,6 +72,7 @@ class Steam
                     ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                     ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
                     ->where('transactions.foreign_currency_id', $currencyId)
+                    ->where('transactions.transaction_currency_id', '!=', $currencyId)
                     ->sum('transactions.foreign_amount')
         );
         $balance        = bcadd($nativeBalance, $foreignBalance);
@@ -114,6 +115,7 @@ class Steam
                     ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                     ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
                     ->where('transactions.foreign_currency_id', $currencyId)
+                    ->where('transactions.transaction_currency_id', '!=', $currencyId)
                     ->sum('transactions.foreign_amount')
         );
         $balance        = bcadd($nativeBalance, $foreignBalance);

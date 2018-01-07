@@ -22,8 +22,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
+use FireflyConfig;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
 
 /**
  * Class ForgotPasswordController
@@ -50,5 +55,58 @@ class ForgotPasswordController extends Controller
     {
         parent::__construct();
         $this->middleware('guest');
+    }
+
+    /**
+     * Send a reset link to the given user.
+     *
+     * @param  \Illuminate\Http\Request $request
+     *
+     * @param UserRepositoryInterface   $repository
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    public function sendResetLinkEmail(Request $request, UserRepositoryInterface $repository)
+    {
+        $this->validateEmail($request);
+
+        // verify if the user is not a demo user. If so, we give him back an error.
+        $user = User::where('email', $request->get('email'))->first();
+
+        if (!is_null($user) && $repository->hasRole($user, 'demo')) {
+            return back()->withErrors(['email' => trans('firefly.cannot_reset_demo_user')]);
+        }
+
+        // We will send the password reset link to this user. Once we have attempted
+        // to send the link, we will examine the response then see the message we
+        // need to show to the user. Finally, we'll send out a proper response.
+        $response = $this->broker()->sendResetLink(
+            $request->only('email')
+        );
+
+        if ($response == Password::RESET_LINK_SENT) {
+            return back()->with('status', trans($response));
+        }
+
+        return back()->withErrors(['email' => trans($response)]); // @codeCoverageIgnore
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * Display the form to request a password reset link.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showLinkRequestForm()
+    {
+        // is allowed to?
+        $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $userCount         = User::count();
+        $allowRegistration = true;
+        if (true === $singleUserMode && $userCount > 0) {
+            $allowRegistration = false;
+        }
+
+        return view('auth.passwords.email')->with(compact('allowRegistration'));
     }
 }
