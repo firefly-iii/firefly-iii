@@ -3366,10 +3366,10 @@ opt/app/vendor/pragmarx/google2fa-laravel/src/config/config.php
 opt/app/vendor/pragmarx/google2fa-laravel/tests/spec/Support/AuthenticatorSpec.php
 opt/app/vendor/pragmarx/google2fa-laravel/upgrading.md
 opt/app/vendor/pragmarx/google2fa/LICENSE
+opt/app/vendor/pragmarx/google2fa/README.md
 opt/app/vendor/pragmarx/google2fa/changelog.md
 opt/app/vendor/pragmarx/google2fa/composer.json
 opt/app/vendor/pragmarx/google2fa/docs/playground.jpg
-opt/app/vendor/pragmarx/google2fa/readme.md
 opt/app/vendor/pragmarx/google2fa/src/Exceptions/IncompatibleWithGoogleAuthenticatorException.php
 opt/app/vendor/pragmarx/google2fa/src/Exceptions/InvalidCharactersException.php
 opt/app/vendor/pragmarx/google2fa/src/Exceptions/SecretKeyTooShortException.php
@@ -3378,6 +3378,7 @@ opt/app/vendor/pragmarx/google2fa/src/Support/Base32.php
 opt/app/vendor/pragmarx/google2fa/src/Support/Constants.php
 opt/app/vendor/pragmarx/google2fa/src/Support/QRCode.php
 opt/app/vendor/pragmarx/google2fa/src/Support/Url.php
+opt/app/vendor/pragmarx/google2fa/tests/Constants.php
 opt/app/vendor/pragmarx/google2fa/tests/Google2FATest.php
 opt/app/vendor/pragmarx/google2fa/tests/bootstrap.php
 opt/app/vendor/pragmarx/google2fa/upgrading.md
