@@ -39,7 +39,7 @@ You can find Firefly III in [the Sandstorm.io marketplace](https://apps.sandstor
 
 ### Other options
 
-Firefly III is also available as a package on [https://softaculous.com/](Softaculous) and [AMPPS](https://www.ampps.com/).
+Firefly III is also available as a package on [Softaculous](https://softaculous.com/) and [AMPPS](https://www.ampps.com/).
 
 ## More about Firefly III
 
