@@ -63,6 +63,7 @@ class ImportStorage
     private $matchBills = false;
     /** @var Collection */
     private $objects;
+    private $total     = 0;
     /** @var array */
     private $transfers = [];
 
@@ -116,6 +117,7 @@ class ImportStorage
     public function setObjects(Collection $objects)
     {
         $this->objects = $objects;
+        $this->total   = $objects->count();
     }
 
     /**
@@ -150,7 +152,7 @@ class ImportStorage
      */
     protected function storeImportJournal(int $index, ImportJournal $importJournal): bool
     {
-        Log::debug(sprintf('Going to store object #%d with description "%s"', $index, $importJournal->getDescription()));
+        Log::debug(sprintf('Going to store object #%d/%d with description "%s"', ($index+1), $this->total, $importJournal->getDescription()));
         $assetAccount      = $importJournal->asset->getAccount();
         $amount            = $importJournal->getAmount();
         $currencyId        = $this->getCurrencyId($importJournal);

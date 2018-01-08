@@ -22,15 +22,21 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Routine;
 
+use Carbon\Carbon;
+use DB;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Import\Object\ImportJournal;
+use FireflyIII\Import\Storage\ImportStorage;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Services\Spectre\Exception\DuplicatedCustomerException;
 use FireflyIII\Services\Spectre\Exception\SpectreException;
 use FireflyIII\Services\Spectre\Object\Account;
 use FireflyIII\Services\Spectre\Object\Customer;
 use FireflyIII\Services\Spectre\Object\Login;
 use FireflyIII\Services\Spectre\Object\Token;
+use FireflyIII\Services\Spectre\Object\Transaction;
 use FireflyIII\Services\Spectre\Request\CreateTokenRequest;
 use FireflyIII\Services\Spectre\Request\ListAccountsRequest;
 use FireflyIII\Services\Spectre\Request\ListCustomersRequest;
@@ -144,10 +150,7 @@ class SpectreRoutine implements RoutineInterface
                 throw new FireflyException(sprintf('Cannot handle stage %s', $stage));
         }
 
-        var_dump($config);
-        exit;
-
-        throw new FireflyException('Application cannot handle this.');
+        return true;
     }
 
     /**
@@ -253,10 +256,16 @@ class SpectreRoutine implements RoutineInterface
         $customer = $this->getCustomer();
         Log::debug(sprintf('Customer ID is %s', $customer->getId()));
 
+        // add some steps done
+        $this->repository->addStepsDone($this->job, 2);
+
         // use customer to request a token:
         $uri   = route('import.status', [$this->job->key]);
         $token = $this->getToken($customer, $uri);
         Log::debug(sprintf('Token is %s', $token->getToken()));
+
+        // add some steps done
+        $this->repository->addStepsDone($this->job, 2);
 
         // update job, give it the token:
         $config                   = $this->job->configuration;
@@ -287,6 +296,10 @@ class SpectreRoutine implements RoutineInterface
         $request  = new ListLoginsRequest($this->job->user);
         $request->setCustomer($customer);
         $request->call();
+
+        // add some steps done
+        $this->repository->addStepsDone($this->job, 2);
+
         $logins = $request->getLogins();
         /** @var Login $final */
         $final = null;
@@ -305,11 +318,17 @@ class SpectreRoutine implements RoutineInterface
             throw new FireflyException('No valid login attempt found.');
         }
 
+        // add some steps done
+        $this->repository->addStepsDone($this->job, 2);
+
         // list the users accounts using this login.
         $accountRequest = new ListAccountsRequest($this->job->user);
         $accountRequest->setLogin($login);
         $accountRequest->call();
         $accounts = $accountRequest->getAccounts();
+
+        // add some steps done
+        $this->repository->addStepsDone($this->job, 2);
 
         // store accounts in job:
         $all = [];
@@ -327,37 +346,160 @@ class SpectreRoutine implements RoutineInterface
         $this->job->status        = 'configuring';
         $this->job->save();
 
+        // add some steps done
+        $this->repository->addStepsDone($this->job, 2);
+
         return;
     }
 
     /**
+     * @param array $all
      *
+     * @throws FireflyException
+     */
+    private function importTransactions(array $all)
+    {
+        Log::debug('Going to import transactions');
+        $collection = new Collection;
+        // create import objects?
+        foreach ($all as $accountId => $data) {
+            Log::debug(sprintf('Now at account #%d', $accountId));
+            /** @var Transaction $transaction */
+            foreach ($data['transactions'] as $transaction) {
+                Log::debug(sprintf('Now at transaction #%d', $transaction->getId()));
+                /** @var Account $account */
+                $account       = $data['account'];
+                $importJournal = new ImportJournal;
+                $importJournal->setUser($this->job->user);
+                $importJournal->asset->setDefaultAccountId($data['import_id']);
+                // call set value a bunch of times for various data entries:
+                $tags   = [];
+                $tags[] = $transaction->getMode();
+                $tags[] = $transaction->getStatus();
+                if ($transaction->isDuplicated()) {
+                    $tags[] = 'possibly-duplicated';
+                }
+                $extra = $transaction->getExtra()->toArray();
+                $notes = '';
+                $notes .= strval(trans('import.imported_from_account', ['account' => $account->getName()])) . '  '
+                          . "\n"; // double space for newline in Markdown.
+                foreach ($extra as $key => $value) {
+                    switch ($key) {
+                        default:
+                            $notes .= $key . ': ' . $value . '  '; // for newline in Markdown.
+                    }
+                }
+                // hash
+                $importJournal->setHash($transaction->getHash());
+
+                // account ID (Firefly III account):
+                $importJournal->setValue(['role' => 'account-id', 'value' => $data['import_id'], 'mapped' => $data['import_id']]);
+
+                // description:
+                $importJournal->setValue(['role' => 'description', 'value' => $transaction->getDescription()]);
+
+                // date:
+                $importJournal->setValue(['role' => 'date-transaction', 'value' => $transaction->getMadeOn()->toIso8601String()]);
+
+
+                // amount
+                $importJournal->setValue(['role' => 'amount', 'value' => $transaction->getAmount()]);
+                $importJournal->setValue(['role' => 'currency-code', 'value' => $transaction->getCurrencyCode()]);
+
+
+                // various meta fields:
+                $importJournal->setValue(['role' => 'category-name', 'value' => $transaction->getCategory()]);
+                $importJournal->setValue(['role' => 'note', 'value' => $notes]);
+                $importJournal->setValue(['role' => 'tags-comma', 'value' => join(',', $tags)]);
+                $collection->push($importJournal);
+            }
+        }
+        Log::debug(sprintf('Going to try and store all %d them.', $collection->count()));
+        // try to store them:
+        $storage = new ImportStorage;
+
+        $storage->setJob($this->job);
+        $storage->setDateFormat('Y-m-d\TH:i:sO');
+        $storage->setObjects($collection);
+        $storage->store();
+        Log::info('Back in importTransactions()');
+
+        // link to tag
+        /** @var TagRepositoryInterface $repository */
+        $repository = app(TagRepositoryInterface::class);
+        $repository->setUser($this->job->user);
+        $data                       = [
+            'tag'         => trans('import.import_with_key', ['key' => $this->job->key]),
+            'date'        => new Carbon,
+            'description' => null,
+            'latitude'    => null,
+            'longitude'   => null,
+            'zoomLevel'   => null,
+            'tagMode'     => 'nothing',
+        ];
+        $tag                        = $repository->store($data);
+        $extended                   = $this->job->extended_status;
+        $extended['tag']            = $tag->id;
+        $this->job->extended_status = $extended;
+        $this->job->save();
+
+        Log::debug(sprintf('Created tag #%d ("%s")', $tag->id, $tag->tag));
+        Log::debug('Looping journals...');
+        $journalIds = $storage->journals->pluck('id')->toArray();
+        $tagId      = $tag->id;
+        foreach ($journalIds as $journalId) {
+            Log::debug(sprintf('Linking journal #%d to tag #%d...', $journalId, $tagId));
+            DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journalId, 'tag_id' => $tagId]);
+        }
+        Log::info(sprintf('Linked %d journals to tag #%d ("%s")', $storage->journals->count(), $tag->id, $tag->tag));
+
+        // set status to "finished"?
+        // update job:
+        $this->job->status = 'finished';
+        $this->job->save();
+        return;
+    }
+
+    /**
+     * @throws FireflyException
+     * @throws SpectreException
      */
     private function runStageHaveMapping()
     {
-        // for each spectre account id in 'account-mappings'.
-        // find FF account
-        // get transactions.
-        // import?!
         $config   = $this->job->configuration;
         $accounts = $config['accounts'] ?? [];
+        $all      = [];
+        $count    = 0;
         /** @var array $accountArray */
         foreach ($accounts as $accountArray) {
             $account  = new Account($accountArray);
             $importId = intval($config['accounts-mapped'][$account->getid()] ?? 0);
             $doImport = $importId !== 0 ? true : false;
             if (!$doImport) {
+                Log::debug('Will NOT import from Spectre account #%d ("%s")', $account->getId(), $account->getName());
                 continue;
             }
-            // import into account
+            // grab all transactions
             $listTransactionsRequest = new ListTransactionsRequest($this->job->user);
             $listTransactionsRequest->setAccount($account);
             $listTransactionsRequest->call();
-            $transactions = $listTransactionsRequest->getTransactions();
-            var_dump($transactions);exit;
+            $transactions           = $listTransactionsRequest->getTransactions();
+            $all[$account->getId()] = [
+                'account'      => $account,
+                'import_id'    => $importId,
+                'transactions' => $transactions,
+            ];
+            $count                  += count($transactions);
 
+            // add some steps done
+            $this->repository->addStepsDone($this->job, 2);
         }
-        var_dump($config);
-        exit;
+        // update number of steps:
+        $this->repository->setTotalSteps($this->job, $count * 5);
+        $this->repository->setStepsDone($this->job, 1);
+        Log::debug(sprintf('Total number of transactions: %d', $count));
+
+
+        $this->importTransactions($all);
     }
 }

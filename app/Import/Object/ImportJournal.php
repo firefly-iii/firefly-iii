@@ -179,6 +179,8 @@ class ImportJournal
      */
     public function setValue(array $array)
     {
+        $array['mapped'] = $array['mapped'] ?? null;
+        $array['value']  = $array['value'] ?? null;
         switch ($array['role']) {
             default:
                 throw new FireflyException(sprintf('ImportJournal cannot handle "%s" with value "%s".', $array['role'], $array['value']));

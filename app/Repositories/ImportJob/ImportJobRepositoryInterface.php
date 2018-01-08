@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 interface ImportJobRepositoryInterface
 {
+
     /**
      * @param ImportJob $job
      * @param int       $steps
@@ -111,6 +112,22 @@ interface ImportJobRepositoryInterface
      * @return void
      */
     public function setExtendedStatus(ImportJob $job, array $array): ImportJob;
+
+    /**
+     * @param ImportJob $job
+     * @param int       $count
+     *
+     * @return ImportJob
+     */
+    public function setStepsDone(ImportJob $job, int $steps): ImportJob;
+
+    /**
+     * @param ImportJob $job
+     * @param int       $count
+     *
+     * @return ImportJob
+     */
+    public function setTotalSteps(ImportJob $job, int $count): ImportJob;
 
     /**
      * @param User $user

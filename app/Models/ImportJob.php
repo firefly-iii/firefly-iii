@@ -106,6 +106,7 @@ class ImportJob extends Model
         $status['done']        += $count;
         $this->extended_status = $status;
         $this->save();
+        Log::debug(sprintf('Add %d to steps done for job "%s" making steps done %d', $count, $this->key, $status['done']));
     }
 
     /**
@@ -117,6 +118,7 @@ class ImportJob extends Model
         $status['steps']       += $count;
         $this->extended_status = $status;
         $this->save();
+        Log::debug(sprintf('Add %d to total steps for job "%s" making total steps %d', $count, $this->key, $status['steps']));
     }
 
     /**
@@ -196,6 +198,30 @@ class ImportJob extends Model
         if (in_array($value, $this->validStatus)) {
             $this->attributes['status'] = $value;
         }
+    }
+
+    /**
+     * @param int $steps
+     */
+    public function setStepsDone(int $steps)
+    {
+        $status                = $this->extended_status;
+        $status['done']        = $steps;
+        $this->extended_status = $status;
+        $this->save();
+        Log::debug(sprintf('Set steps done for job "%s" to %d', $this->key, $steps));
+    }
+
+    /**
+     * @param int $count
+     */
+    public function setTotalSteps(int $count)
+    {
+        $status                = $this->extended_status;
+        $status['steps']       = $count;
+        $this->extended_status = $status;
+        $this->save();
+        Log::debug(sprintf('Set total steps for job "%s" to %d', $this->key, $count));
     }
 
     /**

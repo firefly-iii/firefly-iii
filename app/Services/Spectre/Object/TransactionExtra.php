@@ -161,6 +161,7 @@ class TransactionExtra extends SpectreObject
             'categorization_confidence' => $this->categorizationConfidence,
         ];
 
+
         return $array;
     }
 

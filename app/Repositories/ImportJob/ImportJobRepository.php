@@ -311,4 +311,30 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     {
         return $job->uploadFileContents();
     }
+
+    /**
+     * @param ImportJob $job
+     * @param int       $count
+     *
+     * @return ImportJob
+     */
+    public function setStepsDone(ImportJob $job, int $steps): ImportJob
+    {
+        $job->setStepsDone($steps);
+
+        return $job;
+    }
+
+    /**
+     * @param ImportJob $job
+     * @param int       $count
+     *
+     * @return ImportJob
+     */
+    public function setTotalSteps(ImportJob $job, int $count): ImportJob
+    {
+        $job->setTotalSteps($count);
+
+        return $job;
+    }
 }
