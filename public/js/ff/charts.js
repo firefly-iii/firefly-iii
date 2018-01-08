@@ -88,7 +88,9 @@ const verticalLinePlugin = {
 
     afterDatasetsDraw: function (chart, easing) {
         if (chart.config.lineAtIndex) {
-            chart.config.lineAtIndex.forEach(pointIndex => this.renderVerticalLine(chart, pointIndex));
+            chart.config.lineAtIndex.forEach(function(pointIndex) {
+                this.renderVerticalLine(chart, pointIndex);
+            }, this);
         }
     }
 };
