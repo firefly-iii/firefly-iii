@@ -108,6 +108,8 @@ return [
     'clone_deposit'                              => 'Kloning deposit ini',
     'clone_transfer'                             => 'Kloning transfer ini',
     'multi_select_no_selection'                  => 'Tidak ada yang di pilih',
+    'multi_select_select_all'                    => 'Select all',
+    'multi_select_n_selected'                    => 'selected',
     'multi_select_all_selected'                  => 'Semua dipilih',
     'multi_select_filter_placeholder'            => 'Menemukan..',
     'between_dates_breadcrumb'                   => 'Antara :start dan :end',

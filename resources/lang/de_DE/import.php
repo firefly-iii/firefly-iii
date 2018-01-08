@@ -145,7 +145,7 @@ return [
     'column_note'                     => 'Notiz(en)',
 
     // prerequisites
-    'prerequisites'                   => 'Prerequisites',
+    'prerequisites'                   => 'Voraussetzungen',
 
     // bunq
     'bunq_prerequisites_title'        => 'Voraussetzungen für einen Import von bunq',
@@ -156,4 +156,8 @@ return [
     'spectre_prerequisites_title'     => 'Voraussetzungen für einen Import von Spectre',
     'spectre_prerequisites_text'      => 'In order to import data using the Spectre API, you must provide Firefly III with two secret values. They can be found on the <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
     'spectre_enter_pub_key'           => 'Der Import funktioniert nur, wenn Sie diesen öffentlichen Schlüssel auf Ihrer <a href="https://www.saltedge.com/clients/security/edit">Sicherheitsseite</a> eingeben.',
+    'spectre_accounts_title'          => 'Select accounts to import from',
+    'spectre_accounts_text'           => 'Each account on the left below has been found by Spectre and can be imported into Firefly III. Please select the asset account that should hold any given transactions. If you do not wish to import from any particular account, remove the check from the checkbox.',
+    'spectre_do_import'               => 'Yes, import from this account',
 ];
+

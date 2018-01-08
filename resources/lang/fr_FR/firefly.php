@@ -108,6 +108,8 @@ return [
     'clone_deposit'                              => 'Cloner ce dépôt',
     'clone_transfer'                             => 'Cloner ce transfert',
     'multi_select_no_selection'                  => 'Aucun sélectionné',
+    'multi_select_select_all'                    => 'Select all',
+    'multi_select_n_selected'                    => 'selected',
     'multi_select_all_selected'                  => 'Tous sélectionnés',
     'multi_select_filter_placeholder'            => 'Rechercher..',
     'between_dates_breadcrumb'                   => 'Entre :start et :end',

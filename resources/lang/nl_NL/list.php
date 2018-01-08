@@ -100,4 +100,6 @@ return [
     'sum_deposits'            => 'Som van inkomsten',
     'sum_transfers'           => 'Som van overschrijvingen',
     'reconcile'               => 'Afstemmen',
+    'account_on_spectre'      => 'Rekening (Spectre)',
+    'do_import'               => 'Importeer van deze rekening',
 ];

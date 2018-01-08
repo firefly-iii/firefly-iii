@@ -108,6 +108,8 @@ return [
     'clone_deposit'                              => 'Bu depozitoyu klonla',
     'clone_transfer'                             => 'Bu transferi kopyala',
     'multi_select_no_selection'                  => 'Hiçbiri seçilmedi',
+    'multi_select_select_all'                    => 'Select all',
+    'multi_select_n_selected'                    => 'selected',
     'multi_select_all_selected'                  => 'Tümü seçildi',
     'multi_select_filter_placeholder'            => 'Bul..',
     'between_dates_breadcrumb'                   => ':start ve :end arasında',

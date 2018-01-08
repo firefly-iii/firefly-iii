@@ -108,6 +108,8 @@ return [
     'clone_deposit'                              => 'Zduplikuj tą wpłatę',
     'clone_transfer'                             => 'Zduplikuj ten transfer',
     'multi_select_no_selection'                  => 'Nie wybrano',
+    'multi_select_select_all'                    => 'Select all',
+    'multi_select_n_selected'                    => 'selected',
     'multi_select_all_selected'                  => 'Wybrano wszystko',
     'multi_select_filter_placeholder'            => 'Znajdź...',
     'between_dates_breadcrumb'                   => 'Pomiędzy :start a :end',

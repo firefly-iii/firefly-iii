@@ -100,4 +100,6 @@ return [
     'sum_deposits'            => 'Toplam para yatırma',
     'sum_transfers'           => 'Transferlerin toplamı',
     'reconcile'               => 'Onaylanmış',
+    'account_on_spectre'      => 'Account (Spectre)',
+    'do_import'               => 'Import from this account',
 ];

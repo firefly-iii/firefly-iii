@@ -108,6 +108,8 @@ return [
     'clone_deposit'                              => 'Clone this deposit',
     'clone_transfer'                             => 'Clone this transfer',
     'multi_select_no_selection'                  => 'None selected',
+    'multi_select_select_all'                    => 'Select all',
+    'multi_select_n_selected'                    => 'selected',
     'multi_select_all_selected'                  => 'All selected',
     'multi_select_filter_placeholder'            => 'Find..',
     'between_dates_breadcrumb'                   => 'Between :start and :end',

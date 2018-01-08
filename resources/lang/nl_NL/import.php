@@ -156,4 +156,8 @@ return [
     'spectre_prerequisites_title'     => 'Voorwaarden voor een import via Spectre',
     'spectre_prerequisites_text'      => 'Als je gegevens wilt importeren via de Spectre API, moet je een aantal geheime codes bezitten. Ze zijn te vinden op <a href="https://www.saltedge.com/clients/profile/secrets">de secrets pagina</a>.',
     'spectre_enter_pub_key'           => 'Het importeren werkt alleen als je deze publieke sleutel op uw <a href="https://www.saltedge.com/clients/security/edit">security pagina</a> invoert.',
+    'spectre_accounts_title'          => 'Selecteer de accounts waaruit je wilt importeren',
+    'spectre_accounts_text'           => 'Links staan de rekeningen die zijn gevonden door Spectre. Ze kunnen worden geïmporteerd in Firefly III. Selecteer er de juiste betaalrekening bij. Verwijder het vinkje als je toch niet van een bepaalde rekening wilt importeren.',
+    'spectre_do_import'               => 'Ja, importeer van deze rekening',
 ];
+

@@ -108,6 +108,8 @@ return [
     'clone_deposit'                              => 'Kopieer deze inkomsten',
     'clone_transfer'                             => 'Kopieer deze overschrijving',
     'multi_select_no_selection'                  => 'Niets geselecteerd',
+    'multi_select_select_all'                    => 'Selecteer alles',
+    'multi_select_n_selected'                    => 'geselecteerd',
     'multi_select_all_selected'                  => 'Alles geselecteerd',
     'multi_select_filter_placeholder'            => 'Vinden..',
     'between_dates_breadcrumb'                   => 'Tussen :start en :end',

@@ -156,4 +156,8 @@ return [
     'spectre_prerequisites_title'     => 'Wymagania wstępne do importowania za pomocą Spectre',
     'spectre_prerequisites_text'      => 'Aby importować dane za pomocą interfejsu Spectre API, musisz dostarczyć Firefly III dwie sekretne wartości. Można je znaleźć na <a href="https://www.saltedge.com/clients/profile/secrets">stronie sekretów</a>.',
     'spectre_enter_pub_key'           => 'Importowanie będzie działać tylko po wpisaniu tego klucza publicznego na <a href="https://www.saltedge.com/clients/security/edit">stronie zabezpieczeń</a>.',
+    'spectre_accounts_title'          => 'Select accounts to import from',
+    'spectre_accounts_text'           => 'Each account on the left below has been found by Spectre and can be imported into Firefly III. Please select the asset account that should hold any given transactions. If you do not wish to import from any particular account, remove the check from the checkbox.',
+    'spectre_do_import'               => 'Yes, import from this account',
 ];
+
