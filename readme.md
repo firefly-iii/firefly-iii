@@ -42,6 +42,8 @@ others try to increase their current cashflow. There are tons of ways to save an
 
 By keeping track of your expenses and your income you can budget accordingly and save money. Stop living from paycheck to paycheck but give yourself the financial wiggle room you need.
 
+You can read more about this on [the website](https://firefly-iii.org/).
+
 ### Features
 Most importantly...
 
@@ -51,25 +53,34 @@ Most importantly...
 
 But actually, it features:
 
-* A double-entry bookkeeping system;
-* You can store, edit and remove withdrawals, deposits and transfers. This allows you full financial management;
+* [A double-entry bookkeeping system](https://en.wikipedia.org/wiki/Double-entry_bookkeeping_system);
+* You can store, edit and remove [withdrawals, deposits and transfers](https://firefly-iii.org/guide-transactions.html). This allows you full financial management;
 * You can manage different types of accounts;
-  * Asset accounts
-  * Shared asset accounts (household accounts)
+  * [Asset](https://firefly-iii.org/guide-accounts.html) accounts
+  * Shared [asset accounts](https://firefly-iii.org/guide-accounts.html) ([household accounts](https://firefly-iii.org/guide-accounts.html))
   * Saving accounts
   * Credit cards
-* It’s possible to create, change and manage money using budgets;
+* It's possible to create, change and manage money using _[budgets](https://firefly-iii.org/guide-budgets.html)_;
 * Organize transactions using categories;
-* Save towards a goal using piggy banks;
-* Predict and anticipate bills;
-* View income / expense reports;
-* Rule based transaction handling with the ability to create your own rules.
+* Save towards a goal using [piggy banks](https://firefly-iii.org/guide-piggy-banks.html);
+* Predict and anticipate [bills](https://firefly-iii.org/guide-bills.html);
+* View income / expense [reports](https://firefly-iii.org/guide-reports.html);
+* [Rule based](https://firefly-iii.org/guide-rules.html) transaction handling with the ability to create your own rules.
 * The ability to export data so you can move to another system.
-* The ability to import data so you can move from another system.
+* The ability to _import_ data so you can move _from_ another system.
 * Organize expenses using tags;
 * 2 factor authentication for extra security 🔒;
 * Supports any currency you want, including crypto currencies such as Bitcoin ₿.
 * Lots of help text in case you don’t get it.
+
+Everything is organised:
+
+* Clear views that should show you how you're doing;
+* Easy navigation through your records;
+* Browse back and forth to see previous months or even years;
+* Lots of charts because we all love them;
+* Financial reporting showing you how well you are doing;
+* Lots of math because we all love it.
 
 ### Who is it for?
 This application is for people who want to track their finances, keep an eye on their money **without having to upload their financial records to the cloud**. 
