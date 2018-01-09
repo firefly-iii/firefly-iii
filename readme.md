@@ -4,9 +4,9 @@
 <p align="center">
 	<!-- alll icons are flatsquare -->
 	<!-- version -->
-	[![Packagist](https://img.shields.io/packagist/v/grumpydictator/firefly-iii.svg?style=flat-square)](https://packagist.org/packages/grumpydictator/firefly-iii)
+	<a href="https://packagist.org/packages/grumpydictator/firefly-iii"><img src="https://img.shields.io/packagist/v/grumpydictator/firefly-iii.svg?style=flat-square" alt="Packagist"></a>
 	<!-- license -->
-	[![license](https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+	<a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square" alt="License"></a>
 </p>
 
 <!-- MarkdownTOC autolink="true" depth="4" bracket="round" list_bullets="*" -->
@@ -119,15 +119,4 @@ If you are looking for alternatives, check out [Kickball's Awesome-Selfhosted li
 ### Badges
 I like badges!
 
-<!-- build status -->
-[![Travis branch](https://img.shields.io/travis/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://travis-ci.org/firefly-iii/firefly-iii/branches)
-<!-- scrutinizer -->
-[![Scrutinizer](https://img.shields.io/scrutinizer/g/firefly-iii/firefly-iii.svg?style=flat-square)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/)
-<!-- Code coverage (coveralls) -->
-[![Coveralls github branch](https://img.shields.io/coveralls/github/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://coveralls.io/github/firefly-iii/firefly-iii)
-<!-- requires PHP 7.1 -->
-[![Requires PHP7.1](https://img.shields.io/badge/php-7.1-red.svg)](https://secure.php.net/downloads.php)
-<!-- license (again) -->
-[![license](https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.en.html)	
-<!-- donate button -->
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) 
+[![Travis branch](https://img.shields.io/travis/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://travis-ci.org/firefly-iii/firefly-iii/branches)[![Scrutinizer](https://img.shields.io/scrutinizer/g/firefly-iii/firefly-iii.svg?style=flat-square)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/)[![Coveralls github branch](https://img.shields.io/coveralls/github/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://coveralls.io/github/firefly-iii/firefly-iii)[![Requires PHP7.1](https://img.shields.io/badge/php-7.1-red.svg)](https://secure.php.net/downloads.php)[![license](https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.en.html)	[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) 
