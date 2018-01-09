@@ -92,7 +92,7 @@ There are many ways to run Firefly III
 3. You can [run it using Docker](https://firefly-iii.org/using-docker.html).
 4. You can [deploy to Heroku](https://heroku.com/deploy?template=https://github.com/firefly-iii/firefly-iii/tree/master)
 5. You can [deploy to Sandstorm.io](https://apps.sandstorm.io/app/uws252ya9mep4t77tevn85333xzsgrpgth8q4y1rhknn1hammw70)
-6. You can [install it using [Softaculous](https://softaculous.com/). These guys even have made [another demo site](http://www.softaculous.com/softaculous/apps/others/Firefly_III)!
+6. You can [install it using Softaculous](https://softaculous.com/). These guys even have made [another demo site](http://www.softaculous.com/softaculous/apps/others/Firefly_III)!
 7. You can [install it using AMPPS](https://www.ampps.com/)
 5. *Even more options are on the way!*
 
