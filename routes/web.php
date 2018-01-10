@@ -170,7 +170,7 @@ Route::group(
     Route::get('edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'edit']);
     Route::get('delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'delete']);
     Route::get('show/{budget}', ['uses' => 'BudgetController@show', 'as' => 'show']);
-    Route::get('show/{budget}/{budgetlimit}', ['uses' => 'BudgetController@showByBudgetLimit', 'as' => 'show.limit']);
+    Route::get('show/{budget}/{budgetLimit}', ['uses' => 'BudgetController@showByBudgetLimit', 'as' => 'show.limit']);
     Route::get('list/no-budget/{moment?}', ['uses' => 'BudgetController@noBudget', 'as' => 'no-budget']);
     Route::get('{moment?}', ['uses' => 'BudgetController@index', 'as' => 'index']);
 
@@ -279,13 +279,13 @@ Route::group(
     Route::get('frontpage', ['uses' => 'BudgetController@frontpage', 'as' => 'frontpage']);
     Route::get('period/0/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@periodNoBudget', 'as' => 'period.no-budget']);
     Route::get('period/{budget}/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@period', 'as' => 'period']);
-    Route::get('budget/{budget}/{budgetlimit}', ['uses' => 'BudgetController@budgetLimit', 'as' => 'budget-limit']);
+    Route::get('budget/{budget}/{budgetLimit}', ['uses' => 'BudgetController@budgetLimit', 'as' => 'budget-limit']);
     Route::get('budget/{budget}', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
 
     // these charts are used in budget/show:
-    Route::get('expense-category/{budget}/{budgetlimit?}', ['uses' => 'BudgetController@expenseCategory', 'as' => 'expense-category']);
-    Route::get('expense-asset/{budget}/{budgetlimit?}', ['uses' => 'BudgetController@expenseAsset', 'as' => 'expense-asset']);
-    Route::get('expense-expense/{budget}/{budgetlimit?}', ['uses' => 'BudgetController@expenseExpense', 'as' => 'expense-expense']);
+    Route::get('expense-category/{budget}/{budgetLimit?}', ['uses' => 'BudgetController@expenseCategory', 'as' => 'expense-category']);
+    Route::get('expense-asset/{budget}/{budgetLimit?}', ['uses' => 'BudgetController@expenseAsset', 'as' => 'expense-asset']);
+    Route::get('expense-expense/{budget}/{budgetLimit?}', ['uses' => 'BudgetController@expenseExpense', 'as' => 'expense-expense']);
 
     // these charts are used in reports (category reports):
     Route::get(
@@ -817,8 +817,8 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Transaction', 'prefix' => 'transactions/convert', 'as' => 'transactions.convert.'], function () {
-    Route::get('{transaction_type}/{tj}', ['uses' => 'ConvertController@index', 'as' => 'index']);
-    Route::post('{transaction_type}/{tj}', ['uses' => 'ConvertController@postIndex', 'as' => 'index.post']);
+    Route::get('{transactionType}/{tj}', ['uses' => 'ConvertController@index', 'as' => 'index']);
+    Route::post('{transactionType}/{tj}', ['uses' => 'ConvertController@postIndex', 'as' => 'index.post']);
 }
 );
 

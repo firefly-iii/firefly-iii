@@ -32,6 +32,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Log;
 use Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class User.
@@ -59,6 +60,23 @@ class User extends Authenticatable
      * @var string
      */
     protected $table = 'users';
+
+    /**
+     * @param string $value
+     *
+     * @return User
+     */
+    public static function routeBinder(string $value): User
+    {
+        if (auth()->check()) {
+            $userId = intval($value);
+            $user   = self::find($userId);
+            if (!is_null($user)) {
+                return $user;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
 
     /**
      * @codeCoverageIgnore

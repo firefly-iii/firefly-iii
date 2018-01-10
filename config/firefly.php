@@ -153,12 +153,12 @@ return [
         'attachment'        => \FireflyIII\Models\Attachment::class,
         'bill'              => \FireflyIII\Models\Bill::class,
         'budget'            => \FireflyIII\Models\Budget::class,
+        'budgetLimit'       => \FireflyIII\Models\BudgetLimit::class,
         'category'          => \FireflyIII\Models\Category::class,
         'linkType'          => \FireflyIII\Models\LinkType::class,
-        'transaction_type'  => \FireflyIII\Models\TransactionType::class,
+        'transactionType'   => \FireflyIII\Models\TransactionType::class,
         'journalLink'       => \FireflyIII\Models\TransactionJournalLink::class,
         'currency'          => \FireflyIII\Models\TransactionCurrency::class,
-        'budgetlimit'       => \FireflyIII\Models\BudgetLimit::class,
         'piggyBank'         => \FireflyIII\Models\PiggyBank::class,
         'tj'                => \FireflyIII\Models\TransactionJournal::class,
         'tag'               => \FireflyIII\Models\Tag::class,
@@ -166,20 +166,29 @@ return [
         'ruleGroup'         => \FireflyIII\Models\RuleGroup::class,
         'exportJob'         => \FireflyIII\Models\ExportJob::class,
         'importJob'         => \FireflyIII\Models\ImportJob::class,
+        'user'              => \FireflyIII\User::class,
 
-        // binders
-        'fromCurrencyCode'  => \FireflyIII\Support\Binder\CurrencyCode::class,
-        'toCurrencyCode'    => \FireflyIII\Support\Binder\CurrencyCode::class,
-        'unfinishedJournal' => \FireflyIII\Support\Binder\UnfinishedJournal::class,
+        // strings
+
+        // dates
+        'start_date'        => \FireflyIII\Support\Binder\Date::class,
+        'end_date'          => \FireflyIII\Support\Binder\Date::class,
+        'date'              => \FireflyIII\Support\Binder\Date::class,
+
+        // lists
         'accountList'       => \FireflyIII\Support\Binder\AccountList::class,
         'expenseList'       => \FireflyIII\Support\Binder\AccountList::class,
         'budgetList'        => \FireflyIII\Support\Binder\BudgetList::class,
         'journalList'       => \FireflyIII\Support\Binder\JournalList::class,
         'categoryList'      => \FireflyIII\Support\Binder\CategoryList::class,
         'tagList'           => \FireflyIII\Support\Binder\TagList::class,
-        'start_date'        => \FireflyIII\Support\Binder\Date::class,
-        'end_date'          => \FireflyIII\Support\Binder\Date::class,
-        'date'              => \FireflyIII\Support\Binder\Date::class,
+
+        // others
+        'fromCurrencyCode'  => \FireflyIII\Support\Binder\CurrencyCode::class,
+        'toCurrencyCode'    => \FireflyIII\Support\Binder\CurrencyCode::class,
+        'unfinishedJournal' => \FireflyIII\Support\Binder\UnfinishedJournal::class,
+
+
     ],
     'rule-triggers'              => [
         'user_action'           => 'FireflyIII\TransactionRules\Triggers\UserAction',
