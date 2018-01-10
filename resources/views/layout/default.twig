@@ -188,6 +188,11 @@
 <script src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ FF_VERSION }}{% if account %}&amp;account={{ account.id }}{% endif %}"
         type="text/javascript"></script>
 <script type="text/javascript" src="js/ff/firefly.js?v={{ FF_VERSION }}"></script>
+<script type="text/javascript">
+    var helpPageTitle = "{{ trans('firefly.help_for_this_page')|escape('js') }}";
+    var noHelpForPage = "{{ trans('firefly.no_help_could_be_found')|escape('js') }}";
+    var noHelpForPageTitle = "{{ trans('firefly.no_help_title')|escape('js') }}";
+</script>
 <script type="text/javascript" src="js/ff/help.js?v={{ FF_VERSION }}"></script>
 {% if not shownDemo %}
     <script type="text/javascript">
