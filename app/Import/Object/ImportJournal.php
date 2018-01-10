@@ -48,6 +48,8 @@ class ImportJournal
     public $currency;
     /** @var string */
     public $description = '';
+    /** @var ImportCurrency */
+    public $foreignCurrency;
     /** @var string */
     public $hash;
     /** @var array */
@@ -71,6 +73,8 @@ class ImportJournal
     /** @var string */
     private $externalId = '';
     /** @var array */
+    private $foreignAmount;
+    /** @var array */
     private $modifiers = [];
     /** @var User */
     private $user;
@@ -80,12 +84,13 @@ class ImportJournal
      */
     public function __construct()
     {
-        $this->asset    = new ImportAccount;
-        $this->opposing = new ImportAccount;
-        $this->bill     = new ImportBill;
-        $this->category = new ImportCategory;
-        $this->budget   = new ImportBudget;
-        $this->currency = new ImportCurrency;
+        $this->asset           = new ImportAccount;
+        $this->opposing        = new ImportAccount;
+        $this->bill            = new ImportBill;
+        $this->category        = new ImportCategory;
+        $this->budget          = new ImportBudget;
+        $this->currency        = new ImportCurrency;
+        $this->foreignCurrency = new ImportCurrency;
     }
 
     /**
@@ -189,6 +194,12 @@ class ImportJournal
                 break;
             case 'amount':
                 $this->amount = $array;
+                break;
+            case 'amount_foreign':
+                $this->foreignAmount = $array;
+                break;
+            case 'foreign-currency-code':
+                $this->foreignCurrency->setId($array);
                 break;
             case 'amount_debit':
                 $this->amountDebit = $array;

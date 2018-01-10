@@ -412,8 +412,27 @@ class SpectreRoutine implements RoutineInterface
                 $notes = '';
                 $notes .= strval(trans('import.imported_from_account', ['account' => $account->getName()])) . '  '
                           . "\n"; // double space for newline in Markdown.
+
                 foreach ($extra as $key => $value) {
                     switch ($key) {
+                        case 'account_number':
+                            $importJournal->setValue(['role' => 'account-number', 'value' => $value]);
+                            break;
+                        case 'original_category':
+                        case 'original_subcategory':
+                        case 'customer_category_code':
+                        case 'customer_category_name':
+                            $tags[] = $value;
+                            break;
+                        case 'payee':
+                            $importJournal->setValue(['role' => 'opposing-name', 'value' => $value]);
+                            break;
+                        case 'original_amount':
+                            $importJournal->setValue(['role' => 'amount_foreign', 'value' => $value]);
+                            break;
+                        case 'original_currency_code':
+                            $importJournal->setValue(['role' => 'foreign-currency-code', 'value' => $value]);
+                            break;
                         default:
                             $notes .= $key . ': ' . $value . '  '; // for newline in Markdown.
                     }
@@ -494,7 +513,8 @@ class SpectreRoutine implements RoutineInterface
      */
     private function runStageHaveMapping()
     {
-        $accounts = $this->getConfig()['accounts'] ?? [];
+        $config   = $this->getConfig();
+        $accounts = $config['accounts'] ?? [];
         $all      = [];
         $count    = 0;
         /** @var array $accountArray */
@@ -503,7 +523,7 @@ class SpectreRoutine implements RoutineInterface
             $importId = intval($config['accounts-mapped'][$account->getid()] ?? 0);
             $doImport = $importId !== 0 ? true : false;
             if (!$doImport) {
-                Log::debug('Will NOT import from Spectre account #%d ("%s")', $account->getId(), $account->getName());
+                Log::debug(sprintf('Will NOT import from Spectre account #%d ("%s")', $account->getId(), $account->getName()));
                 continue;
             }
             // grab all transactions

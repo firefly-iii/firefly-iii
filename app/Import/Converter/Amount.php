@@ -82,20 +82,20 @@ class Amount implements ConverterInterface
 
         // if decimal is dot, replace all comma's and spaces with nothing. then parse as float (round to 4 pos)
         if ('.' === $decimal) {
-            $search   = [',', ' '];
-            $value    = str_replace($search, '', $value);
+            $search = [',', ' '];
+            $value  = str_replace($search, '', $value);
             Log::debug(sprintf('Converted amount from "%s" to "%s".', $original, $value));
         }
         if (',' === $decimal) {
-            $search   = ['.', ' '];
-            $value    = str_replace($search, '', $value);
-            $value    = str_replace(',', '.', $value);
+            $search = ['.', ' '];
+            $value  = str_replace($search, '', $value);
+            $value  = str_replace(',', '.', $value);
             Log::debug(sprintf('Converted amount from "%s" to "%s".', $original, $value));
         }
         if (null === $decimal) {
             // replace all:
-            $search   = ['.', ' ', ','];
-            $value    = str_replace($search, '', $value);
+            $search = ['.', ' ', ','];
+            $value  = str_replace($search, '', $value);
             Log::debug(sprintf('No decimal character found. Converted amount from "%s" to "%s".', $original, $value));
         }
 

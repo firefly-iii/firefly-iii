@@ -69,7 +69,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $status['done'] += $steps;
         Log::debug(sprintf('Add %d to steps done for job "%s" making steps done %d', $steps, $job->key, $status['done']));
 
-        return $this->setExtendedStatus($status);
+        return $this->setExtendedStatus($job, $status);
     }
 
     /**

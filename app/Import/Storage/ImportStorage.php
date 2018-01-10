@@ -98,12 +98,12 @@ class ImportStorage
         $this->repository->setUser($job->user);
 
         $config                  = $this->repository->getConfiguration($job);
-        $currency                = app('amount')->getDefaultCurrencyByUser($this->job->user);
+        $currency                = app('amount')->getDefaultCurrencyByUser($job->user);
         $this->defaultCurrencyId = $currency->id;
+        $this->job               = $job;
         $this->transfers         = $this->getTransfers();
         $this->applyRules        = $config['apply-rules'] ?? false;
         $this->matchBills        = $config['match-bills'] ?? false;
-
 
         if (true === $this->applyRules) {
             Log::debug('applyRules seems to be true, get the rules.');
@@ -118,8 +118,6 @@ class ImportStorage
         Log::debug(sprintf('Value of apply rules is %s', var_export($this->applyRules, true)));
         Log::debug(sprintf('Value of match bills is %s', var_export($this->matchBills, true)));
 
-
-        $this->job = $job;
 
     }
 
