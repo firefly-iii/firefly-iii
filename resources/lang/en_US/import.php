@@ -159,5 +159,9 @@ return [
     'spectre_accounts_title'          => 'Select accounts to import from',
     'spectre_accounts_text'           => 'Each account on the left below has been found by Spectre and can be imported into Firefly III. Please select the asset account that should hold any given transactions. If you do not wish to import from any particular account, remove the check from the checkbox.',
     'spectre_do_import'               => 'Yes, import from this account',
+
+
+    // various other strings:
+    'imported_from_account'           => 'Imported from ":account"',
 ];
 
