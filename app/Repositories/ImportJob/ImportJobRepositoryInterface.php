@@ -91,6 +91,13 @@ interface ImportJobRepositoryInterface
     public function getExtendedStatus(ImportJob $job): array;
 
     /**
+     * @param ImportJob $job
+     *
+     * @return string
+     */
+    public function getStatus(ImportJob $job);
+
+    /**
      * @param ImportJob    $job
      * @param UploadedFile $file
      *

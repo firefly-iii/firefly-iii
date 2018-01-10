@@ -88,11 +88,9 @@ class FileConfigurator implements ConfiguratorInterface
         if (is_null($this->job)) {
             throw new FireflyException('Cannot call configureJob() without a job.');
         }
-        $class = $this->getConfigurationClass();
-        $job   = $this->job;
         /** @var ConfigurationInterface $object */
-        $object = app($class);
-        $object->setJob($job);
+        $object = app($this->getConfigurationClass());
+        $object->setJob($this->job);
         $result        = $object->storeConfiguration($data);
         $this->warning = $object->getWarningMessage();
 
@@ -111,12 +109,9 @@ class FileConfigurator implements ConfiguratorInterface
         if (is_null($this->job)) {
             throw new FireflyException('Cannot call getNextData() without a job.');
         }
-
-        $class = $this->getConfigurationClass();
-        $job   = $this->job;
         /** @var ConfigurationInterface $object */
-        $object = app($class);
-        $object->setJob($job);
+        $object = app($this->getConfigurationClass());
+        $object->setJob($this->job);
 
         return $object->getData();
     }

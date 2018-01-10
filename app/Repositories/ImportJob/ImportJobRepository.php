@@ -51,9 +51,10 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      */
     public function addError(ImportJob $job, int $index, string $error): ImportJob
     {
-        $job->addError($index, $error);
+        $extended                     = $this->getExtendedStatus($job);
+        $extended['errors'][$index][] = $error;
 
-        return $job;
+        return $this->setExtendedStatus($job, $extended);
     }
 
     /**
@@ -64,9 +65,11 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      */
     public function addStepsDone(ImportJob $job, int $steps = 1): ImportJob
     {
-        $job->addStepsDone($steps);
+        $status         = $this->getExtendedStatus($job);
+        $status['done'] += $steps;
+        Log::debug(sprintf('Add %d to steps done for job "%s" making steps done %d', $steps, $job->key, $status['done']));
 
-        return $job;
+        return $this->setExtendedStatus($status);
     }
 
     /**
@@ -173,6 +176,16 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         }
 
         return [];
+    }
+
+    /**
+     * @param ImportJob $job
+     *
+     * @return string
+     */
+    public function getStatus(ImportJob $job): string
+    {
+        return $job->status;
     }
 
     /**

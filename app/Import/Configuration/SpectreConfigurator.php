@@ -24,6 +24,7 @@ namespace FireflyIII\Import\Configuration;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Configuration\Spectre\HaveAccounts;
 use Log;
 
@@ -34,6 +35,9 @@ class SpectreConfigurator implements ConfiguratorInterface
 {
     /** @var ImportJob */
     private $job;
+
+    /** @var ImportJobRepositoryInterface */
+    private $repository;
 
     /** @var string */
     private $warning = '';
@@ -51,12 +55,14 @@ class SpectreConfigurator implements ConfiguratorInterface
      * @param array $data
      *
      * @return bool
+     * @throws FireflyException
      */
     public function configureJob(array $data): bool
     {
-        $config = $this->job->configuration;
-        $stage  = $config['stage'];
-        $status = $this->job->status;
+        if (is_null($this->job)) {
+            throw new FireflyException('Cannot call configureJob() without a job.');
+        }
+        $stage = $this->getConfig()['stage'] ?? 'initial';
         Log::debug(sprintf('in getNextData(), for stage "%s".', $stage));
         switch ($stage) {
             case 'have-accounts':
@@ -66,11 +72,10 @@ class SpectreConfigurator implements ConfiguratorInterface
                 $class->storeConfiguration($data);
 
                 // update job for next step and set to "configured".
-                $config                   = $this->job->configuration;
-                $config['stage']          = 'have-account-mapping';
-                $this->job->configuration = $config;
-                $this->job->status        = 'configured';
-                $this->job->save();
+                $config          = $this->getConfig();
+                $config['stage'] = 'have-account-mapping';
+                $this->repository->setConfiguration($this->job, $config);
+
                 return true;
                 break;
             default:
@@ -83,12 +88,14 @@ class SpectreConfigurator implements ConfiguratorInterface
      * Return the data required for the next step in the job configuration.
      *
      * @return array
+     * @throws FireflyException
      */
     public function getNextData(): array
     {
-        $config = $this->job->configuration;
-        $stage  = $config['stage'];
-        $status = $this->job->status;
+        if (is_null($this->job)) {
+            throw new FireflyException('Cannot call configureJob() without a job.');
+        }
+        $stage = $this->getConfig()['stage'] ?? 'initial';
         Log::debug(sprintf('in getNextData(), for stage "%s".', $stage));
         switch ($stage) {
             case 'has-token':
@@ -96,6 +103,12 @@ class SpectreConfigurator implements ConfiguratorInterface
                 $config['is-redirected'] = true;
                 $config['stage']         = 'user-logged-in';
                 $status                  = 'configured';
+
+                // update config and status:
+                $this->repository->setConfiguration($this->job, $config);
+                $this->repository->setStatus($this->job, $status);
+
+                return $this->repository->getConfiguration($this->job);
                 break;
             case 'have-accounts':
                 // use special class:
@@ -108,29 +121,25 @@ class SpectreConfigurator implements ConfiguratorInterface
             default:
                 return [];
                 break;
-
         }
-
-        // update config and status:
-        $this->job->configuration = $config;
-        $this->job->status        = $status;
-        $this->job->save();
-
-        return $this->job->configuration;
     }
 
     /**
      * @return string
+     * @throws FireflyException
      */
     public function getNextView(): string
     {
-        $config = $this->job->configuration;
-        $stage  = $config['stage'];
+        if (is_null($this->job)) {
+            throw new FireflyException('Cannot call configureJob() without a job.');
+        }
+        $stage = $this->getConfig()['stage'] ?? 'initial';
         Log::debug(sprintf('in getNextView(), for stage "%s".', $stage));
         switch ($stage) {
             case 'has-token':
                 // redirect to Spectre.
                 Log::info('User is being redirected to Spectre.');
+
                 return 'import.spectre.redirect';
                 break;
             case 'have-accounts':
@@ -155,11 +164,14 @@ class SpectreConfigurator implements ConfiguratorInterface
 
     /**
      * @return bool
+     * @throws FireflyException
      */
     public function isJobConfigured(): bool
     {
-        $config = $this->job->configuration;
-        $stage  = $config['stage'];
+        if (is_null($this->job)) {
+            throw new FireflyException('Cannot call configureJob() without a job.');
+        }
+        $stage = $this->getConfig()['stage'] ?? 'initial';
         Log::debug(sprintf('in isJobConfigured(), for stage "%s".', $stage));
         switch ($stage) {
             case 'has-token':
@@ -177,9 +189,14 @@ class SpectreConfigurator implements ConfiguratorInterface
     /**
      * @param ImportJob $job
      */
-    public function setJob(ImportJob $job)
+    public function setJob(ImportJob $job): void
     {
-        $defaultConfig           = [
+        // make repository
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
+
+        // set default config:
+        $defaultConfig = [
             'has-token'       => false,
             'token'           => '',
             'token-expires'   => 0,
@@ -191,16 +208,31 @@ class SpectreConfigurator implements ConfiguratorInterface
             'accounts'        => '',
             'accounts-mapped' => '',
             'auto-start'      => true,
+            'apply-rules'     => true,
+            'match-bills'     => false,
         ];
-        $extendedStatus          = $job->extended_status;
+        $currentConfig = $this->repository->getConfiguration($job);
+        $finalConfig   = array_merge($defaultConfig, $currentConfig);
+
+        // set default extended status:
+        $extendedStatus          = $this->repository->getExtendedStatus($job);
         $extendedStatus['steps'] = 100;
 
-
-        $config               = $job->configuration;
-        $finalConfig          = array_merge($defaultConfig, $config);
-        $job->configuration   = $finalConfig;
-        $job->extended_status = $extendedStatus;
-        $job->save();
+        // save to job:
+        $job       = $this->repository->setConfiguration($job, $finalConfig);
+        $job       = $this->repository->setExtendedStatus($job, $extendedStatus);
         $this->job = $job;
+
+        return;
+    }
+
+    /**
+     * Shorthand method.
+     *
+     * @return array
+     */
+    private function getConfig(): array
+    {
+        return $this->repository->getConfiguration($this->job);
     }
 }

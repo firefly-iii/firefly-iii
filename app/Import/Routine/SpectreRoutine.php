@@ -122,15 +122,14 @@ class SpectreRoutine implements RoutineInterface
      */
     public function run(): bool
     {
-        if ('configured' === $this->job->status) {
+        if ('configured' === $this->getStatus()) {
             $this->repository->updateStatus($this->job, 'running');
         }
         Log::info(sprintf('Start with import job %s using Spectre.', $this->job->key));
         set_time_limit(0);
 
         // check if job has token first!
-        $config = $this->job->configuration;
-        $stage  = $config['stage'];
+        $stage = $this->getConfig()['stage'] ?? 'unknown';
 
         switch ($stage) {
             case 'initial':
@@ -205,21 +204,20 @@ class SpectreRoutine implements RoutineInterface
      */
     protected function getCustomer(): Customer
     {
-        $config = $this->job->configuration;
+        $config = $this->getConfig();
         if (!is_null($config['customer'])) {
             $customer = new Customer($config['customer']);
 
             return $customer;
         }
 
-        $customer                 = $this->createCustomer();
-        $config['customer']       = [
+        $customer           = $this->createCustomer();
+        $config['customer'] = [
             'id'         => $customer->getId(),
             'identifier' => $customer->getIdentifier(),
             'secret'     => $customer->getSecret(),
         ];
-        $this->job->configuration = $config;
-        $this->job->save();
+        $this->setConfig($config);
 
         return $customer;
     }
@@ -268,19 +266,18 @@ class SpectreRoutine implements RoutineInterface
         $this->repository->addStepsDone($this->job, 2);
 
         // update job, give it the token:
-        $config                   = $this->job->configuration;
-        $config['has-token']      = true;
-        $config['token']          = $token->getToken();
-        $config['token-expires']  = $token->getExpiresAt()->format('U');
-        $config['token-url']      = $token->getConnectUrl();
-        $config['stage']          = 'has-token';
-        $this->job->configuration = $config;
+        $config                  = $this->getConfig();
+        $config['has-token']     = true;
+        $config['token']         = $token->getToken();
+        $config['token-expires'] = $token->getExpiresAt()->format('U');
+        $config['token-url']     = $token->getConnectUrl();
+        $config['stage']         = 'has-token';
+        $this->setConfig($config);
 
         Log::debug('Job config is now', $config);
 
         // update job, set status to "configuring".
-        $this->job->status = 'configuring';
-        $this->job->save();
+        $this->setStatus('configuring');
         Log::debug(sprintf('Job status is now %s', $this->job->status));
     }
 
@@ -319,7 +316,8 @@ class SpectreRoutine implements RoutineInterface
             $this->repository->addError($this->job, 0, 'Spectre connection failed. Did you use invalid credentials, press Cancel or failed the 2FA challenge?');
             $this->repository->setTotalSteps($this->job, 1);
             $this->repository->setStepsDone($this->job, 1);
-            $this->repository->setStatus($this->job,'error');
+            $this->repository->setStatus($this->job, 'error');
+
             return;
         }
 
@@ -343,18 +341,44 @@ class SpectreRoutine implements RoutineInterface
         }
 
         // update job:
-        $config                   = $this->job->configuration;
-        $config['accounts']       = $all;
-        $config['login']          = $login->toArray();
-        $config['stage']          = 'have-accounts';
-        $this->job->configuration = $config;
-        $this->job->status        = 'configuring';
-        $this->job->save();
+        $config             = $this->getConfig();
+        $config['accounts'] = $all;
+        $config['login']    = $login->toArray();
+        $config['stage']    = 'have-accounts';
+
+        $this->setConfig($config);
+        $this->setStatus('configuring');
 
         // add some steps done
         $this->repository->addStepsDone($this->job, 2);
 
         return;
+    }
+
+    /**
+     * @return array
+     */
+    private function getConfig(): array
+    {
+        return $this->repository->getConfiguration($this->job);
+    }
+
+    /**
+     * @return array
+     */
+    private function getExtendedStatus(): array
+    {
+        return $this->repository->getExtendedStatus($this->job);
+    }
+
+    /**
+     * Shorthand method.
+     *
+     * @return string
+     */
+    private function getStatus(): string
+    {
+        return $this->repository->getStatus($this->job);
     }
 
     /**
@@ -433,7 +457,7 @@ class SpectreRoutine implements RoutineInterface
         /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);
         $repository->setUser($this->job->user);
-        $data                       = [
+        $data            = [
             'tag'         => trans('import.import_with_key', ['key' => $this->job->key]),
             'date'        => new Carbon,
             'description' => null,
@@ -442,11 +466,10 @@ class SpectreRoutine implements RoutineInterface
             'zoomLevel'   => null,
             'tagMode'     => 'nothing',
         ];
-        $tag                        = $repository->store($data);
-        $extended                   = $this->job->extended_status;
-        $extended['tag']            = $tag->id;
-        $this->job->extended_status = $extended;
-        $this->job->save();
+        $tag             = $repository->store($data);
+        $extended        = $this->getExtendedStatus();
+        $extended['tag'] = $tag->id;
+        $this->setExtendedStatus($extended);
 
         Log::debug(sprintf('Created tag #%d ("%s")', $tag->id, $tag->tag));
         Log::debug('Looping journals...');
@@ -460,8 +483,7 @@ class SpectreRoutine implements RoutineInterface
 
         // set status to "finished"?
         // update job:
-        $this->job->status = 'finished';
-        $this->job->save();
+        $this->setStatus('finished');
 
         return;
     }
@@ -472,8 +494,7 @@ class SpectreRoutine implements RoutineInterface
      */
     private function runStageHaveMapping()
     {
-        $config   = $this->job->configuration;
-        $accounts = $config['accounts'] ?? [];
+        $accounts = $this->getConfig()['accounts'] ?? [];
         $all      = [];
         $count    = 0;
         /** @var array $accountArray */
@@ -507,5 +528,37 @@ class SpectreRoutine implements RoutineInterface
 
 
         $this->importTransactions($all);
+    }
+
+    /**
+     * Shorthand.
+     *
+     * @param array $config
+     */
+    private function setConfig(array $config): void
+    {
+        $this->repository->setConfiguration($this->job, $config);
+
+        return;
+    }
+
+    /**
+     * @param array $extended
+     */
+    private function setExtendedStatus(array $extended): void
+    {
+        $this->repository->setExtendedStatus($this->job, $extended);
+
+        return;
+    }
+
+    /**
+     * Shorthand.
+     *
+     * @param string $status
+     */
+    private function setStatus(string $status): void
+    {
+        $this->repository->setStatus($this->job, $status);
     }
 }

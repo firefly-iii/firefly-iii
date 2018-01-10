@@ -28,6 +28,7 @@ use FireflyIII\Import\FileProcessor\FileProcessorInterface;
 use FireflyIII\Import\Storage\ImportStorage;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Tag;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -45,6 +46,9 @@ class FileRoutine implements RoutineInterface
     public $lines = 0;
     /** @var ImportJob */
     private $job;
+
+    /** @var ImportJobRepositoryInterface */
+    private $repository;
 
     /**
      * ImportRoutine constructor.
@@ -84,8 +88,8 @@ class FileRoutine implements RoutineInterface
      */
     public function run(): bool
     {
-        if ('configured' !== $this->job->status) {
-            Log::error(sprintf('Job %s is in state "%s" so it cannot be started.', $this->job->key, $this->job->status));
+        if ('configured' !== $this->getStatus()) {
+            Log::error(sprintf('Job %s is in state "%s" so it cannot be started.', $this->job->key, $this->getStatus()));
 
             return false;
         }
@@ -102,8 +106,7 @@ class FileRoutine implements RoutineInterface
         Log::debug('Back in run()');
 
         // update job:
-        $this->job->status = 'finished';
-        $this->job->save();
+        $this->setStatus('finished');
 
         Log::debug('Updated job...');
         Log::debug(sprintf('%d journals in $storage->journals', $storage->journals->count()));
@@ -125,7 +128,9 @@ class FileRoutine implements RoutineInterface
      */
     public function setJob(ImportJob $job)
     {
-        $this->job = $job;
+        $this->job        = $job;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
     }
 
     /**
@@ -134,18 +139,16 @@ class FileRoutine implements RoutineInterface
     protected function getImportObjects(): Collection
     {
         $objects  = new Collection;
-        $config   = $this->job->configuration;
-        $fileType = $config['file-type'] ?? 'csv';
+        $fileType = $this->getConfig()['file-type'] ?? 'csv';
         // will only respond to "file"
         $class = config(sprintf('import.options.file.processors.%s', $fileType));
         /** @var FileProcessorInterface $processor */
         $processor = app($class);
         $processor->setJob($this->job);
 
-        if ('configured' === $this->job->status) {
+        if ('configured' === $this->getStatus()) {
             // set job as "running"...
-            $this->job->status = 'running';
-            $this->job->save();
+            $this->setStatus('running');
 
             Log::debug('Job is configured, start with run()');
             $processor->run();
@@ -171,7 +174,7 @@ class FileRoutine implements RoutineInterface
         /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);
         $repository->setUser($this->job->user);
-        $data                       = [
+        $data            = [
             'tag'         => trans('import.import_with_key', ['key' => $this->job->key]),
             'date'        => new Carbon,
             'description' => null,
@@ -180,11 +183,10 @@ class FileRoutine implements RoutineInterface
             'zoomLevel'   => null,
             'tagMode'     => 'nothing',
         ];
-        $tag                        = $repository->store($data);
-        $extended                   = $this->job->extended_status;
-        $extended['tag']            = $tag->id;
-        $this->job->extended_status = $extended;
-        $this->job->save();
+        $tag             = $repository->store($data);
+        $extended        = $this->getExtendedStatus();
+        $extended['tag'] = $tag->id;
+        $this->setExtendedStatus($extended);
 
         Log::debug(sprintf('Created tag #%d ("%s")', $tag->id, $tag->tag));
         Log::debug('Looping journals...');
@@ -200,15 +202,64 @@ class FileRoutine implements RoutineInterface
     }
 
     /**
+     * Shorthand method
+     *
+     * @return array
+     */
+    private function getConfig(): array
+    {
+        return $this->repository->getConfiguration($this->job);
+    }
+
+    /**
+     * @return array
+     */
+    private function getExtendedStatus(): array
+    {
+        return $this->repository->getExtendedStatus($this->job);
+    }
+
+    /**
+     * Shorthand method.
+     *
+     * @return string
+     */
+    private function getStatus(): string
+    {
+        return $this->repository->getStatus($this->job);
+    }
+
+    /**
+     * @param array $extended
+     */
+    private function setExtendedStatus(array $extended): void
+    {
+        $this->repository->setExtendedStatus($this->job, $extended);
+
+        return;
+    }
+
+    /**
+     * Shorthand
+     *
+     * @param string $status
+     */
+    private function setStatus(string $status): void
+    {
+        $this->repository->setStatus($this->job, $status);
+    }
+
+    /**
      * @param Collection $objects
      *
      * @return ImportStorage
      */
     private function storeObjects(Collection $objects): ImportStorage
     {
+        $config  = $this->getConfig();
         $storage = new ImportStorage;
         $storage->setJob($this->job);
-        $storage->setDateFormat($this->job->configuration['date-format']);
+        $storage->setDateFormat($config['date-format']);
         $storage->setObjects($objects);
         $storage->store();
         Log::info('Back in storeObjects()');

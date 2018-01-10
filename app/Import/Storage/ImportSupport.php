@@ -436,7 +436,7 @@ trait ImportSupport
         if (!$journal->save()) {
             $errorText = join(', ', $journal->getErrors()->all());
             // add three steps:
-            $this->job->addStepsDone(3);
+            $this->repository->addStepsDone($this->job, 3);
             // throw error
             throw new FireflyException($errorText);
         }

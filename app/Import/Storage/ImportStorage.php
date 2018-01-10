@@ -30,6 +30,7 @@ use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -53,6 +54,8 @@ class ImportStorage
     protected $defaultCurrencyId = 1;
     /** @var ImportJob */
     protected $job;
+    /** @var ImportJobRepositoryInterface */
+    protected $repository;
     /** @var Collection */
     protected $rules;
     /** @var bool */
@@ -63,7 +66,8 @@ class ImportStorage
     private $matchBills = false;
     /** @var Collection */
     private $objects;
-    private $total     = 0;
+    /** @var int */
+    private $total = 0;
     /** @var array */
     private $transfers = [];
 
@@ -90,13 +94,17 @@ class ImportStorage
      */
     public function setJob(ImportJob $job)
     {
-        $this->job               = $job;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
+
+        $config                  = $this->repository->getConfiguration($job);
         $currency                = app('amount')->getDefaultCurrencyByUser($this->job->user);
         $this->defaultCurrencyId = $currency->id;
         $this->transfers         = $this->getTransfers();
-        $config                  = $job->configuration;
         $this->applyRules        = $config['apply-rules'] ?? false;
         $this->matchBills        = $config['match-bills'] ?? false;
+
+
         if (true === $this->applyRules) {
             Log::debug('applyRules seems to be true, get the rules.');
             $this->rules = $this->getRules();
@@ -109,6 +117,10 @@ class ImportStorage
         }
         Log::debug(sprintf('Value of apply rules is %s', var_export($this->applyRules, true)));
         Log::debug(sprintf('Value of match bills is %s', var_export($this->matchBills, true)));
+
+
+        $this->job = $job;
+
     }
 
     /**
@@ -152,7 +164,7 @@ class ImportStorage
      */
     protected function storeImportJournal(int $index, ImportJournal $importJournal): bool
     {
-        Log::debug(sprintf('Going to store object #%d/%d with description "%s"', ($index+1), $this->total, $importJournal->getDescription()));
+        Log::debug(sprintf('Going to store object #%d/%d with description "%s"', ($index + 1), $this->total, $importJournal->getDescription()));
         $assetAccount      = $importJournal->asset->getAccount();
         $amount            = $importJournal->getAmount();
         $currencyId        = $this->getCurrencyId($importJournal);
@@ -163,7 +175,7 @@ class ImportStorage
         $description       = $importJournal->getDescription();
 
         // First step done!
-        $this->job->addStepsDone(1);
+        $this->repository->addStepsDone($this->job, 1);
 
         /**
          * Check for double transfer.
@@ -177,7 +189,7 @@ class ImportStorage
             'opposing'    => $opposingAccount->name,
         ];
         if ($this->isDoubleTransfer($parameters) || $this->hashAlreadyImported($importJournal->hash)) {
-            $this->job->addStepsDone(3);
+            $this->repository->addStepsDone($this->job, 3);
             // throw error
             $message = sprintf('Detected a possible duplicate, skip this one (hash: %s).', $importJournal->hash);
             Log::error($message, $parameters);
@@ -201,7 +213,7 @@ class ImportStorage
         unset($parameters);
 
         // Another step done!
-        $this->job->addStepsDone(1);
+        $this->repository->addStepsDone($this->job, 1);
 
         // store meta object things:
         $this->storeCategory($journal, $importJournal->category->getCategory());
@@ -225,7 +237,7 @@ class ImportStorage
         $journal->save();
 
         // Another step done!
-        $this->job->addStepsDone(1);
+        $this->repository->addStepsDone($this->job, 1);
 
         // run rules if config calls for it:
         if (true === $this->applyRules) {
@@ -247,7 +259,7 @@ class ImportStorage
         }
 
         // Another step done!
-        $this->job->addStepsDone(1);
+        $this->repository->addStepsDone($this->job, 1);
         $this->journals->push($journal);
 
         Log::info(sprintf('Imported new journal #%d: "%s", amount %s %s.', $journal->id, $journal->description, $journal->transactionCurrency->code, $amount));

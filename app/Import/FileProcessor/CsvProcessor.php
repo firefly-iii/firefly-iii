@@ -98,7 +98,7 @@ class CsvProcessor implements FileProcessorInterface
                 if ($this->rowAlreadyImported($row)) {
                     $message = sprintf('Row #%d has already been imported.', $index);
                     $this->repository->addStepsDone($this->job, 5);
-                    $this->addError($index, $message);
+                    $this->repository->addError($this->job, $index, $message);
                     Log::info($message);
 
                     return null;
@@ -152,23 +152,6 @@ class CsvProcessor implements FileProcessorInterface
         $this->repository->setUser($job->user);
 
         return $this;
-    }
-
-    /**
-     * Shorthand method.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param int    $index
-     * @param string $message
-     */
-    private function addError(int $index, string $message): void
-    {
-        $extended                     = $this->getExtendedStatus();
-        $extended['errors'][$index][] = $message;
-        $this->setExtendedStatus($extended);
-
-        return;
     }
 
     /**
@@ -375,7 +358,7 @@ class CsvProcessor implements FileProcessorInterface
      */
     private function specifics(array $row): array
     {
-        $config = $this->job->configuration;
+        $config = $this->getConfig();
         $names  = array_keys($config['specifics'] ?? []);
         foreach ($names as $name) {
             if (!in_array($name, $this->validSpecifics)) {
