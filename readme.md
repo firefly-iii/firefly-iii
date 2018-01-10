@@ -83,7 +83,7 @@ Everything is organised:
 * Lots of math because we all love it.
 
 ### Who is it for?
-This application is for people who want to track their finances, keep an eye on their money **without having to upload their financial records to the cloud**. 
+This application is for people who want to track their finances, keep an eye on their money **without having to upload their financial records to the cloud**. You're a bit tech-savvy, you like open source software and you don't mind tinkering with (self-hosted) servers.
 
 ## Get started
 There are many ways to run Firefly III
@@ -104,10 +104,10 @@ Your help is always welcome! Feel free to open issues, ask questions, talk about
 
 Of course there are some [contributing guidelines](https://github.com/firefly-iii/firefly-iii/blob/master/.github/CONTRIBUTING.md) and a [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/master/code_of_conduct.md), which I invite you to check out.
 
-## The end game
+## The goal
 Firefly III should give you **insight** into and **control** over your finances. Money should be useful, not scary. You should be able to *see* where it is going, to *feel* your expenses and to... wow, I'm going overboard with this aren't I?
 
-But you get the idea: this is your money. These are your expenses. Stop them from controlling you. I built this tool because I started to dislike it. Having it, not having, paying bills, etc. But no more. I want to feel "safe", whatever my balance is. And I hoop this tool can help. I know it helps me.
+But you get the idea: this is your money. These are your expenses. Stop them from controlling you. I built this tool because I started to dislike money. Having it, not having, paying bills with it, etc. But no more. I want to feel "safe", whatever my balance is. And I hoop this tool can help. I know it helps me.
 
 ## Contact
 You can contact me at [thegrumpydictator@gmail.com](mailto:thegrumpydictator@gmail.com), you may open an issue or contact me through the various social media pages there are: [reddit](https://www.reddit.com/r/FireflyIII/), [Twitter](https://twitter.com/Firefly_III) and [Facebook](https://www.facebook.com/FireflyIII/).
@@ -130,4 +130,4 @@ If you are looking for alternatives, check out [Kickball's Awesome-Selfhosted li
 ### Badges
 I like badges!
 
-[![Travis branch](https://img.shields.io/travis/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://travis-ci.org/firefly-iii/firefly-iii/branches) [![Scrutinizer](https://img.shields.io/scrutinizer/g/firefly-iii/firefly-iii.svg?style=flat-square)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/) [![Coveralls github branch](https://img.shields.io/coveralls/github/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://coveralls.io/github/firefly-iii/firefly-iii) [![Requires PHP7.1](https://img.shields.io/badge/php-7.1-red.svg)](https://secure.php.net/downloads.php) [![license](https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) 
+[![Travis branch](https://img.shields.io/travis/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://travis-ci.org/firefly-iii/firefly-iii/branches) [![Scrutinizer](https://img.shields.io/scrutinizer/g/firefly-iii/firefly-iii.svg?style=flat-square)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/) [![Coveralls github branch](https://img.shields.io/coveralls/github/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://coveralls.io/github/firefly-iii/firefly-iii) [![Requires PHP7.1](https://img.shields.io/badge/php-7.1-red.svg?style=flat-square)](https://secure.php.net/downloads.php) [![license](https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) 
