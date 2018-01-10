@@ -130,6 +130,7 @@ class SpectreConfigurator implements ConfiguratorInterface
         switch ($stage) {
             case 'has-token':
                 // redirect to Spectre.
+                Log::info('User is being redirected to Spectre.');
                 return 'import.spectre.redirect';
                 break;
             case 'have-accounts':

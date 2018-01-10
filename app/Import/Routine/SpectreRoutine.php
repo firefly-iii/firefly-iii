@@ -315,7 +315,12 @@ class SpectreRoutine implements RoutineInterface
             }
         }
         if (is_null($final)) {
-            throw new FireflyException('No valid login attempt found.');
+            Log::error('Could not find a valid login for this user.');
+            $this->repository->addError($this->job, 0, 'Spectre connection failed. Did you use invalid credentials, press Cancel or failed the 2FA challenge?');
+            $this->repository->setTotalSteps($this->job, 1);
+            $this->repository->setStepsDone($this->job, 1);
+            $this->repository->setStatus($this->job,'error');
+            return;
         }
 
         // add some steps done
@@ -457,6 +462,7 @@ class SpectreRoutine implements RoutineInterface
         // update job:
         $this->job->status = 'finished';
         $this->job->save();
+
         return;
     }
 

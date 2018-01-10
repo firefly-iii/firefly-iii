@@ -34,6 +34,15 @@ interface ImportJobRepositoryInterface
 
     /**
      * @param ImportJob $job
+     * @param int       $index
+     * @param string    $error
+     *
+     * @return ImportJob
+     */
+    public function addError(ImportJob $job, int $index, string $error): ImportJob;
+
+    /**
+     * @param ImportJob $job
      * @param int       $steps
      *
      * @return ImportJob
@@ -112,6 +121,14 @@ interface ImportJobRepositoryInterface
      * @return void
      */
     public function setExtendedStatus(ImportJob $job, array $array): ImportJob;
+
+    /**
+     * @param ImportJob $job
+     * @param string    $status
+     *
+     * @return ImportJob
+     */
+    public function setStatus(ImportJob $job, string $status): ImportJob;
 
     /**
      * @param ImportJob $job

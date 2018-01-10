@@ -44,6 +44,20 @@ class ImportJobRepository implements ImportJobRepositoryInterface
 
     /**
      * @param ImportJob $job
+     * @param int       $index
+     * @param string    $error
+     *
+     * @return ImportJob
+     */
+    public function addError(ImportJob $job, int $index, string $error): ImportJob
+    {
+        $job->addError($index, $error);
+
+        return $job;
+    }
+
+    /**
+     * @param ImportJob $job
      * @param int       $steps
      *
      * @return ImportJob
@@ -278,6 +292,46 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     }
 
     /**
+     * @param ImportJob $job
+     * @param string    $status
+     *
+     * @return ImportJob
+     */
+    public function setStatus(ImportJob $job, string $status): ImportJob
+    {
+        $job->status = $status;
+        $job->save();
+
+        return $job;
+    }
+
+    /**
+     * @param ImportJob $job
+     * @param int       $count
+     *
+     * @return ImportJob
+     */
+    public function setStepsDone(ImportJob $job, int $steps): ImportJob
+    {
+        $job->setStepsDone($steps);
+
+        return $job;
+    }
+
+    /**
+     * @param ImportJob $job
+     * @param int       $count
+     *
+     * @return ImportJob
+     */
+    public function setTotalSteps(ImportJob $job, int $count): ImportJob
+    {
+        $job->setTotalSteps($count);
+
+        return $job;
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user)
@@ -310,31 +364,5 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     public function uploadFileContents(ImportJob $job): string
     {
         return $job->uploadFileContents();
-    }
-
-    /**
-     * @param ImportJob $job
-     * @param int       $count
-     *
-     * @return ImportJob
-     */
-    public function setStepsDone(ImportJob $job, int $steps): ImportJob
-    {
-        $job->setStepsDone($steps);
-
-        return $job;
-    }
-
-    /**
-     * @param ImportJob $job
-     * @param int       $count
-     *
-     * @return ImportJob
-     */
-    public function setTotalSteps(ImportJob $job, int $count): ImportJob
-    {
-        $job->setTotalSteps($count);
-
-        return $job;
     }
 }

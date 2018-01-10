@@ -118,13 +118,12 @@ function reportOnJobStatus(data) {
             // show text:
             $('#import-status-more-info').html(data.finishedText);
             break;
-        case "errored":
-            // TODO this view is not yet used.
+        case "error":
             // hide all possible boxes:
             $('.statusbox').hide();
 
             // fill in some details:
-            var errorMessage = data.error_message;
+            var errorMessage = data.errors.join(", ");
 
             $('.fatal_error_txt').text(errorMessage);
 
