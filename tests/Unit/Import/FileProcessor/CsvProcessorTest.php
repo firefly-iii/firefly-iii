@@ -43,7 +43,6 @@ class CsvProcessorTest extends TestCase
      */
     public function testGetObjectsNoJob()
     {
-
         $processor = new CsvProcessor();
         $processor->getObjects();
     }
@@ -137,11 +136,13 @@ class CsvProcessorTest extends TestCase
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config);
         $repository->shouldReceive('uploadFileContents')->withArgs([Mockery::any()])->andReturn($csvFile)->once();
-        $repository->shouldReceive('getExtendedStatus')->twice()->andReturn([]); // twice for update errors.
-        $repository->shouldReceive('setExtendedStatus')->twice()->andReturn($job);
+        $repository->shouldReceive('getExtendedStatus')->once()->andReturn([]); // twice for update errors.
+        $repository->shouldReceive('setExtendedStatus')->once()->andReturn($job);
+
         // mock stuff for this single row:
         $repository->shouldReceive('countByHash')->once()->withArgs([Mockery::any()])->andReturn(1);
         $repository->shouldReceive('addStepsDone')->once()->withArgs([Mockery::any(), 5]);
+        $repository->shouldReceive('addError')->once()->withArgs([Mockery::any(), 0, 'Row #0 has already been imported.']);
         $processor = new CsvProcessor();
         $processor->setJob($job);
         $processor->run();
