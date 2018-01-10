@@ -73,7 +73,7 @@ return [
      *
      */
     'import_roles'     => [
-        '_ignore'       => [
+        '_ignore'               => [
             'mappable'        => false,
             'pre-process-map' => false,
             'field'           => 'ignored',
@@ -82,48 +82,55 @@ return [
 
 
         ],
-        'bill-id'       => [
+        'bill-id'               => [
             'mappable'        => true,
             'pre-process-map' => false,
             'field'           => 'bill',
             'converter'       => 'BillId',
             'mapper'          => 'Bills',
         ],
-        'note'       => [
+        'note'                  => [
             'mappable'        => false,
             'pre-process-map' => false,
             'field'           => 'note',
             'converter'       => 'Note',
         ],
-        'bill-name'     => [
+        'bill-name'             => [
             'mappable'        => true,
             'pre-process-map' => false,
             'field'           => 'bill',
             'converter'       => 'BillName',
             'mapper'          => 'Bills',
         ],
-        'currency-id'   => [
+        'currency-id'           => [
             'mappable'        => true,
             'pre-process-map' => false,
             'field'           => 'currency',
             'converter'       => 'CurrencyId',
             'mapper'          => 'TransactionCurrencies',
         ],
-        'currency-name' => [
+        'currency-name'         => [
             'mappable'        => true,
             'pre-process-map' => false,
             'converter'       => 'CurrencyName',
             'field'           => 'currency',
             'mapper'          => 'TransactionCurrencies',
         ],
-        'currency-code' => [
+        'currency-code'         => [
             'mappable'        => true,
             'pre-process-map' => false,
             'converter'       => 'CurrencyCode',
             'field'           => 'currency',
             'mapper'          => 'TransactionCurrencies',
         ],
-        'external-id'   => [
+        'foreign-currency-code' => [
+            'mappable'        => true,
+            'pre-process-map' => false,
+            'converter'       => 'CurrencyCode',
+            'field'           => 'foreign_currency',
+            'mapper'          => 'TransactionCurrencies',
+        ],
+        'external-id'           => [
             'mappable'        => false,
             'pre-process-map' => false,
             'converter'       => 'ExternalId',
@@ -297,6 +304,12 @@ return [
             'pre-process-map' => false,
             'converter'       => 'AmountCredit',
             'field'           => 'amount_credit',
+        ],
+        'amount_foreign'    => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'converter'       => 'Amount',
+            'field'           => 'amount_foreign',
         ],
         'sepa-ct-id'        => [
             'mappable'        => false,
