@@ -121,10 +121,10 @@ trait ImportSupport
     {
         $transaction                          = new Transaction;
         $transaction->account_id              = $parameters['account'];
-        $transaction->transaction_journal_id  = $parameters['id'];
-        $transaction->transaction_currency_id = $parameters['currency'];
+        $transaction->transaction_journal_id  = intval($parameters['id']);
+        $transaction->transaction_currency_id = intval($parameters['currency']);
         $transaction->amount                  = $parameters['amount'];
-        $transaction->foreign_currency_id     = $parameters['foreign_currency'];
+        $transaction->foreign_currency_id     = intval($parameters['foreign_currency']);
         $transaction->foreign_amount          = $parameters['foreign_amount'];
         $transaction->save();
         if (null === $transaction->id) {

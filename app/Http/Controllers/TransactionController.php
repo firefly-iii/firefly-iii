@@ -272,7 +272,7 @@ class TransactionController extends Controller
         $return = [];
         /** @var Transaction $transaction */
         foreach ($collection as $transaction) {
-            $currencyId = $transaction->transaction_currency_id;
+            $currencyId = intval($transaction->transaction_currency_id);
 
             // save currency information:
             if (!isset($return[$currencyId])) {

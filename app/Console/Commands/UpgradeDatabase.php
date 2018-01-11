@@ -220,7 +220,7 @@ class UpgradeDatabase extends Command
 
                         // when mismatch in transaction:
                         if (!(intval($transaction->transaction_currency_id) === intval($currency->id))) {
-                            $transaction->foreign_currency_id     = $transaction->transaction_currency_id;
+                            $transaction->foreign_currency_id     = intval($transaction->transaction_currency_id);
                             $transaction->foreign_amount          = $transaction->amount;
                             $transaction->transaction_currency_id = $currency->id;
                             $transaction->save();
