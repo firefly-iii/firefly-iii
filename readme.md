@@ -1,4 +1,4 @@
-<p align="center"><img src="https://firefly-iii.org/static/img/logo-small.png"></p>
+<p align="center"><img src="https://firefly-iii.org/static/img/logo-small-new.png"></p>
 <h1 align="center">Firefly III</h1>
 
 <p align="center">
