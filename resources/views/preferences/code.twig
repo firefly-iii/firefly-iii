@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <form method="POST" action="{{ route('preferences.code.store') }}" accept-charset="UTF-8" class="form-horizontal" id="preferences.code">
+    <form method="POST" action="{{ route('preferences.code.store') }}" accept-charset="UTF-8" class="form-horizontal" id="preferences_code">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-6">
@@ -40,7 +40,15 @@
                 </div>
             </div>
         </div>
-
-        <!-- form close -->
     </form>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+    $(function () {
+        "use strict";
+
+        // Focus first visible form element.
+        $("form#preferences_code input:enabled:visible:first").first().select();
+    });
+</script>
 {% endblock %}
