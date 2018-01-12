@@ -59,21 +59,54 @@
                                     </ul>
                                 </div>
                             </div>
-
-
                         </div>
 
                         {% if data[0].count > 0 %}
                             <div class="box-body no-padding">
+                                <div class="btn-group" style="padding:8px;">
+                                    <a href="{{ route('transactions.create','withdrawal') }}" class="btn btn-success"><i
+                                                class="fa fa-money fa-fw"></i> {{ 'create_new_transaction'|_ }}</a>
+                                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                        <span class="caret"></span>
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="{{ route('transactions.create','withdrawal') }}"><i
+                                                        class="fa fa-long-arrow-left fa-fw"></i> {{ 'newWithdrawal'|_ }}</a></li>
+                                        <li><a href="{{ route('transactions.create','deposit') }}"><i
+                                                        class="fa fa-long-arrow-right fa-fw"></i> {{ 'newDeposit'|_ }}</a></li>
+                                        <li><a href="{{ route('transactions.create','transfer') }}"><i class="fa fa-fw fa-exchange"></i> {{ 'newTransfer'|_ }}
+                                            </a></li>
+                                    </ul>
+                                </div>
                                 {% include 'list.journals-tiny' with {'transactions': data[0],'account': data[1]} %}
                             </div>
                         {% else %}
                             <div class="box-body">
+                                <div class="btn-group">
+                                    <a href="{{ route('transactions.create','withdrawal') }}" class="btn btn-success"><i
+                                                class="fa fa-money fa-fw"></i> {{ 'create_new_transaction'|_ }}</a>
+                                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                        <span class="caret"></span>
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="{{ route('transactions.create','withdrawal') }}"><i
+                                                        class="fa fa-long-arrow-left fa-fw"></i> {{ 'newWithdrawal'|_ }}</a></li>
+                                        <li><a href="{{ route('transactions.create','deposit') }}"><i
+                                                        class="fa fa-long-arrow-right fa-fw"></i> {{ 'newDeposit'|_ }}</a></li>
+                                        <li><a href="{{ route('transactions.create','transfer') }}"><i class="fa fa-fw fa-exchange"></i> {{ 'newTransfer'|_ }}
+                                            </a></li>
+                                    </ul>
+                                </div>
                                 <p>
                                     <em>
                                         {{ trans('firefly.no_transactions_account', {name: data[1].name}) }}
                                     </em>
                                 </p>
+
                             </div>
                         {% endif %}
 
@@ -146,7 +179,7 @@
         var piggyInfoUri = '{{ route('json.fp.piggy-banks') }}';
         var todayText = ' {{ trans('firefly.today')|escape('js') }}';
 
-        <!-- render vertical line with text "today"  -->
+        {# render vertical line with text "today"  #}
         {% if start.lte(today) and end.gte(today) %}
         var today = {{ today.diffInDays(start) + 1 }};
         {% else %}
