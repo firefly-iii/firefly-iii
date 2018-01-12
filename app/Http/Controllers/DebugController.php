@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use DB;
+use Exception;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use Illuminate\Http\Request;
 use Log;
@@ -84,7 +85,11 @@ class DebugController extends Controller
             if ($handler instanceof RotatingFileHandler) {
                 $logFile = $handler->getUrl();
                 if (null !== $logFile) {
-                    $logContent = file_get_contents($logFile);
+                    try {
+                        $logContent = file_get_contents('/aaaa/'.$logFile);
+                    } catch(Exception $e) {
+                        // don't care
+                    }
                 }
             }
         }
