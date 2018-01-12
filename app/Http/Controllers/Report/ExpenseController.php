@@ -568,7 +568,7 @@ class ExpenseController extends Controller
         ];
         // loop to support multi currency
         foreach ($set as $transaction) {
-            $currencyId = $transaction->transaction_currency_id;
+            $currencyId = intval($transaction->transaction_currency_id);
 
             // if not set, set to zero:
             if (!isset($sum['per_currency'][$currencyId])) {
