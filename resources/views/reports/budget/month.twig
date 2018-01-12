@@ -35,6 +35,12 @@
                             </tr>
                         {% endfor %}
                         </tbody>
+                        <tfoot>
+                        <tr>
+                            <td>{{ 'sum'|_ }}</td>
+                            <td style="text-align: right;">{{ accountSummary.sum|formatAmount }}</td>
+                        </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -65,6 +71,12 @@
                             </tr>
                         {% endfor %}
                         </tbody>
+                        <tfoot>
+                        <tr>
+                            <td>{{ 'sum'|_ }}</td>
+                            <td style="text-align: right;">{{ budgetSummary.sum|formatAmount }}</td>
+                        </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -140,7 +152,11 @@
                             </tr>
                             </thead>
                             <tbody>
+                            {% set totalCount = 0 %}
+                            {% set totalSum = 0 %}
                             {% for row in averageExpenses %}
+                                {% set totalCount = totalCount+ row.count %}
+                                {% set totalSum = totalSum + row.sum %}
                                 {% if loop.index > listLength %}
                                     <tr class="overListLength">
                                 {% else %}
@@ -169,6 +185,13 @@
                                     </td>
                                 </tr>
                             {% endif %}
+                            <tr>
+                                <td colspan="2">
+                                    {{ 'sum'|_ }}
+                                </td>
+                                <td style="text-align:right">{{ totalSum|formatAmount }}</td>
+                                <td>{{ totalCount }}</td>
+                            </tr>
                             </tfoot>
                         </table>
                     </div>
@@ -193,7 +216,9 @@
                             </tr>
                             </thead>
                             <tbody>
+                            {% set totalSum = 0 %}
                             {% for row in topExpenses %}
+                                {% set totalSum = totalSum + row.transaction_amount %}
                                 {% if loop.index > listLength %}
                                     <tr class="overListLength">
                                 {% else %}
@@ -230,6 +255,12 @@
                                     </td>
                                 </tr>
                             {% endif %}
+                            <tr>
+                                <td colspan="3">
+                                    {{ 'sum'|_ }}
+                                </td>
+                                <td style="text-align:right">{{ totalSum|formatAmount }}</td>
+                            </tr>
                             </tfoot>
                         </table>
                     </div>

@@ -133,7 +133,7 @@ class Support
             }
 
             $return[$objectId]['earned'] = $entry;
-            $return['sum']['earned'] = bcadd($return['sum']['earned'], $entry);
+            $return['sum']['earned']     = bcadd($return['sum']['earned'], $entry);
         }
 
         return $return;
@@ -146,12 +146,15 @@ class Support
      */
     protected function summarizeByAccount(Collection $collection): array
     {
-        $result = [];
+        $result = [
+            'sum' => '0',
+        ];
         /** @var Transaction $transaction */
         foreach ($collection as $transaction) {
             $accountId          = $transaction->account_id;
             $result[$accountId] = $result[$accountId] ?? '0';
             $result[$accountId] = bcadd($transaction->transaction_amount, $result[$accountId]);
+            $result['sum']      = bcadd($result['sum'], $transaction->transaction_amount);
         }
 
         return $result;
