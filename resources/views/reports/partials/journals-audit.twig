@@ -16,7 +16,7 @@
         <th class="hide-process_date">{{ trans('list.process_date') }}</th>
         <th class="hide-interest_date">{{ trans('list.interest_date') }}</th>
 
-        <!-- new optional fields (3x) -->
+        {# new optional fields (3x) #}
         <th class="hide-interest_date">{{ trans('list.due_date') }}</th>
         <th class="hide-payment_date">{{ trans('list.payment_date') }}</th>
         <th class="hide-invoice_date">{{ trans('list.invoice_date') }}</th>
@@ -28,7 +28,7 @@
         <th class="hide-category"><i class="fa fa-bar-chart fa-fw" title="{{ trans('list.category') }}"></i></th>
         <th class="hide-bill">{{ trans('list.bill') }}</th>
 
-        <!-- more optional fields (2x) -->
+        {# more optional fields (2x) #}
         <th class="hide-internal_reference">{{ trans('list.internal_reference') }}</th>
         <th class="hide-notes">{{ trans('list.notes') }}</th>
 
@@ -82,7 +82,7 @@
 
             </td>
 
-            <!-- new optional fields (3x) -->
+            {# new optional fields (3x) #}
             <td class="hide-due_date">
                 {% if transaction.transactionJournal.hasMeta('due_date') %}
                     {{ transaction.transactionJournal.getMeta('due_date').formatLocalized(monthAndDayFormat) }}
@@ -125,7 +125,7 @@
                 <td class="hide-bill">&nbsp;</td>
             {% endif %}
 
-            <!-- new optional fields (2x) -->
+            {# new optional fields (2x) #}
             <td class="hide-internal_reference">
 
                 {% if transaction.transactionJournal.hasMeta('internal_reference') %}

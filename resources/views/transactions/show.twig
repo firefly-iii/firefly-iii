@@ -74,18 +74,14 @@
                             <td>{{ trans('list.description') }}</td>
                             <td>{{ journal.description }}</td>
                         </tr>
-                        <!-- source(s) -->
                         <tr>
                             <td>{{ 'source_accounts'|_ }}</td>
                             <td>{{ sourceAccount(journal)|raw }}</td>
                         </tr>
-
-                        <!-- destination(s) -->
                         <tr>
                             <td>{{ 'destination_accounts'|_ }}</td>
                             <td>{{ destinationAccount(journal)|raw }}</td>
                         </tr>
-                        <!-- total amount -->
                         <tr>
                             <td>{{ 'total_amount'|_ }}</td>
                             <td>
@@ -163,7 +159,6 @@
                 </div>
             </div>
 
-            <!-- events, if present -->
             {% if journal.piggyBankEvents|length > 0 %}
                 <div class="box">
                     <div class="box-header with-border">

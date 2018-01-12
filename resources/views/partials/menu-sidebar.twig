@@ -1,10 +1,8 @@
 <ul class="sidebar-menu">
-    <!-- home / dashboard -->
     <li class="{{ activeRouteStrict('index') }} treeview">
         <a href="{{ route('index') }}"><i class="fa fa-dashboard fa-fw"></i>
             <span>{{ 'dashboard'|_ }}</span></a>
     </li>
-    <!-- accounts -->
     <li class="{{ activeRoutePartial('accounts') }} treeview" id="account-menu">
         <a href="#">
             <i class="fa fa-credit-card fa-fw"></i>
@@ -13,7 +11,6 @@
               <i class="fa fa-angle-left pull-right"></i>
             </span>
         </a>
-        <!-- submenu for accounts -->
         <ul class="treeview-menu">
             <li class="{{ activeRoutePartialWhat('accounts', 'asset') }}">
                 <a href="{{ route('accounts.index','asset') }}">
@@ -32,37 +29,30 @@
             </li>
         </ul>
     </li>
-    <!-- budgets-->
     <li class="{{ activeRoutePartial('budgets') }}" id="budget-menu">
         <a href="{{ route('budgets.index') }}">
             <i class="fa fa-tasks fa-fw"></i>
             <span>{{ 'budgets'|_ }}</span>
         </a>
     </li>
-    <!-- categories -->
     <li class="{{ activeRoutePartial('categories') }}">
         <a href="{{ route('categories.index') }}">
             <i class="fa fa-bar-chart fa-fw"></i>
             <span>{{ 'categories'|_ }}</span>
         </a>
     </li>
-    <!-- tags -->
     <li class="{{ activeRoutePartial('tags') }}">
         <a href="{{ route('tags.index') }}">
             <i class="fa fa-tags fa-fw"></i>
             <span>{{ 'tags'|_ }}</span>
         </a>
     </li>
-
-    <!-- reports -->
     <li class="{{ activeRoutePartial('reports') }}" id="report-menu">
         <a href="{{ route('reports.index') }}">
             <i class="fa fa-line-chart fa-fw"></i>
             <span>{{ 'reports'|_ }}</span>
         </a>
     </li>
-
-    <!-- transactions -->
     <li class="{{ activeRoutePartial('transactions') }} treeview" id="transaction-menu">
         <a href="#">
             <i class="fa fa-repeat"></i>
@@ -87,7 +77,6 @@
         </ul>
 
     </li>
-    <!-- money management -->
     <li class="{{ activeRoutePartial('bills') }} {{ activeRoutePartial('piggy-banks') }} {{ activeRoutePartial('rules') }} treeview">
         <a href="#">
             <i class="fa fa-euro fa-fw"></i>
@@ -112,8 +101,6 @@
         </ul>
 
     </li>
-
-    <!-- import and export  -->
     <li class="{{ activeRoutePartial('export') }} {{ activeRoutePartial('import') }} treeview">
         <a href="#">
             <i class="fa fa-arrows-alt fa-fw"></i>
@@ -134,9 +121,6 @@
         </ul>
 
     </li>
-
-    <!-- options and preferences -->
-
     <li id="option-menu"
         class="{{ activeRoutePartial('admin') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currencies') }} treeview">
         <a href="#">
@@ -162,7 +146,6 @@
                 <a class="{{ activeRoutePartial('currencies') }}" href="{{ route('currencies.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currencies'|_ }}
                 </a>
             </li>
-            <!-- admin (if user admin) -->
             {% if Auth.user.hasRole('owner') %}
                 <li class="{{ activeRoutePartial('admin') }}">
                     <a class="{{ activeRoutePartial('admin') }}" href="{{ route('admin.index') }}"><i
@@ -173,9 +156,6 @@
 
 
     </li>
-
-
-    <!-- other options -->
     {% if not SANDSTORM %}
         <li>
             <a href="{{ route('logout') }}">

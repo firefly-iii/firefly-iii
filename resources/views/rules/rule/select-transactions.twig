@@ -28,8 +28,6 @@
                                 <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
                                     {{ ExpandedForm.date('start_date', first) }}
                                     {{ ExpandedForm.date('end_date', today) }}
-
-                                    <!-- ACCOUNTS -->
                                     {{ ExpandedForm.multiCheckbox('accounts',accountList, checkedAccounts, {' class': 'account-checkbox', 'label': trans('firefly.include_transactions_from_accounts') }) }}
                                 </div>
                             </div>

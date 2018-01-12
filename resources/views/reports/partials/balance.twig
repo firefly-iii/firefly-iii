@@ -1,5 +1,4 @@
 <table class="table table-hover">
-    <!-- build balance report header -->
     <thead>
     <tr>
         <th colspan="2">{{ 'budgets'|_ }}</th>
@@ -13,7 +12,6 @@
     </thead>
     <tbody>
 
-    <!-- make rows -->
     {% for balanceLine in balance.getBalanceLines %}
         <tr>
 

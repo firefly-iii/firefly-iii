@@ -67,11 +67,9 @@
                         </label>
                     </div>
                 </div>
-                <!-- /.col -->
                 <div class="col-xs-4">
                     <button type="submit" class="btn btn-primary btn-block btn-flat">{{ 'sign_in'|_ }}</button>
                 </div>
-                <!-- /.col -->
             </div>
         </form>
         {% if allowRegistration %}
@@ -79,6 +77,5 @@
         {% endif %}
         <a href="{{ URL.to('/password/reset') }}">{{ 'forgot_my_password'|_ }}</a>
     </div>
-    <!-- /.login-box-body -->
 {% endblock %}
 

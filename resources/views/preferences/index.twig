@@ -10,7 +10,7 @@
 
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <!-- start of preferences tabs -->
+                {# start of preferences tabs #}
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#general" data-toggle="tab" aria-expanded="true">{{ 'preferences_general'|_ }}</a></li>
@@ -20,9 +20,9 @@
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="general">
-                            <!-- general settings here -->
+                            {# general settings here #}
                             <div class="row">
-                                <!-- general settings column A -->
+                                {# general settings column A #}
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     {# language #}
                                     <div class="preferences-box">
@@ -47,7 +47,7 @@
                                         </p>
                                     </div>
 
-                                    <!-- fiscal year -->
+                                    {# fiscal year #}
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_custom_fiscal_year'|_ }}</h3>
                                         <p class="text-info">
@@ -59,10 +59,10 @@
                                     </div>
                                 </div>
 
-                                <!-- general settings column B -->
+                                {# general settings column B #}
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 
-                                    <!-- transaction preferences -->
+                                    {# transaction preferences #}
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_optional_fields_transaction'|_ }}</h3>
                                         <p class="text-info">
@@ -87,9 +87,9 @@
                             </div>
                         </div>
                         <div class="tab-pane" id="frontpage">
-                            <!-- frontpage settings here -->
+                            {# frontpage settings here #}
                             <div class="row">
-                                <!-- frontpage settings column a -->
+                                {# frontpage settings column a #}
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_home_screen_accounts'|_ }}</h3>
@@ -113,9 +113,9 @@
                                         {% endfor %}
                                     </div>
                                 </div>
-                                <!-- frontpage settings column b -->
+                                {# frontpage settings column b #}
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <!-- show deposit chart -->
+                                    {# show deposit chart #}
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_home_show_deposits'|_ }}</h3>
                                         <p class="text-info">{{ 'pref_home_show_deposits_info'|_ }}</p>
@@ -137,12 +137,12 @@
                             </div>
                         </div>
                         <div class="tab-pane" id="security">
-                            <!-- security settings here -->
+                            {# security settings here #}
                             <div class="row">
-                                <!-- security settings column A -->
+                                {# security settings column A #}
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 
-                                    <!-- 2fa -->
+                                    {# 2fa #}
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_two_factor_auth'|_ }}</h3>
                                         <p class="text-info">{{ 'pref_two_factor_auth_help'|_ }}</p>
@@ -177,17 +177,17 @@
                                     </div>
                                 </div>
 
-                                <!-- security settings column B -->
+                                {# security settings column B #}
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 </div>
                             </div>
                         </div>
                         <div class="tab-pane" id="layout">
-                            <!-- layout settings here -->
+                            {# layout settings here #}
                             <div class="row">
-                                <!-- layout settings column A -->
+                                {# layout settings column A #}
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <!-- view range -->
+                                    {# view range #}
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_view_range'|_ }}</h3>
                                         <p class="text-info">{{ 'pref_view_range_help'|_ }}</p>
@@ -239,10 +239,9 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <!-- end -->
                                 </div>
 
-                                <!-- layout settings column B -->
+                                {# layout settings column B #}
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <div class="preferences-box">
                                         <h3>{{ 'list_page_size_title'|_ }}</h3>
