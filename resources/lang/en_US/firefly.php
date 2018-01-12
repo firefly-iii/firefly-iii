@@ -44,6 +44,7 @@ return [
     'Opening balance'                            => 'Opening balance',
     'create_new_stuff'                           => 'Create new stuff',
     'new_withdrawal'                             => 'New withdrawal',
+    'create_new_transaction'                     => 'Create new transaction',
     'new_deposit'                                => 'New deposit',
     'new_transfer'                               => 'New transfer',
     'new_asset_account'                          => 'New asset account',
