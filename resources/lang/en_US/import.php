@@ -178,7 +178,7 @@ return [
     'spectre_extra_key_open_date'          => 'Open date',
     'spectre_extra_key_current_time'       => 'Current time',
     'spectre_extra_key_current_date'       => 'Current date',
-    'spectre_extra_key_cards'              => 'Car',
+    'spectre_extra_key_cards'              => 'Cards',
     'spectre_extra_key_units'              => 'Units',
     'spectre_extra_key_unit_price'         => 'Unit price',
     'spectre_extra_key_transactions_count' => 'Transactions count',
