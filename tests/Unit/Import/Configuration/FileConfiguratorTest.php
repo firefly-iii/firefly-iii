@@ -47,15 +47,19 @@ class FileConfiguratorTest extends TestCase
     public function testConfigureJobInitial()
     {
         // data
-        $config = ['stage' => 'initial'];
-        $data   = ['some' => 'array'];
-        $job    = $this->getJob($config);
+        $config   = ['stage' => 'initial'];
+        $data     = ['some' => 'array'];
+        $extended = ['steps' => 0, 'done' => 0];
+        $job      = $this->getJob($config);
 
         // mock repository
         $repository = $this->mock(ImportJobRepositoryInterface::class);
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
+
 
         // assert that new initial is created:
         $processor = $this->mock(Initial::class);
@@ -76,15 +80,18 @@ class FileConfiguratorTest extends TestCase
     public function testConfigureJobMap()
     {
         // data
-        $config = ['stage' => 'map'];
-        $data   = ['some' => 'array'];
-        $job    = $this->getJob($config);
+        $config   = ['stage' => 'map'];
+        $data     = ['some' => 'array'];
+        $extended = ['steps' => 0, 'done' => 0];
+        $job      = $this->getJob($config);
 
         // mock repository
         $repository = $this->mock(ImportJobRepositoryInterface::class);
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
 
         // assert that new Roles is created:
         $processor = $this->mock(Map::class);
@@ -107,9 +114,6 @@ class FileConfiguratorTest extends TestCase
      */
     public function testConfigureJobNoJob()
     {
-        // mock repos
-        $repository = $this->mock(ImportJobRepositoryInterface::class);
-
         // config
         $configurator = new FileConfigurator();
         $configurator->configureJob([]);
@@ -124,15 +128,18 @@ class FileConfiguratorTest extends TestCase
     public function testConfigureJobReady()
     {
         // data
-        $config = ['stage' => 'ready'];
-        $data   = ['some' => 'array'];
-        $job    = $this->getJob($config);
+        $config   = ['stage' => 'ready'];
+        $data     = ['some' => 'array'];
+        $extended = ['steps' => 0, 'done' => 0];
+        $job      = $this->getJob($config);
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
 
         // run config
         $configurator = new FileConfigurator();
@@ -146,15 +153,18 @@ class FileConfiguratorTest extends TestCase
      */
     public function testConfigureJobRoles()
     {
-        $config = ['stage' => 'roles'];
-        $data   = ['some' => 'array'];
-        $job    = $this->getJob($config);
+        $config   = ['stage' => 'roles'];
+        $data     = ['some' => 'array'];
+        $extended = ['steps' => 0, 'done' => 0];
+        $job      = $this->getJob($config);
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
 
         // assert that new Roles is created:
         $processor = $this->mock(Roles::class);
@@ -175,15 +185,18 @@ class FileConfiguratorTest extends TestCase
     public function testConfigureJobUploadConfig()
     {
         // data
-        $config = ['stage' => 'upload-config'];
-        $data   = ['some' => 'array'];
-        $job    = $this->getJob($config);
+        $config   = ['stage' => 'upload-config'];
+        $data     = ['some' => 'array'];
+        $extended = ['steps' => 0, 'done' => 0];
+        $job      = $this->getJob($config);
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
 
         // assert that new UploadConfig is created:
         $processor = $this->mock(UploadConfig::class);
@@ -203,14 +216,17 @@ class FileConfiguratorTest extends TestCase
     public function testGetNextDataInitial()
     {
         // data
-        $config = ['stage' => 'initial'];
-        $job    = $this->getJob($config);
+        $config   = ['stage' => 'initial'];
+        $extended = ['steps' => 0, 'done' => 0];
+        $job      = $this->getJob($config);
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
 
         // assert that new Initial is created:
         $processor = $this->mock(Initial::class);
@@ -243,6 +259,7 @@ class FileConfiguratorTest extends TestCase
     {
         // data
         $config = ['stage' => 'upload-config'];
+        $extended = ['steps' => 0, 'done' => 0];
         $job    = $this->getJob($config);
 
         // mock repos
@@ -250,6 +267,8 @@ class FileConfiguratorTest extends TestCase
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
 
         // assert that new Initial is created:
         $processor = $this->mock(UploadConfig::class);
@@ -271,6 +290,7 @@ class FileConfiguratorTest extends TestCase
     {
         // data
         $config = ['stage' => 'ksksjje'];
+        $extended = ['steps' => 0, 'done' => 0];
         $job    = $this->getJob($config);
 
         // mock repos
@@ -278,6 +298,8 @@ class FileConfiguratorTest extends TestCase
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
 
         // should throw error
         $configurator = new FileConfigurator();
@@ -292,6 +314,7 @@ class FileConfiguratorTest extends TestCase
     {
         // data:
         $config = ['stage' => 'map'];
+        $extended = ['steps' => 0, 'done' => 0];
         $job    = $this->getJob($config);
 
         // mock repos
@@ -299,6 +322,8 @@ class FileConfiguratorTest extends TestCase
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
 
         // assert that new Initial is created:
         $processor = $this->mock(Map::class);
@@ -320,6 +345,7 @@ class FileConfiguratorTest extends TestCase
     {
         // data
         $config = ['stage' => 'ready'];
+        $extended = ['steps' => 0, 'done' => 0];
         $job    = $this->getJob($config);
 
         // mock repos
@@ -327,6 +353,8 @@ class FileConfiguratorTest extends TestCase
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
 
         // run config
         $configurator = new FileConfigurator();
@@ -341,6 +369,7 @@ class FileConfiguratorTest extends TestCase
     {
         // data
         $config = ['stage' => 'roles'];
+        $extended = ['steps' => 0, 'done' => 0];
         $job    = $this->getJob($config);
 
         // mock repos
@@ -348,6 +377,8 @@ class FileConfiguratorTest extends TestCase
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
 
         // assert that new Initial is created:
         $processor = $this->mock(Roles::class);
@@ -367,6 +398,7 @@ class FileConfiguratorTest extends TestCase
     {
         // data
         $config = ['stage' => 'initial'];
+        $extended = ['steps' => 0, 'done' => 0];
         $job    = $this->getJob($config);
 
         // mock repos
@@ -374,6 +406,8 @@ class FileConfiguratorTest extends TestCase
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
 
         // run
         $configurator = new FileConfigurator();
@@ -393,6 +427,7 @@ class FileConfiguratorTest extends TestCase
     {
         // data
         $config = ['stage' => 'slkds903ms90k'];
+        $extended = ['steps' => 0, 'done' => 0];
         $job    = $this->getJob($config);
 
         // mock repos
@@ -400,6 +435,8 @@ class FileConfiguratorTest extends TestCase
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
 
         // run config
         $configurator = new FileConfigurator();
@@ -414,6 +451,7 @@ class FileConfiguratorTest extends TestCase
     {
         // data
         $config = ['stage' => 'map'];
+        $extended = ['steps' => 0, 'done' => 0];
         $job    = $this->getJob($config);
 
         // mock repos
@@ -421,6 +459,8 @@ class FileConfiguratorTest extends TestCase
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
 
         // run config
         $configurator = new FileConfigurator();
@@ -439,7 +479,6 @@ class FileConfiguratorTest extends TestCase
      */
     public function testGetNextViewNoJob()
     {
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $configurator = new FileConfigurator();
         $configurator->getNextView();
     }
@@ -453,6 +492,7 @@ class FileConfiguratorTest extends TestCase
     {
         // data
         $config = ['stage' => 'ready'];
+        $extended = ['steps' => 0, 'done' => 0];
         $job    = $this->getJob($config);
 
         // mock repos
@@ -460,6 +500,8 @@ class FileConfiguratorTest extends TestCase
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
 
         // run configx§
         $configurator = new FileConfigurator();
@@ -474,6 +516,7 @@ class FileConfiguratorTest extends TestCase
     {
         // data
         $config = ['stage' => 'roles'];
+        $extended = ['steps' => 0, 'done' => 0];
         $job    = $this->getJob($config);
 
         // mock repos
@@ -481,6 +524,8 @@ class FileConfiguratorTest extends TestCase
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
 
         // run config
         $configurator = new FileConfigurator();
@@ -498,6 +543,7 @@ class FileConfiguratorTest extends TestCase
     {
         // data
         $config = ['stage' => 'upload-config'];
+        $extended = ['steps' => 0, 'done' => 0];
         $job    = $this->getJob($config);
 
         // mock repos
@@ -505,6 +551,8 @@ class FileConfiguratorTest extends TestCase
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
 
         // run config
         $configurator = new FileConfigurator();
@@ -522,6 +570,7 @@ class FileConfiguratorTest extends TestCase
     {
         // data
         $config = ['stage' => 'upload-config'];
+        $extended = ['steps' => 0, 'done' => 0];
         $job    = $this->getJob($config);
 
         // mock repos
@@ -529,6 +578,8 @@ class FileConfiguratorTest extends TestCase
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->once();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
 
         // run config
         $configurator = new FileConfigurator();
@@ -559,6 +610,7 @@ class FileConfiguratorTest extends TestCase
     {
         // data
         $config = ['stage' => 'upload-config'];
+        $extended = ['steps' => 0, 'done' => 0];
         $job    = $this->getJob($config);
 
         // mock repos
@@ -566,6 +618,8 @@ class FileConfiguratorTest extends TestCase
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
         $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
 
         // run config
         $configurator = new FileConfigurator();
@@ -574,30 +628,6 @@ class FileConfiguratorTest extends TestCase
 
         // test
         $this->assertFalse($result);
-    }
-
-    /**
-     * @covers \FireflyIII\Import\Configuration\FileConfigurator::isJobConfigured
-     */
-    public function testIsJobConfiguredTrue()
-    {
-        // data
-        $config = ['stage' => 'ready'];
-        $job    = $this->getJob($config);
-
-        // mock repos
-        $repository = $this->mock(ImportJobRepositoryInterface::class);
-        $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
-        $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
-        $repository->shouldReceive('setConfiguration')->once();
-
-        // run config
-        $configurator = new FileConfigurator();
-        $configurator->setJob($job);
-        $result = $configurator->isJobConfigured();
-
-        // test
-        $this->assertTrue($result);
     }
 
     /**
@@ -610,6 +640,33 @@ class FileConfiguratorTest extends TestCase
     {
         $configurator = new FileConfigurator();
         $configurator->isJobConfigured();
+    }
+
+    /**
+     * @covers \FireflyIII\Import\Configuration\FileConfigurator::isJobConfigured
+     */
+    public function testIsJobConfiguredTrue()
+    {
+        // data
+        $config = ['stage' => 'ready'];
+        $extended = ['steps' => 0, 'done' => 0];
+        $job    = $this->getJob($config);
+
+        // mock repos
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
+        $repository->shouldReceive('getConfiguration')->andReturn($config)->twice();
+        $repository->shouldReceive('setConfiguration')->once();
+        $repository->shouldReceive('getExtendedStatus')->andReturn($extended)->once();
+        $repository->shouldReceive('setExtendedStatus')->once();
+
+        // run config
+        $configurator = new FileConfigurator();
+        $configurator->setJob($job);
+        $result = $configurator->isJobConfigured();
+
+        // test
+        $this->assertTrue($result);
     }
 
     /**
