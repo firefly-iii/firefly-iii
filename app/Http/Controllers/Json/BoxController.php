@@ -25,11 +25,13 @@ namespace FireflyIII\Http\Controllers\Json;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Response;
 
@@ -170,7 +172,7 @@ class BoxController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function netWorth(AccountRepositoryInterface $repository)
+    public function netWorth(AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepos)
     {
         $date = new Carbon(date('Y-m-d')); // needed so its per day.
         /** @var Carbon $start */
@@ -193,16 +195,32 @@ class BoxController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
+        $netWorth = [];
         $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $currency = app('amount')->getDefaultCurrency();
         $balances = app('steam')->balancesByAccounts($accounts, $date);
-        $sum      = '0';
-        foreach ($balances as $entry) {
-            $sum = bcadd($sum, $entry);
+
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $accountCurrency = $currency;
+            $balance         = $balances[$account->id] ?? '0';
+            $currencyId      = intval($account->getMeta('currency_id'));
+            if ($currencyId !== 0) {
+                $accountCurrency = $currencyRepos->find($currencyId);
+            }
+            if (!isset($netWorth[$accountCurrency->id])) {
+                $netWorth[$accountCurrency->id]['currency'] = $accountCurrency;
+                $netWorth[$accountCurrency->id]['sum']      = '0';
+            }
+            $netWorth[$accountCurrency->id]['sum'] = bcadd($netWorth[$accountCurrency->id]['sum'], $balance);
         }
 
+        $return = [];
+        foreach ($netWorth as $currencyId => $data) {
+            $return[$currencyId] = app('amount')->formatAnything($data['currency'], $data['sum'], false);
+        }
         $return = [
-            'net_worth' => app('amount')->formatAnything($currency, $sum, false),
+            'net_worths' => array_values($return),
         ];
 
         $cache->store($return);

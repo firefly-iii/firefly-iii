@@ -67,7 +67,7 @@ function getPiggyBanks() {
 function getNetWorthBox() {
     // box-net-worth
     $.getJSON('json/box/net-worth').done(function (data) {
-        $('#box-net-worth').html(data.net_worth);
+        $('#box-net-worth').html(data.net_worths.join(', '));
     });
 }
 
