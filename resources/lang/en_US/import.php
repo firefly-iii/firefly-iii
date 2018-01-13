@@ -49,7 +49,8 @@ return [
     'status_bread_crumb'                   => 'Import status',
     'status_sub_title'                     => 'Import status',
     'config_sub_title'                     => 'Set up your import',
-    'status_finished_job'                  => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+    'status_finished_job'                  => 'The :count transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+    'status_finished_no_tag'               => 'Firefly III has not collected any journals from your import file.',
     'import_with_key'                      => 'Import with key \':key\'',
 
     // file, upload something
@@ -181,7 +182,7 @@ return [
     'spectre_extra_key_cards'              => 'Cards',
     'spectre_extra_key_units'              => 'Units',
     'spectre_extra_key_unit_price'         => 'Unit price',
-    'spectre_extra_key_transactions_count' => 'Transactions count',
+    'spectre_extra_key_transactions_count' => 'Transaction count',
 
     // various other strings:
     'imported_from_account'                => 'Imported from ":account"',
