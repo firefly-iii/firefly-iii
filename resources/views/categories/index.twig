@@ -11,8 +11,6 @@
         <div class="box">
             <div class="box-header with-border">
                 <h3 class="box-title">{{ 'categories'|_ }}</h3>
-
-
                 <div class="box-tools pull-right">
                     <div class="btn-group">
                         <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
@@ -24,9 +22,16 @@
 
             </div>
             <div class="box-body no-padding">
+                <div style="padding:8px;">
+                    <a class="btn btn-success" href="{{ route('categories.create') }}"><i class="fa fa-plus fa-fw"></i> {{ 'new_category'|_ }}</a>
+                </div>
                 {% include 'list/categories' %}
             </div>
+            <div class="box-footer">
+                <a class="btn btn-success" href="{{ route('categories.create') }}"><i class="fa fa-plus fa-fw"></i> {{ 'new_category'|_ }}</a>
+            </div>
         </div>
+
     </div>
 </div>
 {% else %}

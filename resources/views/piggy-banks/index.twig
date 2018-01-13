@@ -15,7 +15,13 @@
                 <h3 class="box-title">{{ 'piggyBanks'|_ }}</h3>
             </div>
             <div class="box-body no-padding">
+                <div style="padding:8px;">
+                    <a class="btn btn-success" href="{{ route('piggy-banks.create') }}"><i class="fa fa-plus fa-fw"></i> {{ 'create_new_piggy_bank'|_ }}</a>
+                </div>
                 {% include 'list/piggy-banks' %}
+            </div>
+            <div class="box-footer">
+                <a class="btn btn-success" href="{{ route('piggy-banks.create') }}"><i class="fa fa-plus fa-fw"></i> {{ 'create_new_piggy_bank'|_ }}</a>
             </div>
         </div>
     </div>

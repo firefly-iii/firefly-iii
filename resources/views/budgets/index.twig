@@ -134,6 +134,9 @@
                     <h3 class="box-title">{{ 'budgets'|_ }}</h3>
                 </div>
                 <div class="box-body no-padding">
+                    <div style="padding:8px;">
+                        <a href="{{ route('budgets.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i>  {{ 'createBudget'|_ }}</a>
+                    </div>
                     <div style="padding-left:8px;">
                         {{ budgets.render|raw }}
                     </div>
@@ -196,6 +199,9 @@
                     <div style="padding-left:8px;">
                         {{ budgets.render|raw }}
                     </div>
+                </div>
+                <div class="box-footer">
+                    <a href="{{ route('budgets.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i>  {{ 'createBudget'|_ }}</a>
                 </div>
             </div>
         </div>
