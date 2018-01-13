@@ -191,6 +191,7 @@ class SpectreRoutine implements RoutineInterface
             }
         }
 
+
         Preferences::setForUser($this->job->user, 'spectre_customer', $customer->toArray());
 
         return $customer;
@@ -254,16 +255,10 @@ class SpectreRoutine implements RoutineInterface
         $customer = $this->getCustomer();
         Log::debug(sprintf('Customer ID is %s', $customer->getId()));
 
-        // add some steps done
-        $this->repository->addStepsDone($this->job, 2);
-
         // use customer to request a token:
         $uri   = route('import.status', [$this->job->key]);
         $token = $this->getToken($customer, $uri);
         Log::debug(sprintf('Token is %s', $token->getToken()));
-
-        // add some steps done
-        $this->repository->addStepsDone($this->job, 2);
 
         // update job, give it the token:
         $config                  = $this->getConfig();
@@ -279,6 +274,7 @@ class SpectreRoutine implements RoutineInterface
         // update job, set status to "configuring".
         $this->setStatus('configuring');
         Log::debug(sprintf('Job status is now %s', $this->job->status));
+        $this->addStep();
     }
 
     /**
@@ -293,9 +289,6 @@ class SpectreRoutine implements RoutineInterface
         $request  = new ListLoginsRequest($this->job->user);
         $request->setCustomer($customer);
         $request->call();
-
-        // add some steps done
-        $this->repository->addStepsDone($this->job, 2);
 
         $logins = $request->getLogins();
         /** @var Login $final */
@@ -314,24 +307,17 @@ class SpectreRoutine implements RoutineInterface
         if (is_null($final)) {
             Log::error('Could not find a valid login for this user.');
             $this->repository->addError($this->job, 0, 'Spectre connection failed. Did you use invalid credentials, press Cancel or failed the 2FA challenge?');
-            $this->repository->setTotalSteps($this->job, 1);
-            $this->repository->setStepsDone($this->job, 1);
             $this->repository->setStatus($this->job, 'error');
 
             return;
         }
-
-        // add some steps done
-        $this->repository->addStepsDone($this->job, 2);
+        $this->addStep();
 
         // list the users accounts using this login.
         $accountRequest = new ListAccountsRequest($this->job->user);
         $accountRequest->setLogin($login);
         $accountRequest->call();
         $accounts = $accountRequest->getAccounts();
-
-        // add some steps done
-        $this->repository->addStepsDone($this->job, 2);
 
         // store accounts in job:
         $all = [];
@@ -348,11 +334,27 @@ class SpectreRoutine implements RoutineInterface
 
         $this->setConfig($config);
         $this->setStatus('configuring');
-
-        // add some steps done
-        $this->repository->addStepsDone($this->job, 2);
+        $this->addStep();
 
         return;
+    }
+
+    /**
+     * Shorthand method.
+     */
+    private function addStep()
+    {
+        $this->repository->addStepsDone($this->job, 1);
+    }
+
+    /**
+     * Shorthand
+     *
+     * @param int $steps
+     */
+    private function addTotalSteps(int $steps)
+    {
+        $this->repository->addTotalSteps($this->job, $steps);
     }
 
     /**
@@ -364,6 +366,8 @@ class SpectreRoutine implements RoutineInterface
     }
 
     /**
+     * Shorthand method.
+     *
      * @return array
      */
     private function getExtendedStatus(): array
@@ -462,8 +466,11 @@ class SpectreRoutine implements RoutineInterface
                 $collection->push($importJournal);
             }
         }
+        $this->addStep();
         Log::debug(sprintf('Going to try and store all %d them.', $collection->count()));
-        // try to store them:
+
+        $this->addTotalSteps(7 * $collection->count());
+        // try to store them (seven steps per transaction)
         $storage = new ImportStorage;
 
         $storage->setJob($this->job);
@@ -494,15 +501,19 @@ class SpectreRoutine implements RoutineInterface
         Log::debug('Looping journals...');
         $journalIds = $storage->journals->pluck('id')->toArray();
         $tagId      = $tag->id;
+        $this->addTotalSteps(count($journalIds));
+
         foreach ($journalIds as $journalId) {
             Log::debug(sprintf('Linking journal #%d to tag #%d...', $journalId, $tagId));
             DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journalId, 'tag_id' => $tagId]);
+            $this->addStep();
         }
         Log::info(sprintf('Linked %d journals to tag #%d ("%s")', $storage->journals->count(), $tag->id, $tag->tag));
 
         // set status to "finished"?
         // update job:
         $this->setStatus('finished');
+        $this->addStep();
 
         return;
     }
@@ -537,14 +548,9 @@ class SpectreRoutine implements RoutineInterface
                 'transactions' => $transactions,
             ];
             $count                  += count($transactions);
-
-            // add some steps done
-            $this->repository->addStepsDone($this->job, 2);
         }
-        // update number of steps:
-        $this->repository->setTotalSteps($this->job, $count * 5);
-        $this->repository->setStepsDone($this->job, 1);
         Log::debug(sprintf('Total number of transactions: %d', $count));
+        $this->addStep();
 
 
         $this->importTransactions($all);
@@ -563,6 +569,8 @@ class SpectreRoutine implements RoutineInterface
     }
 
     /**
+     * Shorthand method.
+     *
      * @param array $extended
      */
     private function setExtendedStatus(array $extended): void

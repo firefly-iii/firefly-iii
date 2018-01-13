@@ -113,6 +113,7 @@ class StatusController extends Controller
             $result['started'] = true;
             $result['running'] = true;
         }
+        $result['percentage'] = $result['percentage'] > 100 ? 100 : $result['percentage'];
 
         return Response::json($result);
     }

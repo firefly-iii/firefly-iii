@@ -216,7 +216,7 @@ class SpectreConfigurator implements ConfiguratorInterface
 
         // set default extended status:
         $extendedStatus          = $this->repository->getExtendedStatus($job);
-        $extendedStatus['steps'] = 100;
+        $extendedStatus['steps'] = 6;
 
         // save to job:
         $job       = $this->repository->setConfiguration($job, $finalConfig);
