@@ -96,17 +96,24 @@ class FileRoutine implements RoutineInterface
         set_time_limit(0);
         Log::info(sprintf('Start with import job %s', $this->job->key));
 
+        // total steps: 6
+        $this->setTotalSteps(6);
+
         $importObjects = $this->getImportObjects();
         $this->lines   = $importObjects->count();
+        $this->addStep();
+
+        // total steps can now be extended. File has been scanned. 7 steps per line:
+        $this->addTotalSteps(7 * $this->lines);
 
         // once done, use storage thing to actually store them:
         Log::info(sprintf('Returned %d valid objects from file processor', $this->lines));
 
         $storage = $this->storeObjects($importObjects);
+        $this->addStep();
         Log::debug('Back in run()');
 
-        // update job:
-        $this->setStatus('finished');
+
 
         Log::debug('Updated job...');
         Log::debug(sprintf('%d journals in $storage->journals', $storage->journals->count()));
@@ -117,6 +124,10 @@ class FileRoutine implements RoutineInterface
 
         // create tag, link tag to all journals:
         $this->createImportTag();
+        $this->addStep();
+
+        // update job:
+        $this->setStatus('finished');
 
         Log::info(sprintf('Done with import job %s', $this->job->key));
 
@@ -159,6 +170,14 @@ class FileRoutine implements RoutineInterface
     }
 
     /**
+     * Shorthand method.
+     */
+    private function addStep()
+    {
+        $this->repository->addStepsDone($this->job, 1);
+    }
+
+    /**
      *
      */
     private function createImportTag(): Tag
@@ -170,6 +189,7 @@ class FileRoutine implements RoutineInterface
 
             return new Tag;
         }
+        $this->addTotalSteps($this->journals->count() + 2);
 
         /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);
@@ -184,6 +204,7 @@ class FileRoutine implements RoutineInterface
             'tagMode'     => 'nothing',
         ];
         $tag             = $repository->store($data);
+        $this->addStep();
         $extended        = $this->getExtendedStatus();
         $extended['tag'] = $tag->id;
         $this->setExtendedStatus($extended);
@@ -195,9 +216,10 @@ class FileRoutine implements RoutineInterface
         foreach ($journalIds as $journalId) {
             Log::debug(sprintf('Linking journal #%d to tag #%d...', $journalId, $tagId));
             DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journalId, 'tag_id' => $tagId]);
+            $this->addStep();
         }
         Log::info(sprintf('Linked %d journals to tag #%d ("%s")', $this->journals->count(), $tag->id, $tag->tag));
-
+        $this->addStep();
         return $tag;
     }
 
@@ -247,6 +269,26 @@ class FileRoutine implements RoutineInterface
     private function setStatus(string $status): void
     {
         $this->repository->setStatus($this->job, $status);
+    }
+
+    /**
+     * Shorthand
+     *
+     * @param int $steps
+     */
+    private function setTotalSteps(int $steps)
+    {
+        $this->repository->setTotalSteps($this->job, $steps);
+    }
+
+    /**
+     * Shorthand
+     *
+     * @param int $steps
+     */
+    private function addTotalSteps(int $steps)
+    {
+        $this->repository->addTotalSteps($this->job, $steps);
     }
 
     /**

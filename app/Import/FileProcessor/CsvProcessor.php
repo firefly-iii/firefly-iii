@@ -90,6 +90,7 @@ class CsvProcessor implements FileProcessorInterface
         Log::debug('Now in CsvProcessor run(). Job is now running...');
 
         $entries = new Collection($this->getImportArray());
+        $this->addStep();
         Log::notice('Building importable objects from CSV file.');
         Log::debug(sprintf('Number of entries: %d', $entries->count()));
         $notImported = $entries->filter(
@@ -97,7 +98,6 @@ class CsvProcessor implements FileProcessorInterface
                 $row = array_values($row);
                 if ($this->rowAlreadyImported($row)) {
                     $message = sprintf('Row #%d has already been imported.', $index);
-                    $this->repository->addStepsDone($this->job, 5);
                     $this->repository->addError($this->job, $index, $message);
                     Log::info($message);
 
@@ -107,22 +107,16 @@ class CsvProcessor implements FileProcessorInterface
                 return $row;
             }
         );
+        $this->addStep();
         Log::debug(sprintf('Number of entries left: %d', $notImported->count()));
-
-        // set (new) number of steps:
-        $extended          = $this->getExtendedStatus();
-        $steps             = $notImported->count() * 5;
-        $extended['steps'] = $steps;
-        $this->setExtendedStatus($extended);
-        Log::debug(sprintf('Number of steps: %d', $steps));
 
         $notImported->each(
             function (array $row, int $index) {
                 $journal = $this->importRow($index, $row);
                 $this->objects->push($journal);
-                $this->repository->addStepsDone($this->job, 1);
             }
         );
+        $this->addStep();
 
         return true;
     }
@@ -152,6 +146,14 @@ class CsvProcessor implements FileProcessorInterface
         $this->repository->setUser($job->user);
 
         return $this;
+    }
+
+    /**
+     * Shorthand method.
+     */
+    private function addStep()
+    {
+        $this->repository->addStepsDone($this->job, 1);
     }
 
     /**
@@ -212,7 +214,6 @@ class CsvProcessor implements FileProcessorInterface
      *
      * @throws \League\Csv\Exception
      * @throws \League\Csv\Exception
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     private function getImportArray(): Iterator
     {

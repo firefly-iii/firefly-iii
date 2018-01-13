@@ -212,7 +212,7 @@ class Account extends Model
      *
      * @return string
      */
-    public function getNameAttribute($value): string
+    public function getNameAttribute($value): ?string
     {
         if ($this->encrypted) {
             return Crypt::decrypt($value);

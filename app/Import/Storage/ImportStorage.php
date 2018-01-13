@@ -36,6 +36,15 @@ use Log;
 
 /**
  * Is capable of storing individual ImportJournal objects.
+ * Adds 7 steps per object stored:
+ * 1. get all import data from import journal
+ * 2. is not a duplicate
+ * 3. create the journal
+ * 4. store journal
+ * 5. run rules
+ * 6. run bills
+ * 7. finished storing object
+ *
  * Class ImportStorage.
  */
 class ImportStorage
@@ -141,6 +150,7 @@ class ImportStorage
             function (ImportJournal $importJournal, int $index) {
                 try {
                     $this->storeImportJournal($index, $importJournal);
+                    $this->addStep();
                 } catch (FireflyException | ErrorException | Exception $e) {
                     $this->errors->push($e->getMessage());
                     Log::error(sprintf('Cannot import row #%d because: %s', $index, $e->getMessage()));
@@ -171,9 +181,7 @@ class ImportStorage
         $opposingAccount   = $this->getOpposingAccount($importJournal->opposing, $assetAccount->id, $amount);
         $transactionType   = $this->getTransactionType($amount, $opposingAccount);
         $description       = $importJournal->getDescription();
-
-        // First step done!
-        $this->repository->addStepsDone($this->job, 1);
+        $this->addStep();
 
         /**
          * Check for double transfer.
@@ -187,13 +195,17 @@ class ImportStorage
             'opposing'    => $opposingAccount->name,
         ];
         if ($this->isDoubleTransfer($parameters) || $this->hashAlreadyImported($importJournal->hash)) {
-            $this->repository->addStepsDone($this->job, 3);
             // throw error
             $message = sprintf('Detected a possible duplicate, skip this one (hash: %s).', $importJournal->hash);
             Log::error($message, $parameters);
+
+            // add five steps to keep the pace:
+            $this->addSteps(5);
+
             throw new FireflyException($message);
         }
         unset($parameters);
+        $this->addStep();
 
         // store journal and create transactions:
         $parameters = [
@@ -209,9 +221,7 @@ class ImportStorage
         ];
         $journal    = $this->storeJournal($parameters);
         unset($parameters);
-
-        // Another step done!
-        $this->repository->addStepsDone($this->job, 1);
+        $this->addStep();
 
         // store meta object things:
         $this->storeCategory($journal, $importJournal->category->getCategory());
@@ -233,18 +243,18 @@ class ImportStorage
         // set journal completed:
         $journal->completed = true;
         $journal->save();
-
-        // Another step done!
-        $this->repository->addStepsDone($this->job, 1);
+        $this->addStep();
 
         // run rules if config calls for it:
         if (true === $this->applyRules) {
             Log::info('Will apply rules to this journal.');
             $this->applyRules($journal);
         }
+
         if (!(true === $this->applyRules)) {
             Log::info('Will NOT apply rules to this journal.');
         }
+        $this->addStep();
 
         // match bills if config calls for it.
         if (true === $this->matchBills) {
@@ -255,14 +265,31 @@ class ImportStorage
         if (!(true === $this->matchBills)) {
             Log::info('Cannot match bills (yet), but do not have to.');
         }
+        $this->addStep();
 
-        // Another step done!
-        $this->repository->addStepsDone($this->job, 1);
         $this->journals->push($journal);
 
         Log::info(sprintf('Imported new journal #%d: "%s", amount %s %s.', $journal->id, $journal->description, $journal->transactionCurrency->code, $amount));
 
         return true;
+    }
+
+    /**
+     * Shorthand method.
+     */
+    private function addStep()
+    {
+        $this->repository->addStepsDone($this->job, 1);
+    }
+
+    /**
+     * Shorthand method
+     *
+     * @param int $steps
+     */
+    private function addSteps(int $steps)
+    {
+        $this->repository->addStepsDone($this->job, $steps);
     }
 
     /**

@@ -174,30 +174,6 @@ class ImportJob extends Model
     }
 
     /**
-     * @param int $steps
-     */
-    public function setStepsDone(int $steps)
-    {
-        $status                = $this->extended_status;
-        $status['done']        = $steps;
-        $this->extended_status = $status;
-        $this->save();
-        Log::debug(sprintf('Set steps done for job "%s" to %d', $this->key, $steps));
-    }
-
-    /**
-     * @param int $count
-     */
-    public function setTotalSteps(int $count)
-    {
-        $status                = $this->extended_status;
-        $status['steps']       = $count;
-        $this->extended_status = $status;
-        $this->save();
-        Log::debug(sprintf('Set total steps for job "%s" to %d', $this->key, $count));
-    }
-
-    /**
      * @return string
      *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException

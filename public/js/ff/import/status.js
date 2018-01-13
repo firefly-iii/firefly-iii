@@ -28,6 +28,7 @@ var interval = 500;
 var numberOfSteps = 0;
 var numberOfReports = 0;
 var jobFailed = false;
+var pressedStart = false;
 
 // counts how many errors have been detected
 var knownErrors = 0;
@@ -37,7 +38,11 @@ $(function () {
     console.log('in start');
     timeOutId = setTimeout(checkJobStatus, startInterval);
 
-    $('.start-job').click(startJob);
+    $('.start-job').click(function () {
+        // notify (extra) that start button is pressed.
+        pressedStart = true;
+        startJob();
+    });
     if (job.configuration['auto-start']) {
         console.log('Called startJob()!');
         startJob();
@@ -89,6 +94,15 @@ function reportOnJobStatus(data) {
                 console.log('Job is auto start. Check status again in 500ms.');
                 timeOutId = setTimeout(checkJobStatus, interval);
             }
+            if (pressedStart) {
+                console.log('pressedStart = true, will check extra.');
+                // do a time out just in case. Could be that job is running or is even done already.
+                timeOutId = setTimeout(checkJobStatus, 2000);
+                pressedStart = false;
+            }
+            if (!pressedStart) {
+                console.log('pressedStart = false, will do nothing.');
+            }
             break;
         case "running":
             // job is running! Show the running box:
@@ -115,6 +129,8 @@ function reportOnJobStatus(data) {
         case "finished":
             $('.statusbox').hide();
             $('.status_finished').show();
+            // report on detected errors:
+            reportOnErrors(data);
             // show text:
             $('#import-status-more-info').html(data.finishedText);
             break;
@@ -176,8 +192,9 @@ function jobIsStalled(data) {
  * Only when job is in "configured" state.
  */
 function startJob() {
+    console.log("In startJob()");
     if (job.status === "configured") {
-        console.log("Job auto started!");
+        console.log("Job started!");
         // disable the button, add loading thing.
         $('.start-job').prop('disabled', true).text('...');
         $.post(jobStartUri, {_token: token}).fail(reportOnSubmitError);

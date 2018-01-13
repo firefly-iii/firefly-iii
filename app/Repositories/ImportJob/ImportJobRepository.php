@@ -73,6 +73,23 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     }
 
     /**
+     * @param ImportJob $job
+     * @param int       $steps
+     *
+     * @return ImportJob
+     */
+    public function addTotalSteps(ImportJob $job, int $steps = 1): ImportJob
+    {
+        $extended          = $this->getExtendedStatus($job);
+        $total             = $extended['steps'] ?? 0;
+        $total             += $steps;
+        $extended['steps'] = $total;
+
+        return $this->setExtendedStatus($job, $extended);
+
+    }
+
+    /**
      * Return number of imported rows with this hash value.
      *
      * @param string $hash
@@ -320,15 +337,17 @@ class ImportJobRepository implements ImportJobRepositoryInterface
 
     /**
      * @param ImportJob $job
-     * @param int       $count
+     * @param int       $steps
      *
      * @return ImportJob
      */
     public function setStepsDone(ImportJob $job, int $steps): ImportJob
     {
-        $job->setStepsDone($steps);
+        $status         = $this->getExtendedStatus($job);
+        $status['done'] = $steps;
+        Log::debug(sprintf('Set steps done for job "%s" to %d', $job->key, $steps));
 
-        return $job;
+        return $this->setExtendedStatus($job, $status);
     }
 
     /**
@@ -339,9 +358,11 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      */
     public function setTotalSteps(ImportJob $job, int $count): ImportJob
     {
-        $job->setTotalSteps($count);
+        $status          = $this->getExtendedStatus($job);
+        $status['steps'] = $count;
+        Log::debug(sprintf('Set total steps for job "%s" to %d', $job->key, $count));
 
-        return $job;
+        return $this->setExtendedStatus($job, $status);
     }
 
     /**

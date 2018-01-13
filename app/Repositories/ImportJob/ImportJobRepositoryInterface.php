@@ -50,6 +50,14 @@ interface ImportJobRepositoryInterface
     public function addStepsDone(ImportJob $job, int $steps = 1): ImportJob;
 
     /**
+     * @param ImportJob $job
+     * @param int       $steps
+     *
+     * @return ImportJob
+     */
+    public function addTotalSteps(ImportJob $job, int $steps = 1): ImportJob;
+
+    /**
      * Return number of imported rows with this hash value.
      *
      * @param string $hash

@@ -187,6 +187,12 @@ class FileConfigurator implements ConfiguratorInterface
         $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($job->user);
 
+        // set number of steps to 100:
+        $extendedStatus          = $this->getExtendedStatus();
+        $extendedStatus['steps'] = 6;
+        $extendedStatus['done']  = 0;
+        $this->setExtendedStatus($extendedStatus);
+
         $config    = $this->getConfig();
         $newConfig = array_merge($this->defaultConfig, $config);
         $this->repository->setConfiguration($job, $newConfig);
@@ -240,5 +246,25 @@ class FileConfigurator implements ConfiguratorInterface
         Log::debug(sprintf('Configuration class is "%s"', $class));
 
         return $class;
+    }
+
+    /**
+     * @return array
+     */
+    private function getExtendedStatus(): array
+    {
+        return $this->repository->getExtendedStatus($this->job);
+    }
+
+    /**
+     * Shorthand method.
+     *
+     * @param array $extended
+     */
+    private function setExtendedStatus(array $extended): void
+    {
+        $this->repository->setExtendedStatus($this->job, $extended);
+
+        return;
     }
 }

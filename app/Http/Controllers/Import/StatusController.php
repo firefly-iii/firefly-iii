@@ -93,14 +93,20 @@ class StatusController extends Controller
             $result['percentage']      = round(($job->extended_status['done'] / $job->extended_status['steps']) * 100, 0);
             $result['show_percentage'] = true;
         }
-
         if ('finished' === $job->status) {
-            $tagId = $job->extended_status['tag'];
-            /** @var TagRepositoryInterface $repository */
-            $repository             = app(TagRepositoryInterface::class);
-            $tag                    = $repository->find($tagId);
-            $result['finished']     = true;
-            $result['finishedText'] = trans('import.status_finished_job', ['link' => route('tags.show', [$tag->id, 'all']), 'tag' => $tag->tag]);
+            $result['finished'] = true;
+            $tagId              = intval($job->extended_status['tag']);
+            if ($tagId !== 0) {
+                /** @var TagRepositoryInterface $repository */
+                $repository             = app(TagRepositoryInterface::class);
+                $tag                    = $repository->find($tagId);
+                $count = $tag->transactionJournals()->count();
+                $result['finishedText'] = trans('import.status_finished_job', ['count' => $count,'link' => route('tags.show', [$tag->id, 'all']), 'tag' => $tag->tag]);
+            }
+
+            if ($tagId === 0) {
+                $result['finishedText'] = trans('import.status_finished_no_tag');
+            }
         }
 
         if ('running' === $job->status) {
