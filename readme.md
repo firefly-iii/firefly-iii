@@ -47,8 +47,9 @@ You can read more about this on [the website](https://firefly-iii.org/).
 ### Features
 Most importantly...
 
-* Firefly can import any CSV file, so migrating from other systems is easy.
-* Firefly runs on your own server, so you are fully in control of your data. It will not contact other sites or servers.
+* Firefly runs on your own server, so you are fully in control of your data. It will not contact other sites or servers;
+* You can import from over 2500 financial providers, in 55 countries when you enable the [Spectre API](https://www.saltedge.com/solutions_for_finapps);
+* You can import CSV files from practically any bank;
 * If you feel you’re missing something you can just ask me and I’ll add it!
 
 But actually, it features:
@@ -70,7 +71,7 @@ But actually, it features:
 * The ability to _import_ data so you can move _from_ another system.
 * Organize expenses using tags;
 * 2 factor authentication for extra security 🔒;
-* Supports any currency you want, including crypto currencies such as Bitcoin ₿.
+* Supports any currency you want, including crypto currencies such as ₿itcoin  and Ξthereum.
 * Lots of help text in case you don’t get it.
 
 Everything is organised:
