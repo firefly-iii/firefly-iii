@@ -611,21 +611,19 @@ class BudgetController extends Controller
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-
-        Log::debug('Going to get period expenses and incomes.');
-        while ($end >= $start) {
-            $end        = app('navigation')->startOfPeriod($end, $range);
-            $currentEnd = app('navigation')->endOfPeriod($end, $range);
+        $dates = app('navigation')->blockPeriods($start, $end, $range);
+        foreach ($dates as $date) {
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withoutBudget()->withOpposingAccount()->setTypes([TransactionType::WITHDRAWAL]);
+            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutBudget()->withOpposingAccount()->setTypes(
+                [TransactionType::WITHDRAWAL]
+            );
             $set      = $collector->getJournals();
             $sum      = strval($set->sum('transaction_amount') ?? '0');
             $journals = $set->count();
-            $dateStr  = $end->format('Y-m-d');
-            $dateName = app('navigation')->periodShow($end, $range);
-            $entries->push(['string' => $dateStr, 'name' => $dateName, 'count' => $journals, 'sum' => $sum, 'date' => clone $end]);
-            $end = app('navigation')->subtractPeriod($end, $range, 1);
+            $dateStr  = $date['end']->format('Y-m-d');
+            $dateName = app('navigation')->periodShow($date['end'], $date['period']);
+            $entries->push(['string' => $dateStr, 'name' => $dateName, 'count' => $journals, 'sum' => $sum, 'date' => clone $date['end']]);
         }
         $cache->store($entries);
 
