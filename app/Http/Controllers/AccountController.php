@@ -316,6 +316,7 @@ class AccountController extends Controller
         // prep for "specific date" view.
         if (strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
+            $start    = app('navigation')->startOfPeriod($start, $range);
             $end      = app('navigation')->endOfPeriod($start, $range);
             $fStart   = $start->formatLocalized($this->monthAndDayFormat);
             $fEnd     = $end->formatLocalized($this->monthAndDayFormat);
@@ -470,7 +471,7 @@ class AccountController extends Controller
                       ->withOpposingAccount();
             $spent = strval($collector->getJournals()->sum('transaction_amount'));
 
-            $dateStr  = $date['start']->format('Y-m-d');
+            $dateStr  = $date['end']->format('Y-m-d');
             $dateName = app('navigation')->periodShow($date['start'], $date['period']);
             $entries->push(
                 [
@@ -478,7 +479,7 @@ class AccountController extends Controller
                     'name'   => $dateName,
                     'spent'  => $spent,
                     'earned' => $earned,
-                    'date'   => clone $date['start'],]
+                    'date'   => clone $date['end'],]
             );
         }
 
