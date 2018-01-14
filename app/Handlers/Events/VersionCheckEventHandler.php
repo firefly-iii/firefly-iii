@@ -59,7 +59,7 @@ class VersionCheckEventHandler
         $lastCheckTime = FireflyConfig::get('last_update_check', time());
         $now           = time();
         if ($now - $lastCheckTime->data < 604800) {
-            Log::debug(sprintf('Checked for updates less than a week ago (on %s).', date('Y-m-d H:i:s',$lastCheckTime->data));
+            Log::debug(sprintf('Checked for updates less than a week ago (on %s).', date('Y-m-d H:i:s',$lastCheckTime->data)));
 
             return;
 
