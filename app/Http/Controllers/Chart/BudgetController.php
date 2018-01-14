@@ -37,7 +37,6 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Preferences;
 use Response;
 use Steam;
 
@@ -78,37 +77,43 @@ class BudgetController extends Controller
      */
     public function budget(Budget $budget)
     {
-        $first        = $this->repository->firstUseDate($budget);
-        $range        = Preferences::get('viewRange', '1M')->data;
-        $currentStart = app('navigation')->startOfPeriod($first, $range);
-        $last         = session('end', new Carbon);
-        $cache        = new CacheProperties();
-        $cache->addProperty($first);
-        $cache->addProperty($last);
+        $start = $this->repository->firstUseDate($budget);
+        $end   = session('end', new Carbon);
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
         $cache->addProperty('chart.budget.budget');
 
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        $final = clone $last;
-        $final->addYears(2);
+        // depending on diff, do something with range of chart.
+        $step   = '1D';
+        $months = $start->diffInMonths($end);
+        if ($months > 3) {
+            $step = '1W';
+        }
+        if ($months > 24) {
+            $step = '1M';
+        }
+        if ($months > 60) {
+            $step = '1Y';
+        }
         $budgetCollection = new Collection([$budget]);
-        $last             = app('navigation')->endOfX($last, $range, $final); // not to overshoot.
-        $entries          = [];
-        while ($currentStart < $last) {
-            // periodspecific dates:
-            $currentEnd = app('navigation')->endOfPeriod($currentStart, $range);
-            // sub another day because reasons.
-            $currentEnd->subDay();
-            $spent            = $this->repository->spentInPeriod($budgetCollection, new Collection, $currentStart, $currentEnd);
-            $format           = app('navigation')->periodShow($currentStart, $range);
-            $entries[$format] = bcmul($spent, '-1');
-            $currentStart     = clone $currentEnd;
-            $currentStart->addDays(2);
+        $chartData        = [];
+        $current          = clone $start;
+        $current          = app('navigation')->startOfPeriod($current, $step);
+
+        while ($end >= $current) {
+            $currentEnd        = app('navigation')->endOfPeriod($current, $step);
+            $spent             = $this->repository->spentInPeriod($budgetCollection, new Collection, $current, $currentEnd);
+            $label             = app('navigation')->periodShow($current, $step);
+            $chartData[$label] = floatval(bcmul($spent,'-1'));
+            $current           = app('navigation')->addPeriod($current, $step, 1);
         }
 
-        $data = $this->generator->singleSet(strval(trans('firefly.spent')), $entries);
+        $data = $this->generator->singleSet(strval(trans('firefly.spent')), $chartData);
 
         $cache->store($data);
 

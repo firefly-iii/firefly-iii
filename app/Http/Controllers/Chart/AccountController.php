@@ -76,21 +76,46 @@ class AccountController extends Controller
         $repository = app(AccountRepositoryInterface::class);
         $start      = $repository->oldestJournalDate($account);
         $end        = new Carbon;
-        $format     = (string)trans('config.month_and_day');
-        $range      = Steam::balanceInRange($account, $start, $end);
-        $current    = clone $start;
-        $previous   = array_values($range)[0];
-        $chartData  = [];
 
-        while ($end >= $current) {
-            $theDate           = $current->format('Y-m-d');
-            $balance           = $range[$theDate] ?? $previous;
-            $label             = $current->formatLocalized($format);
-            $chartData[$label] = $balance;
-            $previous          = $balance;
-            $current->addDay();
+        // depending on diff, do something with range of chart.
+        $step   = '1D';
+        $months = $start->diffInMonths($end);
+        if ($months > 3) {
+            $step = '1W';
         }
-
+        if ($months > 24) {
+            $step = '1M';
+        }
+        if ($months > 100) {
+            $step = '1Y';
+        }
+        $chartData = [];
+        $current   = clone $start;
+        switch ($step) {
+            case '1D':
+                $format   = (string)trans('config.month_and_day');
+                $range    = Steam::balanceInRange($account, $start, $end);
+                $previous = array_values($range)[0];
+                while ($end >= $current) {
+                    $theDate           = $current->format('Y-m-d');
+                    $balance           = $range[$theDate] ?? $previous;
+                    $label             = $current->formatLocalized($format);
+                    $chartData[$label] = floatval($balance);
+                    $previous          = $balance;
+                    $current->addDay();
+                }
+                break;
+            case '1W':
+            case '1M':
+            case '1Y':
+                while ($end >= $current) {
+                    $balance           = floatval(Steam::balance($account, $current));
+                    $label             = app('navigation')->periodShow($current, $step);
+                    $chartData[$label] = $balance;
+                    $current           = app('navigation')->addPeriod($current, $step, 1);
+                }
+                break;
+        }
         $data = $this->generator->singleSet($account->name, $chartData);
         $cache->store($data);
 
