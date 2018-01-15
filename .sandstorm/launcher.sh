@@ -58,5 +58,9 @@ echo "Migrating..."
 php /opt/app/artisan migrate --seed --force
 echo "Done!"
 
+echo "Clear cache.."
+php /opt/app/artisan cache:clear
+echo "Done"
+
 # Start nginx.
 /usr/sbin/nginx -c /opt/app/.sandstorm/service-config/nginx.conf -g "daemon off;"
