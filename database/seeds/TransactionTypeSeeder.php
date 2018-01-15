@@ -30,10 +30,20 @@ class TransactionTypeSeeder extends Seeder
 {
     public function run()
     {
-        TransactionType::create(['type' => TransactionType::WITHDRAWAL]);
-        TransactionType::create(['type' => TransactionType::DEPOSIT]);
-        TransactionType::create(['type' => TransactionType::TRANSFER]);
-        TransactionType::create(['type' => TransactionType::OPENING_BALANCE]);
-        TransactionType::create(['type' => TransactionType::RECONCILIATION]);
+        $types = [
+            TransactionType::WITHDRAWAL,
+            TransactionType::DEPOSIT,
+            TransactionType::TRANSFER,
+            TransactionType::OPENING_BALANCE,
+        ];
+
+        foreach ($types as $type) {
+            try {
+                TransactionType::create(['type' => $type]);
+            } catch (PDOException $e) {
+                Log::warning(sprintf('Could not create transaction type "%s". It might exist already.', $type));
+            }
+        }
+
     }
 }

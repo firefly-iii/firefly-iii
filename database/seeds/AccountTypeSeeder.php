@@ -30,15 +30,24 @@ class AccountTypeSeeder extends Seeder
 {
     public function run()
     {
-        AccountType::create(['type' => AccountType::DEFAULT]);
-        AccountType::create(['type' => AccountType::CASH]);
-        AccountType::create(['type' => AccountType::ASSET]);
-        AccountType::create(['type' => AccountType::EXPENSE]);
-        AccountType::create(['type' => AccountType::REVENUE]);
-        AccountType::create(['type' => AccountType::INITIAL_BALANCE]);
-        AccountType::create(['type' => AccountType::BENEFICIARY]);
-        AccountType::create(['type' => AccountType::IMPORT]);
-        AccountType::create(['type' => AccountType::LOAN]);
-        AccountType::create(['type' => AccountType::RECONCILIATION]);
+        $types = [
+            AccountType::DEFAULT,
+            AccountType::CASH,
+            AccountType::ASSET,
+            AccountType::EXPENSE,
+            AccountType::REVENUE,
+            AccountType::INITIAL_BALANCE,
+            AccountType::BENEFICIARY,
+            AccountType::IMPORT,
+            AccountType::LOAN,
+            AccountType::RECONCILIATION,
+        ];
+        foreach ($types as $type) {
+            try {
+                AccountType::create(['type' => $type]);
+            } catch (PDOException $e) {
+                Log::warning(sprintf('Could not create account type "%s". It might exist already.', $type));
+            }
+        }
     }
 }
