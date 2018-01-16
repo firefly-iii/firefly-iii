@@ -2,6 +2,7 @@
 
 # When you change this file, you must take manual action. Read this doc:
 # - https://docs.sandstorm.io/en/latest/vagrant-spk/customizing/#setupsh
+echo "Now in setup.sh"
 
 set -euo pipefail
 
