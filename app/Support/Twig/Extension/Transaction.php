@@ -27,7 +27,6 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Transaction as TransactionModel;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Support\SingleCacheProperties;
 use Lang;
 use Twig_Extension;
 
@@ -45,14 +44,6 @@ class Transaction extends Twig_Extension
      */
     public function amount(TransactionModel $transaction): string
     {
-        $cache = new SingleCacheProperties;
-        $cache->addProperty('transaction-amount');
-        $cache->addProperty($transaction->id);
-        $cache->addProperty($transaction->updated_at);
-        if ($cache->has()) {
-            return $cache->get();
-        }
-
         $amount   = bcmul(app('steam')->positive(strval($transaction->transaction_amount)), '-1');
         $format   = '%s';
         $coloured = true;
@@ -97,8 +88,6 @@ class Transaction extends Twig_Extension
             $currency->decimal_places = $transaction->foreign_currency_dp;
             $str                      .= ' (' . sprintf($format, app('amount')->formatAnything($currency, $amount, $coloured)) . ')';
         }
-        $cache->store($str);
-
         return $str;
     }
 
@@ -109,15 +98,6 @@ class Transaction extends Twig_Extension
      */
     public function amountArray(array $transaction): string
     {
-        $cache = new SingleCacheProperties;
-        $cache->addProperty('transaction-array-amount');
-        $cache->addProperty($transaction['source_id']);
-        $cache->addProperty($transaction['destination_id']);
-        $cache->addProperty($transaction['updated_at']);
-        if ($cache->has()) {
-            return $cache->get();
-        }
-
         // first display amount:
         $amount                       = TransactionType::WITHDRAWAL === $transaction['journal_type'] ? $transaction['source_amount']
             : $transaction['destination_amount'];
@@ -135,8 +115,6 @@ class Transaction extends Twig_Extension
             $fakeCurrency->symbol         = $transaction['foreign_currency_symbol'];
             $string                       .= ' (' . app('amount')->formatAnything($fakeCurrency, $amount, true) . ')';
         }
-        $cache->store($string);
-
         return $string;
     }
 
@@ -147,14 +125,6 @@ class Transaction extends Twig_Extension
      */
     public function budgets(TransactionModel $transaction): string
     {
-        $cache = new SingleCacheProperties;
-        $cache->addProperty('transaction-budgets');
-        $cache->addProperty($transaction->id);
-        $cache->addProperty($transaction->updated_at);
-        if ($cache->has()) {
-            return $cache->get();
-        }
-
         // journal has a budget:
         if (isset($transaction->transaction_journal_budget_id)) {
             $name = app('steam')->tryDecrypt($transaction->transaction_journal_budget_name);
@@ -185,12 +155,10 @@ class Transaction extends Twig_Extension
             }
 
             $txt = join(', ', $str);
-            $cache->store($txt);
 
             return $txt;
         }
         $txt = '';
-        $cache->store($txt);
 
         return $txt;
     }
@@ -202,19 +170,10 @@ class Transaction extends Twig_Extension
      */
     public function categories(TransactionModel $transaction): string
     {
-        $cache = new SingleCacheProperties;
-        $cache->addProperty('transaction-categories');
-        $cache->addProperty($transaction->id);
-        $cache->addProperty($transaction->updated_at);
-        if ($cache->has()) {
-            return $cache->get();
-        }
-
         // journal has a category:
         if (isset($transaction->transaction_journal_category_id)) {
             $name = app('steam')->tryDecrypt($transaction->transaction_journal_category_name);
             $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$transaction->transaction_journal_category_id]), $name, $name);
-            $cache->store($txt);
 
             return $txt;
         }
@@ -223,7 +182,6 @@ class Transaction extends Twig_Extension
         if (isset($transaction->transaction_category_id)) {
             $name = app('steam')->tryDecrypt($transaction->transaction_category_name);
             $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$transaction->transaction_category_id]), $name, $name);
-            $cache->store($txt);
 
             return $txt;
         }
@@ -240,14 +198,11 @@ class Transaction extends Twig_Extension
             }
 
             $txt = join(', ', $str);
-            $cache->store($txt);
 
             return $txt;
         }
 
         $txt = '';
-        $cache->store($txt);
-
         return $txt;
     }
 
@@ -258,19 +213,10 @@ class Transaction extends Twig_Extension
      */
     public function description(TransactionModel $transaction): string
     {
-        $cache = new SingleCacheProperties;
-        $cache->addProperty('description');
-        $cache->addProperty($transaction->id);
-        $cache->addProperty($transaction->updated_at);
-        if ($cache->has()) {
-            return $cache->get();
-        }
         $description = $transaction->description;
         if (strlen(strval($transaction->transaction_description)) > 0) {
             $description = $transaction->transaction_description . '(' . $transaction->description . ')';
         }
-
-        $cache->store($description);
 
         return $description;
     }
@@ -282,14 +228,6 @@ class Transaction extends Twig_Extension
      */
     public function destinationAccount(TransactionModel $transaction): string
     {
-        $cache = new SingleCacheProperties;
-        $cache->addProperty('transaction-destination');
-        $cache->addProperty($transaction->id);
-        $cache->addProperty($transaction->updated_at);
-        if ($cache->has()) {
-            return $cache->get();
-        }
-
         if (TransactionType::RECONCILIATION === $transaction->transaction_type_type) {
             return '&mdash;';
         }
@@ -325,13 +263,11 @@ class Transaction extends Twig_Extension
 
         if (AccountType::CASH === $type) {
             $txt = '<span class="text-success">(' . trans('firefly.cash') . ')</span>';
-            $cache->store($txt);
 
             return $txt;
         }
 
         $txt = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$transactionId]));
-        $cache->store($txt);
 
         return $txt;
     }
@@ -343,13 +279,6 @@ class Transaction extends Twig_Extension
      */
     public function hasAttachments(TransactionModel $transaction): string
     {
-        $cache = new SingleCacheProperties;
-        $cache->addProperty('attachments');
-        $cache->addProperty($transaction->id);
-        $cache->addProperty($transaction->updated_at);
-        if ($cache->has()) {
-            return $cache->get();
-        }
         $journalId = intval($transaction->journal_id);
         $count     = Attachment::whereNull('deleted_at')
                                ->where('attachable_type', 'FireflyIII\Models\TransactionJournal')
@@ -357,13 +286,11 @@ class Transaction extends Twig_Extension
                                ->count();
         if ($count > 0) {
             $res = sprintf('<i class="fa fa-paperclip" title="%s"></i>', Lang::choice('firefly.nr_of_attachments', $count, ['count' => $count]));
-            $cache->store($res);
 
             return $res;
         }
 
         $res = '';
-        $cache->store($res);
 
         return $res;
     }
@@ -375,14 +302,6 @@ class Transaction extends Twig_Extension
      */
     public function icon(TransactionModel $transaction): string
     {
-        $cache = new SingleCacheProperties;
-        $cache->addProperty('icon');
-        $cache->addProperty($transaction->id);
-        $cache->addProperty($transaction->updated_at);
-        if ($cache->has()) {
-            return $cache->get();
-        }
-
         switch ($transaction->transaction_type_type) {
             case TransactionType::WITHDRAWAL:
                 $txt = sprintf('<i class="fa fa-long-arrow-left fa-fw" title="%s"></i>', trans('firefly.withdrawal'));
@@ -403,7 +322,6 @@ class Transaction extends Twig_Extension
                 $txt = '';
                 break;
         }
-        $cache->store($txt);
 
         return $txt;
     }
@@ -415,20 +333,10 @@ class Transaction extends Twig_Extension
      */
     public function isReconciled(TransactionModel $transaction): string
     {
-        $cache = new SingleCacheProperties;
-        $cache->addProperty('transaction-reconciled');
-        $cache->addProperty($transaction->id);
-        $cache->addProperty($transaction->updated_at);
-        $cache->addProperty($transaction->reconciled);
-        if ($cache->has()) {
-            return $cache->get();
-        }
         $icon = '';
         if (1 === intval($transaction->reconciled)) {
             $icon = '<i class="fa fa-check"></i>';
         }
-
-        $cache->store($icon);
 
         return $icon;
     }
@@ -440,25 +348,14 @@ class Transaction extends Twig_Extension
      */
     public function isSplit(TransactionModel $transaction): string
     {
-        $cache = new SingleCacheProperties;
-        $cache->addProperty('split');
-        $cache->addProperty($transaction->id);
-        $cache->addProperty($transaction->updated_at);
-        if ($cache->has()) {
-            return $cache->get();
-        }
         $journalId = intval($transaction->journal_id);
         $count     = TransactionModel::where('transaction_journal_id', $journalId)->whereNull('deleted_at')->count();
         if ($count > 2) {
             $res = '<i class="fa fa-fw fa-share-alt" aria-hidden="true"></i>';
-            $cache->store($res);
-
             return $res;
         }
 
         $res = '';
-        $cache->store($res);
-
         return $res;
     }
 
@@ -469,13 +366,6 @@ class Transaction extends Twig_Extension
      */
     public function sourceAccount(TransactionModel $transaction): string
     {
-        $cache = new SingleCacheProperties;
-        $cache->addProperty('transaction-source');
-        $cache->addProperty($transaction->id);
-        $cache->addProperty($transaction->updated_at);
-        if ($cache->has()) {
-            return $cache->get();
-        }
         if (TransactionType::RECONCILIATION === $transaction->transaction_type_type) {
             return '&mdash;';
         }
@@ -510,14 +400,11 @@ class Transaction extends Twig_Extension
 
         if (AccountType::CASH === $type) {
             $txt = '<span class="text-success">(' . trans('firefly.cash') . ')</span>';
-            $cache->store($txt);
 
             return $txt;
         }
 
         $txt = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$transactionId]));
-        $cache->store($txt);
-
         return $txt;
     }
 }

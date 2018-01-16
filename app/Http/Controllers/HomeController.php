@@ -202,8 +202,8 @@ class HomeController extends Controller
                    'rules.select', 'search.search', 'test-flash', 'transactions.link.delete', 'transactions.link.switch',
                    'two-factor.lost', 'reports.options', 'debug', 'import.create-job', 'import.download', 'import.start', 'import.status.json',
                    'preferences.delete-code', 'rules.test-triggers', 'piggy-banks.remove-money', 'piggy-banks.add-money',
-                   'accounts.reconcile.transactions', 'accounts.reconcile.overview','export.download',
-                   'transactions.clone','two-factor.index'
+                   'accounts.reconcile.transactions', 'accounts.reconcile.overview', 'export.download',
+                   'transactions.clone', 'two-factor.index',
         ];
         $return = '&nbsp;';
         /** @var Route $route */
@@ -223,6 +223,7 @@ class HomeController extends Controller
                 }
             }
         }
+
         return $return;
     }
 

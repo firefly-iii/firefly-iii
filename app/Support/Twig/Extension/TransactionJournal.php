@@ -25,7 +25,6 @@ namespace FireflyIII\Support\Twig\Extension;
 use FireflyIII\Models\Transaction as TransactionModel;
 use FireflyIII\Models\TransactionJournal as JournalModel;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Support\SingleCacheProperties;
 use Twig_Extension;
 
 /**
@@ -40,14 +39,6 @@ class TransactionJournal extends Twig_Extension
      */
     public function totalAmount(JournalModel $journal): string
     {
-        $cache = new SingleCacheProperties;
-        $cache->addProperty('total-amount');
-        $cache->addProperty($journal->id);
-        $cache->addProperty($journal->updated_at);
-        if ($cache->has()) {
-            return $cache->get();
-        }
-
         $transactions = $journal->transactions()->where('amount', '>', 0)->get();
         $totals       = [];
         $type         = $journal->transactionType->type;
@@ -84,7 +75,6 @@ class TransactionJournal extends Twig_Extension
             $array[] = app('amount')->formatAnything($total['currency'], $total['amount']);
         }
         $txt = join(' / ', $array);
-        $cache->store($txt);
 
         return $txt;
     }

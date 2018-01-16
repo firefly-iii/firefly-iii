@@ -33,6 +33,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Preferences;
 
 /**
  * Is capable of storing individual ImportJournal objects.
@@ -250,6 +251,7 @@ class ImportStorage
             Log::info('Will apply rules to this journal.');
             $this->applyRules($journal);
         }
+        Preferences::setForUser($this->job->user, 'lastActivity', microtime());
 
         if (!(true === $this->applyRules)) {
             Log::info('Will NOT apply rules to this journal.');
@@ -258,7 +260,7 @@ class ImportStorage
 
         // match bills if config calls for it.
         if (true === $this->matchBills) {
-            Log::info('Cannot match bills (yet).');
+            Log::info('Will match bills.');
             $this->matchBills($journal);
         }
 
