@@ -6,14 +6,7 @@ set -euo pipefail
 echo "In build.sh"
 
 cd /opt/app
-
-if [ -f /opt/app/.env.sandstorm ] ; then
-	echo "No sandstorm env file, copy."
-	cp .env.sandstorm .env
-else
-	echo "Sandstorm env file exists already."
-fi
-
+cp .env.sandstorm .env
 
 if [ -f /opt/app/composer.json ] ; then
     if [ ! -f composer.phar ] ; then
