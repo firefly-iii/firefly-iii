@@ -36,7 +36,7 @@ function showHelp(e) {
     $('#helpBody').html('<i class="fa fa-refresh fa-spin"></i>');
     $('#helpModal').modal('show');
     $('#helpTitle').html(helpPageTitle);
-    $.getJSON('helpx/' + encodeURI(route)).done(function (data) {
+    $.getJSON('help/' + encodeURI(route)).done(function (data) {
         $('#helpBody').html(data.html);
     }).fail(function () {
         $('#helpBody').html('<p class="text-danger">' + noHelpForPage + '</p>');
