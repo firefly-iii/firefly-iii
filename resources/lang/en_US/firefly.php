@@ -181,7 +181,7 @@ return [
     'admin_update_check_now_title'               => 'Check for updates now',
     'admin_update_check_now_explain'             => 'If you press the button, Firefly III will see if your current version is the latest.',
     'check_for_updates_button'                   => 'Check now!',
-    'update_new_version_alert'                   => 'A new version is available. You are running v:your_version, the latest version is v:new_version which was released on :date.',
+    'update_new_version_alert'                   => 'A new version if Firefly III is available. You are running v:your_version, the latest version is v:new_version which was released on :date.',
     'update_current_version_alert'               => 'You are running v:version, which is the latest available release.',
     'update_newer_version_alert'                 => 'You are running v:your_version, which is newer than the latest release, v:new_version.',
     'update_check_error'                         => 'An error occurred while checking for updates. Please view the log files.',
@@ -618,8 +618,8 @@ return [
     'between_amounts'                          => 'between :low and :high.',
     'repeats'                                  => 'Repeats',
     'connected_journals'                       => 'Connected transactions',
-    'auto_match_on'                            => 'Automatically matched by Firefly',
-    'auto_match_off'                           => 'Not automatically matched by Firefly',
+    'auto_match_on'                            => 'Automatically matched by Firefly III',
+    'auto_match_off'                           => 'Not automatically matched by Firefly III',
     'next_expected_match'                      => 'Next expected match',
     'delete_bill'                              => 'Delete bill ":name"',
     'deleted_bill'                             => 'Deleted bill ":name"',
@@ -779,7 +779,7 @@ return [
     'notes'                                    => 'Notes',
 
     // new user:
-    'welcome'                                  => 'Welcome to Firefly!',
+    'welcome'                                  => 'Welcome to Firefly III!',
     'submit'                                   => 'Submit',
     'getting_started'                          => 'Getting started',
     'to_get_started'                           => 'It is good to see you have successfully installed Firefly III. To get started with this tool please enter your bank\'s name and the balance of your main checking account. Do not worry yet if you have multiple accounts. You can add those later. It\'s just that Firefly III needs something to start with.',
