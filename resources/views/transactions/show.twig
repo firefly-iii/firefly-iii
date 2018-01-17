@@ -345,8 +345,9 @@
                                                 #{{ link.source.id }}: {{ link.source.description }}</a>
                                             ({{ link.source|journalTotalAmount }})
                                         {% endif %}
-                                        {% if link.comment != "" %}
-                                            <br/><em>{{ link.comment }}</em>
+                                        {% if link.notes.count == 1 %}
+                                            <br/>
+                                            {{ link.notes.first.text|markdown }}
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -459,9 +460,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="comments" class="col-sm-2 control-label">{{ 'comments'|_ }}</label>
+                            <label for="notes" class="col-sm-2 control-label">{{ 'notes'|_ }}</label>
                             <div class="col-sm-10">
-                                <textarea id="comments" name="comments" class="form-control"></textarea>
+                                <textarea id="notes" name="notes" class="form-control"></textarea>
                             </div>
                         </div>
 

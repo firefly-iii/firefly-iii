@@ -129,7 +129,6 @@ class Transaction extends Twig_Extension
         if (isset($transaction->transaction_journal_budget_id)) {
             $name = app('steam')->tryDecrypt($transaction->transaction_journal_budget_name);
             $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$transaction->transaction_journal_budget_id]), $name, $name);
-            $cache->store($txt);
 
             return $txt;
         }
@@ -138,7 +137,6 @@ class Transaction extends Twig_Extension
         if (isset($transaction->transaction_budget_id)) {
             $name = app('steam')->tryDecrypt($transaction->transaction_budget_name);
             $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$transaction->transaction_budget_id]), $name, $name);
-            $cache->store($txt);
 
             return $txt;
         }

@@ -81,6 +81,8 @@ class CategoryControllerTest extends TestCase
         $category   = factory(Category::class)->make();
         $repository->shouldReceive('getCategories')->andReturn(new Collection([$category]));
         $repository->shouldReceive('spentInPeriod')->andReturn('-1');
+        $repository->shouldReceive('earnedInPeriod')->andReturn('1');
+
 
         $this->be($this->user());
         $response = $this->get(route('report-data.category.operations', ['1', '20120101', '20120131']));
