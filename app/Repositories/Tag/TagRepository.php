@@ -126,7 +126,7 @@ class TagRepository implements TagRepositoryInterface
     public function findByTag(string $tag): Tag
     {
         $tags = $this->user->tags()->get();
-        // @var Tag $tag
+        /** @var Tag $databaseTag */
         foreach ($tags as $databaseTag) {
             if ($databaseTag->tag === $tag) {
                 return $databaseTag;

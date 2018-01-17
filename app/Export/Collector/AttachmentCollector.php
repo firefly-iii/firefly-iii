@@ -52,7 +52,7 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
      */
     public function __construct()
     {
-        // @var AttachmentRepositoryInterface repository
+        /** @var AttachmentRepositoryInterface repository */
         $this->repository = app(AttachmentRepositoryInterface::class);
         // make storage:
         $this->uploadDisk = Storage::disk('upload');

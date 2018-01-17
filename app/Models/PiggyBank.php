@@ -158,7 +158,7 @@ class PiggyBank extends Model
     public function leftOnAccount(Carbon $date): string
     {
         $balance = Steam::balanceIgnoreVirtual($this->account, $date);
-        // @var PiggyBank $p
+        /** @var PiggyBank $piggyBank */
         foreach ($this->account->piggyBanks as $piggyBank) {
             $currentAmount = $piggyBank->currentRelevantRep()->currentamount ?? '0';
 
