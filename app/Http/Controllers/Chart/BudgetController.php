@@ -106,11 +106,15 @@ class BudgetController extends Controller
         $current          = app('navigation')->startOfPeriod($current, $step);
 
         while ($end >= $current) {
-            $currentEnd        = app('navigation')->endOfPeriod($current, $step);
+            $currentEnd = app('navigation')->endOfPeriod($current, $step);
+            if ($step === '1Y') {
+                $currentEnd->subDay();
+            }
             $spent             = $this->repository->spentInPeriod($budgetCollection, new Collection, $current, $currentEnd);
             $label             = app('navigation')->periodShow($current, $step);
-            $chartData[$label] = floatval(bcmul($spent,'-1'));
-            $current           = app('navigation')->addPeriod($current, $step, 1);
+            $chartData[$label] = floatval(bcmul($spent, '-1'));
+            $current           = clone $currentEnd;
+            $current->addDay();
         }
 
         $data = $this->generator->singleSet(strval(trans('firefly.spent')), $chartData);
