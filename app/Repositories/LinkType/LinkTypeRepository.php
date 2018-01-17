@@ -24,6 +24,7 @@ namespace FireflyIII\Repositories\LinkType;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\LinkType;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\User;
@@ -188,9 +189,21 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
             $link->source()->associate($right);
             $link->destination()->associate($left);
         }
-
-        $link->comment = $link['comments'] ?? null;
         $link->save();
+
+        // make note in noteable:
+        if (strlen($information['notes']) > 0) {
+            $dbNote = $link->notes()->first();
+            if (null === $dbNote) {
+                $dbNote = new Note();
+                $dbNote->noteable()->associate($link);
+            }
+            $dbNote->text = trim($information['notes']);
+            $dbNote->save();
+        }
+
+        //$link->comment = $link['notes'] ?? null;
+
 
         return $link;
     }
