@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 return [
+    'html_language' => 'ru',
     'locale'        => 'ru, Russian, ru_RU, ru_RU.utf8, ru_RU.UTF-8',
     'month'         => '%B %Y',
     'month_and_day' => '%e %B %Y',
