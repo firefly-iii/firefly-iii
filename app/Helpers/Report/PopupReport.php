@@ -136,7 +136,7 @@ class PopupReport implements PopupReportInterface
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($attributes['accounts'])->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setRange($attributes['startDate'], $attributes['endDate'])
+                  ->setRange($attributes['startDate'], $attributes['endDate'])->withOpposingAccount()
                   ->setCategory($category);
         $journals = $collector->getJournals();
 

@@ -59,16 +59,16 @@ class ReportController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                // @var AccountRepositoryInterface $repository
+                /** @var AccountRepositoryInterface accountRepository */
                 $this->accountRepository = app(AccountRepositoryInterface::class);
 
-                // @var BudgetRepositoryInterface $repository
+                /** @var BudgetRepositoryInterface budgetRepository */
                 $this->budgetRepository = app(BudgetRepositoryInterface::class);
 
-                // @var CategoryRepositoryInterface categoryRepository
+                /** @var CategoryRepositoryInterface categoryRepository */
                 $this->categoryRepository = app(CategoryRepositoryInterface::class);
 
-                // @var PopupReportInterface popupHelper
+                /** @var PopupReportInterface popupHelper */
                 $this->popupHelper = app(PopupReportInterface::class);
 
                 return $next($request);
