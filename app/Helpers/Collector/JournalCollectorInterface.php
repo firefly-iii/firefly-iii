@@ -79,8 +79,6 @@ interface JournalCollectorInterface
      */
     public function getPaginatedJournals(): LengthAwarePaginator;
 
-    public function getQuery(): EloquentBuilder;
-
     /**
      * @param string $filter
      *

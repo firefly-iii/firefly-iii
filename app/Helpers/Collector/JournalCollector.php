@@ -246,14 +246,13 @@ class JournalCollector implements JournalCollectorInterface
         $this->run = true;
 
         // find query set in cache.
-        $hash  = hash('sha256', $this->query->toSql());
+        $hash  = hash('sha256', $this->query->toSql() . serialize($this->query->getBindings()));
         $key   = 'query-' . substr($hash, -8);
         $cache = new CacheProperties;
         $cache->addProperty($key);
         if ($cache->has()) {
             Log::debug(sprintf('Return cache of query with ID "%s".', $key));
-
-            return $cache->get(); // @codeCoverageIgnore
+            //return $cache->get(); // @codeCoverageIgnore
         }
 
         /** @var Collection $set */
@@ -297,14 +296,6 @@ class JournalCollector implements JournalCollectorInterface
         $journals = new LengthAwarePaginator($set, $this->count, $this->limit, $this->page);
 
         return $journals;
-    }
-
-    /**
-     * @return EloquentBuilder
-     */
-    public function getQuery(): EloquentBuilder
-    {
-        return $this->query;
     }
 
     /**
