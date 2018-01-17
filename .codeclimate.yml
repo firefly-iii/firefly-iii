@@ -1,0 +1,12 @@
+--- 
+exclude_patterns: 
+  - public/lib/
+  - public/js/lib/
+  - public/fonts/
+  - public/css/jquery-ui/
+  - public/css/bootstrap-multiselect.css
+  - public/css/bootstrap-sortable.css
+  - public/css/bootstrap-tagsinput.css
+  - public/css/daterangepicker.css
+  - public/css/google-fonts.css
+  - .sandstorm/
