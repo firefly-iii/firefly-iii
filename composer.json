@@ -1,129 +1,126 @@
 {
-  "name": "grumpydictator/firefly-iii",
-  "description": "Firefly III: a personal finances manager.",
-  "keywords": [
-    "finance",
-    "finances",
-    "manager",
-    "management",
-    "euro",
-    "dollar",
-    "laravel",
-    "money",
-    "currency",
-    "financials",
-    "financial",
-    "budgets",
-    "administration",
-    "tool",
-    "tooling",
-    "help",
-    "helper",
-    "assistant",
-    "planning",
-    "organizing",
-    "bills",
-    "personal finance",
-    "budgets",
-    "budgeting",
-    "budgeting tool",
-    "budgeting application",
-    "transactions",
-    "self hosted",
-    "self-hosted",
-    "transfers",
-    "management"
-  ],
-  "license": "GPL-3.0",
-  "homepage": "https://github.com/firefly-iii/firefly-iii",
-  "type": "project",
-  "authors": [
-    {
-      "name": "James Cole",
-      "email": "thegrumpydictator@gmail.com",
-      "homepage": "https://github.com/firefly-iii",
-      "role": "Developer"
-    }
-  ],
-  "require": {
-    "php": ">=7.1.0",
-    "ext-bcmath": "*",
-    "ext-curl": "*",
-    "ext-gd": "*",
-    "ext-intl": "*",
-    "ext-mbstring": "*",
-    "ext-zip": "*",
-    "bacon/bacon-qr-code": "1.*",
-    "davejamesmiller/laravel-breadcrumbs": "4.*",
-    "doctrine/dbal": "2.*",
-    "fideloper/proxy": "3.*",
-    "laravel/framework": "5.5.*",
-    "laravelcollective/html": "5.5.*",
-    "league/commonmark": "0.*",
-    "league/csv": "9.*",
-    "pragmarx/google2fa": "2.*",
-    "pragmarx/google2fa-laravel": "^0.1.4",
-    "rcrowe/twigbridge": "0.9.*",
-    "rmccue/requests": "1.*",
-    "twig/twig": "1.*",
-    "watson/validating": "3.*"
-  },
-  "require-dev": {
-    "barryvdh/laravel-debugbar": "3.*",
-    "barryvdh/laravel-ide-helper": "2.*",
-    "filp/whoops": "2.*",
-    "fzaninotto/faker": "1.*",
-    "mockery/mockery": "^1.0",
-    "php-coveralls/php-coveralls": "^2.0",
-    "phpunit/phpunit": "^6.0"
-  },
-  "autoload": {
-    "classmap": [
-      "database/seeds",
-      "database/factories"
-    ],
-    "psr-4": {
-      "FireflyIII\\": "app/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Tests\\": "tests/"
-    }
-  },
-  "extra": {
-    "laravel": {
-      "dont-discover": [
-      ]
-    }
-  },
-  "scripts": {
-    "pre-install-cmd": [
-      "@php -r \"if (!(getenv('DYNO'))===false){file_exists('.env') || copy('.env.heroku', '.env');}\""
-    ],
-    "post-root-package-install": [
-      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-    ],
-    "post-create-project-cmd": [
-      "@php artisan key:generate"
-    ],
-    "post-autoload-dump": [
-      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
-    ],
-    "post-update-cmd": [
-      "php artisan firefly:upgrade-database",
-      "php artisan firefly:verify",
-      "php artisan firefly:instructions update",
-      "php artisan optimize"
-    ],
-    "post-install-cmd": [
-      "php artisan optimize",
-      "php artisan firefly:instructions install"
-    ]
-  },
-  "config": {
-    "preferred-install": "dist",
-    "sort-packages": true,
-    "optimize-autoloader": true
-  }
+	"name": "grumpydictator/firefly-iii",
+	"description": "Firefly III: a personal finances manager.",
+	"keywords": [
+		"finance",
+		"finances",
+		"manager",
+		"management",
+		"euro",
+		"dollar",
+		"laravel",
+		"money",
+		"currency",
+		"financials",
+		"financial",
+		"budgets",
+		"administration",
+		"tool",
+		"tooling",
+		"help",
+		"helper",
+		"assistant",
+		"planning",
+		"organizing",
+		"bills",
+		"personal finance",
+		"budgets",
+		"budgeting",
+		"budgeting tool",
+		"budgeting application",
+		"transactions",
+		"self hosted",
+		"self-hosted",
+		"transfers",
+		"management"
+	],
+	"license": "GPL-3.0-or-later",
+	"homepage": "https://github.com/firefly-iii/firefly-iii",
+	"type": "project",
+	"authors": [{
+		"name": "James Cole",
+		"email": "thegrumpydictator@gmail.com",
+		"homepage": "https://github.com/firefly-iii",
+		"role": "Developer"
+	}],
+	"require": {
+		"php": ">=7.1.0",
+		"ext-bcmath": "*",
+		"ext-curl": "*",
+		"ext-gd": "*",
+		"ext-intl": "*",
+		"ext-mbstring": "*",
+		"ext-zip": "*",
+		"bacon/bacon-qr-code": "1.*",
+		"davejamesmiller/laravel-breadcrumbs": "4.*",
+		"doctrine/dbal": "2.*",
+		"fideloper/proxy": "3.*",
+		"laravel/framework": "5.5.*",
+		"laravelcollective/html": "5.5.*",
+		"league/commonmark": "0.*",
+		"league/csv": "9.*",
+		"pragmarx/google2fa": "2.*",
+		"pragmarx/google2fa-laravel": "^0.1.4",
+		"rcrowe/twigbridge": "0.9.*",
+		"rmccue/requests": "1.*",
+		"twig/twig": "1.*",
+		"watson/validating": "3.*"
+	},
+	"require-dev": {
+		"barryvdh/laravel-debugbar": "3.*",
+		"barryvdh/laravel-ide-helper": "2.*",
+		"filp/whoops": "2.*",
+		"fzaninotto/faker": "1.*",
+		"mockery/mockery": "^1.0",
+		"php-coveralls/php-coveralls": "^2.0",
+		"phpunit/phpunit": "^6.0"
+	},
+	"autoload": {
+		"classmap": [
+			"database/seeds",
+			"database/factories"
+		],
+		"psr-4": {
+			"FireflyIII\\": "app/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Tests\\": "tests/"
+		}
+	},
+	"extra": {
+		"laravel": {
+			"dont-discover": []
+		}
+	},
+	"scripts": {
+		"pre-install-cmd": [
+			"@php -r \"if (!(getenv('DYNO'))===false){file_exists('.env') || copy('.env.heroku', '.env');}\""
+		],
+		"post-root-package-install": [
+			"@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+		],
+		"post-create-project-cmd": [
+			"@php artisan key:generate"
+		],
+		"post-autoload-dump": [
+			"Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
+		],
+		"post-update-cmd": [
+			"php artisan firefly:upgrade-database",
+			"php artisan firefly:verify",
+			"php artisan firefly:instructions update",
+			"php artisan optimize"
+		],
+		"post-install-cmd": [
+			"php artisan optimize",
+			"php artisan firefly:instructions install"
+		]
+	},
+	"config": {
+		"preferred-install": "dist",
+		"sort-packages": true,
+		"optimize-autoloader": true
+	}
 }
