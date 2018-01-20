@@ -50,7 +50,6 @@ class PrerequisitesController extends Controller
                 return $next($request);
             }
         );
-        $this->middleware(IsDemoUser::class);
     }
 
     /**

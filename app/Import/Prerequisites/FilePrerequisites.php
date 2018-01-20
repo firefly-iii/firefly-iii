@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Prerequisites;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
@@ -62,9 +63,13 @@ class FilePrerequisites implements PrerequisitesInterface
      * True if prerequisites. False if not.
      *
      * @return bool
+     * @throws FireflyException
      */
     public function hasPrerequisites(): bool
     {
+        if($this->user->hasRole('demo')) {
+            throw new FireflyException('Apologies, the demo user cannot import files.');
+        }
         return false;
     }
 
