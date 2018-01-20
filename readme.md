@@ -42,7 +42,7 @@ others try to increase their current cashflow. There are tons of ways to save an
 
 By keeping track of your expenses and your income you can budget accordingly and save money. Stop living from paycheck to paycheck but give yourself the financial wiggle room you need.
 
-You can read more about this on [the website](https://firefly-iii.org/).
+You can read more about this on [the website](https://firefly-iii.org/) and the [official documentation](http://firefly-iii.readthedocs.io/en/latest/index.html).
 
 ### Features
 Most importantly...
@@ -89,8 +89,8 @@ This application is for people who want to track their finances, keep an eye on 
 ## Get started
 There are many ways to run Firefly III
 1. There is a [demo site](https://demo.firefly-iii.org) with an example financial administration already present.
-2. You can [install it on your server](https://firefly-iii.org/using-installing.html).
-3. You can [run it using Docker](https://firefly-iii.org/using-docker.html).
+2. You can [install it on your server](http://firefly-iii.readthedocs.io/en/latest/installation/server.html).
+3. You can [run it using Docker](http://firefly-iii.readthedocs.io/en/latest/installation/docker.html).
 4. You can [deploy to Heroku](https://heroku.com/deploy?template=https://github.com/firefly-iii/firefly-iii/tree/master)
 5. You can [deploy to Sandstorm.io](https://apps.sandstorm.io/app/uws252ya9mep4t77tevn85333xzsgrpgth8q4y1rhknn1hammw70)
 6. You can [install it using Softaculous](https://softaculous.com/). These guys even have made [another demo site](http://www.softaculous.com/softaculous/apps/others/Firefly_III)!
