@@ -61,8 +61,8 @@ But actually, it features:
   * Shared [asset accounts](http://firefly-iii.readthedocs.io/en/latest/concepts/accounts.html) ([household accounts](http://firefly-iii.readthedocs.io/en/latest/concepts/accounts.html))
   * Saving accounts
   * Credit cards
-* It's possible to create, change and manage money using _[budgets](http://firefly-iii.readthedocs.io/en/latest/concepts/budgets.html)_
-* Organize transactions using categories
+* It's possible to create, change and manage money using [budgets](http://firefly-iii.readthedocs.io/en/latest/concepts/budgets.html)
+* Organize transactions using [categories](http://firefly-iii.readthedocs.io/en/latest/concepts/categories.html)
 * Save towards a goal using [piggy banks](http://firefly-iii.readthedocs.io/en/latest/advanced/piggies.html)
 * Predict and anticipate [bills](http://firefly-iii.readthedocs.io/en/latest/advanced/bills.html)
 * View income / expense [reports](http://firefly-iii.readthedocs.io/en/latest/advanced/reports.html)
