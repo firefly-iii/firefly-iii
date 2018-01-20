@@ -47,7 +47,7 @@ You can read more about this on [the website](https://firefly-iii.org/).
 ### Features
 Most importantly...
 
-* Firefly runs on your own server, so you are fully in control of your data. It will not contact other sites or servers;
+* Firefly III runs on your own server, so you are fully in control of your data. It will not contact other sites or servers;
 * You can import from over 2500 financial providers, in 55 countries when you enable the [Spectre API](https://www.saltedge.com/solutions_for_finapps);
 * You can import CSV files from practically any bank;
 * If you feel you’re missing something you can just ask me and I’ll add it!
