@@ -2,6 +2,38 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.7.0] - 2018-01-31
+### Added
+- Support for Russian
+- Support for the Spectre API (Salt Edge)
+- Many strings now translatable thanks to @Nik-vr (#1118, #1116, #1109, )
+- Many buttons to quickly create stuff
+- Sum of tables in reports, requested by @MacPaille (#1106)
+- Future versions of Firefly III will notify you there is a new version, as suggested by @8bitgentleman in #1050
+- Improved net worth box #1101 (@Nik-vr)
+- Nice dropdown in transaction list #1082
+
+
+### Changed
+- Whole new [read me file](https://github.com/firefly-iii/firefly-iii/blob/master/readme.md), [new end user documentation](https://firefly-iii.readthedocs.io/en/latest/) and an [updated website](https://www.firefly-iii.org/)!
+- Many charts and info-blocks now scale property (#989 and #1040)
+
+### Fixed
+- Charts work in IE thanks to @devlearner (#1107)
+- Various fixes in import routine
+- Bug that left charts empty (#1088), reported by various users amongst which @jinformatique
+- #1124, as reported by @gavu
+- #1125, as reported by @gavu
+- #1126, as reported by @gavu
+- #1131, as reported by @dp87
+- #1129, as reported by @gavu
+- #1132, as reported by @gavu
+- Issue with cache in Sandstorm (#1130)
+- #1134
+
+### Security
+- Removed many access rights from the demo user
+
 ## [4.6.13] - 2018-01-06
 ### Added
 - [Issue 1074](https://github.com/firefly-iii/firefly-iii/issues/1074), suggested by [MacPaille](https://github.com/MacPaille)
