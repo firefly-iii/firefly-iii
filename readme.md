@@ -42,7 +42,7 @@ others try to increase their current cashflow. There are tons of ways to save an
 
 By keeping track of your expenses and your income you can budget accordingly and save money. Stop living from paycheck to paycheck but give yourself the financial wiggle room you need.
 
-You can read more about this on [the website](https://firefly-iii.org/) and the [official documentation](http://firefly-iii.readthedocs.io/en/latest/index.html).
+You can read more about this in the [official documentation](http://firefly-iii.readthedocs.io/en/latest/index.html).
 
 ### Features
 Most importantly...
