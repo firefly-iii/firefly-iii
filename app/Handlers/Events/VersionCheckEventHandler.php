@@ -59,7 +59,7 @@ class VersionCheckEventHandler
         $lastCheckTime = FireflyConfig::get('last_update_check', time());
         $now           = time();
         if ($now - $lastCheckTime->data < 604800) {
-            Log::debug(sprintf('Checked for updates less than a week ago (on %s).', date('Y-m-d H:i:s',$lastCheckTime->data)));
+            Log::debug(sprintf('Checked for updates less than a week ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data)));
 
             return;
 
@@ -91,6 +91,7 @@ class VersionCheckEventHandler
         } catch (FireflyException $e) {
             Log::error(sprintf('Could not check for updates: %s', $e->getMessage()));
         }
+        $string = 'no result: ' . $check;
         if ($check === -2) {
             $string = strval(trans('firefly.update_check_error'));
         }
@@ -103,6 +104,9 @@ class VersionCheckEventHandler
                     ['your_version' => $current, 'new_version' => $first->getTitle(), 'date' => $first->getUpdated()->formatLocalized($monthAndDayFormat)]
                 )
             );
+        }
+        if ($check !== 0) {
+            // flash info
             session()->flash('info', $string);
         }
 
