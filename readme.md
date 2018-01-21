@@ -103,7 +103,7 @@ Make sure you check for updates regularly. Your Firefly III instance will ask yo
 ## Contribute
 Your help is always welcome! Feel free to open issues, ask questions, talk about it and discuss this tool. I've create several social media accounts and I invite you to follow them, tweet at them and post to them. There's [reddit](https://www.reddit.com/r/FireflyIII/), [Twitter](https://twitter.com/Firefly_III) and [Facebook](https://www.facebook.com/FireflyIII/) just to start. It's not very active but it's a start!
 
-Of course there are some [contributing guidelines](https://github.com/firefly-iii/firefly-iii/blob/master/.github/CONTRIBUTING.md) and a [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/master/code_of_conduct.md), which I invite you to check out.
+Of course there are some [contributing guidelines](https://github.com/firefly-iii/firefly-iii/blob/master/.github/contributing.md) and a [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/master/.github/code_of_conduct.md), which I invite you to check out.
 
 ## The goal
 Firefly III should give you **insight** into and **control** over your finances. Money should be useful, not scary. You should be able to *see* where it is going, to *feel* your expenses and to... wow, I'm going overboard with this aren't I?
