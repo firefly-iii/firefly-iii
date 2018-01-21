@@ -6,30 +6,30 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Support for Russian
 - Support for the Spectre API (Salt Edge)
-- Many strings now translatable thanks to @Nik-vr (#1118, #1116, #1109, )
+- Many strings now translatable thanks to [Nik-vr](https://github.com/Nik-vr) ([issue 1118](https://github.com/firefly-iii/firefly-iii/issues/1118), [issue 1116](https://github.com/firefly-iii/firefly-iii/issues/1116), [issue 1109](https://github.com/firefly-iii/firefly-iii/issues/1109), )
 - Many buttons to quickly create stuff
-- Sum of tables in reports, requested by @MacPaille (#1106)
-- Future versions of Firefly III will notify you there is a new version, as suggested by @8bitgentleman in #1050
-- Improved net worth box #1101 (@Nik-vr)
-- Nice dropdown in transaction list #1082
+- Sum of tables in reports, requested by [MacPaille](https://github.com/MacPaille) ([issue 1106](https://github.com/firefly-iii/firefly-iii/issues/1106))
+- Future versions of Firefly III will notify you there is a new version, as suggested by [8bitgentleman](https://github.com/8bitgentleman) in [issue 1050](https://github.com/firefly-iii/firefly-iii/issues/1050)
+- Improved net worth box [issue 1101](https://github.com/firefly-iii/firefly-iii/issues/1101) ([Nik-vr](https://github.com/Nik-vr))
+- Nice dropdown in transaction list [issue 1082](https://github.com/firefly-iii/firefly-iii/issues/1082)
 
 
 ### Changed
 - Whole new [read me file](https://github.com/firefly-iii/firefly-iii/blob/master/readme.md), [new end user documentation](https://firefly-iii.readthedocs.io/en/latest/) and an [updated website](https://www.firefly-iii.org/)!
-- Many charts and info-blocks now scale property (#989 and #1040)
+- Many charts and info-blocks now scale property ([issue 989](https://github.com/firefly-iii/firefly-iii/issues/989) and [issue 1040](https://github.com/firefly-iii/firefly-iii/issues/1040))
 
 ### Fixed
-- Charts work in IE thanks to @devlearner (#1107)
+- Charts work in IE thanks to [devlearner](https://github.com/devlearner) ([issue 1107](https://github.com/firefly-iii/firefly-iii/issues/1107))
 - Various fixes in import routine
-- Bug that left charts empty (#1088), reported by various users amongst which @jinformatique
-- #1124, as reported by @gavu
-- #1125, as reported by @gavu
-- #1126, as reported by @gavu
-- #1131, as reported by @dp87
-- #1129, as reported by @gavu
-- #1132, as reported by @gavu
-- Issue with cache in Sandstorm (#1130)
-- #1134
+- Bug that left charts empty ([issue 1088](https://github.com/firefly-iii/firefly-iii/issues/1088)), reported by various users amongst which [jinformatique](https://github.com/jinformatique)
+- [Issue 1124](https://github.com/firefly-iii/firefly-iii/issues/1124), as reported by [gavu](https://github.com/gavu)
+- [Issue 1125](https://github.com/firefly-iii/firefly-iii/issues/1125), as reported by [gavu](https://github.com/gavu)
+- [Issue 1126](https://github.com/firefly-iii/firefly-iii/issues/1126), as reported by [gavu](https://github.com/gavu)
+- [Issue 1131](https://github.com/firefly-iii/firefly-iii/issues/1131), as reported by [dp87](https://github.com/dp87)
+- [Issue 1129](https://github.com/firefly-iii/firefly-iii/issues/1129), as reported by [gavu](https://github.com/gavu)
+- [Issue 1132](https://github.com/firefly-iii/firefly-iii/issues/1132), as reported by [gavu](https://github.com/gavu)
+- Issue with cache in Sandstorm ([issue 1130](https://github.com/firefly-iii/firefly-iii/issues/1130))
+- [Issue 1134](https://github.com/firefly-iii/firefly-iii/issues/1134)
 
 ### Security
 - Removed many access rights from the demo user
