@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\User;
 
+use FireflyIII\Models\Role;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
@@ -30,12 +31,28 @@ use Illuminate\Support\Collection;
  */
 interface UserRepositoryInterface
 {
+
+    /**
+     * @param string $name
+     * @param string $displayName
+     * @param string $description
+     *
+     * @return Role
+     */
+    public function createRole(string $name, string $displayName, string $description): Role;
     /**
      * Returns a collection of all users.
      *
      * @return Collection
      */
     public function all(): Collection;
+
+    /**
+     * @param string $role
+     *
+     * @return Role|null
+     */
+    public function getRole(string $role): ?Role;
 
     /**
      * Gives a user a role.

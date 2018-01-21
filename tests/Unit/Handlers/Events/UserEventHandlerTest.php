@@ -24,11 +24,17 @@ namespace Tests\Unit\Handlers\Events;
 
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
+use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Handlers\Events\UserEventHandler;
+use FireflyIII\Mail\ConfirmEmailChangeMail;
 use FireflyIII\Mail\RegisteredUser as RegisteredUserMail;
 use FireflyIII\Mail\RequestedNewPassword as RequestedNewPasswordMail;
+use FireflyIII\Mail\UndoEmailChangeMail;
+use FireflyIII\Models\Role;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Mail;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -56,6 +62,127 @@ class UserEventHandlerTest extends TestCase
         $listener->attachUserRole($event);
         $this->assertTrue(true);
     }
+
+    /**
+     * @covers \FireflyIII\Handlers\Events\UserEventHandler::checkSingleUserIsAdmin
+     */
+    public function testCheckSingleUserIsAdminMulti()
+    {
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $user       = $this->user();
+        $event      = new Login($user, true);
+        $listener   = new UserEventHandler();
+
+        // mock stuff
+        $repository->shouldReceive('count')->once()->andReturn(2);
+
+
+        $listener->checkSingleUserIsAdmin($event);
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @covers \FireflyIII\Handlers\Events\UserEventHandler::checkSingleUserIsAdmin
+     */
+    public function testCheckSingleUserIsAdminNoRole()
+    {
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $user       = $this->emptyUser();
+        $event      = new Login($user, true);
+        $listener   = new UserEventHandler();
+
+        // mock stuff
+        $repository->shouldReceive('count')->once()->andReturn(1);
+        $repository->shouldReceive('getRole')->once()->andReturn(null);
+        $repository->shouldReceive('attachRole')->once()->withArgs([Mockery::any(), 'owner']);
+        $repository->shouldReceive('createRole')->once()->withArgs(['owner', 'Site Owner', 'User runs this instance of FF3'])->andReturn(new Role);
+
+        $listener->checkSingleUserIsAdmin($event);
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @covers \FireflyIII\Handlers\Events\UserEventHandler::checkSingleUserIsAdmin
+     */
+    public function testCheckSingleUserIsAdminNotAdmin()
+    {
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $user       = $this->emptyUser();
+        $event      = new Login($user, true);
+        $listener   = new UserEventHandler();
+
+        // mock stuff
+        $repository->shouldReceive('count')->once()->andReturn(1);
+        $repository->shouldReceive('getRole')->once()->andReturn(new Role);
+        $repository->shouldReceive('attachRole')->once()->withArgs([Mockery::any(), 'owner']);
+
+        $listener->checkSingleUserIsAdmin($event);
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @covers \FireflyIII\Handlers\Events\UserEventHandler::checkSingleUserIsAdmin
+     */
+    public function testCheckSingleUserIsAdminSingle()
+    {
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $user       = $this->user();
+        $event      = new Login($user, true);
+        $listener   = new UserEventHandler();
+
+        // mock stuff
+        $repository->shouldReceive('count')->once()->andReturn(1);
+
+        $listener->checkSingleUserIsAdmin($event);
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @covers \FireflyIII\Handlers\Events\UserEventHandler::sendEmailChangeConfirmMail
+     * @covers \FireflyIII\Events\UserChangedEmail
+     */
+    public function testSendEmailChangeConfirmMail()
+    {
+        Mail::fake();
+        $user     = $this->emptyUser();
+        $event    = new UserChangedEmail($user, 'new@new', 'old@old', '127.0.0.1');
+        $listener = new UserEventHandler;
+        $listener->sendEmailChangeConfirmMail($event);
+
+        // must send user an email:
+
+        Mail::assertSent(
+            ConfirmEmailChangeMail::class, function ($mail) {
+            return $mail->hasTo('new@new') && '127.0.0.1' === $mail->ipAddress;
+        }
+        );
+
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @covers \FireflyIII\Handlers\Events\UserEventHandler::sendEmailChangeUndoMail
+     * @covers \FireflyIII\Events\UserChangedEmail
+     */
+    public function testSendEmailChangeUndoMail()
+    {
+        Mail::fake();
+        $user     = $this->emptyUser();
+        $event    = new UserChangedEmail($user, 'new@new', 'old@old', '127.0.0.1');
+        $listener = new UserEventHandler;
+        $listener->sendEmailChangeUndoMail($event);
+
+        // must send user an email:
+
+        Mail::assertSent(
+            UndoEmailChangeMail::class, function ($mail) {
+            return $mail->hasTo('old@old') && '127.0.0.1' === $mail->ipAddress;
+        }
+        );
+
+        $this->assertTrue(true);
+    }
+
 
     /**
      * @covers \FireflyIII\Handlers\Events\UserEventHandler::sendNewPassword

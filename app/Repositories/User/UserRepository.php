@@ -129,6 +129,18 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @param string $name
+     * @param string $displayName
+     * @param string $description
+     *
+     * @return Role
+     */
+    public function createRole(string $name, string $displayName, string $description): Role
+    {
+        return Role::create(['name' => $name, 'display_name' => $displayName, 'description' => $description]);
+    }
+
+    /**
      * @param User $user
      *
      * @return bool
@@ -176,6 +188,16 @@ class UserRepository implements UserRepositoryInterface
     public function first(): ?User
     {
         return User::first();
+    }
+
+    /**
+     * @param string $role
+     *
+     * @return Role|null
+     */
+    public function getRole(string $role): ?Role
+    {
+        return Role::where('name', $role)->first();
     }
 
     /**
