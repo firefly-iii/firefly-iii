@@ -33,23 +33,23 @@ $(document).ready(function () {
 
     $.getJSON('json/expense-accounts').done(function (data) {
         destAccounts = data;
-        $('input[name$="destination_account_name]"]').typeahead({source: destAccounts});
+        $('input[name$="destination_account_name]"]').typeahead({source: destAccounts, autoSelect: false});
     });
 
     $.getJSON('json/revenue-accounts').done(function (data) {
         srcAccounts = data;
-        $('input[name$="source_account_name]"]').typeahead({source: srcAccounts});
+        $('input[name$="source_account_name]"]').typeahead({source: srcAccounts, autoSelect: false});
     });
 
     $.getJSON('json/categories').done(function (data) {
         categories = data;
-        $('input[name$="category]"]').typeahead({source: categories});
+        $('input[name$="category]"]').typeahead({source: categories, autoSelect: false});
     });
 
     $.getJSON('json/transaction-journals/' + what).done(function (data) {
         descriptions = data;
-        $('input[name="journal_description"]').typeahead({source: descriptions});
-        $('input[name$="description]"]').typeahead({source: descriptions});
+        $('input[name="journal_description"]').typeahead({source: descriptions, autoSelect: false});
+        $('input[name$="description]"]').typeahead({source: descriptions, autoSelect: false});
     });
 
     $.getJSON('json/tags').done(function (data) {
@@ -59,7 +59,8 @@ $(document).ready(function () {
                 source: data,
                 afterSelect: function () {
                     this.$element.val("");
-                }
+                },
+                autoSelect: false
             }
         };
         $('input[name="tags"]').tagsinput(
@@ -114,17 +115,17 @@ function cloneDivRow() {
 
     source.find('input[name$="][amount]"]').val("").on('input', calculateSum);
     if (destAccounts.length > 0) {
-        source.find('input[name$="destination_account_name]"]').typeahead({source: destAccounts});
+        source.find('input[name$="destination_account_name]"]').typeahead({source: destAccounts, autoSelect: false});
     }
 
     if (destAccounts.length > 0) {
-        source.find('input[name$="source_account_name]"]').typeahead({source: srcAccounts});
+        source.find('input[name$="source_account_name]"]').typeahead({source: srcAccounts, autoSelect: false});
     }
     if (categories.length > 0) {
-        source.find('input[name$="category]"]').typeahead({source: categories});
+        source.find('input[name$="category]"]').typeahead({source: categories, autoSelect: false});
     }
     if (descriptions.length > 0) {
-        source.find('input[name$="description]"]').typeahead({source: descriptions});
+        source.find('input[name$="description]"]').typeahead({source: descriptions, autoSelect: false});
     }
 
     $('div.split_row_holder').append(source);

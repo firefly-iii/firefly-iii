@@ -98,7 +98,7 @@ function updateNativeCurrency(useAccountCurrency) {
  */
 function updateDescription() {
     $.getJSON('json/transaction-journals/' + what).done(function (data) {
-        $('input[name="description"]').typeahead('destroy').typeahead({source: data});
+        $('input[name="description"]').typeahead('destroy').typeahead({source: data, autoSelect: false});
     });
     $('#ffInput_description').focus();
 }

@@ -47,12 +47,11 @@ function runModernizer() {
 function setCommonAutocomplete() {
     $.getJSON('json/tags').done(function (data) {
         var opt = {
-            typeahead: {
-                source: data,
-                afterSelect: function () {
-                    this.$element.val("");
-                }
-            }
+            source: data,
+            afterSelect: function () {
+                this.$element.val("");
+            },
+            autoSelect: false,
         };
         $('input[name="tags"]').tagsinput(
             opt
@@ -61,18 +60,18 @@ function setCommonAutocomplete() {
 
     if ($('input[name="destination_account_name"]').length > 0) {
         $.getJSON('json/expense-accounts').done(function (data) {
-            $('input[name="destination_account_name"]').typeahead({source: data});
+            $('input[name="destination_account_name"]').typeahead({source: data, autoSelect: false});
         });
     }
 
     if ($('input[name="source_account_name"]').length > 0) {
         $.getJSON('json/revenue-accounts').done(function (data) {
-            $('input[name="source_account_name"]').typeahead({source: data});
+            $('input[name="source_account_name"]').typeahead({source: data, autoSelect: false});
         });
     }
 
     $.getJSON('json/categories').done(function (data) {
-        $('input[name="category"]').typeahead({source: data});
+        $('input[name="category"]').typeahead({source: data, autoSelect: false});
     });
 }
 
