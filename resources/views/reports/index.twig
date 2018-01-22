@@ -55,7 +55,7 @@
                             <label for="inputDateRange" class="col-sm-3 control-label">{{ 'report_date_range'|_ }}</label>
 
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="inputDateRange" name="daterange"
+                                <input autocomplete="off" type="text" class="form-control" id="inputDateRange" name="daterange"
                                        value="{{ Session.get('start').format('Y-m-d') }} - {{ Session.get('end').format('Y-m-d') }}">
                             </div>
                         </div>

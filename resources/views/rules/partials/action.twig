@@ -16,7 +16,7 @@
     </td>
     <td>
 
-        <input type="text" value="{{ oldValue }}" name="rule-action-value[{{ count }}]"
+        <input autocomplete="off" type="text" value="{{ oldValue }}" name="rule-action-value[{{ count }}]"
                class="form-control">
         {% if errors.has(('rule-action-value.'~count)) %}
             <p class="text-danger">

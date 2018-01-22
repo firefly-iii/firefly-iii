@@ -20,7 +20,7 @@
     </td>
     <td>
 
-        <input type="text" value="{{ oldValue }}" name="rule-trigger-value[{{ count }}]"
+        <input autocomplete="off" type="text" value="{{ oldValue }}" name="rule-trigger-value[{{ count }}]"
                class="form-control">
         {% if errors.has(('rule-trigger-value.'~count)) %}
             <p class="text-danger">

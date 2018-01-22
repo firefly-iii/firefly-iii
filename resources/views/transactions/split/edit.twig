@@ -230,14 +230,14 @@
 
                                 {# description #}
                                 <div class="col-lg-3 col-md-5 col-sm-12 col-xs-12">
-                                    <input type="text" name="transactions[{{ loop.index0 }}][description]" value="{{ transaction.description }}"
+                                    <input autocomplete="off" type="text" name="transactions[{{ loop.index0 }}][description]" value="{{ transaction.description }}"
                                            class="form-control"/>
                                 </div>
 
                                 {# destination for withdrawals: #}
                                 {% if preFilled.what == 'withdrawal' %}
                                     <div class="col-lg-2 col-md-5 col-sm-12 col-xs-12">
-                                        <input type="text" name="transactions[{{ loop.index0 }}][destination_account_name]"
+                                        <input autocomplete="off" type="text" name="transactions[{{ loop.index0 }}][destination_account_name]"
                                                value="{{ transaction.destination_account_name }}" class="form-control"/>
                                     </div>
                                 {% endif %}
@@ -245,7 +245,7 @@
                                 {# source for deposits #}
                                 {% if preFilled.what == 'deposit' %}
                                     <div class="col-lg-2 col-md-5 col-sm-12 col-xs-12">
-                                        <input type="text" name="transactions[{{ loop.index0 }}][source_account_name]"
+                                        <input autocomplete="off" type="text" name="transactions[{{ loop.index0 }}][source_account_name]"
                                                value="{{ transaction.source_account_name }}" class="form-control"/>
                                     </div>
                                 {% endif %}
@@ -295,7 +295,7 @@
 
                                     {# category #}
                                     <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
-                                        <input type="text" name="transactions[{{ loop.index0 }}][category]" value="{{ transaction.category }}"
+                                        <input autocomplete="off" type="text" name="transactions[{{ loop.index0 }}][category]" value="{{ transaction.category }}"
                                                class="form-control"/>
                                     </div>
                                 </div>
