@@ -213,7 +213,7 @@ class Transaction extends Twig_Extension
     {
         $description = $transaction->description;
         if (strlen(strval($transaction->transaction_description)) > 0) {
-            $description = $transaction->transaction_description . '(' . $transaction->description . ')';
+            $description = $transaction->transaction_description . ' (' . $transaction->description . ')';
         }
 
         return $description;
