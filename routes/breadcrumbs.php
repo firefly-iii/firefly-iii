@@ -42,8 +42,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
-//use DaveJamesMiller\Breadcrumbs\Generator as BreadCrumbsGenerator;
-
 // HOME
 Breadcrumbs::register(
     'home',
@@ -217,7 +215,7 @@ Breadcrumbs::register(
     'admin.links.show',
     function (BreadCrumbsGenerator $breadcrumbs, LinkType $linkType) {
         $breadcrumbs->parent('admin.links.index');
-        $breadcrumbs->push(trans('firefly.overview_for_link', [$linkType->name]), route('admin.links.show', [$linkType->id]));
+        $breadcrumbs->push(trans('firefly.overview_for_link', ['name' => $linkType->name]), route('admin.links.show', [$linkType->id]));
     }
 );
 
