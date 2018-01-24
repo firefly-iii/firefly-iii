@@ -105,6 +105,8 @@ Your help is always welcome! Feel free to open issues, ask questions, talk about
 
 Of course there are some [contributing guidelines](https://github.com/firefly-iii/firefly-iii/blob/master/.github/contributing.md) and a [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/master/.github/code_of_conduct.md), which I invite you to check out.
 
+I can always use your help [squashing bugs](http://firefly-iii.readthedocs.io/en/latest/support/contribute.html#bugs), thinking about [new features](http://firefly-iii.readthedocs.io/en/latest/support/contribute.html#feature-requests) or [translating Firefly III](http://firefly-iii.readthedocs.io/en/latest/support/contribute.html#translations) into other languages.
+
 ## The goal
 Firefly III should give you **insight** into and **control** over your finances. Money should be useful, not scary. You should be able to *see* where it is going, to *feel* your expenses and to... wow, I'm going overboard with this aren't I?
 
