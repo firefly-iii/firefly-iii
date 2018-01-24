@@ -237,8 +237,8 @@ class UserRepository implements UserRepositoryInterface
                                                     ->where('budgets.user_id', $user->id)->get(['budget_limits.budget_id'])->count();
         $return['export_jobs']         = $user->exportJobs()->count();
         $return['export_jobs_success'] = $user->exportJobs()->where('status', 'export_downloaded')->count();
-        $return['import_jobs']         = $user->exportJobs()->count();
-        $return['import_jobs_success'] = $user->exportJobs()->where('status', 'import_complete')->count();
+        $return['import_jobs']         = $user->importJobs()->count();
+        $return['import_jobs_success'] = $user->importJobs()->where('status', 'finished')->count();
         $return['rule_groups']         = $user->ruleGroups()->count();
         $return['rules']               = $user->rules()->count();
         $return['tags']                = $user->tags()->count();
