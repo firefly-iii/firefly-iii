@@ -84,10 +84,10 @@ class AccountController extends Controller
             $step = '1W';
         }
         if ($months > 24) {
-            $step = '1M';
+            $step = '1M'; // @codeCoverageIgnore
         }
         if ($months > 100) {
-            $step = '1Y';
+            $step = '1Y'; // @codeCoverageIgnore
         }
         $chartData = [];
         $current   = clone $start;
@@ -106,8 +106,8 @@ class AccountController extends Controller
                 }
                 break;
             case '1W':
-            case '1M':
-            case '1Y':
+            case '1M': // @codeCoverageIgnore
+            case '1Y': // @codeCoverageIgnore
                 while ($end >= $current) {
                     $balance           = floatval(Steam::balance($account, $current));
                     $label             = app('navigation')->periodShow($current, $step);
