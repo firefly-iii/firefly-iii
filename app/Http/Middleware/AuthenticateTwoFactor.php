@@ -26,7 +26,8 @@ use Closure;
 use Illuminate\Http\Request;
 use Log;
 use Preferences;
-
+use Auth;
+use Session;
 /**
  * Class AuthenticateTwoFactor.
  */
@@ -43,6 +44,11 @@ class AuthenticateTwoFactor
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
+        if (Auth::guard($guard)->guest()) {
+
+            return redirect()->guest('login');
+        }
+
         $is2faEnabled = Preferences::get('twoFactorAuthEnabled', false)->data;
         $has2faSecret = null !== Preferences::get('twoFactorAuthSecret');
         $is2faAuthed  = 'true' === $request->cookie('twoFactorAuthenticated');

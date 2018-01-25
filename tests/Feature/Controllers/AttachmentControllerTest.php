@@ -123,12 +123,16 @@ class AttachmentControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\AttachmentController::preview
      * @covers \FireflyIII\Http\Controllers\AttachmentController::__construct
      */
-    public function testPreview()
+    public function testView()
     {
+        $repository   = $this->mock(AttachmentRepositoryInterface::class);
+        $repository->shouldReceive('exists')->once()->andReturn(true);
+        $repository->shouldReceive('getContent')->once()->andReturn('This is attachment number one.');
+
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $this->be($this->user());
-        $response = $this->get(route('attachments.preview', [3]));
+        $response = $this->get(route('attachments.view', [3]));
         $response->assertStatus(200);
     }
 
