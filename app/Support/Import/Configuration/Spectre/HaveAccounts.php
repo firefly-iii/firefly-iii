@@ -51,7 +51,6 @@ class HaveAccounts implements ConfigurationInterface
         $accountRepository = app(AccountRepositoryInterface::class);
         /** @var CurrencyRepositoryInterface $currencyRepository */
         $currencyRepository = app(CurrencyRepositoryInterface::class);
-        $data               = [];
         $config             = $this->job->configuration;
         $collection         = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $defaultCurrency    = app('amount')->getDefaultCurrency();

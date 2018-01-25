@@ -43,6 +43,27 @@ use Illuminate\Support\Collection;
 trait TransactionJournalTrait
 {
     /**
+     * @param Builder $query
+     * @param string  $table
+     *
+     * @return bool
+     */
+    public static function isJoined(Builder $query, string $table): bool
+    {
+        $joins = $query->getQuery()->joins;
+        if (null === $joins) {
+            return false;
+        }
+        foreach ($joins as $join) {
+            if ($join->table === $table) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @return string
      */
     public function amount(): string
@@ -210,27 +231,6 @@ trait TransactionJournalTrait
      * @return bool
      */
     abstract public function isDeposit(): bool;
-
-    /**
-     * @param Builder $query
-     * @param string  $table
-     *
-     * @return bool
-     */
-    public function isJoined(Builder $query, string $table): bool
-    {
-        $joins = $query->getQuery()->joins;
-        if (null === $joins) {
-            return false;
-        }
-        foreach ($joins as $join) {
-            if ($join->table === $table) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     /**
      * @return bool

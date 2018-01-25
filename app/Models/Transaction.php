@@ -66,6 +66,7 @@ use Watson\Validating\ValidatingTrait;
  * @property string $transaction_currency_symbol
  * @property int    $transaction_currency_dp
  * @property string $transaction_currency_code
+ * @property string $description
  */
 class Transaction extends Model
 {

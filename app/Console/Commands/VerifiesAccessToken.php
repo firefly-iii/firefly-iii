@@ -36,7 +36,7 @@ trait VerifiesAccessToken
     /**
      * Abstract method to make sure trait knows about method "option".
      *
-     * @param null $key
+     * @param string|null $key
      *
      * @return mixed
      */
@@ -55,7 +55,7 @@ trait VerifiesAccessToken
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->find($userId);
 
-        if (null === $user->id) {
+        if (null === $user) {
             Log::error(sprintf('verifyAccessToken(): no such user for input "%d"', $userId));
 
             return false;

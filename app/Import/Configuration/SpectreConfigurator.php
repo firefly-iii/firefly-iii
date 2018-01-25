@@ -77,7 +77,6 @@ class SpectreConfigurator implements ConfiguratorInterface
                 $this->repository->setConfiguration($this->job, $config);
 
                 return true;
-                break;
             default:
                 throw new FireflyException(sprintf('Cannot store configuration when job is in state "%s"', $stage));
                 break;
@@ -95,7 +94,9 @@ class SpectreConfigurator implements ConfiguratorInterface
         if (is_null($this->job)) {
             throw new FireflyException('Cannot call configureJob() without a job.');
         }
-        $stage = $this->getConfig()['stage'] ?? 'initial';
+        $config = $this->getConfig();
+        $stage  = $config['stage'] ?? 'initial';
+
         Log::debug(sprintf('in getNextData(), for stage "%s".', $stage));
         switch ($stage) {
             case 'has-token':
@@ -109,9 +110,7 @@ class SpectreConfigurator implements ConfiguratorInterface
                 $this->repository->setStatus($this->job, $status);
 
                 return $this->repository->getConfiguration($this->job);
-                break;
             case 'have-accounts':
-                // use special class:
                 /** @var HaveAccounts $class */
                 $class = app(HaveAccounts::class);
                 $class->setJob($this->job);
@@ -120,7 +119,6 @@ class SpectreConfigurator implements ConfiguratorInterface
                 return $data;
             default:
                 return [];
-                break;
         }
     }
 
@@ -141,13 +139,10 @@ class SpectreConfigurator implements ConfiguratorInterface
                 Log::info('User is being redirected to Spectre.');
 
                 return 'import.spectre.redirect';
-                break;
             case 'have-accounts':
                 return 'import.spectre.accounts';
-                break;
             default:
                 return '';
-                break;
 
         }
     }

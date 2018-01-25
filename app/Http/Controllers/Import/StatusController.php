@@ -105,7 +105,7 @@ class StatusController extends Controller
             }
 
             if ($tagId === 0) {
-                $result['finishedText'] = trans('import.status_finished_no_tag');
+                $result['finishedText'] = trans('import.status_finished_no_tag'); // @codeCoverageIgnore
             }
         }
 

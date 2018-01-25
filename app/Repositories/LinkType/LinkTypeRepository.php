@@ -202,9 +202,6 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
             $dbNote->save();
         }
 
-        //$link->comment = $link['notes'] ?? null;
-
-
         return $link;
     }
 

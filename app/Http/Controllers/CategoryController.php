@@ -190,7 +190,7 @@ class CategoryController extends Controller
             $end      = new Carbon;
         }
 
-        // prep for "specific date" view.$dates = app('navigation')->blockPeriods($start, $end, $range);
+        // prep for "specific date" view.
         if (strlen($moment) > 0 && 'all' !== $moment) {
             $start    = app('navigation')->startOfPeriod(new Carbon($moment), $range);
             $end      = app('navigation')->endOfPeriod($start, $range);

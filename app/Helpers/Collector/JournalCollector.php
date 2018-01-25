@@ -233,7 +233,7 @@ class JournalCollector implements JournalCollectorInterface
         $countQuery->getQuery()->groups     = null;
         $countQuery->getQuery()->orders     = null;
         $countQuery->groupBy('accounts.user_id');
-        $this->count = $countQuery->count();
+        $this->count = intval($countQuery->count());
 
         return $this->count;
     }
@@ -252,7 +252,7 @@ class JournalCollector implements JournalCollectorInterface
         $cache->addProperty($key);
         if ($cache->has()) {
             Log::debug(sprintf('Return cache of query with ID "%s".', $key));
-            //return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         /** @var Collection $set */

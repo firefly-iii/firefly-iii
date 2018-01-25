@@ -44,7 +44,6 @@ $(function () {
 
 function startExport() {
     "use strict";
-    console.log('startExport');
     hideForm();
     showLoading();
     hideError();

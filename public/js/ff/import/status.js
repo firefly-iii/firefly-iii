@@ -35,7 +35,6 @@ var knownErrors = 0;
 
 $(function () {
     "use strict";
-    console.log('in start');
     timeOutId = setTimeout(checkJobStatus, startInterval);
 
     $('.start-job').click(function () {
@@ -44,7 +43,6 @@ $(function () {
         startJob();
     });
     if (job.configuration['auto-start']) {
-        console.log('Called startJob()!');
         startJob();
     }
 });
@@ -53,7 +51,6 @@ $(function () {
  * Downloads some JSON and responds to its content to see what the status is of the current import.
  */
 function checkJobStatus() {
-    console.log('in checkJobStatus');
     $.getJSON(jobStatusUri).done(reportOnJobStatus).fail(reportFailedJob);
 }
 
@@ -61,7 +58,6 @@ function checkJobStatus() {
  * This method is called when the JSON query returns an error. If possible, this error is relayed to the user.
  */
 function reportFailedJob(jqxhr, textStatus, error) {
-    console.log('in reportFailedJob');
     // hide all possible boxes:
     $('.statusbox').hide();
 
@@ -81,7 +77,6 @@ function reportFailedJob(jqxhr, textStatus, error) {
  * @param data
  */
 function reportOnJobStatus(data) {
-    console.log('in reportOnJobStatus: ' + data.status);
 
     switch (data.status) {
         case "configured":
@@ -91,17 +86,12 @@ function reportOnJobStatus(data) {
                 $('.status_configured').show();
             }
             if (job.configuration['auto-start']) {
-                console.log('Job is auto start. Check status again in 500ms.');
                 timeOutId = setTimeout(checkJobStatus, interval);
             }
             if (pressedStart) {
-                console.log('pressedStart = true, will check extra.');
                 // do a time out just in case. Could be that job is running or is even done already.
                 timeOutId = setTimeout(checkJobStatus, 2000);
                 pressedStart = false;
-            }
-            if (!pressedStart) {
-                console.log('pressedStart = false, will do nothing.');
             }
             break;
         case "running":
@@ -148,7 +138,6 @@ function reportOnJobStatus(data) {
             break;
         case "configuring":
             // redirect back to configure screen.
-            console.log('Will now redirect to ' + jobConfigureUri);
             window.location = jobConfigureUri;
             break;
         default:
@@ -192,9 +181,7 @@ function jobIsStalled(data) {
  * Only when job is in "configured" state.
  */
 function startJob() {
-    console.log("In startJob()");
     if (job.status === "configured") {
-        console.log("Job started!");
         // disable the button, add loading thing.
         $('.start-job').prop('disabled', true).text('...');
         $.post(jobStartUri, {_token: token}).fail(reportOnSubmitError);
@@ -203,7 +190,6 @@ function startJob() {
         timeOutId = setTimeout(checkJobStatus, startInterval);
         return;
     }
-    console.log("Job not auto started because state is " + job.status);
 }
 
 /**

@@ -256,7 +256,7 @@ class Navigation
     {
         // define period to increment
         $increment     = 'addDay';
-        $format        = self::preferredCarbonFormat($start, $end);
+        $format        = $this->preferredCarbonFormat($start, $end);
         $displayFormat = strval(trans('config.month_and_day'));
         // increment by month (for year)
         if ($start->diffInMonths($end) > 1) {

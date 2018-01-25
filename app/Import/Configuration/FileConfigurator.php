@@ -249,6 +249,9 @@ class FileConfigurator implements ConfiguratorInterface
     }
 
     /**
+     * Shorthand method to return the extended status.
+     *
+     * @codeCoverageIgnore
      * @return array
      */
     private function getExtendedStatus(): array
@@ -257,8 +260,9 @@ class FileConfigurator implements ConfiguratorInterface
     }
 
     /**
-     * Shorthand method.
+     * Shorthand method to set the extended status.
      *
+     * @codeCoverageIgnore
      * @param array $extended
      */
     private function setExtendedStatus(array $extended): void

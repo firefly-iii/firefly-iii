@@ -92,8 +92,6 @@ class TransactionJournal extends Model
         if (auth()->check()) {
             $journalId = intval($value);
             $journal   = auth()->user()->transactionJournals()->where('transaction_journals.id', $journalId)
-                               ->with('transactionType')
-                               ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                                ->first(['transaction_journals.*']);
             if (!is_null($journal)) {
                 return $journal;

@@ -122,9 +122,9 @@ class CsvProcessor implements FileProcessorInterface
     }
 
     /**
-     * @codeCoverageIgnore
-     * Shorthand method
+     * Shorthand method to set the extended status.
      *
+     * @codeCoverageIgnore
      * @param array $array
      */
     public function setExtendedStatus(array $array)
@@ -149,7 +149,9 @@ class CsvProcessor implements FileProcessorInterface
     }
 
     /**
-     * Shorthand method.
+     * Shorthand method to add a step.
+     *
+     * @codeCoverageIgnore
      */
     private function addStep()
     {
@@ -187,27 +189,15 @@ class CsvProcessor implements FileProcessorInterface
     }
 
     /**
-     * @codeCoverageIgnore
-     * Shorthand method.
+     * Shorthand method to return configuration.
      *
+     * @codeCoverageIgnore
      * @return array
      */
     private function getConfig(): array
     {
         return $this->repository->getConfiguration($this->job);
     }
-
-    /**
-     * @codeCoverageIgnore
-     * Shorthand method.
-     *
-     * @return array
-     */
-    private function getExtendedStatus(): array
-    {
-        return $this->repository->getExtendedStatus($this->job);
-    }
-
 
     /**
      * @return Iterator

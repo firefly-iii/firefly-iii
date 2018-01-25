@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Helpers;
 
 use FireflyIII\Http\Middleware\Sandstorm;
+use FireflyIII\Models\Role;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -74,7 +75,7 @@ class SandstormTest extends TestCase
         putenv('SANDSTORM=1');
 
         $repository = $this->mock(UserRepositoryInterface::class);
-        $repository->shouldReceive('count')->once()->andReturn(1);
+        $repository->shouldReceive('count')->twice()->andReturn(1);
 
         $response = $this->get('/_test/sandstorm');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
@@ -123,9 +124,10 @@ class SandstormTest extends TestCase
         putenv('SANDSTORM=1');
 
         $repository = $this->mock(UserRepositoryInterface::class);
-        $repository->shouldReceive('count')->once()->andReturn(0);
+        $repository->shouldReceive('count')->twice()->andReturn(0);
         $repository->shouldReceive('store')->once()->andReturn($this->user());
-        $repository->shouldReceive('attachRole')->once()->andReturn(true);
+        $repository->shouldReceive('attachRole')->twice()->andReturn(true);
+        $repository->shouldReceive('getRole')->once()->andReturn(new Role);
 
         $response = $this->get('/_test/sandstorm', ['X-Sandstorm-User-Id' => 'abcd']);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
@@ -152,7 +154,7 @@ class SandstormTest extends TestCase
         putenv('SANDSTORM=1');
 
         $repository = $this->mock(UserRepositoryInterface::class);
-        $repository->shouldReceive('count')->once()->andReturn(1);
+        $repository->shouldReceive('count')->twice()->andReturn(1);
         $repository->shouldReceive('first')->once()->andReturn($this->user());
 
         $response = $this->get('/_test/sandstorm', ['X-Sandstorm-User-Id' => 'abcd']);

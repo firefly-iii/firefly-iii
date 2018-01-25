@@ -65,7 +65,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validate2faCode($attribute, $value): bool
+    public function validate2faCode(/** @scrutinizer ignore-unused */ $attribute, $value): bool
     {
         if (!is_string($value) || null === $value || 6 != strlen($value)) {
             return false;
@@ -85,7 +85,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateBelongsToUser($attribute, $value, $parameters): bool
+    public function validateBelongsToUser(/** @scrutinizer ignore-unused */ $attribute, $value, $parameters): bool
     {
         $field = $parameters[1] ?? 'id';
 
@@ -108,7 +108,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateBic($attribute, $value): bool
+    public function validateBic(/** @scrutinizer ignore-unused */ $attribute, $value): bool
     {
         $regex  = '/^[a-z]{6}[0-9a-z]{2}([0-9a-z]{3})?\z/i';
         $result = preg_match($regex, $value);
@@ -130,7 +130,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateIban($attribute, $value): bool
+    public function validateIban(/** @scrutinizer ignore-unused */ $attribute, $value): bool
     {
         if (!is_string($value) || null === $value || strlen($value) < 6) {
             return false;
@@ -210,7 +210,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateMore($attribute, $value, $parameters): bool
+    public function validateMore(/** @scrutinizer ignore-unused */ $attribute, $value, $parameters): bool
     {
         $compare = $parameters[0] ?? '0';
 
@@ -226,7 +226,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateMustExist($attribute, $value, $parameters): bool
+    public function validateMustExist(/** @scrutinizer ignore-unused */ $attribute, $value, $parameters): bool
     {
         $field = $parameters[1] ?? 'id';
 
@@ -335,7 +335,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateSecurePassword($attribute, $value): bool
+    public function validateSecurePassword(/** @scrutinizer ignore-unused */ $attribute, $value): bool
     {
         $verify = false;
         if (isset($this->data['verify_password'])) {
@@ -360,7 +360,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateUniqueAccountForUser($attribute, $value, $parameters): bool
+    public function validateUniqueAccountForUser(/** @scrutinizer ignore-unused */ $attribute, $value, $parameters): bool
     {
         // because a user does not have to be logged in (tests and what-not).
         if (!auth()->check()) {
@@ -390,7 +390,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateUniqueAccountNumberForUser($attribute, $value): bool
+    public function validateUniqueAccountNumberForUser(/** @scrutinizer ignore-unused */ $attribute, $value): bool
     {
         $accountId = $this->data['id'] ?? 0;
 
@@ -428,7 +428,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateUniqueObjectForUser($attribute, $value, $parameters): bool
+    public function validateUniqueObjectForUser(/** @scrutinizer ignore-unused */ $attribute, $value, $parameters): bool
     {
         $value = $this->tryDecrypt($value);
         // exclude?
@@ -460,7 +460,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateUniquePiggyBankForUser($attribute, $value, $parameters): bool
+    public function validateUniquePiggyBankForUser(/** @scrutinizer ignore-unused */ $attribute, $value, $parameters): bool
     {
         $exclude = $parameters[0] ?? null;
         $query   = DB::table('piggy_banks')->whereNull('piggy_banks.deleted_at')
