@@ -37,7 +37,18 @@ return [
     'maxUploadSize'  => 15242880,
     'allowedMimes'   => [
         /* plain files */
-        'image/png', 'image/jpeg', 'application/pdf', 'text/plain',
+        'text/plain',
+
+        /* images */
+        'image/jpeg',
+        'image/svg+xml',
+        'image/png',
+        'image/heic',
+        'image/heic-sequence',
+
+        /* PDF */
+        'application/pdf',
+
 
         /* MS word */
         'application/msword',
