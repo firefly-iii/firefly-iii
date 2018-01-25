@@ -35,6 +35,7 @@ class TransactionTypeSeeder extends Seeder
             TransactionType::DEPOSIT,
             TransactionType::TRANSFER,
             TransactionType::OPENING_BALANCE,
+            TransactionType::RECONCILIATION,
         ];
 
         foreach ($types as $type) {
