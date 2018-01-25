@@ -130,8 +130,8 @@ Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'attachments', 'as' => 'attachments.'], function () {
     Route::get('edit/{attachment}', ['uses' => 'AttachmentController@edit', 'as' => 'edit']);
     Route::get('delete/{attachment}', ['uses' => 'AttachmentController@delete', 'as' => 'delete']);
-    Route::get('preview/{attachment}', ['uses' => 'AttachmentController@preview', 'as' => 'preview']);
     Route::get('download/{attachment}', ['uses' => 'AttachmentController@download', 'as' => 'download']);
+    Route::get('view/{attachment}', ['uses' => 'AttachmentController@view', 'as' => 'view']);
 
     Route::post('update/{attachment}', ['uses' => 'AttachmentController@update', 'as' => 'update']);
     Route::post('destroy/{attachment}', ['uses' => 'AttachmentController@destroy', 'as' => 'destroy']);
