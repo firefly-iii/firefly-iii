@@ -55,6 +55,7 @@ class ConfigurationController extends Controller
                 return $next($request);
             }
         );
+        $this->middleware(IsDemoUser::class);
     }
 
     /**

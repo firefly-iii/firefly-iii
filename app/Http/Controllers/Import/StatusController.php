@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Import;
 
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Response;
@@ -47,6 +48,7 @@ class StatusController extends Controller
                 return $next($request);
             }
         );
+        $this->middleware(IsDemoUser::class);
     }
 
     /**
@@ -100,8 +102,10 @@ class StatusController extends Controller
                 /** @var TagRepositoryInterface $repository */
                 $repository             = app(TagRepositoryInterface::class);
                 $tag                    = $repository->find($tagId);
-                $count = $tag->transactionJournals()->count();
-                $result['finishedText'] = trans('import.status_finished_job', ['count' => $count,'link' => route('tags.show', [$tag->id, 'all']), 'tag' => $tag->tag]);
+                $count                  = $tag->transactionJournals()->count();
+                $result['finishedText'] = trans(
+                    'import.status_finished_job', ['count' => $count, 'link' => route('tags.show', [$tag->id, 'all']), 'tag' => $tag->tag]
+                );
             }
 
             if ($tagId === 0) {

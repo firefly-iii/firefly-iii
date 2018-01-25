@@ -33,6 +33,7 @@ use Log;
 use Response;
 use View;
 
+
 /**
  * Class FileController.
  */
@@ -57,6 +58,7 @@ class IndexController extends Controller
                 return $next($request);
             }
         );
+        $this->middleware(IsDemoUser::class)->except(['index']);
     }
 
     /**

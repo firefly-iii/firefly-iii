@@ -51,9 +51,9 @@ class IsDemoUser
         /** @var User $user */
         $user = auth()->user();
         if ($user->hasRole('demo')) {
-            Session::flash('warning', strval(trans('firefly.not_available_demo_user')));
+            Session::flash('info', strval(trans('firefly.not_available_demo_user')));
 
-            return redirect(route('index'));
+            return redirect($request->session()->previousUrl());
         }
 
         return $next($request);
