@@ -86,8 +86,8 @@ class DebugController extends Controller
                 $logFile = $handler->getUrl();
                 if (null !== $logFile) {
                     try {
-                        $logContent = file_get_contents('/aaaa/'.$logFile);
-                    } catch(Exception $e) {
+                        $logContent = file_get_contents($logFile);
+                    } catch (Exception $e) {
                         // don't care
                     }
                 }
