@@ -98,7 +98,7 @@ class BudgetController extends Controller
             $step = '1M';
         }
         if ($months > 60) {
-            $step = '1Y';
+            $step = '1Y'; // @codeCoverageIgnore
         }
         $budgetCollection = new Collection([$budget]);
         $chartData        = [];
@@ -108,7 +108,7 @@ class BudgetController extends Controller
         while ($end >= $current) {
             $currentEnd = app('navigation')->endOfPeriod($current, $step);
             if ($step === '1Y') {
-                $currentEnd->subDay();
+                $currentEnd->subDay(); // @codeCoverageIgnore
             }
             $spent             = $this->repository->spentInPeriod($budgetCollection, new Collection, $current, $currentEnd);
             $label             = app('navigation')->periodShow($current, $step);
