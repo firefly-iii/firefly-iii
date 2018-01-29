@@ -180,16 +180,14 @@ return [
         'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],
         'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '],
+        'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'],
         'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'],
         'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'],
 
         // incomplete languages:
-        //'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'],
         //'id_ID' => ['name_locale' => 'Indonesian', 'name_english' => 'Indonesian'],
         //'es_ES' => ['name_locale' => 'Spanish', 'name_english' => 'Spanish'],
-
         //'sl_SI' => ['name_locale' => 'Slovenščina', 'name_english' => 'Slovenian'],
-        //
     ],
     'transactionTypesByWhat'     => [
         'expenses'   => ['Withdrawal'],
