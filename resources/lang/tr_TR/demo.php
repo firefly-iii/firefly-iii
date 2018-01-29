@@ -32,6 +32,4 @@ return [
     'transactions-index'             => 'Bu masraflar, mevduatlar ve transferler için özellikle yaratıcı değildir. Bunlar otomatik olarak oluşturuldu.',
     'piggy-banks-index'              => 'Gördüğünüz gibi, üç tane banka var. Her domuzcuk bankasındaki para miktarını değiştirmek için artı ve eksi düğmelerini kullanın. Her domuzcuk bankasının yönetimini görmek için domuzcuk\'un üzerine tıklayın.',
     'import-index'                   => 'Elbette, herhangi bir CVS dosyası Firefly III\'e aktarılabilir',
-    'import-configure-security'      => 'Güvenlik kaygıları nedeniyle yüklemeniz yerel bir dosya ile değiştirildi.',
-    'import-configure-configuration' => 'Aşağıda gördüğünüz yapılandırma, yerel dosya için doğrudur.',
 ];

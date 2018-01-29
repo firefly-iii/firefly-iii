@@ -100,6 +100,6 @@ return [
     'sum_deposits'            => 'Сумма доходов',
     'sum_transfers'           => 'Сумма переводов',
     'reconcile'               => 'Сверка',
-    'account_on_spectre'      => 'Account (Spectre)',
-    'do_import'               => 'Import from this account',
+    'account_on_spectre'      => 'Счёт (Spectre)',
+    'do_import'               => 'Импортировать с этого счёта',
 ];

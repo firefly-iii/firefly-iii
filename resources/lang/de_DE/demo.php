@@ -32,6 +32,4 @@ return [
     'transactions-index'             => 'Diese Aufwendungen, Einzahlungen und Überweisungen sind nicht besonders einfallsreich. Sie wurden automatisch generiert.',
     'piggy-banks-index'              => 'Wie Sie sehen können, gibt es drei Sparschweine. Benutzen die Plus- und Minusknöpfe um die Menge des Geldes in den Sparschweinen zu beeinflussen. Klicken Sie auf den Namen des Sparschweins um Details einzusehen.',
     'import-index'                   => 'Natürlich kann jede CSV-Datei in Firefly III importiert werden',
-    'import-configure-security'      => 'Aufgrund von Sicherheitsbedenken wurde der Upload mit einer lokalen Datei ersetzt.',
-    'import-configure-configuration' => 'Die unten stehende Konfiguration für die lokale Datei ist korrekt.',
 ];

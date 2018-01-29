@@ -32,6 +32,4 @@ return [
     'transactions-index'             => 'Te wydatki, depozyty i transfery nie są szczególnie pomysłowe. Zostały wygenerowane automatycznie.',
     'piggy-banks-index'              => 'Jak widać, istnieją trzy skarbonki. Użyj przycisków plus i minus, aby wpłynąć na ilość pieniędzy w każdej skarbonce. Kliknij nazwę skarbonki, aby zobaczyć administrację każdej skarbonki.',
     'import-index'                   => 'Oczywiście każdy plik CSV można zaimportować do Firefly III',
-    'import-configure-security'      => 'Ze względów bezpieczeństwa przesyłanie zostało zastąpione lokalnym plikiem.',
-    'import-configure-configuration' => 'Konfiguracja, która widzisz poniżej jest prawidłowa dla lokalnego pliku.',
 ];

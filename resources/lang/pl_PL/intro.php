@@ -31,13 +31,13 @@ return [
 
     // create account:
     'accounts_create_iban'                  => 'Nadaj kontom ważny numer IBAN. Może to ułatwić import danych w przyszłości.',
-    'accounts_create_asset_opening_balance' => 'Konta zasobów mogą mieć "bilans otwarcia", wskazując początek historii tego konta w Firefly.',
+    'accounts_create_asset_opening_balance' => 'Konta aktywów mogą mieć "bilans otwarcia", wskazujący początek historii tego konta w Firefly III.',
     'accounts_create_asset_currency'        => 'Firefly III obsługuje wiele walut. Konta aktywów mają jedną główną walutę, który należy ustawić tutaj.',
     'accounts_create_asset_virtual'         => 'Czasami warto dodać do konta wirtualne saldo: dodatkowa kwota zawsze dodawana lub odejmowana od rzeczywistego salda.',
 
     // budgets index
     'budgets_index_intro'                   => 'Budżety są wykorzystywane do zarządzania finansami i stanowią jedną z podstawowych funkcji Firefly III.',
-    'budgets_index_set_budget'              => 'Ustaw całkowity budżet na każdy okres, aby Firefly mógł Ci powiedzieć, czy wydałeś wszystkie dostępne pieniądze.',
+    'budgets_index_set_budget'              => 'Ustaw całkowity budżet na każdy okres, aby Firefly III mógł Ci powiedzieć, czy wydałeś wszystkie dostępne pieniądze.',
     'budgets_index_see_expenses_bar'        => 'Wydawanie pieniędzy powoli wypełnia ten pasek.',
     'budgets_index_navigate_periods'        => 'Przejrzyj okresy, aby łatwiej ustawić przyszłe budżety.',
     'budgets_index_new_budget'              => 'Utwórz nowe budżety zgodnie z Twoimi potrzebami.',

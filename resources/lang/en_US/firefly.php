@@ -211,8 +211,8 @@ return [
     // export data:
     'import_and_export'                          => 'Import and export',
     'export_data'                                => 'Export data',
-    'export_and_backup_data'                     => 'Export and backup',
-    'export_data_intro'                          => 'For backup purposes, when migrating to another system or when migrating to another Firefly III installation.',
+    'export_and_backup_data'                     => 'Export data',
+    'export_data_intro'                          => 'Use the exported data to move to a new financial application. Please note that these files are not meant as a backup. They do not contain enough meta-data to fully restore a new Firefly III installation. If you want to make a backup of your data, please backup the database directly.',
     'export_format'                              => 'Export format',
     'export_format_csv'                          => 'Comma separated values (CSV file)',
     'export_format_mt940'                        => 'MT940 compatible format',

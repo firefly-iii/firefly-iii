@@ -32,6 +32,4 @@ return [
     'transactions-index'             => 'Deze uitgaven, inkomsten en overschrijvingen zijn niet heel fantasierijk. Ze zijn automatisch gegenereerd.',
     'piggy-banks-index'              => 'Zoals je kan zien zijn er drie spaarpotjes. Gebruik de plus- en minknoppen om het bedrag in de spaarpotjes te veranderen. Klik op de naam van het spaarpotje om er de geschiedenis van te zien.',
     'import-index'                   => 'Uiteraard kan je elk CSV bestand importeren in Firefly III',
-    'import-configure-security'      => 'Uit veiligheidsoverwegingen is je upload vervangen door een lokaal bestand.',
-    'import-configure-configuration' => 'Deze configuratie is correct voor het lokale bestand.',
 ];
