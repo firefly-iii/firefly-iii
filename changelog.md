@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.7.0] - 2018-01-31
 ### Added
-- Support for Russian
+- Support for Russian and Portuguese (Brazil)
 - Support for the Spectre API (Salt Edge)
 - Many strings now translatable thanks to [Nik-vr](https://github.com/Nik-vr) ([issue 1118](https://github.com/firefly-iii/firefly-iii/issues/1118), [issue 1116](https://github.com/firefly-iii/firefly-iii/issues/1116), [issue 1109](https://github.com/firefly-iii/firefly-iii/issues/1109), )
 - Many buttons to quickly create stuff
