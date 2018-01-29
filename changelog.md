@@ -12,7 +12,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Future versions of Firefly III will notify you there is a new version, as suggested by [8bitgentleman](https://github.com/8bitgentleman) in [issue 1050](https://github.com/firefly-iii/firefly-iii/issues/1050)
 - Improved net worth box [issue 1101](https://github.com/firefly-iii/firefly-iii/issues/1101) ([Nik-vr](https://github.com/Nik-vr))
 - Nice dropdown in transaction list [issue 1082](https://github.com/firefly-iii/firefly-iii/issues/1082)
-
+- Better support for local fonts thanks to @devlearner (#1145)
+- Improve attachment support and view capabilities (suggested by @trinhit in #1146)
 
 ### Changed
 - Whole new [read me file](https://github.com/firefly-iii/firefly-iii/blob/master/readme.md), [new end user documentation](https://firefly-iii.readthedocs.io/en/latest/) and an [updated website](https://www.firefly-iii.org/)!
@@ -30,6 +31,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 1132](https://github.com/firefly-iii/firefly-iii/issues/1132), as reported by [gavu](https://github.com/gavu)
 - Issue with cache in Sandstorm ([issue 1130](https://github.com/firefly-iii/firefly-iii/issues/1130))
 - [Issue 1134](https://github.com/firefly-iii/firefly-iii/issues/1134)
+- [Issue 1140](https://github.com/firefly-iii/firefly-iii/issues/1140)
+- [Issue 1141](https://github.com/firefly-iii/firefly-iii/issues/1141), reported by [ErikFontanel](https://github.com/ErikFontanel)
+- [Issue 1142](https://github.com/firefly-iii/firefly-iii/issues/1142)
 
 ### Security
 - Removed many access rights from the demo user
