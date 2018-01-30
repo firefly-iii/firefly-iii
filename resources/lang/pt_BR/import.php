@@ -32,7 +32,7 @@ return [
     'status_ready_noconfig_text'           => 'A importação está pronta para começar. Toda a configuração que você precisava fazer foi feita. Para realmente executar a importação, você pode executar o seguinte comando no seu console ou executar a importação baseada na web. Dependendo da sua configuração, a importação do console lhe dará mais comentários.',
     'status_ready_config'                  => 'Download da configuração',
     'status_ready_start'                   => 'Iniciar a importação',
-    'status_ready_share'                   => 'Por favor, considere baixar sua configuração e compartilhá-la no <strong><a href="https://github.com/firefly-iii/import-configurations/wiki"> centro de configuração de importação</a></strong>. Isso permitirá que outros usuários do Firefly III importem seus arquivos mais facilmente.',
+    'status_ready_share'                   => 'Por favor, considere baixar sua configuração e compartilhá-la no <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">centro de configuração de importação</a></strong>. Isso permitirá que outros usuários do Firefly III importem seus arquivos mais facilmente.',
     'status_job_new'                       => 'O trabalho é novo.',
     'status_job_configuring'               => 'A importação está sendo configurada.',
     'status_job_configured'                => 'A importação está configurada.',

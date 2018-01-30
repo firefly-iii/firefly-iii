@@ -27,7 +27,7 @@ return [
     'month_and_day' => '%e. %B %Y',
     'date_time'     => '%e %B %Y, @ %T',
     'specific_day'  => '%e. %B %Y',
-    'week_in_year'  => 'Woche %W, %Y',
+    'week_in_year'  => 'KW %W, %Y',
     'year'          => '%Y',
     'half_year'     => '%B %Y',
 ];
