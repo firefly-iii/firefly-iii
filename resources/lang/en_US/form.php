@@ -158,7 +158,7 @@ return [
     'tag_areYouSure'             => 'Are you sure you want to delete the tag ":tag"?',
     'journal_link_areYouSure'    => 'Are you sure you want to delete the link between <a href=":source_link">:source</a> and <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'        => 'Are you sure you want to delete the link type ":name" (":inward" / ":outward")?',
-    'permDeleteWarning'          => 'Deleting stuff from Firely is permanent and cannot be undone.',
+    'permDeleteWarning'          => 'Deleting stuff from Firefly III is permanent and cannot be undone.',
     'mass_make_selection'        => 'You can still prevent items from being deleted by removing the checkbox.',
     'delete_all_permanently'     => 'Delete selected permanently',
     'update_all_journals'        => 'Update these transactions',
