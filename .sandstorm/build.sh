@@ -3,10 +3,9 @@
 # This script only runs once, when the app connects to sandstorm.
 set -euo pipefail
 
-
+echo "In build.sh"
 
 cd /opt/app
-
 cp .env.sandstorm .env
 
 if [ -f /opt/app/composer.json ] ; then

@@ -88,11 +88,9 @@ class FileConfigurator implements ConfiguratorInterface
         if (is_null($this->job)) {
             throw new FireflyException('Cannot call configureJob() without a job.');
         }
-        $class = $this->getConfigurationClass();
-        $job   = $this->job;
         /** @var ConfigurationInterface $object */
-        $object = app($class);
-        $object->setJob($job);
+        $object = app($this->getConfigurationClass());
+        $object->setJob($this->job);
         $result        = $object->storeConfiguration($data);
         $this->warning = $object->getWarningMessage();
 
@@ -111,12 +109,9 @@ class FileConfigurator implements ConfiguratorInterface
         if (is_null($this->job)) {
             throw new FireflyException('Cannot call getNextData() without a job.');
         }
-
-        $class = $this->getConfigurationClass();
-        $job   = $this->job;
         /** @var ConfigurationInterface $object */
-        $object = app($class);
-        $object->setJob($job);
+        $object = app($this->getConfigurationClass());
+        $object->setJob($this->job);
 
         return $object->getData();
     }
@@ -192,6 +187,12 @@ class FileConfigurator implements ConfiguratorInterface
         $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($job->user);
 
+        // set number of steps to 100:
+        $extendedStatus          = $this->getExtendedStatus();
+        $extendedStatus['steps'] = 6;
+        $extendedStatus['done']  = 0;
+        $this->setExtendedStatus($extendedStatus);
+
         $config    = $this->getConfig();
         $newConfig = array_merge($this->defaultConfig, $config);
         $this->repository->setConfiguration($job, $newConfig);
@@ -245,5 +246,29 @@ class FileConfigurator implements ConfiguratorInterface
         Log::debug(sprintf('Configuration class is "%s"', $class));
 
         return $class;
+    }
+
+    /**
+     * Shorthand method to return the extended status.
+     *
+     * @codeCoverageIgnore
+     * @return array
+     */
+    private function getExtendedStatus(): array
+    {
+        return $this->repository->getExtendedStatus($this->job);
+    }
+
+    /**
+     * Shorthand method to set the extended status.
+     *
+     * @codeCoverageIgnore
+     * @param array $extended
+     */
+    private function setExtendedStatus(array $extended): void
+    {
+        $this->repository->setExtendedStatus($this->job, $extended);
+
+        return;
     }
 }

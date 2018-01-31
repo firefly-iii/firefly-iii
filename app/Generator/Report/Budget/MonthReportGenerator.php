@@ -194,7 +194,9 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
      */
     private function summarizeByBudget(Collection $collection): array
     {
-        $result = [];
+        $result = [
+            'sum' => '0',
+        ];
         /** @var Transaction $transaction */
         foreach ($collection as $transaction) {
             $jrnlBudId         = intval($transaction->transaction_journal_budget_id);
@@ -202,6 +204,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
             $budgetId          = max($jrnlBudId, $transBudId);
             $result[$budgetId] = $result[$budgetId] ?? '0';
             $result[$budgetId] = bcadd($transaction->transaction_amount, $result[$budgetId]);
+            $result['sum']     = bcadd($result['sum'], $transaction->transaction_amount);
         }
 
         return $result;

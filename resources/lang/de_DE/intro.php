@@ -31,13 +31,13 @@ return [
 
     // create account:
     'accounts_create_iban'                  => 'Geben Sie Ihren Konten eine gültige IBAN. Dies könnte einen Datenimport in Zukunft sehr einfach machen.',
-    'accounts_create_asset_opening_balance' => 'Anlagekonten können eine "Eröffnungsbilanz" haben, welche den Beginn der Historie dieses Kontos in Firefly angibt.',
+    'accounts_create_asset_opening_balance' => 'Assets accounts may have an "opening balance", indicating the start of this account\'s history in Firefly III.',
     'accounts_create_asset_currency'        => 'Firefly III unterstützt mehrere Währungen. Anlagenkonten haben eine Hauptwährung, die Sie hier einstellen müssen.',
     'accounts_create_asset_virtual'         => 'Es kann manchmal helfen, Ihrem Konto ein virtuelles Gleichgewicht zu geben: eine zusätzliche Menge, die dem tatsächlichen Kontostand immer hinzugefügt oder daraus entfernt wird.',
 
     // budgets index
     'budgets_index_intro'                   => 'Mit Budgets verwalten Sie Ihre Finanzen und bilden damit eine der Kernfunktionen von Firefly III.',
-    'budgets_index_set_budget'              => 'Stellen Sie Ihr Gesamtbudget für jeden Zeitraum ein, damit Firefly Ihnen mitteilen kann, ob Sie das verfügbare Geld budgetiert haben.',
+    'budgets_index_set_budget'              => 'Set your total budget for every period so Firefly III can tell you if you have budgeted all available money.',
     'budgets_index_see_expenses_bar'        => 'Dieser Balken wird sich langsam füllen, wenn Sie Geld ausgeben.',
     'budgets_index_navigate_periods'        => 'Navigieren Sie durch Zeiträume, um die Budgets im Voraus zu setzen.',
     'budgets_index_new_budget'              => 'Erstellen Sie neue Budgets, wie Sie es für richtig halten.',
@@ -74,7 +74,7 @@ return [
     'transactions_create_withdrawal_ffInput_budget'           => 'Verbinden Sie Ihre Abhebung mit einem Budget für eine bessere Kontrolle Ihrer Finanzen.',
     'transactions_create_withdrawal_currency_dropdown_amount' => 'Verwenden Sie dieses Dropdown, wenn ihre Abbuchung in einer anderen Währung ist.',
     'transactions_create_deposit_currency_dropdown_amount'    => 'Verwenden Sie dieses Dropdown, wenn ihre Einzahlung in einer anderen Währung ist.',
-    'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Wählen Sie ein Sparschwein aus und verbinden Sie diese Überweisung mit Ihren Ersparnissen.',
+    'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Wählen Sie ein Sparschwein aus und verknüpfen Sie diese Umbuchung mit Ihren Ersparnissen.',
 
     // piggy banks index:
     'piggy-banks_index_saved'                                 => 'Dieses Feld zeigt Ihnen, wie viel Sie in jedem Sparschwein gespart haben.',

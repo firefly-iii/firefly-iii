@@ -97,6 +97,15 @@ class TransactionJournalLink extends Model
 
     /**
      * @codeCoverageIgnore
+     * Get all of the notes.
+     */
+    public function notes()
+    {
+        return $this->morphMany(Note::class, 'noteable');
+    }
+
+    /**
+     * @codeCoverageIgnore
      *
      * @param $value
      */

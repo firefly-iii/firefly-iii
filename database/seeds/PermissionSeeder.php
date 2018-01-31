@@ -30,16 +30,25 @@ class PermissionSeeder extends Seeder
 {
     public function run()
     {
-        $owner               = new Role;
-        $owner->name         = 'owner';
-        $owner->display_name = 'Site Owner';
-        $owner->description  = 'User runs this instance of FF3'; // optional
-        $owner->save();
+        $roles = [
+            [
+                'name'         => 'owner',
+                'display_name' => 'Site Owner',
+                'description'  => 'User runs this instance of FF3',
+            ],
+            [
+                'name'         => 'demo',
+                'display_name' => 'Demo User',
+                'description'  => 'User is a demo user',
+            ],
+        ];
+        foreach ($roles as $role) {
+            try {
+                Role::create($role);
+            } catch (PDOException $e) {
+                Log::warning(sprintf('Could not create role "%s". It might exist already.', $role['display_name']));
+            }
+        }
 
-        $demo               = new Role;
-        $demo->name         = 'demo';
-        $demo->display_name = 'Demo User';
-        $demo->description  = 'User is a demo user';
-        $demo->save();
     }
 }

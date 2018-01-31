@@ -37,6 +37,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
@@ -232,7 +233,7 @@ class JournalCollector implements JournalCollectorInterface
         $countQuery->getQuery()->groups     = null;
         $countQuery->getQuery()->orders     = null;
         $countQuery->groupBy('accounts.user_id');
-        $this->count = $countQuery->count();
+        $this->count = intval($countQuery->count());
 
         return $this->count;
     }
@@ -243,6 +244,17 @@ class JournalCollector implements JournalCollectorInterface
     public function getJournals(): Collection
     {
         $this->run = true;
+
+        // find query set in cache.
+        $hash  = hash('sha256', $this->query->toSql() . serialize($this->query->getBindings()));
+        $key   = 'query-' . substr($hash, -8);
+        $cache = new CacheProperties;
+        $cache->addProperty($key);
+        if ($cache->has()) {
+            Log::debug(sprintf('Return cache of query with ID "%s".', $key));
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
         /** @var Collection $set */
         $set = $this->query->get(array_values($this->fields));
 
@@ -263,6 +275,8 @@ class JournalCollector implements JournalCollectorInterface
                 $transaction->opposing_account_iban = app('steam')->tryDecrypt($transaction->opposing_account_iban);
             }
         );
+        Log::debug(sprintf('Cached query with ID "%s".', $key));
+        $cache->store($set);
 
         return $set;
     }

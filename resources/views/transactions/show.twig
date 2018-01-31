@@ -74,18 +74,14 @@
                             <td>{{ trans('list.description') }}</td>
                             <td>{{ journal.description }}</td>
                         </tr>
-                        <!-- source(s) -->
                         <tr>
                             <td>{{ 'source_accounts'|_ }}</td>
                             <td>{{ sourceAccount(journal)|raw }}</td>
                         </tr>
-
-                        <!-- destination(s) -->
                         <tr>
                             <td>{{ 'destination_accounts'|_ }}</td>
                             <td>{{ destinationAccount(journal)|raw }}</td>
                         </tr>
-                        <!-- total amount -->
                         <tr>
                             <td>{{ 'total_amount'|_ }}</td>
                             <td>
@@ -163,7 +159,6 @@
                 </div>
             </div>
 
-            <!-- events, if present -->
             {% if journal.piggyBankEvents|length > 0 %}
                 <div class="box">
                     <div class="box-header with-border">
@@ -244,7 +239,7 @@
                         {% if journal.notes.count == 1 %}
                             <tr>
                                 <td>{{ trans('list.notes') }}</td>
-                                <td>{{ journal.notes.first.text|markdown }}</td>
+                                <td class="markdown">{{ journal.notes.first.text|markdown }}</td>
                             </tr>
                         {% endif %}
 
@@ -293,11 +288,12 @@
                                         <div class="btn-group btn-group-xs">
                                             <a href="{{ route('attachments.edit', att.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
                                             <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                            <a href="{{ route('attachments.download', att.id) }}" class="btn btn-default"><i class="fa fa-download"></i></a>
                                         </div>
                                     </td>
                                     <td>
                                         <i class="fa {{ att.mime|mimeIcon }}"></i>
-                                        <a href="{{ route('attachments.download', att.id) }}" title="{{ att.filename }}">
+                                        <a href="{{ route('attachments.view', att.id) }}" title="{{ att.filename }}">
                                             {% if att.title %}
                                                 {{ att.title }}
                                             {% else %}
@@ -309,9 +305,6 @@
                                             <br/>
                                             <em>{{ att.description }}</em>
                                         {% endif %}
-                                    </td>
-                                    <td style="width:100px;">
-                                        <img src="{{ route('attachments.preview', att.id) }}"/>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -350,8 +343,9 @@
                                                 #{{ link.source.id }}: {{ link.source.description }}</a>
                                             ({{ link.source|journalTotalAmount }})
                                         {% endif %}
-                                        {% if link.comment != "" %}
-                                            <br/><em>{{ link.comment }}</em>
+                                        {% if link.notes.count == 1 %}
+                                            <br/>
+                                            {{ link.notes.first.text|markdown }}
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -464,9 +458,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="comments" class="col-sm-2 control-label">{{ 'comments'|_ }}</label>
+                            <label for="notes" class="col-sm-2 control-label">{{ 'notes'|_ }}</label>
                             <div class="col-sm-10">
-                                <textarea id="comments" name="comments" class="form-control"></textarea>
+                                <textarea id="notes" name="notes" class="form-control"></textarea>
                             </div>
                         </div>
 

@@ -81,6 +81,68 @@ class Navigation
     }
 
     /**
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     * @param string         $range
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    public function blockPeriods(\Carbon\Carbon $start, \Carbon\Carbon $end, string $range): array
+    {
+        $periods = [];
+        // Start by looping per period:
+        $perMonthEnd   = clone $end;
+        $perMonthStart = clone $end;
+        $perMonthStart->startOfyear()->subYear();
+        $perMonthStart = $start->lt($perMonthStart) ? $perMonthStart : $start;
+
+        // loop first set:
+        while ($perMonthEnd >= $perMonthStart) {
+            $perMonthEnd = $this->startOfPeriod($perMonthEnd, $range);
+            $currentEnd  = $this->endOfPeriod($perMonthEnd, $range);
+            if ($currentEnd->gt($start)) {
+                $periods[] = [
+                    'start'  => $perMonthEnd,
+                    'end'    => $currentEnd,
+                    'period' => $range,
+                ];
+            }
+            $perMonthEnd = $this->subtractPeriod($perMonthEnd, $range, 1);
+        }
+
+        // do not continue if date is already less
+        if ($perMonthEnd->lt($start)) {
+            return $periods;
+        }
+
+        // per year variables:
+        $perYearEnd   = clone $perMonthStart;
+        $perYearStart = clone $perMonthStart;
+        unset($perMonthEnd, $currentEnd, $perMonthStart);
+        $perYearEnd->subYear();
+        $perYearStart->subYears(50);
+        $perYearStart = $start->lt($perYearStart) ? $perYearStart : $start;
+        $perYearStart->startOfYear();
+
+        // per year
+        while ($perYearEnd >= $perYearStart) {
+            $perYearEnd = $this->startOfPeriod($perYearEnd, '1Y');
+            $currentEnd = $this->endOfPeriod($perYearEnd, '1Y')->subDay()->endOfDay();
+            if ($currentEnd->gt($start)) {
+                $periods[] = [
+                    'start'  => $perYearEnd,
+                    'end'    => $currentEnd,
+                    'period' => '1Y',
+                ];
+            }
+            $perYearEnd = $this->subtractPeriod($perYearEnd, '1Y', 1);
+        }
+
+        return $periods;
+    }
+
+    /**
      * @param \Carbon\Carbon $end
      * @param                $repeatFreq
      *
@@ -194,7 +256,7 @@ class Navigation
     {
         // define period to increment
         $increment     = 'addDay';
-        $format        = self::preferredCarbonFormat($start, $end);
+        $format        = $this->preferredCarbonFormat($start, $end);
         $displayFormat = strval(trans('config.month_and_day'));
         // increment by month (for year)
         if ($start->diffInMonths($end) > 1) {
@@ -419,6 +481,7 @@ class Navigation
 
             return $date;
         }
+
         if ('custom' === $repeatFreq) {
             return $date; // the date is already at the start.
         }

@@ -43,6 +43,7 @@ class DebugControllerTest extends TestCase
 {
     /**
      * @covers \FireflyIII\Http\Controllers\DebugController::index
+     * @covers \FireflyIII\Http\Controllers\DebugController::__construct
      * @covers \FireflyIII\Http\Controllers\DebugController::errorReporting
      * @covers \FireflyIII\Http\Controllers\DebugController::collectPackages
      */

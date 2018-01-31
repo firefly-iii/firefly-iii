@@ -30,11 +30,22 @@ use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Preferences;
 
 /**
  * Is capable of storing individual ImportJournal objects.
+ * Adds 7 steps per object stored:
+ * 1. get all import data from import journal
+ * 2. is not a duplicate
+ * 3. create the journal
+ * 4. store journal
+ * 5. run rules
+ * 6. run bills
+ * 7. finished storing object
+ *
  * Class ImportStorage.
  */
 class ImportStorage
@@ -53,6 +64,8 @@ class ImportStorage
     protected $defaultCurrencyId = 1;
     /** @var ImportJob */
     protected $job;
+    /** @var ImportJobRepositoryInterface */
+    protected $repository;
     /** @var Collection */
     protected $rules;
     /** @var bool */
@@ -63,6 +76,8 @@ class ImportStorage
     private $matchBills = false;
     /** @var Collection */
     private $objects;
+    /** @var int */
+    private $total = 0;
     /** @var array */
     private $transfers = [];
 
@@ -89,13 +104,17 @@ class ImportStorage
      */
     public function setJob(ImportJob $job)
     {
-        $this->job               = $job;
-        $currency                = app('amount')->getDefaultCurrencyByUser($this->job->user);
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
+
+        $config                  = $this->repository->getConfiguration($job);
+        $currency                = app('amount')->getDefaultCurrencyByUser($job->user);
         $this->defaultCurrencyId = $currency->id;
+        $this->job               = $job;
         $this->transfers         = $this->getTransfers();
-        $config                  = $job->configuration;
         $this->applyRules        = $config['apply-rules'] ?? false;
         $this->matchBills        = $config['match-bills'] ?? false;
+
         if (true === $this->applyRules) {
             Log::debug('applyRules seems to be true, get the rules.');
             $this->rules = $this->getRules();
@@ -108,6 +127,8 @@ class ImportStorage
         }
         Log::debug(sprintf('Value of apply rules is %s', var_export($this->applyRules, true)));
         Log::debug(sprintf('Value of match bills is %s', var_export($this->matchBills, true)));
+
+
     }
 
     /**
@@ -116,6 +137,7 @@ class ImportStorage
     public function setObjects(Collection $objects)
     {
         $this->objects = $objects;
+        $this->total   = $objects->count();
     }
 
     /**
@@ -129,6 +151,7 @@ class ImportStorage
             function (ImportJournal $importJournal, int $index) {
                 try {
                     $this->storeImportJournal($index, $importJournal);
+                    $this->addStep();
                 } catch (FireflyException | ErrorException | Exception $e) {
                     $this->errors->push($e->getMessage());
                     Log::error(sprintf('Cannot import row #%d because: %s', $index, $e->getMessage()));
@@ -150,7 +173,7 @@ class ImportStorage
      */
     protected function storeImportJournal(int $index, ImportJournal $importJournal): bool
     {
-        Log::debug(sprintf('Going to store object #%d with description "%s"', $index, $importJournal->getDescription()));
+        Log::debug(sprintf('Going to store object #%d/%d with description "%s"', ($index + 1), $this->total, $importJournal->getDescription()));
         $assetAccount      = $importJournal->asset->getAccount();
         $amount            = $importJournal->getAmount();
         $currencyId        = $this->getCurrencyId($importJournal);
@@ -159,9 +182,7 @@ class ImportStorage
         $opposingAccount   = $this->getOpposingAccount($importJournal->opposing, $assetAccount->id, $amount);
         $transactionType   = $this->getTransactionType($amount, $opposingAccount);
         $description       = $importJournal->getDescription();
-
-        // First step done!
-        $this->job->addStepsDone(1);
+        $this->addStep();
 
         /**
          * Check for double transfer.
@@ -175,13 +196,17 @@ class ImportStorage
             'opposing'    => $opposingAccount->name,
         ];
         if ($this->isDoubleTransfer($parameters) || $this->hashAlreadyImported($importJournal->hash)) {
-            $this->job->addStepsDone(3);
             // throw error
             $message = sprintf('Detected a possible duplicate, skip this one (hash: %s).', $importJournal->hash);
             Log::error($message, $parameters);
+
+            // add five steps to keep the pace:
+            $this->addSteps(5);
+
             throw new FireflyException($message);
         }
         unset($parameters);
+        $this->addStep();
 
         // store journal and create transactions:
         $parameters = [
@@ -197,9 +222,7 @@ class ImportStorage
         ];
         $journal    = $this->storeJournal($parameters);
         unset($parameters);
-
-        // Another step done!
-        $this->job->addStepsDone(1);
+        $this->addStep();
 
         // store meta object things:
         $this->storeCategory($journal, $importJournal->category->getCategory());
@@ -221,36 +244,54 @@ class ImportStorage
         // set journal completed:
         $journal->completed = true;
         $journal->save();
-
-        // Another step done!
-        $this->job->addStepsDone(1);
+        $this->addStep();
 
         // run rules if config calls for it:
         if (true === $this->applyRules) {
             Log::info('Will apply rules to this journal.');
             $this->applyRules($journal);
         }
+        Preferences::setForUser($this->job->user, 'lastActivity', microtime());
+
         if (!(true === $this->applyRules)) {
             Log::info('Will NOT apply rules to this journal.');
         }
+        $this->addStep();
 
         // match bills if config calls for it.
         if (true === $this->matchBills) {
-            Log::info('Cannot match bills (yet).');
+            Log::info('Will match bills.');
             $this->matchBills($journal);
         }
 
         if (!(true === $this->matchBills)) {
             Log::info('Cannot match bills (yet), but do not have to.');
         }
+        $this->addStep();
 
-        // Another step done!
-        $this->job->addStepsDone(1);
         $this->journals->push($journal);
 
         Log::info(sprintf('Imported new journal #%d: "%s", amount %s %s.', $journal->id, $journal->description, $journal->transactionCurrency->code, $amount));
 
         return true;
+    }
+
+    /**
+     * Shorthand method.
+     */
+    private function addStep()
+    {
+        $this->repository->addStepsDone($this->job, 1);
+    }
+
+    /**
+     * Shorthand method
+     *
+     * @param int $steps
+     */
+    private function addSteps(int $steps)
+    {
+        $this->repository->addStepsDone($this->job, $steps);
     }
 
     /**
@@ -269,7 +310,6 @@ class ImportStorage
 
         $amount   = app('steam')->positive($parameters['amount']);
         $names    = [$parameters['asset'], $parameters['opposing']];
-        $transfer = [];
 
         sort($names);
 

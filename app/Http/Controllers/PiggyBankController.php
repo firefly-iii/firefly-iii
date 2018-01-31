@@ -383,7 +383,7 @@ class PiggyBankController extends Controller
     {
         $note     = $piggyBank->notes()->first();
         $events   = $repository->getEvents($piggyBank);
-        $subTitle = e($piggyBank->name);
+        $subTitle = $piggyBank->name;
 
         return view('piggy-banks.show', compact('piggyBank', 'events', 'subTitle', 'note'));
     }

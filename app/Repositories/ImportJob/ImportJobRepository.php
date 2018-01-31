@@ -44,15 +44,49 @@ class ImportJobRepository implements ImportJobRepositoryInterface
 
     /**
      * @param ImportJob $job
+     * @param int       $index
+     * @param string    $error
+     *
+     * @return ImportJob
+     */
+    public function addError(ImportJob $job, int $index, string $error): ImportJob
+    {
+        $extended                     = $this->getExtendedStatus($job);
+        $extended['errors'][$index][] = $error;
+
+        return $this->setExtendedStatus($job, $extended);
+    }
+
+    /**
+     * @param ImportJob $job
      * @param int       $steps
      *
      * @return ImportJob
      */
     public function addStepsDone(ImportJob $job, int $steps = 1): ImportJob
     {
-        $job->addStepsDone($steps);
+        $status         = $this->getExtendedStatus($job);
+        $status['done'] += $steps;
+        Log::debug(sprintf('Add %d to steps done for job "%s" making steps done %d', $steps, $job->key, $status['done']));
 
-        return $job;
+        return $this->setExtendedStatus($job, $status);
+    }
+
+    /**
+     * @param ImportJob $job
+     * @param int       $steps
+     *
+     * @return ImportJob
+     */
+    public function addTotalSteps(ImportJob $job, int $steps = 1): ImportJob
+    {
+        $extended          = $this->getExtendedStatus($job);
+        $total             = $extended['steps'] ?? 0;
+        $total             += $steps;
+        $extended['steps'] = $total;
+
+        return $this->setExtendedStatus($job, $extended);
+
     }
 
     /**
@@ -159,6 +193,16 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         }
 
         return [];
+    }
+
+    /**
+     * @param ImportJob $job
+     *
+     * @return string
+     */
+    public function getStatus(ImportJob $job): string
+    {
+        return $job->status;
     }
 
     /**
@@ -275,6 +319,50 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         Log::debug(sprintf('Set extended status of job "%s" to (except errors): ', $job->key), $newStatus);
 
         return $job;
+    }
+
+    /**
+     * @param ImportJob $job
+     * @param string    $status
+     *
+     * @return ImportJob
+     */
+    public function setStatus(ImportJob $job, string $status): ImportJob
+    {
+        $job->status = $status;
+        $job->save();
+
+        return $job;
+    }
+
+    /**
+     * @param ImportJob $job
+     * @param int       $steps
+     *
+     * @return ImportJob
+     */
+    public function setStepsDone(ImportJob $job, int $steps): ImportJob
+    {
+        $status         = $this->getExtendedStatus($job);
+        $status['done'] = $steps;
+        Log::debug(sprintf('Set steps done for job "%s" to %d', $job->key, $steps));
+
+        return $this->setExtendedStatus($job, $status);
+    }
+
+    /**
+     * @param ImportJob $job
+     * @param int       $count
+     *
+     * @return ImportJob
+     */
+    public function setTotalSteps(ImportJob $job, int $count): ImportJob
+    {
+        $status          = $this->getExtendedStatus($job);
+        $status['steps'] = $count;
+        Log::debug(sprintf('Set total steps for job "%s" to %d', $job->key, $count));
+
+        return $this->setExtendedStatus($job, $status);
     }
 
     /**

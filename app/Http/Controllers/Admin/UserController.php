@@ -125,7 +125,7 @@ class UserController extends Controller
                 $list          = ['twoFactorAuthEnabled', 'twoFactorAuthSecret'];
                 $preferences   = Preferences::getArrayForUser($user, $list);
                 $user->isAdmin = $user->hasRole('owner');
-                $is2faEnabled  = true === $preferences['twoFactorAuthEnabled'];
+                $is2faEnabled  = 1 === $preferences['twoFactorAuthEnabled'];
                 $has2faSecret  = null !== $preferences['twoFactorAuthSecret'];
                 $user->has2FA  = ($is2faEnabled && $has2faSecret) ? true : false;
                 $user->prefs   = $preferences;

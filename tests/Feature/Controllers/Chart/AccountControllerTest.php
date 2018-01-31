@@ -65,6 +65,26 @@ class AccountControllerTest extends TestCase
     }
 
     /**
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::all
+     */
+    public function testAllLongRange()
+    {
+        $generator    = $this->mock(GeneratorInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $carbon = new Carbon;
+        $carbon->subMonths(5);
+        $accountRepos->shouldReceive('oldestJournalDate')->once()->andReturn($carbon);
+        Steam::shouldReceive('balance')->andReturn('0');
+
+        $generator->shouldReceive('singleSet')->andReturn([]);
+
+        $this->be($this->user());
+        $response = $this->get(route('chart.account.all', [1]));
+        $response->assertStatus(200);
+    }
+
+    /**
      * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseAccounts
      * @covers       \FireflyIII\Generator\Chart\Basic\GeneratorInterface::singleSet
      * @dataProvider dateRangeProvider

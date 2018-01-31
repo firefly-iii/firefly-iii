@@ -95,9 +95,11 @@ return [
     'number_of_transactions'  => 'Anzahl der Zahlungsvorgänge',
     'total_amount'            => 'Gesamtbetrag',
     'sum'                     => 'Summe',
-    'sum_excluding_transfers' => 'Summe (ohne Überweisungen)',
+    'sum_excluding_transfers' => 'Summe (ohne Umbuchungen)',
     'sum_withdrawals'         => 'Summe der Ausgaben',
     'sum_deposits'            => 'Summe der Einzahlungen',
-    'sum_transfers'           => 'Summe der Überweisungen',
+    'sum_transfers'           => 'Summe der Umbuchungen',
     'reconcile'               => 'Reconcile',
+    'account_on_spectre'      => 'Konto (Spectre)',
+    'do_import'               => 'Import from this account',
 ];

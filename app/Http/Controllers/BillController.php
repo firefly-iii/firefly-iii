@@ -262,7 +262,7 @@ class BillController extends Controller
         }
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, $lastPaidDate);
         $hideBill                = true;
-        $subTitle                = e($bill->name);
+        $subTitle                = $bill->name;
 
         return view('bills.show', compact('transactions', 'yearAverage', 'overallAverage', 'year', 'hideBill', 'bill', 'subTitle'));
     }

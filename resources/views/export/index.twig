@@ -49,7 +49,7 @@
 
                                     {{ ExpandedForm.date('export_end_range', today) }}
 
-                                    <!-- EXPORT FORMATS -->
+                                    {# EXPORT FORMATS #}
                                     <div class="form-group">
                                         <label for="exportFormat" class="col-sm-4 control-label">{{ 'export_format'|_ }}</label>
 
@@ -73,7 +73,7 @@
                                     </div>
 
 
-                                    <!-- ACCOUNTS -->
+                                    {# ACCOUNTS #}
                                     {{ ExpandedForm.multiCheckbox('accounts',accountList, checked, {' class': 'account-checkbox'}) }}
 
                                     {{ ExpandedForm.checkbox('include_attachments','1', true) }}

@@ -90,6 +90,7 @@ class CsvProcessor implements FileProcessorInterface
         Log::debug('Now in CsvProcessor run(). Job is now running...');
 
         $entries = new Collection($this->getImportArray());
+        $this->addStep();
         Log::notice('Building importable objects from CSV file.');
         Log::debug(sprintf('Number of entries: %d', $entries->count()));
         $notImported = $entries->filter(
@@ -97,8 +98,7 @@ class CsvProcessor implements FileProcessorInterface
                 $row = array_values($row);
                 if ($this->rowAlreadyImported($row)) {
                     $message = sprintf('Row #%d has already been imported.', $index);
-                    $this->repository->addStepsDone($this->job, 5);
-                    $this->addError($index, $message);
+                    $this->repository->addError($this->job, $index, $message);
                     Log::info($message);
 
                     return null;
@@ -107,30 +107,24 @@ class CsvProcessor implements FileProcessorInterface
                 return $row;
             }
         );
+        $this->addStep();
         Log::debug(sprintf('Number of entries left: %d', $notImported->count()));
-
-        // set (new) number of steps:
-        $extended          = $this->getExtendedStatus();
-        $steps             = $notImported->count() * 5;
-        $extended['steps'] = $steps;
-        $this->setExtendedStatus($extended);
-        Log::debug(sprintf('Number of steps: %d', $steps));
 
         $notImported->each(
             function (array $row, int $index) {
                 $journal = $this->importRow($index, $row);
                 $this->objects->push($journal);
-                $this->repository->addStepsDone($this->job, 1);
             }
         );
+        $this->addStep();
 
         return true;
     }
 
     /**
-     * @codeCoverageIgnore
-     * Shorthand method
+     * Shorthand method to set the extended status.
      *
+     * @codeCoverageIgnore
      * @param array $array
      */
     public function setExtendedStatus(array $array)
@@ -155,20 +149,13 @@ class CsvProcessor implements FileProcessorInterface
     }
 
     /**
-     * Shorthand method.
+     * Shorthand method to add a step.
      *
      * @codeCoverageIgnore
-     *
-     * @param int    $index
-     * @param string $message
      */
-    private function addError(int $index, string $message): void
+    private function addStep()
     {
-        $extended                     = $this->getExtendedStatus();
-        $extended['errors'][$index][] = $message;
-        $this->setExtendedStatus($extended);
-
-        return;
+        $this->repository->addStepsDone($this->job, 1);
     }
 
     /**
@@ -202,9 +189,9 @@ class CsvProcessor implements FileProcessorInterface
     }
 
     /**
-     * @codeCoverageIgnore
-     * Shorthand method.
+     * Shorthand method to return configuration.
      *
+     * @codeCoverageIgnore
      * @return array
      */
     private function getConfig(): array
@@ -213,23 +200,10 @@ class CsvProcessor implements FileProcessorInterface
     }
 
     /**
-     * @codeCoverageIgnore
-     * Shorthand method.
-     *
-     * @return array
-     */
-    private function getExtendedStatus(): array
-    {
-        return $this->repository->getExtendedStatus($this->job);
-    }
-
-
-    /**
      * @return Iterator
      *
      * @throws \League\Csv\Exception
      * @throws \League\Csv\Exception
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     private function getImportArray(): Iterator
     {
@@ -375,7 +349,7 @@ class CsvProcessor implements FileProcessorInterface
      */
     private function specifics(array $row): array
     {
-        $config = $this->job->configuration;
+        $config = $this->getConfig();
         $names  = array_keys($config['specifics'] ?? []);
         foreach ($names as $name) {
             if (!in_array($name, $this->validSpecifics)) {

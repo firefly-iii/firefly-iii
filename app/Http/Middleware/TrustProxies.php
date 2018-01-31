@@ -60,8 +60,8 @@ class TrustProxies extends Middleware
     public function __construct(Repository $config)
     {
         $trustedProxies = env('TRUSTED_PROXIES', null);
-        if (null !== $trustedProxies && strlen($trustedProxies) > 0) {
-            $this->proxies = $trustedProxies;
+        if (false !== $trustedProxies && null !== $trustedProxies && strlen($trustedProxies) > 0) {
+            $this->proxies = strval($trustedProxies);
         }
 
         parent::__construct($config);

@@ -83,32 +83,6 @@ class ImportJob extends Model
     }
 
     /**
-     * @param int    $index
-     * @param string $message
-     *
-     * @return bool
-     */
-    public function addError(int $index, string $message): bool
-    {
-        $extended                     = $this->extended_status;
-        $extended['errors'][$index][] = $message;
-        $this->extended_status        = $extended;
-
-        return true;
-    }
-
-    /**
-     * @param int $count
-     */
-    public function addStepsDone(int $count)
-    {
-        $status                = $this->extended_status;
-        $status['done']        += $count;
-        $this->extended_status = $status;
-        $this->save();
-    }
-
-    /**
      * @param int $count
      */
     public function addTotalSteps(int $count)
@@ -117,6 +91,7 @@ class ImportJob extends Model
         $status['steps']       += $count;
         $this->extended_status = $status;
         $this->save();
+        Log::debug(sprintf('Add %d to total steps for job "%s" making total steps %d', $count, $this->key, $status['steps']));
     }
 
     /**

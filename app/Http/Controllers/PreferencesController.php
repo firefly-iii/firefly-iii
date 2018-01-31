@@ -128,7 +128,7 @@ class PreferencesController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
      */
-    public function postCode(TokenFormRequest $request)
+    public function postCode(/** @scrutinizer ignore-unused */ TokenFormRequest $request)
     {
         Preferences::set('twoFactorAuthEnabled', 1);
         Preferences::set('twoFactorAuthSecret', Session::get('two-factor-secret'));

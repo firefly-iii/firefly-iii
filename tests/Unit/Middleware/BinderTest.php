@@ -309,7 +309,7 @@ class BinderTest extends TestCase
     public function testBudgetLimit()
     {
         Route::middleware(Binder::class)->any(
-            '/_test/binder/{budgetlimit}', function () {
+            '/_test/binder/{budgetLimit}', function () {
             return 'OK';
         }
         );
@@ -328,7 +328,7 @@ class BinderTest extends TestCase
     public function testBudgetLimitNotFound()
     {
         Route::middleware(Binder::class)->any(
-            '/_test/binder/{budgetlimit}', function () {
+            '/_test/binder/{budgetLimit}', function () {
             return 'OK';
         }
         );
@@ -347,7 +347,7 @@ class BinderTest extends TestCase
     public function testBudgetLimitNotLoggedIn()
     {
         Route::middleware(Binder::class)->any(
-            '/_test/binder/{budgetlimit}', function () {
+            '/_test/binder/{budgetLimit}', function () {
             return 'OK';
         }
         );
@@ -1423,7 +1423,7 @@ class BinderTest extends TestCase
     public function testTransactionType()
     {
         Route::middleware(Binder::class)->any(
-            '/_test/binder/{transaction_type}', function () {
+            '/_test/binder/{transactionType}', function () {
             return 'OK';
         }
         );
@@ -1442,7 +1442,7 @@ class BinderTest extends TestCase
     public function testTransactionTypeNotFound()
     {
         Route::middleware(Binder::class)->any(
-            '/_test/binder/{transaction_type}', function () {
+            '/_test/binder/{transactionType}', function () {
             return 'OK';
         }
         );
@@ -1461,7 +1461,7 @@ class BinderTest extends TestCase
     public function testTransactionTypeNotLoggedIn()
     {
         Route::middleware(Binder::class)->any(
-            '/_test/binder/{transaction_type}', function () {
+            '/_test/binder/{transactionType}', function () {
             return 'OK';
         }
         );

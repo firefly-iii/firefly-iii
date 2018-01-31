@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-/** global: token */
+/** global: token, helpPageTitle, noHelpForPage,noHelpForPageTitle */
 $(function () {
     "use strict";
     $('#help').click(showHelp);
@@ -35,12 +35,12 @@ function showHelp(e) {
     }
     $('#helpBody').html('<i class="fa fa-refresh fa-spin"></i>');
     $('#helpModal').modal('show');
-    $('#helpTitle').html('Help for this page');
+    $('#helpTitle').html(helpPageTitle);
     $.getJSON('help/' + encodeURI(route)).done(function (data) {
         $('#helpBody').html(data.html);
     }).fail(function () {
-        $('#helpBody').html('<p class="text-danger">No help text could be found.</p>');
-        $('#helpTitle').html('Apologies');
+        $('#helpBody').html('<p class="text-danger">' + noHelpForPage + '</p>');
+        $('#helpTitle').html(noHelpForPageTitle);
     });
     $('#reenableGuidance').unbind('click').click(function () {
         enableGuidance(route, specialPage);

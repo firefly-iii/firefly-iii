@@ -2,14 +2,17 @@
     <thead>
     <tr>
         <th>{{ 'category'|_ }}</th>
+        <th style="text-align: right;">{{ 'earned'|_ }}</th>
         <th style="text-align: right;">{{ 'spent'|_ }}</th>
         <th>&nbsp;</th>
     </tr>
     </thead>
     <tbody>
-    {% set sum = 0 %}
+    {% set sumSpent = 0 %}
+    {% set sumEarned = 0 %}
     {% for index, category in report %}
-        {% set sum = sum + category.spent %}
+        {% set sumSpent = sumSpent + category.spent %}
+        {% set sumEarned = sumEarned + category.earned %}
         {% if loop.index > listLength %}
             <tr class="overListLength">
         {% else %}
@@ -18,6 +21,7 @@
         <td>
             <a href="{{ route('categories.show', category.id) }}">{{ category.name }}</a>
         </td>
+        <td style="text-align: right;">{{ 0|formatAmount }}</td>
         <td style="text-align: right;">{{ category.spent|formatAmount }}</td>
         <td style="width:20px;">
             <i class="fa fa-fw fa-info-circle text-muted firefly-info-button"
@@ -38,7 +42,8 @@
 
     <tr>
         <td><em>{{ 'sum'|_ }}</em></td>
-        <td style="text-align: right;">{{ sum|formatAmount }}</td>
+        <td style="text-align: right;">{{ sumEarned|formatAmount }}</td>
+        <td style="text-align: right;">{{ sumSpent|formatAmount }}</td>
         <td>&nbsp;</td>
     </tr>
     </tfoot>

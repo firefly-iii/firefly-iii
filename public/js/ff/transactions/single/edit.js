@@ -94,7 +94,7 @@ function getAccountId() {
  */
 function setAutocompletes() {
     $.getJSON('json/transaction-journals/' + what).done(function (data) {
-        $('input[name="description"]').typeahead({source: data});
+        $('input[name="description"]').typeahead({source: data, autoSelect: false});
     });
 }
 

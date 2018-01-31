@@ -100,4 +100,6 @@ return [
     'sum_deposits'            => 'Jumlah simpanan',
     'sum_transfers'           => 'Jumlah transfer',
     'reconcile'               => 'Menyesuaikan',
+    'account_on_spectre'      => 'Account (Spectre)',
+    'do_import'               => 'Import from this account',
 ];

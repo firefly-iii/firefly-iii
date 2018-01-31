@@ -129,6 +129,18 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @param string $name
+     * @param string $displayName
+     * @param string $description
+     *
+     * @return Role
+     */
+    public function createRole(string $name, string $displayName, string $description): Role
+    {
+        return Role::create(['name' => $name, 'display_name' => $displayName, 'description' => $description]);
+    }
+
+    /**
      * @param User $user
      *
      * @return bool
@@ -179,6 +191,16 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @param string $role
+     *
+     * @return Role|null
+     */
+    public function getRole(string $role): ?Role
+    {
+        return Role::where('name', $role)->first();
+    }
+
+    /**
      * Return basic user information.
      *
      * @param User $user
@@ -215,8 +237,8 @@ class UserRepository implements UserRepositoryInterface
                                                     ->where('budgets.user_id', $user->id)->get(['budget_limits.budget_id'])->count();
         $return['export_jobs']         = $user->exportJobs()->count();
         $return['export_jobs_success'] = $user->exportJobs()->where('status', 'export_downloaded')->count();
-        $return['import_jobs']         = $user->exportJobs()->count();
-        $return['import_jobs_success'] = $user->exportJobs()->where('status', 'import_complete')->count();
+        $return['import_jobs']         = $user->importJobs()->count();
+        $return['import_jobs_success'] = $user->importJobs()->where('status', 'finished')->count();
         $return['rule_groups']         = $user->ruleGroups()->count();
         $return['rules']               = $user->rules()->count();
         $return['tags']                = $user->tags()->count();

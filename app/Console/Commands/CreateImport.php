@@ -178,7 +178,7 @@ class CreateImport extends Command
         $cwd            = getcwd();
         $validTypes     = config('import.options.file.import_formats');
         $type           = strtolower($this->option('type'));
-        if (null === $user->id) {
+        if (null === $user) {
             $this->error(sprintf('There is no user with ID %d.', $this->option('user')));
 
             return false;

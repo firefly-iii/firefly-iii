@@ -1,51 +1,58 @@
-# .scrutinizer.yml
-tools:
-  external_code_coverage: false
-filter:
-  paths:
+--- 
+build: 
+  nodes: 
+    analysis: 
+      project_setup: 
+        override: true
+      tests: 
+        override: 
+          - php-scrutinizer-run
+checks: 
+  javascript: true
+  php: 
+    align_assignments: true
+    avoid_fixme_comments: true
+    avoid_multiple_statements_on_same_line: true
+    avoid_perl_style_comments: true
+    avoid_todo_comments: true
+    duplication: false
+    encourage_single_quotes: true
+    newline_at_end_of_file: true
+    no_goto: true
+    no_long_variable_names: 
+      maximum: "20"
+    no_short_method_names: 
+      minimum: "3"
+    no_short_variable_names: 
+      minimum: "3"
+    optional_parameters_at_the_end: true
+    parameter_doc_comments: true
+    remove_extra_empty_lines: true
+    return_doc_comment_if_not_inferrable: true
+    return_doc_comments: true
+    uppercase_constants: true
+    use_self_instead_of_fqcn: true
+coding_style: 
+  php: 
+    spaces: 
+      around_operators: 
+        concatenation: true
+      other: 
+        after_type_cast: false
+filter: 
+  excluded_paths: 
+    - database/migrations/*
+    - bootstrap/*
+    - config/*
+    - docker/*
+    - public/js/lib/*
+    - public/lib/adminlte/js/*
+    - public/lib/bootstrap/js/*
+    - resources/*
+    - routes/*
+    - storage/*
+  paths: 
     - app/*
     - public/js/ff/*
-  excluded_paths:
-    - "database/migrations/*"
-    - "bootstrap/*"
-    - "config/*"
-    - "docker/*"
-    - "public/js/lib/*"
-    - "public/lib/adminlte/js/*"
-    - "public/lib/bootstrap/js/*"
-    - "resources/*"
-    - "routes/*"
-    - "storage/*"
-checks:
-    php:
-        use_self_instead_of_fqcn: true
-        uppercase_constants: true
-        return_doc_comments: true
-        return_doc_comment_if_not_inferrable: true
-        remove_extra_empty_lines: true
-        parameter_doc_comments: true
-        optional_parameters_at_the_end: true
-        no_short_variable_names:
-            minimum: '3'
-        no_short_method_names:
-            minimum: '3'
-        no_long_variable_names:
-            maximum: '20'
-        no_goto: true
-        newline_at_end_of_file: true
-        encourage_single_quotes: true
-        avoid_todo_comments: true
-        avoid_perl_style_comments: true
-        avoid_fixme_comments: true
-        avoid_multiple_statements_on_same_line: true
-        align_assignments: true
-        duplication: false
-    javascript: true
-
-coding_style:
-    php:
-        spaces:
-            around_operators:
-                concatenation: true
-            other:
-                after_type_cast: false
+tools: 
+  external_code_coverage: false

@@ -102,7 +102,12 @@ class Support
      */
     protected function getObjectSummary(array $spent, array $earned): array
     {
-        $return = [];
+        $return = [
+            'sum' => [
+                'spent'  => '0',
+                'earned' => '0',
+            ],
+        ];
 
         /**
          * @var int
@@ -110,10 +115,11 @@ class Support
          */
         foreach ($spent as $objectId => $entry) {
             if (!isset($return[$objectId])) {
-                $return[$objectId] = ['spent' => 0, 'earned' => 0];
+                $return[$objectId] = ['spent' => '0', 'earned' => '0'];
             }
 
             $return[$objectId]['spent'] = $entry;
+            $return['sum']['spent']     = bcadd($return['sum']['spent'], $entry);
         }
         unset($entry);
 
@@ -123,10 +129,11 @@ class Support
          */
         foreach ($earned as $objectId => $entry) {
             if (!isset($return[$objectId])) {
-                $return[$objectId] = ['spent' => 0, 'earned' => 0];
+                $return[$objectId] = ['spent' => '0', 'earned' => '0'];
             }
 
             $return[$objectId]['earned'] = $entry;
+            $return['sum']['earned']     = bcadd($return['sum']['earned'], $entry);
         }
 
         return $return;
@@ -139,12 +146,15 @@ class Support
      */
     protected function summarizeByAccount(Collection $collection): array
     {
-        $result = [];
+        $result = [
+            'sum' => '0',
+        ];
         /** @var Transaction $transaction */
         foreach ($collection as $transaction) {
             $accountId          = $transaction->account_id;
             $result[$accountId] = $result[$accountId] ?? '0';
             $result[$accountId] = bcadd($transaction->transaction_amount, $result[$accountId]);
+            $result['sum']      = bcadd($result['sum'], $transaction->transaction_amount);
         }
 
         return $result;

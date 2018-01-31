@@ -129,12 +129,12 @@ class CategoryController extends Controller
         $report     = [];
         /** @var Category $category */
         foreach ($categories as $category) {
-            $spent = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $end);
-            if (0 !== bccomp($spent, '0')) {
-                $report[$category->id] = ['name' => $category->name, 'spent' => $spent, 'id' => $category->id];
+            $spent  = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $end);
+            $earned = $repository->earnedInPeriod(new Collection([$category]), $accounts, $start, $end);
+            if (0 !== bccomp($spent, '0') || 0 !== bccomp($earned, '0')) {
+                $report[$category->id] = ['name' => $category->name, 'spent' => $spent, 'earned' => $earned, 'id' => $category->id];
             }
         }
-
         // sort the result
         // Obtain a list of columns
         $sum = [];

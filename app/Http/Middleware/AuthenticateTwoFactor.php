@@ -24,11 +24,10 @@ namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Log;
 use Preferences;
+use Auth;
 use Session;
-
 /**
  * Class AuthenticateTwoFactor.
  */
@@ -45,26 +44,14 @@ class AuthenticateTwoFactor
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
-        // do the usual auth, again:
         if (Auth::guard($guard)->guest()) {
-            if ($request->ajax()) {
-                return response('Unauthorized.', 401);
-            }
 
             return redirect()->guest('login');
         }
 
-        if (1 === intval(auth()->user()->blocked)) {
-            Auth::guard($guard)->logout();
-            Session::flash('logoutMessage', trans('firefly.block_account_logout'));
-
-            return redirect()->guest('login');
-        }
         $is2faEnabled = Preferences::get('twoFactorAuthEnabled', false)->data;
         $has2faSecret = null !== Preferences::get('twoFactorAuthSecret');
-
-        // grab 2auth information from session.
-        $is2faAuthed = 'true' === $request->cookie('twoFactorAuthenticated');
+        $is2faAuthed  = 'true' === $request->cookie('twoFactorAuthenticated');
 
         if ($is2faEnabled && $has2faSecret && !$is2faAuthed) {
             Log::debug('Does not seem to be 2 factor authed, redirect.');

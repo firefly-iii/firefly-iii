@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ trans('config.html_language') }}">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -48,19 +48,16 @@
 
         {# Logo #}
         <a href="{{ route('index') }}" class="logo">
-            <!-- mini logo for sidebar mini 50x50 pixels -->
+            {# mini logo for sidebar mini 50x50 pixels #}
             <span class="logo-mini">FF</span>
-            <!-- logo for regular state and mobile devices -->
+            {# logo for regular state and mobile devices #}
             <span class="logo-lg"><b>Firefly</b>III</span>
         </a>
 
-        <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
-            <!-- Sidebar toggle button-->
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                 <span class="sr-only">{{ 'toggleNavigation'|_ }}</span>
             </a>
-            <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
 
@@ -70,7 +67,6 @@
                         </a>
                     </li>
 
-                    <!-- Messages: style can be found in dropdown.less-->
                     <li>
                         <span style="color:#fff;padding: 15px;display: block;line-height: 20px;">
                             <span id="daterange"></span>
@@ -92,35 +88,26 @@
 
         </nav>
     </header>
-    <!-- Left side column. contains the logo and sidebar -->
     <aside class="main-sidebar">
-        <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
-            <!-- search form -->
             <form action="{{ route('search.index') }}" method="get" class="sidebar-form">
                 <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="{{ 'searchPlaceholder'|_ }}" value="{{ query }}"/>
+                    <input autocomplete="off" type="text" name="q" class="form-control" placeholder="{{ 'searchPlaceholder'|_ }}" value="{{ query }}"/>
                     <span class="input-group-btn">
                 <button type='submit' name='search' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
               </span>
                 </div>
             </form>
-            <!-- /.search form -->
-            <!-- sidebar menu: : style can be found in sidebar.less -->
             {% include('partials.menu-sidebar') %}
         </section>
-        <!-- /.sidebar -->
     </aside>
 
-    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
         <section class="content-header">
             {% include('partials.page-header') %}
             {% block breadcrumbs %}{% endblock %}
         </section>
 
-        <!-- Main content -->
         <section class="content">
             {% if IS_DEMO_SITE %}
                 <div class="row no-print">
@@ -134,13 +121,9 @@
 
             {% include('partials.flashes') %}
 
-            <!-- actual content -->
             {% block content %}{% endblock %}
         </section>
-        <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
-
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
             <b>{{ 'version'|_ }}</b> <a href="{{ route('debug') }}">{{ Config.get('firefly.version') }}</a>
@@ -151,10 +134,6 @@
     {% include('partials.control-bar') %}
 
 </div>
-<!-- ./wrapper -->
-
-
-<!-- Modal -->
 <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">
 </div>
 
@@ -188,9 +167,18 @@
 <script src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ FF_VERSION }}{% if account %}&amp;account={{ account.id }}{% endif %}"
         type="text/javascript"></script>
 <script type="text/javascript" src="js/ff/firefly.js?v={{ FF_VERSION }}"></script>
+<script type="text/javascript">
+    var helpPageTitle = "{{ trans('firefly.help_for_this_page')|escape('js') }}";
+    var noHelpForPage = "{{ trans('firefly.no_help_could_be_found')|escape('js') }}";
+    var noHelpForPageTitle = "{{ trans('firefly.no_help_title')|escape('js') }}";
+</script>
 <script type="text/javascript" src="js/ff/help.js?v={{ FF_VERSION }}"></script>
 {% if not shownDemo %}
     <script type="text/javascript">
+        var nextLabel = "{{ trans('firefly.intro_next_label')|escape('js') }}";
+        var prevLabel = "{{ trans('firefly.intro_prev_label')|escape('js') }}";
+        var skipLabel = "{{ trans('firefly.intro_skip_label')|escape('js') }}";
+        var doneLabel = "{{ trans('firefly.intro_done_label')|escape('js') }}";
         var routeForTour = "{{ current_route_name }}";
         var routeStepsUri = "{{ route('json.intro', [current_route_name, what|default("")]) }}";
         var routeForFinishedTour = "{{ route('json.intro.finished', [current_route_name, what|default("")]) }}";

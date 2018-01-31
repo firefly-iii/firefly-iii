@@ -699,6 +699,7 @@ class AccountRepository implements AccountRepositoryInterface
             return null;
         }
 
+
         return $iban;
     }
 }

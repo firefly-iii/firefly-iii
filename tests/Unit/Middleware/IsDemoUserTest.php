@@ -21,9 +21,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Helpers;
+namespace Tests\Unit\Middleware;
 
 use FireflyIII\Http\Middleware\IsDemoUser;
+use FireflyIII\Http\Middleware\StartFireflySession;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -44,19 +45,7 @@ class IsDemoUserTest extends TestCase
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 
-    /**
-     * @covers \FireflyIII\Http\Middleware\IsDemoUser::handle
-     */
-    public function testMiddlewareDemoUser()
-    {
-        $this->withoutExceptionHandling();
-        $this->be($this->demoUser());
-        $response = $this->get('/_test/is-demo');
 
-        $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
-        $response->assertSessionHas('warning', strval(trans('firefly.not_available_demo_user')));
-        $response->assertRedirect(route('index'));
-    }
 
     /**
      * @covers \FireflyIII\Http\Middleware\IsDemoUser::handle
@@ -75,7 +64,7 @@ class IsDemoUserTest extends TestCase
     {
         parent::setUp();
 
-        Route::middleware(IsDemoUser::class)->any(
+        Route::middleware([StartFireflySession::class, IsDemoUser::class])->any(
             '/_test/is-demo', function () {
             return 'OK';
         }

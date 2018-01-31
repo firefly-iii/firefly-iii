@@ -45,7 +45,7 @@ class TagList implements BinderInterface
             $list     = [];
             $incoming = explode(',', $value);
             foreach ($incoming as $entry) {
-                $list[] = trim($entry);
+                $list[] = strtolower(trim($entry));
             }
             $list = array_unique($list);
             if (count($list) === 0) {
@@ -57,7 +57,7 @@ class TagList implements BinderInterface
 
             $collection = $allTags->filter(
                 function (Tag $tag) use ($list) {
-                    return in_array($tag->tag, $list);
+                    return in_array(strtolower($tag->tag), $list);
                 }
             );
 

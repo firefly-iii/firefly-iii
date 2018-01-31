@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Import;
 
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Response;
@@ -47,6 +48,7 @@ class StatusController extends Controller
                 return $next($request);
             }
         );
+        $this->middleware(IsDemoUser::class);
     }
 
     /**
@@ -93,20 +95,29 @@ class StatusController extends Controller
             $result['percentage']      = round(($job->extended_status['done'] / $job->extended_status['steps']) * 100, 0);
             $result['show_percentage'] = true;
         }
-
         if ('finished' === $job->status) {
-            $tagId = $job->extended_status['tag'];
-            /** @var TagRepositoryInterface $repository */
-            $repository             = app(TagRepositoryInterface::class);
-            $tag                    = $repository->find($tagId);
-            $result['finished']     = true;
-            $result['finishedText'] = trans('import.status_finished_job', ['link' => route('tags.show', [$tag->id, 'all']), 'tag' => $tag->tag]);
+            $result['finished'] = true;
+            $tagId              = intval($job->extended_status['tag']);
+            if ($tagId !== 0) {
+                /** @var TagRepositoryInterface $repository */
+                $repository             = app(TagRepositoryInterface::class);
+                $tag                    = $repository->find($tagId);
+                $count                  = $tag->transactionJournals()->count();
+                $result['finishedText'] = trans(
+                    'import.status_finished_job', ['count' => $count, 'link' => route('tags.show', [$tag->id, 'all']), 'tag' => $tag->tag]
+                );
+            }
+
+            if ($tagId === 0) {
+                $result['finishedText'] = trans('import.status_finished_no_tag'); // @codeCoverageIgnore
+            }
         }
 
         if ('running' === $job->status) {
             $result['started'] = true;
             $result['running'] = true;
         }
+        $result['percentage'] = $result['percentage'] > 100 ? 100 : $result['percentage'];
 
         return Response::json($result);
     }

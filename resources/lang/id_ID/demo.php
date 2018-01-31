@@ -32,6 +32,4 @@ return [
     'transactions-index'             => 'Biaya ini, deposito dan transfer tidak terlalu imajinatif. Mereka telah dihasilkan secara otomatis.',
     'piggy-banks-index'              => 'Seperti yang bisa Anda lihat, ada tiga celengan. Gunakan tombol plus dan minus untuk mempengaruhi jumlah uang di setiap celengan. Klik nama celengan untuk melihat administrasi masing-masing celengan.',
     'import-index'                   => 'Tentu saja, file CSV manapun bisa diimpor ke Firefly III',
-    'import-configure-security'      => 'Karena masalah keamanan, upload Anda telah diganti dengan file lokal.',
-    'import-configure-configuration' => 'Konfigurasi yang Anda lihat di bawah ini benar untuk file lokal.',
 ];

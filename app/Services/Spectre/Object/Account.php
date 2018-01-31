@@ -79,6 +79,14 @@ class Account extends SpectreObject
     }
 
     /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
      * @return array
      */
     public function toArray(): array

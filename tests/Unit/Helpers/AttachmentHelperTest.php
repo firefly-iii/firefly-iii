@@ -117,6 +117,22 @@ class AttachmentHelperTest extends TestCase
      *
      * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::__construct
      * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::saveAttachmentsForModel
+     */
+    public function testSaveEmpty()
+    {
+        $journal = TransactionJournal::first();
+        $helper  = new AttachmentHelper;
+
+        $res = $helper->saveAttachmentsForModel($journal, null);
+        $this->assertTrue($res);
+    }
+
+
+    /**
+     * Test double file upload. Needs to be after testSave.
+     *
+     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::__construct
+     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::saveAttachmentsForModel
      * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::processFile
      * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::validateUpload
      * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::validMime

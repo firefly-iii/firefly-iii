@@ -1,6 +1,6 @@
 <?php
 /**
- * SingleCacheProperties.php
+ * pagination.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -20,25 +20,7 @@
  */
 declare(strict_types=1);
 
-namespace FireflyIII\Support;
-
-use Illuminate\Support\Collection;
-
-/**
- * Class CacheProperties.
- */
-class SingleCacheProperties extends CacheProperties
-{
-    /**
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->properties = new Collection;
-        if (auth()->check()) {
-            $this->addProperty(auth()->user()->id);
-            $this->addProperty(app('preferences')->lastActivity());
-        }
-    }
-}
+return [
+    'previous' => '&laquo; Anterior',
+    'next'     => 'Próximo &raquo;',
+];

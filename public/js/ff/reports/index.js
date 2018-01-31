@@ -18,11 +18,13 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: minDate, nonSelectedText, allSelectedText, filterPlaceholder */
+/** global: minDate, nonSelectedText, allSelectedText, filterPlaceholder, nSelectedText, selectAllText */
 
 var defaultMultiSelect = {
     disableIfEmpty: true,
+    selectAllText: selectAllText,
     nonSelectedText: nonSelectedText,
+    nSelectedText: nSelectedText,
     allSelectedText: allSelectedText,
     includeSelectAllOption: true,
     enableFiltering: true,

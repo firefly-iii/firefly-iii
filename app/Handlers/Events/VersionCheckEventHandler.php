@@ -25,6 +25,9 @@ namespace FireflyIII\Handlers\Events;
 
 use FireflyConfig;
 use FireflyIII\Events\RequestedVersionCheckStatus;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Services\Github\Object\Release;
+use FireflyIII\Services\Github\Request\UpdateRequest;
 use FireflyIII\User;
 use Log;
 
@@ -45,6 +48,7 @@ class VersionCheckEventHandler
             return;
         }
 
+
         /** @var User $user */
         $user = $event->user;
         if (!$user->hasRole('owner')) {
@@ -55,7 +59,7 @@ class VersionCheckEventHandler
         $lastCheckTime = FireflyConfig::get('last_update_check', time());
         $now           = time();
         if ($now - $lastCheckTime->data < 604800) {
-            Log::debug('Checked for updates less than a week ago.');
+            Log::debug(sprintf('Checked for updates less than a week ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data)));
 
             return;
 
@@ -71,8 +75,42 @@ class VersionCheckEventHandler
             return;
         }
 
-        // actually check for update and inform the user.
+        $current = config('firefly.version');
+        /** @var UpdateRequest $request */
+        $request = app(UpdateRequest::class);
+        $check   = -2;
+        $first   = new Release(['id' => '0', 'title' => '0', 'updated' => '2017-01-01', 'content' => '']);
+        try {
+            $request->call();
+            $releases = $request->getReleases();
+            // first entry should be the latest entry:
+            /** @var Release $first */
+            $first = reset($releases);
+            $check = version_compare($current, $first->getTitle());
+            FireflyConfig::set('last_update_check', time());
+        } catch (FireflyException $e) {
+            Log::error(sprintf('Could not check for updates: %s', $e->getMessage()));
+        }
+        $string = 'no result: ' . $check;
+        if ($check === -2) {
+            $string = strval(trans('firefly.update_check_error'));
+        }
+        if ($check === -1) {
+            // there is a new FF version!
+            $monthAndDayFormat = (string)trans('config.month_and_day');
+            $string            = strval(
+                trans(
+                    'firefly.update_new_version_alert',
+                    ['your_version' => $current, 'new_version' => $first->getTitle(), 'date' => $first->getUpdated()->formatLocalized($monthAndDayFormat)]
+                )
+            );
+        }
+        if ($check !== 0) {
+            // flash info
+            session()->flash('info', $string);
+        }
 
+        return;
     }
 
 }

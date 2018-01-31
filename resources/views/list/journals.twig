@@ -32,17 +32,22 @@
     {% endfor %}
     </tbody>
 </table>
-<div class="row mass_edit_all hidden-xs" style="display: none;">
+<div class="row mass_edit_all hidden-xs" style="display: none;padding:8px;">
     <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-        <div class="mass_button_options btn-group btn-group" style="display:none;">
-            <a href="#" class="btn btn-default mass_edit"><i class="fa fa-fw fa-pencil"></i> <span>{{ 'edit'|_ }}</span></a>
-            <a href="#" class="btn btn-default bulk_edit"><span>{{ 'bulk_edit'|_ }}</span></a>
-            <a href="#" class="btn btn-danger mass_delete"><i class="fa fa-fw fa-trash"></i> <span>{{ 'delete'|_ }}</span></a>
+        <div class="btn-group dropup mass_button_options" style="display:none;">
+            <button type="button" class="btn btn-default">{{ 'actions'|_ }}</button>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#" class="mass_edit"><i class="fa fa-fw fa-pencil"></i> <span>{{ 'edit'|_ }}</span></a></li>
+                <li><a href="#" class="bulk_edit"><i class="fa fa-fw fa-pencil-square-o"></i> <span>{{ 'bulk_edit'|_ }}</span></a></li>
+                <li><a href="#" class="mass_delete"><i class="fa fa-fw fa-trash"></i> <span>{{ 'delete'|_ }}</span></a></li>
+            </ul>
         </div>
-
     </div>
     <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12 hidden-xs">
-
         <div class="mass_buttons btn-group btn-group pull-right">
             <a href="#" class="btn btn-default mass_select"><i class="fa fa-fw fa-check-square-o"></i> {{ 'select_transactions'|_ }}</a>
             <a href="#" class="btn btn-default mass_stop_select" style="display:none;"><i class="fa faw-fw fa-square-o"
@@ -59,7 +64,7 @@
         </div>
     </div>
 </div>
-<div class="row">
+<div class="row" style="padding:8px;">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         {{ transactions.render|raw }}
     </div>

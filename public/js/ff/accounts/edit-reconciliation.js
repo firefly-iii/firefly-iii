@@ -32,7 +32,7 @@ $(document).ready(function () {
 function setAutocompletes() {
 
     $.getJSON('json/categories').done(function (data) {
-        $('input[name="category"]').typeahead({source: data});
+        $('input[name="category"]').typeahead({source: data, autoSelect: false});
     });
 
     $.getJSON('json/tags').done(function (data) {

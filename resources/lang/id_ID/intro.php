@@ -31,13 +31,13 @@ return [
 
     // create account:
     'accounts_create_iban'                  => 'Berikan akun anda IBAN yang benar. Hal ini bisa membuat data impor sangat mudah di masa yang akan datang.',
-    'accounts_create_asset_opening_balance' => 'Akun aset dapat memiliki "saldo awal", yang menandakan dimulainya riwayat pada akun ini di firefly.',
+    'accounts_create_asset_opening_balance' => 'Assets accounts may have an "opening balance", indicating the start of this account\'s history in Firefly III.',
     'accounts_create_asset_currency'        => 'Firelfly III mendukung berbagai mata uang. Akun aset memiliki satu mata uang utama, yang yang harus anda tetapkan.',
     'accounts_create_asset_virtual'         => 'Kadang-kadang itu dapat membantu memberi akun anda saldo virtual: jumlah tambahan yang selalu ditambahkan atau dihapus dari saldo sebenarnya.',
 
     // budgets index
     'budgets_index_intro'                   => 'Anggaran yang digunakan untuk mengelola keuangan anda dan membentuk salah satu fungsi inti dari Firefly III.',
-    'budgets_index_set_budget'              => 'Tetapkan total anggaran anda untuk setiap periode sehingga Firefly dapat memberi tahu anda jika anda sudah menganggarkan semua uang yang tersedia.',
+    'budgets_index_set_budget'              => 'Set your total budget for every period so Firefly III can tell you if you have budgeted all available money.',
     'budgets_index_see_expenses_bar'        => 'Menghabiskan uang secara perlahan dengan mengisi di bar ini.',
     'budgets_index_navigate_periods'        => 'Menavigasi melalui periode dengan mudah menetapkan anggaraan sebelumnya.',
     'budgets_index_new_budget'              => 'Buat anggaran baru sesuai keinginan anda.',

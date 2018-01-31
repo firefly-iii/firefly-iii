@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Steam;
@@ -173,7 +174,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $startBalance     = $dayBeforeBalance;
         $currency         = $currencyRepos->find(intval($account->getMeta('currency_id')));
 
-        // @var Transaction $journal
+        /** @var Transaction $transaction */
         foreach ($journals as $transaction) {
             $transaction->before = $startBalance;
             $transactionAmount   = $transaction->transaction_amount;

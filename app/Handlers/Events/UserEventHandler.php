@@ -25,11 +25,11 @@ namespace FireflyIII\Handlers\Events;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\UserChangedEmail;
+use FireflyIII\Factories\RoleFactory;
 use FireflyIII\Mail\ConfirmEmailChangeMail;
 use FireflyIII\Mail\RegisteredUser as RegisteredUserMail;
 use FireflyIII\Mail\RequestedNewPassword as RequestedNewPasswordMail;
 use FireflyIII\Mail\UndoEmailChangeMail;
-use FireflyIII\Models\Role;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Auth\Events\Login;
@@ -74,11 +74,12 @@ class UserEventHandler
      */
     public function checkSingleUserIsAdmin(Login $event): bool
     {
-        Log::debug('In checkSingleUserIsAdmin');
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
 
         /** @var User $user */
         $user  = $event->user;
-        $count = User::count();
+        $count = $repository->count();
 
         if ($count > 1) {
             // if more than one user, do nothing.
@@ -93,17 +94,16 @@ class UserEventHandler
             return true;
         }
         // user is the only user but does not have role "owner".
-        $role = Role::where('name', 'owner')->first();
+        $role = $repository->getRole('owner');
         if (is_null($role)) {
             // create role, does not exist. Very strange situation so let's raise a big fuss about it.
-            $role = Role::create(['name' => 'owner', 'display_name' => 'Site Owner', 'description' => 'User runs this instance of FF3']);
+            $role = $repository->createRole('owner', 'Site Owner', 'User runs this instance of FF3');
             Log::error('Could not find role "owner". This is weird.');
         }
 
         Log::info(sprintf('Gave user #%d role #%d ("%s")', $user->id, $role->id, $role->name));
         // give user the role
-        $user->attachRole($role);
-        $user->save();
+        $repository->attachRole($user, 'owner');
 
         return true;
     }

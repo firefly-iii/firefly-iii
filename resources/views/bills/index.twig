@@ -13,8 +13,6 @@
         <div class="box">
             <div class="box-header with-border">
                 <h3 class="box-title">{{ title }}</h3>
-
-
                 <div class="box-tools pull-right">
                     <div class="btn-group">
                         <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
@@ -25,7 +23,13 @@
                 </div>
             </div>
             <div class="box-body table-responsive no-padding">
+                <div style="padding:8px;">
+                    <a class="btn btn-success" href="{{ route('bills.create') }}"><i class="fa fa-plus fa-fw"></i> {{ 'create_new_bill'|_ }}</a>
+                </div>
                 {% include 'list/bills' %}
+            </div>
+            <div class="box-footer">
+                <a class="btn btn-success" href="{{ route('bills.create') }}"><i class="fa fa-plus fa-fw"></i> {{ 'create_new_bill'|_ }}</a>
             </div>
         </div>
     </div>

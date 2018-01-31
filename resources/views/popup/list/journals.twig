@@ -26,9 +26,8 @@
     {# Make sum: #}
     {% set sum = 0 %}
     {% for transaction in journals %}
-        <!-- add to sum
+        {# add to sum #}
         {% set sum = (sum + transaction.transaction_amount) %}
-        -->
         <tr class="drag" data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}">
             <td class="hidden-xs">
                 {{ transaction|transactionIcon }}

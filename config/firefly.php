@@ -33,9 +33,70 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'     => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
-    'version'        => '4.6.13',
+    'version'        => '4.7.0',
     'maxUploadSize'  => 15242880,
-    'allowedMimes'   => ['image/png', 'image/jpeg', 'application/pdf', 'text/plain'],
+    'allowedMimes'   => [
+        /* plain files */
+        'text/plain',
+
+        /* images */
+        'image/jpeg',
+        'image/svg+xml',
+        'image/png',
+        'image/heic',
+        'image/heic-sequence',
+
+        /* PDF */
+        'application/pdf',
+
+
+        /* MS word */
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+        /* MS excel */
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+        /* MS powerpoint */
+        'application/vnd.ms-powerpoint',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'application/vnd.openxmlformats-officedocument.presentationml.template',
+        'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+        /* iWork */
+        'application/x-iwork-pages-sffpages',
+        /* open office */
+        'application/vnd.sun.xml.writer',
+        'application/vnd.sun.xml.writer.template',
+        'application/vnd.sun.xml.writer.global',
+        'application/vnd.stardivision.writer',
+        'application/vnd.stardivision.writer-global',
+        'application/vnd.sun.xml.calc',
+        'application/vnd.sun.xml.calc.template',
+        'application/vnd.stardivision.calc',
+        'application/vnd.sun.xml.impress',
+        'application/vnd.sun.xml.impress.template',
+        'application/vnd.stardivision.impress',
+        'application/vnd.sun.xml.draw',
+        'application/vnd.sun.xml.draw.template',
+        'application/vnd.stardivision.draw',
+        'application/vnd.sun.xml.math',
+        'application/vnd.stardivision.math',
+        'application/vnd.oasis.opendocument.text',
+        'application/vnd.oasis.opendocument.text-template',
+        'application/vnd.oasis.opendocument.text-web',
+        'application/vnd.oasis.opendocument.text-master',
+        'application/vnd.oasis.opendocument.graphics',
+        'application/vnd.oasis.opendocument.graphics-template',
+        'application/vnd.oasis.opendocument.presentation',
+        'application/vnd.oasis.opendocument.presentation-template',
+        'application/vnd.oasis.opendocument.spreadsheet',
+        'application/vnd.oasis.opendocument.spreadsheet-template',
+        'application/vnd.oasis.opendocument.chart',
+        'application/vnd.oasis.opendocument.formula',
+        'application/vnd.oasis.opendocument.database',
+        'application/vnd.oasis.opendocument.image',
+    ],
     'list_length'    => 10,
     'export_formats' => [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
@@ -119,15 +180,14 @@ return [
         'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],
         'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '],
+        'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'],
+        'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'],
         'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'],
 
         // incomplete languages:
-        //'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'],
         //'id_ID' => ['name_locale' => 'Indonesian', 'name_english' => 'Indonesian'],
         //'es_ES' => ['name_locale' => 'Spanish', 'name_english' => 'Spanish'],
-        //'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'],
         //'sl_SI' => ['name_locale' => 'Slovenščina', 'name_english' => 'Slovenian'],
-        //
     ],
     'transactionTypesByWhat'     => [
         'expenses'   => ['Withdrawal'],
@@ -152,12 +212,12 @@ return [
         'attachment'        => \FireflyIII\Models\Attachment::class,
         'bill'              => \FireflyIII\Models\Bill::class,
         'budget'            => \FireflyIII\Models\Budget::class,
+        'budgetLimit'       => \FireflyIII\Models\BudgetLimit::class,
         'category'          => \FireflyIII\Models\Category::class,
         'linkType'          => \FireflyIII\Models\LinkType::class,
-        'transaction_type'  => \FireflyIII\Models\TransactionType::class,
+        'transactionType'   => \FireflyIII\Models\TransactionType::class,
         'journalLink'       => \FireflyIII\Models\TransactionJournalLink::class,
         'currency'          => \FireflyIII\Models\TransactionCurrency::class,
-        'budgetlimit'       => \FireflyIII\Models\BudgetLimit::class,
         'piggyBank'         => \FireflyIII\Models\PiggyBank::class,
         'tj'                => \FireflyIII\Models\TransactionJournal::class,
         'tag'               => \FireflyIII\Models\Tag::class,
@@ -165,20 +225,29 @@ return [
         'ruleGroup'         => \FireflyIII\Models\RuleGroup::class,
         'exportJob'         => \FireflyIII\Models\ExportJob::class,
         'importJob'         => \FireflyIII\Models\ImportJob::class,
+        'user'              => \FireflyIII\User::class,
 
-        // binders
-        'fromCurrencyCode'  => \FireflyIII\Support\Binder\CurrencyCode::class,
-        'toCurrencyCode'    => \FireflyIII\Support\Binder\CurrencyCode::class,
-        'unfinishedJournal' => \FireflyIII\Support\Binder\UnfinishedJournal::class,
+        // strings
+
+        // dates
+        'start_date'        => \FireflyIII\Support\Binder\Date::class,
+        'end_date'          => \FireflyIII\Support\Binder\Date::class,
+        'date'              => \FireflyIII\Support\Binder\Date::class,
+
+        // lists
         'accountList'       => \FireflyIII\Support\Binder\AccountList::class,
         'expenseList'       => \FireflyIII\Support\Binder\AccountList::class,
         'budgetList'        => \FireflyIII\Support\Binder\BudgetList::class,
         'journalList'       => \FireflyIII\Support\Binder\JournalList::class,
         'categoryList'      => \FireflyIII\Support\Binder\CategoryList::class,
         'tagList'           => \FireflyIII\Support\Binder\TagList::class,
-        'start_date'        => \FireflyIII\Support\Binder\Date::class,
-        'end_date'          => \FireflyIII\Support\Binder\Date::class,
-        'date'              => \FireflyIII\Support\Binder\Date::class,
+
+        // others
+        'fromCurrencyCode'  => \FireflyIII\Support\Binder\CurrencyCode::class,
+        'toCurrencyCode'    => \FireflyIII\Support\Binder\CurrencyCode::class,
+        'unfinishedJournal' => \FireflyIII\Support\Binder\UnfinishedJournal::class,
+
+
     ],
     'rule-triggers'              => [
         'user_action'           => 'FireflyIII\TransactionRules\Triggers\UserAction',

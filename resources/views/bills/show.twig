@@ -89,7 +89,7 @@
                         <table class="table">
                             <tr>
                                 <td>{{ trans('list.notes') }}</td>
-                                <td>{{ bill.notes.first.text|markdown }}</td>
+                                <td class="markdown">{{ bill.notes.first.text|markdown }}</td>
                             </tr>
                         </table>
                     {% endif %}

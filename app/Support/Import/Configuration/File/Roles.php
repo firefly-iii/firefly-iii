@@ -143,14 +143,13 @@ class Roles implements ConfigurationInterface
 
         $this->saveConfig($config);
         $this->ignoreUnmappableColumns();
-        $this->setRolesComplete();
-
-        $config          = $this->getConfig();
-        $config['stage'] = 'map';
-        $this->saveConfig($config);
-
-        $this->isMappingNecessary();
-
+        $res = $this->isRolesComplete();
+        if ($res === true) {
+            $config          = $this->getConfig();
+            $config['stage'] = 'map';
+            $this->saveConfig($config);
+            $this->isMappingNecessary();
+        }
 
         return true;
     }
@@ -226,6 +225,56 @@ class Roles implements ConfigurationInterface
     }
 
     /**
+     * @return bool
+     */
+    private function isRolesComplete(): bool
+    {
+        $config   = $this->getConfig();
+        $count    = $config['column-count'];
+        $assigned = 0;
+
+        // check if data actually contains amount column (foreign amount does not count)
+        $hasAmount        = false;
+        $hasForeignAmount = false;
+        $hasForeignCode   = false;
+        for ($i = 0; $i < $count; ++$i) {
+            $role = $config['column-roles'][$i] ?? '_ignore';
+            if ('_ignore' !== $role) {
+                ++$assigned;
+            }
+            if (in_array($role, ['amount', 'amount_credit', 'amount_debit'])) {
+                $hasAmount = true;
+            }
+            if ($role === 'foreign-currency-code') {
+                $hasForeignCode = true;
+            }
+            if ($role === 'amount_foreign') {
+                $hasForeignAmount = true;
+            }
+        }
+        if ($assigned > 0 && $hasAmount && ($hasForeignCode === false && $hasForeignAmount === false)) {
+            $this->warning = '';
+            $this->saveConfig($config);
+
+            return true;
+        }
+        // warn if has foreign amount but no currency code:
+        if ($hasForeignAmount && !$hasForeignCode) {
+            $this->warning = strval(trans('import.foreign_amount_warning'));
+
+            return false;
+        }
+
+        if (0 === $assigned || !$hasAmount) {
+            $this->warning = strval(trans('import.roles_warning'));
+
+            return false;
+        }
+
+        return false;
+    }
+
+    /**
      * make unique example data.
      */
     private function makeExamplesUnique(): bool
@@ -282,36 +331,6 @@ class Roles implements ConfigurationInterface
     private function saveConfig(array $array)
     {
         $this->repository->setConfiguration($this->job, $array);
-    }
-
-    /**
-     * @return bool
-     */
-    private function setRolesComplete(): bool
-    {
-        $config    = $this->getConfig();
-        $count     = $config['column-count'];
-        $assigned  = 0;
-        $hasAmount = false;
-        for ($i = 0; $i < $count; ++$i) {
-            $role = $config['column-roles'][$i] ?? '_ignore';
-            if ('_ignore' !== $role) {
-                ++$assigned;
-            }
-            if (in_array($role, ['amount', 'amount_credit', 'amount_debit'])) {
-                $hasAmount = true;
-            }
-        }
-        if ($assigned > 0 && $hasAmount) {
-            $config['column-roles-complete'] = true;
-            $this->warning                   = '';
-        }
-        if (0 === $assigned || !$hasAmount) {
-            $this->warning = strval(trans('import.roles_warning'));
-        }
-        $this->saveConfig($config);
-
-        return true;
     }
 
     /**

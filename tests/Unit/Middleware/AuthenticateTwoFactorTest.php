@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Helpers;
+namespace Tests\Unit\Middleware;
 
 use FireflyIII\Http\Middleware\AuthenticateTwoFactor;
 use FireflyIII\Models\Preference;
@@ -43,32 +43,6 @@ class AuthenticateTwoFactorTest extends TestCase
         $this->withoutExceptionHandling();
         $response = $this->get('/_test/authenticate');
         $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
-        $response->assertRedirect(route('login'));
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor::handle
-     */
-    public function testMiddlewareAjax()
-    {
-        $server = ['HTTP_X-Requested-With' => 'XMLHttpRequest'];
-        $this->withoutExceptionHandling();
-        $response = $this->get('/_test/authenticate', $server);
-        $this->assertEquals(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor::handle
-     */
-    public function testMiddlewareBlockedUser()
-    {
-        $this->withoutExceptionHandling();
-        $user          = $this->user();
-        $user->blocked = 1;
-        $this->be($user);
-        $response = $this->get('/_test/authenticate');
-        $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
-        $response->assertSessionHas('logoutMessage', strval(trans('firefly.block_account_logout')));
         $response->assertRedirect(route('login'));
     }
 

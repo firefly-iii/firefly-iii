@@ -296,7 +296,7 @@ function updateTriggerInput(selectList) {
 function createAutoComplete(input, URI) {
     input.typeahead('destroy');
     $.getJSON(URI).done(function (data) {
-        input.typeahead({source: data});
+        input.typeahead({source: data, autoSelect: false});
     });
 
 }

@@ -121,11 +121,11 @@ trait ImportSupport
     {
         $transaction                          = new Transaction;
         $transaction->account_id              = $parameters['account'];
-        $transaction->transaction_journal_id  = $parameters['id'];
-        $transaction->transaction_currency_id = $parameters['currency'];
+        $transaction->transaction_journal_id  = intval($parameters['id']);
+        $transaction->transaction_currency_id = intval($parameters['currency']);
         $transaction->amount                  = $parameters['amount'];
-        $transaction->foreign_currency_id     = $parameters['foreign_currency'];
-        $transaction->foreign_amount          = $parameters['foreign_amount'];
+        $transaction->foreign_currency_id     = intval($parameters['foreign_currency']) === 0 ? null : intval($parameters['foreign_currency']);
+        $transaction->foreign_amount          = null === $transaction->foreign_currency_id ? null : $parameters['foreign_amount'];
         $transaction->save();
         if (null === $transaction->id) {
             $errorText = join(', ', $transaction->getErrors()->all());
@@ -155,6 +155,7 @@ trait ImportSupport
      * @param ImportJournal $importJournal
      *
      * @return int
+     * @throws FireflyException
      */
     private function getCurrencyId(ImportJournal $importJournal): int
     {
@@ -192,7 +193,7 @@ trait ImportSupport
     {
         // use given currency by import journal.
         $currency = $importJournal->currency->getTransactionCurrency();
-        if (null !== $currency->id && $currency->id !== $currencyId) {
+        if (null !== $currency->id && intval($currency->id) !== intval($currencyId)) {
             return $currency->id;
         }
 
@@ -216,6 +217,7 @@ trait ImportSupport
      * @see ImportSupport::getTransactionType
      *
      * @return Account
+     * @throws FireflyException
      */
     private function getOpposingAccount(ImportAccount $account, int $forbiddenAccount, string $amount): Account
     {
@@ -435,8 +437,6 @@ trait ImportSupport
 
         if (!$journal->save()) {
             $errorText = join(', ', $journal->getErrors()->all());
-            // add three steps:
-            $this->job->addStepsDone(3);
             // throw error
             throw new FireflyException($errorText);
         }

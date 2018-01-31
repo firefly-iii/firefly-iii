@@ -32,6 +32,4 @@ return [
     'transactions-index'             => 'Ces dépenses, dépôts et transferts ne sont pas particulièrement imaginatifs. Ils ont été générés automatiquement.',
     'piggy-banks-index'              => 'Comme vous pouvez le voir, il y a trois tirelires. Utilisez les boutons plus et moins pour influer sur le montant d’argent dans chaque tirelire. Cliquez sur le nom de la tirelire pour voir l’administration pour chaque tirelire.',
     'import-index'                   => 'Bien sûr, n’importe quel fichier CSV peut être importé dans Firefly III',
-    'import-configure-security'      => 'Pour des raisons de sécurité, votre téléchargement a été remplacé par un fichier local.',
-    'import-configure-configuration' => 'La configuration que vous voyez ci-dessous est correcte pour le fichier local.',
 ];

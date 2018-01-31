@@ -76,8 +76,6 @@ return [
         FireflyIII\Providers\RouteServiceProvider::class,
 
         // own stuff:
-        //        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-        //        Barryvdh\Debugbar\ServiceProvider::class,
         TwigBridge\ServiceProvider::class,
         PragmaRX\Google2FALaravel\ServiceProvider::class,
 
@@ -104,7 +102,6 @@ return [
 
     ],
     'aliases'         => [
-
         'App'           => Illuminate\Support\Facades\App::class,
         'Artisan'       => Illuminate\Support\Facades\Artisan::class,
         'Auth'          => Illuminate\Support\Facades\Auth::class,

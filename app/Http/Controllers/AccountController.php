@@ -39,7 +39,6 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Log;
 use Preferences;
 use Steam;
 use View;
@@ -51,6 +50,13 @@ use View;
  */
 class AccountController extends Controller
 {
+    /** @var CurrencyRepositoryInterface */
+    private $currencyRepos;
+    /** @var JournalRepositoryInterface */
+    private $journalRepos;
+    /** @var AccountRepositoryInterface */
+    private $repository;
+
     /**
      *
      */
@@ -63,6 +69,10 @@ class AccountController extends Controller
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
                 app('view')->share('title', trans('firefly.accounts'));
+
+                $this->repository    = app(AccountRepositoryInterface::class);
+                $this->currencyRepos = app(CurrencyRepositoryInterface::class);
+                $this->journalRepos  = app(JournalRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -77,9 +87,7 @@ class AccountController extends Controller
      */
     public function create(Request $request, string $what = 'asset')
     {
-        /** @var CurrencyRepositoryInterface $repository */
-        $repository         = app(CurrencyRepositoryInterface::class);
-        $allCurrencies      = $repository->get();
+        $allCurrencies      = $this->currencyRepos->get();
         $currencySelectList = ExpandedForm::makeSelectList($allCurrencies);
         $defaultCurrency    = app('amount')->getDefaultCurrency();
         $subTitleIcon       = config('firefly.subIconsByIdentifier.' . $what);
@@ -102,16 +110,15 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
-     * @param Account                    $account
+     * @param Account $account
      *
      * @return View
      */
-    public function delete(AccountRepositoryInterface $repository, Account $account)
+    public function delete(Account $account)
     {
         $typeName    = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
-        $accountList = ExpandedForm::makeSelectListWithEmpty($repository->getAccountsByType([$account->accountType->type]));
+        $accountList = ExpandedForm::makeSelectListWithEmpty($this->repository->getAccountsByType([$account->accountType->type]));
         unset($accountList[$account->id]);
 
         // put previous url in session
@@ -127,14 +134,14 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(Request $request, AccountRepositoryInterface $repository, Account $account)
+    public function destroy(Request $request, Account $account)
     {
         $type     = $account->accountType->type;
         $typeName = config('firefly.shortNamesByFullName.' . $type);
         $name     = $account->name;
-        $moveTo   = $repository->find(intval($request->get('move_account_before_delete')));
+        $moveTo   = $this->repository->find(intval($request->get('move_account_before_delete')));
 
-        $repository->destroy($account, $moveTo);
+        $this->repository->destroy($account, $moveTo);
 
         $request->session()->flash('success', strval(trans('firefly.' . $typeName . '_deleted', ['name' => $name])));
         Preferences::mark();
@@ -154,17 +161,13 @@ class AccountController extends Controller
      * @return View
      *
      * @throws FireflyException
-     * @throws FireflyException
-     * @throws FireflyException
      */
-    public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
+    public function edit(Request $request, Account $account)
     {
-        /** @var CurrencyRepositoryInterface $currencyRepos */
-        $currencyRepos      = app(CurrencyRepositoryInterface::class);
         $what               = config('firefly.shortNamesByFullName')[$account->accountType->type];
         $subTitle           = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
         $subTitleIcon       = config('firefly.subIconsByIdentifier.' . $what);
-        $allCurrencies      = $currencyRepos->get();
+        $allCurrencies      = $this->currencyRepos->get();
         $currencySelectList = ExpandedForm::makeSelectList($allCurrencies);
         $roles              = [];
         foreach (config('firefly.accountRoles') as $role) {
@@ -184,7 +187,7 @@ class AccountController extends Controller
         $openingBalanceAmount = '0' === $account->getOpeningBalanceAmount() ? '' : $openingBalanceAmount;
         $openingBalanceDate   = $account->getOpeningBalanceDate();
         $openingBalanceDate   = 1900 === $openingBalanceDate->year ? null : $openingBalanceDate->format('Y-m-d');
-        $currency             = $currencyRepos->find(intval($account->getMeta('currency_id')));
+        $currency             = $this->currencyRepos->find(intval($account->getMeta('currency_id')));
 
         $preFilled = [
             'accountNumber'        => $account->getMeta('accountNumber'),
@@ -199,7 +202,7 @@ class AccountController extends Controller
             'notes'                => '',
         ];
         /** @var Note $note */
-        $note = $repository->getNote($account);
+        $note = $this->repository->getNote($account);
         if (null !== $note) {
             $preFilled['notes'] = $note->text;
         }
@@ -224,19 +227,18 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Request                    $request
-     * @param AccountRepositoryInterface $repository
-     * @param string                     $what
+     * @param Request $request
+     * @param string  $what
      *
      * @return View
      */
-    public function index(Request $request, AccountRepositoryInterface $repository, string $what)
+    public function index(Request $request, string $what)
     {
         $what         = $what ?? 'asset';
         $subTitle     = trans('firefly.' . $what . '_accounts');
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
         $types        = config('firefly.accountTypesByIdentifier.' . $what);
-        $collection   = $repository->getAccountsByType($types);
+        $collection   = $this->repository->getAccountsByType($types);
         $total        = $collection->count();
         $page         = 0 === intval($request->get('page')) ? 1 : intval($request->get('page'));
         $pageSize     = intval(Preferences::get('listPageSize', 50)->data);
@@ -272,10 +274,9 @@ class AccountController extends Controller
     /**
      * Show an account.
      *
-     * @param Request                    $request
-     * @param JournalRepositoryInterface $repository
-     * @param Account                    $account
-     * @param string                     $moment
+     * @param Request $request
+     * @param Account $account
+     * @param string  $moment
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      *
@@ -284,23 +285,21 @@ class AccountController extends Controller
      *
      * @throws FireflyException
      */
-    public function show(Request $request, JournalRepositoryInterface $repository, Account $account, string $moment = '')
+    public function show(Request $request, Account $account, string $moment = '')
     {
         if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
             return $this->redirectToOriginalAccount($account);
         }
-        /** @var CurrencyRepositoryInterface $currencyRepos */
-        $currencyRepos = app(CurrencyRepositoryInterface::class);
-        $range         = Preferences::get('viewRange', '1M')->data;
-        $subTitleIcon  = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
-        $page          = intval($request->get('page'));
-        $pageSize      = intval(Preferences::get('listPageSize', 50)->data);
-        $chartUri      = route('chart.account.single', [$account->id]);
-        $start         = null;
-        $end           = null;
-        $periods       = new Collection;
-        $currencyId    = intval($account->getMeta('currency_id'));
-        $currency      = $currencyRepos->find($currencyId);
+        $range        = Preferences::get('viewRange', '1M')->data;
+        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
+        $page         = intval($request->get('page'));
+        $pageSize     = intval(Preferences::get('listPageSize', 50)->data);
+        $chartUri     = route('chart.account.single', [$account->id]);
+        $start        = null;
+        $end          = null;
+        $periods      = new Collection;
+        $currencyId   = intval($account->getMeta('currency_id'));
+        $currency     = $this->currencyRepos->find($currencyId);
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
@@ -309,7 +308,7 @@ class AccountController extends Controller
         if ('all' === $moment) {
             $subTitle = trans('firefly.all_journals_for_account', ['name' => $account->name]);
             $chartUri = route('chart.account.all', [$account->id]);
-            $first    = $repository->first();
+            $first    = $this->journalRepos->first();
             $start    = $first->date ?? new Carbon;
             $end      = new Carbon;
         }
@@ -317,12 +316,13 @@ class AccountController extends Controller
         // prep for "specific date" view.
         if (strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
+            $start    = app('navigation')->startOfPeriod($start, $range);
             $end      = app('navigation')->endOfPeriod($start, $range);
             $fStart   = $start->formatLocalized($this->monthAndDayFormat);
             $fEnd     = $end->formatLocalized($this->monthAndDayFormat);
             $subTitle = trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
             $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d')]);
-            $periods  = $this->getPeriodOverview($account);
+            $periods  = $this->getPeriodOverview($account, $start);
         }
 
         // prep for current period view
@@ -332,7 +332,7 @@ class AccountController extends Controller
             $fStart   = $start->formatLocalized($this->monthAndDayFormat);
             $fEnd     = $end->formatLocalized($this->monthAndDayFormat);
             $subTitle = trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
-            $periods  = $this->getPeriodOverview($account);
+            $periods  = $this->getPeriodOverview($account, null);
         }
 
         // grab journals:
@@ -351,15 +351,14 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountFormRequest         $request
-     * @param AccountRepositoryInterface $repository
+     * @param AccountFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(AccountFormRequest $request, AccountRepositoryInterface $repository)
+    public function store(AccountFormRequest $request)
     {
         $data    = $request->getAccountData();
-        $account = $repository->store($data);
+        $account = $this->repository->store($data);
         $request->session()->flash('success', strval(trans('firefly.stored_new_account', ['name' => $account->name])));
         Preferences::mark();
 
@@ -390,10 +389,10 @@ class AccountController extends Controller
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(AccountFormRequest $request, AccountRepositoryInterface $repository, Account $account)
+    public function update(AccountFormRequest $request, Account $account)
     {
         $data = $request->getAccountData();
-        $repository->update($account, $data);
+        $this->repository->update($account, $data);
 
         $request->session()->flash('success', strval(trans('firefly.updated_account', ['name' => $account->name])));
         Preferences::mark();
@@ -435,56 +434,55 @@ class AccountController extends Controller
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    private function getPeriodOverview(Account $account): Collection
+    private function getPeriodOverview(Account $account, ?Carbon $date): Collection
     {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $start      = $repository->oldestJournalDate($account);
-        $range      = Preferences::get('viewRange', '1M')->data;
-        $start      = app('navigation')->startOfPeriod($start, $range);
-        $end        = app('navigation')->endOfX(new Carbon, $range, null);
-        $entries    = new Collection;
-        $count      = 0;
+        $range = Preferences::get('viewRange', '1M')->data;
+        $start = $this->repository->oldestJournalDate($account);
+        $end   = $date ?? new Carbon;
+
         // properties for cache
         $cache = new CacheProperties;
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('account-show-period-entries');
         $cache->addProperty($account->id);
-
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        Log::debug('Going to get period expenses and incomes.');
-        while ($end >= $start && $count < 90) {
-            $end        = app('navigation')->startOfPeriod($end, $range);
-            $currentEnd = app('navigation')->endOfPeriod($end, $range);
+
+        $dates   = app('navigation')->blockPeriods($start, $end, $range);
+        $entries = new Collection;
+
+        // loop dates
+        foreach ($dates as $date) {
 
             // try a collector for income:
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAccounts(new Collection([$account]))->setRange($end, $currentEnd)->setTypes([TransactionType::DEPOSIT])->withOpposingAccount();
+            $collector->setAccounts(new Collection([$account]))->setRange($date['start'], $date['end'])->setTypes([TransactionType::DEPOSIT])
+                      ->withOpposingAccount();
             $earned = strval($collector->getJournals()->sum('transaction_amount'));
 
             // try a collector for expenses:
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAccounts(new Collection([$account]))->setRange($end, $currentEnd)->setTypes([TransactionType::WITHDRAWAL])->withOpposingAccount();
-            $spent    = strval($collector->getJournals()->sum('transaction_amount'));
-            $dateStr  = $end->format('Y-m-d');
-            $dateName = app('navigation')->periodShow($end, $range);
+            $collector->setAccounts(new Collection([$account]))->setRange($date['start'], $date['end'])->setTypes([TransactionType::WITHDRAWAL])
+                      ->withOpposingAccount();
+            $spent = strval($collector->getJournals()->sum('transaction_amount'));
+
+            $dateStr  = $date['end']->format('Y-m-d');
+            $dateName = app('navigation')->periodShow($date['start'], $date['period']);
             $entries->push(
                 [
                     'string' => $dateStr,
                     'name'   => $dateName,
                     'spent'  => $spent,
                     'earned' => $earned,
-                    'date'   => clone $end,]
+                    'date'   => clone $date['end'],]
             );
-            $end = app('navigation')->subtractPeriod($end, $range, 1);
-            ++$count;
         }
+
         $cache->store($entries);
 
         return $entries;

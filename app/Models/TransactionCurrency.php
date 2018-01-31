@@ -28,6 +28,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class TransactionCurrency.
+ *
+ * @property string $code
+ *
  */
 class TransactionCurrency extends Model
 {

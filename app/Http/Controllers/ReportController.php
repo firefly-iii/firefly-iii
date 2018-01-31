@@ -48,6 +48,9 @@ class ReportController extends Controller
     /** @var ReportHelperInterface */
     protected $helper;
 
+    /** @var BudgetRepositoryInterface */
+    private $repository;
+
     /**
      *
      */
@@ -55,13 +58,13 @@ class ReportController extends Controller
     {
         parent::__construct();
 
-        $this->helper = app(ReportHelperInterface::class);
-
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('title', trans('firefly.reports'));
                 app('view')->share('mainTitleIcon', 'fa-line-chart');
                 View::share('subTitleIcon', 'fa-calendar');
+                $this->helper     = app(ReportHelperInterface::class);
+                $this->repository = app(BudgetRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -87,6 +90,7 @@ class ReportController extends Controller
         if ($start < session('first')) {
             $start = session('first');
         }
+        $this->repository->cleanupBudgets();
 
         View::share(
             'subTitle', trans(
@@ -120,6 +124,7 @@ class ReportController extends Controller
         if ($start < session('first')) {
             $start = session('first');
         }
+        $this->repository->cleanupBudgets();
 
         View::share(
             'subTitle',
@@ -157,6 +162,7 @@ class ReportController extends Controller
         if ($start < session('first')) {
             $start = session('first');
         }
+        $this->repository->cleanupBudgets();
 
         View::share(
             'subTitle',
@@ -195,6 +201,7 @@ class ReportController extends Controller
         if ($start < session('first')) {
             $start = session('first');
         }
+        $this->repository->cleanupBudgets();
 
         View::share(
             'subTitle',
@@ -233,6 +240,7 @@ class ReportController extends Controller
         if ($start < session('first')) {
             $start = session('first');
         }
+        $this->repository->cleanupBudgets();
 
         View::share(
             'subTitle',
@@ -265,6 +273,7 @@ class ReportController extends Controller
         $customFiscalYear = Preferences::get('customFiscalYear', 0)->data;
         $accounts         = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $accountList      = join(',', $accounts->pluck('id')->toArray());
+        $this->repository->cleanupBudgets();
 
         return view('reports.index', compact('months', 'accounts', 'start', 'accountList', 'customFiscalYear'));
     }
@@ -391,6 +400,7 @@ class ReportController extends Controller
         if ($start < session('first')) {
             $start = session('first');
         }
+        $this->repository->cleanupBudgets();
 
         View::share(
             'subTitle',

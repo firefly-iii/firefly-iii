@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use File;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\AttachmentFormRequest;
 use FireflyIII\Models\Attachment;
@@ -40,6 +39,9 @@ use View;
  */
 class AttachmentController extends Controller
 {
+    /** @var AttachmentRepositoryInterface */
+    private $repository;
+
     /**
      *
      */
@@ -52,6 +54,7 @@ class AttachmentController extends Controller
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-paperclip');
                 app('view')->share('title', trans('firefly.attachments'));
+                $this->repository = app(AttachmentRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -74,17 +77,16 @@ class AttachmentController extends Controller
     }
 
     /**
-     * @param Request                       $request
-     * @param AttachmentRepositoryInterface $repository
-     * @param Attachment                    $attachment
+     * @param Request    $request
+     * @param Attachment $attachment
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(Request $request, AttachmentRepositoryInterface $repository, Attachment $attachment)
+    public function destroy(Request $request, Attachment $attachment)
     {
         $name = $attachment->filename;
 
-        $repository->destroy($attachment);
+        $this->repository->destroy($attachment);
 
         $request->session()->flash('success', strval(trans('firefly.attachment_deleted', ['name' => $name])));
         Preferences::mark();
@@ -93,17 +95,16 @@ class AttachmentController extends Controller
     }
 
     /**
-     * @param AttachmentRepositoryInterface $repository
-     * @param Attachment                    $attachment
+     * @param Attachment $attachment
      *
      * @return mixed
      *
      * @throws FireflyException
      */
-    public function download(AttachmentRepositoryInterface $repository, Attachment $attachment)
+    public function download(Attachment $attachment)
     {
-        if ($repository->exists($attachment)) {
-            $content = $repository->getContent($attachment);
+        if ($this->repository->exists($attachment)) {
+            $content = $this->repository->getContent($attachment);
             $quoted  = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
 
             /** @var LaravelResponse $response */
@@ -145,37 +146,15 @@ class AttachmentController extends Controller
     }
 
     /**
-     * @param Attachment $attachment
-     *
-     * @return \Illuminate\Http\Response
-     *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
-    public function preview(Attachment $attachment)
-    {
-        $image = 'images/page_green.png';
-
-        if ('application/pdf' === $attachment->mime) {
-            $image = 'images/page_white_acrobat.png';
-        }
-        $file     = public_path($image);
-        $response = Response::make(File::get($file));
-        $response->header('Content-Type', 'image/png');
-
-        return $response;
-    }
-
-    /**
-     * @param AttachmentFormRequest         $request
-     * @param AttachmentRepositoryInterface $repository
-     * @param Attachment                    $attachment
+     * @param AttachmentFormRequest $request
+     * @param Attachment            $attachment
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(AttachmentFormRequest $request, AttachmentRepositoryInterface $repository, Attachment $attachment)
+    public function update(AttachmentFormRequest $request, Attachment $attachment)
     {
         $data = $request->getAttachmentData();
-        $repository->update($attachment, $data);
+        $this->repository->update($attachment, $data);
 
         $request->session()->flash('success', strval(trans('firefly.attachment_updated', ['name' => $attachment->filename])));
         Preferences::mark();
@@ -190,5 +169,26 @@ class AttachmentController extends Controller
 
         // redirect to previous URL.
         return redirect($this->getPreviousUri('attachments.edit.uri'));
+    }
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return \Illuminate\Http\Response
+     * @throws FireflyException
+     */
+    public function view(Attachment $attachment)
+    {
+        if ($this->repository->exists($attachment)) {
+            $content = $this->repository->getContent($attachment);
+
+            return Response::make(
+                $content, 200, [
+                            'Content-Type'        => $attachment->mime,
+                            'Content-Disposition' => 'inline; filename="' . $attachment->filename . '"',
+                        ]
+            );
+        }
+        throw new FireflyException('Could not find the indicated attachment. The file is no longer there.');
     }
 }

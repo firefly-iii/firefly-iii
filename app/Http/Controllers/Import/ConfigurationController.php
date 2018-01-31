@@ -55,7 +55,7 @@ class ConfigurationController extends Controller
                 return $next($request);
             }
         );
-        $this->middleware(IsDemoUser::class)->except(['index']);
+        $this->middleware(IsDemoUser::class);
     }
 
     /**

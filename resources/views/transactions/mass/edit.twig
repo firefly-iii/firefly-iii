@@ -78,7 +78,7 @@
                                                 </select>
                                             {% else %}
                                                 {# SOURCE ACCOUNT NAME FOR DEPOSIT #}
-                                                <input class="form-control input-sm" placeholder="{{ journal.source_account_name }}"
+                                                <input class="form-control input-sm" placeholder="{{ journal.source_account_name }}" autocomplete="off"
                                                        name="source_account_name[{{ journal.id }}]" type="text" value="{{ journal.source_account_name }}">
                                             {% endif %}
                                         </td>
@@ -94,13 +94,13 @@
                                             {% else %}
                                                 {# DESTINATION ACCOUNT NAME FOR EXPENSE #}
                                                 <input class="form-control input-sm" placeholder="{{ journal.destination_account_name }}"
-                                                       name="destination_account_name[{{ journal.id }}]" type="text"
+                                                       name="destination_account_name[{{ journal.id }}]" type="text" autocomplete="off"
                                                        value="{{ journal.destination_account_name }}">
                                             {% endif %}
                                         </td>
                                         {# category #}
                                         <td>
-                                            <input class="form-control input-sm" placeholder="{{ journal.categories[0].name }}"
+                                            <input class="form-control input-sm" placeholder="{{ journal.categories[0].name }}" autocomplete="off"
                                                    name="category[{{ journal.id }}]" type="text" value="{{ journal.categories[0].name }}">
                                         </td>
                                         {# budget #}

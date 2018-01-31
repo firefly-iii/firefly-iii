@@ -200,20 +200,25 @@ class HomeController extends Controller
                    'login', 'logout', 'password.reset', 'profile.confirm-email-change', 'profile.undo-email-change',
                    'register', 'report.options', 'routes', 'rule-groups.down', 'rule-groups.up', 'rules.up', 'rules.down',
                    'rules.select', 'search.search', 'test-flash', 'transactions.link.delete', 'transactions.link.switch',
-                   'two-factor.lost', 'report.options',
+                   'two-factor.lost', 'reports.options', 'debug', 'import.create-job', 'import.download', 'import.start', 'import.status.json',
+                   'preferences.delete-code', 'rules.test-triggers', 'piggy-banks.remove-money', 'piggy-banks.add-money',
+                   'accounts.reconcile.transactions', 'accounts.reconcile.overview', 'export.download',
+                   'transactions.clone', 'two-factor.index',
         ];
         $return = '&nbsp;';
         /** @var Route $route */
         foreach ($set as $route) {
             $name = $route->getName();
             if (null !== $name && in_array('GET', $route->methods()) && strlen($name) > 0) {
+
                 $found = false;
                 foreach ($ignore as $string) {
-                    if (false !== strpos($name, $string)) {
+                    if (!(false === stripos($name, $string))) {
                         $found = true;
+                        break;
                     }
                 }
-                if (!$found) {
+                if ($found === false) {
                     $return .= 'touch ' . $route->getName() . '.md;';
                 }
             }

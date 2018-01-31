@@ -67,8 +67,11 @@ class BudgetRepository implements BudgetRepositoryInterface
             if ($entry->ct > 1) {
                 $newest = BudgetLimit::where('start_date', $entry->start_date)->where('end_date', $entry->end_date)
                                      ->where('budget_id', $entry->budget_id)->orderBy('updated_at', 'DESC')->first(['budget_limits.*']);
-                BudgetLimit::where('start_date', $entry->start_date)->where('end_date', $entry->end_date)
-                           ->where('budget_id', $entry->budget_id)->where('id', '!=', $newest->id)->delete();
+                if (!is_null($newest)) {
+                    BudgetLimit::where('start_date', $entry->start_date)->where('end_date', $entry->end_date)
+                               ->where('budget_id', $entry->budget_id)
+                               ->where('id', '!=', $newest->id)->delete();
+                }
             }
         }
 

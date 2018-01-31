@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Helpers;
+namespace Tests\Unit\Middleware;
 
 use Route;
 use Symfony\Component\HttpFoundation\Response;

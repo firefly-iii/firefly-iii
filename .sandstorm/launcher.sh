@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Runs every time we create a new grain!
+echo "Now in launcher.sh"
 
 # Create a bunch of folders under the clean /var that php, nginx, and mysql expect to exist
 mkdir -p /var/lib/mysql
@@ -30,7 +31,6 @@ mkdir -p /var/storage/framework/views
 mkdir -p /var/storage/logs
 mkdir -p /var/storage/upload
 
-
 # Ensure mysql tables created
 HOME=/etc/mysql /usr/bin/mysql_install_db --force
 
@@ -57,6 +57,10 @@ echo "Done!"
 echo "Migrating..."
 php /opt/app/artisan migrate --seed --force
 echo "Done!"
+
+echo "Clear cache.."
+php /opt/app/artisan cache:clear
+echo "Done"
 
 # Start nginx.
 /usr/sbin/nginx -c /opt/app/.sandstorm/service-config/nginx.conf -g "daemon off;"

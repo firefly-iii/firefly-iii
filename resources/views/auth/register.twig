@@ -42,13 +42,12 @@
                 <div class="col-xs-4">
                     <button class="btn btn-primary pull-right btn-flat">{{ 'button_register'|_ }}</button>
                 </div>
-                <!-- /.col -->
             </div>
         </form>
 
         <a href="{{ URL.to('/login') }}">{{ 'want_to_login'|_ }}</a><br>
         <a href="{{ URL.to('/password/reset') }}">{{ 'forgot_my_password'|_ }}</a>
-    </div><!-- /.form-box -->
+    </div>
 
     {% include 'partials.password-modal' %}
 

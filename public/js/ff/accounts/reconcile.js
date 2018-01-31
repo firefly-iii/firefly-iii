@@ -36,7 +36,6 @@ $(function () {
     Respond to changes in balance statements.
      */
     $('input[type="number"]').on('change', function () {
-        console.log('On change number input.');
         if (reconcileStarted) {
             calculateBalanceDifference();
             difference = balanceDifference - selectedAmount;
@@ -50,7 +49,6 @@ $(function () {
     Respond to changes in the date range.
      */
     $('input[type="date"]').on('change', function () {
-        console.log('On change date input.');
         if (reconcileStarted) {
             // hide original instructions.
             $('.select_transactions_instruction').hide();
@@ -70,19 +68,16 @@ $(function () {
 });
 
 function storeReconcile() {
-    console.log('In storeReconcile.');
     // get modal HTML:
     var ids = [];
     $.each($('.reconcile_checkbox:checked'), function (i, v) {
         ids.push($(v).data('id'));
     });
-    console.log('Ids is ' + ids);
     var cleared = [];
     $.each($('input[class="cleared"]'), function (i, v) {
         var obj = $(v);
         cleared.push(obj.data('id'));
     });
-    console.log('Cleared is ' + ids);
 
     var variables = {
         startBalance: parseFloat($('input[name="start_balance"]').val()),
@@ -105,7 +100,6 @@ function storeReconcile() {
  * @param e
  */
 function checkReconciledBox(e) {
-    console.log('In checkReconciledBox.');
     var el = $(e.target);
     var amount = parseFloat(el.val());
     // if checked, add to selected amount
@@ -125,13 +119,9 @@ function checkReconciledBox(e) {
  * and put it in balanceDifference.
  */
 function calculateBalanceDifference() {
-    console.log('In calculateBalanceDifference.');
     var startBalance = parseFloat($('input[name="start_balance"]').val());
     var endBalance = parseFloat($('input[name="end_balance"]').val());
     balanceDifference = startBalance - endBalance;
-    //if (balanceDifference < 0) {
-    //  balanceDifference = balanceDifference * -1;
-    //}
 }
 
 /**
@@ -139,7 +129,6 @@ function calculateBalanceDifference() {
  * This more or less resets the reconciliation.
  */
 function getTransactionsForRange() {
-    console.log('In getTransactionsForRange.');
     // clear out the box:
     $('#transactions_holder').empty().append($('<p>').addClass('text-center').html('<i class="fa fa-fw fa-spin fa-spinner"></i>'));
     var uri = transactionsUri.replace('%start%', $('input[name="start_date"]').val()).replace('%end%', $('input[name="end_date"]').val());
@@ -154,7 +143,6 @@ function getTransactionsForRange() {
  *
  */
 function includeClearedTransactions() {
-    console.log('In includeClearedTransactions.');
     $.each($('input[class="cleared"]'), function (i, v) {
         var obj = $(v);
         if (obj.data('younger') === false) {
@@ -168,7 +156,6 @@ function includeClearedTransactions() {
  * @param data
  */
 function placeTransactions(data) {
-    console.log('In placeTransactions.');
     $('#transactions_holder').empty().html(data.html);
     selectedAmount = 0;
     // update start + end balance when user has not touched them.
@@ -200,7 +187,6 @@ function placeTransactions(data) {
  * @returns {boolean}
  */
 function startReconcile() {
-    console.log('In startReconcile.');
     reconcileStarted = true;
 
     // hide the start button.
@@ -222,7 +208,6 @@ function startReconcile() {
 }
 
 function updateDifference() {
-    console.log('In updateDifference.');
     var addClass = 'text-info';
     if (difference > 0) {
         addClass = 'text-success';

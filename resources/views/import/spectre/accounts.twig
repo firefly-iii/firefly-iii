@@ -39,10 +39,10 @@
                                                 {{ account.nature|capitalize }} "<strong>{{ account.name }}</strong>" ({{ formatAmountBySymbol(account.balance, account.currency_code~' ') }})<br />
                                                 {% for name, value in account.extra %}
                                                     {% if not value is iterable and name != 'sort_code' and name !='current_date' and name != 'available_amount' and name !='current_time' and name != 'last_posted_transaction_id' %}
-                                                        {{ name|capitalize }}: {{ value }}<br />
+                                                        {{ trans('import.spectre_extra_key_'~name) }}: {{ value }}<br />
                                                     {% endif %}
                                                     {% if name == 'available_amount' %}
-                                                        Available amount: {{ formatAmountBySymbol(value, account.currency_code~' ') }}
+                                                        {{ trans('import.spectre_extra_key_'~name) }}: {{ formatAmountBySymbol(value, account.currency_code~' ') }}
                                                     {% endif %}
                                                 {% endfor %}
                                             </td>
@@ -57,7 +57,7 @@
                                                 <div class="checkbox">
                                                     <label>
                                                         <input type="checkbox" value="1" name="do_import[{{ account.id }}]" checked>
-                                                        {{ 'spectre_do_import'|_ }}
+                                                        {{ trans('import.spectre_do_import') }}
                                                     </label>
                                                 </div>
 
