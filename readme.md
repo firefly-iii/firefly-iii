@@ -33,6 +33,7 @@
 "Firefly III" is a (self-hosted) manager for your personal finances. It can help you keep track of your expenses and income, so you can spend less and save more. Firefly III supports the use of budgets, categories and tags. It can import data from external sources and it has many neat financial reports available. Here are some screenshots:
 
 [![The index of Firefly III](https://firefly-iii.org/static/screenshots/4.7.0/tiny/index.png)](https://firefly-iii.org/static/screenshots/4.7.0/index.png) [![The account overview of Firefly III](https://firefly-iii.org/static/screenshots/4.7.0/tiny/account.png)](https://firefly-iii.org/static/screenshots/4.7.0/account.png)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffirefly-iii%2Ffirefly-iii.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffirefly-iii%2Ffirefly-iii?ref=badge_shield)
 
 [![Overview of all budgets](https://firefly-iii.org/static/screenshots/4.7.0/tiny/budget.png)](https://firefly-iii.org/static/screenshots/4.7.0/budget.png) [![Overview of a category](https://firefly-iii.org/static/screenshots/4.7.0/tiny/category.png)](https://firefly-iii.org/static/screenshots/4.7.0/category.png)
 
@@ -124,6 +125,9 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 ### License
 This work [is licensed](https://github.com/firefly-iii/firefly-iii/blob/master/LICENSE) under the [GPL v3](https://www.gnu.org/licenses/gpl.html).
 
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffirefly-iii%2Ffirefly-iii.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffirefly-iii%2Ffirefly-iii?ref=badge_large)
+
 ### Donate
 If you like Firefly III and if it helps you save lots of money, why not send me [a dime for every dollar saved](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) (this is a joke, although the Paypal form works just fine, try it!)
 
@@ -133,4 +137,4 @@ If you are looking for alternatives, check out [Kickball's Awesome-Selfhosted li
 ### Badges
 I like badges!
 
-[![Travis branch](https://img.shields.io/travis/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://travis-ci.org/firefly-iii/firefly-iii/branches) [![Scrutinizer](https://img.shields.io/scrutinizer/g/firefly-iii/firefly-iii.svg?style=flat-square)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/) [![Coveralls github branch](https://img.shields.io/coveralls/github/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://coveralls.io/github/firefly-iii/firefly-iii) [![Requires PHP7.1](https://img.shields.io/badge/php-7.1-red.svg?style=flat-square)](https://secure.php.net/downloads.php) [![license](https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) 
+[![Travis branch](https://img.shields.io/travis/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://travis-ci.org/firefly-iii/firefly-iii/branches) [![Scrutinizer](https://img.shields.io/scrutinizer/g/firefly-iii/firefly-iii.svg?style=flat-square)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/) [![Coveralls github branch](https://img.shields.io/coveralls/github/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://coveralls.io/github/firefly-iii/firefly-iii) [![Requires PHP7.1](https://img.shields.io/badge/php-7.1-red.svg?style=flat-square)](https://secure.php.net/downloads.php) [![license](https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA)
