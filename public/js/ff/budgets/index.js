@@ -18,7 +18,7 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: infoIncomeUri, token, spent, budgeted, available, currencySymbol, budgetIndexUri, updateIncomeUri, periodStart, periodEnd, budgetAmountUri, accounting */
+/** global: infoIncomeUri, page, token, spent, budgeted, available, currencySymbol, budgetIndexUri, updateIncomeUri, periodStart, periodEnd, budgetAmountUri, accounting */
 /**
  *
  */
@@ -44,7 +44,7 @@ $(function () {
         var sel = $(e.target).val();
         if (sel !== "x") {
             var newUri = budgetIndexUri.replace("REPLACE", sel);
-            window.location.assign(newUri);
+            window.location.assign(newUri + "?page=" + page);
         }
     });
 
