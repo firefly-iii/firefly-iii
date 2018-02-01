@@ -54,10 +54,10 @@
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
             <div class="form-group has-feedback">
-                <input type="email" name="email" value="{{ email }}" class="form-control" placeholder="{{ trans('form.email') }}"/>
+                <input type="email" autocomplete="email" name="email" value="{{ email }}" class="form-control" placeholder="{{ trans('form.email') }}"/>
             </div>
             <div class="form-group has-feedback">
-                <input type="password" name="password" class="form-control" placeholder="{{ trans('form.password') }}"/>
+                <input type="password" name="password" autocomplete="current-password" class="form-control" placeholder="{{ trans('form.password') }}"/>
             </div>
             <div class="row">
                 <div class="col-xs-8">
