@@ -18,8 +18,7 @@
     </title>
     <base href="{{ route('index') }}/">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <link href="lib/bootstrap/css/bootstrap.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
-    <link href="lib/font-awesome/css/font-awesome.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="css/app.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
     <link href="lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
     <link href="lib/adminlte/css/skins/skin-blue-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
     <link href="css/daterangepicker.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
@@ -42,7 +41,7 @@
 
 </head>
 <body class="skin-blue-light sidebar-mini hold-transition">
-<div class="wrapper">
+<div class="wrapper" id="app">
 
     <header class="main-header">
 
@@ -158,8 +157,7 @@
     </div>
 </div>
 
-<script src="js/lib/jquery-3.2.1.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
-<script src="lib/bootstrap/js/bootstrap.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+<script src="js/app.js?v={{ FF_VERSION }}" type="text/javascript"></script>
 <script src="js/lib/moment.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
 <script src="js/lib/daterangepicker.js?v={{ FF_VERSION }}" type="text/javascript"></script>
 <script src="lib/adminlte/js/app.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
