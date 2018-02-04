@@ -10,20 +10,14 @@
 
 <template>
     <div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span>
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">
                         OAuth Clients
-                    </span>
-
-                    <a class="action-link" @click="showCreateClientForm">
-                        Create New Client
-                    </a>
-                </div>
+                </h3>
             </div>
 
-            <div class="panel-body">
+            <div class="box-body">
                 <!-- Current Clients -->
                 <p class="m-b-none" v-if="clients.length === 0">
                     You have not created any OAuth clients.
@@ -59,20 +53,25 @@
 
                             <!-- Edit Button -->
                             <td style="vertical-align: middle;">
-                                <a class="action-link" @click="edit(client)">
+                                <a class="action-link btn btn-default btn-xs" @click="edit(client)">
                                     Edit
                                 </a>
                             </td>
 
                             <!-- Delete Button -->
                             <td style="vertical-align: middle;">
-                                <a class="action-link text-danger" @click="destroy(client)">
+                                <a class="action-link btn btn-danger btn-xs" @click="destroy(client)">
                                     Delete
                                 </a>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="box-footer">
+                <a class="action-link btn btn-success" @click="showCreateClientForm">
+                    Create New Client
+                </a>
             </div>
         </div>
 
