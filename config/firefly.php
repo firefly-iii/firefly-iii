@@ -175,6 +175,7 @@ return [
     'languages'                  => [
         // completed languages
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English'],
+        'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'],
         'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],
         'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'],
         'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'],
@@ -186,7 +187,7 @@ return [
 
         // incomplete languages:
         //'id_ID' => ['name_locale' => 'Indonesian', 'name_english' => 'Indonesian'],
-        //'es_ES' => ['name_locale' => 'Spanish', 'name_english' => 'Spanish'],
+        //
         //'sl_SI' => ['name_locale' => 'Slovenščina', 'name_english' => 'Slovenian'],
     ],
     'transactionTypesByWhat'     => [
