@@ -19,8 +19,6 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -32,8 +30,24 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get(
-    '/user', function (Request $request) {
-    return $request->user();
+//Route::get(
+//    '/user', function (Request $request) {
+//    return 'hello';
+//    return $request->user();
+//}
+//);
+
+
+Route::group(
+    ['middleware' => 'auth:api', 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'bills', 'as' => 'api.v1.bills.'], function () {
+
+    Route::get('', ['uses' => 'BillController@index', 'as' => 'index']);
+    Route::get('{bill}', ['uses' => 'BillController@show', 'as' => 'show']);
 }
 );
+//Route::get(
+//    '/bills', function (Request $request) {
+//    //return 'hello';
+//    return $request->user()->bills;
+//}
+//);

@@ -22,8 +22,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
+use Auth;
 use FireflyIII\Models\Bill;
+use FireflyIII\Transformers\BillTransformer;
 use Illuminate\Http\Request;
+use League\Fractal\Manager;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use League\Fractal\Resource\Collection as FractalCollection;
+use League\Fractal\Serializer\JsonApiSerializer;
+use Preferences;
+use Response;
 
 /**
  * Class BillController
@@ -45,11 +53,25 @@ class BillController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $user      = Auth::guard('api')->user();
+        $pageSize  = intval(Preferences::getForUser($user, 'listPageSize', 50)->data);
+        $paginator = $user->bills()->paginate($pageSize);
+        $bills     = $paginator->getCollection();
+
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+
+        $resource = new FractalCollection($bills, new BillTransformer(), 'bills');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+
+        return Response::json($manager->createData($resource)->toArray());
     }
 
     /**
