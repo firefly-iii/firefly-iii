@@ -342,7 +342,7 @@ class JournalCollector implements JournalCollectorInterface
      */
     public function setAfter(Carbon $after): JournalCollectorInterface
     {
-        $afterStr = $after->format('Y-m-d');
+        $afterStr = $after->format('Y-m-d 00:00:00');
         $this->query->where('transaction_journals.date', '>=', $afterStr);
         Log::debug(sprintf('JournalCollector range is now after %s (inclusive)', $afterStr));
 
@@ -378,7 +378,7 @@ class JournalCollector implements JournalCollectorInterface
      */
     public function setBefore(Carbon $before): JournalCollectorInterface
     {
-        $beforeStr = $before->format('Y-m-d');
+        $beforeStr = $before->format('Y-m-d 00:00:00');
         $this->query->where('transaction_journals.date', '<=', $beforeStr);
         Log::debug(sprintf('JournalCollector range is now before %s (inclusive)', $beforeStr));
 
@@ -565,8 +565,8 @@ class JournalCollector implements JournalCollectorInterface
     public function setRange(Carbon $start, Carbon $end): JournalCollectorInterface
     {
         if ($start <= $end) {
-            $startStr = $start->format('Y-m-d');
-            $endStr   = $end->format('Y-m-d');
+            $startStr = $start->format('Y-m-d 00:00:00');
+            $endStr   = $end->format('Y-m-d 00:00:00');
             $this->query->where('transaction_journals.date', '>=', $startStr);
             $this->query->where('transaction_journals.date', '<=', $endStr);
             Log::debug(sprintf('JournalCollector range is now %s - %s (inclusive)', $startStr, $endStr));

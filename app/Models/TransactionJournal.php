@@ -62,8 +62,7 @@ class TransactionJournal extends Model
             'encrypted'     => 'boolean',
             'completed'     => 'boolean',
         ];
-    /** @var array */
-    protected $dates = ['date', 'interest_date', 'book_date', 'process_date'];
+
     /** @var array */
     protected $fillable
         = ['user_id', 'transaction_type_id', 'bill_id', 'interest_date', 'book_date', 'process_date',

@@ -367,8 +367,8 @@ class BillRepository implements BillRepositoryInterface
     public function getYearAverage(Bill $bill, Carbon $date): string
     {
         $journals = $bill->transactionJournals()
-                         ->where('date', '>=', $date->year . '-01-01')
-                         ->where('date', '<=', $date->year . '-12-31')
+                         ->where('date', '>=', $date->year . '-01-01 00:00:00')
+                         ->where('date', '<=', $date->year . '-12-31 00:00:00')
                          ->get();
         $sum      = '0';
         $count    = strval($journals->count());

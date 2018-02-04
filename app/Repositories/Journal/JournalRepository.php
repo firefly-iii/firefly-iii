@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
 
+use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -301,14 +302,18 @@ class JournalRepository implements JournalRepositoryInterface
         $accounts        = $this->storeAccounts($this->user, $transactionType, $data);
         $data            = $this->verifyNativeAmount($data, $accounts);
         $amount          = strval($data['amount']);
-        $journal         = new TransactionJournal(
+        $dateString      = $data['date'];
+        if ($data['date'] instanceof Carbon) {
+            $dateString = $data['date']->format('Y-m-d 00:00:00');
+        }
+        $journal = new TransactionJournal(
             [
                 'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
                 'transaction_currency_id' => $data['currency_id'], // no longer used.
                 'description'             => $data['description'],
                 'completed'               => 0,
-                'date'                    => $data['date'],
+                'date'                    => $dateString,
             ]
         );
         $journal->save();
