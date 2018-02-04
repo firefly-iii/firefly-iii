@@ -100,6 +100,7 @@ class IndexController extends Controller
         $config['initial-config-complete'] = false;
         $config['has-file-upload']         = false;
         $config['delimiter']               = "\t" === $config['delimiter'] ? 'tab' : $config['delimiter'];
+        unset($config['stage']);
 
         $result = json_encode($config, JSON_PRETTY_PRINT);
         $name   = sprintf('"%s"', addcslashes('import-configuration-' . date('Y-m-d') . '.json', '"\\'));

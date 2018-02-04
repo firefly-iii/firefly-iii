@@ -225,10 +225,16 @@ class ImportJobRepository implements ImportJobRepositoryInterface
             $configFileObject = new SplFileObject($file->getRealPath());
             $configRaw        = $configFileObject->fread($configFileObject->getSize());
             $configuration    = json_decode($configRaw, true);
-
+            Log::debug(sprintf('Raw configuration is %s', $configRaw));
             if (null !== $configuration && is_array($configuration)) {
                 Log::debug('Found configuration', $configuration);
                 $this->setConfiguration($job, $configuration);
+            }
+            if (null === $configuration) {
+                Log::error('Uploaded configuration is NULL');
+            }
+            if (false === $configuration) {
+                Log::error('Uploaded configuration is FALSE');
             }
         }
 
