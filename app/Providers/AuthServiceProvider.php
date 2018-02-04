@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Laravel\Passport\Passport;
 
 /**
  * @codeCoverageIgnore
@@ -46,5 +47,7 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+        Passport::routes();
+        Passport::tokensExpireIn(now()->addDays(14));
     }
 }
