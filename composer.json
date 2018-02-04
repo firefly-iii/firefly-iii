@@ -60,6 +60,7 @@
 		"laravelcollective/html": "5.5.*",
 		"league/commonmark": "0.*",
 		"league/csv": "9.*",
+		"league/fractal": "^0.17.0",
 		"pragmarx/google2fa": "2.*",
 		"pragmarx/google2fa-laravel": "^0.1.4",
 		"rcrowe/twigbridge": "0.9.*",
