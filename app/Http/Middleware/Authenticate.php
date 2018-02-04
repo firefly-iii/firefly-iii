@@ -50,9 +50,9 @@ class Authenticate
 
             return redirect()->guest('login');
         }
-        if (1 === intval(auth()->user()->blocked)) {
+        if (1 === intval(Auth::guard($guard)->user()->blocked)) {
             $message = strval(trans('firefly.block_account_logout'));
-            if ('email_changed' === auth()->user()->blocked_code) {
+            if ('email_changed' === Auth::guard($guard)->user()->blocked_code) {
                 $message = strval(trans('firefly.email_changed_logout'));
             }
 
