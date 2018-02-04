@@ -56,6 +56,7 @@
 		"doctrine/dbal": "2.*",
 		"fideloper/proxy": "3.*",
 		"laravel/framework": "5.5.*",
+		"laravel/passport": "^4.0",
 		"laravelcollective/html": "5.5.*",
 		"league/commonmark": "0.*",
 		"league/csv": "9.*",
