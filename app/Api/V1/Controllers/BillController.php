@@ -23,9 +23,11 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 use Auth;
+use Carbon\Carbon;
 use FireflyIII\Models\Bill;
-use FireflyIII\Transformers\BillTransformer;
+use FireflyIII\Transformers\Bill\BillTransformer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -57,17 +59,25 @@ class BillController extends Controller
      */
     public function index(Request $request)
     {
-        $user      = Auth::guard('api')->user();
-        $pageSize  = intval(Preferences::getForUser($user, 'listPageSize', 50)->data);
+        $user     = Auth::guard('api')->user();
+        $pageSize = intval(Preferences::getForUser($user, 'listPageSize', 50)->data);
+        $start    = null;
+        $end      = null;
+        if (null !== $request->get('start')) {
+            $start = new Carbon($request->get('start'));
+        }
+        if (null !== $request->get('end')) {
+            $end = new Carbon($request->get('end'));
+        }
         $paginator = $user->bills()->paginate($pageSize);
-        $bills     = $paginator->getCollection();
+        /** @var Collection $bills */
+        $bills = $paginator->getCollection();
 
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-
-        $resource = new FractalCollection($bills, new BillTransformer(), 'bills');
+        $resource = new FractalCollection($bills, new BillTransformer($start, $end), 'bills');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
 

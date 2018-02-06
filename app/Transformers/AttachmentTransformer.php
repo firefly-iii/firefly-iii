@@ -1,6 +1,6 @@
 <?php
 /**
- * BillTransformer.php
+ * AttachmentTransformer.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -23,39 +23,25 @@ declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
 
-use FireflyIII\Models\Bill;
+
+use FireflyIII\Models\Attachment;
 use League\Fractal\TransformerAbstract;
 
 /**
- * Class BillTransformer
+ * Class AttachmentTransformer
  */
-class BillTransformer extends TransformerAbstract
+class AttachmentTransformer extends TransformerAbstract
 {
-
     /**
-     * @param Bill $bill
+     * @param Attachment $attachment
      *
      * @return array
      */
-    public function transform(Bill $bill): array
+    public function transform(Attachment $attachment): array
     {
         return [
-            'id'          => (int)$bill->id,
-            'name'        => $bill->name,
-            'match'       => explode(',', $bill->match),
-            'amount_min'  => round($bill->amount_min, 2),
-            'amount_max'  => round($bill->amount_max, 2),
-            'date'        => $bill->date->format('Y-m-d'),
-            'repeat_freq' => $bill->repeat_freq,
-            'skip'        => (int)$bill->skip,
-            'automatch'   => intval($bill->automatch) === 1,
-            'active'      => intval($bill->active) === 1,
-            'links'       => [
-                [
-                    'rel' => 'self',
-                    'uri' => '/bills/' . $bill->id,
-                ],
-            ],
+            'id' => (int)$attachment->id,
         ];
     }
+
 }
