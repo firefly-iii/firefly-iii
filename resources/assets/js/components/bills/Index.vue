@@ -121,7 +121,7 @@
             formatAmount:  Vue.filter('formatAmount'),
             trans: Vue.filter('trans'),
             fetchBillList() {
-                axios.get('api/v1/bills', {params: {start: window.sessionStart, end: window.sessionEnd}}).then((res) => {
+                axios.get('api/v1/bill', {params: {start: window.sessionStart, end: window.sessionEnd}}).then((res) => {
                     this.list = res.data.data;
                 });
             },
