@@ -30,9 +30,12 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Transformers\Bill\BillTransformer;
+use FireflyIII\Transformers\BillTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use League\Fractal\Manager;
+use League\Fractal\Resource\Item;
+use League\Fractal\Serializer\DataArraySerializer;
 use Preferences;
 use URL;
 use View;
@@ -230,8 +233,13 @@ class BillController extends Controller
         $pageSize       = intval(Preferences::get('listPageSize', 50)->data);
         $yearAverage    = $repository->getYearAverage($bill, $start);
         $overallAverage = $repository->getOverallAverage($bill);
-        $transformer    = new BillTransformer($start, $end);
-        $object         = $transformer->transform($bill);
+        $manager        = new Manager();
+        $manager->setSerializer(new DataArraySerializer());
+        $manager->parseIncludes(['attachments']);
+
+        // Make a resource out of the data and
+        $resource = new Item($bill, new BillTransformer($start, $end), 'bill');
+        $object   = $manager->createData($resource)->toArray();
 
         // use collector:
         /** @var JournalCollectorInterface $collector */
@@ -242,7 +250,7 @@ class BillController extends Controller
         $transactions->setPath(route('bills.show', [$bill->id]));
 
 
-        return view('bills.show', compact('transactions', 'yearAverage', 'overallAverage', 'year', 'object','bill', 'subTitle'));
+        return view('bills.show', compact('transactions', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
     }
 
     /**

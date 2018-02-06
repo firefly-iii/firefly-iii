@@ -25,7 +25,7 @@ namespace FireflyIII\Api\V1\Controllers;
 use Auth;
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
-use FireflyIII\Transformers\Bill\BillTransformer;
+use FireflyIII\Transformers\BillTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use League\Fractal\Manager;
