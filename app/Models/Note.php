@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use League\CommonMark\CommonMarkConverter;
 
 /**
  * Class Note.
@@ -43,17 +42,6 @@ class Note extends Model
         ];
     /** @var array */
     protected $fillable = ['title', 'text'];
-
-    /**
-     * @codeCoverageIgnore
-     * @return string
-     */
-    public function getMarkdownAttribute(): string
-    {
-        $converter = new CommonMarkConverter;
-
-        return $converter->convertToHtml($this->text);
-    }
 
     /**
      * @codeCoverageIgnore
