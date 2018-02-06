@@ -170,6 +170,12 @@ return [
     'want_to_login'                              => 'I want to login',
     'button_register'                            => 'Register',
 
+    // API access
+    'authorization_request'                      => 'Firefly III v:version Authorization Request',
+    'authorization_request_intro'                => '<strong>:client</strong> is requesting permission to access your financial administration. Would you like to authorize <strong>:client</strong> to access these records?',
+    'scopes_will_be_able'                        => 'This application will be able to:',
+    'button_authorize'                           => 'Authorize',
+
     // check for updates:
     'update_check_title'                         => 'Check for updates',
     'admin_update_check_title'                   => 'Automatically check for update',
@@ -634,8 +640,6 @@ return [
     'rescanned_bill'                           => 'Rescanned everything.',
     'average_bill_amount_year'                 => 'Average bill amount (:year)',
     'average_bill_amount_overall'              => 'Average bill amount (overall)',
-    'not_or_not_yet'                           => 'Not (yet)',
-    'not_expected_period'                      => 'Not expected this period',
     'bill_is_active'                           => 'Bill is active',
     'bill_expected_between'                    => 'Expected between :start and :end',
     'bill_will_automatch'                      => 'Bill will automatically linked to matching transactions',
