@@ -54,7 +54,7 @@
             #}
             {% if entry.paidDates.count() == 0 and entry.payDates.count() == 0 and entry.active %}
                 <td class="paid_in_period text-muted" data-value="0001-00-00 00-00-00">
-                    {{ 'not_expected_period'|_ }}
+                    {{ trans('components.not_expected_period') }}
                 </td>
                 <td class="expected_in_period hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('Y-m-d H-i-s') }}">
                     {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
@@ -68,7 +68,7 @@
             #}
             {% if entry.paidDates.count() == 0 and entry.payDates.count() > 0 and entry.active %}
                 <td class="paid_in_period text-danger" data-value="0002-00-00 00-00-00">
-                    {{ 'not_or_not_yet'|_ }}
+                    {{ trans('components.not_or_not_yet') }}
                 </td>
                 <td class="expected_in_period hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('Y-m-d H-i-s') }}">
                     {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
