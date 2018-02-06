@@ -7,8 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <base href="{{ route('index') }}/">
-    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css?v={{ FF_VERSION }}" type="text/css" media="all"/>
-    <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css?v={{ FF_VERSION }}" type="text/css" media="all"/>
+    <link href="css/app.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
     <link href="lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
     <!--[if lt IE 9]>
@@ -27,9 +26,8 @@
     </div>
     {% block content %}{% endblock %}
 </div>
-<script type="text/javascript" src="js/lib/jquery-3.2.1.min.js?v={{ FF_VERSION }}"></script>
-<script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js?v={{ FF_VERSION }}"></script>
 
+<script src="js/app.js?v={{ FF_VERSION }}" type="text/javascript"></script>
 {% if env('ANALYTICS_ID','') != '' %}
     <script>
         // send pageview
