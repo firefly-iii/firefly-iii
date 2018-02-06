@@ -23,25 +23,20 @@
             <thead>
             <tr>
                 <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
-                <th>name</th>
-                <th data-defaultsign="az" class="hidden-sm hidden-md hidden-xs">Matches on</th>
-                <th data-defaultsign="_19" colspan="2">Amount</th>
-                <th data-defaultsign="month" class="hidden-sm hidden-xs">Current period</th>
-                <th data-defaultsign="month" class="hidden-sm hidden-xs">Next expected match</th>
-                <th class="hidden-sm hidden-xs hidden-md">Active</th>
-                <th class="hidden-sm hidden-xs hidden-md">Auto match</th>
-                <th data-defaultsign="az" class="hidden-sm hidden-xs">Repeat freq</th>
+                <th>{{ 'list.name' | trans }}</th>
+                <th data-defaultsign="az" class="hidden-sm hidden-md hidden-xs">{{ 'list.matchesOn' | trans }}</th>
+                <th data-defaultsign="_19" colspan="2">{{ 'list.amount' | trans }}</th>
+                <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ 'list.paid_current_period' | trans }}</th>
+                <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ 'list.next_expected_match' | trans }}</th>
+                <th class="hidden-sm hidden-xs hidden-md">{{ 'list.active' | trans }}</th>
+                <th class="hidden-sm hidden-xs hidden-md">{{ 'list.automatch' | trans }}</th>
+                <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ 'list.repeat_freq' | trans }}</th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="(bill, index) in list">
                 <td class="hidden-sm hidden-xs">
-                    <div class="btn-group btn-group-xs edit_tr_buttons">
-                        <a href="x" class="btn btn-default btn-xs">
-                            <i class="fa fa-fw fa-pencil"></i></a>
-                        <a href="x" class="btn btn-danger btn-xs">
-                            <i class="fa fa-fw fa-trash-o"></i></a>
-                    </div>
+                    <div class="btn-group btn-group-xs edit_tr_buttons"><a href="x" class="btn btn-default btn-xs"><i class="fa fa-fw fa-pencil"></i></a><a href="x" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-trash-o"></i></a></div>
                 </td>
                 <td :data-value="bill.attributes.name">
                     <a href="x" :title="bill.attributes.name">{{ bill.attributes.name }}</a>
@@ -56,24 +51,31 @@
                 <td :data-value="bill.attributes.amount_max" style="text-align: right;">
                     <span style="margin-right:5px;" v-html="formatAmount(bill.attributes.amount_max)"></span>
                 </td>
-                <td v-if="bill.attributes.paid_dates.length == 0 && bill.attributes.pay_dates.length == 0 && bill.attributes.active">
-                    Not expected this period.
+                <!-- first two -->
+                <td v-if="bill.attributes.paid_dates.length == 0 && bill.attributes.pay_dates.length == 0 && bill.attributes.active" class="paid_in_period text-muted">
+                    {{ 'components.not_expected_period' | trans }}
                 </td>
-                <td v-if="bill.attributes.paid_dates.length == 0 && bill.attributes.pay_dates.length == 0 && bill.attributes.active">
+                <td v-if="bill.attributes.paid_dates.length == 0 && bill.attributes.pay_dates.length == 0 && bill.attributes.active" class="expected_in_period hidden-sm hidden-xs">
                     {{ bill.attributes.next_expected_match|formatDate }}
                 </td>
-                <td v-if="bill.attributes.paid_dates.length == 0 && bill.attributes.pay_dates.length > 0 && bill.attributes.active">
-                    not or not yet.
+
+                <!-- second set -->
+                <td v-if="bill.attributes.paid_dates.length == 0 && bill.attributes.pay_dates.length > 0 && bill.attributes.active" class="paid_in_period text-danger">
+                    {{ 'components.not_or_not_yet' | trans }}
                 </td>
-                <td v-if="bill.attributes.paid_dates.length == 0 && bill.attributes.pay_dates.length > 0 && bill.attributes.active">
+                <td v-if="bill.attributes.paid_dates.length == 0 && bill.attributes.pay_dates.length > 0 && bill.attributes.active" class="expected_in_period hidden-sm hidden-xs">
                     {{ bill.attributes.next_expected_match|formatDate }}
                 </td>
-                <td v-if="bill.attributes.paid_dates.length > 0 && bill.attributes.active">
+
+                <!-- third set -->
+                <td v-if="bill.attributes.paid_dates.length > 0 && bill.attributes.active" class="paid_in_period text-success">
                     <span v-for="date in bill.attributes.paid_dates">{{ date|formatDate }}<br /></span>
                 </td>
-                <td v-if="bill.attributes.paid_dates.length > 0 && bill.attributes.active">
+                <td v-if="bill.attributes.paid_dates.length > 0 && bill.attributes.active" class="expected_in_period hidden-sm hidden-xs">
                     {{ bill.attributes.next_expected_match|formatDate }}
                 </td>
+
+                <!-- last set -->
                 <td v-if="bill.attributes.active === false" class="paid_in_period text-muted" data-value="0000-00-00 00-00-00">
                     ~
                 </td>
@@ -117,6 +119,7 @@
 
         methods: {
             formatAmount:  Vue.filter('formatAmount'),
+            trans: Vue.filter('trans'),
             fetchBillList() {
                 axios.get('api/v1/bills', {params: {start: window.sessionStart, end: window.sessionEnd}}).then((res) => {
                     this.list = res.data.data;
