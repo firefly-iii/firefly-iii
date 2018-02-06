@@ -19,6 +19,8 @@
         "vue": "^2.5.7"
     },
     "dependencies": {
-        "font-awesome": "^4.7.0"
+        "accounting": "^0.4.1",
+        "font-awesome": "^4.7.0",
+        "moment": "^2.20.1"
     }
 }
