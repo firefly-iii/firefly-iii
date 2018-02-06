@@ -392,9 +392,7 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $date
      *
      * @return \Carbon\Carbon
-     *
-     * @throws \FireflyIII\Support\Facades\FireflyException
-     * @throws \FireflyIII\Support\Facades\FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function nextDateMatch(Bill $bill, Carbon $date): Carbon
     {
@@ -432,10 +430,6 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $date
      *
      * @return Carbon
-     *
-     * @throws \FireflyIII\Support\Facades\FireflyException
-     * @throws \FireflyIII\Support\Facades\FireflyException
-     * @throws \FireflyIII\Support\Facades\FireflyException
      */
     public function nextExpectedMatch(Bill $bill, Carbon $date): Carbon
     {

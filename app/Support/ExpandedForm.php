@@ -288,7 +288,6 @@ class ExpandedForm
      * @return string
      *
      * @throws \Throwable
-     * @throws Facades\FireflyException
      */
     public function nonSelectableAmount(string $name, $value = null, array $options = []): string
     {
@@ -319,7 +318,6 @@ class ExpandedForm
      * @return string
      *
      * @throws \Throwable
-     * @throws Facades\FireflyException
      */
     public function nonSelectableBalance(string $name, $value = null, array $options = []): string
     {
