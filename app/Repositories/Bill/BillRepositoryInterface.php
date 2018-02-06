@@ -36,12 +36,6 @@ interface BillRepositoryInterface
 {
 
     /**
-     * @param int $size
-     *
-     * @return LengthAwarePaginator
-     */
-    public function getPaginator(int $size): LengthAwarePaginator;
-    /**
      * @param Bill $bill
      *
      * @return bool
@@ -111,6 +105,13 @@ interface BillRepositoryInterface
      * @return string
      */
     public function getOverallAverage(Bill $bill): string;
+
+    /**
+     * @param int $size
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getPaginator(int $size): LengthAwarePaginator;
 
     /**
      * @param Bill   $bill
