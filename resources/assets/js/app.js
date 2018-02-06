@@ -6,8 +6,35 @@
  */
 
 require('./bootstrap');
-
 window.Vue = require('vue');
+
+
+import moment from 'moment';
+import accounting from 'accounting';
+
+Vue.filter('formatDate', function(value) {
+
+    if (value) {
+        moment.locale(window.language);
+        return moment(String(value)).format(window.month_and_day_js);
+    }
+});
+
+Vue.filter('formatAmount', function(value) {
+    if (value) {
+        value = parseFloat(value);
+        var parsed = accounting.formatMoney(value, window.currencySymbol, window.frac_digits,window.mon_thousands_sep,window.mon_decimal_point,accountingConfig);
+        if(value < 0) {
+            return '<span class="text-danger">' + parsed + '</span>';
+        }
+        if(value > 0) {
+        return '<span class="text-success">' + parsed + '</span>';
+        }
+        return '<span style="color:#999;">' + parsed + '</span>';
+    }
+});
+
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -16,6 +43,8 @@ window.Vue = require('vue');
  */
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
+
+Vue.component('bills-index', require('./components/bills/Index.vue'));
 
 Vue.component(
     'passport-clients',

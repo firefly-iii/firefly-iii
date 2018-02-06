@@ -37,3 +37,9 @@ var showFullList = '{{ trans('firefly.show_full_list')|escape('js') }}';
 var showOnlyTop = '{{ trans('firefly.show_only_top',{number:listLength})|escape('js') }}';
 var accountingConfig = {{ accounting|json_encode|raw }};
 var token = '{{ csrf_token() }}';
+var sessionStart = '{{ session('start').format('Y-m-d') }}';
+var sessionEnd = '{{ session('end').format('Y-m-d') }}';
+
+// some formatting stuff:
+var month_and_day_js = "{{ trans('config.month_and_day_js') }}";
+var acc_config_new = {format: accountingConfig};

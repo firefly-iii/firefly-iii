@@ -26,6 +26,9 @@
                 <div style="padding:8px;">
                     <a class="btn btn-success" href="{{ route('bills.create') }}"><i class="fa fa-plus fa-fw"></i> {{ 'create_new_bill'|_ }}</a>
                 </div>
+
+                <bills-index></bills-index>
+                <p><hr /></p>
                 {% include 'list/bills' %}
             </div>
             <div class="box-footer">
@@ -42,5 +45,9 @@
 {% endblock %}
 
 {% block scripts %}
+    <script type="text/javascript">
+        var start = '2018-01-01';
+        var end = '2018-01-31';
+    </script>
     <script type="text/javascript" src="js/lib/bootstrap-sortable.js?v={{ FF_VERSION }}"></script>
 {% endblock %}
