@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
@@ -33,6 +34,13 @@ use Illuminate\Support\Collection;
  */
 interface BillRepositoryInterface
 {
+
+    /**
+     * @param int $size
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getPaginator(int $size): LengthAwarePaginator;
     /**
      * @param Bill $bill
      *

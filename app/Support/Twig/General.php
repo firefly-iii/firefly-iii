@@ -65,6 +65,7 @@ class General extends Twig_Extension
             $this->steamPositive(),
             $this->activeRoutePartial(),
             $this->activeRoutePartialWhat(),
+            $this->formatDate(),
         ];
     }
 
@@ -175,6 +176,21 @@ class General extends Twig_Extension
             'env',
             function (string $name, string $default): string {
                 return env($name, $default);
+            }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    protected function formatDate()
+    {
+        return new Twig_SimpleFunction(
+            'formatDate',
+            function (string $date, string $format): string {
+                $carbon = new Carbon($date);
+
+                return $carbon->formatLocalized($format);
             }
         );
     }

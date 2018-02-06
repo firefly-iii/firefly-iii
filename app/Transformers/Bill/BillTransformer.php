@@ -25,6 +25,7 @@ namespace FireflyIII\Transformers\Bill;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Note;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
 use League\Fractal\TransformerAbstract;
@@ -74,6 +75,7 @@ class BillTransformer extends TransformerAbstract
             'pay_dates'           => $this->payDates($bill),
             'paid_dates'          => $paidData['paid_dates'],
             'next_expected_match' => $paidData['next_expected_match'],
+            'notes'               => $this->getNote($bill),
             'links'               => [
                 [
                     'rel' => 'self',
@@ -81,6 +83,8 @@ class BillTransformer extends TransformerAbstract
                 ],
             ],
         ];
+
+        // todo: attachments, journals, notes
 
 
         return $data;
@@ -137,6 +141,13 @@ class BillTransformer extends TransformerAbstract
      */
     protected function paidData(Bill $bill): array
     {
+        if (is_null($this->start) || is_null($this->end)) {
+            return [
+                'paid_dates'          => [],
+                'next_expected_match' => null,
+            ];
+        }
+
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser($bill->user);
@@ -192,5 +203,16 @@ class BillTransformer extends TransformerAbstract
         );
 
         return $simple->toArray();
+    }
+
+    private function getNote($bill): string
+    {
+        /** @var Note $note */
+        $note = $bill->notes()->first();
+        if (!is_null($note)) {
+            return $note->text;
+        }
+
+        return '';
     }
 }

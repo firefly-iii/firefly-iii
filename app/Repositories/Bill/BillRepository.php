@@ -32,6 +32,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
 use Illuminate\Database\Query\JoinClause;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
 use Navigation;
@@ -267,6 +268,16 @@ class BillRepository implements BillRepositoryInterface
         }
 
         return $avg;
+    }
+
+    /**
+     * @param int $size
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getPaginator(int $size): LengthAwarePaginator
+    {
+        return $this->user->bills()->paginate($size);
     }
 
     /**
