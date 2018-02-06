@@ -1,5 +1,5 @@
 <div style="padding-left:8px;">
-    {{ bills.render|raw }}
+    {{ paginator.render|raw }}
 </div>
 <table class="table table-hover sortable">
     <thead>
@@ -26,13 +26,13 @@
             <td data-value="{{ entry.name }}">
                 <a href="{{ route('bills.show',entry.id) }}" title="{{ entry.name }}">{{ entry.name }}</a>
                 {# count attachments #}
-                {% if entry.attachments.count > 0 %}
+                {% if entry.attachments_count > 0 %}
                     <i class="fa fa-paperclip"></i>
                 {% endif %}
 
             </td>
-            <td class="hidden-sm hidden-md hidden-xs" data-value="{{ entry.match }}">
-                {% for match in entry.match|split(',') %}
+            <td class="hidden-sm hidden-md hidden-xs" data-value="{{ entry.match|join(',') }}">
+                {% for match in entry.match %}
                     <span class="label label-info">{{ match }}</span>
                 {% endfor %}
             </td>
@@ -49,44 +49,44 @@
 
             {#
             paidDates = 0 (bill not paid in period)
-            payDates  = 0 (bill not expected to be paid in this period)
+            pay_dates  = 0 (bill not expected to be paid in this period)
             bill is active.
             #}
-            {% if entry.paidDates.count() == 0 and entry.payDates.count() == 0 and entry.active %}
+            {% if entry.paid_dates|length == 0 and entry.pay_dates|length == 0 and entry.active %}
                 <td class="paid_in_period text-muted" data-value="0001-00-00 00-00-00">
                     {{ trans('components.not_expected_period') }}
                 </td>
-                <td class="expected_in_period hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('Y-m-d H-i-s') }}">
-                    {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
+                <td class="expected_in_period hidden-sm hidden-xs" data-value="{{ entry.next_expected_match }}">
+                    {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
                 </td>
             {% endif %}
 
             {#
-            paidDates = 0 (bill not paid in period)
-            payDates  > 0 (bill IS expected to be paid in this period)
+            paid_dates = 0 (bill not paid in period)
+            pay_dates  > 0 (bill IS expected to be paid in this period)
             bill is active
             #}
-            {% if entry.paidDates.count() == 0 and entry.payDates.count() > 0 and entry.active %}
+            {% if entry.paid_dates|length == 0 and entry.pay_dates|length > 0 and entry.active %}
                 <td class="paid_in_period text-danger" data-value="0002-00-00 00-00-00">
                     {{ trans('components.not_or_not_yet') }}
                 </td>
-                <td class="expected_in_period hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('Y-m-d H-i-s') }}">
-                    {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
+                <td class="expected_in_period hidden-sm hidden-xs" data-value="{{ entry.next_expected_match }}">
+                    {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
                 </td>
             {% endif %}
 
             {#
-            paidDates >= 0 (bill is paid X times).
-            Don't care about payDates.
+            paid_dates >= 0 (bill is paid X times).
+            Don't care about pay_dates.
             #}
-            {% if entry.paidDates.count() > 0 and entry.active %}
-                <td class="paid_in_period text-success" data-value="{{ entry.paidDates.first.format('Y-m-d H-i-s') }}">
-                    {% for date in entry.paidDates %}
-                        {{ date.formatLocalized(monthAndDayFormat) }}<br/>
+            {% if entry.paid_dates|length > 0 and entry.active %}
+                <td class="paid_in_period text-success" data-value="{{ entry.paid_dates[0] }}">
+                    {% for date in entry.paid_dates %}
+                        {{ formatDate(date, monthAndDayFormat) }}<br />
                     {% endfor %}
                 </td>
-                <td class="expected_in_period hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('Y-m-d H-i-s') }}">
-                    {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
+                <td class="expected_in_period hidden-sm hidden-xs" data-value="{{ entry.next_expected_match }}">
+                    {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
                 </td>
             {% endif %}
             {# bill is not active #}
@@ -124,5 +124,5 @@
     </tbody>
 </table>
 <div style="padding-left:8px;">
-    {{ bills.render|raw }}
+    {{ paginator.render|raw }}
 </div>

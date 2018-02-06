@@ -10,14 +10,14 @@
         <div class="col-lg-6 col-sm-12 col-md-12">
             <div class="box" id="billInfo">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ bill.name }}</h3>
+                    <h3 class="box-title">{{ object.name }}</h3>
 
                     <div class="box-tools pull-right">
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('bills.edit',bill.id) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
-                                <li><a href="{{ route('bills.delete',bill.id) }}"><i class="fa fa-fw fa-trash-o"></i> {{ 'delete'|_ }}</a></li>
+                                <li><a href="{{ route('bills.edit',object.id) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
+                                <li><a href="{{ route('bills.delete',object.id) }}"><i class="fa fa-fw fa-trash-o"></i> {{ 'delete'|_ }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -28,18 +28,18 @@
                         <tr>
                             <td colspan="2">
                                 {{ 'matching_on'|_ }}
-                                {% for word in bill.match|split(',') %}
+                                {% for word in object.match %}
                                     <span class="label label-info">{{ word }}</span>
                                 {% endfor %}
-                                {{ trans('firefly.between_amounts', {low: bill.amount_min|formatAmount, high: bill.amount_max|formatAmount })|raw }}
+                                {{ trans('firefly.between_amounts', {low: object.amount_min|formatAmount, high: object.amount_max|formatAmount })|raw }}
                                 {{ 'repeats'|_ }}
-                                {{ trans('firefly.repeat_freq_' ~bill.repeat_freq) }}.
+                                {{ trans('firefly.repeat_freq_' ~object.repeat_freq) }}.
                             </td>
                         </tr>
                         <tr>
                             <td>{{ 'bill_is_active'|_ }}</td>
                             <td>
-                                {% if bill.active %}
+                                {% if object.active %}
                                     <i class="fa fa-check fa-fw" title="{{ 'active'|_ }}"></i> {{ 'yes'|_ }}
                                 {% else %}
                                     <i class="fa fa-times fa-fw" title="{{ 'inactive'|_ }}"></i> {{ 'no'|_ }}
@@ -49,21 +49,20 @@
                         <tr>
                             <td>{{ 'bill_will_automatch'|_ }}</td>
                             <td>
-                                {% if bill.automatch %}
+                                {% if object.automatch %}
                                     <i class="fa fa-check fa-fw" title="{{ 'auto_match_on'|_ }}"></i> {{ 'yes'|_ }}
                                 {% else %}
                                     <i class="fa fa-times fa-fw" title="{{ 'auto_match_off'|_ }}"></i> {{ 'no'|_ }}
                                 {% endif %}
                             </td>
                         </tr>
-
                         <tr>
                             <td>{{ 'next_expected_match'|_ }}</td>
                             <td>
-                                {% if bill.nextExpectedMatch %}
-                                    {{ bill.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
-                                {% else %}
-                                    <em>{{ 'unknown'|_ }}</em>
+                                {% if object.next_expected_match|length > 0 %}
+                                {{ formatDate(object.next_expected_match, monthAndDayFormat) }}
+                                {% else  %}
+                                    {{ 'unknown'|_ }}
                                 {% endif %}
                             </td>
                         </tr>
@@ -85,21 +84,21 @@
                     <h3 class="box-title">{{ 'more'|_ }}</h3>
                 </div>
                 <div class="box-body no-padding">
-                    {% if bill.notes.count == 1 %}
+                    {% if object.notes|length > 0 %}
                         <table class="table">
                             <tr>
                                 <td>{{ trans('list.notes') }}</td>
-                                <td class="markdown">{{ bill.notes.first.text|markdown }}</td>
+                                <td class="markdown">{{ object.notes|markdown }}</td>
                             </tr>
                         </table>
                     {% endif %}
                 </div>
 
                 <div class="box-footer">
-                    <a href="{{ route('bills.rescan',bill.id) }}" class="btn btn-default">{{ 'rescan_old'|_ }}</a>
+                    <a href="{{ route('bills.rescan',object.id) }}" class="btn btn-default">{{ 'rescan_old'|_ }}</a>
                 </div>
             </div>
-            {% if bill.attachments|length > 0 %}
+            {% if object.attachments_count > 0 %}
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'attachments'|_ }}</h3>
@@ -171,7 +170,7 @@
 
 {% block scripts %}
     <script type="text/javascript">
-        var billUri = '{{ route('chart.bill.single', [bill.id]) }}';
+        var billUri = '{{ route('chart.bill.single', [object.id]) }}';
     </script>
     <script type="text/javascript" src="js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="js/ff/charts.defaults.js?v={{ FF_VERSION }}"></script>
