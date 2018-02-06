@@ -10,14 +10,14 @@
         <div class="col-lg-6 col-sm-12 col-md-12">
             <div class="box" id="billInfo">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ object.name }}</h3>
+                    <h3 class="box-title">{{ object.data.name }}</h3>
 
                     <div class="box-tools pull-right">
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('bills.edit',object.id) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
-                                <li><a href="{{ route('bills.delete',object.id) }}"><i class="fa fa-fw fa-trash-o"></i> {{ 'delete'|_ }}</a></li>
+                                <li><a href="{{ route('bills.edit',object.data.id) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
+                                <li><a href="{{ route('bills.delete',object.data.id) }}"><i class="fa fa-fw fa-trash-o"></i> {{ 'delete'|_ }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -28,18 +28,18 @@
                         <tr>
                             <td colspan="2">
                                 {{ 'matching_on'|_ }}
-                                {% for word in object.match %}
+                                {% for word in object.data.match %}
                                     <span class="label label-info">{{ word }}</span>
                                 {% endfor %}
-                                {{ trans('firefly.between_amounts', {low: object.amount_min|formatAmount, high: object.amount_max|formatAmount })|raw }}
+                                {{ trans('firefly.between_amounts', {low: object.data.amount_min|formatAmount, high: object.data.amount_max|formatAmount })|raw }}
                                 {{ 'repeats'|_ }}
-                                {{ trans('firefly.repeat_freq_' ~object.repeat_freq) }}.
+                                {{ trans('firefly.repeat_freq_' ~object.data.repeat_freq) }}.
                             </td>
                         </tr>
                         <tr>
                             <td>{{ 'bill_is_active'|_ }}</td>
                             <td>
-                                {% if object.active %}
+                                {% if object.data.active %}
                                     <i class="fa fa-check fa-fw" title="{{ 'active'|_ }}"></i> {{ 'yes'|_ }}
                                 {% else %}
                                     <i class="fa fa-times fa-fw" title="{{ 'inactive'|_ }}"></i> {{ 'no'|_ }}
@@ -49,7 +49,7 @@
                         <tr>
                             <td>{{ 'bill_will_automatch'|_ }}</td>
                             <td>
-                                {% if object.automatch %}
+                                {% if object.data.automatch %}
                                     <i class="fa fa-check fa-fw" title="{{ 'auto_match_on'|_ }}"></i> {{ 'yes'|_ }}
                                 {% else %}
                                     <i class="fa fa-times fa-fw" title="{{ 'auto_match_off'|_ }}"></i> {{ 'no'|_ }}
@@ -59,8 +59,8 @@
                         <tr>
                             <td>{{ 'next_expected_match'|_ }}</td>
                             <td>
-                                {% if object.next_expected_match|length > 0 %}
-                                {{ formatDate(object.next_expected_match, monthAndDayFormat) }}
+                                {% if object.data.next_expected_match|length > 0 %}
+                                {{ formatDate(object.data.next_expected_match, monthAndDayFormat) }}
                                 {% else  %}
                                     {{ 'unknown'|_ }}
                                 {% endif %}
@@ -88,48 +88,48 @@
                         <table class="table">
                             <tr>
                                 <td>{{ trans('list.notes') }}</td>
-                                <td class="markdown">{{ object.notes|markdown }}</td>
+                                <td class="markdown">{{ object.notes.data[0].markdown }}</td>
                             </tr>
                         </table>
                     {% endif %}
                 </div>
 
                 <div class="box-footer">
-                    <a href="{{ route('bills.rescan',object.id) }}" class="btn btn-default">{{ 'rescan_old'|_ }}</a>
+                    <a href="{{ route('bills.rescan',object.data.id) }}" class="btn btn-default">{{ 'rescan_old'|_ }}</a>
                 </div>
             </div>
-            {% if object.attachments_count > 0 %}
+            {% if object.data.attachments_count > 0 %}
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'attachments'|_ }}</h3>
                     </div>
                     <div class="box-body table-responsive no-padding">
                         <table class="table table-hover">
-                            {% for att in bill.attachments %}
+                            {% for att in bill.data.attachments.data %}
                                 <tr>
                                     <td>
                                         <div class="btn-group btn-group-xs">
-                                            <a href="{{ route('attachments.edit', att.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
-                                            <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                            <a href="{{ route('attachments.edit', att.data.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
+                                            <a href="{{ route('attachments.delete', att.data.id) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
                                         </div>
                                     </td>
                                     <td>
-                                        <i class="fa {{ att.mime|mimeIcon }}"></i>
-                                        <a href="{{ route('attachments.download', att.id) }}" title="{{ att.filename }}">
-                                            {% if att.title %}
-                                                {{ att.title }}
+                                        <i class="fa {{ att.data.mime|mimeIcon }}"></i>
+                                        <a href="{{ route('attachments.download', att.data.id) }}" title="{{ att.data.filename }}">
+                                            {% if att.data.title %}
+                                                {{ att.data.title }}
                                             {% else %}
-                                                {{ att.filename }}
+                                                {{ att.data.filename }}
                                             {% endif %}
                                         </a>
-                                        ({{ att.size|filesize }})
-                                        {% if att.description %}
+                                        ({{ att.data.size|filesize }})
+                                        {% if att.data.description %}
                                             <br/>
-                                            <em>{{ att.description }}</em>
+                                            <em>{{ att.data.description }}</em>
                                         {% endif %}
                                     </td>
                                     <td style="width:100px;">
-                                        <img src="{{ route('attachments.preview', att.id) }}"/>
+                                        <img src="{{ route('attachments.preview', att.data.id) }}"/>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -170,7 +170,7 @@
 
 {% block scripts %}
     <script type="text/javascript">
-        var billUri = '{{ route('chart.bill.single', [object.id]) }}';
+        var billUri = '{{ route('chart.bill.single', [object.data.id]) }}';
     </script>
     <script type="text/javascript" src="js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="js/ff/charts.defaults.js?v={{ FF_VERSION }}"></script>
