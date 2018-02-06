@@ -19,35 +19,14 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
-//Route::get(
-//    '/user', function (Request $request) {
-//    return 'hello';
-//    return $request->user();
-//}
-//);
-
-
 Route::group(
-    ['middleware' => 'auth:api', 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'bills', 'as' => 'api.v1.bills.'], function () {
+    ['middleware' => 'auth:api', 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'bill', 'as' => 'api.v1.bills.'], function () {
 
+    // Bills API routes:
     Route::get('', ['uses' => 'BillController@index', 'as' => 'index']);
+    Route::post('', ['uses' => 'BillController@store', 'as' => 'store']);
     Route::get('{bill}', ['uses' => 'BillController@show', 'as' => 'show']);
+    Route::put('{bill}', ['uses' => 'BillController@update', 'as' => 'update']);
+    Route::delete('{bill}', ['uses' => 'BillController@delete', 'as' => 'delete']);
 }
 );
-//Route::get(
-//    '/bills', function (Request $request) {
-//    //return 'hello';
-//    return $request->user()->bills;
-//}
-//);
