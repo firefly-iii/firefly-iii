@@ -1,4 +1,3 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -8,11 +7,15 @@
 require('./bootstrap');
 window.Vue = require('vue');
 
-
 import moment from 'moment';
 import accounting from 'accounting';
+import Lang from './lang.js';
 
-Vue.filter('formatDate', function(value) {
+Vue.filter('trans', (...args) => {
+    return Lang.get(...args);
+});
+
+Vue.filter('formatDate', function (value) {
 
     if (value) {
         moment.locale(window.language);
@@ -20,20 +23,19 @@ Vue.filter('formatDate', function(value) {
     }
 });
 
-Vue.filter('formatAmount', function(value) {
+Vue.filter('formatAmount', function (value) {
     if (value) {
         value = parseFloat(value);
-        var parsed = accounting.formatMoney(value, window.currencySymbol, window.frac_digits,window.mon_thousands_sep,window.mon_decimal_point,accountingConfig);
-        if(value < 0) {
+        let parsed = accounting.formatMoney(value, window.currencySymbol, window.frac_digits, window.mon_thousands_sep, window.mon_decimal_point, accountingConfig);
+        if (value < 0) {
             return '<span class="text-danger">' + parsed + '</span>';
         }
-        if(value > 0) {
-        return '<span class="text-success">' + parsed + '</span>';
+        if (value > 0) {
+            return '<span class="text-success">' + parsed + '</span>';
         }
         return '<span style="color:#999;">' + parsed + '</span>';
     }
 });
-
 
 
 /**
@@ -62,9 +64,6 @@ Vue.component(
 );
 
 
-
-
-
 const app = new Vue({
-    el: '#app'
-});
+                        el: '#app'
+                    });
