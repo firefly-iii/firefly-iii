@@ -1,6 +1,6 @@
 <?php
 /**
- * AttachmentTransformer.php
+ * NoteTransformer.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -24,31 +24,30 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use FireflyIII\Models\Attachment;
+use FireflyIII\Models\Note;
+use League\CommonMark\CommonMarkConverter;
 use League\Fractal\TransformerAbstract;
 
 /**
- * Class AttachmentTransformer
+ * Class NoteTransformer
  */
-class AttachmentTransformer extends TransformerAbstract
+class NoteTransformer extends TransformerAbstract
 {
     /**
-     * @param Attachment $attachment
+     * @param Note $note
      *
      * @return array
      */
-    public function transform(Attachment $attachment): array
+    public function transform(Note $note): array
     {
+        $converter = new CommonMarkConverter;
+
         return [
-            'id'              => (int)$attachment->id,
-            'attachable_type' => $attachment->attachable_type,
-            'md5'             => $attachment->md5,
-            'filename'        => $attachment->filename,
-            'title'           => $attachment->title,
-            'description'     => $attachment->description,
-            'notes'           => $attachment->notes,
-            'mime'            => $attachment->mime,
-            'size'            => $attachment->size,
+            'id'           => (int)$note->id,
+            'notable_type' => $note->noteable_type,
+            'title'        => $note->title,
+            'text'         => $note->text,
+            'markdown'     => $converter->convertToHtml($note->text),
         ];
     }
 
