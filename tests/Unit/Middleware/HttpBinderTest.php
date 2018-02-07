@@ -26,7 +26,7 @@ namespace Tests\Unit\Middleware;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\FiscalHelperInterface;
-use FireflyIII\Http\Middleware\Binder;
+use FireflyIII\Http\Middleware\HttpBinder;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Route;
@@ -37,7 +37,7 @@ use Tests\TestCase;
  * Class BinderTest
  * Per object: works, not existing, not logged in + existing
  */
-class BinderTest extends TestCase
+class HttpBinderTest extends TestCase
 {
 
     /**
@@ -48,7 +48,7 @@ class BinderTest extends TestCase
      */
     public function testAccount()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{account}', function () {
             return 'OK';
         }
@@ -67,7 +67,7 @@ class BinderTest extends TestCase
      */
     public function testAccountList()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{accountList}', function (Collection $accounts) {
             return 'count: ' . $accounts->count();
         }
@@ -86,7 +86,7 @@ class BinderTest extends TestCase
      */
     public function testAccountListEmpty()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{accountList}', function (Collection $accounts) {
             return 'count: ' . $accounts->count();
         }
@@ -104,7 +104,7 @@ class BinderTest extends TestCase
      */
     public function testAccountListInvalid()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{accountList}', function (Collection $accounts) {
             return 'count: ' . $accounts->count();
         }
@@ -123,7 +123,7 @@ class BinderTest extends TestCase
      */
     public function testAccountListNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{accountList}', function (Collection $accounts) {
             return 'count: ' . $accounts->count();
         }
@@ -140,7 +140,7 @@ class BinderTest extends TestCase
      */
     public function testAccountNotFound()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{account}', function () {
             return 'OK';
         }
@@ -159,7 +159,7 @@ class BinderTest extends TestCase
      */
     public function testAccountNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{account}', function () {
             return 'OK';
         }
@@ -177,7 +177,7 @@ class BinderTest extends TestCase
      */
     public function testAttachment()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{attachment}', function () {
             return 'OK';
         }
@@ -196,7 +196,7 @@ class BinderTest extends TestCase
      */
     public function testAttachmentNotFound()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{attachment}', function () {
             return 'OK';
         }
@@ -215,7 +215,7 @@ class BinderTest extends TestCase
      */
     public function testAttachmentNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{attachment}', function () {
             return 'OK';
         }
@@ -233,7 +233,7 @@ class BinderTest extends TestCase
      */
     public function testBill()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{bill}', function () {
             return 'OK';
         }
@@ -252,7 +252,7 @@ class BinderTest extends TestCase
      */
     public function testBillNotFound()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{bill}', function () {
             return 'OK';
         }
@@ -271,7 +271,7 @@ class BinderTest extends TestCase
      */
     public function testBillNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{bill}', function () {
             return 'OK';
         }
@@ -289,7 +289,7 @@ class BinderTest extends TestCase
      */
     public function testBudget()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{budget}', function () {
             return 'OK';
         }
@@ -308,7 +308,7 @@ class BinderTest extends TestCase
      */
     public function testBudgetLimit()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{budgetLimit}', function () {
             return 'OK';
         }
@@ -327,7 +327,7 @@ class BinderTest extends TestCase
      */
     public function testBudgetLimitNotFound()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{budgetLimit}', function () {
             return 'OK';
         }
@@ -346,7 +346,7 @@ class BinderTest extends TestCase
      */
     public function testBudgetLimitNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{budgetLimit}', function () {
             return 'OK';
         }
@@ -364,7 +364,7 @@ class BinderTest extends TestCase
      */
     public function testBudgetList()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{budgetList}', function (Collection $budgets) {
             return 'count: ' . $budgets->count();
         }
@@ -383,7 +383,7 @@ class BinderTest extends TestCase
      */
     public function testBudgetListInvalid()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{budgetList}', function (Collection $budgets) {
             return 'count: ' . $budgets->count();
         }
@@ -401,7 +401,7 @@ class BinderTest extends TestCase
      */
     public function testBudgetNotFound()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{budget}', function () {
             return 'OK';
         }
@@ -420,7 +420,7 @@ class BinderTest extends TestCase
      */
     public function testBudgetNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{budget}', function () {
             return 'OK';
         }
@@ -438,7 +438,7 @@ class BinderTest extends TestCase
      */
     public function testCategory()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{category}', function () {
             return 'OK';
         }
@@ -457,7 +457,7 @@ class BinderTest extends TestCase
      */
     public function testCategoryList()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{categoryList}', function (Collection $categories) {
             return 'count: ' . $categories->count();
         }
@@ -476,7 +476,7 @@ class BinderTest extends TestCase
      */
     public function testCategoryListInvalid()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{categoryList}', function (Collection $categories) {
             return 'count: ' . $categories->count();
         }
@@ -494,7 +494,7 @@ class BinderTest extends TestCase
      */
     public function testCategoryNotFound()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{category}', function () {
             return 'OK';
         }
@@ -513,7 +513,7 @@ class BinderTest extends TestCase
      */
     public function testCategoryNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{category}', function () {
             return 'OK';
         }
@@ -531,7 +531,7 @@ class BinderTest extends TestCase
      */
     public function testCurrencyCode()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{fromCurrencyCode}', function () {
             return 'OK';
         }
@@ -550,7 +550,7 @@ class BinderTest extends TestCase
      */
     public function testCurrencyCodeNotFound()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{fromCurrencyCode}', function () {
             return 'OK';
         }
@@ -569,7 +569,7 @@ class BinderTest extends TestCase
      */
     public function testCurrencyCodeNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{fromCurrencyCode}', function () {
             return 'OK';
         }
@@ -587,7 +587,7 @@ class BinderTest extends TestCase
      */
     public function testDate()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
             return 'date: ' . $date->format('Y-m-d');
         }
@@ -606,7 +606,7 @@ class BinderTest extends TestCase
      */
     public function testDateCurrentMonthEnd()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
             return 'date: ' . $date->format('Y-m-d');
         }
@@ -627,7 +627,7 @@ class BinderTest extends TestCase
      */
     public function testDateCurrentMonthStart()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
             return 'date: ' . $date->format('Y-m-d');
         }
@@ -648,7 +648,7 @@ class BinderTest extends TestCase
      */
     public function testDateCurrentYearEnd()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
             return 'date: ' . $date->format('Y-m-d');
         }
@@ -669,7 +669,7 @@ class BinderTest extends TestCase
      */
     public function testDateCurrentYearStart()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
             return 'date: ' . $date->format('Y-m-d');
         }
@@ -690,7 +690,7 @@ class BinderTest extends TestCase
      */
     public function testDateFiscalYearEnd()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
             return 'date: ' . $date->format('Y-m-d');
         }
@@ -718,7 +718,7 @@ class BinderTest extends TestCase
      */
     public function testDateFiscalYearStart()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
             return 'date: ' . $date->format('Y-m-d');
         }
@@ -746,7 +746,7 @@ class BinderTest extends TestCase
      */
     public function testDateInvalid()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
             return 'date: ' . $date->format('Y-m-d');
         }
@@ -764,7 +764,7 @@ class BinderTest extends TestCase
      */
     public function testExportJob()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{exportJob}', function () {
             return 'OK';
         }
@@ -783,7 +783,7 @@ class BinderTest extends TestCase
      */
     public function testExportJobNotFound()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{exportJob}', function () {
             return 'OK';
         }
@@ -802,7 +802,7 @@ class BinderTest extends TestCase
      */
     public function testExportJobNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{exportJob}', function () {
             return 'OK';
         }
@@ -820,7 +820,7 @@ class BinderTest extends TestCase
      */
     public function testImportJob()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{importJob}', function () {
             return 'OK';
         }
@@ -839,7 +839,7 @@ class BinderTest extends TestCase
      */
     public function testImportJobBadStatus()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{importJob}', function () {
             return 'OK';
         }
@@ -857,7 +857,7 @@ class BinderTest extends TestCase
      */
     public function testImportJobNotFound()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{importJob}', function () {
             return 'OK';
         }
@@ -876,7 +876,7 @@ class BinderTest extends TestCase
      */
     public function testImportJobNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{importJob}', function () {
             return 'OK';
         }
@@ -894,7 +894,7 @@ class BinderTest extends TestCase
      */
     public function testJournalList()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{journalList}', function (Collection $journals) {
             return 'count: ' . $journals->count();
         }
@@ -913,7 +913,7 @@ class BinderTest extends TestCase
      */
     public function testJournalListEmpty()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{journalList}', function (Collection $journals) {
             return 'count: ' . $journals->count();
         }
@@ -931,7 +931,7 @@ class BinderTest extends TestCase
      */
     public function testLinkType()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{linkType}', function () {
             return 'OK';
         }
@@ -950,7 +950,7 @@ class BinderTest extends TestCase
      */
     public function testLinkTypeNotFound()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{linkType}', function () {
             return 'OK';
         }
@@ -969,7 +969,7 @@ class BinderTest extends TestCase
      */
     public function testLinkTypeNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{linkType}', function () {
             return 'OK';
         }
@@ -987,7 +987,7 @@ class BinderTest extends TestCase
      */
     public function testPiggyBank()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{piggyBank}', function () {
             return 'OK';
         }
@@ -1006,7 +1006,7 @@ class BinderTest extends TestCase
      */
     public function testPiggyBankNotFound()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{piggyBank}', function () {
             return 'OK';
         }
@@ -1025,7 +1025,7 @@ class BinderTest extends TestCase
      */
     public function testPiggyBankNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{piggyBank}', function () {
             return 'OK';
         }
@@ -1043,7 +1043,7 @@ class BinderTest extends TestCase
      */
     public function testRule()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{rule}', function () {
             return 'OK';
         }
@@ -1062,7 +1062,7 @@ class BinderTest extends TestCase
      */
     public function testRuleGroup()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{ruleGroup}', function () {
             return 'OK';
         }
@@ -1081,7 +1081,7 @@ class BinderTest extends TestCase
      */
     public function testRuleGroupNotFound()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{ruleGroup}', function () {
             return 'OK';
         }
@@ -1100,7 +1100,7 @@ class BinderTest extends TestCase
      */
     public function testRuleGroupNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{ruleGroup}', function () {
             return 'OK';
         }
@@ -1118,7 +1118,7 @@ class BinderTest extends TestCase
      */
     public function testRuleNotFound()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{rule}', function () {
             return 'OK';
         }
@@ -1137,7 +1137,7 @@ class BinderTest extends TestCase
      */
     public function testRuleNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{rule}', function () {
             return 'OK';
         }
@@ -1155,7 +1155,7 @@ class BinderTest extends TestCase
      */
     public function testTJ()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{tj}', function () {
             return 'OK';
         }
@@ -1174,7 +1174,7 @@ class BinderTest extends TestCase
      */
     public function testTJNotFound()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{tj}', function () {
             return 'OK';
         }
@@ -1193,7 +1193,7 @@ class BinderTest extends TestCase
      */
     public function testTJNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{tj}', function () {
             return 'OK';
         }
@@ -1211,7 +1211,7 @@ class BinderTest extends TestCase
      */
     public function testTag()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{tag}', function () {
             return 'OK';
         }
@@ -1230,7 +1230,7 @@ class BinderTest extends TestCase
      */
     public function testTagList()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{tagList}', function (Collection $tags) {
             return 'count: ' . $tags->count();
         }
@@ -1239,6 +1239,7 @@ class BinderTest extends TestCase
         $names = join(',', $tags->pluck('tag')->toArray());
 
         $repository = $this->mock(TagRepositoryInterface::class);
+        $repository->shouldReceive('setUser');
         $repository->shouldReceive('get')->once()->andReturn($tags);
 
         $this->be($this->user());
@@ -1255,7 +1256,7 @@ class BinderTest extends TestCase
      */
     public function testTagListEmpty()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{tagList}', function (Collection $tags) {
             return 'count: ' . $tags->count();
         }
@@ -1273,7 +1274,7 @@ class BinderTest extends TestCase
      */
     public function testTagNotFound()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{tag}', function () {
             return 'OK';
         }
@@ -1292,7 +1293,7 @@ class BinderTest extends TestCase
      */
     public function testTagNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{tag}', function () {
             return 'OK';
         }
@@ -1310,7 +1311,7 @@ class BinderTest extends TestCase
      */
     public function testTransactionCurrency()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{currency}', function () {
             return 'OK';
         }
@@ -1329,7 +1330,7 @@ class BinderTest extends TestCase
      */
     public function testTransactionCurrencyNotFound()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{currency}', function () {
             return 'OK';
         }
@@ -1348,7 +1349,7 @@ class BinderTest extends TestCase
      */
     public function testTransactionCurrencyNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{currency}', function () {
             return 'OK';
         }
@@ -1366,7 +1367,7 @@ class BinderTest extends TestCase
      */
     public function testTransactionJournalLink()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{journalLink}', function () {
             return 'OK';
         }
@@ -1385,7 +1386,7 @@ class BinderTest extends TestCase
      */
     public function testTransactionJournalLinkNotFound()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{journalLink}', function () {
             return 'OK';
         }
@@ -1404,7 +1405,7 @@ class BinderTest extends TestCase
      */
     public function testTransactionJournalLinkNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{journalLink}', function () {
             return 'OK';
         }
@@ -1422,7 +1423,7 @@ class BinderTest extends TestCase
      */
     public function testTransactionType()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{transactionType}', function () {
             return 'OK';
         }
@@ -1441,7 +1442,7 @@ class BinderTest extends TestCase
      */
     public function testTransactionTypeNotFound()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{transactionType}', function () {
             return 'OK';
         }
@@ -1460,7 +1461,7 @@ class BinderTest extends TestCase
      */
     public function testTransactionTypeNotLoggedIn()
     {
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{transactionType}', function () {
             return 'OK';
         }
@@ -1479,7 +1480,7 @@ class BinderTest extends TestCase
     public function testUnfinishedJournal()
     {
         $journal = $this->user()->transactionJournals()->where('completed', 0)->first();
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{unfinishedJournal}', function () {
             return 'OK';
         }
@@ -1498,7 +1499,7 @@ class BinderTest extends TestCase
     public function testUnfinishedJournalFinished()
     {
         $journal = $this->user()->transactionJournals()->where('completed', 1)->first();
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{unfinishedJournal}', function () {
             return 'OK';
         }
@@ -1516,7 +1517,7 @@ class BinderTest extends TestCase
     public function testUnfinishedJournalNotLoggedIn()
     {
         $journal = $this->user()->transactionJournals()->where('completed', 0)->first();
-        Route::middleware(Binder::class)->any(
+        Route::middleware(HttpBinder::class)->any(
             '/_test/binder/{unfinishedJournal}', function () {
             return 'OK';
         }

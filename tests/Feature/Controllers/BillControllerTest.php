@@ -118,11 +118,13 @@ class BillControllerTest extends TestCase
         $bill         = factory(Bill::class)->make();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(BillRepositoryInterface::class);
-        $repository->shouldReceive('getBills')->andReturn(new Collection([$bill]));
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $collection = new Collection([$bill]);
+        $repository->shouldReceive('getPaginator')->andReturn(new LengthAwarePaginator($collection, 1, 50))->once();
+        $repository->shouldReceive('setUser');
         $repository->shouldReceive('getPaidDatesInRange')->twice()->andReturn(new Collection([new Carbon, new Carbon, new Carbon]));
-        $repository->shouldReceive('getPayDatesInRange')->once()->andReturn(new Collection([new Carbon, new Carbon]));
-        $repository->shouldReceive('nextExpectedMatch')->andReturn(new Carbon);
+
+
 
         $this->be($this->user());
         $response = $this->get(route('bills.index'));
@@ -187,7 +189,7 @@ class BillControllerTest extends TestCase
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
         $repository->shouldReceive('getPaidDatesInRange')->twice()->andReturn(new Collection([new Carbon, new Carbon, new Carbon]));
-        $repository->shouldReceive('getPayDatesInRange')->once()->andReturn(new Collection([new Carbon, new Carbon, new Carbon]));
+        $repository->shouldReceive('setUser');
 
         $this->be($this->user());
         $response = $this->get(route('bills.show', [1]));
