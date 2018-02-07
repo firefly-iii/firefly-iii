@@ -88,11 +88,11 @@ class Budget extends Model
      *
      * @return Budget
      */
-    public static function routeBinder(string $value): Budget
+    public static function routeBinder($guard, string $value): Budget
     {
-        if (auth()->check()) {
+        if ($guard->check()) {
             $budgetId = intval($value);
-            $budget   = auth()->user()->budgets()->find($budgetId);
+            $budget   = $guard->user()->budgets()->find($budgetId);
             if (!is_null($budget)) {
                 return $budget;
             }

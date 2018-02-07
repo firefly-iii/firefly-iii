@@ -118,11 +118,11 @@ class Account extends Model
      *
      * @return Account
      */
-    public static function routeBinder(string $value): Account
+    public static function routeBinder($guard, string $value): Account
     {
-        if (auth()->check()) {
+        if ($guard->check()) {
             $accountId = intval($value);
-            $account   = auth()->user()->accounts()->find($accountId);
+            $account   = $guard->user()->accounts()->find($accountId);
             if (!is_null($account)) {
                 return $account;
             }
@@ -291,6 +291,15 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     * Get all of the notes.
+     */
+    public function notes()
+    {
+        return $this->morphMany(Note::class, 'noteable');
+    }
+
+    /**
      * @return HasMany
      * @codeCoverageIgnore
      */
@@ -343,15 +352,6 @@ class Account extends Model
     public function setIbanAttribute($value)
     {
         $this->attributes['iban'] = Crypt::encrypt($value);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * Get all of the notes.
-     */
-    public function notes()
-    {
-        return $this->morphMany(Note::class, 'noteable');
     }
 
     /**

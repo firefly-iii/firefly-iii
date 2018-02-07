@@ -63,13 +63,14 @@ class User extends Authenticatable
     protected $table = 'users';
 
     /**
+     * @param        $guard
      * @param string $value
      *
      * @return User
      */
-    public static function routeBinder(string $value): User
+    public static function routeBinder($guard, string $value): User
     {
-        if (auth()->check()) {
+        if ($guard->check()) {
             $userId = intval($value);
             $user   = self::find($userId);
             if (!is_null($user)) {

@@ -91,11 +91,11 @@ class Tag extends Model
      *
      * @return Tag
      */
-    public static function routeBinder(string $value): Tag
+    public static function routeBinder($guard, string $value): Tag
     {
-        if (auth()->check()) {
+        if ($guard->check()) {
             $tagId = intval($value);
-            $tag   = auth()->user()->tags()->find($tagId);
+            $tag   = $guard->user()->tags()->find($tagId);
             if (!is_null($tag)) {
                 return $tag;
             }

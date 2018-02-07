@@ -73,11 +73,11 @@ class Bill extends Model
      *
      * @return Bill
      */
-    public static function routeBinder(string $value): Bill
+    public static function routeBinder($guard, string $value): Bill
     {
-        if (auth()->check()) {
+        if ($guard->check()) {
             $billId = intval($value);
-            $bill   = auth()->user()->bills()->find($billId);
+            $bill   = $guard->user()->bills()->find($billId);
             if (!is_null($bill)) {
                 return $bill;
             }

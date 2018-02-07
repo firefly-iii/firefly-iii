@@ -65,11 +65,11 @@ class ImportJob extends Model
      * @throws NotFoundHttpException
      * @throws FireflyException
      */
-    public static function routeBinder($value): ImportJob
+    public static function routeBinder($guard, string $value): ImportJob
     {
-        if (auth()->check()) {
+        if ($guard->check()) {
             $key       = trim($value);
-            $importJob = auth()->user()->importJobs()->where('key', $key)->first();
+            $importJob = $guard->user()->importJobs()->where('key', $key)->first();
             if (null !== $importJob) {
                 // must have valid status:
                 if (!in_array($importJob->status, $importJob->validStatus)) {

@@ -44,15 +44,15 @@ class TransactionJournalLink extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): TransactionJournalLink
+    public static function routeBinder($guard, string $value): TransactionJournalLink
     {
-        if (auth()->check()) {
+        if ($guard->check()) {
             $linkId = intval($value);
             $link   = self::where('journal_links.id', $linkId)
                           ->leftJoin('transaction_journals as t_a', 't_a.id', '=', 'source_id')
                           ->leftJoin('transaction_journals as t_b', 't_b.id', '=', 'destination_id')
-                          ->where('t_a.user_id', auth()->user()->id)
-                          ->where('t_b.user_id', auth()->user()->id)
+                          ->where('t_a.user_id', $guard->user()->id)
+                          ->where('t_b.user_id', $guard->user()->id)
                           ->first(['journal_links.*']);
             if (!is_null($link)) {
                 return $link;

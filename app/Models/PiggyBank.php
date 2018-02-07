@@ -65,13 +65,13 @@ class PiggyBank extends Model
      *
      * @return PiggyBank
      */
-    public static function routeBinder(string $value): PiggyBank
+    public static function routeBinder($guard, string $value): PiggyBank
     {
-        if (auth()->check()) {
+        if ($guard->check()) {
             $piggyBankId = intval($value);
             $piggyBank   = self::where('piggy_banks.id', $piggyBankId)
                                ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
-                               ->where('accounts.user_id', auth()->user()->id)->first(['piggy_banks.*']);
+                               ->where('accounts.user_id', $guard->user()->id)->first(['piggy_banks.*']);
             if (!is_null($piggyBank)) {
                 return $piggyBank;
             }
