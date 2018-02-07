@@ -20,7 +20,7 @@
  */
 
 Route::group(
-    ['middleware' => 'auth:api', 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'bill', 'as' => 'api.v1.bills.'], function () {
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'bill', 'as' => 'api.v1.bills.'], function () {
 
     // Bills API routes:
     Route::get('', ['uses' => 'BillController@index', 'as' => 'index']);
