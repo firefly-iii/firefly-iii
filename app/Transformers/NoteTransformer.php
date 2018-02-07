@@ -48,6 +48,12 @@ class NoteTransformer extends TransformerAbstract
             'title'        => $note->title,
             'text'         => $note->text,
             'markdown'     => $converter->convertToHtml($note->text),
+            'links'           => [
+                [
+                    'rel' => 'self',
+                    'uri' => '/note/' . $note->id,
+                ],
+            ]
         ];
     }
 

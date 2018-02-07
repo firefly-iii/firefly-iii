@@ -72,7 +72,7 @@ class BillTransformer extends TransformerAbstract
     {
         $attachments = $bill->attachments()->get();
 
-        return $this->collection($attachments, new AttachmentTransformer);
+        return $this->collection($attachments, new AttachmentTransformer,'attachment');
     }
 
     /**
@@ -84,7 +84,7 @@ class BillTransformer extends TransformerAbstract
     {
         $notes = $bill->notes()->get();
 
-        return $this->collection($notes, new NoteTransformer);
+        return $this->collection($notes, new NoteTransformer,'note');
     }
 
     /**
@@ -114,7 +114,7 @@ class BillTransformer extends TransformerAbstract
             'links'               => [
                 [
                     'rel' => 'self',
-                    'uri' => '/bills/' . $bill->id,
+                    'uri' => '/bill/' . $bill->id,
                 ],
             ],
         ];
