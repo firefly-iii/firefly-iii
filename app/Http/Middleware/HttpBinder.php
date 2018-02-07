@@ -24,7 +24,9 @@ namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use FireflyIII\Support\Domain;
+use Illuminate\Auth\SessionGuard;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 
 /**
  * Class HttpBinder
@@ -54,9 +56,16 @@ class HttpBinder
      */
     public function handle(Request $request, Closure $next)
     {
+        $middleware = $request->route()->middleware();
+        $guard = 'web';
+        if(in_array('auth:api', $middleware)) {
+            $guard = 'api';
+        }
+        $guard = auth()->guard($guard);
+
         foreach ($request->route()->parameters() as $key => $value) {
             if (isset($this->binders[$key])) {
-                $boundObject = $this->performBinding($key, $value, $request->route());
+                $boundObject = $this->performBinding($guard, $key, $value, $request->route());
                 $request->route()->setParameter($key, $boundObject);
             }
         }
@@ -71,10 +80,9 @@ class HttpBinder
      *
      * @return mixed
      */
-    private function performBinding($key, $value, $route)
+    private function performBinding($guard, string $key, string $value, Route $route)
     {
         $class = $this->binders[$key];
-
-        return $class::routeBinder($value, $route);
+        return $class::routeBinder($guard, $value, $route);
     }
 }

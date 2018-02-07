@@ -167,7 +167,7 @@ class Kernel extends HttpKernel
 
             'auth:api' => [
                 'throttle:60,1',
-                'bindings',
+                HttpBinder::class,
             ],
         ];
 
