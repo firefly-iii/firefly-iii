@@ -24,8 +24,8 @@ namespace FireflyIII\Http;
 
 use FireflyIII\Http\Middleware\Authenticate;
 use FireflyIII\Http\Middleware\AuthenticateTwoFactor;
-use FireflyIII\Http\Middleware\Binder;
 use FireflyIII\Http\Middleware\EncryptCookies;
+use FireflyIII\Http\Middleware\HttpBinder;
 use FireflyIII\Http\Middleware\IsAdmin;
 use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
@@ -44,7 +44,8 @@ use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use \Laravel\Passport\Http\Middleware\CreateFreshApiToken;
+use Laravel\Passport\Http\Middleware\CreateFreshApiToken;
+
 /**
  * @codeCoverageIgnore
  * Class Kernel
@@ -95,7 +96,7 @@ class Kernel extends HttpKernel
                 StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
-                Binder::class,
+                HttpBinder::class,
                 RedirectIfAuthenticated::class,
             ],
             // MUST be logged in.
@@ -108,7 +109,7 @@ class Kernel extends HttpKernel
                 StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
-                Binder::class,
+                HttpBinder::class,
                 Authenticate::class,
                 RedirectIfTwoFactorAuthenticated::class,
             ],
@@ -123,7 +124,7 @@ class Kernel extends HttpKernel
                 StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
-                Binder::class,
+                HttpBinder::class,
                 Authenticate::class,
             ],
 
@@ -141,7 +142,7 @@ class Kernel extends HttpKernel
                 Authenticate::class,
                 AuthenticateTwoFactor::class,
                 Range::class,
-                Binder::class,
+                HttpBinder::class,
                 CreateFreshApiToken::class,
             ],
             // MUST be logged in
@@ -160,11 +161,11 @@ class Kernel extends HttpKernel
                 AuthenticateTwoFactor::class,
                 IsAdmin::class,
                 Range::class,
-                Binder::class,
+                HttpBinder::class,
                 CreateFreshApiToken::class,
             ],
 
-            'api' => [
+            'auth:api' => [
                 'throttle:60,1',
                 'bindings',
             ],
@@ -181,7 +182,7 @@ class Kernel extends HttpKernel
         = [
             'auth'       => Authenticate::class,
             'auth.basic' => AuthenticateWithBasicAuth::class,
-            'bindings'   => Binder::class,
+            'bindings'   => HttpBinder::class,
             'can'        => Authorize::class,
             'guest'      => RedirectIfAuthenticated::class,
             'throttle'   => ThrottleRequests::class,

@@ -1,7 +1,7 @@
 <?php
 /**
- * Binder.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * HttpBinder.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -27,9 +27,9 @@ use FireflyIII\Support\Domain;
 use Illuminate\Http\Request;
 
 /**
- * Class Binder.
+ * Class HttpBinder
  */
-class Binder
+class HttpBinder
 {
     /**
      * @var array
