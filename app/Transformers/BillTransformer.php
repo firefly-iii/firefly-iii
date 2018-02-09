@@ -72,7 +72,8 @@ class BillTransformer extends TransformerAbstract
     {
         $attachments = $bill->attachments()->get();
 
-        return $this->collection($attachments, new AttachmentTransformer);
+        return $this->collection($attachments, new AttachmentTransformer,'attachment');
+
     }
 
     /**
@@ -84,7 +85,8 @@ class BillTransformer extends TransformerAbstract
     {
         $notes = $bill->notes()->get();
 
-        return $this->collection($notes, new NoteTransformer);
+        return $this->collection($notes, new NoteTransformer,'note');
+
     }
 
     /**
@@ -95,7 +97,9 @@ class BillTransformer extends TransformerAbstract
     public function transform(Bill $bill): array
     {
         $paidData = $this->paidData($bill);
-        $data     = [
+        $payDates = $this->payDates($bill);
+
+        $data = [
             'id'                  => (int)$bill->id,
             'name'                => $bill->name,
             'match'               => explode(',', $bill->match),
@@ -107,13 +111,13 @@ class BillTransformer extends TransformerAbstract
             'automatch'           => intval($bill->automatch) === 1,
             'active'              => intval($bill->active) === 1,
             'attachments_count'   => $bill->attachments()->count(),
-            'pay_dates'           => $this->payDates($bill),
+            'pay_dates'           => $payDates,
             'paid_dates'          => $paidData['paid_dates'],
             'next_expected_match' => $paidData['next_expected_match'],
             'links'               => [
                 [
                     'rel' => 'self',
-                    'uri' => '/bills/' . $bill->id,
+                    'uri' => '/bill/' . $bill->id,
                 ],
             ],
         ];
@@ -217,6 +221,9 @@ class BillTransformer extends TransformerAbstract
      */
     protected function payDates(Bill $bill): array
     {
+        if (is_null($this->start) || is_null($this->end)) {
+            return [];
+        }
         $set          = new Collection;
         $currentStart = clone $this->start;
         while ($currentStart <= $this->end) {

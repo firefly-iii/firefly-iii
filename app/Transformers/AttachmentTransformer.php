@@ -49,6 +49,13 @@ class AttachmentTransformer extends TransformerAbstract
             'notes'           => $attachment->notes,
             'mime'            => $attachment->mime,
             'size'            => $attachment->size,
+            'links'           => [
+                [
+                    'rel' => 'self',
+                    'uri' => '/attachment/' . $attachment->id,
+                ],
+            ]
+
         ];
     }
 
