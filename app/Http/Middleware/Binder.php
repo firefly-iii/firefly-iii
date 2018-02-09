@@ -25,7 +25,6 @@ namespace FireflyIII\Http\Middleware;
 use Closure;
 use FireflyIII\Support\Domain;
 use Illuminate\Contracts\Auth\Factory as Auth;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 
 /**
@@ -68,16 +67,9 @@ class Binder
      */
     public function handle($request, Closure $next, ...$guards)
     {
-        $middleware = $request->route()->middleware();
-        $guard = 'web';
-        if(in_array('auth:api', $middleware)) {
-            $guard = 'api';
-        }
-        $guard = auth()->guard($guard);
-
         foreach ($request->route()->parameters() as $key => $value) {
             if (isset($this->binders[$key])) {
-                $boundObject = $this->performBinding($guard, $key, $value, $request->route());
+                $boundObject = $this->performBinding($key, $value, $request->route());
                 $request->route()->setParameter($key, $boundObject);
             }
         }
@@ -92,9 +84,10 @@ class Binder
      *
      * @return mixed
      */
-    private function performBinding($guard, string $key, string $value, Route $route)
+    private function performBinding(string $key, string $value, Route $route)
     {
         $class = $this->binders[$key];
-        return $class::routeBinder($guard, $value, $route);
+
+        return $class::routeBinder($value, $route);
     }
 }
