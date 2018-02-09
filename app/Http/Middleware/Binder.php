@@ -1,6 +1,6 @@
 <?php
 /**
- * HttpBinder.php
+ * Binder.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -31,7 +31,7 @@ use Illuminate\Routing\Route;
 /**
  * Class HttpBinder
  */
-class HttpBinder
+class Binder
 {
     /**
      * The authentication factory instance.
