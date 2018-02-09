@@ -101,7 +101,7 @@ Route::group(
     Route::get('create/{what}', ['uses' => 'AccountController@create', 'as' => 'create'])->where('what', 'revenue|asset|expense');
     Route::get('edit/{account}', ['uses' => 'AccountController@edit', 'as' => 'edit']);
     Route::get('delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'delete']);
-    Route::get('show/{account}/{moment?}', ['uses' => 'AccountController@show', 'as' => 'show']);
+    Route::get('show/{account}/{start_date?}/{end_date?}', ['uses' => 'AccountController@show', 'as' => 'show']);
 
     // reconcile routes:
     Route::get('reconcile/{account}/index/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@reconcile', 'as' => 'reconcile']);
@@ -244,9 +244,7 @@ Route::group(
     Route::get('expense', ['uses' => 'AccountController@expenseAccounts', 'as' => 'expense']);
     Route::get('revenue', ['uses' => 'AccountController@revenueAccounts', 'as' => 'revenue']);
     Route::get('report/{accountList}/{start_date}/{end_date}', ['uses' => 'AccountController@report', 'as' => 'report']);
-    Route::get('all/{account}', ['uses' => 'AccountController@all', 'as' => 'all']);
-    Route::get('single/{account}', ['uses' => 'AccountController@single', 'as' => 'single']);
-    Route::get('period/{account}/{date}', ['uses' => 'AccountController@period', 'as' => 'period']);
+    Route::get('period/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@period', 'as' => 'period']);
 
     Route::get('income-category/{account}/all/all', ['uses' => 'AccountController@incomeCategoryAll', 'as' => 'income-category-all']);
     Route::get('expense-category/{account}/all/all', ['uses' => 'AccountController@expenseCategoryAll', 'as' => 'expense-category-all']);

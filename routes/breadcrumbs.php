@@ -76,25 +76,18 @@ Breadcrumbs::register(
 
 Breadcrumbs::register(
     'accounts.show',
-    function (BreadCrumbsGenerator $breadcrumbs, Account $account, string $moment, Carbon $start, Carbon $end) {
+    function (BreadCrumbsGenerator $breadcrumbs, Account $account, Carbon $start, Carbon $end) {
         $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
 
         $breadcrumbs->parent('accounts.index', $what);
         $breadcrumbs->push($account->name, route('accounts.show', [$account->id]));
 
-        // push when is all:
-        if ('all' === $moment) {
-            $breadcrumbs->push(trans('firefly.everything'), route('accounts.show', [$account->id, 'all']));
-        }
-        // when is specific period or when empty:
-        if ('all' !== $moment && '(nothing)' !== $moment) {
             $title = trans(
                 'firefly.between_dates_breadcrumb',
                 ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
                  'end'   => $end->formatLocalized(strval(trans('config.month_and_day'))),]
             );
-            $breadcrumbs->push($title, route('accounts.show', [$account->id, $moment, $start, $end]));
-        }
+            $breadcrumbs->push($title, route('accounts.show', [$account->id, $start, $end]));
     }
 );
 

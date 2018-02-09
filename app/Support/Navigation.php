@@ -90,8 +90,13 @@ class Navigation
      */
     public function blockPeriods(\Carbon\Carbon $start, \Carbon\Carbon $end, string $range): array
     {
+        if ($end < $start) {
+            list($start, $end) = [$end, $start];
+        }
         $periods = [];
-        // Start by looping per period:
+        /*
+         * Start looping per months for 1 year + the rest of the year:
+         */
         $perMonthEnd   = clone $end;
         $perMonthStart = clone $end;
         $perMonthStart->startOfyear()->subYear();
@@ -285,7 +290,7 @@ class Navigation
 
     /**
      * @param \Carbon\Carbon $theDate
-     * @param  string              $repeatFrequency
+     * @param  string        $repeatFrequency
      *
      * @return string
      *

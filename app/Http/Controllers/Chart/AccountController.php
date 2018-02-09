@@ -58,69 +58,6 @@ class AccountController extends Controller
         $this->generator = app(GeneratorInterface::class);
     }
 
-    /**
-     * @param Account $account
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function all(Account $account)
-    {
-        $cache = new CacheProperties;
-        $cache->addProperty('chart.account.all');
-        $cache->addProperty($account->id);
-        if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
-        }
-
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $start      = $repository->oldestJournalDate($account);
-        $end        = new Carbon;
-
-        // depending on diff, do something with range of chart.
-        $step   = '1D';
-        $months = $start->diffInMonths($end);
-        if ($months > 3) {
-            $step = '1W';
-        }
-        if ($months > 24) {
-            $step = '1M'; // @codeCoverageIgnore
-        }
-        if ($months > 100) {
-            $step = '1Y'; // @codeCoverageIgnore
-        }
-        $chartData = [];
-        $current   = clone $start;
-        switch ($step) {
-            case '1D':
-                $format   = (string)trans('config.month_and_day');
-                $range    = Steam::balanceInRange($account, $start, $end);
-                $previous = array_values($range)[0];
-                while ($end >= $current) {
-                    $theDate           = $current->format('Y-m-d');
-                    $balance           = $range[$theDate] ?? $previous;
-                    $label             = $current->formatLocalized($format);
-                    $chartData[$label] = floatval($balance);
-                    $previous          = $balance;
-                    $current->addDay();
-                }
-                break;
-            case '1W':
-            case '1M': // @codeCoverageIgnore
-            case '1Y': // @codeCoverageIgnore
-                while ($end >= $current) {
-                    $balance           = floatval(Steam::balance($account, $current));
-                    $label             = app('navigation')->periodShow($current, $step);
-                    $chartData[$label] = $balance;
-                    $current           = app('navigation')->addPeriod($current, $step, 1);
-                }
-                break;
-        }
-        $data = $this->generator->singleSet($account->name, $chartData);
-        $cache->store($data);
-
-        return Response::json($data);
-    }
 
     /**
      * Shows the balances for all the user's expense accounts.
@@ -366,34 +303,55 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function period(Account $account, Carbon $start)
+    public function period(Account $account, Carbon $start, Carbon $end)
     {
-        $range = Preferences::get('viewRange', '1M')->data;
-        $end   = app('navigation')->endOfPeriod($start, $range);
-        $cache = new CacheProperties();
+        $cache = new CacheProperties;
+        $cache->addProperty('chart.account.period');
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty('chart.account.period');
         $cache->addProperty($account->id);
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
-
-        $format    = (string)trans('config.month_and_day');
-        $range     = Steam::balanceInRange($account, $start, $end);
-        $current   = clone $start;
-        $previous  = array_values($range)[0];
-        $chartData = [];
-
-        while ($end >= $current) {
-            $theDate           = $current->format('Y-m-d');
-            $balance           = $range[$theDate] ?? $previous;
-            $label             = $current->formatLocalized($format);
-            $chartData[$label] = $balance;
-            $previous          = $balance;
-            $current->addDay();
+        // depending on diff, do something with range of chart.
+        $step   = '1D';
+        $months = $start->diffInMonths($end);
+        if ($months > 3) {
+            $step = '1W';
         }
-
+        if ($months > 24) {
+            $step = '1M'; // @codeCoverageIgnore
+        }
+        if ($months > 100) {
+            $step = '1Y'; // @codeCoverageIgnore
+        }
+        $chartData = [];
+        $current   = clone $start;
+        switch ($step) {
+            case '1D':
+                $format   = (string)trans('config.month_and_day');
+                $range    = Steam::balanceInRange($account, $start, $end);
+                $previous = array_values($range)[0];
+                while ($end >= $current) {
+                    $theDate           = $current->format('Y-m-d');
+                    $balance           = $range[$theDate] ?? $previous;
+                    $label             = $current->formatLocalized($format);
+                    $chartData[$label] = floatval($balance);
+                    $previous          = $balance;
+                    $current->addDay();
+                }
+                break;
+            case '1W':
+            case '1M': // @codeCoverageIgnore
+            case '1Y': // @codeCoverageIgnore
+                while ($end >= $current) {
+                    $balance           = floatval(Steam::balance($account, $current));
+                    $label             = app('navigation')->periodShow($current, $step);
+                    $chartData[$label] = $balance;
+                    $current           = app('navigation')->addPeriod($current, $step, 1);
+                }
+                break;
+        }
         $data = $this->generator->singleSet($account->name, $chartData);
         $cache->store($data);
 
@@ -452,49 +410,6 @@ class AccountController extends Controller
 
         arsort($chartData);
         $data = $this->generator->singleSet(strval(trans('firefly.earned')), $chartData);
-        $cache->store($data);
-
-        return Response::json($data);
-    }
-
-    /**
-     * Shows an account's balance for a single month.
-     *
-     * @param Account $account
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function single(Account $account)
-    {
-        $start = clone session('start', Carbon::now()->startOfMonth());
-        $end   = clone session('end', Carbon::now()->endOfMonth());
-
-        // chart properties for cache:
-        $cache = new CacheProperties();
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('chart.account.single');
-        $cache->addProperty($account->id);
-        if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
-        }
-
-        $format    = (string)trans('config.month_and_day');
-        $range     = Steam::balanceInRange($account, $start, $end);
-        $current   = clone $start;
-        $previous  = array_values($range)[0];
-        $chartData = [];
-
-        while ($end >= $current) {
-            $theDate           = $current->format('Y-m-d');
-            $balance           = $range[$theDate] ?? $previous;
-            $label             = $current->formatLocalized($format);
-            $chartData[$label] = $balance;
-            $previous          = $balance;
-            $current->addDay();
-        }
-
-        $data = $this->generator->singleSet($account->name, $chartData);
         $cache->store($data);
 
         return Response::json($data);
