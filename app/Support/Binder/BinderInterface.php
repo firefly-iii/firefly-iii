@@ -35,5 +35,5 @@ interface BinderInterface
      *
      * @return mixed
      */
-    public static function routeBinder($guard, string $value, Route $route);
+    public static function routeBinder(string $value, Route $route);
 }

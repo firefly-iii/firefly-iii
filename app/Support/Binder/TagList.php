@@ -39,9 +39,9 @@ class TagList implements BinderInterface
      *
      * @return Collection
      */
-    public static function routeBinder($guard, string $value, Route $route): Collection
+    public static function routeBinder(string $value, Route $route):  Collection
     {
-        if ($guard->check()) {
+        if (auth()->check()) {
             $list     = [];
             $incoming = explode(',', $value);
             foreach ($incoming as $entry) {
@@ -53,7 +53,7 @@ class TagList implements BinderInterface
             }
             /** @var TagRepositoryInterface $repository */
             $repository = app(TagRepositoryInterface::class);
-            $repository->setUser($guard->user());
+            $repository->setUser(auth()->user());
             $allTags = $repository->get();
 
             $collection = $allTags->filter(

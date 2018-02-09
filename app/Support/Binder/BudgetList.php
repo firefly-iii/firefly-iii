@@ -38,9 +38,9 @@ class BudgetList implements BinderInterface
      *
      * @return Collection
      */
-    public static function routeBinder($guard, string $value, Route $route): Collection
+    public static function routeBinder(string $value, Route $route): Collection
     {
-        if ($guard->check()) {
+        if (auth()->check()) {
             $list     = [];
             $incoming = explode(',', $value);
             foreach ($incoming as $entry) {
@@ -52,7 +52,7 @@ class BudgetList implements BinderInterface
             }
 
             /** @var \Illuminate\Support\Collection $collection */
-            $collection = $guard->user()->budgets()
+            $collection = auth()->user()->budgets()
                                 ->where('active', 1)
                                 ->whereIn('id', $list)
                                 ->get();

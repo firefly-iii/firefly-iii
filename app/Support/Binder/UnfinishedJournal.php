@@ -37,13 +37,13 @@ class UnfinishedJournal implements BinderInterface
      *
      * @return TransactionJournal
      */
-    public static function routeBinder($guard, string $value, Route $route): TransactionJournal
+    public static function routeBinder(string $value, Route $route):  TransactionJournal
     {
-        if ($guard->check()) {
-            $journal = $guard->user()->transactionJournals()->where('transaction_journals.id', $value)
+        if (auth()->check()) {
+            $journal = auth()->user()->transactionJournals()->where('transaction_journals.id', $value)
                              ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                              ->where('completed', 0)
-                             ->where('user_id', $guard->user()->id)->first(['transaction_journals.*']);
+                             ->where('user_id', auth()->user()->id)->first(['transaction_journals.*']);
             if (!is_null($journal)) {
                 return $journal;
             }
