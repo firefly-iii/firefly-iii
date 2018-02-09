@@ -23,34 +23,49 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\Auth\Factory as Auth;
 use Log;
-use Preferences;
-use Auth;
-use Session;
+
 /**
  * Class AuthenticateTwoFactor.
  */
 class AuthenticateTwoFactor
 {
     /**
-     * Handle an incoming request.
+     * The authentication factory instance.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
-     * @param string|null              $guard
-     *
-     * @return mixed
+     * @var \Illuminate\Contracts\Auth\Factory
      */
-    public function handle(Request $request, Closure $next, $guard = null)
-    {
-        if (Auth::guard($guard)->guest()) {
+    protected $auth;
 
+    /**
+     * Create a new middleware instance.
+     *
+     * @param  \Illuminate\Contracts\Auth\Factory $auth
+     *
+     * @return void
+     */
+    public function __construct(Auth $auth)
+    {
+        $this->auth = $auth;
+    }
+
+    /**
+     * @param         $request
+     * @param Closure $next
+     * @param array   ...$guards
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|mixed
+     * @throws \Illuminate\Container\EntryNotFoundException
+     */
+    public function handle($request, Closure $next, ...$guards)
+    {
+        if ($this->auth->guest()) {
             return redirect()->guest('login');
         }
 
-        $is2faEnabled = Preferences::get('twoFactorAuthEnabled', false)->data;
-        $has2faSecret = null !== Preferences::get('twoFactorAuthSecret');
+        $is2faEnabled = app('preferences')->get('twoFactorAuthEnabled', false)->data;
+        $has2faSecret = null !== app('preferences')->get('twoFactorAuthSecret');
         $is2faAuthed  = 'true' === $request->cookie('twoFactorAuthenticated');
 
         if ($is2faEnabled && $has2faSecret && !$is2faAuthed) {
@@ -61,4 +76,5 @@ class AuthenticateTwoFactor
 
         return $next($request);
     }
+
 }
