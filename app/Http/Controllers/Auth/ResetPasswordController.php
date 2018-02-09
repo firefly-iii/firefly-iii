@@ -75,6 +75,7 @@ class ResetPasswordController extends Controller
         if (true === $singleUserMode && $userCount > 0) {
             $allowRegistration = false;
         }
+
         return view('auth.passwords.reset')->with(
             ['token' => $token, 'email' => $request->email, 'allowRegistration' => $allowRegistration]
         );

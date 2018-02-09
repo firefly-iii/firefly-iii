@@ -114,7 +114,6 @@ class FileRoutine implements RoutineInterface
         Log::debug('Back in run()');
 
 
-
         Log::debug('Updated job...');
         Log::debug(sprintf('%d journals in $storage->journals', $storage->journals->count()));
         $this->journals = $storage->journals;
@@ -178,6 +177,16 @@ class FileRoutine implements RoutineInterface
     }
 
     /**
+     * Shorthand
+     *
+     * @param int $steps
+     */
+    private function addTotalSteps(int $steps)
+    {
+        $this->repository->addTotalSteps($this->job, $steps);
+    }
+
+    /**
      *
      */
     private function createImportTag(): Tag
@@ -194,7 +203,7 @@ class FileRoutine implements RoutineInterface
         /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);
         $repository->setUser($this->job->user);
-        $data            = [
+        $data = [
             'tag'         => trans('import.import_with_key', ['key' => $this->job->key]),
             'date'        => new Carbon,
             'description' => null,
@@ -203,7 +212,7 @@ class FileRoutine implements RoutineInterface
             'zoomLevel'   => null,
             'tagMode'     => 'nothing',
         ];
-        $tag             = $repository->store($data);
+        $tag  = $repository->store($data);
         $this->addStep();
         $extended        = $this->getExtendedStatus();
         $extended['tag'] = $tag->id;
@@ -220,6 +229,7 @@ class FileRoutine implements RoutineInterface
         }
         Log::info(sprintf('Linked %d journals to tag #%d ("%s")', $this->journals->count(), $tag->id, $tag->tag));
         $this->addStep();
+
         return $tag;
     }
 
@@ -279,16 +289,6 @@ class FileRoutine implements RoutineInterface
     private function setTotalSteps(int $steps)
     {
         $this->repository->setTotalSteps($this->job, $steps);
-    }
-
-    /**
-     * Shorthand
-     *
-     * @param int $steps
-     */
-    private function addTotalSteps(int $steps)
-    {
-        $this->repository->addTotalSteps($this->job, $steps);
     }
 
     /**

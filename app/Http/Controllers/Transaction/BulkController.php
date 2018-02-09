@@ -35,7 +35,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Session;
 use View;
 
 /**
@@ -142,7 +141,7 @@ class BulkController extends Controller
         $ignoreCategory = intval($request->get('ignore_category')) === 1;
         $ignoreBudget   = intval($request->get('ignore_budget')) === 1;
         $ignoreTags     = intval($request->get('ignore_tags')) === 1;
-        $count = 0;
+        $count          = 0;
         if (is_array($journalIds)) {
             foreach ($journalIds as $journalId) {
                 $journal = $repository->find(intval($journalId));

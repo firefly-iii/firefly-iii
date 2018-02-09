@@ -58,14 +58,6 @@ class Transaction extends SpectreObject
     private $updatedAt;
 
     /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
      * Transaction constructor.
      *
      * @param array $data
@@ -86,39 +78,6 @@ class Transaction extends SpectreObject
         $this->createdAt    = new Carbon($data['created_at']);
         $this->updatedAt    = new Carbon($data['updated_at']);
     }
-
-    /**
-     * @return string
-     */
-    public function getMode(): string
-    {
-        return $this->mode;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus(): string
-    {
-        return $this->status;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDuplicated(): bool
-    {
-        return $this->duplicated;
-    }
-
-    /**
-     * @return TransactionExtra
-     */
-    public function getExtra(): TransactionExtra
-    {
-        return $this->extra;
-    }
-
 
     /**
      * @return string
@@ -153,6 +112,14 @@ class Transaction extends SpectreObject
     }
 
     /**
+     * @return TransactionExtra
+     */
+    public function getExtra(): TransactionExtra
+    {
+        return $this->extra;
+    }
+
+    /**
      * @return string
      */
     public function getHash(): string
@@ -178,11 +145,43 @@ class Transaction extends SpectreObject
     }
 
     /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
      * @return Carbon
      */
     public function getMadeOn(): Carbon
     {
         return $this->madeOn;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMode(): string
+    {
+        return $this->mode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDuplicated(): bool
+    {
+        return $this->duplicated;
     }
 
 

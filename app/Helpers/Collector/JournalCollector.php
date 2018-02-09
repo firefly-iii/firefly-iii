@@ -252,6 +252,7 @@ class JournalCollector implements JournalCollectorInterface
         $cache->addProperty($key);
         if ($cache->has()) {
             Log::debug(sprintf('Return cache of query with ID "%s".', $key));
+
             return $cache->get(); // @codeCoverageIgnore
         }
 

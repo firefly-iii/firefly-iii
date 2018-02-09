@@ -22,15 +22,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
 
-use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use Log;
 
 /**
  * Trait UpdateJournalsTrait.

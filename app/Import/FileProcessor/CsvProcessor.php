@@ -125,6 +125,7 @@ class CsvProcessor implements FileProcessorInterface
      * Shorthand method to set the extended status.
      *
      * @codeCoverageIgnore
+     *
      * @param array $array
      */
     public function setExtendedStatus(array $array)

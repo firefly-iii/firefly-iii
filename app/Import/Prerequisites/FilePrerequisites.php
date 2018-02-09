@@ -67,9 +67,10 @@ class FilePrerequisites implements PrerequisitesInterface
      */
     public function hasPrerequisites(): bool
     {
-        if($this->user->hasRole('demo')) {
+        if ($this->user->hasRole('demo')) {
             throw new FireflyException('Apologies, the demo user cannot import files.');
         }
+
         return false;
     }
 

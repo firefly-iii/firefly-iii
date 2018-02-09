@@ -308,8 +308,8 @@ class ImportStorage
             return false;
         }
 
-        $amount   = app('steam')->positive($parameters['amount']);
-        $names    = [$parameters['asset'], $parameters['opposing']];
+        $amount = app('steam')->positive($parameters['amount']);
+        $names  = [$parameters['asset'], $parameters['opposing']];
 
         sort($names);
 

@@ -74,6 +74,7 @@ class BillController extends Controller
     public function destroy(Bill $bill)
     {
         $this->repository->destroy($bill);
+
         return response()->json(null, 204);
     }
 

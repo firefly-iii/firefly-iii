@@ -43,6 +43,16 @@ class Request extends FormRequest
     /**
      * @param string $field
      *
+     * @return int
+     */
+    public function integer(string $field): int
+    {
+        return intval($this->get($field));
+    }
+
+    /**
+     * @param string $field
+     *
      * @return string
      */
     public function string(string $field): string
@@ -136,15 +146,5 @@ class Request extends FormRequest
         }
 
         return $return;
-    }
-
-    /**
-     * @param string $field
-     *
-     * @return int
-     */
-    public function integer(string $field): int
-    {
-        return intval($this->get($field));
     }
 }

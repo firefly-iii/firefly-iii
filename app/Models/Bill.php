@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
-use Illuminate\Contracts\Auth\Factory as Auth;
+
 /**
  * Class Bill.
  */

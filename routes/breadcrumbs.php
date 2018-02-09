@@ -76,33 +76,33 @@ Breadcrumbs::register(
 
 Breadcrumbs::register(
     'accounts.show',
-    function (BreadCrumbsGenerator $breadcrumbs, Account $account, Carbon $start, Carbon $end) {
+    function (BreadCrumbsGenerator $breadcrumbs, Account $account, Carbon $start = null, Carbon $end = null) {
         $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
 
         $breadcrumbs->parent('accounts.index', $what);
         $breadcrumbs->push($account->name, route('accounts.show', [$account->id]));
 
-            $title = trans(
-                'firefly.between_dates_breadcrumb',
-                ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
-                 'end'   => $end->formatLocalized(strval(trans('config.month_and_day'))),]
-            );
-            $breadcrumbs->push($title, route('accounts.show', [$account->id, $start, $end]));
+        $title = trans(
+            'firefly.between_dates_breadcrumb',
+            ['start' => $start ? $start->formatLocalized(strval(trans('config.month_and_day'))) : '',
+             'end'   => $end ? $end->formatLocalized(strval(trans('config.month_and_day'))) : '',]
+        );
+        $breadcrumbs->push($title, route('accounts.show', $account));
     }
 );
 
 Breadcrumbs::register(
     'accounts.reconcile',
     function (BreadCrumbsGenerator $breadcrumbs, Account $account) {
-        $breadcrumbs->parent('accounts.show', $account, '(nothing)', new Carbon, new Carbon);
-        $breadcrumbs->push(trans('firefly.reconcile_account', ['account' =>$account->name]), route('accounts.reconcile', [$account->id]));
+        $breadcrumbs->parent('accounts.show', $account);
+        $breadcrumbs->push(trans('firefly.reconcile_account', ['account' => $account->name]), route('accounts.reconcile', [$account->id]));
     }
 );
 
 Breadcrumbs::register(
     'accounts.reconcile.show',
     function (BreadCrumbsGenerator $breadcrumbs, Account $account, TransactionJournal $journal) {
-        $breadcrumbs->parent('accounts.show', $account, '(nothing)', new Carbon, new Carbon);
+        $breadcrumbs->parent('accounts.show', $account);
         $title = trans('firefly.reconciliation') . ' "' . $journal->description . '"';
         $breadcrumbs->push($title, route('accounts.reconcile.show', [$journal->id]));
     }
@@ -111,7 +111,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'accounts.delete',
     function (BreadCrumbsGenerator $breadcrumbs, Account $account) {
-        $breadcrumbs->parent('accounts.show', $account, '(nothing)', new Carbon, new Carbon);
+        $breadcrumbs->parent('accounts.show', $account);
         $breadcrumbs->push(trans('firefly.delete_account', ['name' => $account->name]), route('accounts.delete', [$account->id]));
     }
 );
@@ -119,7 +119,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'accounts.edit',
     function (BreadCrumbsGenerator $breadcrumbs, Account $account) {
-        $breadcrumbs->parent('accounts.show', $account, '(nothing)', new Carbon, new Carbon);
+        $breadcrumbs->parent('accounts.show', $account);
         $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
 
         $breadcrumbs->push(trans('firefly.edit_' . $what . '_account', ['name' => $account->name]), route('accounts.edit', [$account->id]));

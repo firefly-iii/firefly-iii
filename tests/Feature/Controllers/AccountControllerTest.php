@@ -204,40 +204,6 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\AccountController::show
-     * @dataProvider dateRangeProvider
-     *
-     * @param string $range
-     */
-    public function testShowAll(string $range)
-    {
-        // mock stuff
-        $transaction  = factory(Transaction::class)->make();
-        $collector    = $this->mock(JournalCollectorInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->twice()->andReturn(new TransactionJournal);
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setLimit')->andReturnSelf();
-        $collector->shouldReceive('setPage')->andReturnSelf();
-
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10));
-
-        $tasker = $this->mock(AccountTaskerInterface::class);
-        $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
-        $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
-
-        $this->be($this->user());
-        $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('accounts.show', [1, 'all']));
-        $response->assertStatus(200);
-        // has bread crumb
-        $response->assertSee('<ol class="breadcrumb">');
-    }
-
-    /**
      * @covers                   \FireflyIII\Http\Controllers\AccountController::show
      * @covers                   \FireflyIII\Http\Controllers\AccountController::redirectToOriginalAccount
      * @expectedExceptionMessage Expected a transaction
@@ -256,39 +222,6 @@ class AccountControllerTest extends TestCase
         $response->assertStatus(500);
     }
 
-    /**
-     * @covers       \FireflyIII\Http\Controllers\AccountController::show
-     * @dataProvider dateRangeProvider
-     *
-     * @param string $range
-     */
-    public function testShowByDate(string $range)
-    {
-        // mock stuff
-        $transaction  = factory(Transaction::class)->make();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $collector = $this->mock(JournalCollectorInterface::class);
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setLimit')->andReturnSelf();
-        $collector->shouldReceive('setPage')->andReturnSelf();
-
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10));
-
-        $repository = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('oldestJournalDate')->andReturn(new Carbon)->once();
-
-        $this->be($this->user());
-        $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('accounts.show', [1, '2016-01-01']));
-        $response->assertStatus(200);
-        // has bread crumb
-        $response->assertSee('<ol class="breadcrumb">');
-    }
 
     /**
      * @covers       \FireflyIII\Http\Controllers\AccountController::show

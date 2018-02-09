@@ -290,15 +290,15 @@ class AccountController extends Controller
         if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
             return $this->redirectToOriginalAccount($account);
         }
-        if ($end < $start) {
-            throw new FireflyException('End is after start!');
-        }
         $range = Preferences::get('viewRange', '1M')->data;
         if (null === $start) {
             $start = session('start');
         }
         if (null === $end) {
             $end = app('navigation')->endOfPeriod($start, $range);
+        }
+        if ($end < $start) {
+            throw new FireflyException('End is after start!');
         }
 
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);

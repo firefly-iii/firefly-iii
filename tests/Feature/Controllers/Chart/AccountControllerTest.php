@@ -47,42 +47,6 @@ use Tests\TestCase;
  */
 class AccountControllerTest extends TestCase
 {
-    /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::all
-     */
-    public function testAll()
-    {
-        $generator    = $this->mock(GeneratorInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-
-        $accountRepos->shouldReceive('oldestJournalDate')->once()->andReturn(Carbon::now()->subMonth());
-        Steam::shouldReceive('balanceInRange')->andReturn(['2012-01-01' => '0']);
-        $generator->shouldReceive('singleSet')->andReturn([]);
-
-        $this->be($this->user());
-        $response = $this->get(route('chart.account.all', [1]));
-        $response->assertStatus(200);
-    }
-
-    /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::all
-     */
-    public function testAllLongRange()
-    {
-        $generator    = $this->mock(GeneratorInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-
-        $carbon = new Carbon;
-        $carbon->subMonths(5);
-        $accountRepos->shouldReceive('oldestJournalDate')->once()->andReturn($carbon);
-        Steam::shouldReceive('balance')->andReturn('0');
-
-        $generator->shouldReceive('singleSet')->andReturn([]);
-
-        $this->be($this->user());
-        $response = $this->get(route('chart.account.all', [1]));
-        $response->assertStatus(200);
-    }
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseAccounts
@@ -328,7 +292,7 @@ class AccountControllerTest extends TestCase
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('chart.account.period', [1, '2012-01-01']));
+        $response = $this->get(route('chart.account.period', [1, '2012-01-01','2012-01-31']));
         $response->assertStatus(200);
     }
 
@@ -369,22 +333,4 @@ class AccountControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::single
-     * @dataProvider dateRangeProvider
-     *
-     * @param string $range
-     */
-    public function testSingle(string $range)
-    {
-        $generator = $this->mock(GeneratorInterface::class);
-
-        Steam::shouldReceive('balanceInRange')->andReturn(['2012-01-01' => '0']);
-        $generator->shouldReceive('singleSet')->andReturn([]);
-
-        $this->be($this->user());
-        $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('chart.account.single', [1]));
-        $response->assertStatus(200);
-    }
 }

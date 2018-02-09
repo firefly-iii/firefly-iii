@@ -25,7 +25,6 @@ namespace FireflyIII\Support;
 use Amount as Amt;
 use Carbon\Carbon;
 use Eloquent;
-use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use RuntimeException;

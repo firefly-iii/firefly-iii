@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Spectre\Request;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Services\Spectre\Exception\DuplicatedCustomerException;
 use FireflyIII\Services\Spectre\Exception\SpectreException;
 use FireflyIII\User;
 use Log;

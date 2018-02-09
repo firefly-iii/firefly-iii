@@ -54,7 +54,7 @@ class AttachmentTransformer extends TransformerAbstract
                     'rel' => 'self',
                     'uri' => '/attachment/' . $attachment->id,
                 ],
-            ]
+            ],
         ];
     }
 

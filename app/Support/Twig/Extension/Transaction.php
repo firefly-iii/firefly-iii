@@ -88,6 +88,7 @@ class Transaction extends Twig_Extension
             $currency->decimal_places = $transaction->foreign_currency_dp;
             $str                      .= ' (' . sprintf($format, app('amount')->formatAnything($currency, $amount, $coloured)) . ')';
         }
+
         return $str;
     }
 
@@ -115,6 +116,7 @@ class Transaction extends Twig_Extension
             $fakeCurrency->symbol         = $transaction['foreign_currency_symbol'];
             $string                       .= ' (' . app('amount')->formatAnything($fakeCurrency, $amount, true) . ')';
         }
+
         return $string;
     }
 
@@ -201,6 +203,7 @@ class Transaction extends Twig_Extension
         }
 
         $txt = '';
+
         return $txt;
     }
 
@@ -350,10 +353,12 @@ class Transaction extends Twig_Extension
         $count     = TransactionModel::where('transaction_journal_id', $journalId)->whereNull('deleted_at')->count();
         if ($count > 2) {
             $res = '<i class="fa fa-fw fa-share-alt" aria-hidden="true"></i>';
+
             return $res;
         }
 
         $res = '';
+
         return $res;
     }
 
@@ -403,6 +408,7 @@ class Transaction extends Twig_Extension
         }
 
         $txt = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$transactionId]));
+
         return $txt;
     }
 }
