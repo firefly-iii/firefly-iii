@@ -72,7 +72,7 @@ class BillTransformer extends TransformerAbstract
     {
         $attachments = $bill->attachments()->get();
 
-        return $this->collection($attachments, new AttachmentTransformer,'attachment');
+        return $this->collection($attachments, new AttachmentTransformer, 'attachment');
     }
 
     /**
@@ -84,7 +84,7 @@ class BillTransformer extends TransformerAbstract
     {
         $notes = $bill->notes()->get();
 
-        return $this->collection($notes, new NoteTransformer,'note');
+        return $this->collection($notes, new NoteTransformer, 'note');
     }
 
     /**

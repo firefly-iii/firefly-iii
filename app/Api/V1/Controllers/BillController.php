@@ -52,12 +52,16 @@ class BillController extends Controller
      */
     public function __construct()
     {
-
-        /** @var BillRepositoryInterface repository */
-        $this->repository = app(BillRepositoryInterface::class);
-        $user             = Auth::guard('api')->user();
-        $this->repository->setUser($user);
         parent::__construct();
+        $this->middleware(
+            function ($request, $next) {
+                /** @var BillRepositoryInterface repository */
+                $this->repository = app(BillRepositoryInterface::class);
+                $this->repository->setUser(auth()->user());
+
+                return $next($request);
+            }
+        );
     }
 
     /**
@@ -104,10 +108,10 @@ class BillController extends Controller
         return Response::json($manager->createData($resource)->toArray());
     }
 
+
     /**
-     * Display the specified resource.
-     *
-     * @param  \FireflyIII\Models\Bill $bill
+     * @param Request $request
+     * @param Bill    $bill
      *
      * @return \Illuminate\Http\JsonResponse
      */
