@@ -44,7 +44,7 @@ class TransactionJournalLink extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder($guard, string $value): TransactionJournalLink
+    public static function routeBinder(string $value): TransactionJournalLink
     {
         if ($guard->check()) {
             $linkId = intval($value);

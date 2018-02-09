@@ -56,7 +56,7 @@ class RuleGroup extends Model
      *
      * @return RuleGroup
      */
-    public static function routeBinder($guard, string $value): RuleGroup
+    public static function routeBinder(string $value): RuleGroup
     {
         if ($guard->check()) {
             $ruleGroupId = intval($value);

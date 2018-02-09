@@ -86,7 +86,7 @@ class TransactionJournal extends Model
      *
      * @return TransactionJournal
      */
-    public static function routeBinder($guard, string $value): TransactionJournal
+    public static function routeBinder(string $value): TransactionJournal
     {
         if ($guard->check()) {
             $journalId = intval($value);

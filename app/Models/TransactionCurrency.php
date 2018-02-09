@@ -58,7 +58,7 @@ class TransactionCurrency extends Model
      *
      * @return TransactionCurrency
      */
-    public static function routeBinder($guard, string $value): TransactionCurrency
+    public static function routeBinder(string $value): TransactionCurrency
     {
         if ($guard->check()) {
             $currencyId = intval($value);

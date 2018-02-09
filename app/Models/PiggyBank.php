@@ -65,7 +65,7 @@ class PiggyBank extends Model
      *
      * @return PiggyBank
      */
-    public static function routeBinder($guard, string $value): PiggyBank
+    public static function routeBinder(string $value): PiggyBank
     {
         if ($guard->check()) {
             $piggyBankId = intval($value);

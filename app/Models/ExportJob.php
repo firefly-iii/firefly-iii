@@ -48,7 +48,7 @@ class ExportJob extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder($guard, string $value): ExportJob
+    public static function routeBinder(string $value): ExportJob
     {
         if ($guard->check()) {
             $key       = trim($value);

@@ -49,7 +49,7 @@ class BudgetLimit extends Model
      *
      * @return mixed
      */
-    public static function routeBinder($guard, string $value): BudgetLimit
+    public static function routeBinder(string $value): BudgetLimit
     {
         if ($guard->check()) {
             $budgetLimitId = intval($value);

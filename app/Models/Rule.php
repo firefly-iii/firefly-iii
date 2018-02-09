@@ -53,7 +53,7 @@ class Rule extends Model
      *
      * @return Rule
      */
-    public static function routeBinder($guard, string $value): Rule
+    public static function routeBinder(string $value): Rule
     {
         if ($guard->check()) {
             $ruleId = intval($value);

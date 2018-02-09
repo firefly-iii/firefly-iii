@@ -118,11 +118,11 @@ class Account extends Model
      *
      * @return Account
      */
-    public static function routeBinder($guard, string $value): Account
+    public static function routeBinder(string $value): Account
     {
-        if ($guard->check()) {
+        if (auth()->check()) {
             $accountId = intval($value);
-            $account   = $guard->user()->accounts()->find($accountId);
+            $account   = auth()->user()->accounts()->find($accountId);
             if (!is_null($account)) {
                 return $account;
             }
