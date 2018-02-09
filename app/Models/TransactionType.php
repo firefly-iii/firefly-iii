@@ -74,7 +74,7 @@ class TransactionType extends Model
      */
     public static function routeBinder(string $type): TransactionType
     {
-        if (!$guard->check()) {
+        if (!auth()->check()) {
             throw new NotFoundHttpException();
         }
         $transactionType = self::where('type', ucfirst($type))->first();

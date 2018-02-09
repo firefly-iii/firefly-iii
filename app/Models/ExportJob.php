@@ -50,9 +50,9 @@ class ExportJob extends Model
      */
     public static function routeBinder(string $value): ExportJob
     {
-        if ($guard->check()) {
+        if (auth()->check()) {
             $key       = trim($value);
-            $exportJob = $guard->user()->exportJobs()->where('key', $key)->first();
+            $exportJob = auth()->user()->exportJobs()->where('key', $key)->first();
             if (null !== $exportJob) {
                 return $exportJob;
             }

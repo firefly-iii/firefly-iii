@@ -58,9 +58,9 @@ class Attachment extends Model
      */
     public static function routeBinder(string $value): Attachment
     {
-        if ($guard->check()) {
+        if (auth()->check()) {
             $attachmentId = intval($value);
-            $attachment   = $guard->user()->attachments()->find($attachmentId);
+            $attachment   = auth()->user()->attachments()->find($attachmentId);
             if (!is_null($attachment)) {
                 return $attachment;
             }

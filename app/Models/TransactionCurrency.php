@@ -60,7 +60,7 @@ class TransactionCurrency extends Model
      */
     public static function routeBinder(string $value): TransactionCurrency
     {
-        if ($guard->check()) {
+        if (auth()->check()) {
             $currencyId = intval($value);
             $currency   = self::find($currencyId);
             if (!is_null($currency)) {

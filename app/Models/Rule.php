@@ -55,9 +55,9 @@ class Rule extends Model
      */
     public static function routeBinder(string $value): Rule
     {
-        if ($guard->check()) {
+        if (auth()->check()) {
             $ruleId = intval($value);
-            $rule   = $guard->user()->rules()->find($ruleId);
+            $rule   = auth()->user()->rules()->find($ruleId);
             if (!is_null($rule)) {
                 return $rule;
             }

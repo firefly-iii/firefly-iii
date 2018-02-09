@@ -67,9 +67,9 @@ class ImportJob extends Model
      */
     public static function routeBinder(string $value): ImportJob
     {
-        if ($guard->check()) {
+        if (auth()->check()) {
             $key       = trim($value);
-            $importJob = $guard->user()->importJobs()->where('key', $key)->first();
+            $importJob = auth()->user()->importJobs()->where('key', $key)->first();
             if (null !== $importJob) {
                 // must have valid status:
                 if (!in_array($importJob->status, $importJob->validStatus)) {

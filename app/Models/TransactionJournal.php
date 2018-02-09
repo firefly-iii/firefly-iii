@@ -88,9 +88,9 @@ class TransactionJournal extends Model
      */
     public static function routeBinder(string $value): TransactionJournal
     {
-        if ($guard->check()) {
+        if (auth()->check()) {
             $journalId = intval($value);
-            $journal   = $guard->user()->transactionJournals()->where('transaction_journals.id', $journalId)
+            $journal   = auth()->user()->transactionJournals()->where('transaction_journals.id', $journalId)
                                ->first(['transaction_journals.*']);
             if (!is_null($journal)) {
                 return $journal;

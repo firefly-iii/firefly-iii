@@ -51,11 +51,11 @@ class BudgetLimit extends Model
      */
     public static function routeBinder(string $value): BudgetLimit
     {
-        if ($guard->check()) {
+        if (auth()->check()) {
             $budgetLimitId = intval($value);
             $budgetLimit   = self::where('budget_limits.id', $budgetLimitId)
                                  ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-                                 ->where('budgets.user_id', $guard->user()->id)
+                                 ->where('budgets.user_id', auth()->user()->id)
                                  ->first(['budget_limits.*']);
             if (!is_null($budgetLimit)) {
                 return $budgetLimit;

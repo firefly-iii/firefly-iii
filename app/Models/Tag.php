@@ -93,9 +93,9 @@ class Tag extends Model
      */
     public static function routeBinder(string $value): Tag
     {
-        if ($guard->check()) {
+        if (auth()->check()) {
             $tagId = intval($value);
-            $tag   = $guard->user()->tags()->find($tagId);
+            $tag   = auth()->user()->tags()->find($tagId);
             if (!is_null($tag)) {
                 return $tag;
             }

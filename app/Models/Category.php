@@ -89,9 +89,9 @@ class Category extends Model
      */
     public static function routeBinder(string $value): Category
     {
-        if ($guard->check()) {
+        if (auth()->check()) {
             $categoryId = intval($value);
-            $category   = $guard->user()->categories()->find($categoryId);
+            $category   = auth()->user()->categories()->find($categoryId);
             if (!is_null($category)) {
                 return $category;
             }

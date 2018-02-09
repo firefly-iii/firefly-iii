@@ -90,9 +90,9 @@ class Budget extends Model
      */
     public static function routeBinder(string $value): Budget
     {
-        if ($guard->check()) {
+        if (auth()->check()) {
             $budgetId = intval($value);
-            $budget   = $guard->user()->budgets()->find($budgetId);
+            $budget   = auth()->user()->budgets()->find($budgetId);
             if (!is_null($budget)) {
                 return $budget;
             }
