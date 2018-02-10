@@ -25,6 +25,7 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\Attachment;
+use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 
 /**
@@ -32,6 +33,31 @@ use League\Fractal\TransformerAbstract;
  */
 class AttachmentTransformer extends TransformerAbstract
 {
+    /**
+     * List of resources possible to include
+     *
+     * @var array
+     */
+    protected $availableIncludes = ['user'];
+    /**
+     * List of resources to automatically include
+     *
+     * @var array
+     */
+    protected $defaultIncludes = [];
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return Item
+     */
+    public function includeUser(Attachment $attachment): Item
+    {
+        $user = $attachment->user()->first();
+
+        return $this->item($user, new UserTransformer, 'user');
+    }
+
     /**
      * @param Attachment $attachment
      *

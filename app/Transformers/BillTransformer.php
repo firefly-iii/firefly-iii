@@ -27,7 +27,9 @@ use Carbon\Carbon;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
+use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
+use League\Fractal\Resource\Collection as FractalCollection;
 
 /**
  * Class BillTransformer
@@ -39,7 +41,7 @@ class BillTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = ['attachments', 'notes'];
+    protected $availableIncludes = ['attachments', 'notes', 'transactionJournals', 'user'];
     /**
      * List of resources to automatically include
      *
@@ -66,9 +68,21 @@ class BillTransformer extends TransformerAbstract
     /**
      * @param Bill $bill
      *
-     * @return \League\Fractal\Resource\Collection
+     * @return \League\Fractal\Resource\Item
      */
-    public function includeAttachments(Bill $bill)
+    public function includeUser(Bill $bill): Item
+    {
+        $user = $bill->user()->first();
+
+        return $this->item($user, new UserTransformer, 'user');
+    }
+
+    /**
+     * @param Bill $bill
+     *
+     * @return FractalCollection
+     */
+    public function includeAttachments(Bill $bill): FractalCollection
     {
         $attachments = $bill->attachments()->get();
 
@@ -78,13 +92,25 @@ class BillTransformer extends TransformerAbstract
     /**
      * @param Bill $bill
      *
-     * @return \League\Fractal\Resource\Collection
+     * @return FractalCollection
      */
-    public function includeNotes(Bill $bill)
+    public function includeNotes(Bill $bill): FractalCollection
     {
         $notes = $bill->notes()->get();
 
         return $this->collection($notes, new NoteTransformer, 'note');
+    }
+
+    /**
+     * @param Bill $bill
+     *
+     * @return FractalCollection
+     */
+    public function includeTransactionJournals(Bill $bill): FractalCollection
+    {
+        $journals = $bill->transactionJournals()->get();
+
+        return $this->collection($journals, new JournalTransformer, 'transaction_journal');
     }
 
     /**
@@ -119,8 +145,7 @@ class BillTransformer extends TransformerAbstract
             ],
         ];
 
-        // todo: attachments, journals, notes
-
+        // todo updated at, created at
 
         return $data;
 

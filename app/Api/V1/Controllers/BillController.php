@@ -81,6 +81,8 @@ class BillController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
@@ -128,7 +130,7 @@ class BillController extends Controller
 
 
         $manager = new Manager();
-        $manager->parseIncludes(['attachments']);
+        $manager->parseIncludes(['attachments', 'notes', 'transactionJournals', 'user']);
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
@@ -138,11 +140,9 @@ class BillController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @param BillRequest $request
      *
-     * @param  \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(BillRequest $request)
     {
@@ -158,7 +158,6 @@ class BillController extends Controller
         $bill = $this->repository->store($request->getAll());
 
         $manager = new Manager();
-        $manager->parseIncludes(['attachments']);
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
@@ -169,12 +168,10 @@ class BillController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @param BillRequest $request
+     * @param Bill        $bill
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \FireflyIII\Models\Bill  $bill
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(BillRequest $request, Bill $bill)
     {
@@ -190,7 +187,6 @@ class BillController extends Controller
             $end = new Carbon($request->get('end'));
         }
         $manager = new Manager();
-        $manager->parseIncludes(['attachments']);
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
