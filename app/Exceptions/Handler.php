@@ -27,6 +27,7 @@ use Exception;
 use FireflyIII\Jobs\MailError;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Handler
@@ -62,6 +63,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof NotFoundHttpException && $request->expectsJson()) {
+            return response()->json(['message' => 'Not found'], 404);
+        }
+
         if ($exception instanceof FireflyException || $exception instanceof ErrorException) {
             $isDebug = env('APP_DEBUG', false);
 
