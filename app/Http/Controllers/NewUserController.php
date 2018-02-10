@@ -93,6 +93,20 @@ class NewUserController extends Controller
             Preferences::mark();
         }
 
+        // set default optional fields:
+        $visibleFields = [
+            'interest_date'      => true,
+            'book_date'          => false,
+            'process_date'       => false,
+            'due_date'           => false,
+            'payment_date'       => false,
+            'invoice_date'       => false,
+            'internal_reference' => false,
+            'notes'              => true,
+            'attachments'        => true,
+        ];
+        Preferences::set('transaction_journal_optional_fields', $visibleFields);
+
         Session::flash('success', strval(trans('firefly.stored_new_accounts_new_user')));
         Preferences::mark();
 
