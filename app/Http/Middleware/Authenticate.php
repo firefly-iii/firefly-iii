@@ -88,11 +88,10 @@ class Authenticate
                     if ('email_changed' === $user->blocked_code) {
                         $message = strval(trans('firefly.email_changed_logout'));
                     }
-
                     app('session')->flash('logoutMessage', $message);
                     $this->auth->logout();
 
-                    return redirect()->guest('login');
+                    throw new AuthenticationException('Blocked account.', $guards);
                 }
             }
 
