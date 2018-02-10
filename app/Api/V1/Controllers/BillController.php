@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use Auth;
 use Carbon\Carbon;
+use FireflyIII\Api\V1\Requests\BillRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Transformers\BillTransformer;
@@ -71,11 +71,11 @@ class BillController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Bill $bill)
+    public function delete(Bill $bill)
     {
         $this->repository->destroy($bill);
 
-        return response()->json(null, 204);
+        return response()->json([], 204);
     }
 
     /**
@@ -85,8 +85,7 @@ class BillController extends Controller
      */
     public function index(Request $request)
     {
-        $user     = Auth::guard('api')->user();
-        $pageSize = intval(Preferences::getForUser($user, 'listPageSize', 50)->data);
+        $pageSize = intval(Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data);
         $start    = null;
         $end      = null;
         if (null !== $request->get('start')) {
@@ -145,9 +144,28 @@ class BillController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BillRequest $request)
     {
-        //
+        $start = null;
+        $end   = null;
+        if (null !== $request->get('start')) {
+            $start = new Carbon($request->get('start'));
+        }
+        if (null !== $request->get('end')) {
+            $end = new Carbon($request->get('end'));
+        }
+
+        $bill = $this->repository->store($request->getAll());
+
+        $manager = new Manager();
+        $manager->parseIncludes(['attachments']);
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $resource = new Item($bill, new BillTransformer($start, $end), 'bill');
+
+        return Response::json($manager->createData($resource)->toArray());
+
     }
 
     /**
@@ -158,8 +176,27 @@ class BillController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Bill $bill)
+    public function update(BillRequest $request, Bill $bill)
     {
-        //
+        $data = $request->getAll();
+        $bill = $this->repository->update($bill, $data);
+
+        $start = null;
+        $end   = null;
+        if (null !== $request->get('start')) {
+            $start = new Carbon($request->get('start'));
+        }
+        if (null !== $request->get('end')) {
+            $end = new Carbon($request->get('end'));
+        }
+        $manager = new Manager();
+        $manager->parseIncludes(['attachments']);
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $resource = new Item($bill, new BillTransformer($start, $end), 'bill');
+
+        return Response::json($manager->createData($resource)->toArray());
+
     }
 }

@@ -535,11 +535,15 @@ class BillRepository implements BillRepositoryInterface
      */
     public function store(array $data): Bill
     {
+        $matchArray = explode(',', $data['match']);
+        $matchArray = array_unique($matchArray);
+        $match      = join(',', $matchArray);
+
         /** @var Bill $bill */
         $bill = Bill::create(
             [
                 'name'        => $data['name'],
-                'match'       => $data['match'],
+                'match'       => $match,
                 'amount_min'  => $data['amount_min'],
                 'user_id'     => $this->user->id,
                 'amount_max'  => $data['amount_max'],
@@ -567,8 +571,12 @@ class BillRepository implements BillRepositoryInterface
      */
     public function update(Bill $bill, array $data): Bill
     {
+        $matchArray = explode(',', $data['match']);
+        $matchArray = array_unique($matchArray);
+        $match      = join(',', $matchArray);
+
         $bill->name        = $data['name'];
-        $bill->match       = $data['match'];
+        $bill->match       = $match;
         $bill->amount_min  = $data['amount_min'];
         $bill->amount_max  = $data['amount_max'];
         $bill->date        = $data['date'];
