@@ -126,12 +126,12 @@ else
     then
         echo "Must run PHPUnit without coverage:"
 
-        echo "phpunit $verbalflag --configuration $configfile $featuretestclass $unittestclass $testsuite"
-        phpunit $verbalflag  --configuration $configfile $featuretestclass $unittestclass $testsuite
+        echo "./vendor/bin/phpunit $verbalflag --configuration $configfile $featuretestclass $unittestclass $testsuite"
+        ./vendor/bin/phpunit $verbalflag  --configuration $configfile $featuretestclass $unittestclass $testsuite
     else
         echo "Must run PHPUnit with coverage"
-        echo "phpunit $verbalflag --configuration $configfile $featuretestclass $unittestclass $testsuite"
-        phpunit $verbalflag --configuration $configfile $featuretestclass $unittestclass $testsuite
+        echo "./vendor/bin/phpunit $verbalflag --configuration $configfile $featuretestclass $unittestclass $testsuite"
+        ./vendor/bin/phpunit $verbalflag --configuration $configfile $featuretestclass $unittestclass $testsuite
     fi
 fi
 
