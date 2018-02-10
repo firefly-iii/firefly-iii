@@ -68,9 +68,9 @@ class User extends Authenticatable
      *
      * @return User
      */
-    public static function routeBinder($guard, string $value): User
+    public static function routeBinder(string $value): User
     {
-        if ($guard->check()) {
+        if (auth()->check()) {
             $userId = intval($value);
             $user   = self::find($userId);
             if (!is_null($user)) {
