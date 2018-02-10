@@ -75,7 +75,7 @@
 		"fzaninotto/faker": "1.*",
 		"mockery/mockery": "^1.0",
 		"php-coveralls/php-coveralls": "^2.0",
-		"phpunit/phpunit": "^6.0"
+		"phpunit/phpunit": "~6.0"
 	},
 	"autoload": {
 		"classmap": [
