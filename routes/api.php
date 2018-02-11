@@ -20,7 +20,21 @@
  */
 
 Route::group(
-    ['middleware' => ['auth:api','bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'bills', 'as' => 'api.v1.bills.'], function () {
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'accounts', 'as' => 'api.v1.accounts.'],
+    function () {
+
+        // Accounts API routes:
+        Route::get('', ['uses' => 'AccountController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'AccountController@store', 'as' => 'store']);
+        Route::get('{account}', ['uses' => 'AccountController@show', 'as' => 'show']);
+        Route::put('{account}', ['uses' => 'AccountController@update', 'as' => 'update']);
+        Route::delete('{account}', ['uses' => 'AccountController@delete', 'as' => 'delete']);
+    }
+);
+
+
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'bills', 'as' => 'api.v1.bills.'], function () {
 
     // Bills API routes:
     Route::get('', ['uses' => 'BillController@index', 'as' => 'index']);
@@ -30,3 +44,4 @@ Route::group(
     Route::delete('{bill}', ['uses' => 'BillController@delete', 'as' => 'delete']);
 }
 );
+
