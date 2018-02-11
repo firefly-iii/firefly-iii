@@ -130,11 +130,11 @@ class BillController extends Controller
 
 
         $manager = new Manager();
-        $manager->parseIncludes(['attachments', 'notes', 'transactionJournals', 'user']);
+        $manager->parseIncludes(['attachments', 'journals', 'user']);
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($bill, new BillTransformer($start, $end), 'bill');
+        $resource = new Item($bill, new BillTransformer($start, $end), 'bills');
 
         return Response::json($manager->createData($resource)->toArray());
     }
@@ -155,17 +155,17 @@ class BillController extends Controller
             $end = new Carbon($request->get('end'));
         }
 
-        $bill = $this->repository->store($request->getAll());
-
+        $bill    = $this->repository->store($request->getAll());
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($bill, new BillTransformer($start, $end), 'bill');
+        $resource = new Item($bill, new BillTransformer($start, $end), 'bills');
 
         return Response::json($manager->createData($resource)->toArray());
 
     }
+
 
     /**
      * @param BillRequest $request
@@ -186,11 +186,12 @@ class BillController extends Controller
         if (null !== $request->get('end')) {
             $end = new Carbon($request->get('end'));
         }
+
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($bill, new BillTransformer($start, $end), 'bill');
+        $resource = new Item($bill, new BillTransformer($start, $end), 'bills');
 
         return Response::json($manager->createData($resource)->toArray());
 

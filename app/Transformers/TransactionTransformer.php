@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
+use FireflyIII\Models\Transaction;
 use League\Fractal\TransformerAbstract;
 
 /**
@@ -32,37 +33,41 @@ use League\Fractal\TransformerAbstract;
 class TransactionTransformer extends TransformerAbstract
 {
     /**
-     * @param array $original
+     * @param Transaction $transaction
      *
      * @return array
      */
-    public function transform(array $original): array
+    public function transform(Transaction $transaction): array
     {
-        $id            = $original['source_id'];
-        $foreignAmount = null;
-        if (!is_null($original['foreign_source_amount'])) {
-            $foreignAmount = round($original['foreign_source_amount'], $original['foreign_currency_dp']);
-        }
-        $return = [
-            'id'                    => $id,
-            'amount'                => round($original['source_amount'], $original['transaction_currency_dp']),
-            'currency_id'           => $original['transaction_currency_id'],
-            'currency_code'         => $original['transaction_currency_code'],
-            'foreign_amount'        => $foreignAmount,
-            'foreign_currency_id'   => $original['foreign_currency_id'],
-            'foreign_currency_code' => $original['foreign_currency_code'],
-            'description'           => $original['description'],
-            'links'                 => [
+        $opposing = Transaction
+            ::where('transaction_journal_id', $transaction->transaction_journal_id)
+            ->where('identifier', $transaction->identifier)
+            ->where('amount', $transaction->amount * -1)
+            ->whereNull('deleted_at')
+            ->first(['transactions.*']);
+
+        $data = [
+            'id'                  => (int)$transaction->id,
+            'updated_at'          => $transaction->updated_at->toAtomString(),
+            'created_at'          => $transaction->created_at->toAtomString(),
+            'source_id'           => (int)$transaction->account_id,
+            'destination_id'      => $opposing->account_id,
+            'description'         => $transaction->description,
+            'currency_id'         => (int)$transaction->transaction_currency_id,
+            'amount'              => (float)$transaction->amount,
+            'foreign_currency_id' => is_null($transaction->foreign_currency_id) ? null : (int)$transaction->foreign_currency_id,
+            'foreign_amount'      => is_null($transaction->foreign_amount) ? null : (float)$transaction->foreign_amount,
+            'identifier'          => (int)$transaction->identifier,
+
+            'links' => [
                 [
                     'rel' => 'self',
-                    'uri' => '/transaction/' . $id,
+                    'uri' => '/transactions/' . $transaction->id,
                 ],
             ],
         ];
 
-        // todo source account, dest account, budget, category
-
-        return $return;
+        return $data;
     }
 
 }

@@ -25,11 +25,12 @@ namespace FireflyIII\Transformers;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Note;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
+use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
-use League\Fractal\Resource\Collection as FractalCollection;
 
 /**
  * Class BillTransformer
@@ -41,13 +42,13 @@ class BillTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = ['attachments', 'notes', 'transactionJournals', 'user'];
+    protected $availableIncludes = ['attachments', 'journals', 'user'];
     /**
      * List of resources to automatically include
      *
      * @var array
      */
-    protected $defaultIncludes = ['notes',];
+    protected $defaultIncludes = [];
     /** @var Carbon */
     private $end = null;
     /** @var Carbon */
@@ -68,25 +69,13 @@ class BillTransformer extends TransformerAbstract
     /**
      * @param Bill $bill
      *
-     * @return \League\Fractal\Resource\Item
-     */
-    public function includeUser(Bill $bill): Item
-    {
-        $user = $bill->user()->first();
-
-        return $this->item($user, new UserTransformer, 'user');
-    }
-
-    /**
-     * @param Bill $bill
-     *
      * @return FractalCollection
      */
     public function includeAttachments(Bill $bill): FractalCollection
     {
         $attachments = $bill->attachments()->get();
 
-        return $this->collection($attachments, new AttachmentTransformer, 'attachment');
+        return $this->collection($attachments, new AttachmentTransformer, 'attachments');
     }
 
     /**
@@ -94,23 +83,23 @@ class BillTransformer extends TransformerAbstract
      *
      * @return FractalCollection
      */
-    public function includeNotes(Bill $bill): FractalCollection
-    {
-        $notes = $bill->notes()->get();
-
-        return $this->collection($notes, new NoteTransformer, 'note');
-    }
-
-    /**
-     * @param Bill $bill
-     *
-     * @return FractalCollection
-     */
-    public function includeTransactionJournals(Bill $bill): FractalCollection
+    public function includeJournals(Bill $bill): FractalCollection
     {
         $journals = $bill->transactionJournals()->get();
 
-        return $this->collection($journals, new JournalTransformer, 'transaction_journal');
+        return $this->collection($journals, new TransactionJournalTransformer, 'journals');
+    }
+
+    /**
+     * @param Bill $bill
+     *
+     * @return \League\Fractal\Resource\Item
+     */
+    public function includeUser(Bill $bill): Item
+    {
+        $user = $bill->user()->first();
+
+        return $this->item($user, new UserTransformer, 'users');
     }
 
     /**
@@ -124,6 +113,8 @@ class BillTransformer extends TransformerAbstract
         $payDates = $this->payDates($bill);
         $data     = [
             'id'                  => (int)$bill->id,
+            'updated_at'          => $bill->updated_at->toAtomString(),
+            'created_at'          => $bill->created_at->toAtomString(),
             'name'                => $bill->name,
             'match'               => explode(',', $bill->match),
             'amount_min'          => round($bill->amount_min, 2),
@@ -137,15 +128,19 @@ class BillTransformer extends TransformerAbstract
             'pay_dates'           => $payDates,
             'paid_dates'          => $paidData['paid_dates'],
             'next_expected_match' => $paidData['next_expected_match'],
+            'notes'               => null,
             'links'               => [
                 [
                     'rel' => 'self',
-                    'uri' => '/bill/' . $bill->id,
+                    'uri' => '/bills/' . $bill->id,
                 ],
             ],
         ];
-
-        // todo updated at, created at
+        /** @var Note $note */
+        $note = $bill->notes()->first();
+        if (!is_null($note)) {
+            $data['notes'] = $note->text;
+        }
 
         return $data;
 

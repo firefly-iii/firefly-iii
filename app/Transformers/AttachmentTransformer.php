@@ -67,6 +67,8 @@ class AttachmentTransformer extends TransformerAbstract
     {
         return [
             'id'              => (int)$attachment->id,
+            'updated_at'      => $attachment->updated_at->toAtomString(),
+            'created_at'      => $attachment->created_at->toAtomString(),
             'attachable_type' => $attachment->attachable_type,
             'md5'             => $attachment->md5,
             'filename'        => $attachment->filename,

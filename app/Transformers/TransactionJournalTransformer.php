@@ -24,15 +24,15 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
+use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\TransformerAbstract;
 
 /**
- * Class JournalTransformer
+ * Class TransactionJournalTransformer
  */
-class JournalTransformer extends TransformerAbstract
+class TransactionJournalTransformer extends TransformerAbstract
 {
 
     /**
@@ -40,13 +40,13 @@ class JournalTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = ['attachments', 'notes', 'transactions', 'user', 'tags', 'budget', 'category', 'bill', 'meta', 'piggy_bank_events'];
+    protected $availableIncludes = ['attachments', 'transactions', 'user', 'tags', 'budget', 'category', 'bill', 'meta', 'piggy_bank_events'];
     /**
      * List of resources to automatically include
      *
      * @var array
      */
-    protected $defaultIncludes = ['transactions',];
+    protected $defaultIncludes = ['transactions'];
 
     /**
      * @param TransactionJournal $journal
@@ -55,12 +55,11 @@ class JournalTransformer extends TransformerAbstract
      */
     public function includeTransactions(TransactionJournal $journal): FractalCollection
     {
-        $tasker = app(JournalTaskerInterface::class);
-        $tasker->setUser($journal->user);
-        $transactions = $tasker->getTransactionsOverview($journal);
+        $set = $journal->transactions()->where('amount', '<', 0)->get(['transactions.*']);
 
-        return $this->collection($transactions, new TransactionTransformer, 'transaction');
+        return $this->collection($set, new TransactionTransformer, 'transactions');
     }
+
 
     /**
      * @param TransactionJournal $journal
@@ -69,20 +68,30 @@ class JournalTransformer extends TransformerAbstract
      */
     public function transform(TransactionJournal $journal): array
     {
-        return [
+        $data = [
             'id'          => (int)$journal->id,
+            'updated_at'  => $journal->updated_at->toAtomString(),
+            'created_at'  => $journal->created_at->toAtomString(),
             'type'        => $journal->transactionType->type,
             'description' => $journal->description,
             'date'        => $journal->date->format('Y-m-d'),
             'order'       => $journal->order,
             'completed'   => $journal->completed,
+            'notes'       => null,
             'links'       => [
                 [
                     'rel' => 'self',
-                    'uri' => '/transaction_journal/' . $journal->id,
+                    'uri' => '/journals/' . $journal->id,
                 ],
             ],
         ];
+        /** @var Note $note */
+        $note = $journal->notes()->first();
+        if (!is_null($note)) {
+            $data['notes'] = $note->text;
+        }
+
+        return $data;
     }
 
 }

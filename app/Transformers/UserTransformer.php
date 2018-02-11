@@ -41,11 +41,16 @@ class UserTransformer extends TransformerAbstract
     {
 
         return [
-            'id'    => (int)$user->id,
-            'links' => [
+            'id'           => (int)$user->id,
+            'updated_at'   => $user->updated_at->toAtomString(),
+            'created_at'   => $user->created_at->toAtomString(),
+            'email'        => $user->email,
+            'blocked'      => intval($user->blocked) === 1,
+            'blocked_code' => $user->blocked_code,
+            'links'        => [
                 [
                     'rel' => 'self',
-                    'uri' => '/user/' . $user->id,
+                    'uri' => '/users/' . $user->id,
                 ],
             ],
         ];
