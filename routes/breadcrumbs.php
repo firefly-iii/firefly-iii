@@ -81,13 +81,14 @@ Breadcrumbs::register(
 
         $breadcrumbs->parent('accounts.index', $what);
         $breadcrumbs->push($account->name, route('accounts.show', [$account->id]));
-
-        $title = trans(
-            'firefly.between_dates_breadcrumb',
-            ['start' => $start ? $start->formatLocalized(strval(trans('config.month_and_day'))) : '',
-             'end'   => $end ? $end->formatLocalized(strval(trans('config.month_and_day'))) : '',]
-        );
-        $breadcrumbs->push($title, route('accounts.show', $account));
+        if (!is_null($start) && !is_null($end)) {
+            $title = trans(
+                'firefly.between_dates_breadcrumb',
+                ['start' => $start ? $start->formatLocalized(strval(trans('config.month_and_day'))) : '',
+                 'end'   => $end ? $end->formatLocalized(strval(trans('config.month_and_day'))) : '',]
+            );
+            $breadcrumbs->push($title, route('accounts.show', $account));
+        }
     }
 );
 
