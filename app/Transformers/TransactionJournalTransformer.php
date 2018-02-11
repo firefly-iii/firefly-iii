@@ -27,7 +27,9 @@ namespace FireflyIII\Transformers;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use League\Fractal\Resource\Collection as FractalCollection;
+use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class TransactionJournalTransformer
@@ -40,13 +42,117 @@ class TransactionJournalTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = ['attachments', 'transactions', 'user', 'tags', 'budget', 'category', 'bill', 'meta', 'piggy_bank_events'];
+    protected $availableIncludes = ['attachments', 'transactions', 'user', 'tags', 'budget', 'category', 'bill', 'journal_meta', 'piggy_bank_events'];
     /**
      * List of resources to automatically include
      *
      * @var array
      */
-    protected $defaultIncludes = ['transactions'];
+    protected $defaultIncludes = ['attachments', 'transactions', 'user', 'tags', 'budget', 'category', 'bill', 'journal_meta', 'piggy_bank_events'];
+
+    /** @var ParameterBag */
+    protected $parameters;
+
+    /**
+     * BillTransformer constructor.
+     *
+     * @param ParameterBag $parameters
+     */
+    public function __construct(ParameterBag $parameters)
+    {
+        $this->parameters = $parameters;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return FractalCollection
+     */
+    public function includeAttachments(TransactionJournal $journal): FractalCollection
+    {
+        return $this->collection($journal->attachments, new AttachmentTransformer($this->parameters), 'attachments');
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Item|null
+     */
+    public function includeBill(TransactionJournal $journal): ?Item
+    {
+        $bill = $journal->bill()->first();
+        if (!is_null($bill)) {
+            return $this->item($bill, new BillTransformer($this->parameters), 'bills');
+        }
+
+        return null;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Item|null
+     */
+    public function includeBudget(TransactionJournal $journal): ?Item
+    {
+        $budget = $journal->budgets()->first();
+        if (!is_null($budget)) {
+            return $this->item($budget, new BudgetTransformer($this->parameters), 'budgets');
+        }
+
+        return null;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Item|null
+     */
+    public function includeCategory(TransactionJournal $journal): ?Item
+    {
+        $category = $journal->categories()->first();
+        if (!is_null($category)) {
+            return $this->item($category, new CategoryTransformer($this->parameters), 'categories');
+        }
+
+        return null;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return FractalCollection
+     */
+    public function includeJournalMeta(TransactionJournal $journal): FractalCollection
+    {
+        $meta = $journal->transactionJournalMeta()->get();
+
+        return $this->collection($meta, new JournalMetaTransformer($this->parameters), 'journal_meta');
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return FractalCollection
+     */
+    public function includePiggyBankEvents(TransactionJournal $journal): FractalCollection
+    {
+        $events = $journal->piggyBankEvents()->get();
+
+        return $this->collection($events, new PiggyBankEventTransformer($this->parameters), 'piggy_bank_events');
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return FractalCollection
+     */
+    public function includeTags(TransactionJournal $journal): FractalCollection
+    {
+        $set = $journal->tags;
+
+        return $this->collection($set, new TagTransformer($this->parameters), 'tag');
+    }
 
     /**
      * @param TransactionJournal $journal
@@ -57,9 +163,18 @@ class TransactionJournalTransformer extends TransformerAbstract
     {
         $set = $journal->transactions()->where('amount', '<', 0)->get(['transactions.*']);
 
-        return $this->collection($set, new TransactionTransformer, 'transactions');
+        return $this->collection($set, new TransactionTransformer($this->parameters), 'transactions');
     }
 
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return \League\Fractal\Resource\Item
+     */
+    public function includeUser(TransactionJournal $journal): Item
+    {
+        return $this->item($journal->user, new UserTransformer($this->parameters), 'users');
+    }
 
     /**
      * @param TransactionJournal $journal

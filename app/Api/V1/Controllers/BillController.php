@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use Carbon\Carbon;
 use FireflyIII\Api\V1\Requests\BillRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -87,15 +86,7 @@ class BillController extends Controller
      */
     public function index(Request $request)
     {
-        $pageSize = intval(Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data);
-        $start    = null;
-        $end      = null;
-        if (null !== $request->get('start')) {
-            $start = new Carbon($request->get('start'));
-        }
-        if (null !== $request->get('end')) {
-            $end = new Carbon($request->get('end'));
-        }
+        $pageSize  = intval(Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data);
         $paginator = $this->repository->getPaginator($pageSize);
         /** @var Collection $bills */
         $bills = $paginator->getCollection();
@@ -104,7 +95,7 @@ class BillController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new FractalCollection($bills, new BillTransformer($start, $end), 'bills');
+        $resource = new FractalCollection($bills, new BillTransformer($this->parameters), 'bills');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return Response::json($manager->createData($resource)->toArray());
@@ -119,22 +110,12 @@ class BillController extends Controller
      */
     public function show(Request $request, Bill $bill)
     {
-        $start = null;
-        $end   = null;
-        if (null !== $request->get('start')) {
-            $start = new Carbon($request->get('start'));
-        }
-        if (null !== $request->get('end')) {
-            $end = new Carbon($request->get('end'));
-        }
-
-
         $manager = new Manager();
         $manager->parseIncludes(['attachments', 'journals', 'user']);
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($bill, new BillTransformer($start, $end), 'bills');
+        $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
 
         return Response::json($manager->createData($resource)->toArray());
     }
@@ -146,21 +127,12 @@ class BillController extends Controller
      */
     public function store(BillRequest $request)
     {
-        $start = null;
-        $end   = null;
-        if (null !== $request->get('start')) {
-            $start = new Carbon($request->get('start'));
-        }
-        if (null !== $request->get('end')) {
-            $end = new Carbon($request->get('end'));
-        }
-
         $bill    = $this->repository->store($request->getAll());
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($bill, new BillTransformer($start, $end), 'bills');
+        $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
 
         return Response::json($manager->createData($resource)->toArray());
 
@@ -175,23 +147,13 @@ class BillController extends Controller
      */
     public function update(BillRequest $request, Bill $bill)
     {
-        $data = $request->getAll();
-        $bill = $this->repository->update($bill, $data);
-
-        $start = null;
-        $end   = null;
-        if (null !== $request->get('start')) {
-            $start = new Carbon($request->get('start'));
-        }
-        if (null !== $request->get('end')) {
-            $end = new Carbon($request->get('end'));
-        }
-
+        $data    = $request->getAll();
+        $bill    = $this->repository->update($bill, $data);
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($bill, new BillTransformer($start, $end), 'bills');
+        $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
 
         return Response::json($manager->createData($resource)->toArray());
 

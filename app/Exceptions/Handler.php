@@ -64,7 +64,23 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if ($exception instanceof NotFoundHttpException && $request->expectsJson()) {
-            return response()->json(['message' => 'Not found'], 404);
+            return response()->json(['message' => 'Resource not found', 'exception' => 'NotFoundHttpException'], 404);
+        }
+        if ($request->expectsJson()) {
+            $isDebug = env('APP_DEBUG', false);
+            if ($isDebug) {
+                return response()->json(
+                    [
+                        'message'   => $exception->getMessage(),
+                        'exception' => get_class($exception),
+                        'line'      => $exception->getLine(),
+                        'file'      => $exception->getFile(),
+                        'trace'     => $exception->getTrace(),
+                    ], 500
+                );
+            }
+
+            return response()->json(['message' => 'Internal Firefly III Exception. See log files.', 'exception' => get_class($exception)], 500);
         }
 
         if ($exception instanceof FireflyException || $exception instanceof ErrorException) {

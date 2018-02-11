@@ -31,6 +31,7 @@ use Illuminate\Support\Collection;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class BillTransformer
@@ -49,21 +50,18 @@ class BillTransformer extends TransformerAbstract
      * @var array
      */
     protected $defaultIncludes = [];
-    /** @var Carbon */
-    private $end = null;
-    /** @var Carbon */
-    private $start = null;
+
+    /** @var ParameterBag */
+    protected $parameters;
 
     /**
      * BillTransformer constructor.
      *
-     * @param Carbon|null $start
-     * @param Carbon|null $end
+     * @param ParameterBag $parameters
      */
-    public function __construct(Carbon $start = null, Carbon $end = null)
+    public function __construct(ParameterBag $parameters)
     {
-        $this->start = $start;
-        $this->end   = $end;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -75,7 +73,7 @@ class BillTransformer extends TransformerAbstract
     {
         $attachments = $bill->attachments()->get();
 
-        return $this->collection($attachments, new AttachmentTransformer, 'attachments');
+        return $this->collection($attachments, new AttachmentTransformer($this->parameters), 'attachments');
     }
 
     /**
@@ -85,9 +83,16 @@ class BillTransformer extends TransformerAbstract
      */
     public function includeJournals(Bill $bill): FractalCollection
     {
-        $journals = $bill->transactionJournals()->get();
+        $query = $bill->transactionJournals();
+        if (!is_null($this->parameters->get('end'))) {
+            $query->where('date', '<=', $this->parameters->get('end')->format('Y-m-d 00:00:00'));
+        }
+        if (!is_null($this->parameters->get('start'))) {
+            $query->where('date', '>=', $this->parameters->get('start')->format('Y-m-d 00:00:00'));
+        }
+        $journals = $query->get();
 
-        return $this->collection($journals, new TransactionJournalTransformer, 'journals');
+        return $this->collection($journals, new TransactionJournalTransformer($this->parameters), 'journals');
     }
 
     /**
@@ -97,9 +102,7 @@ class BillTransformer extends TransformerAbstract
      */
     public function includeUser(Bill $bill): Item
     {
-        $user = $bill->user()->first();
-
-        return $this->item($user, new UserTransformer, 'users');
+        return $this->item($bill->user, new UserTransformer($this->parameters), 'users');
     }
 
     /**
@@ -196,7 +199,7 @@ class BillTransformer extends TransformerAbstract
      */
     protected function paidData(Bill $bill): array
     {
-        if (is_null($this->start) || is_null($this->end)) {
+        if (is_null($this->parameters->get('start')) || is_null($this->parameters->get('end'))) {
             return [
                 'paid_dates'          => [],
                 'next_expected_match' => null,
@@ -206,7 +209,7 @@ class BillTransformer extends TransformerAbstract
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser($bill->user);
-        $set    = $repository->getPaidDatesInRange($bill, $this->start, $this->end);
+        $set    = $repository->getPaidDatesInRange($bill, $this->parameters->get('start'), $this->parameters->get('end'));
         $simple = $set->map(
             function (Carbon $date) {
                 return $date->format('Y-m-d');
@@ -214,7 +217,7 @@ class BillTransformer extends TransformerAbstract
         );
 
         // calculate next expected match:
-        $lastPaidDate = $this->lastPaidDate($set, $this->start);
+        $lastPaidDate = $this->lastPaidDate($set, $this->parameters->get('start'));
         $nextMatch    = clone $bill->date;
         while ($nextMatch < $lastPaidDate) {
             $nextMatch = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
@@ -238,15 +241,15 @@ class BillTransformer extends TransformerAbstract
      */
     protected function payDates(Bill $bill): array
     {
-        if (is_null($this->start) || is_null($this->end)) {
+        if (is_null($this->parameters->get('start')) || is_null($this->parameters->get('end'))) {
             return [];
         }
         $set          = new Collection;
-        $currentStart = clone $this->start;
-        while ($currentStart <= $this->end) {
+        $currentStart = clone $this->parameters->get('start');
+        while ($currentStart <= $this->parameters->get('end')) {
             $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
             // If nextExpectedMatch is after end, we continue:
-            if ($nextExpectedMatch > $this->end) {
+            if ($nextExpectedMatch > $this->parameters->get('end')) {
                 break;
             }
             // add to set

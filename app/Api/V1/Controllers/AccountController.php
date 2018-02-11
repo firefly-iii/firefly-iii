@@ -88,22 +88,19 @@ class AccountController extends Controller
      */
     public function index(Request $request)
     {
-        $type       = $request->get('type') ?? 'all';
-        $types      = $this->mapTypes($type);
+        $types      = $this->mapTypes($this->parameters->get('type'));
         $pageSize   = intval(Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data);
-        $page       = 0 === intval($request->get('page')) ? 1 : intval($request->get('page'));
         $collection = $this->repository->getAccountsByType($types);
         $count      = $collection->count();
-        $accounts   = $collection->slice(($page - 1) * $pageSize, $pageSize);
+        $accounts   = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($accounts, $count, $pageSize, $page);
-
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $paginator = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
+        $manager   = new Manager();
+        $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new FractalCollection($accounts, new AccountTransformer, 'accounts');
+        $resource = new FractalCollection($accounts, new AccountTransformer($this->parameters), 'accounts');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return Response::json($manager->createData($resource)->toArray());
@@ -119,10 +116,10 @@ class AccountController extends Controller
     {
 
         $manager = new Manager();
-        $manager->parseIncludes(['attachments', 'journals', 'user']);
+        //$manager->parseIncludes(['attachments', 'journals', 'user']);
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new Item($account, new AccountTransformer, 'accounts');
+        $resource = new Item($account, new AccountTransformer($this->parameters), 'accounts');
 
         return Response::json($manager->createData($resource)->toArray());
     }

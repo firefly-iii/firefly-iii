@@ -1,6 +1,6 @@
 <?php
 /**
- * AttachmentTransformer.php
+ * PiggyBankTransformer.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -24,28 +24,28 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use FireflyIII\Models\Attachment;
-use League\Fractal\Resource\Item;
+use FireflyIII\Models\Note;
+use FireflyIII\Models\PiggyBank;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * Class AttachmentTransformer
+ * Class PiggyBankTransformer
  */
-class AttachmentTransformer extends TransformerAbstract
+class PiggyBankTransformer extends TransformerAbstract
 {
     /**
      * List of resources possible to include
      *
      * @var array
      */
-    protected $availableIncludes = ['user'];
+    protected $availableIncludes = ['account', 'user', 'piggy_bank_events'];
     /**
      * List of resources to automatically include
      *
      * @var array
      */
-    protected $defaultIncludes = ['user'];
+    protected $defaultIncludes = [];
 
     /** @var ParameterBag */
     protected $parameters;
@@ -61,41 +61,32 @@ class AttachmentTransformer extends TransformerAbstract
     }
 
     /**
-     * @param Attachment $attachment
-     *
-     * @return Item
-     */
-    public function includeUser(Attachment $attachment): Item
-    {
-        return $this->item($attachment->user, new UserTransformer($this->parameters), 'user');
-    }
-
-    /**
-     * @param Attachment $attachment
+     * @param PiggyBank $piggyBank
      *
      * @return array
      */
-    public function transform(Attachment $attachment): array
+    public function transform(PiggyBank $piggyBank): array
     {
-        return [
-            'id'              => (int)$attachment->id,
-            'updated_at'      => $attachment->updated_at->toAtomString(),
-            'created_at'      => $attachment->created_at->toAtomString(),
-            'attachable_type' => $attachment->attachable_type,
-            'md5'             => $attachment->md5,
-            'filename'        => $attachment->filename,
-            'title'           => $attachment->title,
-            'description'     => $attachment->description,
-            'notes'           => $attachment->notes,
-            'mime'            => $attachment->mime,
-            'size'            => $attachment->size,
-            'links'           => [
+
+        $data = [
+            'id'         => (int)$piggyBank->id,
+            'updated_at' => $piggyBank->updated_at->toAtomString(),
+            'created_at' => $piggyBank->created_at->toAtomString(),
+            'name'       => $piggyBank->name,
+            'notes'      => null,
+            'links'      => [
                 [
                     'rel' => 'self',
-                    'uri' => '/attachment/' . $attachment->id,
+                    'uri' => '/piggy_banks/' . $piggyBank->id,
                 ],
             ],
         ];
-    }
+        /** @var Note $note */
+        $note = $piggyBank->notes()->first();
+        if (!is_null($note)) {
+            $data['notes'] = $note->text;
+        }
 
+        return $data;
+    }
 }

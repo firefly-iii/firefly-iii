@@ -1,6 +1,6 @@
 <?php
 /**
- * AttachmentTransformer.php
+ * JournalMetaTransformer.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -24,28 +24,27 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use FireflyIII\Models\Attachment;
-use League\Fractal\Resource\Item;
+use FireflyIII\Models\TransactionJournalMeta;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * Class AttachmentTransformer
+ * Class JournalMetaTransformer
  */
-class AttachmentTransformer extends TransformerAbstract
+class JournalMetaTransformer extends TransformerAbstract
 {
     /**
      * List of resources possible to include
      *
      * @var array
      */
-    protected $availableIncludes = ['user'];
+    protected $availableIncludes = ['journal'];
     /**
      * List of resources to automatically include
      *
      * @var array
      */
-    protected $defaultIncludes = ['user'];
+    protected $defaultIncludes = [];
 
     /** @var ParameterBag */
     protected $parameters;
@@ -61,41 +60,28 @@ class AttachmentTransformer extends TransformerAbstract
     }
 
     /**
-     * @param Attachment $attachment
-     *
-     * @return Item
-     */
-    public function includeUser(Attachment $attachment): Item
-    {
-        return $this->item($attachment->user, new UserTransformer($this->parameters), 'user');
-    }
-
-    /**
-     * @param Attachment $attachment
+     * @param TransactionJournalMeta $meta
      *
      * @return array
      */
-    public function transform(Attachment $attachment): array
+    public function transform(TransactionJournalMeta $meta): array
     {
-        return [
-            'id'              => (int)$attachment->id,
-            'updated_at'      => $attachment->updated_at->toAtomString(),
-            'created_at'      => $attachment->created_at->toAtomString(),
-            'attachable_type' => $attachment->attachable_type,
-            'md5'             => $attachment->md5,
-            'filename'        => $attachment->filename,
-            'title'           => $attachment->title,
-            'description'     => $attachment->description,
-            'notes'           => $attachment->notes,
-            'mime'            => $attachment->mime,
-            'size'            => $attachment->size,
-            'links'           => [
+        $data = [
+            'id'         => (int)$meta->id,
+            'updated_at' => $meta->updated_at->toAtomString(),
+            'created_at' => $meta->created_at->toAtomString(),
+            'name'       => $meta->name,
+            'data'       => $meta->data,
+            'hash'       => $meta->hash,
+            'links'      => [
                 [
                     'rel' => 'self',
-                    'uri' => '/attachment/' . $attachment->id,
+                    'uri' => '/journal_meta/' . $meta->id,
                 ],
             ],
         ];
+
+        return $data;
     }
 
 }

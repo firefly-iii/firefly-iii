@@ -26,12 +26,26 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\User;
 use League\Fractal\TransformerAbstract;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class UserTransformer
  */
 class UserTransformer extends TransformerAbstract
 {
+    /** @var ParameterBag */
+    protected $parameters;
+
+    /**
+     * BillTransformer constructor.
+     *
+     * @param ParameterBag $parameters
+     */
+    public function __construct(ParameterBag $parameters)
+    {
+        $this->parameters = $parameters;
+    }
+
     /**
      * @param User $user
      *

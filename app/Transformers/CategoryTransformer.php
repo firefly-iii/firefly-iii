@@ -1,6 +1,6 @@
 <?php
 /**
- * AttachmentTransformer.php
+ * CategoryTransformer.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -24,15 +24,14 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use FireflyIII\Models\Attachment;
-use League\Fractal\Resource\Item;
+use FireflyIII\Models\Category;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * Class AttachmentTransformer
+ * Class CategoryTransformer
  */
-class AttachmentTransformer extends TransformerAbstract
+class CategoryTransformer extends TransformerAbstract
 {
     /**
      * List of resources possible to include
@@ -45,7 +44,7 @@ class AttachmentTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = ['user'];
+    protected $defaultIncludes = [];
 
     /** @var ParameterBag */
     protected $parameters;
@@ -61,41 +60,26 @@ class AttachmentTransformer extends TransformerAbstract
     }
 
     /**
-     * @param Attachment $attachment
-     *
-     * @return Item
-     */
-    public function includeUser(Attachment $attachment): Item
-    {
-        return $this->item($attachment->user, new UserTransformer($this->parameters), 'user');
-    }
-
-    /**
-     * @param Attachment $attachment
+     * @param Category $category
      *
      * @return array
      */
-    public function transform(Attachment $attachment): array
+    public function transform(Category $category): array
     {
-        return [
-            'id'              => (int)$attachment->id,
-            'updated_at'      => $attachment->updated_at->toAtomString(),
-            'created_at'      => $attachment->created_at->toAtomString(),
-            'attachable_type' => $attachment->attachable_type,
-            'md5'             => $attachment->md5,
-            'filename'        => $attachment->filename,
-            'title'           => $attachment->title,
-            'description'     => $attachment->description,
-            'notes'           => $attachment->notes,
-            'mime'            => $attachment->mime,
-            'size'            => $attachment->size,
-            'links'           => [
+        $data = [
+            'id'         => (int)$category->id,
+            'updated_at' => $category->updated_at->toAtomString(),
+            'created_at' => $category->created_at->toAtomString(),
+            'name'       => $category->name,
+            'links'      => [
                 [
                     'rel' => 'self',
-                    'uri' => '/attachment/' . $attachment->id,
+                    'uri' => '/categories/' . $category->id,
                 ],
             ],
         ];
+
+        return $data;
     }
 
 }
