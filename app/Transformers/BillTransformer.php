@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -43,7 +44,7 @@ class BillTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = ['attachments', 'journals', 'user'];
+    protected $availableIncludes = ['attachments', 'transactions', 'user'];
     /**
      * List of resources to automatically include
      *
@@ -81,18 +82,23 @@ class BillTransformer extends TransformerAbstract
      *
      * @return FractalCollection
      */
-    public function includeJournals(Bill $bill): FractalCollection
+    public function includeTransactions(Bill $bill): FractalCollection
     {
-        $query = $bill->transactionJournals();
-        if (!is_null($this->parameters->get('end'))) {
-            $query->where('date', '<=', $this->parameters->get('end')->format('Y-m-d 00:00:00'));
-        }
-        if (!is_null($this->parameters->get('start'))) {
-            $query->where('date', '>=', $this->parameters->get('start')->format('Y-m-d 00:00:00'));
-        }
-        $journals = $query->get();
+        $pageSize = intval(app('preferences')->getForUser($bill->user, 'listPageSize', 50)->data);
 
-        return $this->collection($journals, new TransactionJournalTransformer($this->parameters), 'journals');
+        // journals always use collector and limited using URL parameters.
+        $collector = new JournalCollector;
+        $collector->setUser($bill->user);
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setBills(new Collection([$bill]));
+        if (!is_null($this->parameters->get('start')) && !is_null($this->parameters->get('end'))) {
+            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        }
+        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
+        $journals = $collector->getJournals();
+
+        return $this->collection($journals, new TransactionTransformer($this->parameters), 'transactions');
     }
 
     /**

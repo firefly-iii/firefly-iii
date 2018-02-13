@@ -25,10 +25,12 @@ namespace FireflyIII\Transformers;
 
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionJournal;
+use Illuminate\Support\Collection;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
@@ -44,7 +46,7 @@ class AccountTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = ['journals', 'piggy_banks', 'user'];
+    protected $availableIncludes = ['transactions', 'piggy_banks', 'user'];
     /**
      * List of resources to automatically include
      *
@@ -69,20 +71,26 @@ class AccountTransformer extends TransformerAbstract
      *
      * @return FractalCollection
      */
-    public function includeJournals(Account $account): FractalCollection
+    public function includeTransactions(Account $account): FractalCollection
     {
-        $ids   = $account->transactions()->get(['transactions.transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
-        $query = TransactionJournal::whereIn('id', $ids);
-        if (!is_null($this->parameters->get('end'))) {
-            $query->where('date', '<=', $this->parameters->get('end')->format('Y-m-d 00:00:00'));
-        }
-        if (!is_null($this->parameters->get('start'))) {
-            $query->where('date', '>=', $this->parameters->get('start')->format('Y-m-d 00:00:00'));
-        }
+        $pageSize = intval(app('preferences')->getForUser($account->user, 'listPageSize', 50)->data);
 
-        $journals = $query->get(['transaction_journals.*']);
+        // journals always use collector and limited using URL parameters.
+        $collector = new JournalCollector;
+        $collector->setUser($account->user);
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        if ($account->accountType->type === AccountType::ASSET) {
+            $collector->setAccounts(new Collection([$account]));
+        } else {
+            $collector->setOpposingAccounts(new Collection([$account]));
+        }
+        if (!is_null($this->parameters->get('start')) && !is_null($this->parameters->get('end'))) {
+            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        }
+        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
+        $journals = $collector->getJournals();
 
-        return $this->collection($journals, new TransactionJournalTransformer($this->parameters), 'journals');
+        return $this->collection($journals, new TransactionTransformer($this->parameters), 'transactions');
     }
 
     /**

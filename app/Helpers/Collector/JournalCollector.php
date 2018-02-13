@@ -69,6 +69,8 @@ class JournalCollector implements JournalCollectorInterface
             'transaction_journals.description',
             'transaction_journals.date',
             'transaction_journals.encrypted',
+            'transaction_journals.created_at',
+            'transaction_journals.updated_at',
             'transaction_types.type as transaction_type_type',
             'transaction_journals.bill_id',
             'transaction_journals.updated_at',

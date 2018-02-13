@@ -38,7 +38,7 @@ class BudgetTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = ['user'];
+    protected $availableIncludes = ['user', 'transactions'];
     /**
      * List of resources to automatically include
      *

@@ -1,6 +1,6 @@
 <?php
 /**
- * BillController.php
+ * TransactionController.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -18,34 +18,27 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
-
-use FireflyIII\Api\V1\Requests\BillRequest;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Bill;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Transformers\BillTransformer;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use League\Fractal\Manager;
-use League\Fractal\Pagination\IlluminatePaginatorAdapter;
-use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
 use Preferences;
 
-/**
- * Class BillController
- */
-class BillController extends Controller
-{
-    /** @var BillRepositoryInterface */
-    private $repository;
 
+/**
+ * Class TransactionController
+ */
+class TransactionController extends Controller
+{
+
+    /** @var JournalRepositoryInterface */
+    private $repository;
     /**
-     * BillController constructor.
+     * TransactionController constructor.
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
@@ -54,8 +47,8 @@ class BillController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var BillRepositoryInterface repository */
-                $this->repository = app(BillRepositoryInterface::class);
+                /** @var JournalRepositoryInterface repository */
+                $this->repository = app(JournalRepositoryInterface::class);
                 $this->repository->setUser(auth()->user());
 
                 return $next($request);
@@ -66,13 +59,13 @@ class BillController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \FireflyIII\Models\Bill $bill
+     * @param  \FireflyIII\Models\TransactionJournal $journal
      *
      * @return \Illuminate\Http\Response
      */
-    public function delete(Bill $bill)
+    public function delete(TransactionJournal $journal)
     {
-        $this->repository->destroy($bill);
+        $this->repository->destroy($journal);
 
         return response()->json([], 204);
     }
@@ -111,10 +104,7 @@ class BillController extends Controller
     public function show(Request $request, Bill $bill)
     {
         $manager = new Manager();
-        // add include parameter:
-        $include = $request->get('include') ?? '';
-        $manager->parseIncludes($include);
-
+        $manager->parseIncludes(['attachments', 'journals', 'user']);
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 

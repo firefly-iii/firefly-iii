@@ -94,22 +94,32 @@ class AccountController extends Controller
      */
     public function index(Request $request)
     {
+        // create some objects:
+        $manager   = new Manager();
+        $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
+
+        // read type from URI
+        $type = $request->get('type') ?? 'all';
+        $this->parameters->set('type', $type);
+
+        // types to get, page size:
         $types      = $this->mapTypes($this->parameters->get('type'));
         $pageSize   = intval(Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data);
+
+        // get list of accounts. Count it and split it.
         $collection = $this->repository->getAccountsByType($types);
         $count      = $collection->count();
         $accounts   = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
         $paginator = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
-        $manager   = new Manager();
-        $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
+        // present to user.
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
         $resource = new FractalCollection($accounts, new AccountTransformer($this->parameters), 'accounts');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
-        return response()->json($manager->createData($resource)->toArray());
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**
@@ -120,14 +130,17 @@ class AccountController extends Controller
      */
     public function show(Request $request, Account $account)
     {
-
         $manager = new Manager();
-        //$manager->parseIncludes(['attachments', 'journals', 'user']);
+
+        // add include parameter:
+        $include = $request->get('include') ?? '';
+        $manager->parseIncludes($include);
+
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
         $resource = new Item($account, new AccountTransformer($this->parameters), 'accounts');
 
-        return response()->json($manager->createData($resource)->toArray());
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**
@@ -150,7 +163,7 @@ class AccountController extends Controller
 
         $resource = new Item($account, new AccountTransformer($this->parameters), 'accounts');
 
-        return response()->json($manager->createData($resource)->toArray());
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
     }
 
@@ -177,7 +190,7 @@ class AccountController extends Controller
 
         $resource = new Item($account, new AccountTransformer($this->parameters), 'accounts');
 
-        return response()->json($manager->createData($resource)->toArray());
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**

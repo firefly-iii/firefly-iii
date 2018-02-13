@@ -88,9 +88,6 @@ class Controller extends BaseController
             $bag->set($field, $obj);
         }
 
-        $type = request()->get('type') ?? 'all';
-        $bag->set('type', $type);
-
         return $bag;
 
     }
