@@ -368,7 +368,10 @@ class FireflyValidator extends Validator
         }
 
         if (isset($this->data['what'])) {
-            return $this->validateByAccountTypeString($value, $parameters);
+            return $this->validateByAccountTypeString($value, $parameters, $this->data['what']);
+        }
+        if (isset($this->data['type'])) {
+            return $this->validateByAccountTypeString($value, $parameters, $this->data['type']);
         }
 
         if (isset($this->data['account_type_id'])) {
@@ -390,9 +393,12 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateUniqueAccountNumberForUser($attribute, $value): bool
+    public function validateUniqueAccountNumberForUser($attribute, $value, $parameters): bool
     {
         $accountId = $this->data['id'] ?? 0;
+        if($accountId === 0) {
+            $accountId = $parameters[0] ?? 0;
+        }
 
         $query = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
                             ->whereNull('accounts.deleted_at')
@@ -601,18 +607,19 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $value
-     * @param $parameters
+     * @param string $value
+     * @param array  $parameters
+     * @param string $type
      *
      * @return bool
      */
-    private function validateByAccountTypeString($value, $parameters): bool
+    private function validateByAccountTypeString(string $value, array $parameters, string $type): bool
     {
-        $search = Config::get('firefly.accountTypeByIdentifier.' . $this->data['what']);
-        $type   = AccountType::whereType($search)->first();
-        $ignore = $parameters[0] ?? 0;
+        $search      = Config::get('firefly.accountTypeByIdentifier.' . $type);
+        $accountType = AccountType::whereType($search)->first();
+        $ignore      = $parameters[0] ?? 0;
 
-        $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
+        $set = auth()->user()->accounts()->where('account_type_id', $accountType->id)->where('id', '!=', $ignore)->get();
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name === $value) {

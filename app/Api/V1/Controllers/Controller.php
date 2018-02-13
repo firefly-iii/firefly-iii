@@ -73,27 +73,20 @@ class Controller extends BaseController
         }
         $bag->set('page', $page);
 
-        $start     = request()->get('start');
-        $startDate = null;
-        if (!is_null($start)) {
-            try {
-                $startDate = new Carbon($start);
-            } catch (InvalidDateException $e) {
-                // don't care
+        // some date fields:
+        $dates = ['start','end','date'];
+        foreach($dates as $field) {
+            $date =  request()->get($field);
+            $obj = null;
+            if (!is_null($date)) {
+                try {
+                    $obj= new Carbon($date);
+                } catch (InvalidDateException $e) {
+                    // don't care
+                }
             }
+            $bag->set($field, $obj);
         }
-        $bag->set('start', $startDate);
-
-        $end     = request()->get('end');
-        $endDate = null;
-        if (!is_null($end)) {
-            try {
-                $endDate = new Carbon($end);
-            } catch (InvalidDateException $e) {
-                // don't care
-            }
-        }
-        $bag->set('end', $endDate);
 
         $type = request()->get('type') ?? 'all';
         $bag->set('type', $type);

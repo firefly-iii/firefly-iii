@@ -1,6 +1,6 @@
 <?php
 /**
- * BillController.php
+ * UserController.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -18,33 +18,35 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\BillRequest;
-use FireflyIII\Models\Bill;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Transformers\BillTransformer;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Transformers\UserTransformer;
+use FireflyIII\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 use Preferences;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 
 /**
- * Class BillController
+ * Class UserController
  */
-class BillController extends Controller
+class UserController extends Controller
 {
-    /** @var BillRepositoryInterface */
+
+    /** @var UserRepositoryInterface */
     private $repository;
 
     /**
-     * BillController constructor.
+     * UserController constructor.
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
@@ -53,9 +55,8 @@ class BillController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var BillRepositoryInterface repository */
-                $this->repository = app(BillRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+                /** @var UserRepositoryInterface repository */
+                $this->repository = app(UserRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -65,15 +66,18 @@ class BillController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \FireflyIII\Models\Bill $bill
+     * @param  \FireflyIII\User $user
      *
      * @return \Illuminate\Http\Response
      */
-    public function delete(Bill $bill)
+    public function delete(User $user)
     {
-        $this->repository->destroy($bill);
+        if (auth()->user()->hasRole('owner')) {
+            $this->repository->destroy($user);
 
-        return response()->json([], 204);
+            return response()->json([], 204);
+        }
+        throw new AccessDeniedException('');
     }
 
     /**
@@ -85,76 +89,61 @@ class BillController extends Controller
      */
     public function index(Request $request)
     {
-        $pageSize  = intval(Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data);
-        $paginator = $this->repository->getPaginator($pageSize);
-        /** @var Collection $bills */
-        $bills = $paginator->getCollection();
+        $pageSize   = intval(Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data);
+        $collection = $this->repository->all();
+        $count      = $collection->count();
+        $users      = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        // make paginator:
+        $paginator = new LengthAwarePaginator($users, $count, $pageSize, $this->parameters->get('page'));
+        $manager   = new Manager();
+        $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new FractalCollection($bills, new BillTransformer($this->parameters), 'bills');
+        $resource = new FractalCollection($users, new UserTransformer($this->parameters), 'users');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray());
     }
 
-
     /**
      * @param Request $request
-     * @param Bill    $bill
+     * @param User    $user
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Request $request, Bill $bill)
+    public function show(Request $request, User $user)
     {
+
         $manager = new Manager();
-        $manager->parseIncludes(['attachments', 'journals', 'user']);
+        //$manager->parseIncludes(['attachments', 'journals', 'user']);
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
+        $resource = new Item($user, new UserTransformer($this->parameters), 'users');
 
         return response()->json($manager->createData($resource)->toArray());
     }
 
     /**
-     * @param BillRequest $request
+     * @param AccountRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(BillRequest $request)
+    public function store(AccountRequest $request)
     {
-        $bill    = $this->repository->store($request->getAll());
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
-
-        return response()->json($manager->createData($resource)->toArray());
 
     }
-
 
     /**
-     * @param BillRequest $request
-     * @param Bill        $bill
+     * @param AccountRequest $request
+     * @param Account        $account
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(BillRequest $request, Bill $bill)
+    public function update(AccountRequest $request, Account $account)
     {
-        $data    = $request->getAll();
-        $bill    = $this->repository->update($bill, $data);
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
-
-        return response()->json($manager->createData($resource)->toArray());
 
     }
+
 }

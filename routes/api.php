@@ -20,6 +20,17 @@
  */
 
 Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'about', 'as' => 'api.v1.about.'],
+    function () {
+
+        // Accounts API routes:
+        Route::get('', ['uses' => 'AboutController@about', 'as' => 'index']);
+        Route::get('user', ['uses' => 'AboutController@user', 'as' => 'user']);
+    }
+);
+
+
+Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'accounts', 'as' => 'api.v1.accounts.'],
     function () {
 
@@ -45,3 +56,15 @@ Route::group(
 }
 );
 
+Route::group(
+    ['middleware' => ['auth:api', 'bindings', \FireflyIII\Http\Middleware\IsAdmin::class], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'users', 'as' => 'api.v1.users.'],
+    function () {
+
+        // Users API routes:
+        Route::get('', ['uses' => 'UserController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'UserController@store', 'as' => 'store']);
+        Route::get('{user}', ['uses' => 'UserController@show', 'as' => 'show']);
+        Route::put('{user}', ['uses' => 'UserController@update', 'as' => 'update']);
+        Route::delete('{user}', ['uses' => 'UserController@delete', 'as' => 'delete']);
+    }
+);

@@ -23,9 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
+use FireflyIII\Api\V1\Requests\AccountRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Transformers\AccountTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -35,7 +37,6 @@ use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 use Preferences;
-use Response;
 
 /**
  * Class AccountController
@@ -43,6 +44,8 @@ use Response;
 class AccountController extends Controller
 {
 
+    /** @var CurrencyRepositoryInterface */
+    private $currencyRepository;
     /** @var AccountRepositoryInterface */
     private $repository;
 
@@ -59,6 +62,9 @@ class AccountController extends Controller
                 /** @var AccountRepositoryInterface repository */
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUser(auth()->user());
+
+                $this->currencyRepository = app(CurrencyRepositoryInterface::class);
+                $this->currencyRepository->setUser(auth()->user());
 
                 return $next($request);
             }
@@ -103,7 +109,7 @@ class AccountController extends Controller
         $resource = new FractalCollection($accounts, new AccountTransformer($this->parameters), 'accounts');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
-        return Response::json($manager->createData($resource)->toArray());
+        return response()->json($manager->createData($resource)->toArray());
     }
 
     /**
@@ -121,7 +127,7 @@ class AccountController extends Controller
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
         $resource = new Item($account, new AccountTransformer($this->parameters), 'accounts');
 
-        return Response::json($manager->createData($resource)->toArray());
+        return response()->json($manager->createData($resource)->toArray());
     }
 
     /**
@@ -131,6 +137,20 @@ class AccountController extends Controller
      */
     public function store(AccountRequest $request)
     {
+        $data = $request->getAll();
+        // if currency ID is 0, find the currency by the code:
+        if ($data['currency_id'] === 0) {
+            $currency            = $this->currencyRepository->findByCode($data['currency_code']);
+            $data['currency_id'] = $currency->id;
+        }
+        $account = $this->repository->store($data);
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $resource = new Item($account, new AccountTransformer($this->parameters), 'accounts');
+
+        return response()->json($manager->createData($resource)->toArray());
 
     }
 
@@ -142,8 +162,22 @@ class AccountController extends Controller
      */
     public function update(AccountRequest $request, Account $account)
     {
+        $data = $request->getAll();
+        // if currency ID is 0, find the currency by the code:
+        if ($data['currency_id'] === 0) {
+            $currency            = $this->currencyRepository->findByCode($data['currency_code']);
+            $data['currency_id'] = $currency->id;
+        }
+        // set correct type:
+        $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
+        $this->repository->update($account, $data);
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
+        $resource = new Item($account, new AccountTransformer($this->parameters), 'accounts');
 
+        return response()->json($manager->createData($resource)->toArray());
     }
 
     /**

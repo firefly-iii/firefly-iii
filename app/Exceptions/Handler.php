@@ -28,7 +28,7 @@ use FireflyIII\Jobs\MailError;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use Illuminate\Validation\ValidationException;
 /**
  * Class Handler
  */
@@ -63,6 +63,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof ValidationException && $request->expectsJson()) {
+            // ignore it: controller will handle it.
+            return parent::render($request, $exception);
+        }
         if ($exception instanceof NotFoundHttpException && $request->expectsJson()) {
             return response()->json(['message' => 'Resource not found', 'exception' => 'NotFoundHttpException'], 404);
         }

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
+use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionCurrency;
@@ -49,7 +50,7 @@ class AccountTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = ['journals', 'piggy_banks', 'user'];
+    protected $defaultIncludes = [];
     /** @var ParameterBag */
     protected $parameters;
 
@@ -80,6 +81,7 @@ class AccountTransformer extends TransformerAbstract
         }
 
         $journals = $query->get(['transaction_journals.*']);
+
         return $this->collection($journals, new TransactionJournalTransformer($this->parameters), 'journals');
     }
 
@@ -116,17 +118,23 @@ class AccountTransformer extends TransformerAbstract
         if (strlen($role) === 0) {
             $role = null;
         }
-        $currencyId   = (int)$account->getMeta('currency_id');
-        $currencyCode = null;
+        $currencyId    = (int)$account->getMeta('currency_id');
+        $currencyCode  = null;
+        $decimalPlaces = 2;
         if ($currencyId > 0) {
-            $currency     = TransactionCurrency::find($currencyId);
-            $currencyCode = $currency->code;
+            $currency      = TransactionCurrency::find($currencyId);
+            $currencyCode  = $currency->code;
+            $decimalPlaces = $currency->decimal_places;
+        }
+
+        $date = new Carbon;
+        if (!is_null($this->parameters->get('date'))) {
+            $date = $this->parameters->get('date');
         }
 
         if ($currencyId === 0) {
             $currencyId = null;
         }
-
 
         $data = [
             'id'                   => (int)$account->id,
@@ -137,12 +145,15 @@ class AccountTransformer extends TransformerAbstract
             'type'                 => $account->accountType->type,
             'currency_id'          => $currencyId,
             'currency_code'        => $currencyCode,
+            'current_balance'      => round(app('steam')->balance($account, $date), $decimalPlaces),
+            'current_balance_date' => $date->format('Y-m-d'),
             'notes'                => null,
             'monthly_payment_date' => $this->getMeta($account, 'ccMonthlyPaymentDate'),
             'credit_card_type'     => $this->getMeta($account, 'ccType'),
             'account_number'       => $this->getMeta($account, 'accountNumber'),
             'iban'                 => $account->iban,
             'bic'                  => $this->getMeta($account, 'BIC'),
+            'virtual_balance'      => round($account->virtual_balance, $decimalPlaces),
             'role'                 => $role,
             'links'                => [
                 [
@@ -151,6 +162,8 @@ class AccountTransformer extends TransformerAbstract
                 ],
             ],
         ];
+
+        // todo opening balance
         /** @var Note $note */
         $note = $account->notes()->first();
         if (!is_null($note)) {

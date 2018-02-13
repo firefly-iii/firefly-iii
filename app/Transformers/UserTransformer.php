@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
+use FireflyIII\Models\Role;
 use FireflyIII\User;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -53,6 +54,11 @@ class UserTransformer extends TransformerAbstract
      */
     public function transform(User $user): array
     {
+        /** @var Role $role */
+        $role = $user->roles()->first();
+        if (!is_null($role)) {
+            $role = $role->name;
+        }
 
         return [
             'id'           => (int)$user->id,
@@ -61,6 +67,7 @@ class UserTransformer extends TransformerAbstract
             'email'        => $user->email,
             'blocked'      => intval($user->blocked) === 1,
             'blocked_code' => $user->blocked_code,
+            'role'         => $role,
             'links'        => [
                 [
                     'rel' => 'self',

@@ -49,7 +49,11 @@ class AccountRepository implements AccountRepositoryInterface
 
     use FindAccountsTrait;
     /** @var array */
-    private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber', 'currency_id', 'BIC'];
+    private $validAssetFields = ['accountRole', 'accountNumber', 'currency_id', 'BIC'];
+    /** @var array */
+    private $validCCFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber', 'currency_id', 'BIC'];
+    /** @var array */
+    private $validFields = ['accountNumber', 'currency_id', 'BIC'];
 
     /**
      * Moved here from account CRUD.
@@ -195,6 +199,11 @@ class AccountRepository implements AccountRepositoryInterface
         if ($this->validOpeningBalanceData($data)) {
             $this->updateInitialBalance($newAccount, $data);
 
+            // update note:
+            if (isset($data['notes'])) {
+                $this->updateNote($newAccount, $data['notes']);
+            }
+
             return $newAccount;
         }
         $this->deleteInitialBalance($newAccount);
@@ -335,7 +344,7 @@ class AccountRepository implements AccountRepositoryInterface
 
         // create it:
         $databaseData
-                    = [
+            = [
             'user_id'         => $this->user->id,
             'account_type_id' => $accountType->id,
             'name'            => $data['name'],
@@ -343,6 +352,12 @@ class AccountRepository implements AccountRepositoryInterface
             'active'          => true === $data['active'] ? true : false,
             'iban'            => $data['iban'],
         ];
+
+        // remove virtual balance when not an asset account:
+        if ($accountType->type !== AccountType::ASSET) {
+            $databaseData['virtual_balance'] = '0';
+        }
+
         $newAccount = new Account($databaseData);
         Log::debug('Final account creation dataset', $databaseData);
         $newAccount->save();
@@ -500,7 +515,16 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function updateMetadata(Account $account, array $data)
     {
-        foreach ($this->validFields as $field) {
+        $fields = $this->validFields;
+
+        if ($account->accountType->type === AccountType::ASSET) {
+            $fields = $this->validAssetFields;
+        }
+        if ($account->accountType->type === AccountType::ASSET && $data['accountRole'] === 'ccAsset') {
+            $fields = $this->validCCFields;
+        }
+
+        foreach ($fields as $field) {
             /** @var AccountMeta $entry */
             $entry = $account->accountMeta()->where('name', $field)->first();
 
