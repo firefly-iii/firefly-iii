@@ -227,6 +227,7 @@ return [
         'ruleGroup'         => \FireflyIII\Models\RuleGroup::class,
         'exportJob'         => \FireflyIII\Models\ExportJob::class,
         'importJob'         => \FireflyIII\Models\ImportJob::class,
+        'transaction'       => \FireflyIII\Models\Transaction::class,
         'user'              => \FireflyIII\User::class,
 
         // strings
