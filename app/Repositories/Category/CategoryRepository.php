@@ -111,6 +111,18 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * Find a category or return NULL
+     *
+     * @param int $categoryId
+     *
+     * @return Category|null
+     */
+    public function findNull(int $categoryId): ?Category
+    {
+        return $this->user->categories()->find($categoryId);
+    }
+
+    /**
      * @param Category $category
      *
      * @return Carbon|null

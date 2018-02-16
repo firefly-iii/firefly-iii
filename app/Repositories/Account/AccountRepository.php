@@ -44,12 +44,13 @@ use Validator;
  */
 class AccountRepository implements AccountRepositoryInterface
 {
+
     /** @var User */
     private $user;
-
-    use FindAccountsTrait;
     /** @var array */
     private $validAssetFields = ['accountRole', 'accountNumber', 'currency_id', 'BIC'];
+
+    use FindAccountsTrait;
     /** @var array */
     private $validCCFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber', 'currency_id', 'BIC'];
     /** @var array */
@@ -89,6 +90,16 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return true;
+    }
+
+    /**
+     * @param int $accountId
+     *
+     * @return Account|null
+     */
+    public function findNull(int $accountId): ?Account
+    {
+        return $this->user->accounts()->find($accountId);
     }
 
     /**
@@ -336,7 +347,7 @@ class AccountRepository implements AccountRepositoryInterface
 
         // account may exist already:
         $existingAccount = $this->findByName($data['name'], [$type]);
-        if (null !== $existingAccount->id) {
+        if (null !== $existingAccount) {
             Log::warning(sprintf('There already is an account named "%s" of type "%s".', $data['name'], $type));
 
             return $existingAccount;

@@ -109,9 +109,9 @@ trait FindAccountsTrait
      * @param string $name
      * @param array  $types
      *
-     * @return Account
+     * @return Account|null
      */
-    public function findByName(string $name, array $types): Account
+    public function findByName(string $name, array $types): ?Account
     {
         $query = $this->user->accounts();
 
@@ -132,7 +132,7 @@ trait FindAccountsTrait
         }
         Log::debug(sprintf('There is no account with name "%s" or types', $name), $types);
 
-        return new Account;
+        return null;
     }
 
     /**

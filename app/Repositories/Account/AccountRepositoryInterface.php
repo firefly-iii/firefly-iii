@@ -57,9 +57,17 @@ interface AccountRepositoryInterface
     /**
      * @param int $accountId
      *
+     * @deprecated
      * @return Account
      */
     public function find(int $accountId): Account;
+
+    /**
+     * @param int $accountId
+     *
+     * @return Account|null
+     */
+    public function findNull(int $accountId): ?Account;
 
     /**
      * @param string $number
@@ -81,9 +89,9 @@ interface AccountRepositoryInterface
      * @param string $name
      * @param array  $types
      *
-     * @return Account
+     * @return Account|null
      */
-    public function findByName(string $name, array $types): Account;
+    public function findByName(string $name, array $types): ?Account;
 
     /**
      * Return account type by string.

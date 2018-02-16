@@ -47,18 +47,18 @@ interface BillRepositoryInterface
      *
      * @param int $billId
      *
-     * @return Bill
+     * @return Bill|null
      */
-    public function find(int $billId): Bill;
+    public function find(int $billId): ?Bill;
 
     /**
      * Find a bill by name.
      *
      * @param string $name
      *
-     * @return Bill
+     * @return Bill|null
      */
-    public function findByName(string $name): Bill;
+    public function findByName(string $name): ?Bill;
 
     /**
      * @return Collection

@@ -130,6 +130,18 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * Find by currency code, return NULL if unfound.
+     *
+     * @param string $currencyCode
+     *
+     * @return TransactionCurrency|null
+     */
+    public function findByCodeNull(string $currencyCode): ?TransactionCurrency
+    {
+        return TransactionCurrency::where('code', $currencyCode)->first();
+    }
+
+    /**
      * Find by currency name.
      *
      * @param string $currencyName
@@ -161,6 +173,21 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         return $currency;
+    }
+
+    /**
+     * Find by ID, return NULL if not found.
+     *
+     * @param int $currencyId
+     *
+     * @return TransactionCurrency|null
+     */
+    public function findNull(int $currencyId): ?TransactionCurrency
+    {
+        /** @var TransactionCurrency $res */
+        $res = TransactionCurrency::find($currencyId);
+
+        return $res;
     }
 
     /**

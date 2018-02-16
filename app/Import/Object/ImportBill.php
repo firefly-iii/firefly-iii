@@ -114,7 +114,7 @@ class ImportBill
             Log::debug(sprintf('Finding bill with ID #%d', $this->id['value']));
             /** @var Bill $bill */
             $bill = $this->repository->find(intval($this->id['value']));
-            if (null !== $bill->id) {
+            if (null !== $bill) {
                 Log::debug(sprintf('Found unmapped bill by ID (#%d): %s', $bill->id, $bill->name));
 
                 return $bill;
@@ -199,7 +199,7 @@ class ImportBill
         $search = intval($array['mapped']);
         $bill   = $this->repository->find($search);
 
-        if (null === $bill->id) {
+        if (null === $bill) {
             Log::error(sprintf('There is no bill with id #%d. Invalid mapping will be ignored!', $search));
 
             return new Bill;
