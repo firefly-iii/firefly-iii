@@ -25,6 +25,7 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\PiggyBankEvent;
+use FireflyIII\Models\TransactionCurrency;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -38,7 +39,7 @@ class PiggyBankEventTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = ['piggy_bank', 'journal'];
+    protected $availableIncludes = ['piggy_bank', 'transactions'];
     /**
      * List of resources to automatically include
      *
@@ -66,11 +67,19 @@ class PiggyBankEventTransformer extends TransformerAbstract
      */
     public function transform(PiggyBankEvent $event): array
     {
+        $account       = $event->piggyBank->account;
+        $currencyId    = intval($account->getMeta('currency_id'));
+        $decimalPlaces = 2;
+        if ($currencyId > 0) {
+            $currency      = TransactionCurrency::find($currencyId);
+            $decimalPlaces = $currency->decimal_places;
+        }
+
         $data = [
             'id'         => (int)$event->id,
             'updated_at' => $event->updated_at->toAtomString(),
             'created_at' => $event->created_at->toAtomString(),
-            'amount'     => $event->amount,
+            'amount'     => round($event->amount, $decimalPlaces),
             'links'      => [
                 [
                     'rel' => 'self',
