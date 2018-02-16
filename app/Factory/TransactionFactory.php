@@ -72,7 +72,7 @@ class TransactionFactory
         $repository  = app(JournalRepositoryInterface::class);
         $transaction = $repository->storeBasicTransaction($values);
 
-        // todo: add budget, category
+        // todo: add budget, category, etc.
 
 
         return $transaction;
@@ -118,16 +118,27 @@ class TransactionFactory
             'reconciled'          => $data['reconciled'],
             'identifier'          => $data['identifier'],
         ];
-        $this->create($sourceTransactionData);
-
-
-        print_r($data);
-        print_r($sourceTransactionData);
-        exit;
-
+        $source                = $this->create($sourceTransactionData);
 
         // then make a "positive" transaction based on the data in the array.
+        $destTransactionData = [
+            'description'         => $sourceTransactionData['description'],
+            'amount'              => app('steam')->positive(strval($data['amount'])),
+            'foreign_amount'      => is_null($data['foreign_amount']) ? null : app('steam')->positive(strval($data['foreign_amount'])),
+            'currency'            => $currency,
+            'foreign_currency'    => $foreignCurrency,
+            'budget'              => $budget,
+            'category'            => $category,
+            'account'             => $destinationAccount,
+            'transaction_journal' => $journal,
+            'reconciled'          => $data['reconciled'],
+            'identifier'          => $data['identifier'],
+        ];
+        $dest                = $this->create($destTransactionData);
 
+        // todo link budget, category
+
+        return new Collection([$source, $dest]);
     }
 
     /**
