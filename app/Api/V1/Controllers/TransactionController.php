@@ -22,12 +22,25 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
-use FireflyIII\Models\TransactionJournal;
+
+use FireflyIII\Api\V1\Requests\TransactionRequest;
+use FireflyIII\Factory\TransactionJournalFactory;
+use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\Filter\NegativeAmountFilter;
+use FireflyIII\Helpers\Filter\PositiveAmountFilter;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use League\Fractal\Manager;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use League\Fractal\Resource\Collection as FractalCollection;
+use League\Fractal\Resource\Item;
+use League\Fractal\Serializer\JsonApiSerializer;
 use Preferences;
-
 
 /**
  * Class TransactionController
@@ -37,6 +50,7 @@ class TransactionController extends Controller
 
     /** @var JournalRepositoryInterface */
     private $repository;
+
     /**
      * TransactionController constructor.
      *
@@ -59,36 +73,61 @@ class TransactionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \FireflyIII\Models\TransactionJournal $journal
+     * @param  \FireflyIII\Models\Transaction $transaction
      *
      * @return \Illuminate\Http\Response
      */
-    public function delete(TransactionJournal $journal)
+    public function delete(Transaction $transaction)
     {
-        $this->repository->destroy($journal);
+        $journal = $transaction->transactionJournal;
+        $this->repository->delete($journal);
 
         return response()->json([], 204);
     }
 
     /**
-     * Display a listing of the resource.
-     *
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function index(Request $request)
     {
-        $pageSize  = intval(Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data);
-        $paginator = $this->repository->getPaginator($pageSize);
-        /** @var Collection $bills */
-        $bills = $paginator->getCollection();
+        $pageSize = intval(Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data);
+
+        // read type from URI
+        $type = $request->get('type') ?? 'default';
+        $this->parameters->set('type', $type);
+
+        // types to get, page size:
+        $types = $this->mapTypes($this->parameters->get('type'));
 
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new FractalCollection($bills, new BillTransformer($this->parameters), 'bills');
+        // collect transactions using the journal collector
+        $collector = new JournalCollector;
+        $collector->setUser(auth()->user());
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setAllAssetAccounts();
+
+        // remove internal transfer filter:
+        if (in_array(TransactionType::TRANSFER, $types)) {
+            $collector->removeFilter(InternalTransferFilter::class);
+        }
+
+        if (!is_null($this->parameters->get('start')) && !is_null($this->parameters->get('end'))) {
+            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        }
+        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
+        $collector->setTypes($types);
+        $paginator = $collector->getPaginatedJournals();
+        $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
+        $transactions = $paginator->getCollection();
+
+
+        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray());
@@ -96,31 +135,61 @@ class TransactionController extends Controller
 
 
     /**
-     * @param Request $request
-     * @param Bill    $bill
+     * @param Request     $request
+     * @param Transaction $transaction
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Request $request, Bill $bill)
+    public function show(Request $request, Transaction $transaction)
     {
         $manager = new Manager();
-        $manager->parseIncludes(['attachments', 'journals', 'user']);
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
+        // add include parameter:
+        $include = $request->get('include') ?? '';
+        $manager->parseIncludes($include);
+
+        // needs a lot of extra data to match the journal collector. Or just expand that one.
+        // collect transactions using the journal collector
+        $collector = new JournalCollector;
+        $collector->setUser(auth()->user());
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        // filter on specific journals.
+        $collector->setJournals(new Collection([$transaction->transactionJournal]));
+
+        // add filter to remove transactions:
+        $transactionType = $transaction->transactionJournal->transactionType->type;
+        if ($transactionType === TransactionType::WITHDRAWAL) {
+            $collector->addFilter(PositiveAmountFilter::class);
+        }
+        if (!($transactionType === TransactionType::WITHDRAWAL)) {
+            $collector->addFilter(NegativeAmountFilter::class);
+        }
+
+        $transaction = $collector->getJournals();
+
+        $resource = new FractalCollection($transaction, new TransactionTransformer($this->parameters), 'transactions');
 
         return response()->json($manager->createData($resource)->toArray());
     }
 
     /**
-     * @param BillRequest $request
+     * @param TransactionRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(BillRequest $request)
+    public function store(TransactionRequest $request)
     {
-        $bill    = $this->repository->store($request->getAll());
+        $data         = $request->getAll();
+        $data['user'] = auth()->user()->id;
+        /** @var TransactionJournalFactory $factory */
+        $factory = app(TransactionJournalFactory::class);
+        $factory->setUser(auth()->user());
+        $journal = $factory->create($data);
+
+        exit;
+
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
@@ -140,6 +209,7 @@ class TransactionController extends Controller
      */
     public function update(BillRequest $request, Bill $bill)
     {
+        die('todo');
         $data    = $request->getAll();
         $bill    = $this->repository->update($bill, $data);
         $manager = new Manager();
@@ -149,6 +219,76 @@ class TransactionController extends Controller
         $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
 
         return response()->json($manager->createData($resource)->toArray());
+
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return array
+     */
+    private function mapTypes(string $type): array
+    {
+        $types = [
+            'all'             => [
+                TransactionType::WITHDRAWAL,
+                TransactionType::DEPOSIT,
+                TransactionType::TRANSFER,
+                TransactionType::OPENING_BALANCE,
+                TransactionType::RECONCILIATION,
+            ],
+            'withdrawal'      => [
+                TransactionType::WITHDRAWAL,
+            ],
+            'withdrawals'     => [
+                TransactionType::WITHDRAWAL,
+            ],
+            'expense'         => [
+                TransactionType::WITHDRAWAL,
+            ],
+            'income'          => [
+                TransactionType::DEPOSIT,
+            ],
+            'deposit'         => [
+                TransactionType::DEPOSIT,
+            ],
+            'deposits'        => [
+                TransactionType::DEPOSIT,
+            ],
+            'transfer'        => [
+                TransactionType::TRANSFER,
+            ],
+            'transfers'       => [
+                TransactionType::TRANSFER,
+            ],
+            'opening_balance' => [
+                TransactionType::OPENING_BALANCE,
+            ],
+            'reconciliation'  => [
+                TransactionType::RECONCILIATION,
+            ],
+            'reconciliations' => [
+                TransactionType::RECONCILIATION,
+            ],
+            'special'         => [
+                TransactionType::OPENING_BALANCE,
+                TransactionType::RECONCILIATION,
+            ],
+            'specials'        => [
+                TransactionType::OPENING_BALANCE,
+                TransactionType::RECONCILIATION,
+            ],
+            'default'         => [
+                TransactionType::WITHDRAWAL,
+                TransactionType::DEPOSIT,
+                TransactionType::TRANSFER,
+            ],
+        ];
+        if (isset($types[$type])) {
+            return $types[$type];
+        }
+
+        return $types['default'];
 
     }
 }
