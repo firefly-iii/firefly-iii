@@ -32,7 +32,7 @@ class BillRequest extends Request
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         // Only allow authenticated users
         return auth()->check();
@@ -64,7 +64,7 @@ class BillRequest extends Request
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = [
             'name'        => 'required|between:1,255|uniqueObjectForUser:bills,name',

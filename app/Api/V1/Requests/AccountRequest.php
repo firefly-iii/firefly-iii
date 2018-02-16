@@ -32,7 +32,7 @@ class AccountRequest extends Request
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         // Only allow authenticated users
         return auth()->check();
@@ -67,7 +67,7 @@ class AccountRequest extends Request
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         $accountRoles   = join(',', config('firefly.accountRoles'));
         $types          = join(',', array_keys(config('firefly.subTitlesByIdentifier')));
