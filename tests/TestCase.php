@@ -128,4 +128,17 @@ abstract class TestCase extends BaseTestCase
 
         return $object;
     }
+
+    /**
+     * @param string $class
+     *
+     * @return Mockery\MockInterface
+     */
+    protected function overload(string $class)
+    {
+        $externalMock = Mockery::mock('overload:' . $class);
+
+        //$this->app->instance($class, $externalMock);
+        return $externalMock;
+    }
 }

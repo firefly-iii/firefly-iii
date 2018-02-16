@@ -227,6 +227,8 @@ $factory->define(
     function (Faker\Generator $faker) {
         return [
             'id'              => $faker->unique()->numberBetween(1000, 10000),
+            'created_at'      => new Carbon,
+            'updated_at'      => new Carbon,
             'name'            => $faker->words(3, true),
             'account_type_id' => 1,
             'active'          => true,

@@ -30,6 +30,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
@@ -57,7 +58,10 @@ class AccountTransformer extends TransformerAbstract
     protected $parameters;
 
     /**
-     * BillTransformer constructor.
+     *
+     * AccountTransformer constructor.
+     *
+     * @codeCoverageIgnore
      *
      * @param ParameterBag $parameters
      */
@@ -67,6 +71,26 @@ class AccountTransformer extends TransformerAbstract
     }
 
     /**
+     * Include piggy banks into end result.
+     *
+     * @codeCoverageIgnore
+     *
+     * @param Account $account
+     *
+     * @return FractalCollection
+     */
+    public function includePiggyBanks(Account $account): FractalCollection
+    {
+        $piggies = $account->piggyBanks()->get();
+
+        return $this->collection($piggies, new PiggyBankTransformer($this->parameters), 'piggy_banks');
+    }
+
+    /**
+     * Include transactions into end result.
+     *
+     * @codeCoverageIgnore
+     *
      * @param Account $account
      *
      * @return FractalCollection
@@ -94,18 +118,10 @@ class AccountTransformer extends TransformerAbstract
     }
 
     /**
-     * @param Account $account
+     * Include user data in end result.
      *
-     * @return FractalCollection
-     */
-    public function includePiggyBanks(Account $account): FractalCollection
-    {
-        $piggies = $account->piggyBanks()->get();
-
-        return $this->collection($piggies, new PiggyBankTransformer($this->parameters), 'piggy_banks');
-    }
-
-    /**
+     * @codeCoverageIgnore
+     *
      * @param Account $account
      *
      * @return Item
@@ -122,8 +138,9 @@ class AccountTransformer extends TransformerAbstract
      */
     public function transform(Account $account): array
     {
+        $type = $account->accountType->type;
         $role = $account->getMeta('accountRole');
-        if (strlen($role) === 0) {
+        if (strlen($role) === 0 || $type !== AccountType::ASSET) {
             $role = null;
         }
         $currencyId    = (int)$account->getMeta('currency_id');
@@ -144,24 +161,44 @@ class AccountTransformer extends TransformerAbstract
             $currencyId = null;
         }
 
+        $monthlyPaymentDate = null;
+        $creditCardType     = null;
+        if ($role === 'ccAsset' && $type === AccountType::ASSET) {
+            $creditCardType     = $this->getMeta($account, 'ccType');
+            $monthlyPaymentDate = $this->getMeta($account, 'ccMonthlyPaymentDate');
+        }
+
+        $openingBalance     = null;
+        $openingBalanceDate = null;
+        if ($type === AccountType::ASSET) {
+            /** @var AccountRepositoryInterface $repository */
+            $repository = app(AccountRepositoryInterface::class);
+            $repository->setuser($account->user);
+            $amount             = $repository->getOpeningBalanceAmount($account);
+            $openingBalance     = is_null($amount) ? null : round($amount, $decimalPlaces);
+            $openingBalanceDate = $repository->getOpeningBalanceDate($account);
+        }
+
         $data = [
             'id'                   => (int)$account->id,
             'updated_at'           => $account->updated_at->toAtomString(),
             'created_at'           => $account->created_at->toAtomString(),
             'name'                 => $account->name,
             'active'               => intval($account->active) === 1,
-            'type'                 => $account->accountType->type,
+            'type'                 => $type,
             'currency_id'          => $currencyId,
             'currency_code'        => $currencyCode,
             'current_balance'      => round(app('steam')->balance($account, $date), $decimalPlaces),
             'current_balance_date' => $date->format('Y-m-d'),
             'notes'                => null,
-            'monthly_payment_date' => $this->getMeta($account, 'ccMonthlyPaymentDate'),
-            'credit_card_type'     => $this->getMeta($account, 'ccType'),
+            'monthly_payment_date' => $monthlyPaymentDate,
+            'credit_card_type'     => $creditCardType,
             'account_number'       => $this->getMeta($account, 'accountNumber'),
             'iban'                 => $account->iban,
             'bic'                  => $this->getMeta($account, 'BIC'),
             'virtual_balance'      => round($account->virtual_balance, $decimalPlaces),
+            'opening_balance'      => $openingBalance,
+            'opening_balance_date' => $openingBalanceDate,
             'role'                 => $role,
             'links'                => [
                 [
@@ -171,17 +208,20 @@ class AccountTransformer extends TransformerAbstract
             ],
         ];
 
-        // todo opening balance
         /** @var Note $note */
         $note = $account->notes()->first();
         if (!is_null($note)) {
-            $data['notes'] = $note->text;
+            $data['notes'] = $note->text; // @codeCoverageIgnore
         }
 
         return $data;
     }
 
     /**
+     * Get meta data field for account.
+     *
+     * @codeCoverageIgnore
+     *
      * @param Account $account
      * @param string  $field
      *
