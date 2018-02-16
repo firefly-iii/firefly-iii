@@ -43,6 +43,13 @@ interface JournalCollectorInterface
     public function addFilter(string $filter): JournalCollectorInterface;
 
     /**
+     * @param Collection $journals
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setJournals(Collection $journals): JournalCollectorInterface;
+
+    /**
      * @param string $amount
      *
      * @return JournalCollectorInterface

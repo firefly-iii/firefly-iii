@@ -489,6 +489,23 @@ class JournalCollector implements JournalCollectorInterface
     }
 
     /**
+     * @param Collection $journals
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setJournals(Collection $journals): JournalCollectorInterface
+    {
+        $ids = $journals->pluck('id')->toArray();
+        $this->query->where(
+            function (EloquentBuilder $q) use ($ids) {
+                $q->whereIn('transaction_journals.id', $ids);
+            }
+        );
+
+        return $this;
+    }
+
+    /**
      * @param int $limit
      *
      * @return JournalCollectorInterface
