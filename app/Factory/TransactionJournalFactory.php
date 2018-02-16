@@ -78,7 +78,7 @@ class TransactionJournalFactory
 
         $journal = $repository->storeBasic($values);
 
-        // todo link other stuff to journal (meta-data etc).
+        // todo link other stuff to journal (meta-data etc). tags
 
         // start creating transactions:
         /** @var array $trData */
@@ -87,14 +87,9 @@ class TransactionJournalFactory
             $factory->setUser($this->user);
 
             $trData['reconciled'] = $data['reconciled'] ?? false;
-            $transactions         = $factory->createPair($journal, $trData);
+            $factory->createPair($journal, $trData);
         }
-
-        echo 'id is ', $journal->id;
-        exit;
-
-
-        //$currency                     = $this->findCurrency($data['currency_id'], $data['currency_code']);
+        $repository->markCompleted($journal);
 
         return $journal;
     }
