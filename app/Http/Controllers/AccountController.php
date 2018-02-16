@@ -162,7 +162,7 @@ class AccountController extends Controller
      *
      * @throws FireflyException
      */
-    public function edit(Request $request, Account $account)
+    public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
     {
         $what               = config('firefly.shortNamesByFullName')[$account->accountType->type];
         $subTitle           = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
@@ -183,10 +183,8 @@ class AccountController extends Controller
         // pre fill some useful values.
 
         // the opening balance is tricky:
-        $openingBalanceAmount = $account->getOpeningBalanceAmount();
-        $openingBalanceAmount = '0' === $account->getOpeningBalanceAmount() ? '' : $openingBalanceAmount;
-        $openingBalanceDate   = $account->getOpeningBalanceDate();
-        $openingBalanceDate   = 1900 === $openingBalanceDate->year ? null : $openingBalanceDate->format('Y-m-d');
+        $openingBalanceAmount = strval($repository->getOpeningBalanceAmount($account));
+        $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
         $currency             = $this->currencyRepos->find(intval($account->getMeta('currency_id')));
 
         $preFilled = [

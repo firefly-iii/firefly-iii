@@ -241,56 +241,6 @@ class Account extends Model
     }
 
     /**
-     * Returns the amount of the opening balance for this account.
-     *
-     * @return string
-     *
-     * @throws FireflyException
-     */
-    public function getOpeningBalanceAmount(): string
-    {
-        $journal = TransactionJournal::sortCorrectly()
-                                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                     ->where('transactions.account_id', $this->id)
-                                     ->transactionTypes([TransactionType::OPENING_BALANCE])
-                                     ->first(['transaction_journals.*']);
-        if (null === $journal) {
-            return '0';
-        }
-
-        $count = $journal->transactions()->count();
-        if (2 !== $count) {
-            throw new FireflyException(sprintf('Cannot use getFirstTransaction on journal #%d', $journal->id));
-        }
-        $transaction = $journal->transactions()->where('account_id', $this->id)->first();
-        if (null === $transaction) {
-            return '0';
-        }
-
-        return strval($transaction->amount);
-    }
-
-    /**
-     * Returns the date of the opening balance for this account. If no date, will return 01-01-1900.
-     *
-     * @return Carbon
-     */
-    public function getOpeningBalanceDate(): Carbon
-    {
-        $date    = new Carbon('1900-01-01');
-        $journal = TransactionJournal::sortCorrectly()
-                                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                     ->where('transactions.account_id', $this->id)
-                                     ->transactionTypes([TransactionType::OPENING_BALANCE])
-                                     ->first(['transaction_journals.*']);
-        if (null === $journal) {
-            return $date;
-        }
-
-        return $journal->date;
-    }
-
-    /**
      * @codeCoverageIgnore
      * Get all of the notes.
      */

@@ -125,6 +125,49 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Returns the amount of the opening balance for this account.
+     *
+     * @return string
+     */
+    public function getOpeningBalanceAmount(Account $account): ?string
+    {
+
+        $journal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                     ->where('transactions.account_id', $account->id)
+                                     ->transactionTypes([TransactionType::OPENING_BALANCE])
+                                     ->first(['transaction_journals.*']);
+        if (null === $journal) {
+            return null;
+        }
+        $transaction = $journal->transactions()->where('account_id', $account->id)->first();
+        if (null === $transaction) {
+            return null;
+        }
+
+        return strval($transaction->amount);
+    }
+
+    /**
+     * Return date of opening balance as string or null.
+     *
+     * @param Account $account
+     *
+     * @return null|string
+     */
+    public function getOpeningBalanceDate(Account $account): ?string
+    {
+        $journal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                     ->where('transactions.account_id', $account->id)
+                                     ->transactionTypes([TransactionType::OPENING_BALANCE])
+                                     ->first(['transaction_journals.*']);
+        if (null === $journal) {
+            return null;
+        }
+
+        return $journal->date->format('Y-m-d');
+    }
+
+    /**
      * Returns the date of the very last transaction in this account.
      *
      * @param Account $account

@@ -54,7 +54,7 @@ class Steam
         $currencyId = intval($account->getMeta('currency_id'));
         // use system default currency:
         if (0 === $currencyId) {
-            $currency   = app('amount')->getDefaultCurrency();
+            $currency = app('amount')->getDefaultCurrencyByUser($account->user);
             $currencyId = $currency->id;
         }
         // first part: get all balances in own currency:

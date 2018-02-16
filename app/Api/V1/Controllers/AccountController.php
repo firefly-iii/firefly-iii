@@ -113,6 +113,7 @@ class AccountController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.accounts.index') . $this->buildParams());
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));

@@ -41,7 +41,7 @@ class Note extends Model
             'deleted_at' => 'datetime',
         ];
     /** @var array */
-    protected $fillable = ['title', 'text'];
+    protected $fillable = ['title', 'text', 'noteable_id', 'noteable_type'];
 
     /**
      * @codeCoverageIgnore
