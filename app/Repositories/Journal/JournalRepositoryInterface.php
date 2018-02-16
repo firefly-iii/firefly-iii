@@ -153,6 +153,24 @@ interface JournalRepositoryInterface
     public function store(array $data): TransactionJournal;
 
     /**
+     * Store a new transaction journal based on the values given.
+     *
+     * @param array $values
+     *
+     * @return TransactionJournal
+     */
+    public function storeBasic(array $values): TransactionJournal;
+
+    /**
+     * Store a new transaction based on the values given.
+     *
+     * @param array $values
+     *
+     * @return Transaction
+     */
+    public function storeBasicTransaction(array $values): Transaction;
+
+    /**
      * @param TransactionJournal $journal
      * @param array              $data
      *

@@ -378,6 +378,30 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Store a new transaction journal based on the values given.
+     *
+     * @param array $values
+     *
+     * @return TransactionJournal
+     */
+    public function storeBasic(array $values): TransactionJournal
+    {
+        return TransactionJournal::create($values);
+    }
+
+    /**
+     * Store a new transaction based on the values given.
+     *
+     * @param array $values
+     *
+     * @return Transaction
+     */
+    public function storeBasicTransaction(array $values): Transaction
+    {
+        return Transaction::create($values);
+    }
+
+    /**
      * @param TransactionJournal $journal
      * @param array              $data
      *
