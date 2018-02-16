@@ -58,6 +58,8 @@ class BillTransformer extends TransformerAbstract
     /**
      * BillTransformer constructor.
      *
+     * @codeCoverageIgnore
+     *
      * @param ParameterBag $parameters
      */
     public function __construct(ParameterBag $parameters)
@@ -66,8 +68,11 @@ class BillTransformer extends TransformerAbstract
     }
 
     /**
+     * Include any attachments.
+     *
      * @param Bill $bill
      *
+     * @codeCoverageIgnore
      * @return FractalCollection
      */
     public function includeAttachments(Bill $bill): FractalCollection
@@ -78,8 +83,11 @@ class BillTransformer extends TransformerAbstract
     }
 
     /**
+     * Include any transactions.
+     *
      * @param Bill $bill
      *
+     * @codeCoverageIgnore
      * @return FractalCollection
      */
     public function includeTransactions(Bill $bill): FractalCollection
@@ -102,8 +110,11 @@ class BillTransformer extends TransformerAbstract
     }
 
     /**
+     * Include the user.
+     *
      * @param Bill $bill
      *
+     * @codeCoverageIgnore
      * @return \League\Fractal\Resource\Item
      */
     public function includeUser(Bill $bill): Item
@@ -112,6 +123,8 @@ class BillTransformer extends TransformerAbstract
     }
 
     /**
+     * Transform the bill.
+     *
      * @param Bill $bill
      *
      * @return array

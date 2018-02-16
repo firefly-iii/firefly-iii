@@ -53,6 +53,8 @@ class AttachmentTransformer extends TransformerAbstract
     /**
      * BillTransformer constructor.
      *
+     * @codeCoverageIgnore
+     *
      * @param ParameterBag $parameters
      */
     public function __construct(ParameterBag $parameters)
@@ -61,6 +63,10 @@ class AttachmentTransformer extends TransformerAbstract
     }
 
     /**
+     * Attach the user.
+     *
+     * @codeCoverageIgnore
+     *
      * @param Attachment $attachment
      *
      * @return Item
@@ -71,6 +77,8 @@ class AttachmentTransformer extends TransformerAbstract
     }
 
     /**
+     * Transform attachment.
+     *
      * @param Attachment $attachment
      *
      * @return array
