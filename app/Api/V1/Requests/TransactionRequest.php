@@ -59,6 +59,7 @@ class TransactionRequest extends Request
             'piggy_bank_name'    => $this->string('piggy_bank_name'),
             'bill_id'            => $this->integer('bill_id'),
             'bill_name'          => $this->string('bill_name'),
+            'tags'               => explode(',', $this->string('tags')),
 
             // then, custom fields for journal
             'interest_date'      => $this->date('interest_date'),
@@ -114,6 +115,7 @@ class TransactionRequest extends Request
             'piggy_bank_name'                         => ['between:1,255', 'nullable', new BelongsUser],
             'bill_id'                                 => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser],
             'bill_name'                               => ['between:1,255', 'nullable', new BelongsUser],
+            'tags'                                    => 'between:1,255',
 
             // then, custom fields for journal
             'interest_date'                           => 'date|nullable',
