@@ -56,6 +56,20 @@ Route::group(
 }
 );
 
+
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transactions', 'as' => 'api.v1.transactions.'],
+    function () {
+
+        // Users API routes:
+        Route::get('', ['uses' => 'TransactionController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'TransactionController@store', 'as' => 'store']);
+        Route::get('{transaction}', ['uses' => 'TransactionController@show', 'as' => 'show']);
+        Route::put('{transaction}', ['uses' => 'TransactionController@update', 'as' => 'update']);
+        Route::delete('{transaction}', ['uses' => 'TransactionController@delete', 'as' => 'delete']);
+    }
+);
+
 Route::group(
     ['middleware' => ['auth:api', 'bindings', \FireflyIII\Http\Middleware\IsAdmin::class], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'users', 'as' => 'api.v1.users.'],
     function () {
