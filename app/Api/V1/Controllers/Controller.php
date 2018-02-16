@@ -62,6 +62,32 @@ class Controller extends BaseController
     }
 
     /**
+     * @return string
+     */
+    protected function buildParams(): string
+    {
+        $return = '?';
+        $params = [];
+        foreach ($this->parameters as $key => $value) {
+            if($key === 'page') {
+                continue;
+            }
+            if ($value instanceof Carbon) {
+                $params[$key] = $value->format('Y-m-d');
+            }
+            if (!$value instanceof Carbon) {
+                $params[$key] = $value;
+            }
+        }
+        $return .= http_build_query($params);
+        if (strlen($return) === 1) {
+            return '';
+        }
+
+        return $return;
+    }
+
+    /**
      * @return ParameterBag
      */
     private function getParameters(): ParameterBag
@@ -74,13 +100,13 @@ class Controller extends BaseController
         $bag->set('page', $page);
 
         // some date fields:
-        $dates = ['start','end','date'];
-        foreach($dates as $field) {
-            $date =  request()->get($field);
-            $obj = null;
+        $dates = ['start', 'end', 'date'];
+        foreach ($dates as $field) {
+            $date = request()->get($field);
+            $obj  = null;
             if (!is_null($date)) {
                 try {
-                    $obj= new Carbon($date);
+                    $obj = new Carbon($date);
                 } catch (InvalidDateException $e) {
                     // don't care
                 }
