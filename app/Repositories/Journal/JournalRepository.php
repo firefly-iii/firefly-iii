@@ -240,6 +240,21 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Mark journal as completed and return it.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return TransactionJournal
+     */
+    public function markCompleted(TransactionJournal $journal): TransactionJournal
+    {
+        $journal->completed = true;
+        $journal->save();
+
+        return $journal;
+    }
+
+    /**
      * @param Transaction $transaction
      *
      * @return bool

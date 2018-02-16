@@ -126,6 +126,15 @@ interface JournalRepositoryInterface
     public function isTransfer(TransactionJournal $journal): bool;
 
     /**
+     * Mark journal as completed and return it.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return TransactionJournal
+     */
+    public function markCompleted(TransactionJournal $journal): TransactionJournal;
+
+    /**
      * @param Transaction $transaction
      *
      * @return bool
