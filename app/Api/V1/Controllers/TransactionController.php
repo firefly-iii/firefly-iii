@@ -178,6 +178,7 @@ class TransactionController extends Controller
      * @param TransactionRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function store(TransactionRequest $request)
     {
@@ -188,16 +189,35 @@ class TransactionController extends Controller
         $factory->setUser(auth()->user());
         $journal = $factory->create($data);
 
-        exit;
-
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
+        // add include parameter:
+        $include = $request->get('include') ?? '';
+        $manager->parseIncludes($include);
+
+        // needs a lot of extra data to match the journal collector. Or just expand that one.
+        // collect transactions using the journal collector
+        $collector = new JournalCollector;
+        $collector->setUser(auth()->user());
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        // filter on specific journals.
+        $collector->setJournals(new Collection([$journal]));
+
+        // add filter to remove transactions:
+        $transactionType = $journal->transactionType->type;
+        if ($transactionType === TransactionType::WITHDRAWAL) {
+            $collector->addFilter(PositiveAmountFilter::class);
+        }
+        if (!($transactionType === TransactionType::WITHDRAWAL)) {
+            $collector->addFilter(NegativeAmountFilter::class);
+        }
+
+        $transaction = $collector->getJournals();
+        $resource = new FractalCollection($transaction, new TransactionTransformer($this->parameters), 'transactions');
 
         return response()->json($manager->createData($resource)->toArray());
-
     }
 
 
