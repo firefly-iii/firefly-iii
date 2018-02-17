@@ -154,8 +154,8 @@ class AccountController extends Controller
         $data = $request->getAll();
         // if currency ID is 0, find the currency by the code:
         if ($data['currency_id'] === 0) {
-            $currency            = $this->currencyRepository->findByCode($data['currency_code']);
-            $data['currency_id'] = $currency->id;
+            $currency            = $this->currencyRepository->findByCodeNull($data['currency_code']);
+            $data['currency_id'] = is_null($currency) ? 0 : $currency->id;
         }
         $account = $this->repository->store($data);
         $manager = new Manager();
@@ -179,8 +179,8 @@ class AccountController extends Controller
         $data = $request->getAll();
         // if currency ID is 0, find the currency by the code:
         if ($data['currency_id'] === 0) {
-            $currency            = $this->currencyRepository->findByCode($data['currency_code']);
-            $data['currency_id'] = $currency->id;
+            $currency            = $this->currencyRepository->findByCodeNull($data['currency_code']);
+            $data['currency_id'] = is_null($currency) ? 0 : $currency->id;
         }
         // set correct type:
         $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
@@ -256,6 +256,6 @@ class AccountController extends Controller
             return $types[$type];
         }
 
-        return $types['all'];
+        return $types['all']; // @codeCoverageIgnore
     }
 }
