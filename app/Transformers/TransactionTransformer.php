@@ -54,7 +54,9 @@ class TransactionTransformer extends TransformerAbstract
     protected $parameters;
 
     /**
-     * BillTransformer constructor.
+     * TransactionTransformer constructor.
+     *
+     * @codeCoverageIgnore
      *
      * @param ParameterBag $parameters
      */
@@ -64,6 +66,10 @@ class TransactionTransformer extends TransformerAbstract
     }
 
     /**
+     * Include attachments.
+     *
+     * @codeCoverageIgnore
+     *
      * @param Transaction $transaction
      *
      * @return FractalCollection
@@ -74,6 +80,10 @@ class TransactionTransformer extends TransformerAbstract
     }
 
     /**
+     * Include meta data
+     *
+     * @codeCoverageIgnore
+     *
      * @param Transaction $transaction
      *
      * @return FractalCollection
@@ -86,6 +96,10 @@ class TransactionTransformer extends TransformerAbstract
     }
 
     /**
+     * Include piggy bank events
+     *
+     * @codeCoverageIgnore
+     *
      * @param Transaction $transaction
      *
      * @return FractalCollection
@@ -98,6 +112,10 @@ class TransactionTransformer extends TransformerAbstract
     }
 
     /**
+     * Include tags
+     *
+     * @codeCoverageIgnore
+     *
      * @param Transaction $transaction
      *
      * @return FractalCollection
@@ -110,6 +128,10 @@ class TransactionTransformer extends TransformerAbstract
     }
 
     /**
+     * Include the user.
+     *
+     * @codeCoverageIgnore
+     *
      * @param Transaction $transaction
      *
      * @return \League\Fractal\Resource\Item
@@ -121,6 +143,8 @@ class TransactionTransformer extends TransformerAbstract
 
 
     /**
+     * Transform the journal.
+     *
      * @param Transaction $transaction
      *
      * @return array
@@ -128,6 +152,21 @@ class TransactionTransformer extends TransformerAbstract
      */
     public function transform(Transaction $transaction): array
     {
+        $categoryId   = null;
+        $categoryName = null;
+        $budgetId     = null;
+        $budgetName   = null;
+        $categoryId   = is_null($transaction->transaction_category_id) ? $transaction->transaction_journal_category_id
+            : $transaction->transaction_category_id;
+        $categoryName = is_null($transaction->transaction_category_name) ? $transaction->transaction_journal_category_name
+            : $transaction->transaction_category_name;
+
+        if ($transaction->transaction_type_type === TransactionType::WITHDRAWAL) {
+            $budgetId   = is_null($transaction->transaction_budget_id) ? $transaction->transaction_journal_budget_id
+                : $transaction->transaction_budget_id;
+            $budgetName = is_null($transaction->transaction_budget_name) ? $transaction->transaction_journal_budget_name
+                : $transaction->transaction_budget_name;
+        }
         $data = [
             'id'                    => (int)$transaction->id,
             'updated_at'            => $transaction->updated_at->toAtomString(),
@@ -138,7 +177,7 @@ class TransactionTransformer extends TransformerAbstract
             'identifier'            => $transaction->identifier,
             'journal_id'            => (int)$transaction->journal_id,
             'reconciled'            => (bool)$transaction->reconciled,
-            'amount'                => round($transaction->transaction_amount, $transaction->transaction_currency_dp),
+            'amount'                => round($transaction->transaction_amount, intval($transaction->transaction_currency_dp)),
             'currency_id'           => $transaction->transaction_currency_id,
             'currency_code'         => $transaction->transaction_currency_code,
             'currency_dp'           => $transaction->transaction_currency_dp,
@@ -148,14 +187,10 @@ class TransactionTransformer extends TransformerAbstract
             'foreign_currency_dp'   => $transaction->foreign_currency_dp,
             'bill_id'               => $transaction->bill_id,
             'bill_name'             => $transaction->bill_name,
-            'category_id'           => is_null($transaction->transaction_category_id) ? $transaction->transaction_journal_category_id
-                : $transaction->transaction_category_id,
-            'category_name'         => is_null($transaction->transaction_category_name) ? $transaction->transaction_journal_category_name
-                : $transaction->transaction_category_name,
-            'budget_id'             => is_null($transaction->transaction_budget_id) ? $transaction->transaction_journal_budget_id
-                : $transaction->transaction_budget_id,
-            'budget_name'           => is_null($transaction->transaction_budget_name) ? $transaction->transaction_journal_budget_name
-                : $transaction->transaction_budget_name,
+            'category_id'           => $categoryId,
+            'category_name'         => $categoryName,
+            'budget_id'             => $budgetId,
+            'budget_name'           => $budgetName,
             'links'                 => [
                 [
                     'rel' => 'self',
@@ -166,12 +201,12 @@ class TransactionTransformer extends TransformerAbstract
 
         // expand foreign amount:
         if (!is_null($transaction->transaction_foreign_amount)) {
-            $data['foreign_amount'] = round($transaction->transaction_foreign_amount, $transaction->foreign_currency_dp);
+            $data['foreign_amount'] = round($transaction->transaction_foreign_amount, intval($transaction->foreign_currency_dp));
         }
 
         // switch on type for consistency
-        switch (true) {
-            case TransactionType::WITHDRAWAL === $transaction->transaction_type_type:
+        switch ($transaction->transaction_type_type) {
+            case TransactionType::WITHDRAWAL:
                 $data['source_id']        = $transaction->account_id;
                 $data['source_name']      = $transaction->account_name;
                 $data['source_iban']      = $transaction->account_iban;
@@ -181,7 +216,10 @@ class TransactionTransformer extends TransformerAbstract
                 $data['destination_iban'] = $transaction->opposing_account_iban;
                 $data['destination_type'] = $transaction->opposing_account_type;
                 break;
-            case TransactionType::DEPOSIT === $transaction->transaction_type_type:
+            case TransactionType::DEPOSIT:
+            case TransactionType::TRANSFER:
+            case TransactionType::OPENING_BALANCE:
+            case TransactionType::RECONCILIATION:
                 $data['source_id']        = $transaction->opposing_account_id;
                 $data['source_name']      = $transaction->opposing_account_name;
                 $data['source_iban']      = $transaction->opposing_account_iban;
@@ -190,31 +228,13 @@ class TransactionTransformer extends TransformerAbstract
                 $data['destination_name'] = $transaction->account_name;
                 $data['destination_iban'] = $transaction->account_iban;
                 $data['destination_type'] = $transaction->account_type;
-                break;
-            case TransactionType::TRANSFER === $transaction->transaction_type_type && bccomp($transaction->transaction_amount, '0') > 0:
-                $data['source_id']        = $transaction->opposing_account_id;
-                $data['source_name']      = $transaction->opposing_account_name;
-                $data['source_iban']      = $transaction->opposing_account_iban;
-                $data['source_type']      = $transaction->opposing_account_type;
-                $data['destination_id']   = $transaction->account_id;
-                $data['destination_name'] = $transaction->account_name;
-                $data['destination_iban'] = $transaction->account_iban;
-                $data['destination_type'] = $transaction->account_type;
-                break;
-            case TransactionType::TRANSFER === $transaction->transaction_type_type && bccomp($transaction->transaction_amount, '0') < 0:
-                $data['source_id']        = $transaction->account_id;
-                $data['source_name']      = $transaction->account_name;
-                $data['source_iban']      = $transaction->account_iban;
-                $data['source_type']      = $transaction->account_type;
-                $data['destination_id']   = $transaction->opposing_account_id;
-                $data['destination_name'] = $transaction->opposing_account_name;
-                $data['destination_iban'] = $transaction->opposing_account_iban;
-                $data['destination_type'] = $transaction->opposing_account_type;
-                $data['amount']           = $data['amount'] * -1;
-                $data['foreign_amount']   = is_null($data['foreign_amount']) ? null : $data['foreign_amount'] * -1;
                 break;
             default:
-                throw new FireflyException(sprintf('Cannot handle % s!', $transaction->transaction_type_type));
+                // @codeCoverageIgnoreStart
+                throw new FireflyException(
+                    sprintf('Transaction transformer cannot handle transactions of type "%s"!', $transaction->transaction_type_type)
+                );
+            // @codeCoverageIgnoreEnd
 
         }
 

@@ -132,6 +132,8 @@ class AccountTransformer extends TransformerAbstract
     }
 
     /**
+     * Transform the account.
+     *
      * @param Account $account
      *
      * @return array

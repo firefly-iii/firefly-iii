@@ -24,7 +24,11 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Models\Budget;
+use Illuminate\Support\Collection;
+use League\Fractal\Resource\Collection as FractalCollection;
+use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -50,7 +54,9 @@ class BudgetTransformer extends TransformerAbstract
     protected $parameters;
 
     /**
-     * BillTransformer constructor.
+     * BudgetTransformer constructor.
+     *
+     * @codeCoverageIgnore
      *
      * @param ParameterBag $parameters
      */
@@ -60,6 +66,48 @@ class BudgetTransformer extends TransformerAbstract
     }
 
     /**
+     * Include any transactions.
+     *
+     * @param Budget $budget
+     *
+     * @codeCoverageIgnore
+     * @return FractalCollection
+     */
+    public function includeTransactions(Budget $budget): FractalCollection
+    {
+        $pageSize = intval(app('preferences')->getForUser($budget->user, 'listPageSize', 50)->data);
+
+        // journals always use collector and limited using URL parameters.
+        $collector = new JournalCollector;
+        $collector->setUser($budget->user);
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setBudgets(new Collection([$budget]));
+        if (!is_null($this->parameters->get('start')) && !is_null($this->parameters->get('end'))) {
+            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        }
+        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
+        $journals = $collector->getJournals();
+
+        return $this->collection($journals, new TransactionTransformer($this->parameters), 'transactions');
+    }
+
+    /**
+     * Include the user.
+     *
+     * @param Budget $budget
+     *
+     * @codeCoverageIgnore
+     * @return Item
+     */
+    public function includeUser(Budget $budget): Item
+    {
+        return $this->item($budget->user, new UserTransformer($this->parameters), 'users');
+    }
+
+    /**
+     * Transform a budget.
+     *
      * @param Budget $budget
      *
      * @return array
@@ -70,6 +118,7 @@ class BudgetTransformer extends TransformerAbstract
             'id'         => (int)$budget->id,
             'updated_at' => $budget->updated_at->toAtomString(),
             'created_at' => $budget->created_at->toAtomString(),
+            'active'     => intval($budget->active) === 1,
             'name'       => $budget->name,
             'links'      => [
                 [

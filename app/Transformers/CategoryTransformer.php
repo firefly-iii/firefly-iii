@@ -24,7 +24,11 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Models\Category;
+use Illuminate\Support\Collection;
+use League\Fractal\Resource\Collection as FractalCollection;
+use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -38,7 +42,7 @@ class CategoryTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = ['user','transactions'];
+    protected $availableIncludes = ['user', 'transactions'];
     /**
      * List of resources to automatically include
      *
@@ -50,7 +54,9 @@ class CategoryTransformer extends TransformerAbstract
     protected $parameters;
 
     /**
-     * BillTransformer constructor.
+     * CategoryTransformer constructor.
+     *
+     * @codeCoverageIgnore
      *
      * @param ParameterBag $parameters
      */
@@ -60,6 +66,48 @@ class CategoryTransformer extends TransformerAbstract
     }
 
     /**
+     * Include any transactions.
+     *
+     * @param Category $category
+     *
+     * @codeCoverageIgnore
+     * @return FractalCollection
+     */
+    public function includeTransactions(Category $category): FractalCollection
+    {
+        $pageSize = intval(app('preferences')->getForUser($category->user, 'listPageSize', 50)->data);
+
+        // journals always use collector and limited using URL parameters.
+        $collector = new JournalCollector;
+        $collector->setUser($category->user);
+        $collector->withOpposingAccount()->withCategoryInformation()->withCategoryInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setCategories(new Collection([$category]));
+        if (!is_null($this->parameters->get('start')) && !is_null($this->parameters->get('end'))) {
+            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        }
+        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
+        $journals = $collector->getJournals();
+
+        return $this->collection($journals, new TransactionTransformer($this->parameters), 'transactions');
+    }
+
+    /**
+     * Include the user.
+     *
+     * @param Category $category
+     *
+     * @codeCoverageIgnore
+     * @return Item
+     */
+    public function includeUser(Category $category): Item
+    {
+        return $this->item($category->user, new UserTransformer($this->parameters), 'users');
+    }
+
+    /**
+     * Convert category.
+     *
      * @param Category $category
      *
      * @return array

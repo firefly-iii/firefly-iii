@@ -75,7 +75,7 @@ class BillTransformerTest extends TestCase
     public function testNote()
     {
 
-        $bill        = Bill::create(
+        $bill     = Bill::create(
             [
                 'user_id'     => $this->user()->id,
                 'name'        => 'Some bill ' . rand(1, 10000),
@@ -88,8 +88,8 @@ class BillTransformerTest extends TestCase
                 'active'      => 1,
             ]
         );
-        $noteText    = 'I are a note ' . rand(1, 10000);
-        $note        = Note::create(
+        $noteText = 'I are a note ' . rand(1, 10000);
+        Note::create(
             [
                 'noteable_id'   => $bill->id,
                 'noteable_type' => Bill::class,
@@ -118,7 +118,7 @@ class BillTransformerTest extends TestCase
         // mock stuff
         $repository = $this->mock(BillRepositoryInterface::class);
         $repository->shouldReceive('setUser')->andReturnSelf();
-        $repository->shouldReceive('getPaidDatesInRange')->andReturn(new Collection([new Carbon]));
+        $repository->shouldReceive('getPaidDatesInRange')->andReturn(new Collection([new Carbon('2018-01-02')]));
         $bill       = Bill::create(
             [
                 'user_id'     => $this->user()->id,
@@ -127,7 +127,7 @@ class BillTransformerTest extends TestCase
                 'amount_min'  => 12.34,
                 'amount_max'  => 45.67,
                 'date'        => '2018-01-02',
-                'repeat_freq' => 'weekly',
+                'repeat_freq' => 'monthly',
                 'skip'        => 0,
                 'active'      => 1,
             ]
@@ -140,6 +140,10 @@ class BillTransformerTest extends TestCase
 
         $this->assertEquals($bill->name, $result['name']);
         $this->assertTrue($result['active']);
+        $this->assertCount(1, $result['pay_dates']);
+        $this->assertEquals('2018-01-02', $result['pay_dates'][0]);
+        $this->assertCount(1, $result['paid_dates']);
+        $this->assertEquals('2018-01-02', $result['paid_dates'][0]);
     }
 
 }

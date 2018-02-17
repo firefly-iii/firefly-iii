@@ -38,7 +38,9 @@ class UserTransformer extends TransformerAbstract
     protected $parameters;
 
     /**
-     * BillTransformer constructor.
+     * UserTransformer constructor.
+     *
+     * @codeCoverageIgnore
      *
      * @param ParameterBag $parameters
      */
@@ -48,6 +50,8 @@ class UserTransformer extends TransformerAbstract
     }
 
     /**
+     * Transform user.
+     *
      * @param User $user
      *
      * @return array

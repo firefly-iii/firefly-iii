@@ -32,6 +32,7 @@ use Illuminate\Support\Collection;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
+use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -212,13 +213,18 @@ class BillTransformer extends TransformerAbstract
     }
 
     /**
+     * Get the data the bill was paid and predict the next expected match.
+     *
      * @param Bill $bill
      *
      * @return array
      */
     protected function paidData(Bill $bill): array
     {
+        Log::debug(sprintf('Now in paidData for bill #%d', $bill->id));
         if (is_null($this->parameters->get('start')) || is_null($this->parameters->get('end'))) {
+            Log::debug('parameters are NULL, return empty array');
+
             return [
                 'paid_dates'          => [],
                 'next_expected_match' => null,
@@ -228,7 +234,8 @@ class BillTransformer extends TransformerAbstract
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser($bill->user);
-        $set    = $repository->getPaidDatesInRange($bill, $this->parameters->get('start'), $this->parameters->get('end'));
+        $set = $repository->getPaidDatesInRange($bill, $this->parameters->get('start'), $this->parameters->get('end'));
+        Log::debug(sprintf('Count %d entries in getPaidDatesInRange()', $set->count()));
         $simple = $set->map(
             function (Carbon $date) {
                 return $date->format('Y-m-d');

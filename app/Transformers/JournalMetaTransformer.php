@@ -24,7 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Models\TransactionJournalMeta;
+use Illuminate\Support\Collection;
+use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -38,7 +41,7 @@ class JournalMetaTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = ['journal'];
+    protected $availableIncludes = ['transactions'];
     /**
      * List of resources to automatically include
      *
@@ -50,7 +53,9 @@ class JournalMetaTransformer extends TransformerAbstract
     protected $parameters;
 
     /**
-     * BillTransformer constructor.
+     * JournalMetaTransformer constructor.
+     *
+     * @codeCoverageIgnore
      *
      * @param ParameterBag $parameters
      */
@@ -60,6 +65,36 @@ class JournalMetaTransformer extends TransformerAbstract
     }
 
     /**
+     * Include any transactions.
+     *
+     * @param TransactionJournalMeta $meta
+     *
+     * @codeCoverageIgnore
+     * @return FractalCollection
+     */
+    public function includeTransactions(TransactionJournalMeta $meta): FractalCollection
+    {
+        $journal  = $meta->transactionJournal;
+        $pageSize = intval(app('preferences')->getForUser($journal->user, 'listPageSize', 50)->data);
+
+        // journals always use collector and limited using URL parameters.
+        $collector = new JournalCollector;
+        $collector->setUser($journal->user);
+        $collector->withOpposingAccount()->withCategoryInformation()->withCategoryInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setJournals(new Collection([$journal]));
+        if (!is_null($this->parameters->get('start')) && !is_null($this->parameters->get('end'))) {
+            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        }
+        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
+        $journals = $collector->getJournals();
+
+        return $this->collection($journals, new TransactionTransformer($this->parameters), 'transactions');
+    }
+
+    /**
+     * Convert meta object.
+     *
      * @param TransactionJournalMeta $meta
      *
      * @return array
