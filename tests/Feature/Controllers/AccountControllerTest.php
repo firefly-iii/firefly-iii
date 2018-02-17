@@ -125,6 +125,8 @@ class AccountControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('find')->once()->andReturn(new TransactionCurrency());
         $accountRepos->shouldReceive('getNote')->andReturn($note)->once();
+        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturnNull();
+        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturnNull();
 
         $this->be($this->user());
         $account  = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
