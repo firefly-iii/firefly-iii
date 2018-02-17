@@ -120,6 +120,8 @@ $factory->define(
     function (Faker\Generator $faker) {
         return [
             'id'              => $faker->numberBetween(1, 10),
+            'created_at'      => new Carbon,
+            'updated_at'      => new Carbon,
             'user_id'         => 1,
             'name'            => $faker->words(3, true),
             'match'           => $faker->words(3, true),

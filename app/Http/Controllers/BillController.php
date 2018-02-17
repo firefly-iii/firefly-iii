@@ -37,6 +37,7 @@ use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\DataArraySerializer;
 use Preferences;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use URL;
 use View;
 
@@ -172,11 +173,14 @@ class BillController extends Controller
      */
     public function index(BillRepositoryInterface $repository)
     {
-        $start       = session('start');
-        $end         = session('end');
-        $pageSize    = intval(Preferences::get('listPageSize', 50)->data);
-        $paginator   = $repository->getPaginator($pageSize);
-        $transformer = new BillTransformer($start, $end);
+        $start      = session('start');
+        $end        = session('end');
+        $pageSize   = intval(Preferences::get('listPageSize', 50)->data);
+        $paginator  = $repository->getPaginator($pageSize);
+        $parameters = new ParameterBag();
+        $parameters->set('start', $start);
+        $parameters->set('end', $end);
+        $transformer = new BillTransformer($parameters);
         /** @var Collection $bills */
         $bills = $paginator->getCollection()->map(
             function (Bill $bill) use ($transformer) {
@@ -238,7 +242,10 @@ class BillController extends Controller
         $manager->parseIncludes(['attachments']);
 
         // Make a resource out of the data and
-        $resource = new Item($bill, new BillTransformer($start, $end), 'bill');
+        $parameters = new ParameterBag();
+        $parameters->set('start', $start);
+        $parameters->set('end', $end);
+        $resource = new Item($bill, new BillTransformer($parameters), 'bill');
         $object   = $manager->createData($resource)->toArray();
 
         // use collector:
