@@ -43,6 +43,7 @@ class FrontpageControllerTest extends TestCase
         $piggy      = $this->user()->piggyBanks()->first();
         $repository = $this->mock(PiggyBankRepositoryInterface::class);
         $repository->shouldReceive('getPiggyBanks')->andReturn(new Collection([$piggy]));
+        $repository->shouldReceive('getCurrentAmount')->andReturn('10');
 
         $this->be($this->user());
         $response = $this->get(route('json.fp.piggy-banks'));
