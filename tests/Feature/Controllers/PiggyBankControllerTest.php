@@ -177,6 +177,7 @@ class PiggyBankControllerTest extends TestCase
         $two->account_id = $one->account_id;
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getPiggyBanks')->andReturn(new Collection([$one, $two]));
+        $repository->shouldReceive('getCurrentAmount')->andReturn('10');
 
         Steam::shouldReceive('balanceIgnoreVirtual')->twice()->andReturn('1');
 

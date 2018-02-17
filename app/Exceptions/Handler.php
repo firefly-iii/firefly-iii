@@ -25,10 +25,12 @@ namespace FireflyIII\Exceptions;
 use ErrorException;
 use Exception;
 use FireflyIII\Jobs\MailError;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Illuminate\Validation\ValidationException;
+
 /**
  * Class Handler
  */
@@ -70,6 +72,11 @@ class Handler extends ExceptionHandler
         if ($exception instanceof NotFoundHttpException && $request->expectsJson()) {
             return response()->json(['message' => 'Resource not found', 'exception' => 'NotFoundHttpException'], 404);
         }
+
+        if ($exception instanceof AuthenticationException && $request->expectsJson()) {
+            return response()->json(['message' => 'Unauthenticated', 'exception' => 'AuthenticationException'], 401);
+        }
+
         if ($request->expectsJson()) {
             $isDebug = env('APP_DEBUG', false);
             if ($isDebug) {

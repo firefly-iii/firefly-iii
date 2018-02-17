@@ -47,6 +47,7 @@ class AuthenticateTest extends TestCase
      */
     public function testMiddlewareAjax()
     {
+        //$this->withoutExceptionHandling();
         $server   = ['HTTP_X-Requested-With' => 'XMLHttpRequest'];
         $response = $this->get('/_test/authenticate', $server);
         $this->assertEquals(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
