@@ -56,7 +56,7 @@ class PiggyBank extends Model
     /** @var array */
     protected $dates = ['startdate', 'targetdate'];
     /** @var array */
-    protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate'];
+    protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate', 'active'];
     /** @var array */
     protected $hidden = ['targetamount_encrypted', 'encrypted'];
 

@@ -164,6 +164,24 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
+     * Get current amount saved in piggy bank.
+     *
+     * @param PiggyBank $piggyBank
+     *
+     * @return string
+     */
+    public function getCurrentAmount(PiggyBank $piggyBank): string
+    {
+        /** @var PiggyBankRepetition $rep */
+        $rep = $piggyBank->piggyBankRepetitions()->first(['piggy_bank_repetitions.*']);
+        if (null === $rep) {
+            return '0';
+        }
+
+        return strval($rep->currentamount);
+    }
+
+    /**
      * @param PiggyBank $piggyBank
      *
      * @return Collection

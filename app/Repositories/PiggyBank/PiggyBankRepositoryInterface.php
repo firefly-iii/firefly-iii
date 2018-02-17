@@ -103,6 +103,15 @@ interface PiggyBankRepositoryInterface
     public function find(int $piggyBankid): PiggyBank;
 
     /**
+     * Get current amount saved in piggy bank.
+     *
+     * @param PiggyBank $piggyBank
+     *
+     * @return string
+     */
+    public function getCurrentAmount(PiggyBank $piggyBank): string;
+
+    /**
      * Get all events.
      *
      * @param PiggyBank $piggyBank

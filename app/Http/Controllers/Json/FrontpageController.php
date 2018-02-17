@@ -45,9 +45,8 @@ class FrontpageController extends Controller
         $info = [];
         /** @var PiggyBank $piggyBank */
         foreach ($set as $piggyBank) {
-            $rep    = $piggyBank->currentRelevantRep();
-            $amount = strval($rep->currentamount);
-            if (null !== $rep->id && 1 === bccomp($amount, '0')) {
+            $amount = $repository->getCurrentAmount($piggyBank);
+            if (1 === bccomp($amount, '0')) {
                 // percentage!
                 $pct = round(($amount / $piggyBank->targetamount) * 100);
 
