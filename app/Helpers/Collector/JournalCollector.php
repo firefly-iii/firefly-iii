@@ -273,10 +273,19 @@ class JournalCollector implements JournalCollectorInterface
                 if (null !== $transaction->bill_name) {
                     $transaction->bill_name = Steam::decrypt(intval($transaction->bill_name_encrypted), $transaction->bill_name);
                 }
+                $transaction->account_name          = app('steam')->tryDecrypt($transaction->account_name);
                 $transaction->opposing_account_name = app('steam')->tryDecrypt($transaction->opposing_account_name);
                 $transaction->account_iban          = app('steam')->tryDecrypt($transaction->account_iban);
                 $transaction->opposing_account_iban = app('steam')->tryDecrypt($transaction->opposing_account_iban);
+
+                // budget name
+                $transaction->transaction_journal_budget_name = app('steam')->tryDecrypt($transaction->transaction_journal_budget_name);
+                $transaction->transaction_budget_name         = app('steam')->tryDecrypt($transaction->transaction_budget_name);
+                // category name:
+                $transaction->transaction_journal_category_name = app('steam')->tryDecrypt($transaction->transaction_journal_category_name);
+                $transaction->transaction_category_name         = app('steam')->tryDecrypt($transaction->transaction_category_name);
             }
+
         );
         Log::debug(sprintf('Cached query with ID "%s".', $key));
         $cache->store($set);
