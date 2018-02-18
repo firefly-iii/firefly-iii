@@ -173,6 +173,7 @@ class TransactionControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     * @covers \FireflyIII\Rules\BelongsUser
      */
     public function testFailExpenseID()
     {
@@ -389,6 +390,415 @@ class TransactionControllerTest extends TestCase
                         'This value is invalid for this field.',
                     ],
 
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Submit journal with a bill ID that is not yours.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     * @covers \FireflyiII\Rules\BelongsUser
+     */
+    public function testFailOwnershipBillId()
+    {
+        // move account to other user
+        $bill          = auth()->user()->bills()->first();
+        $bill->user_id = $this->emptyUser()->id;
+        $bill->save();
+
+        // submit with another account.
+        $account = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $data    = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'bill_id'      => $bill->id,
+            'transactions' => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $account->id,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'bill_id' => [
+                        'This value is invalid for this field.',
+                    ],
+
+                ],
+            ]
+        );
+        // put bill back:
+        $bill->user_id = $this->user()->id;
+        $bill->save();
+    }
+
+    /**
+     * Submit journal with a bill ID that is not yours.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     * @covers \FireflyiII\Rules\BelongsUser
+     */
+    public function testFailOwnershipBillName()
+    {
+        // move account to other user
+        $bill          = auth()->user()->bills()->first();
+        $bill->user_id = $this->emptyUser()->id;
+        $bill->save();
+
+        // submit with another account.
+        $account = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $data    = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'bill_name'    => $bill->name,
+            'transactions' => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $account->id,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'bill_name' => [
+                        'This value is invalid for this field.',
+                    ],
+
+                ],
+            ]
+        );
+        // put bill back:
+        $bill->user_id = $this->user()->id;
+        $bill->save();
+    }
+
+    /**
+     * Submit journal with a budget ID that is not yours.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     * @covers \FireflyiII\Rules\BelongsUser
+     */
+    public function testFailOwnershipBudgetId()
+    {
+        // move account to other user
+        $budget          = auth()->user()->budgets()->first();
+        $budget->user_id = $this->emptyUser()->id;
+        $budget->save();
+
+        // submit with another account.
+        $account = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $data    = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'transactions' => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $account->id,
+                    'budget_id'   => $budget->id,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'transactions.0.budget_id' => [
+                        'This value is invalid for this field.',
+                    ],
+
+                ],
+            ]
+        );
+        // put budget back:
+        $budget->user_id = $this->user()->id;
+        $budget->save();
+    }
+
+    /**
+     * Submit journal with a budget name that is not yours.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     * @covers \FireflyiII\Rules\BelongsUser
+     */
+    public function testFailOwnershipBudgetName()
+    {
+        // move account to other user
+        $budget          = auth()->user()->budgets()->first();
+        $budget->user_id = $this->emptyUser()->id;
+        $budget->save();
+
+        // submit with another account.
+        $account = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $data    = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'transactions' => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $account->id,
+                    'budget_name' => $budget->name,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'transactions.0.budget_name' => [
+                        'This value is invalid for this field.',
+                    ],
+
+                ],
+            ]
+        );
+        // put bill back:
+        $budget->user_id = $this->user()->id;
+        $budget->save();
+    }
+
+    /**
+     * Submit journal with a category ID that is not yours.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     * @covers \FireflyiII\Rules\BelongsUser
+     */
+    public function testFailOwnershipCategoryId()
+    {
+        // move account to other user
+        $category          = auth()->user()->categories()->first();
+        $category->user_id = $this->emptyUser()->id;
+        $category->save();
+
+        // submit with another account.
+        $account = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $data    = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'transactions' => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $account->id,
+                    'category_id' => $category->id,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'transactions.0.category_id' => [
+                        'This value is invalid for this field.',
+                    ],
+
+                ],
+            ]
+        );
+        // put category back:
+        $category->user_id = $this->user()->id;
+        $category->save();
+    }
+
+    /**
+     * Submit journal with a piggy bank that is not yours.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     * @covers \FireflyiII\Rules\BelongsUser
+     */
+    public function testFailOwnershipPiggyBankID()
+    {
+        // move account to other user
+        $move                  = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $move->user_id         = $this->emptyUser()->id;
+        $piggyBank             = auth()->user()->piggyBanks()->first();
+        $oldId                 = $piggyBank->account_id;
+        $piggyBank->account_id = $move->id;
+        $move->save();
+        $piggyBank->save();
+
+        // submit with another account.
+        $account = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $data    = [
+            'description'   => 'Some transaction #' . rand(1, 1000),
+            'date'          => '2018-01-01',
+            'type'          => 'withdrawal',
+            'piggy_bank_id' => $piggyBank->id,
+            'transactions'  => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $account->id,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'piggy_bank_id' => [
+                        'This value is invalid for this field.',
+                    ],
+
+                ],
+            ]
+        );
+        // put account back:
+        $move->user_id = $this->user()->id;
+        $move->save();
+        $piggyBank->account_id = $oldId;
+        $piggyBank->save();
+    }
+
+    /**
+     * Submit journal with a piggy bank that is not yours.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     * @covers \FireflyiII\Rules\BelongsUser
+     */
+    public function testFailOwnershipPiggyBankName()
+    {
+        // move account to other user
+        $move                  = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $move->user_id         = $this->emptyUser()->id;
+        $piggyBank             = auth()->user()->piggyBanks()->first();
+        $oldId                 = $piggyBank->account_id;
+        $piggyBank->account_id = $move->id;
+        $move->save();
+        $piggyBank->save();
+
+        // submit with another account.
+        $account = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $data    = [
+            'description'     => 'Some transaction #' . rand(1, 1000),
+            'date'            => '2018-01-01',
+            'type'            => 'withdrawal',
+            'piggy_bank_name' => $piggyBank->name,
+            'transactions'    => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $account->id,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'piggy_bank_name' => [
+                        'This value is invalid for this field.',
+                    ],
+
+                ],
+            ]
+        );
+        // put account back:
+        $move->user_id = $this->user()->id;
+        $move->save();
+        $piggyBank->account_id = $oldId;
+        $piggyBank->save();
+    }
+
+    /**
+     * Submitted revenue account instead of asset account in deposit.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     * @covers \FireflyIII\Rules\BelongsUser
+     */
+    public function testFailRevenueID()
+    {
+        $account = $this->user()->accounts()->where('account_type_id', 4)->first();
+        $data    = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'deposit',
+            'transactions' => [
+                [
+                    'amount'         => '10',
+                    'currency_id'    => 1,
+                    'destination_id' => $account->id,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'transactions.0.destination_id' => [
+                        'This value is invalid for this field.',
+                    ],
                 ],
             ]
         );

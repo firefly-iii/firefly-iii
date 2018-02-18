@@ -48,7 +48,7 @@ class BelongsUser implements Rule
     {
         $attribute = $this->parseAttribute($attribute);
         if (!auth()->check()) {
-            return true;
+            return true; // @codeCoverageIgnore
         }
         $attribute = strval($attribute);
         switch ($attribute) {
@@ -68,6 +68,11 @@ class BelongsUser implements Rule
                 $count = Bill::where('id', '=', intval($value))->where('user_id', '=', auth()->user()->id)->count();
 
                 return $count === 1;
+            case 'bill_name':
+                $count = $this->countField(Bill::class, 'name', $value);
+
+                return $count === 1;
+                break;
             case 'budget_id':
                 $count = Budget::where('id', '=', intval($value))->where('user_id', '=', auth()->user()->id)->count();
 
@@ -89,13 +94,9 @@ class BelongsUser implements Rule
 
                 return $count === 1;
                 break;
-            case 'bill_name':
-                $count = $this->countField(Bill::class, 'name', $value);
 
-                return $count === 1;
-                break;
             default:
-                throw new FireflyException(sprintf('Rule BelongUser cannot handle "%s"', $attribute));
+                throw new FireflyException(sprintf('Rule BelongUser cannot handle "%s"', $attribute)); // @codeCoverageIgnore
         }
     }
 
@@ -143,6 +144,6 @@ class BelongsUser implements Rule
             return $parts[2];
         }
 
-        return $attribute;
+        return $attribute; // @codeCoverageIgnore
     }
 }
