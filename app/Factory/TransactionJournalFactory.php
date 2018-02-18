@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
-use FireflyIII\Events\StoredTransactionJournal;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\PiggyBank;
@@ -74,8 +73,8 @@ class TransactionJournalFactory
     public function create(array $data): TransactionJournal
     {
         $type            = $this->findTransactionType($data['type']);
-        $bill            = $this->findBill($data['bill_id'], $data['bill_name']);
-        $piggyBank       = $this->findPiggyBank($data['piggy_bank_id'], $data['piggy_bank_name']);
+        //$bill            = $this->findBill($data['bill_id'], $data['bill_name']);
+        //$piggyBank       = $this->findPiggyBank($data['piggy_bank_id'], $data['piggy_bank_name']);
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser($this->user);
         $values          = [
             'user_id'                 => $data['user'],
@@ -90,10 +89,6 @@ class TransactionJournalFactory
         ];
 
         $journal = $this->repository->storeBasic($values);
-
-        // todo link other stuff to journal (meta-data etc). tags
-        // todo
-        // start creating transactions:
 
         $factory = app(TransactionFactory::class);
         $factory->setUser($this->user);
@@ -110,6 +105,24 @@ class TransactionJournalFactory
             /** @var PiggyBankEventFactory $factory */
             $factory = app(PiggyBankEventFactory::class);
             $factory->create($journal, $piggyBank);
+        }
+
+        // store tags and link them:
+        /** @var TagFactory $factory */
+        $factory = app(TagFactory::class);
+        $factory->setUser($journal->user);
+        foreach ($data['tags'] as $string) {
+            $tagData = [
+                'tag'         => $string,
+                'date'        => null,
+                'description' => null,
+                'latitude'    => null,
+                'longitude'   => null,
+                'zoom_level'  => null,
+                'user'        => $journal->user,
+            ];
+            $tag     = $factory->create($tagData);
+            $this->repository->addTag($journal, $tag);
         }
 
         return $journal;

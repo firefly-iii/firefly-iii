@@ -546,4 +546,62 @@ class TransactionControllerTest extends TestCase
         );
     }
 
+    /**
+     * Submit the minimum amount of data required to create a withdrawal.
+     * Add some tags as well. Expect to see them in the result.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     */
+    public function testSuccessStoreTags()
+    {
+        $tags    = [
+            'TagOne' . rand(1, 1000),
+            'TagTwoBlarg' . rand(1, 1000),
+            'SomeThreeTag' . rand(1, 1000),
+        ];
+        $account = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $data    = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'tags'         => join(',', $tags),
+            'transactions' => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $account->id,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions?include=tags', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+        foreach ($tags as $tag) {
+            $response->assertSee($tag);
+        }
+        $response->assertJson(
+            [
+                'data' => [
+                    'type'       => 'transactions',
+                    'attributes' => [
+                        'description'      => $data['description'],
+                        'date'             => $data['date'],
+                        'source_id'        => $account->id,
+                        'source_name'      => $account->name,
+                        'type'             => 'Withdrawal',
+                        'source_type'      => 'Asset account',
+                        'destination_name' => 'Cash account',
+                        'destination_type' => 'Cash account',
+                        'amount'           => -10,
+                    ],
+                    'links'      => true,
+                    'includes'   => [],
+                ],
+            ]
+        );
+    }
+
 }
