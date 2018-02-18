@@ -111,30 +111,25 @@ class TransactionFactory
     {
         // all this data is the same for both transactions:
         $currency        = $this->findCurrency($data['currency_id'], $data['currency_code']);
-        $foreignCurrency = $this->findCurrency($data['foreign_currency_id'], $data['foreign_currency_code']);
-        $budget          = $this->findBudget($data['budget_id'], $data['budget_name']);
-        $category        = $this->findCategory($data['category_id'], $data['category_name']);
         $description     = $journal->description === $data['description'] ? null : $data['description'];
 
         // type of source account depends on journal type:
         $sourceType    = $this->accountType($journal, 'source');
         $sourceAccount = $this->findAccount($sourceType, $data['source_id'], $data['source_name']);
-        $sourceFa      = is_null($data['foreign_amount']) ? null : app('steam')->negative(strval($data['foreign_amount']));
 
         // same for destination account:
         $destinationType    = $this->accountType($journal, 'destination');
         $destinationAccount = $this->findAccount($destinationType, $data['destination_id'], $data['destination_name']);
-        $destinationFa      = is_null($data['foreign_amount']) ? null : app('steam')->positive(strval($data['foreign_amount']));
 
         // first make a "negative" (source) transaction based on the data in the array.
         $sourceTransactionData = [
             'description'         => $description,
             'amount'              => app('steam')->negative(strval($data['amount'])),
-            'foreign_amount'      => $sourceFa,
+            'foreign_amount'      => null,
             'currency'            => $currency,
-            'foreign_currency'    => $foreignCurrency,
-            'budget'              => $budget,
-            'category'            => $category,
+            'foreign_currency'    => null,
+            'budget'              => null,
+            'category'            => null,
             'account'             => $sourceAccount,
             'transaction_journal' => $journal,
             'reconciled'          => $data['reconciled'],
@@ -146,11 +141,11 @@ class TransactionFactory
         $destTransactionData = [
             'description'         => $sourceTransactionData['description'],
             'amount'              => app('steam')->positive(strval($data['amount'])),
-            'foreign_amount'      => $destinationFa,
+            'foreign_amount'      => null,
             'currency'            => $currency,
-            'foreign_currency'    => $foreignCurrency,
-            'budget'              => $budget,
-            'category'            => $category,
+            'foreign_currency'    => null,
+            'budget'              => null,
+            'category'            => null,
             'account'             => $destinationAccount,
             'transaction_journal' => $journal,
             'reconciled'          => $data['reconciled'],

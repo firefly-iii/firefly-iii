@@ -72,14 +72,13 @@ class TransactionJournalFactory
      */
     public function create(array $data): TransactionJournal
     {
+        // store basic journal first.
         $type            = $this->findTransactionType($data['type']);
-        //$bill            = $this->findBill($data['bill_id'], $data['bill_name']);
-        //$piggyBank       = $this->findPiggyBank($data['piggy_bank_id'], $data['piggy_bank_name']);
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser($this->user);
         $values          = [
             'user_id'                 => $data['user'],
             'transaction_type_id'     => $type->id,
-            'bill_id'                 => is_null($bill) ? null : $bill->id,
+            'bill_id'                 => null,
             'transaction_currency_id' => $defaultCurrency->id,
             'description'             => $data['description'],
             'date'                    => $data['date']->format('Y-m-d'),
@@ -90,6 +89,7 @@ class TransactionJournalFactory
 
         $journal = $this->repository->storeBasic($values);
 
+        // store basic transactions:
         $factory = app(TransactionFactory::class);
         $factory->setUser($this->user);
 
@@ -99,31 +99,6 @@ class TransactionJournalFactory
             $factory->createPair($journal, $trData);
         }
         $this->repository->markCompleted($journal);
-
-        // link piggy bank:
-        if ($type->type === TransactionType::TRANSFER && !is_null($piggyBank)) {
-            /** @var PiggyBankEventFactory $factory */
-            $factory = app(PiggyBankEventFactory::class);
-            $factory->create($journal, $piggyBank);
-        }
-
-        // store tags and link them:
-        /** @var TagFactory $factory */
-        $factory = app(TagFactory::class);
-        $factory->setUser($journal->user);
-        foreach ($data['tags'] as $string) {
-            $tagData = [
-                'tag'         => $string,
-                'date'        => null,
-                'description' => null,
-                'latitude'    => null,
-                'longitude'   => null,
-                'zoom_level'  => null,
-                'user'        => $journal->user,
-            ];
-            $tag     = $factory->create($tagData);
-            $this->repository->addTag($journal, $tag);
-        }
 
         return $journal;
     }
