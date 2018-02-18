@@ -25,6 +25,7 @@ namespace FireflyIII\Factory;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -95,10 +96,30 @@ class TransactionJournalFactory
 
         /** @var array $trData */
         foreach ($data['transactions'] as $trData) {
-            $trData['reconciled'] = $data['reconciled'] ?? false;
             $factory->createPair($journal, $trData);
         }
         $this->repository->markCompleted($journal);
+
+        // link bill:
+        $this->connectBill($journal, $data);
+
+        // link piggy bank:
+        $this->connectPiggyBank($journal, $data);
+
+        // link tags:
+        $this->connectTags($journal, $data);
+
+        // store note:
+        $this->storeNote($journal, $data['notes']);
+
+        // store date meta fields (if present):
+        $this->storeMeta($journal, $data, 'interest_date');
+        $this->storeMeta($journal, $data, 'book_date');
+        $this->storeMeta($journal, $data, 'process_date');
+        $this->storeMeta($journal, $data, 'due_date');
+        $this->storeMeta($journal, $data, 'payment_date');
+        $this->storeMeta($journal, $data, 'invoice_date');
+        $this->storeMeta($journal, $data, 'internal_reference');
 
         return $journal;
     }
@@ -114,6 +135,49 @@ class TransactionJournalFactory
         $this->repository->setUser($user);
         $this->billRepository->setUser($user);
         $this->piggyRepository->setUser($user);
+    }
+
+    /**
+     * Connect bill if present.
+     *
+     * @param TransactionJournal $journal
+     * @param array              $data
+     */
+    protected function connectBill(TransactionJournal $journal, array $data): void
+    {
+        $bill = $this->findBill($data['bill_id'], $data['bill_name']);
+        if (!is_null($bill)) {
+            $journal->bill_id = $bill->id;
+            $journal->save();
+        }
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $data
+     */
+    protected function connectPiggyBank(TransactionJournal $journal, array $data): void
+    {
+        $piggyBank = $this->findPiggyBank($data['piggy_bank_id'], $data['piggy_bank_name']);
+        if (!is_null($piggyBank)) {
+            /** @var PiggyBankEventFactory $factory */
+            $factory = app(PiggyBankEventFactory::class);
+            $factory->create($journal, $piggyBank);
+        }
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $data
+     */
+    protected function connectTags(TransactionJournal $journal, array $data): void
+    {
+        $factory = app(TagFactory::class);
+        $factory->setUser($journal->user);
+        foreach ($data['tags'] as $string) {
+            $tag = $factory->findOrCreate($string);
+            $journal->tags()->save($tag);
+        }
     }
 
     /**
@@ -201,6 +265,41 @@ class TransactionJournalFactory
         }
 
         return $transactionType;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $data
+     * @param string             $field
+     */
+    protected function storeMeta(TransactionJournal $journal, array $data, string $field): void
+    {
+        $value = $data[$field];
+        if (!is_null($value)) {
+            $set = [
+                'journal' => $journal,
+                'name'    => $field,
+                'data'    => $data[$field],
+            ];
+            /** @var TransactionJournalMetaFactory $factory */
+            $factory = app(TransactionJournalMetaFactory::class);
+            $factory->updateOrCreate($set);
+        }
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param string             $notes
+     */
+    protected function storeNote(TransactionJournal $journal, string $notes): void
+    {
+        if (strlen($notes) > 0) {
+            $note = new Note;
+            $note->noteable()->associate($journal);
+            $note->text = $notes;
+            $note->save();
+        }
+
     }
 
 }

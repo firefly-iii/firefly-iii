@@ -25,12 +25,15 @@ namespace FireflyIII\Factory;
 
 use FireflyIII\Models\Tag;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 
 /**
  * Class TagFactory
  */
 class TagFactory
 {
+    /** @var Collection */
+    private $tags;
     /** @var User */
     private $user;
 
@@ -43,14 +46,6 @@ class TagFactory
     }
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
      * @param array $data
      *
      * @return Tag|null
@@ -59,14 +54,56 @@ class TagFactory
     {
         return Tag::create(
             [
-                'user_id' => $data['user']->id,
-                'tag' => $data['tag'],
-                'tagMode' => 'nothing',
-                'date' => $data['date'],
-                'description'=> $data['description'],
-
+                'user_id'     => $this->user->id,
+                'tag'         => $data['tag'],
+                'tagMode'     => 'nothing',
+                'date'        => $data['date'],
+                'description' => $data['description'],
+                'latitude'    => $data['latitude'],
+                'longitude '  => $data['longitude'],
+                'zoomLevel'   => $data['zoom_level'],
             ]
         );
+    }
+
+    /**
+     * @param string $tag
+     *
+     * @return Tag|null
+     */
+    public function findOrCreate(string $tag): ?Tag
+    {
+        if (is_null($this->tags)) {
+            $this->tags = $this->user->tags()->get();
+        }
+
+        /** @var Tag $object */
+        foreach ($this->tags as $object) {
+            if ($object->tag === $tag) {
+                return $object;
+            }
+        }
+        $newTag = $this->create(
+            [
+                'tag'         => $tag,
+                'date'        => null,
+                'description' => null,
+                'latitude'    => null,
+                'longitude'   => null,
+                'zoom_level'  => null,
+            ]
+        );
+        $this->tags->push($newTag);
+
+        return $newTag;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 
 }

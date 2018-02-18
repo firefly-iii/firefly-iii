@@ -32,6 +32,7 @@ use Illuminate\Validation\Validator;
 
 
 /**
+ * todo cannot submit using currency not part of source / dest
  * Class TransactionRequest
  */
 class TransactionRequest extends Request
@@ -75,7 +76,7 @@ class TransactionRequest extends Request
             'transactions'       => [],
 
         ];
-        foreach ($this->get('transactions') as $transaction) {
+        foreach ($this->get('transactions') as $index => $transaction) {
             $array                  = [
                 'description'           => $transaction['description'] ?? null,
                 'amount'                => $transaction['amount'],
@@ -92,11 +93,12 @@ class TransactionRequest extends Request
                 'source_name'           => $transaction['source_name'] ?? null,
                 'destination_id'        => isset($transaction['destination_id']) ? intval($transaction['destination_id']) : null,
                 'destination_name'      => $transaction['destination_name'] ?? null,
-                'reconciled'            => intval($transaction['reconciled'] ?? 0) === 1 ? true : false,
-                'identifier'            => isset($transaction['identifier']) ? intval($transaction['identifier']) : 0,
+                'reconciled'            => $transaction['reconciled'] ?? false,
+                'identifier'            => $index,
             ];
             $data['transactions'][] = $array;
         }
+
         return $data;
     }
 
@@ -139,7 +141,6 @@ class TransactionRequest extends Request
             'transactions.*.category_id'           => ['mustExist:categories,id', new BelongsUser],
             'transactions.*.category_name'         => 'between:1,255|nullable',
             'transactions.*.reconciled'            => 'boolean|nullable',
-            'transactions.*.identifier'            => 'numeric|nullable',
             // basic rules will be expanded later.
             'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser],
             'transactions.*.source_name'           => 'between:1,255|nullable',

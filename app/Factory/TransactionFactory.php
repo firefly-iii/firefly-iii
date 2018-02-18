@@ -78,8 +78,7 @@ class TransactionFactory
      */
     public function create(array $data): Transaction
     {
-        $foreignCurrencyId = is_null($data['foreign_currency']) ? null : $data['foreign_currency']->id;
-        $values            = [
+        $values      = [
             'reconciled'              => $data['reconciled'],
             'account_id'              => $data['account']->id,
             'transaction_journal_id'  => $data['transaction_journal']->id,
@@ -87,14 +86,10 @@ class TransactionFactory
             'transaction_currency_id' => $data['currency']->id,
             'amount'                  => $data['amount'],
             'foreign_amount'          => $data['foreign_amount'],
-            'foreign_currency_id'     => $foreignCurrencyId,
+            'foreign_currency_id'     => null,
             'identifier'              => $data['identifier'],
         ];
-        $transaction       = $this->repository->storeBasicTransaction($values);
-
-        // todo: add budget, category, etc.
-        // todo link budget, category
-
+        $transaction = $this->repository->storeBasicTransaction($values);
         return $transaction;
     }
 
@@ -110,8 +105,8 @@ class TransactionFactory
     public function createPair(TransactionJournal $journal, array $data): Collection
     {
         // all this data is the same for both transactions:
-        $currency        = $this->findCurrency($data['currency_id'], $data['currency_code']);
-        $description     = $journal->description === $data['description'] ? null : $data['description'];
+        $currency    = $this->findCurrency($data['currency_id'], $data['currency_code']);
+        $description = $journal->description === $data['description'] ? null : $data['description'];
 
         // type of source account depends on journal type:
         $sourceType    = $this->accountType($journal, 'source');
@@ -120,38 +115,52 @@ class TransactionFactory
         // same for destination account:
         $destinationType    = $this->accountType($journal, 'destination');
         $destinationAccount = $this->findAccount($destinationType, $data['destination_id'], $data['destination_name']);
-
         // first make a "negative" (source) transaction based on the data in the array.
-        $sourceTransactionData = [
-            'description'         => $description,
-            'amount'              => app('steam')->negative(strval($data['amount'])),
-            'foreign_amount'      => null,
-            'currency'            => $currency,
-            'foreign_currency'    => null,
-            'budget'              => null,
-            'category'            => null,
-            'account'             => $sourceAccount,
-            'transaction_journal' => $journal,
-            'reconciled'          => $data['reconciled'],
-            'identifier'          => $data['identifier'],
-        ];
-        $source                = $this->create($sourceTransactionData);
-
+        $source = $this->create(
+            [
+                'description'         => $description,
+                'amount'              => app('steam')->negative(strval($data['amount'])),
+                'foreign_amount'      => null,
+                'currency'            => $currency,
+                'account'             => $sourceAccount,
+                'transaction_journal' => $journal,
+                'reconciled'          => $data['reconciled'],
+                'identifier'          => $data['identifier'],
+            ]
+        );
         // then make a "positive" transaction based on the data in the array.
-        $destTransactionData = [
-            'description'         => $sourceTransactionData['description'],
-            'amount'              => app('steam')->positive(strval($data['amount'])),
-            'foreign_amount'      => null,
-            'currency'            => $currency,
-            'foreign_currency'    => null,
-            'budget'              => null,
-            'category'            => null,
-            'account'             => $destinationAccount,
-            'transaction_journal' => $journal,
-            'reconciled'          => $data['reconciled'],
-            'identifier'          => $data['identifier'],
-        ];
-        $dest                = $this->create($destTransactionData);
+        $dest = $this->create(
+            [
+                'description'         => $description,
+                'amount'              => app('steam')->positive(strval($data['amount'])),
+                'foreign_amount'      => null,
+                'currency'            => $currency,
+                'account'             => $destinationAccount,
+                'transaction_journal' => $journal,
+                'reconciled'          => $data['reconciled'],
+                'identifier'          => $data['identifier'],
+            ]
+        );
+        // set foreign currency
+        $foreign = $this->findCurrency($data['foreign_currency_id'], $data['foreign_currency_code']);
+        $this->setForeignCurrency($source, $foreign);
+        $this->setForeignCurrency($dest, $foreign);
+
+        // set foreign amount:
+        if (!is_null($data['foreign_amount'])) {
+            $this->setForeignAmount($source, app('steam')->negative(strval($data['foreign_amount'])));
+            $this->setForeignAmount($dest, app('steam')->positive(strval($data['foreign_amount'])));
+        }
+
+        // set budget:
+        $budget = $this->findBudget($data['budget_id'], $data['budget_name']);
+        $this->setBudget($source, $budget);
+        $this->setBudget($dest, $budget);
+
+        // set category
+        $category = $this->findCategory($data['category_id'], $data['category_name']);
+        $this->setCategory($source, $category);
+        $this->setCategory($dest, $category);
 
         return new Collection([$source, $dest]);
     }
@@ -355,5 +364,58 @@ class TransactionFactory
         }
 
         return null;
+    }
+
+    /**
+     * @param Transaction $transaction
+     * @param Budget|null $budget
+     */
+    protected function setBudget(Transaction $transaction, ?Budget $budget): void
+    {
+        if (is_null($budget)) {
+            return;
+        }
+        $transaction->budgets()->save($budget);
+
+        return;
+    }
+
+    /**
+     * @param Transaction   $transaction
+     * @param Category|null $category
+     */
+    protected function setCategory(Transaction $transaction, ?Category $category): void
+    {
+        if (is_null($category)) {
+            return;
+        }
+        $transaction->categories()->save($category);
+
+        return;
+    }
+
+    /**
+     * @param Transaction $transaction
+     * @param string      $amount
+     */
+    protected function setForeignAmount(Transaction $transaction, string $amount): void
+    {
+        $transaction->foreign_amount = $amount;
+        $transaction->save();
+    }
+
+    /**
+     * @param Transaction              $transaction
+     * @param TransactionCurrency|null $currency
+     */
+    protected function setForeignCurrency(Transaction $transaction, ?TransactionCurrency $currency): void
+    {
+        if (is_null($currency)) {
+            return;
+        }
+        $transaction->foreign_currency_id = $currency->id;
+        $transaction->save();
+
+        return;
     }
 }

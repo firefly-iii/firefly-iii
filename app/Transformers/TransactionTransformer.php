@@ -25,6 +25,7 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -167,6 +168,13 @@ class TransactionTransformer extends TransformerAbstract
             $budgetName = is_null($transaction->transaction_budget_name) ? $transaction->transaction_journal_budget_name
                 : $transaction->transaction_budget_name;
         }
+        /** @var Note $dbNote */
+        $dbNote = $transaction->transactionJournal->notes()->first();
+        $notes = null;
+        if(!is_null($dbNote)) {
+            $notes = $dbNote->text;
+        }
+
         $data = [
             'id'                    => (int)$transaction->id,
             'updated_at'            => $transaction->updated_at->toAtomString(),
@@ -191,6 +199,7 @@ class TransactionTransformer extends TransformerAbstract
             'category_name'         => $categoryName,
             'budget_id'             => $budgetId,
             'budget_name'           => $budgetName,
+            'notes'                 => $notes,
             'links'                 => [
                 [
                     'rel' => 'self',

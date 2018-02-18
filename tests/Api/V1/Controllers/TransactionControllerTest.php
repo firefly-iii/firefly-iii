@@ -26,6 +26,7 @@ namespace Tests\Api\V1\Controllers;
 
 use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -33,6 +34,11 @@ use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 /**
+ * todo test bad budget, bad category
+ * todo test bad piggy, bad bill
+ * todo test fire of rules with parameter
+ * todo test bad currency, bad foreign currency
+ * todo test reconciled, identifier
  * Class TransactionControllerTest
  */
 class TransactionControllerTest extends TestCase
@@ -73,6 +79,7 @@ class TransactionControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController::__construct
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController::index
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::mapTypes
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
@@ -117,6 +124,7 @@ class TransactionControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController::__construct
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController::index
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::mapTypes
      * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function testIndexWithRange()
@@ -430,6 +438,383 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
+     * Submit with existing budget ID, see it reflected in output.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     */
+    public function testSuccessStoreBudgetId()
+    {
+        $budget  = auth()->user()->budgets()->first();
+        $account = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $data    = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'transactions' => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $account->id,
+                    'budget_id'   => $budget->id,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+        $response->assertJson(
+            [
+                'data' => [
+                    'type'       => 'transactions',
+                    'attributes' => [
+                        'description'      => $data['description'],
+                        'date'             => $data['date'],
+                        'source_id'        => $account->id,
+                        'source_name'      => $account->name,
+                        'type'             => 'Withdrawal',
+                        'source_type'      => 'Asset account',
+                        'destination_name' => 'Cash account',
+                        'destination_type' => 'Cash account',
+                        'amount'           => -10,
+                        'budget_id'        => $budget->id,
+                        'budget_name'      => $budget->name,
+                    ],
+                    'links'      => true,
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Submit with existing budget name, see it reflected in output.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     */
+    public function testSuccessStoreBudgetName()
+    {
+        $budget  = auth()->user()->budgets()->first();
+        $account = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $data    = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'transactions' => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $account->id,
+                    'budget_name' => $budget->name,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+        $response->assertJson(
+            [
+                'data' => [
+                    'type'       => 'transactions',
+                    'attributes' => [
+                        'description'      => $data['description'],
+                        'date'             => $data['date'],
+                        'source_id'        => $account->id,
+                        'source_name'      => $account->name,
+                        'type'             => 'Withdrawal',
+                        'source_type'      => 'Asset account',
+                        'destination_name' => 'Cash account',
+                        'destination_type' => 'Cash account',
+                        'amount'           => -10,
+                        'budget_id'        => $budget->id,
+                        'budget_name'      => $budget->name,
+                    ],
+                    'links'      => true,
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Submit with existing category ID, see it reflected in output.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     */
+    public function testSuccessStoreCategoryID()
+    {
+        $category = auth()->user()->categories()->first();
+        $account  = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $data     = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'transactions' => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $account->id,
+                    'category_id' => $category->id,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+        $response->assertJson(
+            [
+                'data' => [
+                    'type'       => 'transactions',
+                    'attributes' => [
+                        'description'      => $data['description'],
+                        'date'             => $data['date'],
+                        'source_id'        => $account->id,
+                        'source_name'      => $account->name,
+                        'type'             => 'Withdrawal',
+                        'source_type'      => 'Asset account',
+                        'destination_name' => 'Cash account',
+                        'destination_type' => 'Cash account',
+                        'amount'           => -10,
+                        'category_id'      => $category->id,
+                        'category_name'    => $category->name,
+                    ],
+                    'links'      => true,
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Submit with existing category ID, see it reflected in output.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     */
+    public function testSuccessStoreCategoryName()
+    {
+        $category = auth()->user()->categories()->first();
+        $account  = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $data     = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'transactions' => [
+                [
+                    'amount'        => '10',
+                    'currency_id'   => 1,
+                    'source_id'     => $account->id,
+                    'category_name' => $category->name,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+        $response->assertJson(
+            [
+                'data' => [
+                    'type'       => 'transactions',
+                    'attributes' => [
+                        'description'      => $data['description'],
+                        'date'             => $data['date'],
+                        'source_id'        => $account->id,
+                        'source_name'      => $account->name,
+                        'type'             => 'Withdrawal',
+                        'source_type'      => 'Asset account',
+                        'destination_name' => 'Cash account',
+                        'destination_type' => 'Cash account',
+                        'amount'           => -10,
+                        'category_id'      => $category->id,
+                        'category_name'    => $category->name,
+                    ],
+                    'links'      => true,
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Add foreign amount information.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     */
+    public function testSuccessStoreForeignAmount()
+    {
+        $currency = TransactionCurrency::first();
+        $foreign  = TransactionCurrency::where('id', '!=', $currency->id)->first();
+        $account  = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $data     = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'transactions' => [
+                [
+                    'amount'              => '10',
+                    'currency_id'         => $currency->id,
+                    'foreign_currency_id' => $foreign->id,
+                    'foreign_amount'      => 23,
+                    'source_id'           => $account->id,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+        $response->assertJson(
+            [
+                'data' => [
+                    'type'       => 'transactions',
+                    'attributes' => [
+                        'description'           => $data['description'],
+                        'date'                  => $data['date'],
+                        'source_id'             => $account->id,
+                        'source_name'           => $account->name,
+                        'type'                  => 'Withdrawal',
+                        'currency_code'         => $currency->code,
+                        'foreign_currency_code' => $foreign->code,
+                        'foreign_amount'        => -23,
+                        'source_type'           => 'Asset account',
+                        'destination_name'      => 'Cash account',
+                        'destination_type'      => 'Cash account',
+                        'amount'                => -10,
+                    ],
+                    'links'      => true,
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Add all available meta data fields.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     */
+    public function testSuccessStoreMetaData()
+    {
+        $account = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $data    = [
+            'description'        => 'Some transaction #' . rand(1, 1000),
+            'date'               => '2018-01-01',
+            'type'               => 'withdrawal',
+            // store date meta fields (if present):
+            'interest_date'      => '2017-08-02',
+            'book_date'          => '2017-08-03',
+            'process_date'       => '2017-08-04',
+            'due_date'           => '2017-08-05',
+            'payment_date'       => '2017-08-06',
+            'invoice_date'       => '2017-08-07',
+            'internal_reference' => 'I are internal ref!',
+            'transactions'       => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $account->id,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions?include=journal_meta', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+        $response->assertSee('interest_date');
+        $response->assertSee('book_date');
+        $response->assertSee('process_date');
+        $response->assertSee('due_date');
+        $response->assertSee('payment_date');
+        $response->assertSee('invoice_date');
+        $response->assertSee('internal_reference');
+        $response->assertSee('2017-08-02');
+        $response->assertSee('2017-08-03');
+        $response->assertSee('2017-08-04');
+        $response->assertSee('2017-08-05');
+        $response->assertSee('2017-08-06');
+        $response->assertSee('2017-08-07');
+        $response->assertSee('I are internal ref!');
+        $response->assertJson(
+            [
+                'data' => [
+                    'type'       => 'transactions',
+                    'attributes' => [
+                        'description'      => $data['description'],
+                        'date'             => $data['date'],
+                        'source_id'        => $account->id,
+                        'source_name'      => $account->name,
+                        'type'             => 'Withdrawal',
+                        'source_type'      => 'Asset account',
+                        'destination_name' => 'Cash account',
+                        'destination_type' => 'Cash account',
+                        'amount'           => -10,
+                    ],
+                    'links'      => true,
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Submit the minimum amount of data required to create a withdrawal.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     */
+    public function testSuccessStoreNotes()
+    {
+        $account = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $data    = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'notes'        => 'I am a note',
+            'transactions' => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $account->id,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+        $response->assertSee('I am a note');
+        $response->assertJson(
+            [
+                'data' => [
+                    'type'       => 'transactions',
+                    'attributes' => [
+                        'description'      => $data['description'],
+                        'date'             => $data['date'],
+                        'source_id'        => $account->id,
+                        'source_name'      => $account->name,
+                        'type'             => 'Withdrawal',
+                        'source_type'      => 'Asset account',
+                        'destination_name' => 'Cash account',
+                        'destination_type' => 'Cash account',
+                        'amount'           => -10,
+                        'notes'            => 'I am a note',
+                    ],
+                    'links'      => true,
+                ],
+            ]
+        );
+    }
+
+    /**
      * Submit the minimum amount of data required to create a withdrawal.
      * When sending a piggy bank by name, this must be reflected in the output.
      *
@@ -547,6 +932,55 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
+     * Set a different reconciled var
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     */
+    public function testSuccessStoreReconciled()
+    {
+        $account = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $data    = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'transactions' => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $account->id,
+                    'reconciled'  => true,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+        $response->assertJson(
+            [
+                'data' => [
+                    'type'       => 'transactions',
+                    'attributes' => [
+                        'description'      => $data['description'],
+                        'date'             => $data['date'],
+                        'source_id'        => $account->id,
+                        'source_name'      => $account->name,
+                        'type'             => 'Withdrawal',
+                        'source_type'      => 'Asset account',
+                        'destination_name' => 'Cash account',
+                        'destination_type' => 'Cash account',
+                        'amount'           => -10,
+                        'reconciled'       => true,
+                    ],
+                    'links'      => true,
+                ],
+            ]
+        );
+    }
+
+    /**
      * Submit the minimum amount of data required to create a withdrawal.
      * Add some tags as well. Expect to see them in the result.
      *
@@ -584,9 +1018,9 @@ class TransactionControllerTest extends TestCase
         }
         $response->assertJson(
             [
-                'data' => [
-                    'type'       => 'transactions',
-                    'attributes' => [
+                'data'     => [
+                    'type'          => 'transactions',
+                    'attributes'    => [
                         'description'      => $data['description'],
                         'date'             => $data['date'],
                         'source_id'        => $account->id,
@@ -597,9 +1031,10 @@ class TransactionControllerTest extends TestCase
                         'destination_type' => 'Cash account',
                         'amount'           => -10,
                     ],
-                    'links'      => true,
-                    'includes'   => [],
+                    'links'         => [],
+                    'relationships' => [],
                 ],
+                'included' => [],
             ]
         );
     }

@@ -212,9 +212,9 @@ class FireflyValidator extends Validator
      */
     public function validateMore($attribute, $value, $parameters): bool
     {
-        $compare = $parameters[0] ?? '0';
+        $compare = strval($parameters[0] ?? '0');
 
-        return bccomp($value, $compare) > 0;
+        return bccomp(strval($value), $compare) > 0;
     }
 
     /**
