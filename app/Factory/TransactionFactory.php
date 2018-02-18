@@ -241,8 +241,10 @@ class TransactionFactory
                     return $this->accountRepository->findNull($accountId);
                 }
                 if (strlen($accountName) > 0) {
-                    // alternatively, return by name. Validator should catch invalid names.
-                    return $this->accountRepository->findByName($accountName, [AccountType::EXPENSE]);
+                    /** @var AccountFactory $factory */
+                    $factory = app(AccountFactory::class);
+                    $factory->setUser($this->user);
+                    return $factory->findOrCreate($accountName, AccountType::EXPENSE);
                 }
 
                 // return cash account:
@@ -254,8 +256,11 @@ class TransactionFactory
                     return $this->accountRepository->findNull($accountId);
                 }
                 if (strlen($accountName) > 0) {
-                    // alternatively, return by name. Validator should catch invalid names.
-                    return $this->accountRepository->findByName($accountName, [AccountType::REVENUE]);
+                    // alternatively, return by name.
+                    /** @var AccountFactory $factory */
+                    $factory = app(AccountFactory::class);
+                    $factory->setUser($this->user);
+                    return $factory->findOrCreate($accountName, AccountType::REVENUE);
                 }
 
                 // return cash account:

@@ -90,9 +90,9 @@ class TransactionRequest extends Request
                 'category_id'           => isset($transaction['category_id']) ? intval($transaction['category_id']) : null,
                 'category_name'         => $transaction['category_name'] ?? null,
                 'source_id'             => isset($transaction['source_id']) ? intval($transaction['source_id']) : null,
-                'source_name'           => $transaction['source_name'] ?? null,
+                'source_name'           => isset($transaction['source_name']) ? strval($transaction['source_name']) : null,
                 'destination_id'        => isset($transaction['destination_id']) ? intval($transaction['destination_id']) : null,
-                'destination_name'      => $transaction['destination_name'] ?? null,
+                'destination_name'      => isset($transaction['destination_name']) ? strval($transaction['destination_name']) : null,
                 'reconciled'            => $transaction['reconciled'] ?? false,
                 'identifier'            => $index,
             ];
@@ -356,11 +356,8 @@ class TransactionRequest extends Request
             // we ignore the account name at this point.
             return;
         }
-        $account = $repository->findByName($accountName, [$type]);
-        if (is_null($account)) {
-            $validator->errors()->add($nameField, trans('validation.belongs_user'));
-        }
 
+        // not having an opposing account by this name is NOT a problem.
         return;
     }
 
