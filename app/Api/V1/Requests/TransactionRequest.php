@@ -77,27 +77,26 @@ class TransactionRequest extends Request
         ];
         foreach ($this->get('transactions') as $transaction) {
             $array                  = [
-                'description'              => $transaction['description'] ?? null,
-                'amount'                   => $transaction['amount'],
-                'currency_id'              => isset($transaction['currency_id']) ? intval($transaction['currency_id']) : null,
-                'currency_code'            => isset($transaction['currency_code']) ? $transaction['currency_code'] : null,
-                'foreign_amount'           => $transaction['foreign_amount'] ?? null,
-                'foreign_currency_id'      => isset($transaction['foreign_currency_id']) ? intval($transaction['foreign_currency_id']) : null,
-                'foreign_currency_code'    => $transaction['foreign_currency_code'] ?? null,
-                'budget_id'                => isset($transaction['budget_id']) ? intval($transaction['budget_id']) : null,
-                'budget_name'              => $transaction['budget_name'] ?? null,
-                'category_id'              => isset($transaction['category_id']) ? intval($transaction['category_id']) : null,
-                'category_name'            => $transaction['category_name'] ?? null,
-                'source_account_id'        => isset($transaction['source_account_id']) ? intval($transaction['source_account_id']) : null,
-                'source_account_name'      => $transaction['source_account_name'] ?? null,
-                'destination_account_id'   => isset($transaction['destination_account_id']) ? intval($transaction['destination_account_id']) : null,
-                'destination_account_name' => $transaction['destination_account_name'] ?? null,
-                'reconciled'               => intval($transaction['reconciled'] ?? 0) === 1 ? true : false,
-                'identifier'               => isset($transaction['identifier']) ? intval($transaction['identifier']) : 0,
+                'description'           => $transaction['description'] ?? null,
+                'amount'                => $transaction['amount'],
+                'currency_id'           => isset($transaction['currency_id']) ? intval($transaction['currency_id']) : null,
+                'currency_code'         => isset($transaction['currency_code']) ? $transaction['currency_code'] : null,
+                'foreign_amount'        => $transaction['foreign_amount'] ?? null,
+                'foreign_currency_id'   => isset($transaction['foreign_currency_id']) ? intval($transaction['foreign_currency_id']) : null,
+                'foreign_currency_code' => $transaction['foreign_currency_code'] ?? null,
+                'budget_id'             => isset($transaction['budget_id']) ? intval($transaction['budget_id']) : null,
+                'budget_name'           => $transaction['budget_name'] ?? null,
+                'category_id'           => isset($transaction['category_id']) ? intval($transaction['category_id']) : null,
+                'category_name'         => $transaction['category_name'] ?? null,
+                'source_id'             => isset($transaction['source_id']) ? intval($transaction['source_id']) : null,
+                'source_name'           => $transaction['source_name'] ?? null,
+                'destination_id'        => isset($transaction['destination_id']) ? intval($transaction['destination_id']) : null,
+                'destination_name'      => $transaction['destination_name'] ?? null,
+                'reconciled'            => intval($transaction['reconciled'] ?? 0) === 1 ? true : false,
+                'identifier'            => isset($transaction['identifier']) ? intval($transaction['identifier']) : 0,
             ];
             $data['transactions'][] = $array;
         }
-
         return $data;
     }
 
@@ -108,44 +107,44 @@ class TransactionRequest extends Request
     {
         return [
             // basic fields for journal:
-            'type'                                    => 'required|in:withdrawal,deposit,transfer',
-            'date'                                    => 'required|date',
-            'description'                             => 'between:1,255',
-            'piggy_bank_id'                           => ['numeric', 'nullable', 'mustExist:piggy_banks,id', new BelongsUser],
-            'piggy_bank_name'                         => ['between:1,255', 'nullable', new BelongsUser],
-            'bill_id'                                 => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser],
-            'bill_name'                               => ['between:1,255', 'nullable', new BelongsUser],
-            'tags'                                    => 'between:1,255',
+            'type'                                 => 'required|in:withdrawal,deposit,transfer',
+            'date'                                 => 'required|date',
+            'description'                          => 'between:1,255',
+            'piggy_bank_id'                        => ['numeric', 'nullable', 'mustExist:piggy_banks,id', new BelongsUser],
+            'piggy_bank_name'                      => ['between:1,255', 'nullable', new BelongsUser],
+            'bill_id'                              => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser],
+            'bill_name'                            => ['between:1,255', 'nullable', new BelongsUser],
+            'tags'                                 => 'between:1,255',
 
             // then, custom fields for journal
-            'interest_date'                           => 'date|nullable',
-            'book_date'                               => 'date|nullable',
-            'process_date'                            => 'date|nullable',
-            'due_date'                                => 'date|nullable',
-            'payment_date'                            => 'date|nullable',
-            'invoice_date'                            => 'date|nullable',
-            'internal_reference'                      => 'min:1,max:255|nullable',
-            'notes'                                   => 'min:1,max:50000|nullable',
+            'interest_date'                        => 'date|nullable',
+            'book_date'                            => 'date|nullable',
+            'process_date'                         => 'date|nullable',
+            'due_date'                             => 'date|nullable',
+            'payment_date'                         => 'date|nullable',
+            'invoice_date'                         => 'date|nullable',
+            'internal_reference'                   => 'min:1,max:255|nullable',
+            'notes'                                => 'min:1,max:50000|nullable',
 
             // transaction rules (in array for splits):
-            'transactions.*.description'              => 'nullable|between:1,255',
-            'transactions.*.amount'                   => 'required|numeric|more:0',
-            'transactions.*.currency_id'              => 'numeric|exists:transaction_currencies,id|required_without:transactions.*.currency_code',
-            'transactions.*.currency_code'            => 'min:3|max:3|exists:transaction_currencies,code|required_without:transactions.*.currency_id',
-            'transactions.*.foreign_amount'           => 'numeric|more:0',
-            'transactions.*.foreign_currency_id'      => 'numeric|exists:transaction_currencies,id',
-            'transactions.*.foreign_currency_code'    => 'min:3|max:3|exists:transaction_currencies,code',
-            'transactions.*.budget_id'                => ['mustExist:budgets,id', new BelongsUser],
-            'transactions.*.budget_name'              => ['between:1,255', 'nullable', new BelongsUser],
-            'transactions.*.category_id'              => ['mustExist:categories,id', new BelongsUser],
-            'transactions.*.category_name'            => 'between:1,255|nullable',
-            'transactions.*.reconciled'               => 'boolean|nullable',
-            'transactions.*.identifier'               => 'numeric|nullable',
+            'transactions.*.description'           => 'nullable|between:1,255',
+            'transactions.*.amount'                => 'required|numeric|more:0',
+            'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id|required_without:transactions.*.currency_code',
+            'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code|required_without:transactions.*.currency_id',
+            'transactions.*.foreign_amount'        => 'numeric|more:0',
+            'transactions.*.foreign_currency_id'   => 'numeric|exists:transaction_currencies,id',
+            'transactions.*.foreign_currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
+            'transactions.*.budget_id'             => ['mustExist:budgets,id', new BelongsUser],
+            'transactions.*.budget_name'           => ['between:1,255', 'nullable', new BelongsUser],
+            'transactions.*.category_id'           => ['mustExist:categories,id', new BelongsUser],
+            'transactions.*.category_name'         => 'between:1,255|nullable',
+            'transactions.*.reconciled'            => 'boolean|nullable',
+            'transactions.*.identifier'            => 'numeric|nullable',
             // basic rules will be expanded later.
-            'transactions.*.source_account_id'        => ['numeric', 'nullable', new BelongsUser],
-            'transactions.*.source_account_name'      => 'between:1,255|nullable',
-            'transactions.*.destination_account_id'   => ['numeric', 'nullable', new BelongsUser],
-            'transactions.*.destination_account_name' => 'between:1,255|nullable',
+            'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser],
+            'transactions.*.source_name'           => 'between:1,255|nullable',
+            'transactions.*.destination_id'        => ['numeric', 'nullable', new BelongsUser],
+            'transactions.*.destination_name'      => 'between:1,255|nullable',
 
             // todo tags
 
@@ -377,37 +376,37 @@ class TransactionRequest extends Request
         $transactions = $data['transactions'] ?? [];
         foreach ($transactions as $index => $transaction) {
 
-            $sourceId        = isset($transaction['source_account_id']) ? intval($transaction['source_account_id']) : null;
-            $sourceName      = $transaction['source_account_name'] ?? null;
-            $destinationId   = isset($transaction['destination_account_id']) ? intval($transaction['destination_account_id']) : null;
-            $destinationName = $transaction['destination_account_name'] ?? null;
+            $sourceId        = isset($transaction['source_id']) ? intval($transaction['source_id']) : null;
+            $sourceName      = $transaction['source_name'] ?? null;
+            $destinationId   = isset($transaction['destination_id']) ? intval($transaction['destination_id']) : null;
+            $destinationName = $transaction['destination_name'] ?? null;
 
             switch ($data['type']) {
                 case 'withdrawal':
-                    $idField   = 'transactions.' . $index . '.source_account_id';
-                    $nameField = 'transactions.' . $index . '.source_account_name';
+                    $idField   = 'transactions.' . $index . '.source_id';
+                    $nameField = 'transactions.' . $index . '.source_name';
                     $this->assetAccountExists($validator, $sourceId, $sourceName, $idField, $nameField);
 
-                    $idField   = 'transactions.' . $index . '.destination_account_id';
-                    $nameField = 'transactions.' . $index . '.destination_account_name';
+                    $idField   = 'transactions.' . $index . '.destination_id';
+                    $nameField = 'transactions.' . $index . '.destination_name';
                     $this->opposingAccountExists($validator, AccountType::EXPENSE, $destinationId, $destinationName, $idField, $nameField);
                     break;
                 case 'deposit':
-                    $idField   = 'transactions.' . $index . '.source_account_id';
-                    $nameField = 'transactions.' . $index . '.source_account_name';
+                    $idField   = 'transactions.' . $index . '.source_id';
+                    $nameField = 'transactions.' . $index . '.source_name';
                     $this->opposingAccountExists($validator, AccountType::REVENUE, $sourceId, $sourceName, $idField, $nameField);
 
-                    $idField   = 'transactions.' . $index . '.destination_account_id';
-                    $nameField = 'transactions.' . $index . '.destination_account_name';
+                    $idField   = 'transactions.' . $index . '.destination_id';
+                    $nameField = 'transactions.' . $index . '.destination_name';
                     $this->assetAccountExists($validator, $destinationId, $destinationName, $idField, $nameField);
                     break;
                 case 'transfer':
-                    $idField   = 'transactions.' . $index . '.source_account_id';
-                    $nameField = 'transactions.' . $index . '.source_account_name';
+                    $idField   = 'transactions.' . $index . '.source_id';
+                    $nameField = 'transactions.' . $index . '.source_name';
                     $this->assetAccountExists($validator, $sourceId, $sourceName, $idField, $nameField);
 
-                    $idField   = 'transactions.' . $index . '.destination_account_id';
-                    $nameField = 'transactions.' . $index . '.destination_account_name';
+                    $idField   = 'transactions.' . $index . '.destination_id';
+                    $nameField = 'transactions.' . $index . '.destination_name';
                     $this->assetAccountExists($validator, $destinationId, $destinationName, $idField, $nameField);
                     break;
                 default:

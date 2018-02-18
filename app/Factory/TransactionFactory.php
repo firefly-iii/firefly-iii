@@ -46,8 +46,30 @@ use Illuminate\Support\Collection;
  */
 class TransactionFactory
 {
+    /** @var AccountRepositoryInterface */
+    private $accountRepository;
+    /** @var BudgetRepositoryInterface */
+    private $budgetRepository;
+    /** @var CategoryRepositoryInterface */
+    private $categoryRepository;
+    /** @var CurrencyRepositoryInterface */
+    private $currencyRepository;
+    /** @var JournalRepositoryInterface */
+    private $repository;
     /** @var User */
     private $user;
+
+    /**
+     * TransactionFactory constructor.
+     */
+    public function __construct()
+    {
+        $this->repository         = app(JournalRepositoryInterface::class);
+        $this->accountRepository  = app(AccountRepositoryInterface::class);
+        $this->budgetRepository   = app(BudgetRepositoryInterface::class);
+        $this->categoryRepository = app(CategoryRepositoryInterface::class);
+        $this->currencyRepository = app(CurrencyRepositoryInterface::class);
+    }
 
     /**
      * @param array $data
@@ -68,12 +90,10 @@ class TransactionFactory
             'foreign_currency_id'     => $foreignCurrencyId,
             'identifier'              => $data['identifier'],
         ];
-        /** @var JournalRepositoryInterface $repository */
-        $repository  = app(JournalRepositoryInterface::class);
-        $transaction = $repository->storeBasicTransaction($values);
+        $transaction       = $this->repository->storeBasicTransaction($values);
 
         // todo: add budget, category, etc.
-
+        // todo link budget, category
 
         return $transaction;
     }
@@ -94,21 +114,23 @@ class TransactionFactory
         $foreignCurrency = $this->findCurrency($data['foreign_currency_id'], $data['foreign_currency_code']);
         $budget          = $this->findBudget($data['budget_id'], $data['budget_name']);
         $category        = $this->findCategory($data['category_id'], $data['category_name']);
-
+        $description     = $journal->description === $data['description'] ? null : $data['description'];
 
         // type of source account depends on journal type:
         $sourceType    = $this->accountType($journal, 'source');
-        $sourceAccount = $this->findAccount($sourceType, $data['source_account_id'], $data['source_account_name']);
+        $sourceAccount = $this->findAccount($sourceType, $data['source_id'], $data['source_name']);
+        $sourceFa      = is_null($data['foreign_amount']) ? null : app('steam')->negative(strval($data['foreign_amount']));
 
         // same for destination account:
         $destinationType    = $this->accountType($journal, 'destination');
-        $destinationAccount = $this->findAccount($destinationType, $data['destination_account_id'], $data['destination_account_name']);
+        $destinationAccount = $this->findAccount($destinationType, $data['destination_id'], $data['destination_name']);
+        $destinationFa      = is_null($data['foreign_amount']) ? null : app('steam')->positive(strval($data['foreign_amount']));
 
         // first make a "negative" (source) transaction based on the data in the array.
         $sourceTransactionData = [
-            'description'         => $journal->description === $data['description'] ? null : $data['description'],
+            'description'         => $description,
             'amount'              => app('steam')->negative(strval($data['amount'])),
-            'foreign_amount'      => is_null($data['foreign_amount']) ? null : app('steam')->negative(strval($data['foreign_amount'])),
+            'foreign_amount'      => $sourceFa,
             'currency'            => $currency,
             'foreign_currency'    => $foreignCurrency,
             'budget'              => $budget,
@@ -124,7 +146,7 @@ class TransactionFactory
         $destTransactionData = [
             'description'         => $sourceTransactionData['description'],
             'amount'              => app('steam')->positive(strval($data['amount'])),
-            'foreign_amount'      => is_null($data['foreign_amount']) ? null : app('steam')->positive(strval($data['foreign_amount'])),
+            'foreign_amount'      => $destinationFa,
             'currency'            => $currency,
             'foreign_currency'    => $foreignCurrency,
             'budget'              => $budget,
@@ -136,8 +158,6 @@ class TransactionFactory
         ];
         $dest                = $this->create($destTransactionData);
 
-        // todo link budget, category
-
         return new Collection([$source, $dest]);
     }
 
@@ -147,6 +167,11 @@ class TransactionFactory
     public function setUser(User $user)
     {
         $this->user = $user;
+        $this->repository->setUser($user);
+        $this->accountRepository->setUser($user);
+        $this->budgetRepository->setUser($user);
+        $this->categoryRepository->setUser($user);
+        $this->currencyRepository->setUser($user);
     }
 
     /**
@@ -195,45 +220,42 @@ class TransactionFactory
     {
         $accountId   = intval($accountId);
         $accountName = strval($accountName);
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $repository->setUser($this->user);
 
         switch ($expectedType) {
             case AccountType::ASSET:
                 if ($accountId > 0) {
                     // must be able to find it based on ID. Validator should catch invalid ID's.
-                    return $repository->findNull($accountId);
+                    return $this->accountRepository->findNull($accountId);
                 }
 
                 // alternatively, return by name. Validator should catch invalid names.
-                return $repository->findByName($accountName, [AccountType::ASSET]);
+                return $this->accountRepository->findByName($accountName, [AccountType::ASSET]);
                 break;
             case AccountType::EXPENSE:
                 if ($accountId > 0) {
                     // must be able to find it based on ID. Validator should catch invalid ID's.
-                    return $repository->findNull($accountId);
+                    return $this->accountRepository->findNull($accountId);
                 }
                 if (strlen($accountName) > 0) {
                     // alternatively, return by name. Validator should catch invalid names.
-                    return $repository->findByName($accountName, [AccountType::EXPENSE]);
+                    return $this->accountRepository->findByName($accountName, [AccountType::EXPENSE]);
                 }
 
                 // return cash account:
-                return $repository->getCashAccount();
+                return $this->accountRepository->getCashAccount();
                 break;
             case AccountType::REVENUE:
                 if ($accountId > 0) {
                     // must be able to find it based on ID. Validator should catch invalid ID's.
-                    return $repository->findNull($accountId);
+                    return $this->accountRepository->findNull($accountId);
                 }
                 if (strlen($accountName) > 0) {
                     // alternatively, return by name. Validator should catch invalid names.
-                    return $repository->findByName($accountName, [AccountType::REVENUE]);
+                    return $this->accountRepository->findByName($accountName, [AccountType::REVENUE]);
                 }
 
                 // return cash account:
-                return $repository->getCashAccount();
+                return $this->accountRepository->getCashAccount();
 
             default:
                 throw new FireflyException(sprintf('Cannot find account of type "%s".', $expectedType));
@@ -254,21 +276,17 @@ class TransactionFactory
         if (strlen($budgetName) === 0 && $budgetId === 0) {
             return null;
         }
-        /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
-        $budget     = null;
-        $repository->setUser($this->user);
 
         // first by ID:
         if ($budgetId > 0) {
-            $budget = $repository->findNull($budgetId);
+            $budget = $this->budgetRepository->findNull($budgetId);
             if (!is_null($budget)) {
                 return $budget;
             }
         }
 
         if (strlen($budgetName) > 0) {
-            $budget = $repository->findByName($budgetName);
+            $budget = $this->budgetRepository->findByName($budgetName);
             if (!is_null($budget)) {
                 return $budget;
             }
@@ -291,25 +309,21 @@ class TransactionFactory
         if (strlen($categoryName) === 0 && $categoryId === 0) {
             return null;
         }
-        /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
-        $category   = null;
-        $repository->setUser($this->user);
-
         // first by ID:
         if ($categoryId > 0) {
-            $category = $repository->findNull($categoryId);
+            $category = $this->categoryRepository->findNull($categoryId);
             if (!is_null($category)) {
                 return $category;
             }
         }
 
         if (strlen($categoryName) > 0) {
-            $category = $repository->findByName($categoryName);
+            $category = $this->categoryRepository->findByName($categoryName);
             if (!is_null($category)) {
                 return $category;
             }
             // create it?
+            die('create category');
         }
 
         return null;
@@ -329,21 +343,17 @@ class TransactionFactory
         if (strlen($currencyCode) === 0 && intval($currencyId) === 0) {
             return null;
         }
-        /** @var CurrencyRepositoryInterface $repository */
-        $repository = app(CurrencyRepositoryInterface::class);
-        $currency   = null;
-        $repository->setUser($this->user);
 
         // first by ID:
         if ($currencyId > 0) {
-            $currency = $repository->findNull($currencyId);
+            $currency = $this->currencyRepository->findNull($currencyId);
             if (!is_null($currency)) {
                 return $currency;
             }
         }
         // then by code:
         if (strlen($currencyCode) > 0) {
-            $currency = $repository->findByCodeNull($currencyCode);
+            $currency = $this->currencyRepository->findByCodeNull($currencyCode);
             if (!is_null($currency)) {
                 return $currency;
             }

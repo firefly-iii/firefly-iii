@@ -230,7 +230,7 @@ class SingleController extends Controller
         $type = $transactionJournal->transactionTypeStr();
         Session::flash('success', strval(trans('firefly.deleted_' . strtolower($type), ['description' => $transactionJournal->description])));
 
-        $this->repository->delete($transactionJournal);
+        $this->repository->destroy($transactionJournal);
 
         Preferences::mark();
 

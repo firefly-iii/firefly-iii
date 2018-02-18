@@ -164,6 +164,26 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
+     * Find by name or return NULL.
+     *
+     * @param string $name
+     *
+     * @return PiggyBank|null
+     */
+    public function findByName(string $name): ?PiggyBank
+    {
+        $set = $this->user->piggyBanks()->get(['piggy_banks.*']);
+        /** @var PiggyBank $piggy */
+        foreach ($set as $piggy) {
+            if ($piggy->name === $name) {
+                return $piggy;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Get current amount saved in piggy bank.
      *
      * @param PiggyBank $piggyBank

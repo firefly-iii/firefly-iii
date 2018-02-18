@@ -25,6 +25,7 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Tag;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
@@ -77,7 +78,7 @@ class TagTransformer extends TransformerAbstract
         $pageSize = intval(app('preferences')->getForUser($tag->user, 'listPageSize', 50)->data);
 
         // journals always use collector and limited using URL parameters.
-        $collector = new JournalCollector;
+        $collector = app(JournalCollectorInterface::class);
         $collector->setUser($tag->user);
         $collector->withOpposingAccount()->withCategoryInformation()->withCategoryInformation();
         $collector->setAllAssetAccounts();

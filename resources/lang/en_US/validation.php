@@ -89,6 +89,7 @@ return [
     'required_without_all'           => 'The :attribute field is required when none of :values are present.',
     'same'                           => 'The :attribute and :other must match.',
     'size.numeric'                   => 'The :attribute must be :size.',
+    'amount_min_over_max'            => 'The minimum amount cannot be larger than the maximum amount.',
     'size.file'                      => 'The :attribute must be :size kilobytes.',
     'size.string'                    => 'The :attribute must be :size characters.',
     'size.array'                     => 'The :attribute must contain :size items.',

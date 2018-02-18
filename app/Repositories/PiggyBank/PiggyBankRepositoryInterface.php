@@ -103,6 +103,15 @@ interface PiggyBankRepositoryInterface
     public function find(int $piggyBankid): PiggyBank;
 
     /**
+     * Find by name or return NULL.
+     *
+     * @param string $name
+     *
+     * @return PiggyBank|null
+     */
+    public function findByName(string $name): ?PiggyBank;
+
+    /**
      * Get current amount saved in piggy bank.
      *
      * @param PiggyBank $piggyBank

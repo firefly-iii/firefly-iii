@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use Illuminate\Validation\Validator;
+
 /**
  * Class BillRequest
  */
@@ -92,5 +94,26 @@ class BillRequest extends Request
         }
 
         return $rules;
+    }
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  Validator $validator
+     *
+     * @return void
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(
+            function (Validator $validator) {
+                $data = $validator->getData();
+                $min  = floatval($data['amount_min']);
+                $max  = floatval($data['amount_max']);
+                if ($min > $max) {
+                    $validator->errors()->add('amount_min', trans('validation.amount_min_over_max'));
+                }
+            }
+        );
     }
 }

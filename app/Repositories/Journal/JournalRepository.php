@@ -107,7 +107,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @throws \Exception
      */
-    public function delete(TransactionJournal $journal): bool
+    public function destroy(TransactionJournal $journal): bool
     {
         $journal->delete();
 

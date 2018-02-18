@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tests\Api\V1\Controllers;
 
-use FireflyIII\Transformers\UserTransformer;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -63,6 +62,7 @@ class AboutControllerTest extends TestCase
 
     /**
      * Test user end point
+     *
      * @covers \FireflyIII\Api\V1\Controllers\AboutController::user
      */
     public function testUser()

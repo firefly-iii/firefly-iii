@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers;
 use FireflyIII\Api\V1\Requests\TransactionRequest;
 use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\PositiveAmountFilter;
@@ -107,7 +108,7 @@ class TransactionController extends Controller
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         // collect transactions using the journal collector
-        $collector = new JournalCollector;
+        $collector = app(JournalCollectorInterface::class);
         $collector->setUser(auth()->user());
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setAllAssetAccounts();
@@ -130,7 +131,7 @@ class TransactionController extends Controller
         $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
-        return response()->json($manager->createData($resource)->toArray());
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
 
@@ -152,7 +153,7 @@ class TransactionController extends Controller
 
         // needs a lot of extra data to match the journal collector. Or just expand that one.
         // collect transactions using the journal collector
-        $collector = new JournalCollector;
+        $collector = app(JournalCollectorInterface::class);
         $collector->setUser(auth()->user());
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         // filter on specific journals.
@@ -167,11 +168,10 @@ class TransactionController extends Controller
             $collector->addFilter(NegativeAmountFilter::class);
         }
 
-        $transaction = $collector->getJournals();
+        $transactions = $collector->getJournals();
+        $resource = new Item($transactions->first(), new TransactionTransformer($this->parameters), 'transactions');
 
-        $resource = new FractalCollection($transaction, new TransactionTransformer($this->parameters), 'transactions');
-
-        return response()->json($manager->createData($resource)->toArray());
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**
@@ -199,7 +199,7 @@ class TransactionController extends Controller
 
         // needs a lot of extra data to match the journal collector. Or just expand that one.
         // collect transactions using the journal collector
-        $collector = new JournalCollector;
+        $collector = app(JournalCollectorInterface::class);
         $collector->setUser(auth()->user());
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         // filter on specific journals.
@@ -214,10 +214,10 @@ class TransactionController extends Controller
             $collector->addFilter(NegativeAmountFilter::class);
         }
 
-        $transaction = $collector->getJournals();
-        $resource = new FractalCollection($transaction, new TransactionTransformer($this->parameters), 'transactions');
+        $transactions = $collector->getJournals();
+        $resource     = new Item($transactions->first(), new TransactionTransformer($this->parameters), 'transactions');
 
-        return response()->json($manager->createData($resource)->toArray());
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
 
@@ -238,7 +238,7 @@ class TransactionController extends Controller
 
         $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
 
-        return response()->json($manager->createData($resource)->toArray());
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
     }
 
@@ -308,7 +308,7 @@ class TransactionController extends Controller
             return $types[$type];
         }
 
-        return $types['default'];
+        return $types['default']; // @codeCoverageIgnore
 
     }
 }

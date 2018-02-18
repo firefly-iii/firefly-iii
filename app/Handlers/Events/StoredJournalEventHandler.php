@@ -85,7 +85,7 @@ class StoredJournalEventHandler
         }
 
         // piggy exists?
-        if (null === $piggyBank->id) {
+        if (null === $piggyBank) {
             Log::error(sprintf('There is no piggy bank with ID #%d', $piggyBankId));
 
             return true;

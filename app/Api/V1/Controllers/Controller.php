@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class Controller.
+ * @codeCoverageIgnore
  */
 class Controller extends BaseController
 {

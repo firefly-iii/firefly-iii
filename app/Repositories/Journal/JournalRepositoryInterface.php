@@ -60,7 +60,7 @@ interface JournalRepositoryInterface
      *
      * @return bool
      */
-    public function delete(TransactionJournal $journal): bool;
+    public function destroy(TransactionJournal $journal): bool;
 
     /**
      * Find a specific journal.

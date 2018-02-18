@@ -83,8 +83,8 @@ class BelongsUser implements Rule
 
                 return $count === 1;
                 break;
-            case 'source_account_id':
-            case 'destination_account_id':
+            case 'source_id':
+            case 'destination_id':
                 $count = Account::where('id', '=', intval($value))->where('user_id', '=', auth()->user()->id)->count();
 
                 return $count === 1;

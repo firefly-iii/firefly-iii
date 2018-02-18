@@ -25,6 +25,7 @@ namespace FireflyIII\Transformers;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -96,7 +97,7 @@ class BillTransformer extends TransformerAbstract
         $pageSize = intval(app('preferences')->getForUser($bill->user, 'listPageSize', 50)->data);
 
         // journals always use collector and limited using URL parameters.
-        $collector = new JournalCollector;
+        $collector = app(JournalCollectorInterface::class);
         $collector->setUser($bill->user);
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setAllAssetAccounts();

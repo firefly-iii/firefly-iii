@@ -25,6 +25,7 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -94,7 +95,7 @@ class PiggyBankEventTransformer extends TransformerAbstract
         $pageSize = intval(app('preferences')->getForUser($journal->user, 'listPageSize', 50)->data);
 
         // journals always use collector and limited using URL parameters.
-        $collector = new JournalCollector;
+        $collector = app(JournalCollectorInterface::class);
         $collector->setUser($journal->user);
         $collector->withOpposingAccount()->withCategoryInformation()->withCategoryInformation();
         $collector->setAllAssetAccounts();

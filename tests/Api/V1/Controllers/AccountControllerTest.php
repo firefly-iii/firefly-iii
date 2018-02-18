@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tests\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\AccountRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -50,7 +49,7 @@ class AccountControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController::delete
      */
-    public function testDestroy()
+    public function testDelete()
     {
         // mock stuff:
         $repository    = $this->mock(AccountRepositoryInterface::class);
@@ -434,11 +433,11 @@ class AccountControllerTest extends TestCase
         $account = $this->user()->accounts()->first();
         // data to submit
         $data = [
-            'name'         => $account->name,
-            'currency_code'  => 'EUR',
-            'type'         => 'asset',
-            'active'       => 1,
-            'account_role' => 'defaultAsset',
+            'name'          => $account->name,
+            'currency_code' => 'EUR',
+            'type'          => 'asset',
+            'active'        => 1,
+            'account_role'  => 'defaultAsset',
         ];
 
         // test API

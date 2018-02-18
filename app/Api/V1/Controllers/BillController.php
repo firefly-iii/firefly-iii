@@ -98,7 +98,7 @@ class BillController extends Controller
         $resource = new FractalCollection($bills, new BillTransformer($this->parameters), 'bills');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
-        return response()->json($manager->createData($resource)->toArray());
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
 
@@ -120,7 +120,7 @@ class BillController extends Controller
 
         $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
 
-        return response()->json($manager->createData($resource)->toArray());
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**
@@ -137,7 +137,7 @@ class BillController extends Controller
 
         $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
 
-        return response()->json($manager->createData($resource)->toArray());
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
     }
 
@@ -158,7 +158,7 @@ class BillController extends Controller
 
         $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
 
-        return response()->json($manager->createData($resource)->toArray());
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
     }
 }
