@@ -32,7 +32,6 @@ use Illuminate\Validation\Validator;
 
 
 /**
- * todo cannot submit using currency not part of source / dest
  * Class TransactionRequest
  */
 class TransactionRequest extends Request
@@ -146,9 +145,6 @@ class TransactionRequest extends Request
             'transactions.*.source_name'           => 'between:1,255|nullable',
             'transactions.*.destination_id'        => ['numeric', 'nullable', new BelongsUser],
             'transactions.*.destination_name'      => 'between:1,255|nullable',
-
-            // todo tags
-
         ];
     }
 

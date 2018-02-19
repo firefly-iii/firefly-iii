@@ -34,11 +34,7 @@ use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 /**
- * todo test bad budget, bad category
- * todo test bad piggy, bad bill
  * todo test fire of rules with parameter
- * todo test bad currency, bad foreign currency
- * todo test reconciled, identifier
  * Class TransactionControllerTest
  */
 class TransactionControllerTest extends TestCase
@@ -74,6 +70,80 @@ class TransactionControllerTest extends TestCase
         $response = $this->delete('/api/v1/transactions/' . $transaction->id);
         $response->assertStatus(204);
 
+    }
+
+    /**
+     * Submit with bad currency code
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     */
+    public function testFailCurrencyCode()
+    {
+        $account = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $data    = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'transactions' => [
+                [
+                    'amount'        => '10',
+                    'currency_code' => 'FU2',
+                    'source_id'     => $account->id,
+                ],
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'transactions.0.currency_code' => [
+                        'The selected transactions.0.currency_code is invalid.',
+                    ],
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Submit with bad currency ID.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     */
+    public function testFailCurrencyId()
+    {
+        $account = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $data    = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'transactions' => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1991,
+                    'source_id'   => $account->id,
+                ],
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'transactions.0.currency_id' => [
+                        'The selected transactions.0.currency_id is invalid.',
+                    ],
+                ],
+            ]
+        );
     }
 
     /**
@@ -1859,6 +1929,54 @@ class TransactionControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
+    public function testSuccessStorePiggyDeposit()
+    {
+        $dest  = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $piggy = auth()->user()->piggyBanks()->first();
+        $data  = [
+            'description'     => 'Some deposit #' . rand(1, 1000),
+            'date'            => '2018-01-01',
+            'type'            => 'deposit',
+            'piggy_bank_name' => $piggy->name,
+            'transactions'    => [
+                [
+                    'amount'         => '10',
+                    'currency_id'    => 1,
+                    'destination_id' => $dest->id,
+                ],
+            ],
+        ];
+        // test API
+        $response = $this->post('/api/v1/transactions?include=piggy_bank_events', $data, ['Accept' => 'application/json']);
+        $this->assertFalse(isset($response->json()['included']));
+        $response->assertStatus(200);
+        $response->assertJson(
+            [
+                'data'     => [
+                    'type'       => 'transactions',
+                    'attributes' => [
+                        'description'      => $data['description'],
+                        'date'             => $data['date'],
+                        'type'             => 'Deposit',
+                        'destination_id'   => $dest->id,
+                        'destination_name' => $dest->name,
+                        'destination_type' => 'Asset account',
+                        'amount'           => 10,
+                    ],
+                    'links'      => [],
+                ],
+            ]
+        );
+
+    }
+
+    /**
+     * Submit the minimum amount of data required to create a withdrawal.
+     * When sending a piggy bank by name, this must be reflected in the output.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     */
     public function testSuccessStorePiggyId()
     {
         $source = auth()->user()->accounts()->where('account_type_id', 3)->first();
@@ -1914,7 +2032,6 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit the minimum amount of data required to create a withdrawal.
      * When sending a piggy bank by name, this must be reflected in the output.
-     * TODO only when sending a transfer. Ignore it with withdrawals.
      *
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest

@@ -339,6 +339,10 @@ class SingleController extends Controller
         $doSplit       = 1 === intval($request->get('split_journal'));
         $createAnother = 1 === intval($request->get('create_another'));
         $data          = $request->getJournalData();
+
+        // todo call factory instead of repository
+
+
         $journal       = $repository->store($data);
         if (null === $journal->id) {
             // error!

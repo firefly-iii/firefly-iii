@@ -45,12 +45,13 @@ class PiggyBankEventFactory
      */
     public function create(TransactionJournal $journal, ?PiggyBank $piggyBank): ?PiggyBankEvent
     {
+        Log::debug(sprintf('Now in PiggyBankEventCreate for a %s', $journal->transactionType->type));
         if (is_null($piggyBank)) {
             return null;
         }
 
         // is a transfer?
-        if (!TransactionType::TRANSFER === $journal->transactionType->type) {
+        if (!(TransactionType::TRANSFER === $journal->transactionType->type)) {
             Log::info(sprintf('Will not connect %s #%d to a piggy bank.', $journal->transactionType->type, $journal->id));
 
             return null;
