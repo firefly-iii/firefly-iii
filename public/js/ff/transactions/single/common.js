@@ -47,16 +47,21 @@ function runModernizer() {
 function setCommonAutocomplete() {
     $.getJSON('json/tags').done(function (data) {
         var opt = {
-            source: data,
-            afterSelect: function () {
-                this.$element.val("");
+            typeahead: {
+                source: data,
+                afterSelect: function () {
+                    this.$element.val("");
+
+                }
             },
             autoSelect: false,
         };
+
         $('input[name="tags"]').tagsinput(
             opt
         );
     });
+
 
     if ($('input[name="destination_account_name"]').length > 0) {
         $.getJSON('json/expense-accounts').done(function (data) {
