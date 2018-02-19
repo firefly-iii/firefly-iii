@@ -40,9 +40,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
 
 /**
- * todo: test foreign amount.
- * todo: test transfer left, test transfer right.
- * todo: test transaction description
  * Class TransactionTransformerTest
  */
 class TransactionTransformerTest extends TestCase

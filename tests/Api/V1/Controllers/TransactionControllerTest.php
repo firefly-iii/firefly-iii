@@ -1140,7 +1140,6 @@ class TransactionControllerTest extends TestCase
 
     /**
      * Submit a transaction (withdrawal) with attached bill ID
-     * TODO also test deposit / transfer (should be ignored).
      *
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
