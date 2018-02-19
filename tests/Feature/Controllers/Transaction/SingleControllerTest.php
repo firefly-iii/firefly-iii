@@ -112,7 +112,7 @@ class SingleControllerTest extends TestCase
         // mock
         $repository = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('delete')->once();
+        $repository->shouldReceive('destroy')->once();
 
         $this->session(['transactions.delete.uri' => 'http://localhost']);
         $this->be($this->user());

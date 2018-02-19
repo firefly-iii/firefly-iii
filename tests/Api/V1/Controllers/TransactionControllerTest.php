@@ -1422,7 +1422,7 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * Submit with existing category ID, see it reflected in output.
+     * Submit with existing category name, see it reflected in output.
      *
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
@@ -1591,6 +1591,57 @@ class TransactionControllerTest extends TestCase
                         'destination_name' => 'Cash account',
                         'destination_type' => 'Cash account',
                         'amount'           => -10,
+                    ],
+                    'links'      => true,
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Submit with NEW category name, see it reflected in output.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     */
+    public function testSuccessStoreNewCategoryName()
+    {
+        $account = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $name    = 'Some new category #' . rand(1, 1000);
+        $data    = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'transactions' => [
+                [
+                    'amount'        => '10',
+                    'currency_id'   => 1,
+                    'source_id'     => $account->id,
+                    'category_name' => $name,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+        $response->assertJson(
+            [
+                'data' => [
+                    'type'       => 'transactions',
+                    'attributes' => [
+                        'description'      => $data['description'],
+                        'date'             => $data['date'],
+                        'source_id'        => $account->id,
+                        'source_name'      => $account->name,
+                        'type'             => 'Withdrawal',
+                        'source_type'      => 'Asset account',
+                        'destination_name' => 'Cash account',
+                        'destination_type' => 'Cash account',
+                        'amount'           => -10,
+                        'category_name'    => $name,
                     ],
                     'links'      => true,
                 ],
