@@ -82,9 +82,9 @@ class BudgetController extends Controller
      */
     public function amount(Request $request, BudgetRepositoryInterface $repository, Budget $budget)
     {
-        $amount      = strval($request->get('amount'));
-        $start       = Carbon::createFromFormat('Y-m-d', $request->get('start'));
-        $end         = Carbon::createFromFormat('Y-m-d', $request->get('end'));
+        $amount = strval($request->get('amount'));
+        $start  = Carbon::createFromFormat('Y-m-d', $request->get('start'));
+        $end    = Carbon::createFromFormat('Y-m-d', $request->get('end'));
         $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
         if (0 === bccomp($amount, '0')) {
             $budgetLimit = null;
@@ -421,7 +421,7 @@ class BudgetController extends Controller
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $amount          = $request->get('amount');
         $page            = $request->integer('page') === 0 ? 1 : $request->integer('page');
-
+        $this->repository->cleanupBudgets();
         $this->repository->setAvailableBudget($defaultCurrency, $start, $end, $amount);
         Preferences::mark();
 
@@ -504,7 +504,7 @@ class BudgetController extends Controller
     {
         $data   = $request->getBudgetData();
         $budget = $this->repository->store($data);
-
+        $this->repository->cleanupBudgets();
         $request->session()->flash('success', strval(trans('firefly.stored_new_budget', ['name' => $budget->name])));
         Preferences::mark();
 
@@ -531,6 +531,7 @@ class BudgetController extends Controller
         $this->repository->update($budget, $data);
 
         $request->session()->flash('success', strval(trans('firefly.updated_budget', ['name' => $budget->name])));
+        $this->repository->cleanupBudgets();
         Preferences::mark();
 
         if (1 === intval($request->get('return_to_edit'))) {
