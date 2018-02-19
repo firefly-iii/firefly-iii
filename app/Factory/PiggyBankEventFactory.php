@@ -26,11 +26,13 @@ namespace FireflyIII\Factory;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Log;
 
 /**
+ * Create piggy bank events.
+ *
  * Class PiggyBankEventFactory
  */
 class PiggyBankEventFactory
@@ -46,20 +48,17 @@ class PiggyBankEventFactory
         if (is_null($piggyBank)) {
             return null;
         }
-        /** @var JournalRepositoryInterface $repository */
-        $repository = app(JournalRepositoryInterface::class);
-        /** @var PiggyBankRepositoryInterface $piggyRepos */
-        $piggyRepos = app(PiggyBankRepositoryInterface::class);
-        $repository->setUser($journal->user);
-        $piggyRepos->setUser($journal->user);
-
 
         // is a transfer?
-        if (!$repository->isTransfer($journal)) {
+        if (!TransactionType::TRANSFER === $journal->transactionType->type) {
             Log::info(sprintf('Will not connect %s #%d to a piggy bank.', $journal->transactionType->type, $journal->id));
 
             return null;
         }
+
+        /** @var PiggyBankRepositoryInterface $piggyRepos */
+        $piggyRepos = app(PiggyBankRepositoryInterface::class);
+        $piggyRepos->setUser($journal->user);
 
         // repetition exists?
         $repetition = $piggyRepos->getRepetition($piggyBank, $journal->date);

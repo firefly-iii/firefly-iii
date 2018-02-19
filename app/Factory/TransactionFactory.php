@@ -34,10 +34,6 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
@@ -48,14 +44,6 @@ class TransactionFactory
 {
     /** @var AccountRepositoryInterface */
     private $accountRepository;
-    /** @var BudgetRepositoryInterface */
-    private $budgetRepository;
-    /** @var CategoryRepositoryInterface */
-    private $categoryRepository;
-    /** @var CurrencyRepositoryInterface */
-    private $currencyRepository;
-    /** @var JournalRepositoryInterface */
-    private $repository;
     /** @var User */
     private $user;
 
@@ -64,11 +52,7 @@ class TransactionFactory
      */
     public function __construct()
     {
-        $this->repository         = app(JournalRepositoryInterface::class);
-        $this->accountRepository  = app(AccountRepositoryInterface::class);
-        $this->budgetRepository   = app(BudgetRepositoryInterface::class);
-        $this->categoryRepository = app(CategoryRepositoryInterface::class);
-        $this->currencyRepository = app(CurrencyRepositoryInterface::class);
+        $this->accountRepository = app(AccountRepositoryInterface::class);
     }
 
     /**
@@ -78,19 +62,19 @@ class TransactionFactory
      */
     public function create(array $data): Transaction
     {
-        $values      = [
-            'reconciled'              => $data['reconciled'],
-            'account_id'              => $data['account']->id,
-            'transaction_journal_id'  => $data['transaction_journal']->id,
-            'description'             => $data['description'],
-            'transaction_currency_id' => $data['currency']->id,
-            'amount'                  => $data['amount'],
-            'foreign_amount'          => $data['foreign_amount'],
-            'foreign_currency_id'     => null,
-            'identifier'              => $data['identifier'],
-        ];
-        $transaction = $this->repository->storeBasicTransaction($values);
-        return $transaction;
+        return Transaction::create(
+            [
+                'reconciled'              => $data['reconciled'],
+                'account_id'              => $data['account']->id,
+                'transaction_journal_id'  => $data['transaction_journal']->id,
+                'description'             => $data['description'],
+                'transaction_currency_id' => $data['currency']->id,
+                'amount'                  => $data['amount'],
+                'foreign_amount'          => $data['foreign_amount'],
+                'foreign_currency_id'     => null,
+                'identifier'              => $data['identifier'],
+            ]
+        );
     }
 
     /**
@@ -141,6 +125,7 @@ class TransactionFactory
                 'identifier'          => $data['identifier'],
             ]
         );
+
         // set foreign currency
         $foreign = $this->findCurrency($data['foreign_currency_id'], $data['foreign_currency_code']);
         $this->setForeignCurrency($source, $foreign);
@@ -171,11 +156,7 @@ class TransactionFactory
     public function setUser(User $user)
     {
         $this->user = $user;
-        $this->repository->setUser($user);
         $this->accountRepository->setUser($user);
-        $this->budgetRepository->setUser($user);
-        $this->categoryRepository->setUser($user);
-        $this->currencyRepository->setUser($user);
     }
 
     /**
@@ -244,6 +225,7 @@ class TransactionFactory
                     /** @var AccountFactory $factory */
                     $factory = app(AccountFactory::class);
                     $factory->setUser($this->user);
+
                     return $factory->findOrCreate($accountName, AccountType::EXPENSE);
                 }
 
@@ -260,6 +242,7 @@ class TransactionFactory
                     /** @var AccountFactory $factory */
                     $factory = app(AccountFactory::class);
                     $factory->setUser($this->user);
+
                     return $factory->findOrCreate($accountName, AccountType::REVENUE);
                 }
 
@@ -280,28 +263,11 @@ class TransactionFactory
      */
     protected function findBudget(?int $budgetId, ?string $budgetName): ?Budget
     {
-        $budgetId   = intval($budgetId);
-        $budgetName = strval($budgetName);
-        if (strlen($budgetName) === 0 && $budgetId === 0) {
-            return null;
-        }
+        /** @var BudgetFactory $factory */
+        $factory = app(BudgetFactory::class);
+        $factory->setUser($this->user);
 
-        // first by ID:
-        if ($budgetId > 0) {
-            $budget = $this->budgetRepository->findNull($budgetId);
-            if (!is_null($budget)) {
-                return $budget;
-            }
-        }
-
-        if (strlen($budgetName) > 0) {
-            $budget = $this->budgetRepository->findByName($budgetName);
-            if (!is_null($budget)) {
-                return $budget;
-            }
-        }
-
-        return null;
+        return $factory->find($budgetId, $budgetName);
     }
 
     /**
@@ -312,30 +278,11 @@ class TransactionFactory
      */
     protected function findCategory(?int $categoryId, ?string $categoryName): ?Category
     {
-        $categoryId   = intval($categoryId);
-        $categoryName = strval($categoryName);
+        /** @var CategoryFactory $factory */
+        $factory = app(CategoryFactory::class);
+        $factory->setUser($this->user);
 
-        if (strlen($categoryName) === 0 && $categoryId === 0) {
-            return null;
-        }
-        // first by ID:
-        if ($categoryId > 0) {
-            $category = $this->categoryRepository->findNull($categoryId);
-            if (!is_null($category)) {
-                return $category;
-            }
-        }
-
-        if (strlen($categoryName) > 0) {
-            $category = $this->categoryRepository->findByName($categoryName);
-            if (!is_null($category)) {
-                return $category;
-            }
-            // create it?
-            die('create category');
-        }
-
-        return null;
+        return $factory->findOrCreate($categoryId, $categoryName);
     }
 
     /**
@@ -346,29 +293,9 @@ class TransactionFactory
      */
     protected function findCurrency(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {
-        $currencyCode = strval($currencyCode);
-        $currencyId   = intval($currencyId);
+        $factory = app(TransactionCurrencyFactory::class);
 
-        if (strlen($currencyCode) === 0 && intval($currencyId) === 0) {
-            return null;
-        }
-
-        // first by ID:
-        if ($currencyId > 0) {
-            $currency = $this->currencyRepository->findNull($currencyId);
-            if (!is_null($currency)) {
-                return $currency;
-            }
-        }
-        // then by code:
-        if (strlen($currencyCode) > 0) {
-            $currency = $this->currencyRepository->findByCodeNull($currencyCode);
-            if (!is_null($currency)) {
-                return $currency;
-            }
-        }
-
-        return null;
+        return $factory->find($currencyId, $currencyCode);
     }
 
     /**

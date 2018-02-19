@@ -28,20 +28,14 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\User;
 
 /**
+ * Factory to create or return accounts.
+ *
  * Class AccountFactory
  */
 class AccountFactory
 {
     /** @var User */
     private $user;
-
-    /**
-     * TagFactory constructor.
-     */
-    public function __construct()
-    {
-
-    }
 
     /**
      * @param array $data
@@ -71,7 +65,7 @@ class AccountFactory
             }
         }
 
-        $newAccount = $this->create(
+        return $this->create(
             [
                 'user_id'         => $this->user->id,
                 'name'            => $accountName,
@@ -81,7 +75,6 @@ class AccountFactory
                 'active'          => true,
             ]
         );
-        return $newAccount;
     }
 
     /**

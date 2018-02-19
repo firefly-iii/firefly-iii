@@ -38,14 +38,6 @@ class TagFactory
     private $user;
 
     /**
-     * TagFactory constructor.
-     */
-    public function __construct()
-    {
-
-    }
-
-    /**
      * @param array $data
      *
      * @return Tag|null
@@ -83,6 +75,7 @@ class TagFactory
                 return $object;
             }
         }
+
         $newTag = $this->create(
             [
                 'tag'         => $tag,

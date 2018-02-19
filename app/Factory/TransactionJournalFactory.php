@@ -24,15 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
-use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
-use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\User;
 
 /**
@@ -40,28 +34,8 @@ use FireflyIII\User;
  */
 class TransactionJournalFactory
 {
-    /** @var BillRepositoryInterface */
-    private $billRepository;
-    /** @var PiggyBankRepositoryInterface */
-    private $piggyRepository;
-    /** @var JournalRepositoryInterface */
-    private $repository;
-    /** @var TransactionTypeRepositoryInterface */
-    private $ttRepository;
     /** @var User */
     private $user;
-
-    /**
-     * TransactionJournalFactory constructor.
-     */
-    public function __construct()
-    {
-        $this->repository      = app(JournalRepositoryInterface::class);
-        $this->billRepository  = app(BillRepositoryInterface::class);
-        $this->piggyRepository = app(PiggyBankRepositoryInterface::class);
-        $this->ttRepository    = app(TransactionTypeRepositoryInterface::class);
-
-    }
 
     /**
      * Create a new transaction journal and associated transactions.
@@ -76,19 +50,19 @@ class TransactionJournalFactory
         // store basic journal first.
         $type            = $this->findTransactionType($data['type']);
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser($this->user);
-        $values          = [
-            'user_id'                 => $data['user'],
-            'transaction_type_id'     => $type->id,
-            'bill_id'                 => null,
-            'transaction_currency_id' => $defaultCurrency->id,
-            'description'             => $data['description'],
-            'date'                    => $data['date']->format('Y-m-d'),
-            'order'                   => 0,
-            'tag_count'               => 0,
-            'completed'               => 0,
-        ];
-
-        $journal = $this->repository->storeBasic($values);
+        $journal         = TransactionJournal::create(
+            [
+                'user_id'                 => $data['user'],
+                'transaction_type_id'     => $type->id,
+                'bill_id'                 => null,
+                'transaction_currency_id' => $defaultCurrency->id,
+                'description'             => $data['description'],
+                'date'                    => $data['date']->format('Y-m-d'),
+                'order'                   => 0,
+                'tag_count'               => 0,
+                'completed'               => 0,
+            ]
+        );
 
         // store basic transactions:
         $factory = app(TransactionFactory::class);
@@ -98,7 +72,8 @@ class TransactionJournalFactory
         foreach ($data['transactions'] as $trData) {
             $factory->createPair($journal, $trData);
         }
-        $this->repository->markCompleted($journal);
+        $journal->completed = true;
+        $journal->save();
 
         // link bill:
         $this->connectBill($journal, $data);
@@ -132,9 +107,6 @@ class TransactionJournalFactory
     public function setUser(User $user): void
     {
         $this->user = $user;
-        $this->repository->setUser($user);
-        $this->billRepository->setUser($user);
-        $this->piggyRepository->setUser($user);
     }
 
     /**
@@ -145,7 +117,11 @@ class TransactionJournalFactory
      */
     protected function connectBill(TransactionJournal $journal, array $data): void
     {
-        $bill = $this->findBill($data['bill_id'], $data['bill_name']);
+        /** @var BillFactory $factory */
+        $factory = app(BillFactory::class);
+        $factory->setUser($this->user);
+        $bill = $factory->find($data['bill_id'], $data['bill_name']);
+
         if (!is_null($bill)) {
             $journal->bill_id = $bill->id;
             $journal->save();
@@ -158,7 +134,11 @@ class TransactionJournalFactory
      */
     protected function connectPiggyBank(TransactionJournal $journal, array $data): void
     {
-        $piggyBank = $this->findPiggyBank($data['piggy_bank_id'], $data['piggy_bank_name']);
+        /** @var PiggyBankFactory $factory */
+        $factory = app(PiggyBankFactory::class);
+        $factory->setUser($this->user);
+
+        $piggyBank = $factory->find($data['piggy_bank_id'], $data['piggy_bank_name']);
         if (!is_null($piggyBank)) {
             /** @var PiggyBankEventFactory $factory */
             $factory = app(PiggyBankEventFactory::class);
@@ -181,74 +161,6 @@ class TransactionJournalFactory
     }
 
     /**
-     * Find the given bill based on the ID or the name. ID takes precedence over the name.
-     *
-     * @param int    $billId
-     * @param string $billName
-     *
-     * @return Bill|null
-     */
-    protected function findBill(int $billId, string $billName): ?Bill
-    {
-        if (strlen($billName) === 0 && $billId === 0) {
-            return null;
-        }
-        // first find by ID:
-        if ($billId > 0) {
-            /** @var Bill $bill */
-            $bill = $this->billRepository->find($billId);
-            if (!is_null($bill)) {
-                return $bill;
-            }
-        }
-
-        // then find by name:
-        if (strlen($billName) > 0) {
-            $bill = $this->billRepository->findByName($billName);
-            if (!is_null($bill)) {
-                return $bill;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Find the given bill based on the ID or the name. ID takes precedence over the name.
-     *
-     * @param int    $piggyBankId
-     * @param string $piggyBankName
-     *
-     * @return PiggyBank|null
-     */
-    protected function findPiggyBank(int $piggyBankId, string $piggyBankName): ?PiggyBank
-    {
-        if (strlen($piggyBankName) === 0 && $piggyBankId === 0) {
-            return null;
-        }
-        // first find by ID:
-        if ($piggyBankId > 0) {
-            /** @var PiggyBank $piggyBank */
-            $piggyBank = $this->piggyRepository->find($piggyBankId);
-            if (!is_null($piggyBank)) {
-                return $piggyBank;
-            }
-        }
-
-
-        // then find by name:
-        if (strlen($piggyBankName) > 0) {
-            /** @var PiggyBank $piggyBank */
-            $piggyBank = $this->piggyRepository->findByName($piggyBankName);
-            if (!is_null($piggyBank)) {
-                return $piggyBank;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Get the transaction type. Since this is mandatory, will throw an exception when nothing comes up. Will always
      * use TransactionType repository.
      *
@@ -259,7 +171,8 @@ class TransactionJournalFactory
      */
     protected function findTransactionType(string $type): TransactionType
     {
-        $transactionType = $this->ttRepository->findByType($type);
+        $factory         = app(TransactionTypeFactory::class);
+        $transactionType = $factory->find($type);
         if (is_null($transactionType)) {
             throw new FireflyException(sprintf('Could not find transaction type for "%s"', $type));
         }
