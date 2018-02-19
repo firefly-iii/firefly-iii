@@ -96,9 +96,9 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @param string $name
      *
-     * @return Category
+     * @return Category|null
      */
-    public function findByName(string $name): Category
+    public function findByName(string $name): ?Category
     {
         $categories = $this->user->categories()->get(['categories.*']);
         foreach ($categories as $category) {
@@ -107,7 +107,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             }
         }
 
-        return new Category;
+        return null;
     }
 
     /**

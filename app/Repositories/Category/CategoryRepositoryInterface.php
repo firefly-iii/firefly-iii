@@ -74,7 +74,7 @@ interface CategoryRepositoryInterface
      *
      * @return Category
      */
-    public function findByName(string $name): Category;
+    public function findByName(string $name): ?Category;
 
     /**
      * @param Category $category
