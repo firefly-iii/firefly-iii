@@ -39,7 +39,6 @@ use Illuminate\Support\Collection;
 use Log;
 use Preferences;
 use Response;
-use Steam;
 
 /** checked
  * Class AccountController.
@@ -80,8 +79,8 @@ class AccountController extends Controller
         $start->subDay();
 
         $accounts      = $repository->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY]);
-        $startBalances = Steam::balancesByAccounts($accounts, $start);
-        $endBalances   = Steam::balancesByAccounts($accounts, $end);
+        $startBalances = app('steam')->balancesByAccounts($accounts, $start);
+        $endBalances   = app('steam')->balancesByAccounts($accounts, $end);
         $chartData     = [];
 
         foreach ($accounts as $account) {
@@ -330,7 +329,7 @@ class AccountController extends Controller
         switch ($step) {
             case '1D':
                 $format   = (string)trans('config.month_and_day');
-                $range    = Steam::balanceInRange($account, $start, $end);
+                $range    = app('steam')->balanceInRange($account, $start, $end);
                 $previous = array_values($range)[0];
                 while ($end >= $current) {
                     $theDate           = $current->format('Y-m-d');
@@ -345,7 +344,7 @@ class AccountController extends Controller
             case '1M': // @codeCoverageIgnore
             case '1Y': // @codeCoverageIgnore
                 while ($end >= $current) {
-                    $balance           = floatval(Steam::balance($account, $current));
+                    $balance           = floatval(app('steam')->balance($account, $current));
                     $label             = app('navigation')->periodShow($current, $step);
                     $chartData[$label] = $balance;
                     $current           = app('navigation')->addPeriod($current, $step, 1);
@@ -394,8 +393,8 @@ class AccountController extends Controller
         $accounts = $repository->getAccountsByType([AccountType::REVENUE]);
 
         $start->subDay();
-        $startBalances = Steam::balancesByAccounts($accounts, $start);
-        $endBalances   = Steam::balancesByAccounts($accounts, $end);
+        $startBalances = app('steam')->balancesByAccounts($accounts, $start);
+        $endBalances   = app('steam')->balancesByAccounts($accounts, $end);
 
         foreach ($accounts as $account) {
             $id           = $account->id;
@@ -440,14 +439,14 @@ class AccountController extends Controller
 
         $chartData = [];
         foreach ($accounts as $account) {
-            $currency     = $repository->find(intval($account->getMeta('currency_id')));
+            $currency     = $repository->findNull(intval($account->getMeta('currency_id')));
             $currentSet   = [
                 'label'           => $account->name,
                 'currency_symbol' => $currency->symbol,
                 'entries'         => [],
             ];
             $currentStart = clone $start;
-            $range        = Steam::balanceInRange($account, $start, clone $end);
+            $range        = app('steam')->balanceInRange($account, $start, clone $end);
             $previous     = array_values($range)[0];
             while ($currentStart <= $end) {
                 $format   = $currentStart->format('Y-m-d');

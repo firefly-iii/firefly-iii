@@ -595,7 +595,7 @@ class JournalCollector implements JournalCollectorInterface
     {
         if ($start <= $end) {
             $startStr = $start->format('Y-m-d 00:00:00');
-            $endStr   = $end->format('Y-m-d 00:00:00');
+            $endStr   = $end->format('Y-m-d 23:59:59');
             $this->query->where('transaction_journals.date', '>=', $startStr);
             $this->query->where('transaction_journals.date', '<=', $endStr);
             Log::debug(sprintf('JournalCollector range is now %s - %s (inclusive)', $startStr, $endStr));
