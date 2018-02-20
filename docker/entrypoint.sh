@@ -9,6 +9,10 @@ cat .env.docker | envsubst > .env
 # if the database is an sqlite database, we need to remove all non-connection variables
 if [ "$FF_DB_CONNECTION" == "sqlite" ]; then
     sed -i '/DB_/{/DB_CONNECTION/!d;}' .env
+
+    # make sure own the sqlite database file
+    chown -R www-data:www-data $FIREFLY_PATH/storage/database
+    chmod -R 775 $FIREFLY_PATH/storage/database
 fi
 
 cat .env
