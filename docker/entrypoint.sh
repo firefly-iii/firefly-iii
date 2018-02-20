@@ -10,6 +10,11 @@ cat .env.docker | envsubst > .env
 if [ "$FF_DB_CONNECTION" == "sqlite" ]; then
     sed -i '/DB_/{/DB_CONNECTION/!d;}' .env
 
+    if [ ! -e "$FIREFLY_PATH/storage/database/database.sqlite" ]; then 
+        # check if the database file exists, if not, create one
+        touch $FIREFLY_PATH/storage/database/database.sqlite
+    fi
+
     # make sure own the sqlite database file
     chown -R www-data:www-data $FIREFLY_PATH/storage/database
     chmod -R 775 $FIREFLY_PATH/storage/database
