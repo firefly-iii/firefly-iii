@@ -29,6 +29,7 @@ return [
     'file_already_attached'          => 'Uploaded file ":name" is already attached to this object.',
     'file_attached'                  => 'Succesfully uploaded file ":name".',
     'must_exist'                     => 'The ID in field :attribute does not exist in the database.',
+    'all_accounts_equal'             => 'All accounts in this field must be equal.',
     'belongs_user'                   => 'This value is invalid for this field.',
     'at_least_one_transaction'       => 'Need at least one transaction.',
     'require_currency_info'          => 'The content of this field is invalid without currency information.',

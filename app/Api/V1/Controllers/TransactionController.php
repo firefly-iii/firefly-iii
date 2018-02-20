@@ -215,7 +215,7 @@ class TransactionController extends Controller
         }
 
         $transactions = $collector->getJournals();
-        $resource     = new Item($transactions->first(), new TransactionTransformer($this->parameters), 'transactions');
+        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }

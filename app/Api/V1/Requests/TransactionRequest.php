@@ -165,6 +165,7 @@ class TransactionRequest extends Request
                 $this->emptySplitDescriptions($validator);
                 $this->foreignCurrencyInformation($validator);
                 $this->validateAccountInformation($validator);
+                $this->validateSplitAccounts($validator);
             }
         );
     }
@@ -368,6 +369,9 @@ class TransactionRequest extends Request
     {
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
+        if(!isset($data['type'])) {
+            return;
+        }
         foreach ($transactions as $index => $transaction) {
 
             $sourceId        = isset($transaction['source_id']) ? intval($transaction['source_id']) : null;
@@ -404,10 +408,57 @@ class TransactionRequest extends Request
                     $this->assetAccountExists($validator, $destinationId, $destinationName, $idField, $nameField);
                     break;
                 default:
-                    throw new FireflyException(sprintf('The validator cannot handle transaction type "%s".', $data['type']));
+                    throw new FireflyException(sprintf('The validator cannot handle transaction type "%s" in validateAccountInformation().', $data['type']));
 
             }
         }
+    }
+
+    /**
+     * @param Validator $validator
+     *
+     * @throws FireflyException
+     */
+    protected function validateSplitAccounts(Validator $validator)
+    {
+        $data  = $validator->getData();
+        $count = isset($data['transactions']) ? count($data['transactions']) : 0;
+        if ($count < 2) {
+            return;
+        }
+        // collect all source ID's and destination ID's, if present:
+        $sources      = [];
+        $destinations = [];
+
+        foreach ($data['transactions'] as $transaction) {
+            $sources[]      = isset($transaction['source_id']) ? intval($transaction['source_id']) : 0;
+            $destinations[] = isset($transaction['destination_id']) ? intval($transaction['destination_id']) : 0;
+        }
+        $destinations = array_unique($destinations);
+        $sources      = array_unique($sources);
+        // switch on type:
+        switch ($data['type']) {
+            case 'withdrawal':
+                if (count($sources) > 1) {
+                    $validator->errors()->add('transactions.0.source_id', trans('validation.all_accounts_equal'));
+                }
+                break;
+            case 'deposit':
+                if (count($destinations) > 1) {
+                    $validator->errors()->add('transactions.0.destination_id', trans('validation.all_accounts_equal'));
+                }
+                break;
+            case 'transfer':
+                if (count($sources) > 1 || count($destinations) > 1) {
+                    $validator->errors()->add('transactions.0.source_id', trans('validation.all_accounts_equal'));
+                    $validator->errors()->add('transactions.0.destination_id', trans('validation.all_accounts_equal'));
+                }
+                break;
+            default:
+                throw new FireflyException(sprintf('The validator cannot handle transaction type "%s" in validateSplitAccounts().', $data['type']));
+        }
+
+        return;
     }
 
 }

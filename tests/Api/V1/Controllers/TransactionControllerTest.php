@@ -875,6 +875,155 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
+     * Try to store a withdrawal with different source accounts.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     */
+    public function testFailSplitDeposit()
+    {
+        $account = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $second  = auth()->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $account->id)->first();
+        $data    = [
+            'description'  => 'Some deposit #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'deposit',
+            'transactions' => [
+                [
+                    'amount'         => '10',
+                    'currency_id'    => 1,
+                    'destination_id' => $account->id,
+                    'description'    => 'Part 1',
+                ],
+                [
+                    'amount'         => '10',
+                    'currency_id'    => 1,
+                    'destination_id' => $second->id,
+                    'description'    => 'Part 2',
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'transactions.0.destination_id' => [
+                        'All accounts in this field must be equal.',
+                    ],
+                ],
+            ]
+        );
+
+    }
+
+    /**
+     * Try to store a withdrawal with different source accounts.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     */
+    public function testFailSplitTransfer()
+    {
+        $account = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $second  = auth()->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $account->id)->first();
+        $data    = [
+            'description'  => 'Some transfer #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'transfer',
+            'transactions' => [
+                [
+                    'amount'         => '10',
+                    'currency_id'    => 1,
+                    'source_id'      => $account->id,
+                    'destination_id' => $second->id,
+                    'description'    => 'Part 1',
+                ],
+                [
+                    'amount'         => '10',
+                    'currency_id'    => 1,
+                    'source_id'      => $second->id,
+                    'destination_id' => $account->id,
+                    'description'    => 'Part 2',
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'transactions.0.source_id'      => [
+                        'All accounts in this field must be equal.',
+                    ],
+                    'transactions.0.destination_id' => [
+                        'All accounts in this field must be equal.',
+                    ],
+                ],
+            ]
+        );
+
+    }
+
+    /**
+     * Try to store a withdrawal with different source accounts.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     */
+    public function testFailSplitWithdrawal()
+    {
+        $account = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $second  = auth()->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $account->id)->first();
+        $data    = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'transactions' => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $account->id,
+                    'description' => 'Part 1',
+                ],
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $second->id,
+                    'description' => 'Part 2',
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'transactions.0.source_id' => [
+                        'All accounts in this field must be equal.',
+                    ],
+                ],
+            ]
+        );
+
+    }
+
+    /**
      * Show index.
      *
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController::__construct
@@ -1117,23 +1266,23 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data' => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'source_id'        => $account->id,
-                        'source_name'      => $account->name,
-                        'type'             => 'Withdrawal',
-                        'source_type'      => 'Asset account',
-                        'destination_name' => 'Cash account',
-                        'destination_type' => 'Cash account',
-                        'bill_id'          => $bill->id,
-                        'bill_name'        => $bill->name,
-                        'amount'           => -10,
-                    ],
-                    'links'      => true,
-                ],
+                'data' => [[
+                               'type'       => 'transactions',
+                               'attributes' => [
+                                   'description'      => $data['description'],
+                                   'date'             => $data['date'],
+                                   'source_id'        => $account->id,
+                                   'source_name'      => $account->name,
+                                   'type'             => 'Withdrawal',
+                                   'source_type'      => 'Asset account',
+                                   'destination_name' => 'Cash account',
+                                   'destination_type' => 'Cash account',
+                                   'bill_id'          => $bill->id,
+                                   'bill_name'        => $bill->name,
+                                   'amount'           => -10,
+                               ],
+                               'links'      => true,
+                           ]],
             ]
         );
     }
@@ -1169,23 +1318,23 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data' => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'source_id'        => $account->id,
-                        'source_name'      => $account->name,
-                        'type'             => 'Withdrawal',
-                        'source_type'      => 'Asset account',
-                        'destination_name' => 'Cash account',
-                        'destination_type' => 'Cash account',
-                        'bill_id'          => $bill->id,
-                        'bill_name'        => $bill->name,
-                        'amount'           => -10,
-                    ],
-                    'links'      => true,
-                ],
+                'data' => [[
+                               'type'       => 'transactions',
+                               'attributes' => [
+                                   'description'      => $data['description'],
+                                   'date'             => $data['date'],
+                                   'source_id'        => $account->id,
+                                   'source_name'      => $account->name,
+                                   'type'             => 'Withdrawal',
+                                   'source_type'      => 'Asset account',
+                                   'destination_name' => 'Cash account',
+                                   'destination_type' => 'Cash account',
+                                   'bill_id'          => $bill->id,
+                                   'bill_name'        => $bill->name,
+                                   'amount'           => -10,
+                               ],
+                               'links'      => true,
+                           ]],
             ]
         );
     }
@@ -1219,22 +1368,22 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data' => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'source_id'        => $account->id,
-                        'source_name'      => $account->name,
-                        'type'             => 'Withdrawal',
-                        'source_type'      => 'Asset account',
-                        'destination_name' => 'Cash account',
-                        'destination_type' => 'Cash account',
-                        'amount'           => -10,
-                    ],
-                    'links'      => true,
-                ],
-            ]
+                'data' => [[
+                               'type'       => 'transactions',
+                               'attributes' => [
+                                   'description'      => $data['description'],
+                                   'date'             => $data['date'],
+                                   'source_id'        => $account->id,
+                                   'source_name'      => $account->name,
+                                   'type'             => 'Withdrawal',
+                                   'source_type'      => 'Asset account',
+                                   'destination_name' => 'Cash account',
+                                   'destination_type' => 'Cash account',
+                                   'amount'           => -10,
+                               ],
+                               'links'      => true,
+                           ],
+                ]]
         );
     }
 
@@ -1267,22 +1416,22 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data' => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'source_id'        => $account->id,
-                        'source_name'      => $account->name,
-                        'type'             => 'Withdrawal',
-                        'source_type'      => 'Asset account',
-                        'destination_name' => 'Cash account',
-                        'destination_type' => 'Cash account',
-                        'amount'           => -10,
-                    ],
-                    'links'      => true,
-                ],
-            ]
+                'data' => [[
+                               'type'       => 'transactions',
+                               'attributes' => [
+                                   'description'      => $data['description'],
+                                   'date'             => $data['date'],
+                                   'source_id'        => $account->id,
+                                   'source_name'      => $account->name,
+                                   'type'             => 'Withdrawal',
+                                   'source_type'      => 'Asset account',
+                                   'destination_name' => 'Cash account',
+                                   'destination_type' => 'Cash account',
+                                   'amount'           => -10,
+                               ],
+                               'links'      => true,
+                           ],
+                ]]
         );
     }
 
@@ -1315,22 +1464,22 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data' => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'destination_id'   => $account->id,
-                        'destination_name' => $account->name,
-                        'destination_type' => 'Asset account',
-                        'type'             => 'Deposit',
-                        'source_name'      => 'Cash account',
-                        'source_type'      => 'Cash account',
-                        'amount'           => 10,
-                    ],
-                    'links'      => true,
-                ],
-            ]
+                'data' => [[
+                               'type'       => 'transactions',
+                               'attributes' => [
+                                   'description'      => $data['description'],
+                                   'date'             => $data['date'],
+                                   'destination_id'   => $account->id,
+                                   'destination_name' => $account->name,
+                                   'destination_type' => 'Asset account',
+                                   'type'             => 'Deposit',
+                                   'source_name'      => 'Cash account',
+                                   'source_type'      => 'Cash account',
+                                   'amount'           => 10,
+                               ],
+                               'links'      => true,
+                           ],
+                ]]
         );
     }
 
@@ -1365,24 +1514,24 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data' => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'source_id'        => $account->id,
-                        'source_name'      => $account->name,
-                        'type'             => 'Withdrawal',
-                        'source_type'      => 'Asset account',
-                        'destination_name' => 'Cash account',
-                        'destination_type' => 'Cash account',
-                        'amount'           => -10,
-                        'budget_id'        => $budget->id,
-                        'budget_name'      => $budget->name,
-                    ],
-                    'links'      => true,
-                ],
-            ]
+                'data' => [[
+                               'type'       => 'transactions',
+                               'attributes' => [
+                                   'description'      => $data['description'],
+                                   'date'             => $data['date'],
+                                   'source_id'        => $account->id,
+                                   'source_name'      => $account->name,
+                                   'type'             => 'Withdrawal',
+                                   'source_type'      => 'Asset account',
+                                   'destination_name' => 'Cash account',
+                                   'destination_type' => 'Cash account',
+                                   'amount'           => -10,
+                                   'budget_id'        => $budget->id,
+                                   'budget_name'      => $budget->name,
+                               ],
+                               'links'      => true,
+                           ],
+                ]]
         );
     }
 
@@ -1417,24 +1566,24 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data' => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'source_id'        => $account->id,
-                        'source_name'      => $account->name,
-                        'type'             => 'Withdrawal',
-                        'source_type'      => 'Asset account',
-                        'destination_name' => 'Cash account',
-                        'destination_type' => 'Cash account',
-                        'amount'           => -10,
-                        'budget_id'        => $budget->id,
-                        'budget_name'      => $budget->name,
-                    ],
-                    'links'      => true,
-                ],
-            ]
+                'data' => [[
+                               'type'       => 'transactions',
+                               'attributes' => [
+                                   'description'      => $data['description'],
+                                   'date'             => $data['date'],
+                                   'source_id'        => $account->id,
+                                   'source_name'      => $account->name,
+                                   'type'             => 'Withdrawal',
+                                   'source_type'      => 'Asset account',
+                                   'destination_name' => 'Cash account',
+                                   'destination_type' => 'Cash account',
+                                   'amount'           => -10,
+                                   'budget_id'        => $budget->id,
+                                   'budget_name'      => $budget->name,
+                               ],
+                               'links'      => true,
+                           ],
+                ]]
         );
     }
 
@@ -1469,24 +1618,24 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data' => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'source_id'        => $account->id,
-                        'source_name'      => $account->name,
-                        'type'             => 'Withdrawal',
-                        'source_type'      => 'Asset account',
-                        'destination_name' => 'Cash account',
-                        'destination_type' => 'Cash account',
-                        'amount'           => -10,
-                        'category_id'      => $category->id,
-                        'category_name'    => $category->name,
-                    ],
-                    'links'      => true,
-                ],
-            ]
+                'data' => [[
+                               'type'       => 'transactions',
+                               'attributes' => [
+                                   'description'      => $data['description'],
+                                   'date'             => $data['date'],
+                                   'source_id'        => $account->id,
+                                   'source_name'      => $account->name,
+                                   'type'             => 'Withdrawal',
+                                   'source_type'      => 'Asset account',
+                                   'destination_name' => 'Cash account',
+                                   'destination_type' => 'Cash account',
+                                   'amount'           => -10,
+                                   'category_id'      => $category->id,
+                                   'category_name'    => $category->name,
+                               ],
+                               'links'      => true,
+                           ],
+                ]]
         );
     }
 
@@ -1521,24 +1670,24 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data' => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'source_id'        => $account->id,
-                        'source_name'      => $account->name,
-                        'type'             => 'Withdrawal',
-                        'source_type'      => 'Asset account',
-                        'destination_name' => 'Cash account',
-                        'destination_type' => 'Cash account',
-                        'amount'           => -10,
-                        'category_id'      => $category->id,
-                        'category_name'    => $category->name,
-                    ],
-                    'links'      => true,
-                ],
-            ]
+                'data' => [[
+                               'type'       => 'transactions',
+                               'attributes' => [
+                                   'description'      => $data['description'],
+                                   'date'             => $data['date'],
+                                   'source_id'        => $account->id,
+                                   'source_name'      => $account->name,
+                                   'type'             => 'Withdrawal',
+                                   'source_type'      => 'Asset account',
+                                   'destination_name' => 'Cash account',
+                                   'destination_type' => 'Cash account',
+                                   'amount'           => -10,
+                                   'category_id'      => $category->id,
+                                   'category_name'    => $category->name,
+                               ],
+                               'links'      => true,
+                           ],
+                ]]
         );
     }
 
@@ -1575,25 +1724,25 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data' => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'           => $data['description'],
-                        'date'                  => $data['date'],
-                        'source_id'             => $account->id,
-                        'source_name'           => $account->name,
-                        'type'                  => 'Withdrawal',
-                        'currency_code'         => $currency->code,
-                        'foreign_currency_code' => $foreign->code,
-                        'foreign_amount'        => -23,
-                        'source_type'           => 'Asset account',
-                        'destination_name'      => 'Cash account',
-                        'destination_type'      => 'Cash account',
-                        'amount'                => -10,
-                    ],
-                    'links'      => true,
-                ],
-            ]
+                'data' => [[
+                               'type'       => 'transactions',
+                               'attributes' => [
+                                   'description'           => $data['description'],
+                                   'date'                  => $data['date'],
+                                   'source_id'             => $account->id,
+                                   'source_name'           => $account->name,
+                                   'type'                  => 'Withdrawal',
+                                   'currency_code'         => $currency->code,
+                                   'foreign_currency_code' => $foreign->code,
+                                   'foreign_amount'        => -23,
+                                   'source_type'           => 'Asset account',
+                                   'destination_name'      => 'Cash account',
+                                   'destination_type'      => 'Cash account',
+                                   'amount'                => -10,
+                               ],
+                               'links'      => true,
+                           ],
+                ]]
         );
     }
 
@@ -1648,22 +1797,22 @@ class TransactionControllerTest extends TestCase
         $response->assertSee('I are internal ref!');
         $response->assertJson(
             [
-                'data' => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'source_id'        => $account->id,
-                        'source_name'      => $account->name,
-                        'type'             => 'Withdrawal',
-                        'source_type'      => 'Asset account',
-                        'destination_name' => 'Cash account',
-                        'destination_type' => 'Cash account',
-                        'amount'           => -10,
-                    ],
-                    'links'      => true,
-                ],
-            ]
+                'data' => [[
+                               'type'       => 'transactions',
+                               'attributes' => [
+                                   'description'      => $data['description'],
+                                   'date'             => $data['date'],
+                                   'source_id'        => $account->id,
+                                   'source_name'      => $account->name,
+                                   'type'             => 'Withdrawal',
+                                   'source_type'      => 'Asset account',
+                                   'destination_name' => 'Cash account',
+                                   'destination_type' => 'Cash account',
+                                   'amount'           => -10,
+                               ],
+                               'links'      => true,
+                           ],
+                ]]
         );
     }
 
@@ -1698,23 +1847,23 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data' => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'source_id'        => $account->id,
-                        'source_name'      => $account->name,
-                        'type'             => 'Withdrawal',
-                        'source_type'      => 'Asset account',
-                        'destination_name' => 'Cash account',
-                        'destination_type' => 'Cash account',
-                        'amount'           => -10,
-                        'category_name'    => $name,
-                    ],
-                    'links'      => true,
-                ],
-            ]
+                'data' => [[
+                               'type'       => 'transactions',
+                               'attributes' => [
+                                   'description'      => $data['description'],
+                                   'date'             => $data['date'],
+                                   'source_id'        => $account->id,
+                                   'source_name'      => $account->name,
+                                   'type'             => 'Withdrawal',
+                                   'source_type'      => 'Asset account',
+                                   'destination_name' => 'Cash account',
+                                   'destination_type' => 'Cash account',
+                                   'amount'           => -10,
+                                   'category_name'    => $name,
+                               ],
+                               'links'      => true,
+                           ],
+                ]]
         );
     }
 
@@ -1749,22 +1898,22 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data' => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'source_id'        => $account->id,
-                        'source_name'      => $account->name,
-                        'type'             => 'Withdrawal',
-                        'source_type'      => 'Asset account',
-                        'destination_name' => $name,
-                        'destination_type' => 'Expense account',
-                        'amount'           => -10,
-                    ],
-                    'links'      => true,
-                ],
-            ]
+                'data' => [[
+                               'type'       => 'transactions',
+                               'attributes' => [
+                                   'description'      => $data['description'],
+                                   'date'             => $data['date'],
+                                   'source_id'        => $account->id,
+                                   'source_name'      => $account->name,
+                                   'type'             => 'Withdrawal',
+                                   'source_type'      => 'Asset account',
+                                   'destination_name' => $name,
+                                   'destination_type' => 'Expense account',
+                                   'amount'           => -10,
+                               ],
+                               'links'      => true,
+                           ],
+                ]]
         );
     }
 
@@ -1799,23 +1948,23 @@ class TransactionControllerTest extends TestCase
         $response->assertSee('I am a note');
         $response->assertJson(
             [
-                'data' => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'source_id'        => $account->id,
-                        'source_name'      => $account->name,
-                        'type'             => 'Withdrawal',
-                        'source_type'      => 'Asset account',
-                        'destination_name' => 'Cash account',
-                        'destination_type' => 'Cash account',
-                        'amount'           => -10,
-                        'notes'            => 'I am a note',
-                    ],
-                    'links'      => true,
-                ],
-            ]
+                'data' => [[
+                               'type'       => 'transactions',
+                               'attributes' => [
+                                   'description'      => $data['description'],
+                                   'date'             => $data['date'],
+                                   'source_id'        => $account->id,
+                                   'source_name'      => $account->name,
+                                   'type'             => 'Withdrawal',
+                                   'source_type'      => 'Asset account',
+                                   'destination_name' => 'Cash account',
+                                   'destination_type' => 'Cash account',
+                                   'amount'           => -10,
+                                   'notes'            => 'I am a note',
+                               ],
+                               'links'      => true,
+                           ],
+                ]]
         );
     }
 
@@ -1850,23 +1999,23 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data' => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'source_id'        => $account->id,
-                        'source_name'      => $account->name,
-                        'type'             => 'Withdrawal',
-                        'source_type'      => 'Asset account',
-                        'destination_name' => $opposing->name,
-                        'destination_id'   => $opposing->id,
-                        'destination_type' => 'Expense account',
-                        'amount'           => -10,
-                    ],
-                    'links'      => true,
-                ],
-            ]
+                'data' => [[
+                               'type'       => 'transactions',
+                               'attributes' => [
+                                   'description'      => $data['description'],
+                                   'date'             => $data['date'],
+                                   'source_id'        => $account->id,
+                                   'source_name'      => $account->name,
+                                   'type'             => 'Withdrawal',
+                                   'source_type'      => 'Asset account',
+                                   'destination_name' => $opposing->name,
+                                   'destination_id'   => $opposing->id,
+                                   'destination_type' => 'Expense account',
+                                   'amount'           => -10,
+                               ],
+                               'links'      => true,
+                           ],
+                ]]
         );
     }
 
@@ -1901,23 +2050,23 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data' => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'source_id'        => $account->id,
-                        'source_name'      => $account->name,
-                        'type'             => 'Withdrawal',
-                        'source_type'      => 'Asset account',
-                        'destination_name' => $opposing->name,
-                        'destination_id'   => $opposing->id,
-                        'destination_type' => 'Expense account',
-                        'amount'           => -10,
-                    ],
-                    'links'      => true,
-                ],
-            ]
+                'data' => [[
+                               'type'       => 'transactions',
+                               'attributes' => [
+                                   'description'      => $data['description'],
+                                   'date'             => $data['date'],
+                                   'source_id'        => $account->id,
+                                   'source_name'      => $account->name,
+                                   'type'             => 'Withdrawal',
+                                   'source_type'      => 'Asset account',
+                                   'destination_name' => $opposing->name,
+                                   'destination_id'   => $opposing->id,
+                                   'destination_type' => 'Expense account',
+                                   'amount'           => -10,
+                               ],
+                               'links'      => true,
+                           ],
+                ]]
         );
     }
 
@@ -1951,20 +2100,20 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data'     => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'type'             => 'Deposit',
-                        'destination_id'   => $dest->id,
-                        'destination_name' => $dest->name,
-                        'destination_type' => 'Asset account',
-                        'amount'           => 10,
-                    ],
-                    'links'      => [],
-                ],
-            ]
+                'data' => [[
+                               'type'       => 'transactions',
+                               'attributes' => [
+                                   'description'      => $data['description'],
+                                   'date'             => $data['date'],
+                                   'type'             => 'Deposit',
+                                   'destination_id'   => $dest->id,
+                                   'destination_name' => $dest->name,
+                                   'destination_type' => 'Asset account',
+                                   'amount'           => 10,
+                               ],
+                               'links'      => [],
+                           ],
+                ]]
         );
 
     }
@@ -2000,22 +2149,22 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data'     => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'type'             => 'Transfer',
-                        'source_id'        => $source->id,
-                        'source_name'      => $source->name,
-                        'source_type'      => 'Asset account',
-                        'destination_id'   => $dest->id,
-                        'destination_name' => $dest->name,
-                        'destination_type' => 'Asset account',
-                        'amount'           => 10,
-                    ],
-                    'links'      => [],
-                ],
+                'data'     => [[
+                                   'type'       => 'transactions',
+                                   'attributes' => [
+                                       'description'      => $data['description'],
+                                       'date'             => $data['date'],
+                                       'type'             => 'Transfer',
+                                       'source_id'        => $source->id,
+                                       'source_name'      => $source->name,
+                                       'source_type'      => 'Asset account',
+                                       'destination_id'   => $dest->id,
+                                       'destination_name' => $dest->name,
+                                       'destination_type' => 'Asset account',
+                                       'amount'           => 10,
+                                   ],
+                                   'links'      => [],
+                               ]],
                 'included' => [
                     0 => [
                         'type'       => 'piggy_bank_events',
@@ -2059,22 +2208,22 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data'     => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'type'             => 'Transfer',
-                        'source_id'        => $source->id,
-                        'source_name'      => $source->name,
-                        'source_type'      => 'Asset account',
-                        'destination_id'   => $dest->id,
-                        'destination_name' => $dest->name,
-                        'destination_type' => 'Asset account',
-                        'amount'           => 10,
-                    ],
-                    'links'      => [],
-                ],
+                'data'     => [[
+                                   'type'       => 'transactions',
+                                   'attributes' => [
+                                       'description'      => $data['description'],
+                                       'date'             => $data['date'],
+                                       'type'             => 'Transfer',
+                                       'source_id'        => $source->id,
+                                       'source_name'      => $source->name,
+                                       'source_type'      => 'Asset account',
+                                       'destination_id'   => $dest->id,
+                                       'destination_name' => $dest->name,
+                                       'destination_type' => 'Asset account',
+                                       'amount'           => 10,
+                                   ],
+                                   'links'      => [],
+                               ]],
                 'included' => [
                     0 => [
                         'type'       => 'piggy_bank_events',
@@ -2117,24 +2266,63 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data' => [
-                    'type'       => 'transactions',
-                    'attributes' => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'source_id'        => $account->id,
-                        'source_name'      => $account->name,
-                        'type'             => 'Withdrawal',
-                        'source_type'      => 'Asset account',
-                        'destination_name' => 'Cash account',
-                        'destination_type' => 'Cash account',
-                        'amount'           => -10,
-                        'reconciled'       => true,
-                    ],
-                    'links'      => true,
-                ],
-            ]
+                'data' => [[
+                               'type'       => 'transactions',
+                               'attributes' => [
+                                   'description'      => $data['description'],
+                                   'date'             => $data['date'],
+                                   'source_id'        => $account->id,
+                                   'source_name'      => $account->name,
+                                   'type'             => 'Withdrawal',
+                                   'source_type'      => 'Asset account',
+                                   'destination_name' => 'Cash account',
+                                   'destination_type' => 'Cash account',
+                                   'amount'           => -10,
+                                   'reconciled'       => true,
+                               ],
+                               'links'      => true,
+                           ],
+                ]]
         );
+    }
+
+    /**
+     * Submit the data required for a split withdrawal.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     */
+    public function testSuccessStoreSplit()
+    {
+        $account = auth()->user()->accounts()->where('account_type_id', 3)->first();
+        $data    = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'transactions' => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $account->id,
+                    'description' => 'Part 1',
+                ],
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $account->id,
+                    'description' => 'Part 2',
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $json     = $response->json();
+        $response->assertStatus(200);
+        $this->assertCount(2, $json['data']);
+
     }
 
     /**
@@ -2176,22 +2364,22 @@ class TransactionControllerTest extends TestCase
         }
         $response->assertJson(
             [
-                'data'     => [
-                    'type'          => 'transactions',
-                    'attributes'    => [
-                        'description'      => $data['description'],
-                        'date'             => $data['date'],
-                        'source_id'        => $account->id,
-                        'source_name'      => $account->name,
-                        'type'             => 'Withdrawal',
-                        'source_type'      => 'Asset account',
-                        'destination_name' => 'Cash account',
-                        'destination_type' => 'Cash account',
-                        'amount'           => -10,
-                    ],
-                    'links'         => [],
-                    'relationships' => [],
-                ],
+                'data'     => [[
+                                   'type'          => 'transactions',
+                                   'attributes'    => [
+                                       'description'      => $data['description'],
+                                       'date'             => $data['date'],
+                                       'source_id'        => $account->id,
+                                       'source_name'      => $account->name,
+                                       'type'             => 'Withdrawal',
+                                       'source_type'      => 'Asset account',
+                                       'destination_name' => 'Cash account',
+                                       'destination_type' => 'Cash account',
+                                       'amount'           => -10,
+                                   ],
+                                   'links'         => [],
+                                   'relationships' => [],
+                               ]],
                 'included' => [],
             ]
         );
