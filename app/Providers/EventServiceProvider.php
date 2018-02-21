@@ -122,20 +122,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected function registerDeleteEvents()
     {
-        Account::deleted(
-            function (Account $account) {
-                Log::debug('Now trigger account delete response #' . $account->id);
-                /** @var Transaction $transaction */
-                foreach ($account->transactions()->get() as $transaction) {
-                    Log::debug('Now at transaction #' . $transaction->id);
-                    $journal = $transaction->transactionJournal()->first();
-                    if (null !== $journal) {
-                        Log::debug('Call for deletion of journal #' . $journal->id);
-                        $journal->delete();
-                    }
-                }
-            }
-        );
+
 
         TransactionJournal::deleted(
             function (TransactionJournal $journal) {

@@ -139,7 +139,7 @@ class AccountController extends Controller
         $type     = $account->accountType->type;
         $typeName = config('firefly.shortNamesByFullName.' . $type);
         $name     = $account->name;
-        $moveTo   = $this->repository->find(intval($request->get('move_account_before_delete')));
+        $moveTo   = $this->repository->findNull(intval($request->get('move_account_before_delete')));
 
         $this->repository->destroy($account, $moveTo);
 

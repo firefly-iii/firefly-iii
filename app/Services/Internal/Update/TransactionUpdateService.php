@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Services\Internal;
+namespace FireflyIII\Services\Internal\Update;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;

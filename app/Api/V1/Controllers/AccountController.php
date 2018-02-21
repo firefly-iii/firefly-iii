@@ -80,7 +80,7 @@ class AccountController extends Controller
      */
     public function delete(Account $account)
     {
-        $this->repository->destroy($account, new Account);
+        $this->repository->destroy($account, null);
 
         return response()->json([], 204);
     }

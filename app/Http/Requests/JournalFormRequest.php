@@ -47,7 +47,7 @@ class JournalFormRequest extends Request
     public function getJournalData()
     {
         $data = [
-            'what'                     => $this->get('what'), // type. can be 'deposit', 'withdrawal' or 'transfer'
+            'type'                     => $this->get('what'), // type. can be 'deposit', 'withdrawal' or 'transfer'
             'date'                     => $this->date('date'),
             'tags'                     => explode(',', $this->string('tags')),
             'currency_id'              => $this->integer('amount_currency_id_amount'),

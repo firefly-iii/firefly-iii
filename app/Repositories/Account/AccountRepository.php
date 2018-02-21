@@ -35,6 +35,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\User;
 use Log;
 use Validator;
@@ -82,12 +83,9 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function destroy(Account $account, Account $moveTo): bool
     {
-        if (null !== $moveTo->id) {
-            DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
-        }
-        if (null !== $account) {
-            $account->delete();
-        }
+        /** @var AccountDestroyService $service */
+        $service = app(AccountDestroyService::class);
+        $service->destroy($account, $moveTo);
 
         return true;
     }

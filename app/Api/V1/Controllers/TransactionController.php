@@ -33,7 +33,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Services\Internal\JournalUpdateService;
+use FireflyIII\Services\Internal\Update\JournalUpdateService;
 use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -91,7 +91,6 @@ class TransactionController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function index(Request $request)
     {
@@ -152,7 +151,6 @@ class TransactionController extends Controller
         $include = $request->get('include') ?? '';
         $manager->parseIncludes($include);
 
-        // needs a lot of extra data to match the journal collector. Or just expand that one.
         // collect transactions using the journal collector
         $collector = app(JournalCollectorInterface::class);
         $collector->setUser(auth()->user());
