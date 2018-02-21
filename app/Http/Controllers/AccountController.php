@@ -198,6 +198,7 @@ class AccountController extends Controller
             'virtualBalance'       => $account->virtual_balance,
             'currency_id'          => $currency->id,
             'notes'                => '',
+            'active'               => $account->active,
         ];
         /** @var Note $note */
         $note = $this->repository->getNote($account);

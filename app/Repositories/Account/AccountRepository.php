@@ -36,6 +36,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
+use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use FireflyIII\User;
 use Log;
 use Validator;
@@ -276,23 +277,13 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function update(Account $account, array $data): Account
     {
-        // update the account:
-        $account->name            = $data['name'];
-        $account->active          = $data['active'];
-        $account->virtual_balance = trim($data['virtualBalance']) === '' ? '0' : $data['virtualBalance'];
-        $account->iban            = $data['iban'];
-        $account->save();
-
-        $this->updateMetadata($account, $data);
-        if ($this->validOpeningBalanceData($data)) {
-            $this->updateInitialBalance($account, $data);
+        /** @var AccountUpdateService $service */
+        $service = app(AccountUpdateService::class);
+        try {
+            $account = $service->update($account, $data);
+        } catch (FireflyException $e) {
+        } catch (\Exception $e) {
         }
-
-        // update note:
-        if (isset($data['notes']) && null !== $data['notes']) {
-            $this->updateNote($account, strval($data['notes']));
-        }
-
 
         return $account;
     }

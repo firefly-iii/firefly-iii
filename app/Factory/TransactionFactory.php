@@ -62,13 +62,15 @@ class TransactionFactory
      */
     public function create(array $data): Transaction
     {
+        $currencyId = isset($data['currency']) ? $data['currency']->id : $data['currency_id'];
+
         return Transaction::create(
             [
                 'reconciled'              => $data['reconciled'],
                 'account_id'              => $data['account']->id,
                 'transaction_journal_id'  => $data['transaction_journal']->id,
                 'description'             => $data['description'],
-                'transaction_currency_id' => $data['currency']->id,
+                'transaction_currency_id' => $currencyId,
                 'amount'                  => $data['amount'],
                 'foreign_amount'          => $data['foreign_amount'],
                 'foreign_currency_id'     => null,

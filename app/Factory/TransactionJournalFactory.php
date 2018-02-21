@@ -85,7 +85,7 @@ class TransactionJournalFactory
         $this->connectTags($journal, $data);
 
         // store note:
-        $this->storeNote($journal, $data['notes']);
+        $this->storeNote($journal, strval($data['notes']));
 
         // store date meta fields (if present):
         $this->storeMeta($journal, $data, 'interest_date');
@@ -154,6 +154,9 @@ class TransactionJournalFactory
     {
         $factory = app(TagFactory::class);
         $factory->setUser($journal->user);
+        if (is_null($data['tags'])) {
+            return;
+        }
         foreach ($data['tags'] as $string) {
             $tag = $factory->findOrCreate($string);
             $journal->tags()->save($tag);
@@ -187,7 +190,7 @@ class TransactionJournalFactory
      */
     protected function storeMeta(TransactionJournal $journal, array $data, string $field): void
     {
-        $value = $data[$field];
+        $value = $data[$field] ?? null;
         if (!is_null($value)) {
             $set = [
                 'journal' => $journal,
