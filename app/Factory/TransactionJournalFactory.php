@@ -81,7 +81,6 @@ class TransactionJournalFactory
         // link piggy bank (if transfer)
         $this->connectPiggyBank($journal, $data);
 
-
         // link tags:
         $this->connectTags($journal, $data);
 

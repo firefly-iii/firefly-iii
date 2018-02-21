@@ -34,16 +34,25 @@ class TransactionJournalMetaFactory
     /**
      * @param array $data
      *
-     * @return TransactionJournalMeta
+     * @return TransactionJournalMeta|null
+     * @throws \Exception
      */
-    public function updateOrCreate(array $data): TransactionJournalMeta
+    public function updateOrCreate(array $data): ?TransactionJournalMeta
     {
         $value = $data['data'];
+        /** @var TransactionJournalMeta $entry */
+        $entry = $data['journal']->transactionJournalMeta()->where('name', $data['name'])->first();
+        if (is_null($value) && !is_null($entry)) {
+            $entry->delete();
+
+            return null;
+        }
+
         if ($data['data'] instanceof Carbon) {
             $value = $data['data']->toW3cString();
         }
 
-        $entry = $data['journal']->transactionJournalMeta()->where('name', $data['name'])->first();
+
         if (null === $entry) {
             $entry = new TransactionJournalMeta();
             $entry->transactionJournal()->associate($data['journal']);

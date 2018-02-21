@@ -25,14 +25,15 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\TransactionRequest;
 use FireflyIII\Factory\TransactionJournalFactory;
-use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Services\Internal\JournalUpdateService;
 use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -169,7 +170,7 @@ class TransactionController extends Controller
         }
 
         $transactions = $collector->getJournals();
-        $resource = new Item($transactions->first(), new TransactionTransformer($this->parameters), 'transactions');
+        $resource     = new Item($transactions->first(), new TransactionTransformer($this->parameters), 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -222,21 +223,48 @@ class TransactionController extends Controller
 
 
     /**
-     * @param BillRequest $request
-     * @param Bill        $bill
+     * @param TransactionRequest $request
+     * @param TransactionJournal $journal
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(BillRequest $request, Bill $bill)
+    public function update(TransactionRequest $request, Transaction $transaction)
     {
-        die('todo');
-        $data    = $request->getAll();
-        $bill    = $this->repository->update($bill, $data);
+        $data         = $request->getAll();
+        $data['user'] = auth()->user()->id;
+
+        /** @var JournalUpdateService $service */
+        $service = app(JournalUpdateService::class);
+        $service->setUser(auth()->user());
+        $journal = $service->update($transaction->transactionJournal, $data);
+
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
+        // add include parameter:
+        $include = $request->get('include') ?? '';
+        $manager->parseIncludes($include);
+
+        // needs a lot of extra data to match the journal collector. Or just expand that one.
+        // collect transactions using the journal collector
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser(auth()->user());
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        // filter on specific journals.
+        $collector->setJournals(new Collection([$journal]));
+
+        // add filter to remove transactions:
+        $transactionType = $journal->transactionType->type;
+        if ($transactionType === TransactionType::WITHDRAWAL) {
+            $collector->addFilter(PositiveAmountFilter::class);
+        }
+        if (!($transactionType === TransactionType::WITHDRAWAL)) {
+            $collector->addFilter(NegativeAmountFilter::class);
+        }
+
+        $transactions = $collector->getJournals();
+        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

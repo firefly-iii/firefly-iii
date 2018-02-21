@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Requests;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Rules\BelongsUser;
 use Illuminate\Validation\Validator;
@@ -106,7 +107,7 @@ class TransactionRequest extends Request
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             // basic fields for journal:
             'type'                                 => 'required|in:withdrawal,deposit,transfer',
             'date'                                 => 'required|date',
@@ -146,6 +147,19 @@ class TransactionRequest extends Request
             'transactions.*.destination_id'        => ['numeric', 'nullable', new BelongsUser],
             'transactions.*.destination_name'      => 'between:1,255|nullable',
         ];
+
+        switch ($this->method()) {
+            default:
+                break;
+            case 'PUT':
+            case 'PATCH':
+                unset($rules['type'], $rules['piggy_bank_id'], $rules['piggy_bank_name']);
+                break;
+        }
+
+        return $rules;
+
+
     }
 
     /**
@@ -181,6 +195,7 @@ class TransactionRequest extends Request
      */
     protected function assetAccountExists(Validator $validator, ?int $accountId, ?string $accountName, string $idField, string $nameField): void
     {
+
         $accountId   = intval($accountId);
         $accountName = strval($accountName);
         // both empty? hard exit.
@@ -206,6 +221,7 @@ class TransactionRequest extends Request
             // we ignore the account name at this point.
             return;
         }
+
         $account = $repository->findByName($accountName, [AccountType::ASSET]);
         if (is_null($account)) {
             $validator->errors()->add($nameField, trans('validation.belongs_user'));
@@ -369,11 +385,16 @@ class TransactionRequest extends Request
     {
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
-        if(!isset($data['type'])) {
-            return;
+        if (!isset($data['type'])) {
+            // the journal may exist in the request:
+            /** @var Transaction $transaction */
+            $transaction = $this->route()->parameter('transaction');
+            if (is_null($transaction)) {
+                return;
+            }
+            $data['type'] = strtolower($transaction->transactionJournal->transactionType->type);
         }
         foreach ($transactions as $index => $transaction) {
-
             $sourceId        = isset($transaction['source_id']) ? intval($transaction['source_id']) : null;
             $sourceName      = $transaction['source_name'] ?? null;
             $destinationId   = isset($transaction['destination_id']) ? intval($transaction['destination_id']) : null;
