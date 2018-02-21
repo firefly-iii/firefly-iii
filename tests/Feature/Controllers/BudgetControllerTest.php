@@ -433,6 +433,7 @@ class BudgetControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('setAvailableBudget');
+        $repository->shouldReceive('cleanupBudgets');
 
         $data = ['amount' => '200', 'start' => '2017-01-01', 'end' => '2017-01-31'];
         $this->be($this->user());
@@ -549,6 +550,8 @@ class BudgetControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('find')->andReturn($budget);
         $repository->shouldReceive('store')->andReturn($budget);
+        $repository->shouldReceive('cleanupBudgets');
+
         $this->session(['budgets.create.uri' => 'http://localhost']);
 
         $data = [
@@ -572,7 +575,8 @@ class BudgetControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('find')->andReturn($budget);
         $repository->shouldReceive('update');
-
+        $repository->shouldReceive('cleanupBudgets');
+        
         $this->session(['budgets.edit.uri' => 'http://localhost']);
 
         $data = [
