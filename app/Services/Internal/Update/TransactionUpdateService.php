@@ -311,7 +311,7 @@ class TransactionUpdateService
      * TODO method is duplicated
      *
      * @param Transaction $transaction
-     * @param string|null      $amount
+     * @param string|null $amount
      */
     protected function setForeignAmount(Transaction $transaction, ?string $amount): void
     {
@@ -330,6 +330,7 @@ class TransactionUpdateService
         if (is_null($currency)) {
             $transaction->foreign_currency_id = null;
             $transaction->save();
+
             return;
         }
         $transaction->foreign_currency_id = $currency->id;

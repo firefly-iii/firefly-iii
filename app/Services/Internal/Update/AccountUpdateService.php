@@ -29,8 +29,6 @@ use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use Log;
 
@@ -126,7 +124,6 @@ class AccountUpdateService
             }
         }
     }
-
 
 
 }
