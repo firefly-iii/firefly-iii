@@ -447,6 +447,17 @@ class TransactionRequest extends Request
         if ($count < 2) {
             return;
         }
+
+        if (!isset($data['type'])) {
+            // the journal may exist in the request:
+            /** @var Transaction $transaction */
+            $transaction = $this->route()->parameter('transaction');
+            if (is_null($transaction)) {
+                return;
+            }
+            $data['type'] = strtolower($transaction->transactionJournal->transactionType->type);
+        }
+
         // collect all source ID's and destination ID's, if present:
         $sources      = [];
         $destinations = [];

@@ -57,6 +57,7 @@ class JournalUpdateService
      *
      * @return TransactionJournal
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Exception
      */
     public function update(TransactionJournal $journal, array $data): TransactionJournal
     {
@@ -93,6 +94,14 @@ class JournalUpdateService
             }
             // otherwise, create!
             $factory->createPair($journal, $trData);
+        }
+        // could be that journal has more transactions than submitted (remove split)
+        $transactions = $journal->transactions()->where('amount', '>', 0)->get();
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            if (!isset($data['transactions'][$transaction->identifier])) {
+                $journal->transactions()->where('identifier', $transaction->identifier)->delete();
+            }
         }
 
         // connect bill:
