@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\Account;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
@@ -241,32 +242,15 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array $data
      *
      * @return Account
-     *
-     * @throws FireflyException
      */
     public function store(array $data): Account
     {
-        $newAccount = $this->storeAccount($data);
-        $this->updateMetadata($newAccount, $data);
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user);
+        $account = $factory->create($data);
 
-        if ($this->validOpeningBalanceData($data)) {
-            $this->updateInitialBalance($newAccount, $data);
-
-            // update note:
-            if (isset($data['notes'])) {
-                $this->updateNote($newAccount, $data['notes']);
-            }
-
-            return $newAccount;
-        }
-        $this->deleteInitialBalance($newAccount);
-
-        // update note:
-        if (isset($data['notes'])) {
-            $this->updateNote($newAccount, $data['notes']);
-        }
-
-        return $newAccount;
+        return $account;
     }
 
     /**

@@ -25,9 +25,11 @@ namespace FireflyIII\Services\Internal\Support;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
+use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Factory\TransactionFactory;
 use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
@@ -44,6 +46,13 @@ use Validator;
  */
 trait AccountServiceTrait
 {
+    /** @var array */
+    public $validAssetFields = ['accountRole', 'accountNumber', 'currency_id', 'BIC'];
+    /** @var array */
+    public $validCCFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber', 'currency_id', 'BIC'];
+    /** @var array */
+    public $validFields = ['accountNumber', 'currency_id', 'BIC'];
+
     /**
      * @param Account $account
      *
@@ -56,7 +65,7 @@ trait AccountServiceTrait
         $openingBalance = $this->getIBJournal($account);
 
         // opening balance data? update it!
-        if (null !== $openingBalance->id) {
+        if (null !== $openingBalance) {
             Log::debug('Opening balance journal found, delete journal.');
             $openingBalance->delete();
 
@@ -216,7 +225,6 @@ trait AccountServiceTrait
         $factory = app(AccountFactory::class);
         $factory->setUser($user);
 
-
         return $factory->findOrCreate($name, AccountType::INITIAL_BALANCE);
     }
 
@@ -253,27 +261,6 @@ trait AccountServiceTrait
     }
 
     /**
-     * Verify if array contains valid data to possibly store or update the opening balance.
-     *
-     * @param array $data
-     *
-     * @return bool
-     */
-    public function validIBData(array $data): bool
-    {
-        $data['openingBalance'] = strval($data['openingBalance'] ?? '');
-        if (isset($data['openingBalance']) && null !== $data['openingBalance'] && strlen($data['openingBalance']) > 0
-            && isset($data['openingBalanceDate'])) {
-            Log::debug('Array has valid opening balance data.');
-
-            return true;
-        }
-        Log::debug('Array does not have valid opening balance data.');
-
-        return false;
-    }
-
-    /**
      * @param Account            $account
      * @param TransactionJournal $journal
      * @param array              $data
@@ -282,7 +269,7 @@ trait AccountServiceTrait
      *
      * @throws \Exception
      */
-    protected function updateIBJournal(Account $account, TransactionJournal $journal, array $data): bool
+    public function updateIBJournal(Account $account, TransactionJournal $journal, array $data): bool
     {
         $date           = $data['openingBalanceDate'];
         $amount         = strval($data['openingBalance']);
@@ -324,12 +311,50 @@ trait AccountServiceTrait
     }
 
     /**
+     * Update meta data for account. Depends on type which fields are valid.
+     *
+     * @param Account $account
+     * @param array   $data
+     */
+    public function updateMetaData(Account $account, array $data)
+    {
+        $fields = $this->validFields;
+
+        if ($account->accountType->type === AccountType::ASSET) {
+            $fields = $this->validAssetFields;
+        }
+        if ($account->accountType->type === AccountType::ASSET && $data['accountRole'] === 'ccAsset') {
+            $fields = $this->validCCFields;
+        }
+        /** @var AccountMetaFactory $factory */
+        $factory = app(AccountMetaFactory::class);
+        foreach ($fields as $field) {
+            /** @var AccountMeta $entry */
+            $entry = $account->accountMeta()->where('name', $field)->first();
+
+            // if $data has field and $entry is null, create new one:
+            if (isset($data[$field]) && null === $entry) {
+                Log::debug(sprintf('Created meta-field "%s":"%s" for account #%d ("%s") ', $field, $data[$field], $account->id, $account->name));
+                $factory->create(['account_id' => $account->id, 'name' => $field, 'data' => $data[$field],]);
+            }
+
+            // if $data has field and $entry is not null, update $entry:
+            // let's not bother with a service.
+            if (isset($data[$field]) && null !== $entry) {
+                $entry->data = $data[$field];
+                $entry->save();
+                Log::debug(sprintf('Updated meta-field "%s":"%s" for #%d ("%s") ', $field, $data[$field], $account->id, $account->name));
+            }
+        }
+    }
+
+    /**
      * @param Account $account
      * @param string  $note
      *
      * @return bool
      */
-    protected function updateNote(Account $account, string $note): bool
+    public function updateNote(Account $account, string $note): bool
     {
         if (0 === strlen($note)) {
             $dbNote = $account->notes()->first();
@@ -348,5 +373,26 @@ trait AccountServiceTrait
         $dbNote->save();
 
         return true;
+    }
+
+    /**
+     * Verify if array contains valid data to possibly store or update the opening balance.
+     *
+     * @param array $data
+     *
+     * @return bool
+     */
+    public function validIBData(array $data): bool
+    {
+        $data['openingBalance'] = strval($data['openingBalance'] ?? '');
+        if (isset($data['openingBalance']) && null !== $data['openingBalance'] && strlen($data['openingBalance']) > 0
+            && isset($data['openingBalanceDate'])) {
+            Log::debug('Array has valid opening balance data.');
+
+            return true;
+        }
+        Log::debug('Array does not have valid opening balance data.');
+
+        return false;
     }
 }

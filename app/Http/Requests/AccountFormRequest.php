@@ -47,6 +47,7 @@ class AccountFormRequest extends Request
             'name'                 => $this->string('name'),
             'active'               => $this->boolean('active'),
             'accountType'          => $this->string('what'),
+            'account_type_id'      => 0,
             'currency_id'          => $this->integer('currency_id'),
             'virtualBalance'       => $this->string('virtualBalance'),
             'iban'                 => $this->string('iban'),

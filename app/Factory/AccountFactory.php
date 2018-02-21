@@ -23,8 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
+use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\User;
 
 /**
@@ -34,17 +37,84 @@ use FireflyIII\User;
  */
 class AccountFactory
 {
+    use AccountServiceTrait;
     /** @var User */
     private $user;
 
     /**
      * @param array $data
      *
+     * @throws FireflyException
+     * @throws Exception
      * @return Account
      */
     public function create(array $data): Account
     {
-        return Account::create($data);
+        $type         = $this->getAccountType($data['account_type_id'], $data['accountType']);
+        $data['iban'] = $this->filterIban($data['iban']);
+
+
+        // account may exist already:
+        $existingAccount = $this->find($data['name'], $type->type);
+        if (null !== $existingAccount) {
+            return $existingAccount;
+        }
+
+
+        // create it:
+        $databaseData
+            = [
+            'user_id'         => $this->user->id,
+            'account_type_id' => $type->id,
+            'name'            => $data['name'],
+            'virtual_balance' => strlen(strval($data['virtualBalance'])) === 0 ? '0' : $data['virtualBalance'],
+            'active'          => true === $data['active'] ? true : false,
+            'iban'            => $data['iban'],
+        ];
+
+        // remove virtual balance when not an asset account:
+        if ($type->type !== AccountType::ASSET) {
+            $databaseData['virtual_balance'] = '0';
+        }
+
+        $newAccount = Account::create($databaseData);
+        $this->updateMetadata($newAccount, $data);
+
+        if ($this->validIBData($data)) {
+            $this->updateIB($newAccount, $data);
+        }
+        if (!$this->validIBData($data)) {
+            $this->deleteIB($newAccount);
+        }
+        // update note:
+        if (isset($data['notes'])) {
+            $this->updateNote($newAccount, $data['notes']);
+        }
+
+        return $newAccount;
+    }
+
+    /**
+     * @param string $accountName
+     * @param string $accountType
+     *
+     * @return Account|null
+     * @throws Exception
+     * @throws FireflyException
+     */
+    public function find(string $accountName, string $accountType): ?Account
+    {
+        $type     = AccountType::whereType($accountType)->first();
+        $accounts = $this->user->accounts()->where('account_type_id', $type->id)->get(['accounts.*']);
+
+        /** @var Account $object */
+        foreach ($accounts as $object) {
+            if ($object->name === $accountName) {
+                return $object;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -52,6 +122,8 @@ class AccountFactory
      * @param string $accountType
      *
      * @return Account
+     * @throws Exception
+     * @throws FireflyException
      */
     public function findOrCreate(string $accountName, string $accountType): Account
     {
@@ -70,7 +142,8 @@ class AccountFactory
                 'user_id'         => $this->user->id,
                 'name'            => $accountName,
                 'account_type_id' => $type->id,
-                'virtual_balance' => '0',
+                'accountType'     => null,
+                'virtualBalance' => '0',
                 'iban'            => null,
                 'active'          => true,
             ]
@@ -83,6 +156,24 @@ class AccountFactory
     public function setUser(User $user): void
     {
         $this->user = $user;
+    }
+
+    /**
+     * @param int|null    $accountTypeId
+     * @param null|string $accountType
+     *
+     * @return AccountType|null
+     */
+    protected function getAccountType(?int $accountTypeId, ?string $accountType): ?AccountType
+    {
+        $accountTypeId = intval($accountTypeId);
+        if ($accountTypeId > 0) {
+            return AccountType::find($accountTypeId);
+        }
+        $type = config('firefly.accountTypeByIdentifier.' . strval($accountType));
+
+        return AccountType::whereType($type)->first();
+
     }
 
 }
