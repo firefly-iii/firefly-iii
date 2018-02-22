@@ -64,6 +64,7 @@ class JournalTasker implements JournalTaskerInterface
      * that shows a transaction (transaction/show/xx).
      *
      * @param TransactionJournal $journal
+     * @deprecated
      *
      * @return array
      */
@@ -186,7 +187,7 @@ class JournalTasker implements JournalTaskerInterface
      * the order of transactions within the journal. So the query is pretty complex:.
      *
      * @param int $transactionId
-     *
+     * @deprecated
      * @return string
      */
     private function getBalance(int $transactionId): string

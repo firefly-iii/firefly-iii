@@ -43,12 +43,8 @@ use Preferences;
  */
 class JournalRepository implements JournalRepositoryInterface
 {
-    use CreateJournalsTrait, UpdateJournalsTrait, SupportJournalsTrait;
-
     /** @var User */
     private $user;
-    /** @var array */
-    private $validMetaFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date', 'internal_reference'];
 
     /**
      * @param TransactionJournal $journal
@@ -123,6 +119,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function find(int $journalId): TransactionJournal
     {
+        /** @var TransactionJournal $journal */
         $journal = $this->user->transactionJournals()->where('id', $journalId)->first();
         if (null === $journal) {
             return new TransactionJournal;
@@ -170,6 +167,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function first(): TransactionJournal
     {
+        /** @var TransactionJournal $entry */
         $entry = $this->user->transactionJournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
 
         if (null === $entry) {
