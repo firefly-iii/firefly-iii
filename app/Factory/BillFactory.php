@@ -25,6 +25,7 @@ namespace FireflyIII\Factory;
 
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use FireflyIII\User;
 
 /**
@@ -32,6 +33,7 @@ use FireflyIII\User;
  */
 class BillFactory
 {
+    use BillServiceTrait;
     /** @var BillRepositoryInterface */
     private $repository;
     /** @var User */
@@ -84,6 +86,39 @@ class BillFactory
         $this->user = $user;
         $this->repository->setUser($user);
 
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return Bill|null
+     */
+    public function store(array $data): ?Bill
+    {
+        $matchArray = explode(',', $data['match']);
+        $matchArray = array_unique($matchArray);
+        $match      = join(',', $matchArray);
+
+        /** @var Bill $bill */
+        $bill = Bill::create(
+            [
+                'name'        => $data['name'],
+                'match'       => $match,
+                'amount_min'  => $data['amount_min'],
+                'user_id'     => $this->user->id,
+                'amount_max'  => $data['amount_max'],
+                'date'        => $data['date'],
+                'repeat_freq' => $data['repeat_freq'],
+                'skip'        => $data['skip'],
+                'automatch'   => $data['automatch'],
+                'active'      => $data['active'],
+            ]
+        );
+
+        // update note:
+        if (isset($data['notes'])) {
+            $this->updateNote($bill, $data['notes']);
+        }
     }
 
 }

@@ -231,7 +231,7 @@ trait SupportJournalsTrait
     protected function verifyNativeAmount(array $data, array $accounts): array
     {
         /** @var TransactionType $transactionType */
-        $transactionType             = TransactionType::where('type', ucfirst($data['what']))->first();
+        $transactionType             = TransactionType::where('type', ucfirst($data['type']))->first();
         $submittedCurrencyId         = $data['currency_id'];
         $data['foreign_amount']      = null;
         $data['foreign_currency_id'] = null;

@@ -24,18 +24,19 @@ namespace FireflyIII\Repositories\Bill;
 
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Factory\BillFactory;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Services\Internal\Destroy\BillDestroyService;
+use FireflyIII\Services\Internal\Update\BillUpdateService;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
-use Navigation;
 
 /**
  * Class BillRepository.
@@ -54,7 +55,9 @@ class BillRepository implements BillRepositoryInterface
      */
     public function destroy(Bill $bill): bool
     {
-        $bill->delete();
+        /** @var BillDestroyService $service */
+        $service = app(BillDestroyService::class);
+        $service->destroy($bill);
 
         return true;
     }
@@ -103,12 +106,8 @@ class BillRepository implements BillRepositoryInterface
         /** @var Collection $set */
         $set = $this->user->bills()
                           ->where('active', 1)
-                          ->get(
-                              [
-                                  'bills.*',
-                                  DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount'),
-                              ]
-                          )->sortBy('name');
+                          ->sortBy('name')
+                          ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount'),]);
 
         return $set;
     }
@@ -221,6 +220,7 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $end
      *
      * @return string
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function getBillsUnpaidInRange(Carbon $start, Carbon $end): string
     {
@@ -302,6 +302,7 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $end
      *
      * @return Collection
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function getPayDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
@@ -418,11 +419,11 @@ class BillRepository implements BillRepositoryInterface
 
         while ($start < $date) {
             Log::debug(sprintf('$start (%s) < $date (%s)', $start->format('Y-m-d'), $date->format('Y-m-d')));
-            $start = Navigation::addPeriod($start, $bill->repeat_freq, $bill->skip);
+            $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
             Log::debug('Start is now ' . $start->format('Y-m-d'));
         }
 
-        $end = Navigation::addPeriod($start, $bill->repeat_freq, $bill->skip);
+        $end = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
 
         Log::debug('nextDateMatch: Final start is ' . $start->format('Y-m-d'));
         Log::debug('nextDateMatch: Matching end is ' . $end->format('Y-m-d'));
@@ -455,11 +456,11 @@ class BillRepository implements BillRepositoryInterface
 
         while ($start < $date) {
             Log::debug(sprintf('$start (%s) < $date (%s)', $start->format('Y-m-d'), $date->format('Y-m-d')));
-            $start = Navigation::addPeriod($start, $bill->repeat_freq, $bill->skip);
+            $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
             Log::debug('Start is now ' . $start->format('Y-m-d'));
         }
 
-        $end = Navigation::addPeriod($start, $bill->repeat_freq, $bill->skip);
+        $end = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
 
         // see if the bill was paid in this period.
         $journalCount = $bill->transactionJournals()->before($end)->after($start)->count();
@@ -468,7 +469,7 @@ class BillRepository implements BillRepositoryInterface
             // this period had in fact a bill. The new start is the current end, and we create a new end.
             Log::debug(sprintf('Journal count is %d, so start becomes %s', $journalCount, $end->format('Y-m-d')));
             $start = clone $end;
-            $end   = Navigation::addPeriod($start, $bill->repeat_freq, $bill->skip);
+            $end   = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
         }
         Log::debug('nextExpectedMatch: Final start is ' . $start->format('Y-m-d'));
         Log::debug('nextExpectedMatch: Matching end is ' . $end->format('Y-m-d'));
@@ -479,9 +480,12 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * TODO move to a service.
+     *
      * @param Bill               $bill
      * @param TransactionJournal $journal
      *
+     * @deprecated
      * @return bool
      */
     public function scan(Bill $bill, TransactionJournal $journal): bool
@@ -533,30 +537,11 @@ class BillRepository implements BillRepositoryInterface
      */
     public function store(array $data): Bill
     {
-        $matchArray = explode(',', $data['match']);
-        $matchArray = array_unique($matchArray);
-        $match      = join(',', $matchArray);
+        /** @var BillFactory $factory */
+        $factory = app(BillFactory::class);
+        $factory->setUser($this->user);
+        $bill = $factory->store($data);
 
-        /** @var Bill $bill */
-        $bill = Bill::create(
-            [
-                'name'        => $data['name'],
-                'match'       => $match,
-                'amount_min'  => $data['amount_min'],
-                'user_id'     => $this->user->id,
-                'amount_max'  => $data['amount_max'],
-                'date'        => $data['date'],
-                'repeat_freq' => $data['repeat_freq'],
-                'skip'        => $data['skip'],
-                'automatch'   => $data['automatch'],
-                'active'      => $data['active'],
-            ]
-        );
-
-        // update note:
-        if (isset($data['notes'])) {
-            $this->updateNote($bill, $data['notes']);
-        }
 
         return $bill;
     }
@@ -569,27 +554,10 @@ class BillRepository implements BillRepositoryInterface
      */
     public function update(Bill $bill, array $data): Bill
     {
-        $matchArray = explode(',', $data['match']);
-        $matchArray = array_unique($matchArray);
-        $match      = join(',', $matchArray);
+        /** @var BillUpdateService $service */
+        $service = app(BillUpdateService::class);
 
-        $bill->name        = $data['name'];
-        $bill->match       = $match;
-        $bill->amount_min  = $data['amount_min'];
-        $bill->amount_max  = $data['amount_max'];
-        $bill->date        = $data['date'];
-        $bill->repeat_freq = $data['repeat_freq'];
-        $bill->skip        = $data['skip'];
-        $bill->automatch   = $data['automatch'];
-        $bill->active      = $data['active'];
-        $bill->save();
-
-        // update note:
-        if (isset($data['notes']) && null !== $data['notes']) {
-            $this->updateNote($bill, strval($data['notes']));
-        }
-
-        return $bill;
+        return $service->update($bill, $data);
     }
 
     /**
@@ -628,32 +596,5 @@ class BillRepository implements BillRepositoryInterface
         }
 
         return $wordMatch;
-    }
-
-    /**
-     * @param Bill   $bill
-     * @param string $note
-     *
-     * @return bool
-     */
-    protected function updateNote(Bill $bill, string $note): bool
-    {
-        if (0 === strlen($note)) {
-            $dbNote = $bill->notes()->first();
-            if (null !== $dbNote) {
-                $dbNote->delete();
-            }
-
-            return true;
-        }
-        $dbNote = $bill->notes()->first();
-        if (null === $dbNote) {
-            $dbNote = new Note();
-            $dbNote->noteable()->associate($bill);
-        }
-        $dbNote->text = trim($note);
-        $dbNote->save();
-
-        return true;
     }
 }

@@ -23,42 +23,29 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
-use DB;
+use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
-use FireflyIII\Models\Tag;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
+use FireflyIII\Services\Internal\Update\JournalUpdateService;
 use FireflyIII\User;
-use Log;
 
 /**
  * Class AccountRepository.
  */
 class AccountRepository implements AccountRepositoryInterface
 {
-
+    use FindAccountsTrait;
     /** @var User */
     private $user;
-    /** @var array */
-    private $validAssetFields = ['accountRole', 'accountNumber', 'currency_id', 'BIC'];
-
-    use FindAccountsTrait;
-    /** @var array */
-    private $validCCFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber', 'currency_id', 'BIC'];
-    /** @var array */
-    private $validFields = ['accountNumber', 'currency_id', 'BIC'];
 
     /**
-     * Moved here from account CRUD.
-     *
      * @param array $types
      *
      * @return int
@@ -239,6 +226,8 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array $data
      *
      * @return Account
+     * @throws FireflyException
+     * @throws Exception
      */
     public function store(array $data): Account
     {
@@ -254,6 +243,8 @@ class AccountRepository implements AccountRepositoryInterface
      * @param Account $account
      * @param array   $data
      *
+     * @throws FireflyException
+     * @throws Exception
      * @return Account
      */
     public function update(Account $account, array $data): Account
@@ -270,90 +261,16 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array              $data
      *
      * @return TransactionJournal
+     * @throws FireflyException
+     * @throws Exception
      */
     public function updateReconciliation(TransactionJournal $journal, array $data): TransactionJournal
     {
-        // update journal
-        // update actual journal:
-        $data['amount'] = strval($data['amount']);
-
-        // unlink all categories, recreate them:
-        $journal->categories()->detach();
-
-        $this->storeCategoryWithJournal($journal, strval($data['category']));
-
-        // update amounts
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions as $transaction) {
-            $transaction->amount = bcmul($data['amount'], '-1');
-            if (AccountType::ASSET === $transaction->account->accountType->type) {
-                $transaction->amount = $data['amount'];
-            }
-            $transaction->save();
-        }
-
-        $journal->save();
-
-        // update tags:
-        if (isset($data['tags']) && is_array($data['tags'])) {
-            $this->updateTags($journal, $data['tags']);
-        }
+        /** @var JournalUpdateService $service */
+        $service = app(JournalUpdateService::class);
+        $journal = $service->update($journal, $data);
 
         return $journal;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param string             $category
-     */
-    protected function storeCategoryWithJournal(TransactionJournal $journal, string $category)
-    {
-        if (strlen($category) > 0) {
-            $category = Category::firstOrCreateEncrypted(['name' => $category, 'user_id' => $journal->user_id]);
-            $journal->categories()->save($category);
-        }
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param array              $array
-     *
-     * @return bool
-     */
-    protected function updateTags(TransactionJournal $journal, array $array): bool
-    {
-        // create tag repository
-        /** @var TagRepositoryInterface $tagRepository */
-        $tagRepository = app(TagRepositoryInterface::class);
-
-        // find or create all tags:
-        $tags = [];
-        $ids  = [];
-        foreach ($array as $name) {
-            if (strlen(trim($name)) > 0) {
-                $tag    = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
-                $tags[] = $tag;
-                $ids[]  = $tag->id;
-            }
-        }
-
-        // delete all tags connected to journal not in this array:
-        if (count($ids) > 0) {
-            DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->whereNotIn('tag_id', $ids)->delete();
-        }
-        // if count is zero, delete them all:
-        if (0 === count($ids)) {
-            DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->delete();
-        }
-
-        // connect each tag to journal (if not yet connected):
-        /** @var Tag $tag */
-        foreach ($tags as $tag) {
-            Log::debug(sprintf('Will try to connect tag #%d to journal #%d.', $tag->id, $journal->id));
-            $tagRepository->connect($journal, $tag);
-        }
-
-        return true;
     }
 
 }

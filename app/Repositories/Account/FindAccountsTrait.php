@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Account;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\User;
@@ -44,6 +45,7 @@ trait FindAccountsTrait
      */
     public function find(int $accountId): Account
     {
+        /** @var Account $account */
         $account = $this->user->accounts()->find($accountId);
         if (null === $account) {
             return new Account;
@@ -56,6 +58,7 @@ trait FindAccountsTrait
      * @param string $number
      * @param array  $types
      *
+     * @deprecated
      * @return Account
      */
     public function findByAccountNumber(string $number, array $types): Account
@@ -83,6 +86,7 @@ trait FindAccountsTrait
      * @param string $iban
      * @param array  $types
      *
+     * @deprecated
      * @return Account
      */
     public function findByIban(string $iban, array $types): Account
@@ -213,15 +217,15 @@ trait FindAccountsTrait
      * @return Account
      *
      * @throws FireflyException
+     * @throws \Exception
      */
     public function getCashAccount(): Account
     {
-        $type            = AccountType::where('type', AccountType::CASH)->first();
-        $account         = Account::firstOrCreateEncrypted(
-            ['user_id' => $this->user->id, 'account_type_id' => $type->id, 'name' => 'Cash account']
-        );
-        $account->active = true;
-        $account->save();
+        $type = AccountType::where('type', AccountType::CASH)->first();
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user);
+        $account = $factory->findOrCreate('Cash account', $type->type);
 
         return $account;
     }
@@ -232,6 +236,7 @@ trait FindAccountsTrait
      * @return Account|null
      *
      * @throws FireflyException
+     * @throws \Exception
      */
     public function getReconciliation(Account $account): ?Account
     {
@@ -247,23 +252,12 @@ trait FindAccountsTrait
                 return $account;
             }
         }
-        // assume nothing was found. create it!
-        $data    = [
-            'accountType'    => 'reconcile',
-            'name'           => $name,
-            'iban'           => null,
-            'virtualBalance' => '0',
-            'active'         => true,
-        ];
-        $account = $this->storeAccount($data);
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($account->user);
+        $account = $factory->findOrCreate($name, $type->type);
 
         return $account;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return Account
-     */
-    abstract protected function storeAccount(array $data): Account;
 }
