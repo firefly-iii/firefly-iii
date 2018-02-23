@@ -22,7 +22,12 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Destroy;
+
+use Exception;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalMeta;
+use Log;
 
 /**
  * Class JournalDestroyService
@@ -32,8 +37,28 @@ class JournalDestroyService
     /**
      * @param TransactionJournal $journal
      */
-    public function destroy(TransactionJournal $journal): void {
+    public function destroy(TransactionJournal $journal): void
+    {
+        try {
+            /** @var Transaction $transaction */
+            foreach ($journal->transactions()->get() as $transaction) {
+                Log::debug(sprintf('Will now delete transaction #%d', $transaction->id));
+                $transaction->delete();
+            }
 
+            // also delete journal_meta entries.
+
+            /** @var TransactionJournalMeta $meta */
+            foreach ($journal->transactionJournalMeta()->get() as $meta) {
+                Log::debug(sprintf('Will now delete meta-entry #%d', $meta->id));
+                $meta->delete();
+            }
+            $journal->delete();
+        } catch (Exception $e) {
+            // don't care
+        }
+
+        return;
     }
 
 }
