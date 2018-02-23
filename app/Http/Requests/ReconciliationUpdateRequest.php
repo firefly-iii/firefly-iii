@@ -1,6 +1,6 @@
 <?php
 /**
- * ReconciliationFormRequest.php
+ * ReconciliationUpdateRequest.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 /**
- * @codeCoverageIgnore
- * Class ReconciliationFormRequest.
+ * Class ReconciliationUpdateRequest.
  */
-class ReconciliationFormRequest extends Request
+class ReconciliationUpdateRequest extends Request
 {
     /**
      * @return bool
