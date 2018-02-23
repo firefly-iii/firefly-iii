@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\TransactionRequest;
-use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
@@ -179,14 +178,11 @@ class TransactionController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function store(TransactionRequest $request)
+    public function store(TransactionRequest $request, JournalRepositoryInterface $repository)
     {
         $data         = $request->getAll();
         $data['user'] = auth()->user()->id;
-        /** @var TransactionJournalFactory $factory */
-        $factory = app(TransactionJournalFactory::class);
-        $factory->setUser(auth()->user());
-        $journal = $factory->create($data);
+        $journal      = $repository->store($data);
 
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
@@ -196,7 +192,6 @@ class TransactionController extends Controller
         $include = $request->get('include') ?? '';
         $manager->parseIncludes($include);
 
-        // needs a lot of extra data to match the journal collector. Or just expand that one.
         // collect transactions using the journal collector
         $collector = app(JournalCollectorInterface::class);
         $collector->setUser(auth()->user());

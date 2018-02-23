@@ -424,7 +424,16 @@ class SingleController extends Controller
         }
         // @codeCoverageIgnoreEnd
 
-        $data    = $request->getJournalData();
+        $data                                   = $request->getJournalData();
+        $data['transactions'][0]['currency_id'] = $journal->transaction_currency_id;
+        if ($data['currency_id'] !== $journal->transaction_currency_id) {
+            // currency ID is changed by user. Update transaction:
+
+            $data['transactions'][0]['amount']              = $data['native_amount'];
+            $data['transactions'][0]['foreign_currency_id'] = $data['currency_id'];
+            $data['transactions'][0]['foreign_amount']      = $data['amount'];
+        }
+
         $journal = $repository->update($journal, $data);
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;

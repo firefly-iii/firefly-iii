@@ -47,36 +47,56 @@ class JournalFormRequest extends Request
     public function getJournalData()
     {
         $data = [
-            'type'                     => $this->get('what'), // type. can be 'deposit', 'withdrawal' or 'transfer'
-            'date'                     => $this->date('date'),
-            'tags'                     => explode(',', $this->string('tags')),
-            'currency_id'              => $this->integer('amount_currency_id_amount'),
+            'type'               => $this->get('what'), // type. can be 'deposit', 'withdrawal' or 'transfer'
+            'date'               => $this->date('date'),
+            'tags'               => explode(',', $this->string('tags')),
+
 
             // all custom fields:
-            'interest_date'            => $this->date('interest_date'),
-            'book_date'                => $this->date('book_date'),
-            'process_date'             => $this->date('process_date'),
-            'due_date'                 => $this->date('due_date'),
-            'payment_date'             => $this->date('payment_date'),
-            'invoice_date'             => $this->date('invoice_date'),
-            'internal_reference'       => $this->string('internal_reference'),
-            'notes'                    => $this->string('notes'),
+            'interest_date'      => $this->date('interest_date'),
+            'book_date'          => $this->date('book_date'),
+            'process_date'       => $this->date('process_date'),
+            'due_date'           => $this->date('due_date'),
+            'payment_date'       => $this->date('payment_date'),
+            'invoice_date'       => $this->date('invoice_date'),
+            'internal_reference' => $this->string('internal_reference'),
+            'notes'              => $this->string('notes'),
 
-            // transaction / journal data:
-            'description'              => $this->string('description'),
-            'amount'                   => $this->string('amount'),
-            'budget_id'                => $this->integer('budget_id'),
-            'category'                 => $this->string('category'),
-            'source_account_id'        => $this->integer('source_account_id'),
-            'source_account_name'      => $this->string('source_account_name'),
-            'destination_account_id'   => $this->string('destination_account_id'),
-            'destination_account_name' => $this->string('destination_account_name'),
-            'piggy_bank_id'            => $this->integer('piggy_bank_id'),
+            // journal data:
+            'description'        => $this->string('description'),
+            'piggy_bank_id'      => $this->integer('piggy_bank_id'),
+            'bill_id'            => null,
+            'bill_name'          => null,
 
             // native amount and stuff like that:
-            'native_amount'            => $this->string('native_amount'),
-            'source_amount'            => $this->string('source_amount'),
-            'destination_amount'       => $this->string('destination_amount'),
+            'currency_id'        => $this->integer('amount_currency_id_amount'),
+            'amount'             => $this->string('amount'),
+            'native_amount'      => $this->string('native_amount'),
+            'source_amount'      => $this->string('source_amount'),
+            'destination_amount' => $this->string('destination_amount'),
+
+            // transaction data:
+            'transactions'       => [
+                [
+                    'currency_id'           => null,
+                    'currency_code'         => null,
+                    'description'           => null,
+                    'amount'                => $this->string('amount'),
+                    'budget_id'             => $this->integer('budget_id'),
+                    'budget_name'           => null,
+                    'category_id'           => null,
+                    'category_name'         => $this->string('category'),
+                    'source_id'             => $this->integer('source_account_id'),
+                    'source_name'           => $this->string('source_account_name'),
+                    'destination_id'        => $this->integer('destination_account_id'),
+                    'destination_name'      => $this->string('destination_account_name'),
+                    'foreign_currency_id'   => null,
+                    'foreign_currency_code' => null,
+                    'foreign_amount'        => null,
+                    'reconciled'            => false,
+                    'identifier'            => 0,
+                ],
+            ],
         ];
 
         return $data;
