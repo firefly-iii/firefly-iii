@@ -131,20 +131,4 @@ class Request extends FormRequest
         return round($this->input($field), 12);
     }
 
-    /**
-     * @param string $field
-     * @param string $type
-     *
-     * @return array
-     */
-    protected function getArray(string $field, string $type): array
-    {
-        $original = $this->get($field);
-        $return   = [];
-        foreach ($original as $index => $value) {
-            $return[$index] = $this->$type($value);
-        }
-
-        return $return;
-    }
 }
