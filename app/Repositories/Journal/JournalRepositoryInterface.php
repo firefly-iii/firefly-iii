@@ -171,4 +171,34 @@ interface JournalRepositoryInterface
      * @return TransactionJournal
      */
     public function update(TransactionJournal $journal, array $data): TransactionJournal;
+
+    /**
+     * Update budget for a journal.
+     *
+     * @param TransactionJournal $journal
+     * @param int                $budgetId
+     *
+     * @return TransactionJournal
+     */
+    public function updateBudget(TransactionJournal $journal, int $budgetId): TransactionJournal;
+
+    /**
+     * Update category for a journal.
+     *
+     * @param TransactionJournal $journal
+     * @param string             $category
+     *
+     * @return TransactionJournal
+     */
+    public function updateCategory(TransactionJournal $journal, string $category): TransactionJournal;
+
+    /**
+     * Update tag(s) for a journal.
+     *
+     * @param TransactionJournal $journal
+     * @param array              $tags
+     *
+     * @return TransactionJournal
+     */
+    public function updateTags(TransactionJournal $journal, array $tags): TransactionJournal;
 }

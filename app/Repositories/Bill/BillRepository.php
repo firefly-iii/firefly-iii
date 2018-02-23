@@ -106,8 +106,8 @@ class BillRepository implements BillRepositoryInterface
         /** @var Collection $set */
         $set = $this->user->bills()
                           ->where('active', 1)
-                          ->sortBy('name')
-                          ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount'),]);
+                          ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount'),])
+                          ->sortBy('name');
 
         return $set;
     }

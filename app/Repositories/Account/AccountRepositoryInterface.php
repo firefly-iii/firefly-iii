@@ -48,11 +48,11 @@ interface AccountRepositoryInterface
      * Moved here from account CRUD.
      *
      * @param Account $account
-     * @param Account $moveTo
+     * @param Account|null $moveTo
      *
      * @return bool
      */
-    public function destroy(Account $account, Account $moveTo): bool;
+    public function destroy(Account $account, ?Account $moveTo): bool;
 
     /**
      * @param int $accountId

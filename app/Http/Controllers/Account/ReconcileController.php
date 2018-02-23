@@ -424,7 +424,7 @@ class ReconcileController extends Controller
             'interest_date'   => null,
             'book_date'       => null,
             'transactions'    => [[
-                                      'currency_id'           => $journal->transaction_currency_id,
+                                      'currency_id'           => intval($journal->transaction_currency_id),
                                       'currency_code'         => null,
                                       'description'           => null,
                                       'amount'                => app('steam')->positive($submitted['amount']),

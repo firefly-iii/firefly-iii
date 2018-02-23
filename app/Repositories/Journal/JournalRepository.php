@@ -196,6 +196,18 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Get account of transaction that is more than zero. Only works with unsplit journals.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Account
+     */
+    public function getDestinationAccount(TransactionJournal $journal): Account
+    {
+        return $journal->transactions()->where('amount', '<', 0)->first()->account;
+    }
+
+    /**
      * @param TransactionJournal $journal
      *
      * @return Note|null
@@ -203,6 +215,18 @@ class JournalRepository implements JournalRepositoryInterface
     public function getNote(TransactionJournal $journal): ?Note
     {
         return $journal->notes()->first();
+    }
+
+    /**
+     * Get account of transaction that is less than zero. Only works with unsplit journals.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Account
+     */
+    public function getSourceAccount(TransactionJournal $journal): Account
+    {
+        return $journal->transactions()->where('amount', '>', 0)->first()->account;
     }
 
     /**
@@ -318,26 +342,55 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * Get account of transaction that is more than zero. Only works with unsplit journals.
+     * Update budget for a journal.
      *
      * @param TransactionJournal $journal
+     * @param int                $budgetId
      *
-     * @return Account
+     * @return TransactionJournal
      */
-    public function getDestinationAccount(TransactionJournal $journal): Account
+    public function updateBudget(TransactionJournal $journal, int $budgetId): TransactionJournal
     {
-        return $journal->transactions()->where('amount','<',0)->first()->account;
+        /** @var JournalUpdateService $service */
+        $service = app(JournalUpdateService::class);
+        $service->setUser($this->user);
+
+        return $service->updateBudget($journal, $budgetId);
     }
 
     /**
-     * Get account of transaction that is less than zero. Only works with unsplit journals.
+     * Update category for a journal.
      *
      * @param TransactionJournal $journal
+     * @param string             $category
      *
-     * @return Account
+     * @return TransactionJournal
      */
-    public function getSourceAccount(TransactionJournal $journal): Account
+    public function updateCategory(TransactionJournal $journal, string $category): TransactionJournal
     {
-        return $journal->transactions()->where('amount','>',0)->first()->account;
+        /** @var JournalUpdateService $service */
+        $service = app(JournalUpdateService::class);
+        $service->setUser($this->user);
+
+        return $service->updateCategory($journal, $category);
+    }
+
+    /**
+     * Update tag(s) for a journal.
+     *
+     * @param TransactionJournal $journal
+     * @param array              $tags
+     *
+     * @return TransactionJournal
+     */
+    public function updateTags(TransactionJournal $journal, array $tags): TransactionJournal
+    {
+        /** @var JournalUpdateService $service */
+        $service = app(JournalUpdateService::class);
+        $service->setUser($this->user);
+        $service->connectTags($journal, $tags);
+
+        return $journal;
+
     }
 }

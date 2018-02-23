@@ -73,6 +73,9 @@ trait JournalServiceTrait
         $factory = app(TagFactory::class);
         $factory->setUser($journal->user);
         $set = [];
+        if (!is_array($data['tags'])) {
+            return;
+        }
         foreach ($data['tags'] as $string) {
             if (strlen($string) > 0) {
                 $tag   = $factory->findOrCreate($string);

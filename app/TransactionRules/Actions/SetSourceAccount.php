@@ -136,11 +136,12 @@ class SetSourceAccount implements ActionInterface
         if (null === $account) {
             // create new revenue account with this name:
             $data    = [
-                'name'           => $this->action->action_value,
-                'accountType'    => 'revenue',
-                'virtualBalance' => 0,
-                'active'         => true,
-                'iban'           => null,
+                'name'            => $this->action->action_value,
+                'accountType'     => 'revenue',
+                'account_type_id' => null,
+                'virtualBalance'  => 0,
+                'active'          => true,
+                'iban'            => null,
             ];
             $account = $this->repository->store($data);
         }

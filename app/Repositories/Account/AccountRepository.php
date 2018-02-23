@@ -61,13 +61,13 @@ class AccountRepository implements AccountRepositoryInterface
      * Moved here from account CRUD.
      *
      * @param Account $account
-     * @param Account $moveTo
+     * @param Account|null $moveTo
      *
      * @return bool
      *
      * @throws \Exception
      */
-    public function destroy(Account $account, Account $moveTo): bool
+    public function destroy(Account $account, ?Account $moveTo): bool
     {
         /** @var AccountDestroyService $service */
         $service = app(AccountDestroyService::class);

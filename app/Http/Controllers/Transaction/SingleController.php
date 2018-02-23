@@ -26,7 +26,6 @@ use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Events\StoredTransactionJournal;
 use FireflyIII\Events\UpdatedTransactionJournal;
-use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\JournalFormRequest;
@@ -366,13 +365,7 @@ class SingleController extends Controller
                 'foreign_amount'        => null,
             ],
         ];
-        var_dump($data);exit;
-        // todo call factory instead of repository
-        /** @var TransactionJournalFactory $factory */
-        $factory = app(TransactionJournalFactory::class);
-        $factory->setUser(auth()->user());
-        $journal = $factory->create($data);
-        //$journal       = $repository->store($data);
+        $journal                 = $repository->store($data);
         if (null === $journal->id) {
             // error!
             Log::error('Could not store transaction journal: ', $journal->getErrors()->toArray());

@@ -38,7 +38,6 @@ class TransactionUpdateService
     /** @var User */
     private $user;
 
-
     /**
      * @param int $transactionId
      *
@@ -130,5 +129,36 @@ class TransactionUpdateService
         return $transaction;
     }
 
+    /**
+     * Update budget for a journal.
+     *
+     * @param Transaction $transaction
+     * @param int         $budgetId
+     *
+     * @return Transaction
+     */
+    public function updateBudget(Transaction $transaction, int $budgetId): Transaction
+    {
+        $budget = $this->findBudget($budgetId, null);
+        $this->setBudget($transaction, $budget);
 
+        return $transaction;
+
+    }
+
+    /**
+     * Update category for a journal.
+     *
+     * @param Transaction $transaction
+     * @param string      $category
+     *
+     * @return Transaction
+     */
+    public function updateCategory(Transaction $transaction, string $category): Transaction
+    {
+        $category = $this->findCategory(0, $category);
+        $this->setCategory($transaction, $category);
+
+        return $category;
+    }
 }

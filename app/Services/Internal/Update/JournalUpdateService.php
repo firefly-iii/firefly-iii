@@ -23,10 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
-use FireflyIII\Factory\BillFactory;
-use FireflyIII\Factory\TagFactory;
 use FireflyIII\Factory\TransactionFactory;
-use FireflyIII\Factory\TransactionJournalMetaFactory;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
@@ -124,6 +121,50 @@ class JournalUpdateService
         // store note:
         $this->storeNote($journal, $data['notes']);
 
+
+        return $journal;
+    }
+
+    /**
+     * Update budget for a journal.
+     *
+     * @param TransactionJournal $journal
+     * @param int                $budgetId
+     *
+     * @return TransactionJournal
+     */
+    public function updateBudget(TransactionJournal $journal, int $budgetId): TransactionJournal
+    {
+        /** @var TransactionUpdateService $service */
+        $service = app(TransactionUpdateService::class);
+        $service->setUser($this->user);
+
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions as $transaction) {
+            $service->updateBudget($transaction, $budgetId);
+        }
+
+        return $journal;
+    }
+
+    /**
+     * Update category for a journal.
+     *
+     * @param TransactionJournal $journal
+     * @param string             $category
+     *
+     * @return TransactionJournal
+     */
+    public function updateCategory(TransactionJournal $journal, string $category): TransactionJournal
+    {
+        /** @var TransactionUpdateService $service */
+        $service = app(TransactionUpdateService::class);
+        $service->setUser($this->user);
+
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions as $transaction) {
+            $service->updateCategory($transaction, $category);
+        }
 
         return $journal;
     }

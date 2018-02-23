@@ -150,23 +150,22 @@ class BulkController extends Controller
             foreach ($journalIds as $journalId) {
                 $journal = $repository->find(intval($journalId));
                 if (!is_null($journal)) {
-                    // TODO need to move this to update service.
                     $count++;
                     Log::debug(sprintf('Found journal #%d', $journal->id));
                     // update category if not told to ignore
                     if ($ignoreCategory === false) {
                         Log::debug(sprintf('Set category to %s', $request->string('category')));
 
-                        $service->updateCategory($journal, $request->string('category'));
+                        $repository->updateCategory($journal, $request->string('category'));
                     }
                     // update budget if not told to ignore (and is withdrawal)
                     if ($ignoreBudget === false) {
                         Log::debug(sprintf('Set budget to %d', $request->integer('budget_id')));
-                        $service->updateBudget($journal, $request->integer('budget_id'));
+                        $repository->updateBudget($journal, $request->integer('budget_id'));
                     }
                     if ($ignoreTags === false) {
                         Log::debug(sprintf('Set tags to %s', $request->string('budget_id')));
-                        $service->updateTags($journal, explode(',', $request->string('tags')));
+                        $repository->updateTags($journal, explode(',', $request->string('tags')));
                     }
                     // update tags if not told to ignore (and is withdrawal)
                 }
