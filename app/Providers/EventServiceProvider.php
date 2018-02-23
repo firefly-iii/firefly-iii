@@ -122,25 +122,5 @@ class EventServiceProvider extends ServiceProvider
     protected function registerDeleteEvents()
     {
 
-
-        TransactionJournal::deleted(
-            function (TransactionJournal $journal) {
-                Log::debug(sprintf('Now triggered journal delete response #%d', $journal->id));
-
-                /** @var Transaction $transaction */
-                foreach ($journal->transactions()->get() as $transaction) {
-                    Log::debug(sprintf('Will now delete transaction #%d', $transaction->id));
-                    $transaction->delete();
-                }
-
-                // also delete journal_meta entries.
-
-                /** @var TransactionJournalMeta $meta */
-                foreach ($journal->transactionJournalMeta()->get() as $meta) {
-                    Log::debug(sprintf('Will now delete meta-entry #%d', $meta->id));
-                    $meta->delete();
-                }
-            }
-        );
     }
 }
