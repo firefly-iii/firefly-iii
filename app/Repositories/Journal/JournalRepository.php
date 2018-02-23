@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -300,14 +301,43 @@ class JournalRepository implements JournalRepositoryInterface
      * @return TransactionJournal
      *
      * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws Exception
      */
     public function update(TransactionJournal $journal, array $data): TransactionJournal
     {
         /** @var JournalUpdateService $service */
         $service = app(JournalUpdateService::class);
+        $service->setUser($this->user);
 
-        return $service->update($journal, $data);
+        try {
+            $journal = $service->update($journal, $data);
+        } catch (FireflyException | Exception $e) {
+            throw new FireflyException($e->getMessage());
+        }
+
+        return $journal;
     }
 
+    /**
+     * Get account of transaction that is more than zero. Only works with unsplit journals.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Account
+     */
+    public function getDestinationAccount(TransactionJournal $journal): Account
+    {
+        return $journal->transactions()->where('amount','<',0)->first()->account;
+    }
+
+    /**
+     * Get account of transaction that is less than zero. Only works with unsplit journals.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Account
+     */
+    public function getSourceAccount(TransactionJournal $journal): Account
+    {
+        return $journal->transactions()->where('amount','>',0)->first()->account;
+    }
 }

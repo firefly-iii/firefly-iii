@@ -36,6 +36,7 @@ use Illuminate\Support\MessageBag;
  */
 interface JournalRepositoryInterface
 {
+
     /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
@@ -100,11 +101,29 @@ interface JournalRepositoryInterface
     public function getAssetTransaction(TransactionJournal $journal): ?Transaction;
 
     /**
+     * Get account of transaction that is more than zero. Only works with unsplit journals.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Account
+     */
+    public function getDestinationAccount(TransactionJournal $journal): Account;
+
+    /**
      * @param TransactionJournal $journal
      *
      * @return Note|null
      */
     public function getNote(TransactionJournal $journal): ?Note;
+
+    /**
+     * Get account of transaction that is less than zero. Only works with unsplit journals.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Account
+     */
+    public function getSourceAccount(TransactionJournal $journal): Account;
 
     /**
      * @return Collection

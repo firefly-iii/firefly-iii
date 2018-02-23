@@ -27,9 +27,9 @@ use FireflyIII\Factory\BillFactory;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Factory\TransactionFactory;
 use FireflyIII\Factory\TransactionJournalMetaFactory;
-use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
@@ -40,6 +40,7 @@ use Illuminate\Support\Collection;
  */
 class JournalUpdateService
 {
+    use JournalServiceTrait;
     /** @var User */
     private $user;
 
@@ -125,104 +126,6 @@ class JournalUpdateService
 
 
         return $journal;
-    }
-
-    /**
-     * TODO seems duplicate of connectBill in JournalFactory.
-     * TODO this one is better than journal factory
-     * Connect bill if present.
-     *
-     * @param TransactionJournal $journal
-     * @param array              $data
-     */
-    protected function connectBill(TransactionJournal $journal, array $data): void
-    {
-        /** @var BillFactory $factory */
-        $factory = app(BillFactory::class);
-        $factory->setUser($this->user);
-        $bill = $factory->find($data['bill_id'], $data['bill_name']);
-
-        if (!is_null($bill)) {
-            $journal->bill_id = $bill->id;
-            $journal->save();
-
-            return;
-        }
-        $journal->bill_id = null;
-        $journal->save();
-
-        return;
-    }
-
-    /**
-     * TODO seems duplicate or very equal to connectTags() in JournalFactory.
-     *
-     * @param TransactionJournal $journal
-     * @param array              $data
-     */
-    protected function connectTags(TransactionJournal $journal, array $data): void
-    {
-        /** @var TagFactory $factory */
-        $factory = app(TagFactory::class);
-        $factory->setUser($journal->user);
-        $set = [];
-        foreach ($data['tags'] as $string) {
-            if (strlen($string) > 0) {
-                $tag   = $factory->findOrCreate($string);
-                $set[] = $tag->id;
-            }
-        }
-        $journal->tags()->sync($set);
-    }
-
-    /**
-     * TODO seems duplicate of storeMeta() in journalfactory.
-     * TODO this one is better than the one in journal factory (NULL)>
-     *
-     * @param TransactionJournal $journal
-     * @param array              $data
-     * @param string             $field
-     *
-     * @throws \Exception
-     */
-    protected function storeMeta(TransactionJournal $journal, array $data, string $field): void
-    {
-        $set = [
-            'journal' => $journal,
-            'name'    => $field,
-            'data'    => $data[$field],
-        ];
-        /** @var TransactionJournalMetaFactory $factory */
-        $factory = app(TransactionJournalMetaFactory::class);
-        $factory->updateOrCreate($set);
-    }
-
-    /**
-     * TODO is duplicate of storeNote in journal factory.
-     *
-     * @param TransactionJournal $journal
-     * @param string             $notes
-     */
-    protected function storeNote(TransactionJournal $journal, string $notes): void
-    {
-        if (strlen($notes) > 0) {
-            $note = $journal->notes()->first();
-            if (is_null($note)) {
-                $note = new Note;
-                $note->noteable()->associate($journal);
-            }
-            $note->text = $notes;
-            $note->save();
-
-            return;
-        }
-        $note = $journal->notes()->first();
-        if (!is_null($note)) {
-            $note->delete();
-        }
-
-        return;
-
     }
 
 }

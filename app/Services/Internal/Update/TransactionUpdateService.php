@@ -24,19 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Update;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Factory\AccountFactory;
-use FireflyIII\Factory\BudgetFactory;
-use FireflyIII\Factory\CategoryFactory;
-use FireflyIII\Factory\TransactionCurrencyFactory;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Services\Internal\Support\TransactionServiceTrait;
 use FireflyIII\User;
 
 /**
@@ -44,14 +33,29 @@ use FireflyIII\User;
  */
 class TransactionUpdateService
 {
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
+    use TransactionServiceTrait;
+
     /** @var User */
     private $user;
 
-    public function __construct()
+
+    /**
+     * @param int $transactionId
+     *
+     * @return Transaction|null
+     */
+    public function reconcile(int $transactionId): ?Transaction
     {
-        $this->accountRepository = app(AccountRepositoryInterface::class);
+        $transaction = Transaction::find($transactionId);
+        if (!is_null($transaction)) {
+            $transaction->reconciled = true;
+            $transaction->save();
+
+            return $transaction;
+        }
+
+        return null;
+
     }
 
     /**
@@ -60,7 +64,6 @@ class TransactionUpdateService
     public function setUser(User $user): void
     {
         $this->user = $user;
-        $this->accountRepository->setUser($user);
     }
 
     /**
@@ -78,6 +81,7 @@ class TransactionUpdateService
 
         // update description:
         $transaction->description = $description;
+        $foreignAmount            = null;
         if (floatval($transaction->amount) < 0) {
             // this is the source transaction.
             $type          = $this->accountType($journal, 'source');
@@ -124,219 +128,6 @@ class TransactionUpdateService
         $this->setCategory($transaction, $category);
 
         return $transaction;
-    }
-
-    /**
-     * TODO this method is duplicated
-     *
-     * @param TransactionJournal $journal
-     * @param string             $direction
-     *
-     * @return string
-     * @throws FireflyException
-     */
-    protected function accountType(TransactionJournal $journal, string $direction): string
-    {
-        $types = [];
-        $type  = $journal->transactionType->type;
-        switch ($type) {
-            default:
-                throw new FireflyException(sprintf('Cannot handle type "%s" in accountType()', $type));
-            case TransactionType::WITHDRAWAL:
-                $types['source']      = AccountType::ASSET;
-                $types['destination'] = AccountType::EXPENSE;
-                break;
-            case TransactionType::DEPOSIT:
-                $types['source']      = AccountType::REVENUE;
-                $types['destination'] = AccountType::ASSET;
-                break;
-            case TransactionType::TRANSFER:
-                $types['source']      = AccountType::ASSET;
-                $types['destination'] = AccountType::ASSET;
-                break;
-        }
-        if (!isset($types[$direction])) {
-            throw new FireflyException(sprintf('No type set for direction "%s" and type "%s"', $type, $direction));
-        }
-
-        return $types[$direction];
-    }
-
-    /**
-     * TODO this method is duplicated.
-     *
-     * @param string      $expectedType
-     * @param int|null    $accountId
-     * @param string|null $accountName
-     *
-     * @return Account
-     * @throws FireflyException
-     */
-    protected function findAccount(string $expectedType, ?int $accountId, ?string $accountName): Account
-    {
-        $accountId   = intval($accountId);
-        $accountName = strval($accountName);
-
-        switch ($expectedType) {
-            case AccountType::ASSET:
-                if ($accountId > 0) {
-                    // must be able to find it based on ID. Validator should catch invalid ID's.
-                    return $this->accountRepository->findNull($accountId);
-                }
-
-                // alternatively, return by name. Validator should catch invalid names.
-                return $this->accountRepository->findByName($accountName, [AccountType::ASSET]);
-                break;
-            case AccountType::EXPENSE:
-                if ($accountId > 0) {
-                    // must be able to find it based on ID. Validator should catch invalid ID's.
-                    return $this->accountRepository->findNull($accountId);
-                }
-                if (strlen($accountName) > 0) {
-                    /** @var AccountFactory $factory */
-                    $factory = app(AccountFactory::class);
-                    $factory->setUser($this->user);
-
-                    return $factory->findOrCreate($accountName, AccountType::EXPENSE);
-                }
-
-                // return cash account:
-                return $this->accountRepository->getCashAccount();
-                break;
-            case AccountType::REVENUE:
-                if ($accountId > 0) {
-                    // must be able to find it based on ID. Validator should catch invalid ID's.
-                    return $this->accountRepository->findNull($accountId);
-                }
-                if (strlen($accountName) > 0) {
-                    // alternatively, return by name.
-                    /** @var AccountFactory $factory */
-                    $factory = app(AccountFactory::class);
-                    $factory->setUser($this->user);
-
-                    return $factory->findOrCreate($accountName, AccountType::REVENUE);
-                }
-
-                // return cash account:
-                return $this->accountRepository->getCashAccount();
-
-            default:
-                throw new FireflyException(sprintf('Cannot find account of type "%s".', $expectedType));
-
-        }
-    }
-
-    /**
-     * TODO method is duplicated
-     *
-     * @param int|null    $budgetId
-     * @param null|string $budgetName
-     *
-     * @return Budget|null
-     */
-    protected function findBudget(?int $budgetId, ?string $budgetName): ?Budget
-    {
-        /** @var BudgetFactory $factory */
-        $factory = app(BudgetFactory::class);
-        $factory->setUser($this->user);
-
-        return $factory->find($budgetId, $budgetName);
-    }
-
-    /**
-     * TODO method is duplicated
-     *
-     * @param int|null    $categoryId
-     * @param null|string $categoryName
-     *
-     * @return Category|null
-     */
-    protected function findCategory(?int $categoryId, ?string $categoryName): ?Category
-    {
-        /** @var CategoryFactory $factory */
-        $factory = app(CategoryFactory::class);
-        $factory->setUser($this->user);
-
-        return $factory->findOrCreate($categoryId, $categoryName);
-    }
-
-    /**
-     * TODO method is duplicated
-     *
-     * @param int|null    $currencyId
-     * @param null|string $currencyCode
-     *
-     * @return TransactionCurrency|null
-     */
-    protected function findCurrency(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
-    {
-        $factory = app(TransactionCurrencyFactory::class);
-
-        return $factory->find($currencyId, $currencyCode);
-    }
-
-    /**
-     * TODO almost the same as in transaction factory.
-     *
-     * @param Transaction $transaction
-     * @param Budget|null $budget
-     */
-    protected function setBudget(Transaction $transaction, ?Budget $budget): void
-    {
-        if (is_null($budget)) {
-            return;
-        }
-        $transaction->budgets()->sync([$budget->id]);
-
-        return;
-    }
-
-    /**
-     * TODO almost the same as in transaction factory.
-     *
-     * @param Transaction   $transaction
-     * @param Category|null $category
-     */
-    protected function setCategory(Transaction $transaction, ?Category $category): void
-    {
-        if (is_null($category)) {
-            return;
-        }
-        $transaction->categories()->sync([$category->id]);
-
-        return;
-    }
-
-    /**
-     * TODO method is duplicated
-     *
-     * @param Transaction $transaction
-     * @param string|null $amount
-     */
-    protected function setForeignAmount(Transaction $transaction, ?string $amount): void
-    {
-        $transaction->foreign_amount = $amount;
-        $transaction->save();
-    }
-
-    /**
-     * TODO method is duplicated
-     *
-     * @param Transaction              $transaction
-     * @param TransactionCurrency|null $currency
-     */
-    protected function setForeignCurrency(Transaction $transaction, ?TransactionCurrency $currency): void
-    {
-        if (is_null($currency)) {
-            $transaction->foreign_currency_id = null;
-            $transaction->save();
-
-            return;
-        }
-        $transaction->foreign_currency_id = $currency->id;
-        $transaction->save();
-
-        return;
     }
 
 

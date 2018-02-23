@@ -27,13 +27,16 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\User;
+use Log;
 
 /**
  * Class TransactionJournalFactory
  */
 class TransactionJournalFactory
 {
+    use JournalServiceTrait;
     /** @var User */
     private $user;
 
@@ -47,6 +50,7 @@ class TransactionJournalFactory
      */
     public function create(array $data): TransactionJournal
     {
+        Log::debug('Start of TransactionJournalFactory::create()');
         // store basic journal first.
         $type            = $this->findTransactionType($data['type']);
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser($this->user);
@@ -95,7 +99,7 @@ class TransactionJournalFactory
         $this->storeMeta($journal, $data, 'payment_date');
         $this->storeMeta($journal, $data, 'invoice_date');
         $this->storeMeta($journal, $data, 'internal_reference');
-
+        Log::debug('End of TransactionJournalFactory::create()');
         return $journal;
     }
 
@@ -107,25 +111,6 @@ class TransactionJournalFactory
     public function setUser(User $user): void
     {
         $this->user = $user;
-    }
-
-    /**
-     * Connect bill if present.
-     *
-     * @param TransactionJournal $journal
-     * @param array              $data
-     */
-    protected function connectBill(TransactionJournal $journal, array $data): void
-    {
-        /** @var BillFactory $factory */
-        $factory = app(BillFactory::class);
-        $factory->setUser($this->user);
-        $bill = $factory->find($data['bill_id'], $data['bill_name']);
-
-        if (!is_null($bill)) {
-            $journal->bill_id = $bill->id;
-            $journal->save();
-        }
     }
 
     /**
@@ -147,23 +132,6 @@ class TransactionJournalFactory
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @param array              $data
-     */
-    protected function connectTags(TransactionJournal $journal, array $data): void
-    {
-        $factory = app(TagFactory::class);
-        $factory->setUser($journal->user);
-        if (is_null($data['tags'])) {
-            return;
-        }
-        foreach ($data['tags'] as $string) {
-            $tag = $factory->findOrCreate($string);
-            $journal->tags()->save($tag);
-        }
-    }
-
-    /**
      * Get the transaction type. Since this is mandatory, will throw an exception when nothing comes up. Will always
      * use TransactionType repository.
      *
@@ -181,41 +149,6 @@ class TransactionJournalFactory
         }
 
         return $transactionType;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param array              $data
-     * @param string             $field
-     */
-    protected function storeMeta(TransactionJournal $journal, array $data, string $field): void
-    {
-        $value = $data[$field] ?? null;
-        if (!is_null($value)) {
-            $set = [
-                'journal' => $journal,
-                'name'    => $field,
-                'data'    => $data[$field],
-            ];
-            /** @var TransactionJournalMetaFactory $factory */
-            $factory = app(TransactionJournalMetaFactory::class);
-            $factory->updateOrCreate($set);
-        }
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param string             $notes
-     */
-    protected function storeNote(TransactionJournal $journal, string $notes): void
-    {
-        if (strlen($notes) > 0) {
-            $note = new Note;
-            $note->noteable()->associate($journal);
-            $note->text = $notes;
-            $note->save();
-        }
-
     }
 
 }
