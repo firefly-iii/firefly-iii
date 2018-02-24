@@ -46,13 +46,12 @@ class JournalFormRequest extends Request
      */
     public function getJournalData()
     {
-        var_dump($this->all());
-        $data = [
+        $currencyId = $this->integer('amount_currency_id_amount');
+        $data       = [
             'type'               => $this->get('what'), // type. can be 'deposit', 'withdrawal' or 'transfer'
             'date'               => $this->date('date'),
             'tags'               => explode(',', $this->string('tags')),
             'user'               => auth()->user()->id,
-
 
             // all custom fields:
             'interest_date'      => $this->date('interest_date'),
@@ -70,13 +69,6 @@ class JournalFormRequest extends Request
             'piggy_bank_name'    => null,
             'bill_id'            => null,
             'bill_name'          => null,
-
-            // native amount and stuff like that:
-            //'currency_id'        => $this->integer('amount_currency_id_amount'),
-            //'amount'             => $this->string('amount'),
-            //'native_amount'      => $this->string('native_amount'),
-            //'source_amount'      => $this->string('source_amount'),
-            //'destination_amount' => $this->string('destination_amount'),
 
             // transaction data:
             'transactions'       => [
@@ -101,15 +93,41 @@ class JournalFormRequest extends Request
                 ],
             ],
         ];
-        switch ($data['type']) {
+        switch (strtolower($data['type'])) {
             case 'withdrawal':
-                $data['transactions'][0]['currency_id'] = $this->integer('source_currency_id');
+                $sourceCurrency                            = $this->integer('source_account_currency');
+                $data['transactions'][0]['currency_id']    = $sourceCurrency;
+                $data['transactions'][0]['destination_id'] = null; // clear destination ID (transfer)
+                if ($sourceCurrency !== $currencyId) {
+                    // user has selected a foreign currency.
+                    $data['transactions'][0]['foreign_currency_id'] = $currencyId;
+                    $data['transactions'][0]['foreign_amount']      = $this->string('amount');
+                    $data['transactions'][0]['amount']              = $this->string('native_amount');
+                }
+
                 break;
             case 'deposit':
-                $data['transactions'][0]['currency_id'] = $this->integer('destination_currency_id');
+                $destinationCurrency                    = $this->integer('destination_account_currency');
+                $data['transactions'][0]['currency_id'] = $destinationCurrency;
+                $data['transactions'][0]['source_id']   = null; // clear destination ID (transfer)
+                if ($destinationCurrency !== $currencyId) {
+                    // user has selected a foreign currency.
+                    $data['transactions'][0]['foreign_currency_id'] = $currencyId;
+                    $data['transactions'][0]['foreign_amount']      = $this->string('amount');
+                    $data['transactions'][0]['amount']              = $this->string('native_amount');
+                }
                 break;
             case 'transfer':
-                $data['transactions'][0]['currency_id'] = $this->integer('destination_currency_id');
+                // by default just assume source currency
+                $sourceCurrency                         = $this->integer('source_account_currency');
+                $destinationCurrency                    = $this->integer('destination_account_currency');
+                $data['transactions'][0]['currency_id'] = $sourceCurrency;
+                if ($sourceCurrency !== $destinationCurrency) {
+                    // user has selected a foreign currency.
+                    $data['transactions'][0]['foreign_currency_id'] = $destinationCurrency;
+                    $data['transactions'][0]['foreign_amount']      = $this->string('destination_amount');
+                    $data['transactions'][0]['amount']              = $this->string('source_amount');
+                }
                 break;
 
         }

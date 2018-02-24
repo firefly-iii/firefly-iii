@@ -110,11 +110,86 @@ interface JournalRepositoryInterface
     public function getDestinationAccount(TransactionJournal $journal): Account;
 
     /**
+     * Returns the first positive transaction for the journal. Useful when editing journals.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Transaction
+     */
+    public function getFirstPosTransaction(TransactionJournal $journal): Transaction;
+
+    /**
+     * Return the ID of the budget linked to the journal (if any) or the transactions (if any).
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return int
+     */
+    public function getJournalBudgetId(TransactionJournal $journal): int;
+
+    /**
+     * Return the name of the category linked to the journal (if any) or to the transactions (if any).
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    public function getJournalCategoryName(TransactionJournal $journal): string;
+
+    /**
+     * Return requested date as string. When it's a NULL return the date of journal,
+     * otherwise look for meta field and return that one.
+     *
+     * @param TransactionJournal $journal
+     * @param null|string        $field
+     *
+     * @return string
+     */
+    public function getJournalDate(TransactionJournal $journal, ?string $field): string;
+
+    /**
+     * Return a list of all destination accounts related to journal.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getJournalDestinationAccounts(TransactionJournal $journal): Collection;
+
+    /**
+     * Return a list of all source accounts related to journal.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getJournalSourceAccounts(TransactionJournal $journal): Collection;
+
+    /**
+     * Return value of a meta field (or NULL).
+     *
+     * @param TransactionJournal $journal
+     * @param string             $field
+     *
+     * @return null|string
+     */
+    public function getMetaField(TransactionJournal $journal, string $field): ?string;
+
+    /**
      * @param TransactionJournal $journal
      *
      * @return Note|null
      */
     public function getNote(TransactionJournal $journal): ?Note;
+
+    /**
+     * Return text of a note attached to journal, or ''.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    public function getNoteText(TransactionJournal $journal): string;
 
     /**
      * Get account of transaction that is less than zero. Only works with unsplit journals.
@@ -124,6 +199,24 @@ interface JournalRepositoryInterface
      * @return Account
      */
     public function getSourceAccount(TransactionJournal $journal): Account;
+
+    /**
+     * Return all tags as strings in an array.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return array
+     */
+    public function getTags(TransactionJournal $journal): array;
+
+    /**
+     * Return the transaction type of the journal.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    public function getTransactionType(TransactionJournal $journal): string;
 
     /**
      * @return Collection

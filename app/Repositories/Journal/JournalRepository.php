@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
 
+use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionJournalFactory;
@@ -33,6 +34,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Services\Internal\Update\JournalUpdateService;
+use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
@@ -208,6 +210,184 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Returns the first positive transaction for the journal. Useful when editing journals.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Transaction
+     */
+    public function getFirstPosTransaction(TransactionJournal $journal): Transaction
+    {
+        /** @var Transaction $transaction */
+        $transaction = $journal->transactions()->where('amount', '>', 0)->first();
+
+        return $transaction;
+    }
+
+    /**
+     * Return the ID of the budget linked to the journal (if any) or the transactions (if any).
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return int
+     */
+    public function getJournalBudgetId(TransactionJournal $journal): int
+    {
+        $budget = $journal->budgets()->first();
+        if (null !== $budget) {
+            return $budget->id;
+        }
+        $budget = $journal->transactions()->first()->budgets()->first();
+        if (null !== $budget) {
+            return $budget->id;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Return the name of the category linked to the journal (if any) or to the transactions (if any).
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    public function getJournalCategoryName(TransactionJournal $journal): string
+    {
+        $category = $journal->categories()->first();
+        if (null !== $category) {
+            return $category->name;
+        }
+        $category = $journal->transactions()->first()->categories()->first();
+        if (null !== $category) {
+            return $category->name;
+        }
+
+        return '';
+    }
+
+    /**
+     * Return requested date as string. When it's a NULL return the date of journal,
+     * otherwise look for meta field and return that one.
+     *
+     * @param TransactionJournal $journal
+     * @param null|string        $field
+     *
+     * @return string
+     */
+    public function getJournalDate(TransactionJournal $journal, ?string $field): string
+    {
+        if (is_null($field)) {
+            return $journal->date->format('Y-m-d');
+        }
+        if (null !== $journal->$field && $journal->$field instanceof Carbon) {
+            // make field NULL
+            $carbon          = clone $journal->$field;
+            $journal->$field = null;
+            $journal->save();
+
+            // create meta entry
+            $journal->setMeta($field, $carbon);
+
+            // return that one instead.
+            return $carbon->format('Y-m-d');
+        }
+        $metaField = $journal->getMeta($field);
+        if (null !== $metaField) {
+            $carbon = new Carbon($metaField);
+
+            return $carbon->format('Y-m-d');
+        }
+
+        return '';
+    }
+
+    /**
+     * Return a list of all destination accounts related to journal.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getJournalDestinationAccounts(TransactionJournal $journal): Collection
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($journal->id);
+        $cache->addProperty('destination-account-list');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+        $transactions = $journal->transactions()->where('amount', '>', 0)->orderBy('transactions.account_id')->with('account')->get();
+        $list         = new Collection;
+        /** @var Transaction $t */
+        foreach ($transactions as $t) {
+            $list->push($t->account);
+        }
+        $list = $list->unique('id');
+        $cache->store($list);
+
+        return $list;
+    }
+
+    /**
+     * Return a list of all source accounts related to journal.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getJournalSourceAccounts(TransactionJournal $journal): Collection
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($journal->id);
+        $cache->addProperty('source-account-list');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+        $transactions = $journal->transactions()->where('amount', '<', 0)->orderBy('transactions.account_id')->with('account')->get();
+        $list         = new Collection;
+        /** @var Transaction $t */
+        foreach ($transactions as $t) {
+            $list->push($t->account);
+        }
+        $list = $list->unique('id');
+        $cache->store($list);
+
+        return $list;
+    }
+
+    /**
+     * Return value of a meta field (or NULL) as a string.
+     *
+     * @param TransactionJournal $journal
+     * @param string             $field
+     *
+     * @return null|string
+     */
+    public function getMetaField(TransactionJournal $journal, string $field): ?string
+    {
+        $value = null;
+        $cache = new CacheProperties;
+        $cache->addProperty('journal-meta');
+        $cache->addProperty($journal->id);
+        $cache->addProperty($field);
+
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        Log::debug(sprintf('Looking for journal #%d meta field "%s".', $journal->id, $field));
+        $entry = $journal->transactionJournalMeta()->where('name', $field)->first();
+        if (is_null($entry)) {
+            return null;
+        }
+        $value = $entry->data;
+        $cache->store($value);
+
+        return $value;
+    }
+
+    /**
      * @param TransactionJournal $journal
      *
      * @return Note|null
@@ -215,6 +395,23 @@ class JournalRepository implements JournalRepositoryInterface
     public function getNote(TransactionJournal $journal): ?Note
     {
         return $journal->notes()->first();
+    }
+
+    /**
+     * Return text of a note attached to journal, or ''.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    public function getNoteText(TransactionJournal $journal): string
+    {
+        $note = $this->getNote($journal);
+        if (is_null($note)) {
+            return '';
+        }
+
+        return $note->text;
     }
 
     /**
@@ -227,6 +424,30 @@ class JournalRepository implements JournalRepositoryInterface
     public function getSourceAccount(TransactionJournal $journal): Account
     {
         return $journal->transactions()->where('amount', '>', 0)->first()->account;
+    }
+
+    /**
+     * Return all tags as strings in an array.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return array
+     */
+    public function getTags(TransactionJournal $journal): array
+    {
+        return $journal->tags()->get()->pluck('tag')->toArray();
+    }
+
+    /**
+     * Return the transaction type of the journal.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    public function getTransactionType(TransactionJournal $journal): string
+    {
+        return $journal->transactionType->type;
     }
 
     /**

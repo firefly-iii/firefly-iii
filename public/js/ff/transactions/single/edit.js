@@ -18,30 +18,83 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: what, Modernizr, selectsForeignCurrency, convertForeignToNative, validateCurrencyForTransfer, convertSourceToDestination, journalData, journal, accountInfo, exchangeRateInstructions, currencyInfo */
+/** global: what, Modernizr, selectsForeignCurrency, accountInfo, convertForeignToNative, validateCurrencyForTransfer, convertSourceToDestination, journalData, journal, accountInfo, exchangeRateInstructions, currencyInfo */
 
 $(document).ready(function () {
     "use strict";
+    console.log('in edit.js document.ready');
     setAutocompletes();
     updateInitialPage();
 
+    // update the two source account currency ID fields (initial value):
+    initCurrencyIdValues();
+
+
     // respond to user input:
-    $('.currency-option').on('click', selectsForeignCurrency);
+    $('.currency-option').on('click', function () {
+        // to display instructions and stuff like that.
+        selectsForeignCurrency();
+    });
     $('#ffInput_amount').on('change', convertForeignToNative);
 
     // respond to transfer changes:
-    $('#ffInput_source_account_id').on('change', validateCurrencyForTransfer);
-    $('#ffInput_destination_account_id').on('change', validateCurrencyForTransfer);
+    $('#ffInput_source_account_id').on('change', function () {
+        validateCurrencyForTransfer();
+        // update the two source account currency ID fields (initial value):
+        initCurrencyIdValues();
+    });
+    $('#ffInput_destination_account_id').on('change', function () {
+        validateCurrencyForTransfer();
+        // update the two source account currency ID fields (initial value):
+        initCurrencyIdValues();
+    });
 
     // convert source currency to destination currency (slightly different routine for transfers)
     $('#ffInput_source_amount').on('change', convertSourceToDestination);
+
+
 });
+
+/**
+ * Fills two hidden variables with the correct currency ID.
+ */
+function initCurrencyIdValues() {
+    var currencyId;
+    if (journal.transaction_type.type === "Withdrawal") {
+        // update source from page load info:
+        currencyId = $('input[name="amount_currency_id_amount"]').val();
+        console.log('Set source account currency to ' + currencyId);
+        $('input[name="source_account_currency"]').val(currencyId);
+        return;
+    }
+
+    if (journal.transaction_type.type === "Deposit") {
+        // update destination from page load info:
+        currencyId = $('input[name="amount_currency_id_amount"]').val();
+        console.log('Set destination account currency to ' + currencyId);
+        $('input[name="destination_account_currency"]').val(currencyId);
+        return;
+    }
+    var sourceAccount = $('select[name="source_account_id"]').val();
+    console.log('Source account is ' + sourceAccount);
+    var destAccount = $('select[name="destination_account_id"]').val();
+    console.log('Destination account is ' + destAccount);
+
+    var sourceCurrency = parseInt(accountInfo[sourceAccount].preferredCurrency);
+    var destCurrency = parseInt(accountInfo[destAccount].preferredCurrency);
+
+    console.log('Set source account currency to ' + sourceCurrency);
+    $('input[name="source_account_currency"]').val(sourceCurrency);
+
+    console.log('Set destination account currency to ' + destCurrency);
+    $('input[name="destination_account_currency"]').val(destCurrency);
+}
 
 /**
  * Set some initial values for the user to see.
  */
 function updateInitialPage() {
-
+    console.log('in updateInitialPage()');
     if (journal.transaction_type.type === "Transfer") {
         $('#native_amount_holder').hide();
         $('#amount_holder').hide();
@@ -61,7 +114,6 @@ function updateInitialPage() {
     $('#source_amount_holder').hide();
     $('#destination_amount_holder').hide();
 
-
     if (journalData.native_currency.id === journalData.currency.id) {
         $('#exchange_rate_instruction_holder').hide();
         $('#native_amount_holder').hide();
@@ -78,6 +130,7 @@ function updateInitialPage() {
  * Get accountID based on some meta info.
  */
 function getAccountId() {
+    console.log('in getAccountId()');
     if (journal.transaction_type.type === "Withdrawal") {
         return $('select[name="source_account_id"]').val();
     }
@@ -104,6 +157,7 @@ function setAutocompletes() {
  * @returns {XML|string|void}
  */
 function getExchangeInstructions() {
+    console.log('In getExchangeInstructions()');
     var selectedAccountId = getAccountId();
     var foreignCurrencyId = parseInt($('input[name="amount_currency_id_amount"]').val());
     var nativeCurrencyId = parseInt(accountInfo[selectedAccountId].preferredCurrency);
