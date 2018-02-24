@@ -337,35 +337,16 @@ class SingleController extends Controller
      */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
-        $doSplit                 = 1 === intval($request->get('split_journal'));
-        $createAnother           = 1 === intval($request->get('create_another'));
-        $data                    = $request->getJournalData();
-        $data['user']            = auth()->user()->id;
-        $data['bill_id']         = null;
-        $data['bill_name']       = null;
-        $data['piggy_bank_name'] = null;
-        $data['transactions']    = [
-            [
-                'amount'                => $data['amount'],
-                'currency_id'           => $data['currency_id'],
-                'description'           => null,
-                'reconciled'            => false,
-                'identifier'            => 0,
-                'currency_code'         => null,
-                'budget_id'             => $data['budget_id'],
-                'budget_name'           => null,
-                'category_id'           => null,
-                'category_name'         => $data['category'],
-                'source_id'             => (int)$data['source_account_id'],
-                'source_name'           => $data['source_account_name'],
-                'destination_id'        => (int)$data['destination_account_id'],
-                'destination_name'      => $data['destination_account_name'],
-                'foreign_currency_id'   => null,
-                'foreign_currency_code' => null,
-                'foreign_amount'        => null,
-            ],
-        ];
-        $journal                 = $repository->store($data);
+        $doSplit       = 1 === intval($request->get('split_journal'));
+        $createAnother = 1 === intval($request->get('create_another'));
+        $data          = $request->getJournalData();
+
+
+        var_dump($data);exit;
+
+        $journal       = $repository->store($data);
+
+
         if (null === $journal->id) {
             // error!
             Log::error('Could not store transaction journal: ', $journal->getErrors()->toArray());

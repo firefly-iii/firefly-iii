@@ -46,10 +46,12 @@ class JournalFormRequest extends Request
      */
     public function getJournalData()
     {
+        var_dump($this->all());
         $data = [
             'type'               => $this->get('what'), // type. can be 'deposit', 'withdrawal' or 'transfer'
             'date'               => $this->date('date'),
             'tags'               => explode(',', $this->string('tags')),
+            'user'               => auth()->user()->id,
 
 
             // all custom fields:
@@ -65,15 +67,16 @@ class JournalFormRequest extends Request
             // journal data:
             'description'        => $this->string('description'),
             'piggy_bank_id'      => $this->integer('piggy_bank_id'),
+            'piggy_bank_name'    => null,
             'bill_id'            => null,
             'bill_name'          => null,
 
             // native amount and stuff like that:
-            'currency_id'        => $this->integer('amount_currency_id_amount'),
-            'amount'             => $this->string('amount'),
-            'native_amount'      => $this->string('native_amount'),
-            'source_amount'      => $this->string('source_amount'),
-            'destination_amount' => $this->string('destination_amount'),
+            //'currency_id'        => $this->integer('amount_currency_id_amount'),
+            //'amount'             => $this->string('amount'),
+            //'native_amount'      => $this->string('native_amount'),
+            //'source_amount'      => $this->string('source_amount'),
+            //'destination_amount' => $this->string('destination_amount'),
 
             // transaction data:
             'transactions'       => [
@@ -98,6 +101,18 @@ class JournalFormRequest extends Request
                 ],
             ],
         ];
+        switch ($data['type']) {
+            case 'withdrawal':
+                $data['transactions'][0]['currency_id'] = $this->integer('source_currency_id');
+                break;
+            case 'deposit':
+                $data['transactions'][0]['currency_id'] = $this->integer('destination_currency_id');
+                break;
+            case 'transfer':
+                $data['transactions'][0]['currency_id'] = $this->integer('destination_currency_id');
+                break;
+
+        }
 
         return $data;
     }
