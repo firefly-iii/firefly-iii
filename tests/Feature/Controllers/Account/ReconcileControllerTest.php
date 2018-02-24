@@ -205,6 +205,7 @@ class ReconcileControllerTest extends TestCase
             'transactions' => [1, 2, 3],
             'reconcile'    => 'create',
             'difference'   => '5',
+            'start'        => '20170101',
             'end'          => '20170131',
         ];
         $this->be($this->user());

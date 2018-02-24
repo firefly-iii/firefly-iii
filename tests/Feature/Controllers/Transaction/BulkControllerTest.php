@@ -203,7 +203,7 @@ class BulkControllerTest extends TestCase
         $repository->shouldReceive('updateBudget')->times(4)->andReturn(new TransactionJournal())
                    ->withArgs([Mockery::any(), $data['budget_id']]);
 
-        $repository->shouldReceive('updateTags')->times(4)->andReturn(true)
+        $repository->shouldReceive('updateTags')->times(4)->andReturn(new TransactionJournal())
                    ->withArgs([Mockery::any(), $tags]);
 
 

@@ -576,7 +576,7 @@ class BudgetControllerTest extends TestCase
         $repository->shouldReceive('find')->andReturn($budget);
         $repository->shouldReceive('update');
         $repository->shouldReceive('cleanupBudgets');
-        
+
         $this->session(['budgets.edit.uri' => 'http://localhost']);
 
         $data = [

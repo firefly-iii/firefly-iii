@@ -97,7 +97,7 @@ class AccountControllerTest extends TestCase
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('find')->withArgs([0])->once()->andReturn(new Account);
+        $repository->shouldReceive('findNull')->withArgs([0])->once()->andReturn(null);
         $repository->shouldReceive('destroy')->andReturn(true);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
@@ -285,7 +285,6 @@ class AccountControllerTest extends TestCase
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('find')->andReturn(new Account)->once();
         $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
@@ -313,7 +312,6 @@ class AccountControllerTest extends TestCase
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('find')->andReturn(new Account)->once();
         $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
@@ -339,7 +337,6 @@ class AccountControllerTest extends TestCase
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('find')->andReturn(new Account)->once();
         $repository->shouldReceive('update')->once();
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
@@ -365,7 +362,6 @@ class AccountControllerTest extends TestCase
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('find')->andReturn(new Account)->once();
         $repository->shouldReceive('update')->once();
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
