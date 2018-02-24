@@ -23,7 +23,7 @@
 $(document).ready(function () {
     "use strict";
 
-    // hide ALL exchange things and AMOUNT things
+    // hide ALL exchange things and AMOUNT fields
     $('#exchange_rate_instruction_holder').hide();
     $('#native_amount_holder').hide();
     $('#amount_holder').hide();
@@ -38,8 +38,19 @@ $(document).ready(function () {
 
 
     // when user changes source account or destination, native currency may be different.
-    $('select[name="source_account_id"]').on('change', updateNativeCurrency);
-    $('select[name="destination_account_id"]').on('change', updateNativeCurrency);
+    $('select[name="source_account_id"]').on('change', function() {
+        selectsDifferentSource();
+        // do something for transfers:
+        validateCurrencyForTransfer();
+    });
+    $('select[name="destination_account_id"]').on('change', function() {
+        selectsDifferentDestination();
+        // do something for transfers:
+        validateCurrencyForTransfer();
+    });
+
+    //$('select[name="source_account_id"]').on('change', updateNativeCurrency);
+    //$('select[name="destination_account_id"]').on('change', updateNativeCurrency);
 
     // convert foreign currency to native currency (when input changes, exchange rate)
     $('#ffInput_amount').on('change', convertForeignToNative);
@@ -51,6 +62,55 @@ $(document).ready(function () {
     $('.currency-option').on('click', selectsForeignCurrency);
     $('#ffInput_description').focus();
 });
+
+/**
+ * The user selects a different source account. Applies to withdrawals
+ * and transfers.
+ */
+function selectsDifferentSource() {
+    if (what === "deposit") {
+        console.log('User is making a deposit. Don\'t bother with source.');
+        $('input[name="source_account_currency"]').val("0");
+        return;
+    }
+    // store original currency ID of the selected account in a separate var:
+    var sourceId = $('select[name="source_account_id"]').val();
+    var sourceCurrency = accountInfo[sourceId].preferredCurrency;
+    $('input[name="source_account_currency"]').val(sourceCurrency);
+    console.log('Set source account currency to ' + sourceCurrency);
+
+    // change input thing:
+    $('.currency-option[data-id="' + sourceCurrency + '"]').click();
+    $('[data-toggle="dropdown"]').parent().removeClass('open');
+    $('select[name="source_account_id"]').focus();
+
+    return;
+}
+
+/**
+ * The user selects a different source account. Applies to withdrawals
+ * and transfers.
+ */
+function selectsDifferentDestination() {
+    if (what === "withdrawal") {
+        console.log('User is making a withdrawal. Don\'t bother with destination.');
+        $('input[name="destination_account_currency"]').val("0");
+        return;
+    }
+    // store original currency ID of the selected account in a separate var:
+    var destinationId = $('select[name="destination_account_id"]').val();
+    var destinationCurrency = accountInfo[destinationId].preferredCurrency;
+    $('input[name="destination_account_currency"]').val(destinationCurrency);
+    console.log('Set destinationId account currency to ' + destinationCurrency);
+
+    // change input thing:
+    $('.currency-option[data-id="' + destinationCurrency + '"]').click();
+    $('[data-toggle="dropdown"]').parent().removeClass('open');
+    $('select[name="destination_account_id"]').focus();
+
+    return;
+}
+
 
 /**
  * This function generates a small helper text to explain the user
@@ -66,31 +126,6 @@ function getExchangeInstructions() {
     text = text.replace(/@native_currency/g, currencyInfo[nativeCurrencyId].name);
     text = text.replace(/@foreign_currency/g, currencyInfo[foreignCurrencyId].name);
     return text;
-}
-
-/**
- * There is an input that shows the currency symbol that is native to the selected
- * acccount. So when the user changes the selected account, the native currency is updated:
- */
-function updateNativeCurrency(useAccountCurrency) {
-    var nativeCurrencyId;
-    if (useAccountCurrency) {
-        var newAccountId = getAccountId();
-        nativeCurrencyId = accountInfo[newAccountId].preferredCurrency;
-    }
-    if (!useAccountCurrency) {
-        nativeCurrencyId = overruleCurrency;
-    }
-
-    $('.currency-option[data-id="' + nativeCurrencyId + '"]').click();
-    $('[data-toggle="dropdown"]').parent().removeClass('open');
-    if (what === 'withdrawal') {
-        $('select[name="source_account_id"]').focus();
-    }
-    if (what === 'deposit') {
-        $('select[name="destination_account_id"]').focus();
-    }
-    validateCurrencyForTransfer();
 }
 
 /**
@@ -202,8 +237,14 @@ function updateForm() {
             break;
     }
     // get instructions all the time.
-    updateNativeCurrency(useAccountCurrency);
+    //updateNativeCurrency(useAccountCurrency);
+    console.log('End of update form');
+    selectsDifferentSource();
+    selectsDifferentDestination();
     selectsForeignCurrency();
+
+    // do something for transfers:
+    validateCurrencyForTransfer();
 }
 
 /**
