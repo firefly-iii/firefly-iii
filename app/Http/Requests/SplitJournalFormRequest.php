@@ -41,23 +41,64 @@ class SplitJournalFormRequest extends Request
     /**
      * @return array
      */
-    public function getSplitData(): array
+    public function getAll(): array
     {
         $data = [
-            'id'                               => $this->integer('id'),
-            'journal_description'              => $this->string('journal_description'),
-            'journal_currency_id'              => $this->integer('journal_currency_id'),
-            'journal_source_account_id'        => $this->integer('journal_source_account_id'),
-            'journal_source_account_name'      => $this->string('journal_source_account_name'),
-            'journal_destination_account_id'   => $this->integer('journal_destination_account_id'),
-            'journal_destination_account_name' => $this->string('journal_source_destination_name'),
-            'date'                             => $this->date('date'),
-            'what'                             => $this->string('what'),
-            'interest_date'                    => $this->date('interest_date'),
-            'book_date'                        => $this->date('book_date'),
-            'process_date'                     => $this->date('process_date'),
-            'transactions'                     => $this->getTransactionData(),
+            'description'     => $this->string('description'),
+            'type'            => $this->string('what'),
+            'date'            => $this->date('date'),
+            'tags'            => explode(',', $this->string('tags')),
+            'bill_id'         => null,
+            'bill_name'       => null,
+            'piggy_bank_id'   => null,
+            'piggy_bank_name' => null,
+            'notes'           => $this->string('notes'),
+            'transactions'    => [],
         ];
+        // switch type to get correct source / destination info:
+        $sourceId        = null;
+        $sourceName      = null;
+        $destinationId   = null;
+        $destinationName = null;
+
+        foreach ($this->get('transactions') as $index => $transaction) {
+            switch ($data['type']) {
+                case 'withdrawal':
+                    $sourceId        = $this->integer('journal_source_account_id');
+                    $destinationName = $transaction['destination_account_name'];
+                    break;
+                case 'deposit':
+                    $sourceName    = $transaction['source_account_name'];
+                    $destinationId = $this->integer('journal_destination_account_id');
+                    break;
+                case 'transfer':
+                    $sourceId      = $this->integer('journal_source_account_id');
+                    $destinationId = $this->integer('journal_destination_account_id');
+                    break;
+            }
+            $foreignAmount          = $transaction['foreign_amount'] ?? null;
+            $foreignCurrency        = isset($transaction['foreign_currency_id']) ? intval($transaction['foreign_currency_id']) : null;
+            $set                    = [
+                'source_id'             => $sourceId,
+                'source_name'           => $sourceName,
+                'destination_id'        => $destinationId,
+                'destination_name'      => $destinationName,
+                'foreign_amount'        => $foreignAmount,
+                'foreign_currency_id'   => $foreignCurrency,
+                'foreign_currency_code' => null,
+                'reconciled'            => false,
+                'identifier'            => $index,
+                'currency_id'           => $this->integer('journal_currency_id'),
+                'currency_code'         => null,
+                'description'           => $transaction['description'],
+                'amount'                => $transaction['amount'],
+                'budget_id'             => intval($transaction['budget_id'] ?? 0),
+                'budget_name'           => null,
+                'category_id'           => null,
+                'category_name'         => $transaction['category'],
+            ];
+            $data['transactions'][] = $set;
+        }
 
         return $data;
     }
