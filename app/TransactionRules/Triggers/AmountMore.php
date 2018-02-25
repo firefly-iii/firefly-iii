@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Log;
 
 /**
@@ -71,7 +72,11 @@ final class AmountMore extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $amount  = $journal->destination_amount ?? $journal->amountPositive();
+        /** @var JournalRepositoryInterface $repos */
+        $repos = app(JournalRepositoryInterface::class);
+        $repos->setUser($journal->user);
+
+        $amount  = $journal->destination_amount ?? $repos->getJournalTotal($journal);
         $compare = $this->triggerValue;
         $result  = bccomp($amount, $compare);
         if (1 === $result) {

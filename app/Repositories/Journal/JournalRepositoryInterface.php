@@ -36,7 +36,6 @@ use Illuminate\Support\MessageBag;
  */
 interface JournalRepositoryInterface
 {
-
     /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
@@ -166,6 +165,15 @@ interface JournalRepositoryInterface
     public function getJournalSourceAccounts(TransactionJournal $journal): Collection;
 
     /**
+     * Return total amount of journal. Is always positive.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    public function getJournalTotal(TransactionJournal $journal): string;
+
+    /**
      * Return value of a meta field (or NULL).
      *
      * @param TransactionJournal $journal
@@ -229,6 +237,15 @@ interface JournalRepositoryInterface
      * @return Collection
      */
     public function getTransactionsById(array $transactionIds): Collection;
+
+    /**
+     * Will tell you if journal is reconciled or not.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    public function isJournalReconciled(TransactionJournal $journal): bool;
 
     /**
      * @param Transaction $transaction

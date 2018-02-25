@@ -29,6 +29,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\BillDestroyService;
 use FireflyIII\Services\Internal\Update\BillUpdateService;
 use FireflyIII\Support\CacheProperties;
@@ -253,12 +254,15 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getOverallAverage(Bill $bill): string
     {
+        /** @var JournalRepositoryInterface $repos */
+        $repos = app(JournalRepositoryInterface::class);
+        $repos->setUser($this->user);
         $journals = $bill->transactionJournals()->get();
         $sum      = '0';
         $count    = strval($journals->count());
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            $sum = bcadd($sum, $journal->amountPositive());
+            $sum = bcadd($sum, $repos->getJournalTotal($journal));
         }
         $avg = '0';
         if ($journals->count() > 0) {
@@ -376,15 +380,19 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getYearAverage(Bill $bill, Carbon $date): string
     {
+        /** @var JournalRepositoryInterface $repos */
+        $repos = app(JournalRepositoryInterface::class);
+        $repos->setUser($this->user);
+
         $journals = $bill->transactionJournals()
                          ->where('date', '>=', $date->year . '-01-01 00:00:00')
-                         ->where('date', '<=', $date->year . '-12-31 00:00:00')
+                         ->where('date', '<=', $date->year . '-12-31 23:59:59')
                          ->get();
         $sum      = '0';
         $count    = strval($journals->count());
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            $sum = bcadd($sum, $journal->amountPositive());
+            $sum = bcadd($sum, $repos->getJournalTotal($journal));
         }
         $avg = '0';
         if ($journals->count() > 0) {
@@ -494,15 +502,20 @@ class BillRepository implements BillRepositoryInterface
         if (false === $journal->isWithdrawal()) {
             return false;
         }
-        $destinationAccounts = $journal->destinationAccountList();
-        $sourceAccounts      = $journal->sourceAccountList();
+
+        /** @var JournalRepositoryInterface $repos */
+        $repos = app(JournalRepositoryInterface::class);
+        $repos->setUser($this->user);
+
+        $destinationAccounts = $repos->getJournalDestinationAccounts($journal);
+        $sourceAccounts      = $repos->getJournalDestinationAccounts($journal);
         $matches             = explode(',', $bill->match);
         $description         = strtolower($journal->description) . ' ';
         $description         .= strtolower(join(' ', $destinationAccounts->pluck('name')->toArray()));
         $description         .= strtolower(join(' ', $sourceAccounts->pluck('name')->toArray()));
 
         $wordMatch   = $this->doWordMatch($matches, $description);
-        $amountMatch = $this->doAmountMatch($journal->amountPositive(), $bill->amount_min, $bill->amount_max);
+        $amountMatch = $this->doAmountMatch($repos->getJournalTotal($journal), $bill->amount_min, $bill->amount_max);
 
         // when both, update!
         if ($wordMatch && $amountMatch) {
@@ -561,6 +574,7 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * TODO refactor
      * @param float $amount
      * @param float $min
      * @param float $max
@@ -577,6 +591,7 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * TODO refactor
      * @param array $matches
      * @param       $description
      *

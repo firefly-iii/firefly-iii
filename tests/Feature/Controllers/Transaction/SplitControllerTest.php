@@ -316,15 +316,6 @@ class SplitControllerTest extends TestCase
         ];
 
         $journalRepos->shouldReceive('first')->once()->andReturn($opening);
-//        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]));
-//        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$account]));
-        //$journalRepos->shouldReceive('getTransactionType')->once()->andReturn('Opening balance');
-//        $journalRepos->shouldReceive('getJournalDate')->andReturn('2018-01-01')->once();
-//        $journalRepos->shouldReceive('getMetaField')->andReturn('');
-//        $journalRepos->shouldReceive('getNoteText')->andReturn('Some note')->once();
-//        $journalRepos->shouldReceive('getJournalBudgetId')->andReturn(0);
-//        $journalRepos->shouldReceive('getCategoryName')->andReturn('');
-
 
         $this->be($this->user());
         $response = $this->post(route('transactions.split.update', [$opening->id]), $data);

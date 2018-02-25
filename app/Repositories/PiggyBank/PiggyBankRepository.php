@@ -28,6 +28,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
@@ -222,8 +223,12 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getExactAmount(PiggyBank $piggyBank, PiggyBankRepetition $repetition, TransactionJournal $journal): string
     {
-        $amount  = $journal->amountPositive();
-        $sources = $journal->sourceAccountList()->pluck('id')->toArray();
+        /** @var JournalRepositoryInterface $repos */
+        $repos = app(JournalRepositoryInterface::class);
+        $repos->setUser($this->user);
+
+        $amount  = $repos->getJournalTotal($journal);
+        $sources = $repos->getJournalSourceAccounts($journal)->pluck('id')->toArray();
         $room    = bcsub(strval($piggyBank->targetamount), strval($repetition->currentamount));
         $compare = bcmul($repetition->currentamount, '-1');
 

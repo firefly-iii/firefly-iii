@@ -28,6 +28,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 
 /**
@@ -182,6 +183,9 @@ class PopupReport implements PopupReportInterface
      */
     public function byIncome(Account $account, array $attributes): Collection
     {
+        /** @var JournalRepositoryInterface $repository */
+        $repository = app(JournalRepositoryInterface::class);
+        $repository->setUser($account->user);
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])
@@ -191,9 +195,10 @@ class PopupReport implements PopupReportInterface
 
         // filter the set so the destinations outside of $attributes['accounts'] are not included.
         $journals = $journals->filter(
-            function (Transaction $transaction) use ($report) {
+            function (Transaction $transaction) use ($report, $repository) {
                 // get the destinations:
-                $destinations = $transaction->transactionJournal->destinationAccountList()->pluck('id')->toArray();
+                $journal      = $transaction->transactionJournal;
+                $destinations = $repository->getJournalDestinationAccounts($journal)->pluck('id')->toArray();
 
                 // do these intersect with the current list?
                 return !empty(array_intersect($report, $destinations));

@@ -357,6 +357,30 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Return total amount of journal. Is always positive.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    public function getJournalTotal(TransactionJournal $journal): string
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($journal->id);
+        $cache->addProperty('amount-positive');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        // saves on queries:
+        $amount = $journal->transactions()->where('amount', '>', 0)->get()->sum('amount');
+        $amount = strval($amount);
+        $cache->store($amount);
+
+        return $amount;
+    }
+
+    /**
      * Return value of a meta field (or NULL) as a string.
      *
      * @param TransactionJournal $journal
@@ -473,6 +497,24 @@ class JournalRepository implements JournalRepositoryInterface
                           ->get(['transactions.*']);
 
         return $set;
+    }
+
+    /**
+     * Will tell you if journal is reconciled or not.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    public function isJournalReconciled(TransactionJournal $journal): bool
+    {
+        foreach ($journal->transactions as $transaction) {
+            if ($transaction->reconciled) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

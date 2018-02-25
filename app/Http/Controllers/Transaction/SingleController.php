@@ -104,13 +104,13 @@ class SingleController extends Controller
      */
     public function cloneTransaction(TransactionJournal $journal)
     {
-        $source       = $journal->sourceAccountList()->first();
-        $destination  = $journal->destinationAccountList()->first();
-        $budget       = $journal->budgets()->first();
-        $budgetId     = null === $budget ? 0 : $budget->id;
-        $category     = $journal->categories()->first();
-        $categoryName = null === $category ? '' : $category->name;
-        $tags         = join(',', $journal->tags()->get()->pluck('tag')->toArray());
+        $source       = $this->repository->getJournalSourceAccounts($journal)->first();
+        $destination  = $this->repository->getJournalDestinationAccounts($journal)->first();
+        $budgetId     = $this->repository->getJournalBudgetId($journal);
+        $categoryName = $this->repository->getJournalCategoryName($journal);
+
+        $tags         = join(',',$this->repository->getTags($journal));
+        // todo less direct database access. Use collector?
         /** @var Transaction $transaction */
         $transaction   = $journal->transactions()->first();
         $amount        = app('steam')->positive($transaction->amount);
@@ -398,7 +398,7 @@ class SingleController extends Controller
         }
         // @codeCoverageIgnoreEnd
 
-        $data = $request->getJournalData();
+        $data    = $request->getJournalData();
         $journal = $repository->update($journal, $data);
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;

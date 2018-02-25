@@ -349,29 +349,4 @@ class General extends Twig_Extension
         );
     }
 
-    /**
-     * @return Twig_SimpleFunction
-     */
-    protected function steamPositive()
-    {
-        return new Twig_SimpleFunction(
-            'steam_positive',
-            function (string $str): string {
-                return Steam::positive($str);
-            }
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    private function getAmountFromJournal()
-    {
-        return new Twig_SimpleFunction(
-            'getAmount',
-            function (TransactionJournal $journal): string {
-                return $journal->amount();
-            }
-        );
-    }
 }

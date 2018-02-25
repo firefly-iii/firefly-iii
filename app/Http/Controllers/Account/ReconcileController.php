@@ -52,6 +52,9 @@ use Session;
  */
 class ReconcileController extends Controller
 {
+    /** @var JournalRepositoryInterface */
+    private $repository;
+
     /**
      *
      */
@@ -64,6 +67,7 @@ class ReconcileController extends Controller
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
                 app('view')->share('title', trans('firefly.accounts'));
+                $this->repository = app(JournalRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -84,10 +88,10 @@ class ReconcileController extends Controller
         $subTitle = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
 
         // journal related code
-        $pTransaction = $journal->positiveTransaction(); // TODO replace
+        $pTransaction = $this->repository->getFirstPosTransaction($journal);
         $preFilled    = [
-            'date'     => $journal->dateAsString(),
-            'category' => $journal->categoryAsString(),
+            'date'     => $this->repository->getJournalDate($journal, null),
+            'category' => $this->repository->getJournalCategoryName($journal),
             'tags'     => join(',', $journal->tags->pluck('tag')->toArray()),
             'amount'   => $pTransaction->amount,
         ];
@@ -130,10 +134,8 @@ class ReconcileController extends Controller
         $clearedAmount  = '0';
         $route          = route('accounts.reconcile.submit', [$account->id, $start->format('Ymd'), $end->format('Ymd')]);
         // get sum of transaction amounts:
-        /** @var JournalRepositoryInterface $repository */
-        $repository   = app(JournalRepositoryInterface::class);
-        $transactions = $repository->getTransactionsById($transactionIds);
-        $cleared      = $repository->getTransactionsById($clearedIds);
+        $transactions = $this->repository->getTransactionsById($transactionIds);
+        $cleared      = $this->repository->getTransactionsById($clearedIds);
         $countCleared = 0;
 
         /** @var Transaction $transaction */
@@ -224,12 +226,11 @@ class ReconcileController extends Controller
     }
 
     /**
-     * @param JournalRepositoryInterface $repository
-     * @param TransactionJournal         $journal
+     * @param TransactionJournal $journal
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
-    public function show(JournalRepositoryInterface $repository, TransactionJournal $journal)
+    public function show(TransactionJournal $journal)
     {
 
         if (TransactionType::RECONCILIATION !== $journal->transactionType->type) {
@@ -238,7 +239,7 @@ class ReconcileController extends Controller
         $subTitle = trans('firefly.reconciliation') . ' "' . $journal->description . '"';
 
         // get main transaction:
-        $transaction = $repository->getAssetTransaction($journal);
+        $transaction = $this->repository->getAssetTransaction($journal);
         $account     = $transaction->account;
 
         return view('accounts.reconcile.show', compact('journal', 'subTitle', 'transaction', 'account'));
@@ -384,12 +385,11 @@ class ReconcileController extends Controller
 
     /**
      * @param ReconciliationUpdateRequest $request
-     * @param JournalRepositoryInterface  $repository
      * @param TransactionJournal          $journal
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(ReconciliationUpdateRequest $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
+    public function update(ReconciliationUpdateRequest $request, TransactionJournal $journal)
     {
         if (TransactionType::RECONCILIATION !== $journal->transactionType->type) {
             return redirect(route('transactions.show', [$journal->id]));
@@ -403,8 +403,8 @@ class ReconcileController extends Controller
         $submitted = $request->getJournalData();
 
         // amount pos neg influences the accounts:
-        $source      = $repository->getSourceAccount($journal);
-        $destination = $repository->getDestinationAccount($journal);
+        $source      = $this->repository->getSourceAccount($journal);
+        $destination = $this->repository->getDestinationAccount($journal);
         if (bccomp($submitted['amount'], '0') === 1) {
             // amount is positive, switch accounts:
             list($source, $destination) = [$destination, $source];
@@ -443,10 +443,10 @@ class ReconcileController extends Controller
                                       'category_name'         => $submitted['category'],
                                   ],
             ],
-            'notes'           => $repository->getNote($journal),
+            'notes'           => $this->repository->getNoteText($journal),
         ];
 
-        $repository->update($journal, $data);
+        $this->repository->update($journal, $data);
 
         // @codeCoverageIgnoreStart
         if (1 === intval($request->get('return_to_edit'))) {

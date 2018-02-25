@@ -43,6 +43,9 @@ use View;
  */
 class MassController extends Controller
 {
+    /** @var JournalRepositoryInterface */
+    private $repository;
+
     /**
      *
      */
@@ -54,6 +57,7 @@ class MassController extends Controller
             function ($request, $next) {
                 app('view')->share('title', trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-repeat');
+                $this->repository = app(JournalRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -76,12 +80,11 @@ class MassController extends Controller
     }
 
     /**
-     * @param MassDeleteJournalRequest   $request
-     * @param JournalRepositoryInterface $repository
+     * @param MassDeleteJournalRequest $request
      *
      * @return mixed
      */
-    public function destroy(MassDeleteJournalRequest $request, JournalRepositoryInterface $repository)
+    public function destroy(MassDeleteJournalRequest $request)
     {
         $ids = $request->get('confirm_mass_delete');
         $set = new Collection;
@@ -89,7 +92,7 @@ class MassController extends Controller
             /** @var int $journalId */
             foreach ($ids as $journalId) {
                 /** @var TransactionJournal $journal */
-                $journal = $repository->find(intval($journalId));
+                $journal = $this->repository->find(intval($journalId));
                 if (null !== $journal->id && intval($journalId) === $journal->id) {
                     $set->push($journal);
                 }
@@ -100,7 +103,7 @@ class MassController extends Controller
 
         /** @var TransactionJournal $journal */
         foreach ($set as $journal) {
-            $repository->delete($journal);
+            $this->repository->delete($journal);
             ++$count;
         }
 
@@ -134,8 +137,8 @@ class MassController extends Controller
         $messages = [];
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            $sources      = $journal->sourceAccountList();
-            $destinations = $journal->destinationAccountList();
+            $sources      = $this->repository->getJournalSourceAccounts($journal);
+            $destinations = $this->repository->getJournalDestinationAccounts($journal);
             if ($sources->count() > 1) {
                 $messages[] = trans('firefly.cannot_edit_multiple_source', ['description' => $journal->description, 'id' => $journal->id]);
                 continue;
@@ -172,8 +175,8 @@ class MassController extends Controller
                 $transaction                    = $journal->positiveTransaction();
                 $currency                       = $transaction->transactionCurrency;
                 $journal->amount                = floatval($transaction->amount);
-                $sources                        = $journal->sourceAccountList();
-                $destinations                   = $journal->destinationAccountList();
+                $sources                        = $this->repository->getJournalSourceAccounts($journal);
+                $destinations                   = $this->repository->getJournalDestinationAccounts($journal);
                 $journal->transaction_count     = $journal->transactions()->count();
                 $journal->currency_symbol       = $currency->symbol;
                 $journal->transaction_type_type = $journal->transactionType->type;

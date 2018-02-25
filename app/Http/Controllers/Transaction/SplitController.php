@@ -124,9 +124,10 @@ class SplitController extends Controller
 
         return view(
             'transactions.split.edit', compact(
-            'subTitleIcon', 'currencies', 'optionalFields', 'preFilled', 'subTitle', 'uploadSize', 'assetAccounts', 'budgets', 'journal', 'accountArray',
-            'previous'
-        )
+                                         'subTitleIcon', 'currencies', 'optionalFields', 'preFilled', 'subTitle', 'uploadSize', 'assetAccounts', 'budgets',
+                                         'journal', 'accountArray',
+                                         'previous'
+                                     )
         );
     }
 
@@ -186,7 +187,7 @@ class SplitController extends Controller
         $destinationAccounts = $this->repository->getJournalDestinationAccounts($journal);
         $array               = [
             'journal_description'            => $request->old('journal_description', $journal->description),
-            'journal_amount'                 => $journal->amountPositive(),
+            'journal_amount'                 => $this->repository->getJournalTotal($journal),
             'sourceAccounts'                 => $sourceAccounts,
             'journal_source_account_id'      => $request->old('journal_source_account_id', $sourceAccounts->first()->id),
             'journal_source_account_name'    => $request->old('journal_source_account_name', $sourceAccounts->first()->name),
