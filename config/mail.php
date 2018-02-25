@@ -51,7 +51,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    'host' => env('MAIL_HOST', 'smtp.mailtrap.io'),
 
     /*
     |--------------------------------------------------------------------------
@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'port' => env('MAIL_PORT', 587),
+    'port' => env('MAIL_PORT', 2525),
 
     /*
     |--------------------------------------------------------------------------
@@ -76,7 +76,7 @@ return [
     | used globally for all e-mails that are sent by your application.
     |
     */
-    'from' => ['address' => env('MAIL_FROM', 'noreply@example.com'), 'name' => 'Firefly III Mailer'],
+    'from' => ['address' => env('MAIL_FROM', 'changeme@example.com'), 'name' => 'Firefly III Mailer'],
 
 
     /*
