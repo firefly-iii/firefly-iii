@@ -84,7 +84,7 @@ class SplitJournalFormRequest extends Request
                 'destination_id'        => $destinationId,
                 'destination_name'      => $destinationName,
                 'foreign_amount'        => $foreignAmount,
-                'foreign_currency_id'   => $foreignCurrency,
+                'foreign_currency_id'   => null,
                 'foreign_currency_code' => null,
                 'reconciled'            => false,
                 'identifier'            => $index,

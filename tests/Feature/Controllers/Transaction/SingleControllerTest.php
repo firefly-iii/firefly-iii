@@ -129,19 +129,26 @@ class SingleControllerTest extends TestCase
      */
     public function testEdit()
     {
+        $account    = $this->user()->accounts()->first();
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
 
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
 
-        $note       = new Note();
-        $note->id   = 5;
-        $note->text = 'I see you...';
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('getNote')->andReturn($note)->once();
-        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('countTransactions')->andReturn(2);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('countTransactions')->andReturn(2)->once();
+        $journalRepos->shouldReceive('getTransactionType')->andReturn('Withdrawal')->once();
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]))->once();
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$account]))->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Some Note')->once();
+        $journalRepos->shouldReceive('getFirstPosTransaction')->andReturn(new Transaction)->once();
+        $journalRepos->shouldReceive('getJournalDate')->withAnyArgs()->andReturn('2017-09-01');
+        $journalRepos->shouldReceive('getMetaField')->withAnyArgs()->andReturn('')->once();
+        $journalRepos->shouldReceive('getJournalCategoryName')->once()->andReturn('');
+        $journalRepos->shouldReceive('getJournalBudgetId')->once()->andReturn(0);
+        $journalRepos->shouldReceive('getTags')->once()->andReturn([]);
 
         $this->be($this->user());
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)->whereNull('deleted_at')->where('user_id', $this->user()->id)->first();
@@ -163,14 +170,33 @@ class SingleControllerTest extends TestCase
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
 
+        $account      = $this->user()->accounts()->first();
+        $cash         = $this->user()->accounts()->where('account_type_id', 2)->first();
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+
+        $journalRepos->shouldReceive('countTransactions')->andReturn(2)->once();
+        $journalRepos->shouldReceive('getTransactionType')->andReturn('Deposit')->once();
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$cash]))->once();
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$account]))->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Some Note')->once();
+        $journalRepos->shouldReceive('getFirstPosTransaction')->andReturn(new Transaction)->once();
+        $journalRepos->shouldReceive('getJournalDate')->withAnyArgs()->andReturn('2017-09-01');
+        $journalRepos->shouldReceive('getMetaField')->withAnyArgs()->andReturn('')->once();
+        $journalRepos->shouldReceive('getJournalCategoryName')->once()->andReturn('');
+        $journalRepos->shouldReceive('getJournalBudgetId')->once()->andReturn(0);
+        $journalRepos->shouldReceive('getTags')->once()->andReturn([]);
+
         $this->be($this->user());
-        $withdrawal = Transaction::leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
-                                 ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                 ->where('accounts.account_type_id', 2)
-                                 ->where('transaction_journals.transaction_type_id', 2)
-                                 ->whereNull('transaction_journals.deleted_at')
-                                 ->where('transaction_journals.user_id', $this->user()->id)->first(['transactions.transaction_journal_id']);
-        $response   = $this->get(route('transactions.edit', [$withdrawal->transaction_journal_id]));
+        $deposit = Transaction::leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
+                              ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                              ->where('accounts.account_type_id', 2)
+                              ->where('transaction_journals.transaction_type_id', 2)
+                              ->whereNull('transaction_journals.deleted_at')
+                              ->where('transaction_journals.user_id', $this->user()->id)->first(['transactions.*']);
+
+        $journalRepos->shouldReceive('first')->once()->andReturn($deposit->transactionJournal);
+
+        $response = $this->get(route('transactions.edit', [$deposit->transaction_journal_id]));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -189,14 +215,33 @@ class SingleControllerTest extends TestCase
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
 
+        $account      = $this->user()->accounts()->first();
+        $cash         = $this->user()->accounts()->where('account_type_id', 2)->first();
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+
+        $journalRepos->shouldReceive('countTransactions')->andReturn(2)->once();
+        $journalRepos->shouldReceive('getTransactionType')->andReturn('Withdrawal')->once();
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]))->once();
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$cash]))->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Some Note')->once();
+        $journalRepos->shouldReceive('getFirstPosTransaction')->andReturn(new Transaction)->once();
+        $journalRepos->shouldReceive('getJournalDate')->withAnyArgs()->andReturn('2017-09-01');
+        $journalRepos->shouldReceive('getMetaField')->withAnyArgs()->andReturn('')->once();
+        $journalRepos->shouldReceive('getJournalCategoryName')->once()->andReturn('');
+        $journalRepos->shouldReceive('getJournalBudgetId')->once()->andReturn(0);
+        $journalRepos->shouldReceive('getTags')->once()->andReturn([]);
+
         $this->be($this->user());
         $withdrawal = Transaction::leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
                                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                  ->where('accounts.account_type_id', 2)
                                  ->where('transaction_journals.transaction_type_id', 1)
                                  ->whereNull('transaction_journals.deleted_at')
-                                 ->where('transaction_journals.user_id', $this->user()->id)->first(['transactions.transaction_journal_id']);
-        $response   = $this->get(route('transactions.edit', [$withdrawal->transaction_journal_id]));
+                                 ->where('transaction_journals.user_id', $this->user()->id)->first(['transactions.*']);
+        $journalRepos->shouldReceive('first')->once()->andReturn($withdrawal->transactionJournal);
+
+        $response = $this->get(route('transactions.edit', [$withdrawal->transaction_journal_id]));
+
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -209,14 +254,20 @@ class SingleControllerTest extends TestCase
      */
     public function testEditReconcile()
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository->shouldReceive('getTransactionType')->andReturn('Reconciliation')->once();
+
         $this->be($this->user());
-        $withdrawal = TransactionJournal::where('transaction_type_id', 5)
-                                        ->whereNull('transaction_journals.deleted_at')
-                                        ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                        ->groupBy('transaction_journals.id')
-                                        ->orderBy('ct', 'DESC')
-                                        ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')]);
-        $response   = $this->get(route('transactions.edit', [$withdrawal->id]));
+        $reconcile = TransactionJournal::where('transaction_type_id', 5)
+                                       ->whereNull('transaction_journals.deleted_at')
+                                       ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                       ->groupBy('transaction_journals.id')
+                                       ->orderBy('ct', 'DESC')
+                                       ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')]);
+
+        $repository->shouldReceive('first')->once()->andReturn($reconcile);
+
+        $response = $this->get(route('transactions.edit', [$reconcile->id]));
         $response->assertStatus(302);
     }
 
@@ -226,6 +277,8 @@ class SingleControllerTest extends TestCase
      */
     public function testEditRedirect()
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
+
         $this->be($this->user());
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)
                                         ->whereNull('transaction_journals.deleted_at')
@@ -233,7 +286,12 @@ class SingleControllerTest extends TestCase
                                         ->groupBy('transaction_journals.id')
                                         ->orderBy('ct', 'DESC')
                                         ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')]);
-        $response   = $this->get(route('transactions.edit', [$withdrawal->id]));
+        $repository->shouldReceive('first')->once()->andReturn($withdrawal);
+        $repository->shouldReceive('getTransactionType')->andReturn('Withdrawal');
+        $repository->shouldReceive('countTransactions')->andReturn(3);
+        $response = $this->get(route('transactions.edit', [$withdrawal->id]));
+
+
         $response->assertStatus(302);
     }
 
@@ -260,7 +318,23 @@ class SingleControllerTest extends TestCase
                                         ->where('user_id', $this->user()->id)
                                         ->whereNotNull('transactions.foreign_amount')
                                         ->first(['transaction_journals.*']);
-        $response   = $this->get(route('transactions.edit', [$withdrawal->id]));
+
+        $account      = $this->user()->accounts()->first();
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn($withdrawal);
+        $journalRepos->shouldReceive('countTransactions')->andReturn(2)->once();
+        $journalRepos->shouldReceive('getTransactionType')->andReturn('Transfer')->once();
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]))->once();
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$account]))->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Some Note')->once();
+        $journalRepos->shouldReceive('getFirstPosTransaction')->andReturn(new Transaction)->once();
+        $journalRepos->shouldReceive('getJournalDate')->withAnyArgs()->andReturn('2017-09-01');
+        $journalRepos->shouldReceive('getMetaField')->withAnyArgs()->andReturn('')->once();
+        $journalRepos->shouldReceive('getJournalCategoryName')->once()->andReturn('');
+        $journalRepos->shouldReceive('getJournalBudgetId')->once()->andReturn(0);
+        $journalRepos->shouldReceive('getTags')->once()->andReturn([]);
+
+        $response = $this->get(route('transactions.edit', [$withdrawal->id]));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -289,7 +363,24 @@ class SingleControllerTest extends TestCase
                                         ->where('user_id', $this->user()->id)
                                         ->whereNotNull('transactions.foreign_amount')
                                         ->first(['transaction_journals.*']);
-        $response   = $this->get(route('transactions.edit', [$withdrawal->id]));
+
+        $account      = $this->user()->accounts()->first();
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn($withdrawal);
+        $journalRepos->shouldReceive('countTransactions')->andReturn(2)->once();
+        $journalRepos->shouldReceive('getTransactionType')->andReturn('Withdrawal')->once();
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]))->once();
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$account]))->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Some Note')->once();
+        $journalRepos->shouldReceive('getFirstPosTransaction')->andReturn(new Transaction)->once();
+        $journalRepos->shouldReceive('getJournalDate')->withAnyArgs()->andReturn('2017-09-01');
+        $journalRepos->shouldReceive('getMetaField')->withAnyArgs()->andReturn('')->once();
+        $journalRepos->shouldReceive('getJournalCategoryName')->once()->andReturn('');
+        $journalRepos->shouldReceive('getJournalBudgetId')->once()->andReturn(0);
+        $journalRepos->shouldReceive('getTags')->once()->andReturn([]);
+
+
+        $response = $this->get(route('transactions.edit', [$withdrawal->id]));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');

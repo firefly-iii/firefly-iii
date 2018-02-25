@@ -143,9 +143,6 @@ class SplitController extends Controller
         }
         $data    = $request->getAll();
         $journal = $this->repository->update($journal, $data);
-        var_dump($request->all());
-        var_dump($data);
-        exit;
 
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
@@ -161,7 +158,7 @@ class SplitController extends Controller
         // @codeCoverageIgnoreEnd
 
         $type = strtolower($this->repository->getTransactionType($journal));
-        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => $data['journal_description']])));
+        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => $data['description']])));
         Preferences::mark();
 
         // @codeCoverageIgnoreStart
