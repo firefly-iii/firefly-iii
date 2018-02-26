@@ -33,7 +33,7 @@ return [
     'belongs_user'                   => 'This value is invalid for this field.',
     'at_least_one_transaction'       => 'Need at least one transaction.',
     'require_currency_info'          => 'The content of this field is invalid without currency information.',
-    'equal_description'              => 'Transaction description should not equal journal description.',
+    'equal_description'              => 'Transaction description should not equal global description.',
     'file_invalid_mime'              => 'File ":name" is of type ":mime" which is not accepted as a new upload.',
     'file_too_large'                 => 'File ":name" is too large.',
     'belongs_to_user'                => 'The value of :attribute is unknown',
