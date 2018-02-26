@@ -34,7 +34,7 @@ return [
     'month_and_day_js' => 'MMMM Do, YYYY',
     'date_time_js'     => 'MMMM Do, YYYY, @ HH:mm:ss',
     'specific_day_js'  => 'D MMMM YYYY',
-    'week_in_year_js'  => 'Week w, YYYY',
+    'week_in_year_js'  => '[Week] w, YYYY',
     'year_js'          => 'YYYY',
     'half_year_js'     => 'Q YYYY',
 ];
