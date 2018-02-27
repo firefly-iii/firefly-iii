@@ -60,7 +60,7 @@ class General extends Twig_Extension
             $this->getCurrencySymbol(),
             $this->phpdate(),
             $this->env(),
-            $this->getAmountFromJournal(),
+            //$this->getAmountFromJournal(),
             $this->activeRouteStrict(),
             $this->steamPositive(),
             $this->activeRoutePartial(),
