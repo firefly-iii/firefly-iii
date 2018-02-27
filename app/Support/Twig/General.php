@@ -62,7 +62,7 @@ class General extends Twig_Extension
             $this->env(),
             //$this->getAmountFromJournal(),
             $this->activeRouteStrict(),
-            $this->steamPositive(),
+            //$this->steamPositive(),
             $this->activeRoutePartial(),
             $this->activeRoutePartialWhat(),
             $this->formatDate(),
