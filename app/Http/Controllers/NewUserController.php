@@ -85,9 +85,9 @@ class NewUserController extends Controller
         $this->createSavingsAccount($request, $repository);
 
         // also store currency preference from input:
-        $currency = $currencyRepository->find(intval($request->input('amount_currency_id_bank_balance')));
+        $currency = $currencyRepository->findNull(intval($request->input('amount_currency_id_bank_balance')));
 
-        if (null !== $currency->id) {
+        if (null !== $currency) {
             // store currency preference:
             Preferences::set('currencyPreference', $currency->code);
             Preferences::mark();

@@ -148,13 +148,13 @@ class MassController extends Controller
                 $messages[] = trans('firefly.cannot_edit_multiple_dest', ['description' => $journal->description, 'id' => $journal->id]);
                 continue;
             }
-            if (TransactionType::OPENING_BALANCE === $journal->transactionType->type) {
+            if (TransactionType::OPENING_BALANCE === $this->repository->getTransactionType($journal)) {
                 $messages[] = trans('firefly.cannot_edit_opening_balance');
                 continue;
             }
 
             // cannot edit reconciled transactions / journals:
-            if ($journal->transactions->first()->reconciled) {
+            if ($this->repository->isJournalReconciled($journal)) {
                 $messages[] = trans('firefly.cannot_edit_reconciled', ['description' => $journal->description, 'id' => $journal->id]);
                 continue;
             }
@@ -172,7 +172,7 @@ class MassController extends Controller
         // collect some useful meta data for the mass edit:
         $filtered->each(
             function (TransactionJournal $journal) {
-                $transaction                    = $journal->positiveTransaction();
+                $transaction                    = $this->repository->getFirstPosTransaction($journal);
                 $currency                       = $transaction->transactionCurrency;
                 $journal->amount                = floatval($transaction->amount);
                 $sources                        = $this->repository->getJournalSourceAccounts($journal);
@@ -205,6 +205,8 @@ class MassController extends Controller
     }
 
     /**
+     * TODO this cannot work with new update service.
+     *
      * @param MassEditJournalRequest     $request
      * @param JournalRepositoryInterface $repository
      *
@@ -219,7 +221,7 @@ class MassController extends Controller
                 $journal = $repository->find(intval($journalId));
                 if (!is_null($journal)) {
                     // get optional fields:
-                    $what              = strtolower($journal->transactionTypeStr());
+                    $what              = strtolower($this->repository->getTransactionType($journal));
                     $sourceAccountId   = $request->get('source_account_id')[$journal->id] ?? 0;
                     $sourceAccountName = $request->get('source_account_name')[$journal->id] ?? '';
                     $destAccountId     = $request->get('destination_account_id')[$journal->id] ?? 0;

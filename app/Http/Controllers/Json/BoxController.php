@@ -206,7 +206,7 @@ class BoxController extends Controller
             $balance         = $balances[$account->id] ?? '0';
             $currencyId      = intval($account->getMeta('currency_id'));
             if ($currencyId !== 0) {
-                $accountCurrency = $currencyRepos->find($currencyId);
+                $accountCurrency = $currencyRepos->findNull($currencyId);
             }
             if (!isset($netWorth[$accountCurrency->id])) {
                 $netWorth[$accountCurrency->id]['currency'] = $accountCurrency;

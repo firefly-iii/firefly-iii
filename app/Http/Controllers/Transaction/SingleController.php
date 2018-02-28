@@ -424,7 +424,7 @@ class SingleController extends Controller
         event(new UpdatedTransactionJournal($journal));
         // update, get events by date and sort DESC
 
-        $type = strtolower($journal->transactionTypeStr());
+        $type = strtolower($this->repository->getTransactionType($journal));
         Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => $data['description']])));
         Preferences::mark();
 

@@ -44,12 +44,13 @@ class LinkTypeFormRequest extends Request
     public function rules()
     {
         // fixed
-
-        /** @var LinkTypeRepositoryInterface $repository */
-        $repository = app(LinkTypeRepositoryInterface::class);
         $nameRule   = 'required|min:1|unique:link_types,name';
         $idRule     = '';
-        if (null !== $repository->find($this->integer('id'))->id) {
+
+        // get parameter link:
+        $link = $this->route()->parameter('linkType');
+
+        if (null !== $link) {
             $idRule   = 'exists:link_types,id';
             $nameRule = 'required|min:1';
         }

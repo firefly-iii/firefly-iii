@@ -47,7 +47,7 @@ class JavascriptController extends Controller
     {
         $accounts   = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $preference = Preferences::get('currencyPreference', config('firefly.default_currency', 'EUR'));
-        $default    = $currencyRepository->findByCode($preference->data);
+        $default    = $currencyRepository->findByCodeNull($preference->data);
 
         $data = ['accounts' => []];
 
@@ -95,13 +95,13 @@ class JavascriptController extends Controller
      */
     public function variables(Request $request, AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository)
     {
-        $account    = $repository->find(intval($request->get('account')));
+        $account    = $repository->findNull(intval($request->get('account')));
         $currencyId = 0;
         if (null !== $account) {
             $currencyId = intval($account->getMeta('currency_id'));
         }
         /** @var TransactionCurrency $currency */
-        $currency = $currencyRepository->find($currencyId);
+        $currency = $currencyRepository->findNull($currencyId);
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency();
         }

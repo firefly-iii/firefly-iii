@@ -57,8 +57,8 @@ class ReportFormRequest extends Request
         $collection = new Collection;
         if (is_array($set)) {
             foreach ($set as $accountId) {
-                $account = $repository->find(intval($accountId));
-                if (null !== $account->id) {
+                $account = $repository->findNull(intval($accountId));
+                if (null !== $account) {
                     $collection->push($account);
                 }
             }
@@ -78,8 +78,8 @@ class ReportFormRequest extends Request
         $collection = new Collection;
         if (is_array($set)) {
             foreach ($set as $budgetId) {
-                $budget = $repository->find(intval($budgetId));
-                if (null !== $budget->id) {
+                $budget = $repository->findNull(intval($budgetId));
+                if (null !== $budget) {
                     $collection->push($budget);
                 }
             }
@@ -99,8 +99,8 @@ class ReportFormRequest extends Request
         $collection = new Collection;
         if (is_array($set)) {
             foreach ($set as $categoryId) {
-                $category = $repository->find(intval($categoryId));
-                if (null !== $category->id) {
+                $category = $repository->findNull(intval($categoryId));
+                if (null !== $category) {
                     $collection->push($category);
                 }
             }
@@ -142,8 +142,8 @@ class ReportFormRequest extends Request
         $collection = new Collection;
         if (is_array($set)) {
             foreach ($set as $accountId) {
-                $account = $repository->find(intval($accountId));
-                if (null !== $account->id) {
+                $account = $repository->findNull(intval($accountId));
+                if (null !== $account) {
                     $collection->push($account);
                 }
             }

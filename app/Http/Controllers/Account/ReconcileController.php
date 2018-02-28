@@ -254,16 +254,14 @@ class ReconcileController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @throws FireflyException
      */
-    public function submit(ReconciliationStoreRequest $request, Account $account, Carbon $start, Carbon $end)
+    public function submit(ReconciliationStoreRequest $request, JournalRepositoryInterface $repository, Account $account, Carbon $start, Carbon $end)
     {
         Log::debug('In ReconcileController::submit()');
         $data = $request->getAll();
-        /** @var TransactionUpdateService $service */
-        $service = app(TransactionUpdateService::class); // todo move to repos
 
         /** @var Transaction $transaction */
         foreach ($data['transactions'] as $transactionId) {
-            $service->reconcile(intval($transactionId));
+            $repository->reconcileById(intval($transactionId));
         }
         Log::debug('Reconciled all transactions.');
 
@@ -324,10 +322,7 @@ class ReconcileController extends Controller
                 'notes'           => join(', ', $data['transactions']),
             ];
 
-            /** @var TransactionJournalFactory $factory */
-            $factory = app(TransactionJournalFactory::class); // todo move to repos
-            $factory->setUser(auth()->user());
-            $journal = $factory->create($journalData);
+            $journal = $repository->store($journalData);
         }
         Log::debug('End of routine.');
 
@@ -358,7 +353,7 @@ class ReconcileController extends Controller
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
         $currencyId    = intval($account->getMeta('currency_id'));
-        $currency      = $currencyRepos->find($currencyId);
+        $currency      = $currencyRepos->findNull($currencyId);
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
@@ -403,8 +398,8 @@ class ReconcileController extends Controller
         $submitted = $request->getJournalData();
 
         // amount pos neg influences the accounts:
-        $source      = $this->repository->getSourceAccount($journal);
-        $destination = $this->repository->getDestinationAccount($journal);
+        $source      = $this->repository->getJournalSourceAccounts($journal)->first();
+        $destination = $this->repository->getJournalDestinationAccounts($journal)->first();
         if (bccomp($submitted['amount'], '0') === 1) {
             // amount is positive, switch accounts:
             list($source, $destination) = [$destination, $source];

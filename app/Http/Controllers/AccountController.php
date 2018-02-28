@@ -185,7 +185,7 @@ class AccountController extends Controller
         // the opening balance is tricky:
         $openingBalanceAmount = strval($repository->getOpeningBalanceAmount($account));
         $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
-        $currency             = $this->currencyRepos->find(intval($account->getMeta('currency_id')));
+        $currency             = $this->currencyRepos->findNull(intval($account->getMeta('currency_id')));
 
         $preFilled = [
             'accountNumber'        => $account->getMeta('accountNumber'),
@@ -304,7 +304,7 @@ class AccountController extends Controller
         $page         = intval($request->get('page'));
         $pageSize     = intval(Preferences::get('listPageSize', 50)->data);
         $currencyId   = intval($account->getMeta('currency_id'));
-        $currency     = $this->currencyRepos->find($currencyId);
+        $currency     = $this->currencyRepos->findNull($currencyId);
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
