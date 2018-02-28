@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
@@ -50,7 +51,7 @@ class JavascriptControllerTest extends TestCase
 
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]))
                      ->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->once();
-        $currencyRepos->shouldReceive('findByCode')->withArgs(['EUR'])->andReturn(new TransactionCurrency);
+        $currencyRepos->shouldReceive('findByCodeNull')->withArgs(['EUR'])->andReturn(new TransactionCurrency);
 
         $this->be($this->user());
         $response = $this->get(route('javascript.accounts'));
@@ -81,6 +82,10 @@ class JavascriptControllerTest extends TestCase
      */
     public function testVariables(string $range)
     {
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos->shouldReceive('findNull')->andReturn(new Account);
+        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('javascript.variables'));
@@ -97,6 +102,11 @@ class JavascriptControllerTest extends TestCase
      */
     public function testVariablesCustom(string $range)
     {
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos->shouldReceive('findNull')->andReturn(new Account);
+        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $this->session(['is_custom_range' => true]);

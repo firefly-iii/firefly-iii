@@ -26,6 +26,7 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use Tests\TestCase;
 
 /**
@@ -42,15 +43,8 @@ class OperationsControllerTest extends TestCase
      */
     public function testExpenses()
     {
-        $transactions = factory(Transaction::class, 10)->make();
-        $collector    = $this->mock(JournalCollectorInterface::class);
-
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('addFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn($transactions);
+        $tasker       = $this->mock(AccountTaskerInterface::class);
+        $tasker->shouldReceive('getExpenseReport')->andReturn([]);
 
         $this->be($this->user());
         $response = $this->get(route('report-data.operations.expenses', ['1', '20160101', '20160131']));
@@ -62,15 +56,8 @@ class OperationsControllerTest extends TestCase
      */
     public function testIncome()
     {
-        $transactions = factory(Transaction::class, 10)->make();
-        $collector    = $this->mock(JournalCollectorInterface::class);
-
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT, TransactionType::TRANSFER]])->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('addFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn($transactions);
+        $tasker       = $this->mock(AccountTaskerInterface::class);
+        $tasker->shouldReceive('getIncomeReport')->andReturn([]);
 
         $this->be($this->user());
         $response = $this->get(route('report-data.operations.income', ['1', '20160101', '20160131']));
@@ -82,16 +69,9 @@ class OperationsControllerTest extends TestCase
      */
     public function testOperations()
     {
-        $collector    = $this->mock(JournalCollectorInterface::class);
-        $transactions = factory(Transaction::class, 10)->make();
-
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT, TransactionType::TRANSFER]])->andReturnSelf()->once();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf()->once();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('addFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn($transactions);
+        $tasker       = $this->mock(AccountTaskerInterface::class);
+        $tasker->shouldReceive('getExpenseReport')->andReturn([]);
+        $tasker->shouldReceive('getIncomeReport')->andReturn([]);
 
         $this->be($this->user());
         $response = $this->get(route('report-data.operations.operations', ['1', '20160101', '20160131']));

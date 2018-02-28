@@ -57,8 +57,6 @@ class HelpControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\HelpController::show
      * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
-     * @throws \Exception
-     * @throws \Exception
      */
     public function testShowBackupFromCache()
     {
@@ -88,8 +86,6 @@ class HelpControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\HelpController::show
      * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
-     * @throws \Exception
-     * @throws \Exception
      */
     public function testShowBackupFromGithub()
     {

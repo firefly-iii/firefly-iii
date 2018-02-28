@@ -22,8 +22,10 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Tests\TestCase;
 
@@ -80,10 +82,12 @@ class NewUserControllerTest extends TestCase
     public function testSubmit()
     {
         // mock stuff
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('store')->times(2);
+        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
 
         $data = [
             'bank_name'                       => 'New bank',
@@ -103,10 +107,12 @@ class NewUserControllerTest extends TestCase
     public function testSubmitSingle()
     {
         // mock stuff
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('store')->twice();
+        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
 
         $data = [
             'bank_name'                       => 'New bank',

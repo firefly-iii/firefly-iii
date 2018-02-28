@@ -1030,7 +1030,7 @@ class TransactionControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController::index
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController::mapTypes
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * throws \FireflyIII\Exceptions\FireflyException
      */
     public function testIndex()
     {
@@ -1074,7 +1074,7 @@ class TransactionControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController::__construct
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController::index
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController::mapTypes
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * throws \FireflyIII\Exceptions\FireflyException
      */
     public function testIndexWithRange()
     {

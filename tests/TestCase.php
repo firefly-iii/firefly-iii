@@ -24,7 +24,10 @@ declare(strict_types=1);
 namespace Tests;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Models\Preference;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Log;
@@ -37,19 +40,20 @@ use Mockery;
  */
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication;
-
     /**
      * @param User   $user
      * @param string $range
-     *
-     * @throws \Exception
      */
     public function changeDateRange(User $user, $range)
     {
         $valid = ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'];
         if (in_array($range, $valid)) {
-            Preference::where('user_id', $user->id)->where('name', 'viewRange')->delete();
+            try {
+                Preference::where('user_id', $user->id)->where('name', 'viewRange')->delete();
+            } catch (Exception $e) {
+                // don't care.
+            }
+
             Preference::create(
                 [
                     'user_id' => $user->id,
@@ -68,6 +72,8 @@ abstract class TestCase extends BaseTestCase
             );
         }
     }
+
+    use CreatesApplication;
 
     /**
      * @return array
@@ -140,5 +146,15 @@ abstract class TestCase extends BaseTestCase
 
         //$this->app->instance($class, $externalMock);
         return $externalMock;
+    }
+
+    /**
+     *
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository->shouldReceive('first')->andReturn(new TransactionJournal);
     }
 }

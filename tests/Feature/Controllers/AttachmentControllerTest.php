@@ -42,6 +42,7 @@ class AttachmentControllerTest extends TestCase
     public function testDelete()
     {
         // mock stuff
+        $attachRepository = $this->mock(AttachmentRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $this->be($this->user());
@@ -110,6 +111,7 @@ class AttachmentControllerTest extends TestCase
      */
     public function testEdit()
     {
+        $attachRepository = $this->mock(AttachmentRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $this->be($this->user());

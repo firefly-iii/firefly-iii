@@ -32,6 +32,8 @@ use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
@@ -50,8 +52,13 @@ class TagReportControllerTest extends TestCase
      */
     public function testAccountExpense()
     {
-        $generator = $this->mock(GeneratorInterface::class);
-        $pieChart  = $this->mock(MetaPieChartInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $pieChart     = $this->mock(MetaPieChartInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $tag          = $this->user()->tags()->first();
+        $tagRepos->shouldReceive('setUser');
+        $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
@@ -62,7 +69,9 @@ class TagReportControllerTest extends TestCase
         $generator->shouldReceive('pieChart')->andReturn([])->once();
 
         $this->be($this->user());
-        $response = $this->get(route('chart.tag.account-expense', ['1', 'housing', '20120101', '20120131', 0]));
+
+
+        $response = $this->get(route('chart.tag.account-expense', ['1', $tag->tag, '20120101', '20120131', 0]));
         $response->assertStatus(200);
     }
 
@@ -71,8 +80,13 @@ class TagReportControllerTest extends TestCase
      */
     public function testAccountIncome()
     {
-        $generator = $this->mock(GeneratorInterface::class);
-        $pieChart  = $this->mock(MetaPieChartInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $pieChart     = $this->mock(MetaPieChartInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $tag          = $this->user()->tags()->first();
+        $tagRepos->shouldReceive('setUser');
+        $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
@@ -83,7 +97,8 @@ class TagReportControllerTest extends TestCase
         $generator->shouldReceive('pieChart')->andReturn([])->once();
 
         $this->be($this->user());
-        $response = $this->get(route('chart.tag.account-income', ['1', 'housing', '20120101', '20120131', 0]));
+
+        $response = $this->get(route('chart.tag.account-income', ['1', $tag->tag, '20120101', '20120131', 0]));
         $response->assertStatus(200);
     }
 
@@ -92,8 +107,13 @@ class TagReportControllerTest extends TestCase
      */
     public function testBudgetExpense()
     {
-        $generator = $this->mock(GeneratorInterface::class);
-        $pieChart  = $this->mock(MetaPieChartInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $pieChart     = $this->mock(MetaPieChartInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $tag          = $this->user()->tags()->first();
+        $tagRepos->shouldReceive('setUser');
+        $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
@@ -104,7 +124,7 @@ class TagReportControllerTest extends TestCase
         $generator->shouldReceive('pieChart')->andReturn([])->once();
 
         $this->be($this->user());
-        $response = $this->get(route('chart.tag.budget-expense', ['1', 'housing', '20120101', '20120131', 0]));
+        $response = $this->get(route('chart.tag.budget-expense', ['1', $tag->tag, '20120101', '20120131', 0]));
         $response->assertStatus(200);
     }
 
@@ -113,8 +133,13 @@ class TagReportControllerTest extends TestCase
      */
     public function testCategoryExpense()
     {
-        $generator = $this->mock(GeneratorInterface::class);
-        $pieChart  = $this->mock(MetaPieChartInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $pieChart     = $this->mock(MetaPieChartInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $tag          = $this->user()->tags()->first();
+        $tagRepos->shouldReceive('setUser');
+        $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
@@ -125,7 +150,7 @@ class TagReportControllerTest extends TestCase
         $generator->shouldReceive('pieChart')->andReturn([])->once();
 
         $this->be($this->user());
-        $response = $this->get(route('chart.tag.category-expense', ['1', 'housing', '20120101', '20120131', 0]));
+        $response = $this->get(route('chart.tag.category-expense', ['1', $tag->tag, '20120101', '20120131', 0]));
         $response->assertStatus(200);
     }
 
@@ -137,16 +162,22 @@ class TagReportControllerTest extends TestCase
      */
     public function testMainChart()
     {
-        $generator = $this->mock(GeneratorInterface::class);
-        $collector = $this->mock(JournalCollectorInterface::class);
-        $set       = new Collection;
+        $generator    = $this->mock(GeneratorInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $tag          = $this->user()->tags()->first();
+        $tagRepos->shouldReceive('setUser');
+        $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
+
+        $set = new Collection;
         for ($i = 0; $i < 10; ++$i) {
             $transaction = factory(Transaction::class)->make();
             $tag         = factory(Tag::class)->make();
             $transaction->transactionJournal->tags()->save($tag);
             $set->push($transaction);
         }
-
+        $tag = $this->user()->tags()->first();
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf();
@@ -161,7 +192,7 @@ class TagReportControllerTest extends TestCase
         $generator->shouldReceive('multiSet')->andReturn([])->once();
 
         $this->be($this->user());
-        $response = $this->get(route('chart.tag.main', ['1', 'housing', '20120101', '20120131']));
+        $response = $this->get(route('chart.tag.main', ['1', $tag->tag, '20120101', '20120131']));
         $response->assertStatus(200);
     }
 
@@ -170,8 +201,13 @@ class TagReportControllerTest extends TestCase
      */
     public function testTagExpense()
     {
-        $generator = $this->mock(GeneratorInterface::class);
-        $pieChart  = $this->mock(MetaPieChartInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $pieChart     = $this->mock(MetaPieChartInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $tag          = $this->user()->tags()->first();
+        $tagRepos->shouldReceive('setUser');
+        $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
@@ -182,7 +218,7 @@ class TagReportControllerTest extends TestCase
         $generator->shouldReceive('pieChart')->andReturn([])->once();
 
         $this->be($this->user());
-        $response = $this->get(route('chart.tag.tag-expense', ['1', 'housing', '20120101', '20120131', 0]));
+        $response = $this->get(route('chart.tag.tag-expense', ['1', $tag->tag, '20120101', '20120131', 0]));
         $response->assertStatus(200);
     }
 
@@ -191,8 +227,13 @@ class TagReportControllerTest extends TestCase
      */
     public function testTagIncome()
     {
-        $generator = $this->mock(GeneratorInterface::class);
-        $pieChart  = $this->mock(MetaPieChartInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $pieChart     = $this->mock(MetaPieChartInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $tag          = $this->user()->tags()->first();
+        $tagRepos->shouldReceive('setUser');
+        $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
@@ -203,7 +244,7 @@ class TagReportControllerTest extends TestCase
         $generator->shouldReceive('pieChart')->andReturn([])->once();
 
         $this->be($this->user());
-        $response = $this->get(route('chart.tag.tag-income', ['1', 'housing', '20120101', '20120131', 0]));
+        $response = $this->get(route('chart.tag.tag-income', ['1', $tag->tag, '20120101', '20120131', 0]));
         $response->assertStatus(200);
     }
 }

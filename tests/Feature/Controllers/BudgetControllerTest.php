@@ -86,6 +86,7 @@ class BudgetControllerTest extends TestCase
     public function testCreate()
     {
         // mock stuff
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
@@ -102,6 +103,7 @@ class BudgetControllerTest extends TestCase
     public function testDelete()
     {
         // mock stuff
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
@@ -137,6 +139,7 @@ class BudgetControllerTest extends TestCase
     public function testEdit()
     {
         // mock stuff
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
@@ -291,8 +294,12 @@ class BudgetControllerTest extends TestCase
     public function testInfoIncome()
     {
         // mock stuff
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository = $this->mock(BudgetRepositoryInterface::class);
+
         $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
 
         $this->be($this->user());
         $response = $this->get(route('budgets.income.info', ['20170101', '20170131']));
@@ -302,13 +309,15 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\BudgetController::infoIncome
      * @dataProvider dateRangeProvider
-     * @throws \Exception
      */
     public function testInfoIncomeExpanded(string $range)
     {
         // mock stuff
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository = $this->mock(BudgetRepositoryInterface::class);
         $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -323,11 +332,11 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      *
-     * @throws \Exception
      */
     public function testNoBudget(string $range)
     {
         // mock stuff
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
@@ -362,6 +371,7 @@ class BudgetControllerTest extends TestCase
     public function testNoBudgetAll(string $range)
     {
         // mock stuff
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
@@ -398,6 +408,7 @@ class BudgetControllerTest extends TestCase
     public function testNoBudgetDate(string $range)
     {
         // mock stuff
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
@@ -491,6 +502,7 @@ class BudgetControllerTest extends TestCase
     public function testShowByBadBudgetLimit()
     {
         // mock stuff
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 

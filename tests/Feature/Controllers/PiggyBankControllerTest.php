@@ -48,9 +48,10 @@ class PiggyBankControllerTest extends TestCase
     public function testAdd()
     {
         // mock stuff
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-
+        $piggyRepos->shouldReceive('getCurrentAmount')->andReturn('0');
         $this->be($this->user());
         $response = $this->get(route('piggy-banks.add', [1]));
         $response->assertStatus(200);
@@ -62,8 +63,10 @@ class PiggyBankControllerTest extends TestCase
     public function testAddMobile()
     {
         // mock stuff
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $piggyRepos->shouldReceive('getCurrentAmount')->andReturn('0');
 
         $this->be($this->user());
         $response = $this->get(route('piggy-banks.add-money-mobile', [1]));
