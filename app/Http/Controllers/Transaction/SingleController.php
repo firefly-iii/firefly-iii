@@ -109,7 +109,7 @@ class SingleController extends Controller
         $budgetId     = $this->repository->getJournalBudgetId($journal);
         $categoryName = $this->repository->getJournalCategoryName($journal);
 
-        $tags         = join(',',$this->repository->getTags($journal));
+        $tags = join(',', $this->repository->getTags($journal));
         // todo less direct database access. Use collector?
         /** @var Transaction $transaction */
         $transaction   = $journal->transactions()->first();
@@ -171,6 +171,14 @@ class SingleController extends Controller
         $subTitle       = trans('form.add_new_' . $what);
         $subTitleIcon   = 'fa-plus';
         $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $source         = intval($request->get('source'));
+
+        if (($what === 'withdrawal' || $what === 'transfer') && $source > 0) {
+            $preFilled['source_account_id'] = $source;
+        }
+        if ($what === 'deposit' && $source > 0) {
+            $preFilled['destination_account_id'] = $source;
+        }
 
         Session::put('preFilled', $preFilled);
 
