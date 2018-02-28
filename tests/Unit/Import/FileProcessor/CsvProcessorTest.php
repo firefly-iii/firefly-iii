@@ -26,6 +26,11 @@ namespace Tests\Unit\Import\FileProcessor;
 use FireflyIII\Import\FileProcessor\CsvProcessor;
 use FireflyIII\Import\Specifics\AbnAmroDescription;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Mockery;
 use Tests\TestCase;
@@ -61,6 +66,18 @@ class CsvProcessorTest extends TestCase
      */
     public function testRunBadRole()
     {
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $budRepos      = $this->mock(BudgetRepositoryInterface::class);
+        $jobRepos      = $this->mock(ImportJobRepositoryInterface::class);
+        $catRepos      = $this->mock(CategoryRepositoryInterface::class);
+        $billRepos     = $this->mock(BillRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
+        $accountRepos->shouldReceive('setUser');
+        $budRepos->shouldReceive('setUser');
+        $catRepos->shouldReceive('setUser');
+        $billRepos->shouldReceive('setUser');
+
         // data
         $config   = [
             'column-roles' => [
@@ -72,16 +89,15 @@ class CsvProcessorTest extends TestCase
         $csvFile  = '20170101,-12.34,"Some description"';
 
         // mock stuff
-        $repository = $this->mock(ImportJobRepositoryInterface::class);
-        $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
-        $repository->shouldReceive('getConfiguration')->andReturn($config);
-        $repository->shouldReceive('uploadFileContents')->withArgs([Mockery::any()])->andReturn($csvFile)->once();
-        //$repository->shouldReceive('getExtendedStatus')->once()->andReturn([]);
-        //$repository->shouldReceive('setExtendedStatus')->once()->andReturn($job);
-        $repository->shouldReceive('addStepsDone')->twice();
+
+        $jobRepos->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
+        $jobRepos->shouldReceive('getConfiguration')->andReturn($config);
+        $jobRepos->shouldReceive('uploadFileContents')->withArgs([Mockery::any()])->andReturn($csvFile)->once();
+        $jobRepos->shouldReceive('addStepsDone')->twice();
 
         // mock stuff for this single row:
-        $repository->shouldReceive('countByHash')->once()->withArgs([Mockery::any()])->andReturn(0);
+        $jobRepos->shouldReceive('countByHash')->once()->withArgs([Mockery::any()])->andReturn(0);
+
         $processor = new CsvProcessor();
         $processor->setJob($job);
         $processor->run();
@@ -186,8 +202,8 @@ class CsvProcessorTest extends TestCase
         $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config);
         $repository->shouldReceive('uploadFileContents')->withArgs([Mockery::any()])->andReturn($csvFile)->once();
-//        $repository->shouldReceive('getExtendedStatus')->once()->andReturn([]);
-//        $repository->shouldReceive('setExtendedStatus')->once()->andReturn($job);
+        //        $repository->shouldReceive('getExtendedStatus')->once()->andReturn([]);
+        //        $repository->shouldReceive('setExtendedStatus')->once()->andReturn($job);
         // mock stuff for this single row:
         $repository->shouldReceive('countByHash')->once()->withArgs([Mockery::any()])->andReturn(0);
         $repository->shouldReceive('addStepsDone')->times(2)->withArgs([Mockery::any(), 1]);
@@ -223,6 +239,18 @@ class CsvProcessorTest extends TestCase
      */
     public function testRunSingle()
     {
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $budRepos      = $this->mock(BudgetRepositoryInterface::class);
+        $jobRepos      = $this->mock(ImportJobRepositoryInterface::class);
+        $catRepos      = $this->mock(CategoryRepositoryInterface::class);
+        $billRepos     = $this->mock(BillRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
+        $accountRepos->shouldReceive('setUser');
+        $budRepos->shouldReceive('setUser');
+        $catRepos->shouldReceive('setUser');
+        $billRepos->shouldReceive('setUser');
+
         // data
         $config   = [];
         $job      = $this->getJob($config);
@@ -230,15 +258,13 @@ class CsvProcessorTest extends TestCase
         $extended = ['steps' => 0, 'done' => 0];
 
         // mock stuff
-        $repository = $this->mock(ImportJobRepositoryInterface::class);
-        $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
-        $repository->shouldReceive('getConfiguration')->andReturn($config);
-        $repository->shouldReceive('uploadFileContents')->withArgs([Mockery::any()])->andReturn($csvFile)->once();
-//        $repository->shouldReceive('getExtendedStatus')->once()->andReturn([]);
-//        $repository->shouldReceive('setExtendedStatus')->once()->andReturn($job);
+        $jobRepos->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
+        $jobRepos->shouldReceive('getConfiguration')->andReturn($config);
+        $jobRepos->shouldReceive('uploadFileContents')->withArgs([Mockery::any()])->andReturn($csvFile)->once();
+
         // mock stuff for this single row:
-        $repository->shouldReceive('countByHash')->once()->withArgs([Mockery::any()])->andReturn(0);
-        $repository->shouldReceive('addStepsDone')->times(3)->withArgs([Mockery::any(), 1]);
+        $jobRepos->shouldReceive('countByHash')->once()->withArgs([Mockery::any()])->andReturn(0);
+        $jobRepos->shouldReceive('addStepsDone')->times(3)->withArgs([Mockery::any(), 1]);
         $processor = new CsvProcessor();
         $processor->setJob($job);
         $processor->run();
@@ -260,6 +286,18 @@ class CsvProcessorTest extends TestCase
      */
     public function testRunSpecific()
     {
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $budRepos      = $this->mock(BudgetRepositoryInterface::class);
+        $jobRepos      = $this->mock(ImportJobRepositoryInterface::class);
+        $catRepos      = $this->mock(CategoryRepositoryInterface::class);
+        $billRepos     = $this->mock(BillRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
+        $accountRepos->shouldReceive('setUser');
+        $budRepos->shouldReceive('setUser');
+        $catRepos->shouldReceive('setUser');
+        $billRepos->shouldReceive('setUser');
+
         // data
         $config   = [
             'specifics' => ['AbnAmroDescription' => 1],
@@ -270,15 +308,12 @@ class CsvProcessorTest extends TestCase
         $extended = ['steps' => 0, 'done' => 0];
 
         // mock stuff
-        $repository = $this->mock(ImportJobRepositoryInterface::class);
-        $repository->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
-        $repository->shouldReceive('getConfiguration')->andReturn($config);
-        $repository->shouldReceive('uploadFileContents')->withArgs([Mockery::any()])->andReturn($csvFile)->once();
-//        $repository->shouldReceive('getExtendedStatus')->once()->andReturn([]);
-//        $repository->shouldReceive('setExtendedStatus')->once()->andReturn($job);
+        $jobRepos->shouldReceive('setUser')->withArgs([Mockery::any()])->once();
+        $jobRepos->shouldReceive('getConfiguration')->andReturn($config);
+        $jobRepos->shouldReceive('uploadFileContents')->withArgs([Mockery::any()])->andReturn($csvFile)->once();
         // mock stuff for this single row:
-        $repository->shouldReceive('countByHash')->once()->withArgs([Mockery::any()])->andReturn(0);
-        $repository->shouldReceive('addStepsDone')->times(3)->withArgs([Mockery::any(), 1]);
+        $jobRepos->shouldReceive('countByHash')->once()->withArgs([Mockery::any()])->andReturn(0);
+        $jobRepos->shouldReceive('addStepsDone')->times(3)->withArgs([Mockery::any(), 1]);
 
         // mock specific:
         $specific = $this->mock(AbnAmroDescription::class);

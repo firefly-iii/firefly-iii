@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers\Auth;
 
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class ForgotPasswordControllerTest
@@ -34,6 +35,15 @@ use Tests\TestCase;
  */
 class ForgotPasswordControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug('Now in Feature/Controllers/Auth/ForgotPasswordControllerTest.');
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\ForgotPasswordController::__construct
      * @covers \FireflyIII\Http\Controllers\Auth\ForgotPasswordController::sendResetLinkEmail

@@ -25,7 +25,7 @@ namespace Tests\Api\V1\Controllers;
 
 use Laravel\Passport\Passport;
 use Tests\TestCase;
-
+use Log;
 /**
  * Class AboutControllerTest
  */
@@ -38,6 +38,7 @@ class AboutControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
+        Log::debug('Now in Api/AboutControllerTest.');
     }
 
     /**

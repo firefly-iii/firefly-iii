@@ -25,7 +25,7 @@ namespace Tests\Feature\Controllers\Admin;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
-
+use Log;
 /**
  * Class UserControllerTest
  *
@@ -35,6 +35,15 @@ use Tests\TestCase;
  */
 class UserControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug('Now in Feature/Controllers/Admin/UserControllerTest.');
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UserController::delete
      */

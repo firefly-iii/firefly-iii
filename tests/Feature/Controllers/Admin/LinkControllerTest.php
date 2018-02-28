@@ -26,7 +26,7 @@ use FireflyIII\Models\LinkType;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
-
+use Log;
 /**
  * Class LinkControllerTest
  *
@@ -36,6 +36,15 @@ use Tests\TestCase;
  */
 class LinkControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug('Now in Feature/Controllers/Admin/LinkControllerTest.');
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\LinkController::__construct
      * @covers \FireflyIII\Http\Controllers\Admin\LinkController::create

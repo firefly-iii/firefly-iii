@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tests\Unit\TransactionRules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\TransactionRules\Triggers\AmountExactly;
 use Tests\TestCase;
 
@@ -36,7 +37,11 @@ class AmountExactlyTest extends TestCase
      */
     public function testTriggeredExact()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('setUser');
+        $journalRepos->shouldReceive('getJournalTotal')->andReturn('12.34');
         $journal                     = new TransactionJournal;
+        $journal->user               = $this->user();
         $journal->destination_amount = '12.34';
         $trigger                     = AmountExactly::makeFromStrings('12.340', false);
         $result                      = $trigger->triggered($journal);
@@ -48,7 +53,11 @@ class AmountExactlyTest extends TestCase
      */
     public function testTriggeredNotExact()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('setUser');
+        $journalRepos->shouldReceive('getJournalTotal')->andReturn('12.34');
         $journal                     = new TransactionJournal;
+        $journal->user               = $this->user();
         $journal->destination_amount = '12.35';
         $trigger                     = AmountExactly::makeFromStrings('12.340', false);
         $result                      = $trigger->triggered($journal);

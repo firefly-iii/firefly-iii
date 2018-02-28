@@ -28,6 +28,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Laravel\Passport\Passport;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -42,6 +43,7 @@ class BillControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
+        Log::debug('Now in Api/BillControllerTest.');
 
     }
 

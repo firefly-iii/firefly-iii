@@ -29,6 +29,7 @@ use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Transformers\AccountTransformer;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
@@ -45,6 +46,10 @@ class AccountTransformerTest extends TestCase
      */
     public function testBasic()
     {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
+        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
         // make new account:
         $account = Account::create(
             [
@@ -76,6 +81,10 @@ class AccountTransformerTest extends TestCase
      */
     public function testBasicDate()
     {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
+        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
         // make new account:
         $account      = Account::create(
             [
@@ -108,6 +117,10 @@ class AccountTransformerTest extends TestCase
      */
     public function testCCDataAsset()
     {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
+        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
         // make new account:
         $account = Account::create(
             [
@@ -262,6 +275,10 @@ class AccountTransformerTest extends TestCase
      */
     public function testOpeningBalance()
     {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn('45.67');
+        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn('2018-01-01');
         // make new account:
         $account = Account::create(
             [
@@ -313,6 +330,10 @@ class AccountTransformerTest extends TestCase
      */
     public function testWithCurrency()
     {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
+        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
         // make new account:
         $account = Account::create(
             [
@@ -352,6 +373,10 @@ class AccountTransformerTest extends TestCase
      */
     public function testWithNotes()
     {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
+        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
         // make new account:
         $account = Account::create(
             [

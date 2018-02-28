@@ -24,6 +24,7 @@ namespace Tests\Unit\TransactionRules\Actions;
 
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\TransactionRules\Actions\SetCategory;
 use Tests\TestCase;
 

@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers\Admin;
 
 use FireflyConfig;
 use FireflyIII\Models\Configuration;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -35,6 +36,15 @@ use Tests\TestCase;
  */
 class ConfigurationControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug('Now in Feature/Controllers/Admin/ConfigurationControllerTest.');
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::index
      * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::__construct

@@ -24,7 +24,9 @@ namespace Tests\Unit\TransactionRules\Actions;
 
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\TransactionRules\Actions\SetBudget;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 /**
@@ -39,8 +41,12 @@ class SetBudgetTest extends TestCase
     public function testAct()
     {
         // get journal, remove all budgets
-        $journal = TransactionJournal::find(12);
-        $budget  = $journal->user->budgets()->first();
+        $journal     = TransactionJournal::find(12);
+        $budget      = $journal->user->budgets()->first();
+        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $budgetRepos->shouldReceive('setUser');
+        $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]));
+
         $journal->budgets()->detach();
         $this->assertEquals(0, $journal->budgets()->count());
 

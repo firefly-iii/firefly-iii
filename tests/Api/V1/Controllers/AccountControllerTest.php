@@ -29,6 +29,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class AccountControllerTest
@@ -42,6 +43,7 @@ class AccountControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
+        Log::debug('Now in Api/AccountControllerTest.');
     }
 
     /**

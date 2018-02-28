@@ -29,6 +29,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
+use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
@@ -270,9 +271,10 @@ class TransactionControllerTest extends TestCase
     public function testShow()
     {
         // mock stuff
-        $repository = $this->mock(JournalRepositoryInterface::class);
         $tasker     = $this->mock(JournalTaskerInterface::class);
-        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $linkRepos  = $this->mock(LinkTypeRepositoryInterface::class);
+        $linkRepos->shouldReceive('get')->andReturn(new Collection);
+        $linkRepos->shouldReceive('getLinks')->andReturn(new Collection);
 
         $tasker->shouldReceive('getPiggyBankEvents')->andReturn(new Collection);
         $tasker->shouldReceive('getTransactionsOverview')->andReturn([]);
@@ -289,9 +291,10 @@ class TransactionControllerTest extends TestCase
      */
     public function testShowOpeningBalance()
     {
-        // mock stuff
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $tasker     = $this->mock(JournalTaskerInterface::class);
+        $linkRepos  = $this->mock(LinkTypeRepositoryInterface::class);
+        $linkRepos->shouldReceive('get')->andReturn(new Collection);
+        $linkRepos->shouldReceive('getLinks')->andReturn(new Collection);
 
         $this->be($this->user());
         $journal  = $this->user()->transactionJournals()->where('transaction_type_id', 4)->first();

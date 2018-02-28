@@ -32,6 +32,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class ConfigurationControllerTest
@@ -42,6 +43,15 @@ use Tests\TestCase;
  */
 class ReconcileControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug('Now in Feature/Controllers::ReconcileControllerTest.');
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::edit
      */
