@@ -187,9 +187,7 @@ return [
         'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'],
 
         // incomplete languages:
-        //'id_ID' => ['name_locale' => 'Indonesian', 'name_english' => 'Indonesian'],
-        //
-        //'sl_SI' => ['name_locale' => 'Slovenščina', 'name_english' => 'Slovenian'],
+        // 'ca_ES' => ['name_locale' => 'Català', 'name_english' => 'Catalan'],
     ],
     'transactionTypesByWhat'     => [
         'expenses'   => ['Withdrawal'],
