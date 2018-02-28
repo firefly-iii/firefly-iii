@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\TransactionType;
+
 use FireflyIII\Models\TransactionType;
 
 /**
@@ -29,7 +30,6 @@ use FireflyIII\Models\TransactionType;
  */
 class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 {
-
     /**
      * Find a transaction type or return NULL.
      *

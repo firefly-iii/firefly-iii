@@ -100,15 +100,6 @@ interface JournalRepositoryInterface
     public function getAssetTransaction(TransactionJournal $journal): ?Transaction;
 
     /**
-     * Get account of transaction that is more than zero. Only works with unsplit journals.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return Account
-     */
-    public function getDestinationAccount(TransactionJournal $journal): Account;
-
-    /**
      * Returns the first positive transaction for the journal. Useful when editing journals.
      *
      * @param TransactionJournal $journal
@@ -200,15 +191,6 @@ interface JournalRepositoryInterface
     public function getNoteText(TransactionJournal $journal): string;
 
     /**
-     * Get account of transaction that is less than zero. Only works with unsplit journals.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return Account
-     */
-    public function getSourceAccount(TransactionJournal $journal): Account;
-
-    /**
      * Return all tags as strings in an array.
      *
      * @param TransactionJournal $journal
@@ -253,6 +235,13 @@ interface JournalRepositoryInterface
      * @return bool
      */
     public function reconcile(Transaction $transaction): bool;
+
+    /**
+     * @param int $transactionId
+     *
+     * @return bool
+     */
+    public function reconcileById(int $transactionId): bool;
 
     /**
      * @param TransactionJournal $journal

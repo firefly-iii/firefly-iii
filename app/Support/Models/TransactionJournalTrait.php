@@ -74,6 +74,7 @@ trait TransactionJournalTrait
     abstract public function categories(): BelongsToMany;
 
     /**
+     * @deprecated
      * @return Collection
      */
     public function destinationAccountList(): Collection
@@ -98,6 +99,7 @@ trait TransactionJournalTrait
     }
 
     /**
+     * @deprecated
      * @return Collection
      */
     public function destinationTransactionList(): Collection
@@ -116,6 +118,7 @@ trait TransactionJournalTrait
     }
 
     /**
+     *
      * @param string $name
      *
      * @return string
@@ -148,6 +151,7 @@ trait TransactionJournalTrait
     abstract public function piggyBankEvents(): HasMany;
 
     /**
+     * @deprecated
      * @return int
      */
     public function piggyBankId(): int
@@ -160,6 +164,7 @@ trait TransactionJournalTrait
     }
 
     /**
+     * @deprecated
      * @return Transaction
      */
     public function positiveTransaction(): Transaction
@@ -185,6 +190,7 @@ trait TransactionJournalTrait
     abstract public function setMeta(string $name, $value): TransactionJournalMeta;
 
     /**
+     * @deprecated
      * @return Collection
      */
     public function sourceAccountList(): Collection
@@ -209,6 +215,7 @@ trait TransactionJournalTrait
     }
 
     /**
+     * @deprecated
      * @return Collection
      */
     public function sourceTransactionList(): Collection
@@ -227,6 +234,7 @@ trait TransactionJournalTrait
     }
 
     /**
+     * @deprecated
      * @return string
      */
     public function transactionTypeStr(): string

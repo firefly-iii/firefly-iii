@@ -111,6 +111,8 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * Returns the amount of the opening balance for this account.
      *
+     * @param Account $account
+     *
      * @return string
      */
     public function getOpeningBalanceAmount(Account $account): ?string

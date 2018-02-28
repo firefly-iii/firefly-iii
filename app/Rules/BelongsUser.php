@@ -58,7 +58,7 @@ class BelongsUser implements Rule
 
     /**
      * Determine if the validation rule passes.
-     *
+     * TODO use repositories?
      * @param  string $attribute
      * @param  mixed  $value
      *

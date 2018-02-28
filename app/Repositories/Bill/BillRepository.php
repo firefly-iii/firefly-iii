@@ -410,7 +410,6 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $date
      *
      * @return \Carbon\Carbon
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function nextDateMatch(Bill $bill, Carbon $date): Carbon
     {
@@ -575,6 +574,7 @@ class BillRepository implements BillRepositoryInterface
 
     /**
      * TODO refactor
+     *
      * @param float $amount
      * @param float $min
      * @param float $max
@@ -592,6 +592,7 @@ class BillRepository implements BillRepositoryInterface
 
     /**
      * TODO refactor
+     *
      * @param array $matches
      * @param       $description
      *

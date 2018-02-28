@@ -198,18 +198,6 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * Get account of transaction that is more than zero. Only works with unsplit journals.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return Account
-     */
-    public function getDestinationAccount(TransactionJournal $journal): Account
-    {
-        return $journal->transactions()->where('amount', '<', 0)->first()->account;
-    }
-
-    /**
      * Returns the first positive transaction for the journal. Useful when editing journals.
      *
      * @param TransactionJournal $journal
@@ -439,18 +427,6 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * Get account of transaction that is less than zero. Only works with unsplit journals.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return Account
-     */
-    public function getSourceAccount(TransactionJournal $journal): Account
-    {
-        return $journal->transactions()->where('amount', '>', 0)->first()->account;
-    }
-
-    /**
      * Return all tags as strings in an array.
      *
      * @param TransactionJournal $journal
@@ -540,6 +516,22 @@ class JournalRepository implements JournalRepositoryInterface
         $opposing->save();
 
         return true;
+    }
+
+    /**
+     * @param int $transactionId
+     *
+     * @return bool
+     */
+    public function reconcileById(int $transactionId): bool
+    {
+        /** @var Transaction $transaction */
+        $transaction = $this->user->transactions()->find($transactionId);
+        if (!is_null($transaction)) {
+            return $this->reconcile($transaction);
+        }
+
+        return false;
     }
 
     /**

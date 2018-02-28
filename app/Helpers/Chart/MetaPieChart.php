@@ -79,6 +79,9 @@ class MetaPieChart implements MetaPieChartInterface
     /** @var User */
     protected $user;
 
+    /**
+     * MetaPieChart constructor.
+     */
     public function __construct()
     {
         $this->accounts   = new Collection;

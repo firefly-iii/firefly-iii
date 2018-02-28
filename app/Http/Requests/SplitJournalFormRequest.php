@@ -77,7 +77,6 @@ class SplitJournalFormRequest extends Request
                     break;
             }
             $foreignAmount          = $transaction['foreign_amount'] ?? null;
-            $foreignCurrency        = isset($transaction['foreign_currency_id']) ? intval($transaction['foreign_currency_id']) : null;
             $set                    = [
                 'source_id'             => $sourceId,
                 'source_name'           => $sourceName,
@@ -129,39 +128,4 @@ class SplitJournalFormRequest extends Request
         ];
     }
 
-    /**
-     * @return array
-     */
-    private function getTransactionData(): array
-    {
-        $descriptions    = $this->getArray('description', 'string');
-        $categories      = $this->getArray('category', 'string');
-        $amounts         = $this->getArray('amount', 'float');
-        $budgets         = $this->getArray('amount', 'integer');
-        $srcAccountIds   = $this->getArray('source_account_id', 'integer');
-        $srcAccountNames = $this->getArray('source_account_name', 'string');
-        $dstAccountIds   = $this->getArray('destination_account_id', 'integer');
-        $dstAccountNames = $this->getArray('destination_account_name', 'string');
-        $piggyBankIds    = $this->getArray('piggy_bank_id', 'integer');
-
-        $return = [];
-        // description is leading because it is one of the mandatory fields.
-        foreach ($descriptions as $index => $description) {
-            $category    = $categories[$index] ?? '';
-            $transaction = [
-                'description'              => $description,
-                'amount'                   => Steam::positive($amounts[$index]),
-                'budget_id'                => $budgets[$index] ?? 0,
-                'category'                 => $category,
-                'source_account_id'        => $srcAccountIds[$index] ?? $this->get('journal_source_account_id'),
-                'source_account_name'      => $srcAccountNames[$index] ?? '',
-                'piggy_bank_id'            => $piggyBankIds[$index] ?? 0,
-                'destination_account_id'   => $dstAccountIds[$index] ?? $this->get('journal_destination_account_id'),
-                'destination_account_name' => $dstAccountNames[$index] ?? '',
-            ];
-            $return[]    = $transaction;
-        }
-
-        return $return;
-    }
 }

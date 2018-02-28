@@ -40,6 +40,13 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     private $user;
 
     /**
+     * CurrencyRepository constructor.
+     */
+    public function __construct()
+    {
+    }
+
+    /**
      * @param TransactionCurrency $currency
      *
      * @return bool
