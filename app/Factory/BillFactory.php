@@ -119,6 +119,8 @@ class BillFactory
         if (isset($data['notes'])) {
             $this->updateNote($bill, $data['notes']);
         }
+
+        return $bill;
     }
 
 }
