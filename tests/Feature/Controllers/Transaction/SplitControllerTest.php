@@ -258,7 +258,6 @@ class SplitControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::update
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromRequest
      */
     public function testUpdate()
     {
