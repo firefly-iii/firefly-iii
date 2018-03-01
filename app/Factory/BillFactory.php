@@ -24,9 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 use FireflyIII\Models\Bill;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class BillFactory
@@ -34,66 +35,15 @@ use FireflyIII\User;
 class BillFactory
 {
     use BillServiceTrait;
-    /** @var BillRepositoryInterface */
-    private $repository;
     /** @var User */
     private $user;
-
-    /**
-     * BillFactory constructor.
-     */
-    public function __construct()
-    {
-        $this->repository = app(BillRepositoryInterface::class);
-    }
-
-    /**
-     * @param int|null    $billId
-     * @param null|string $billName
-     *
-     * @return Bill|null
-     */
-    public function find(?int $billId, ?string $billName): ?Bill
-    {
-        $billId   = intval($billId);
-        $billName = strval($billName);
-        // first find by ID:
-        if ($billId > 0) {
-            /** @var Bill $bill */
-            $bill = $this->repository->find($billId);
-            if (!is_null($bill)) {
-                return $bill;
-            }
-        }
-
-        // then find by name:
-        if (strlen($billName) > 0) {
-            $bill = $this->repository->findByName($billName);
-            if (!is_null($bill)) {
-                return $bill;
-            }
-        }
-
-        return null;
-
-    }
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-        $this->repository->setUser($user);
-
-    }
 
     /**
      * @param array $data
      *
      * @return Bill|null
      */
-    public function store(array $data): ?Bill
+    public function create(array $data): ?Bill
     {
         $matchArray = explode(',', $data['match']);
         $matchArray = array_unique($matchArray);
@@ -121,6 +71,67 @@ class BillFactory
         }
 
         return $bill;
+    }
+
+    /**
+     * @param int|null    $billId
+     * @param null|string $billName
+     *
+     * @return Bill|null
+     */
+    public function find(?int $billId, ?string $billName): ?Bill
+    {
+        $billId   = intval($billId);
+        $billName = strval($billName);
+
+        // first find by ID:
+        if ($billId > 0) {
+            /** @var Bill $bill */
+            $bill = $this->user->bills()->find($billId);
+            if (!is_null($bill)) {
+                return $bill;
+            }
+        }
+
+        // then find by name:
+        if (strlen($billName) > 0) {
+            $bill = $this->findByName($billName);
+            if (!is_null($bill)) {
+                return $bill;
+            }
+        }
+
+        return null;
+
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return Bill|null
+     */
+    public function findByName(string $name): ?Bill
+    {
+        /** @var Collection $collection */
+        $collection = $this->user->bills()->get();
+        /** @var Bill $bill */
+        foreach ($collection as $bill) {
+            Log::debug(sprintf('"%s" vs. "%s"', $bill->name, $name));
+            if ($bill->name === $name) {
+                return $bill;
+            }
+        }
+        Log::debug(sprintf('Bill::Find by name returns NULL based on "%s"', $name));
+
+        return null;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
 }

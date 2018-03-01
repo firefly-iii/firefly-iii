@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
-use Exception;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
@@ -44,8 +42,6 @@ class AccountFactory
     /**
      * @param array $data
      *
-     * @throws FireflyException
-     * @throws Exception
      * @return Account
      */
     public function create(array $data): Account
@@ -80,10 +76,10 @@ class AccountFactory
         $newAccount = Account::create($databaseData);
         $this->updateMetadata($newAccount, $data);
 
-        if ($this->validIBData($data)) {
+        if ($this->validIBData($data) && $type->type === AccountType::ASSET) {
             $this->updateIB($newAccount, $data);
         }
-        if (!$this->validIBData($data)) {
+        if (!$this->validIBData($data) && $type->type === AccountType::ASSET) {
             $this->deleteIB($newAccount);
         }
         // update note:
@@ -99,8 +95,6 @@ class AccountFactory
      * @param string $accountType
      *
      * @return Account|null
-     * @throws Exception
-     * @throws FireflyException
      */
     public function find(string $accountName, string $accountType): ?Account
     {
@@ -122,8 +116,6 @@ class AccountFactory
      * @param string $accountType
      *
      * @return Account
-     * @throws Exception
-     * @throws FireflyException
      */
     public function findOrCreate(string $accountName, string $accountType): Account
     {
@@ -143,7 +135,7 @@ class AccountFactory
                 'name'            => $accountName,
                 'account_type_id' => $type->id,
                 'accountType'     => null,
-                'virtualBalance' => '0',
+                'virtualBalance'  => '0',
                 'iban'            => null,
                 'active'          => true,
             ]

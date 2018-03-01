@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Support;
 
 
-use Exception;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Factory\BudgetFactory;
 use FireflyIII\Factory\CategoryFactory;
@@ -39,6 +37,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Log;
 
 /**
  * Trait TransactionServiceTrait
@@ -53,7 +52,6 @@ trait TransactionServiceTrait
      * @param string             $direction
      *
      * @return string|null
-     * @throws FireflyException
      */
     public function accountType(TransactionJournal $journal, string $direction): ?string
     {
@@ -61,7 +59,11 @@ trait TransactionServiceTrait
         $type  = $journal->transactionType->type;
         switch ($type) {
             default:
-                throw new FireflyException(sprintf('Cannot handle type "%s" in accountType()', $type));
+                // @codeCoverageIgnoreStart
+                Log::error(sprintf('Cannot handle type "%s" in accountType()', $type));
+
+                return null;
+            // @codeCoverageIgnoreEnd
             case TransactionType::WITHDRAWAL:
                 $types['source']      = AccountType::ASSET;
                 $types['destination'] = AccountType::EXPENSE;
@@ -83,20 +85,22 @@ trait TransactionServiceTrait
                 return $types[$direction];
         }
         if (!isset($types[$direction])) {
-            throw new FireflyException(sprintf('No type set for direction "%s" and type "%s"', $type, $direction));
+            // @codeCoverageIgnoreStart
+            Log::error(sprintf('No type set for direction "%s" and type "%s"', $type, $direction));
+
+            return null;
+            // @codeCoverageIgnoreEnd
         }
 
         return $types[$direction];
     }
 
     /**
-     * @param string|null      $expectedType
+     * @param string|null $expectedType
      * @param int|null    $accountId
      * @param string|null $accountName
      *
      * @return Account
-     * @throws FireflyException
-     * @throws Exception
      */
     public function findAccount(?string $expectedType, ?int $accountId, ?string $accountName): Account
     {
@@ -105,7 +109,7 @@ trait TransactionServiceTrait
         $repository  = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
 
-        if(is_null($expectedType)) {
+        if (is_null($expectedType)) {
             return $repository->findNull($accountId);
         }
 
@@ -153,7 +157,11 @@ trait TransactionServiceTrait
                 return $repository->getCashAccount();
 
             default:
-                throw new FireflyException(sprintf('Cannot find account of type "%s".', $expectedType));
+                // @codeCoverageIgnoreStart
+                Log::error(sprintf('Cannot find account of type "%s".', $expectedType));
+
+                return null;
+            // @codeCoverageIgnoreEnd
 
         }
     }
@@ -233,7 +241,7 @@ trait TransactionServiceTrait
 
     /**
      * @param Transaction $transaction
-     * @param string|null      $amount
+     * @param string|null $amount
      */
     protected function setForeignAmount(Transaction $transaction, ?string $amount): void
     {

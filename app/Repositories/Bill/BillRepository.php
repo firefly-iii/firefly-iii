@@ -552,7 +552,7 @@ class BillRepository implements BillRepositoryInterface
         /** @var BillFactory $factory */
         $factory = app(BillFactory::class);
         $factory->setUser($this->user);
-        $bill = $factory->store($data);
+        $bill = $factory->create($data);
 
 
         return $bill;

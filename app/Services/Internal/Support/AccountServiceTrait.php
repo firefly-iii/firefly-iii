@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
-use FireflyIII\Exceptions\FireflyException;
+use Exception;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Factory\TransactionFactory;
@@ -57,7 +57,6 @@ trait AccountServiceTrait
      * @param Account $account
      *
      * @return bool
-     * @throws \Exception
      */
     public function deleteIB(Account $account): bool
     {
@@ -67,7 +66,11 @@ trait AccountServiceTrait
         // opening balance data? update it!
         if (null !== $openingBalance) {
             Log::debug('Opening balance journal found, delete journal.');
-            $openingBalance->delete();
+            try {
+                $openingBalance->delete();
+            } catch (Exception $e) {
+                Log::error(sprintf('Could not delete opening balance: %s', $e->getMessage()));
+            }
 
             return true;
         }
@@ -126,7 +129,6 @@ trait AccountServiceTrait
      * @param array   $data
      *
      * @return TransactionJournal|null
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function storeIBJournal(Account $account, array $data): ?TransactionJournal
     {
@@ -233,8 +235,6 @@ trait AccountServiceTrait
      * @param array   $data
      *
      * @return bool
-     * @throws FireflyException
-     * @throws \Exception
      */
     public function updateIB(Account $account, array $data): bool
     {
@@ -266,8 +266,6 @@ trait AccountServiceTrait
      * @param array              $data
      *
      * @return bool
-     *
-     * @throws \Exception
      */
     public function updateIBJournal(Account $account, TransactionJournal $journal, array $data): bool
     {
@@ -279,7 +277,12 @@ trait AccountServiceTrait
         Log::debug(sprintf('Submitted amount for opening balance to update is "%s"', $amount));
         if (0 === bccomp($amount, '0')) {
             Log::notice(sprintf('Amount "%s" is zero, delete opening balance.', $amount));
-            $journal->delete();
+            try {
+                $journal->delete();
+            } catch (Exception $e) {
+                Log::error(sprintf('Could not delete opening balance: %s', $e->getMessage()));
+            }
+
 
             return true;
         }

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
@@ -100,6 +99,7 @@ class TransactionJournalFactory
         $this->storeMeta($journal, $data, 'invoice_date');
         $this->storeMeta($journal, $data, 'internal_reference');
         Log::debug('End of TransactionJournalFactory::create()');
+
         return $journal;
     }
 
@@ -145,7 +145,7 @@ class TransactionJournalFactory
         $factory         = app(TransactionTypeFactory::class);
         $transactionType = $factory->find($type);
         if (is_null($transactionType)) {
-            throw new FireflyException(sprintf('Could not find transaction type for "%s"', $type));
+            throw new FireflyException(sprintf('Could not find transaction type for "%s"', $type)); // @codeCoverageIgnore
         }
 
         return $transactionType;

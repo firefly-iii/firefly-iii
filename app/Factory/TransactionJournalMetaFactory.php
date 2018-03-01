@@ -24,7 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Models\TransactionJournalMeta;
+use Log;
 
 /**
  * Class TransactionJournalMetaFactory
@@ -35,7 +37,6 @@ class TransactionJournalMetaFactory
      * @param array $data
      *
      * @return TransactionJournalMeta|null
-     * @throws \Exception
      */
     public function updateOrCreate(array $data): ?TransactionJournalMeta
     {
@@ -43,7 +44,11 @@ class TransactionJournalMetaFactory
         /** @var TransactionJournalMeta $entry */
         $entry = $data['journal']->transactionJournalMeta()->where('name', $data['name'])->first();
         if (is_null($value) && !is_null($entry)) {
-            $entry->delete();
+            try {
+                $entry->delete();
+            } catch (Exception $e) { // @codeCoverageIgnore
+                Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage())); // @codeCoverageIgnore
+            }
 
             return null;
         }

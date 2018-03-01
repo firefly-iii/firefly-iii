@@ -26,6 +26,7 @@ namespace FireflyIII\Factory;
 use FireflyIII\Models\TransactionType;
 
 /**
+ * @codeCoverageIgnore
  * Class TransactionTypeFactory
  */
 class TransactionTypeFactory

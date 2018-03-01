@@ -25,7 +25,6 @@ namespace FireflyIII\Factory;
 
 
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\User;
 
 /**
@@ -33,18 +32,8 @@ use FireflyIII\User;
  */
 class PiggyBankFactory
 {
-    /** @var PiggyBankRepositoryInterface */
-    private $repository;
     /** @var User */
     private $user;
-
-    /**
-     * PiggyBankFactory constructor.
-     */
-    public function __construct()
-    {
-        $this->repository = app(PiggyBankRepositoryInterface::class);
-    }
 
     /**
      * @param int|null    $piggyBankId
@@ -62,7 +51,7 @@ class PiggyBankFactory
         // first find by ID:
         if ($piggyBankId > 0) {
             /** @var PiggyBank $piggyBank */
-            $piggyBank = $this->repository->find($piggyBankId);
+            $piggyBank = $this->user->piggyBanks()->find($piggyBankId);
             if (!is_null($piggyBank)) {
                 return $piggyBank;
             }
@@ -71,7 +60,7 @@ class PiggyBankFactory
         // then find by name:
         if (strlen($piggyBankName) > 0) {
             /** @var PiggyBank $piggyBank */
-            $piggyBank = $this->repository->findByName($piggyBankName);
+            $piggyBank = $this->findByName($piggyBankName);
             if (!is_null($piggyBank)) {
                 return $piggyBank;
             }
@@ -82,12 +71,29 @@ class PiggyBankFactory
     }
 
     /**
+     * @param string $name
+     *
+     * @return PiggyBank|null
+     */
+    public function findByName(string $name): ?PiggyBank
+    {
+        $set = $this->user->piggyBanks()->get();
+        /** @var PiggyBank $piggy */
+        foreach ($set as $piggy) {
+            if ($piggy->name === $name) {
+                return $piggy;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user)
     {
         $this->user = $user;
-        $this->repository->setUser($user);
 
     }
 

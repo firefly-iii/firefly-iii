@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
-use Exception;
 use FireflyIII\Factory\BillFactory;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Factory\TransactionJournalMetaFactory;
@@ -74,7 +73,7 @@ trait JournalServiceTrait
         $factory->setUser($journal->user);
         $set = [];
         if (!is_array($data['tags'])) {
-            return;
+            return; // @codeCoverageIgnore
         }
         foreach ($data['tags'] as $string) {
             if (strlen($string) > 0) {
@@ -102,11 +101,7 @@ trait JournalServiceTrait
         ];
         /** @var TransactionJournalMetaFactory $factory */
         $factory = app(TransactionJournalMetaFactory::class);
-        try {
-            $factory->updateOrCreate($set);
-        } catch (Exception $e) {
-            // don't care
-        }
+        $factory->updateOrCreate($set);
     }
 
     /**

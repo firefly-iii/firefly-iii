@@ -32,6 +32,8 @@ use FireflyIII\Models\Note;
  */
 trait BillServiceTrait
 {
+
+
     /**
      * @param Bill   $bill
      * @param string $note

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Support\TransactionServiceTrait;
@@ -72,8 +71,6 @@ class TransactionFactory
      * @param array              $data
      *
      * @return Collection
-     * @throws FireflyException
-     * @throws \Exception
      */
     public function createPair(TransactionJournal $journal, array $data): Collection
     {
