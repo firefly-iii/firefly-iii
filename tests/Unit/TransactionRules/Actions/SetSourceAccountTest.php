@@ -50,7 +50,16 @@ class SetSourceAccountTest extends TestCase
 
 
         $type        = TransactionType::whereType(TransactionType::DEPOSIT)->first();
-        $journal     = TransactionJournal::where('transaction_type_id', $type->id)->first();
+
+        // select split transactions to exclude them later:
+        $set = TransactionJournal::where('transaction_type_id', $type->id)->get(['transaction_journals.*']);
+        foreach ($set as $current) {
+            if ($current->transactions()->count() === 2) {
+                $journal = $current;
+                break;
+            }
+        }
+
         $sourceTr    = $journal->transactions()->where('amount', '<', 0)->first();
         $source      = $sourceTr->account;
         $user        = $journal->user;
@@ -88,7 +97,16 @@ class SetSourceAccountTest extends TestCase
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $type         = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
-        $journal      = TransactionJournal::where('transaction_type_id', $type->id)->first();
+
+        // select split transactions to exclude them later:
+        $set = TransactionJournal::where('transaction_type_id', $type->id)->get(['transaction_journals.*']);
+        foreach ($set as $current) {
+            if ($current->transactions()->count() === 2) {
+                $journal = $current;
+                break;
+            }
+        }
+
         $sourceTr     = $journal->transactions()->where('amount', '<', 0)->first();
         $source       = $sourceTr->account;
         $user         = $journal->user;

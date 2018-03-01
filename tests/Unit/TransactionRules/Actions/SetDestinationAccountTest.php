@@ -48,9 +48,18 @@ class SetDestinationAccountTest extends TestCase
      */
     public function testActDepositExisting()
     {
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $type          = TransactionType::whereType(TransactionType::DEPOSIT)->first();
-        $journal       = TransactionJournal::where('transaction_type_id', $type->id)->first();
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $type         = TransactionType::whereType(TransactionType::DEPOSIT)->first();
+
+        // select split transactions to exclude them later:
+        $set = TransactionJournal::where('transaction_type_id', $type->id)->get(['transaction_journals.*']);
+        foreach ($set as $current) {
+            if ($current->transactions()->count() === 2) {
+                $journal = $current;
+                break;
+            }
+        }
+
         $destinationTr = $journal->transactions()->where('amount', '>', 0)->first();
         $destination   = $destinationTr->account;
         $user          = $journal->user;
@@ -88,7 +97,17 @@ class SetDestinationAccountTest extends TestCase
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $type          = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
-        $journal       = TransactionJournal::where('transaction_type_id', $type->id)->first();
+
+        // select split transactions to exclude them later:
+        $set = TransactionJournal::where('transaction_type_id', $type->id)->get(['transaction_journals.*']);
+        foreach ($set as $current) {
+            if ($current->transactions()->count() === 2) {
+                $journal = $current;
+                break;
+            }
+        }
+
+
         $destinationTr = $journal->transactions()->where('amount', '>', 0)->first();
         $destination   = $destinationTr->account;
         $user          = $journal->user;
@@ -123,11 +142,11 @@ class SetDestinationAccountTest extends TestCase
      */
     public function testSplitJournal()
     {
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $transaction = Transaction::orderBy('count', 'DESC')->groupBy('transaction_journal_id')
-                                  ->get(['transaction_journal_id', DB::raw('COUNT(transaction_journal_id) as count')])
-                                  ->first();
-        $journal     = TransactionJournal::find($transaction->transaction_journal_id);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $transaction  = Transaction::orderBy('count', 'DESC')->groupBy('transaction_journal_id')
+                                   ->get(['transaction_journal_id', DB::raw('COUNT(transaction_journal_id) as count')])
+                                   ->first();
+        $journal      = TransactionJournal::find($transaction->transaction_journal_id);
 
         // mock
         $accountRepos->shouldReceive('setUser');
