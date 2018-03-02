@@ -1321,9 +1321,14 @@ class TransactionControllerTest extends TestCase
      */
     public function testShowDeposit()
     {
-        /** @var TransactionJournal $journal */
-        $journal     = $this->user()->transactionJournals()->where('transaction_type_id', 2)->first();
+        do {
+            // this is kind of cheating but OK.
+            /** @var TransactionJournal $journal */
+            $journal = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 2)->whereNull('deleted_at')->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
         $transaction = $journal->transactions()->first();
+
 
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');
@@ -1381,8 +1386,12 @@ class TransactionControllerTest extends TestCase
      */
     public function testShowWithdrawal()
     {
-        /** @var TransactionJournal $journal */
-        $journal     = $this->user()->transactionJournals()->where('transaction_type_id', 1)->first();
+        do {
+            // this is kind of cheating but OK.
+            /** @var TransactionJournal $journal */
+            $journal = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
         $transaction = $journal->transactions()->first();
 
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
