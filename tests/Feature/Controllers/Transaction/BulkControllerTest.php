@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
 
-use DB;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -86,8 +85,8 @@ class BulkControllerTest extends TestCase
 
         // default transactions
         $collection = $this->user()->transactionJournals()->take(4)->get();
-        $allIds = $collection->pluck('id')->toArray();
-        $route  = route('transactions.bulk.edit', join(',', $allIds));
+        $allIds     = $collection->pluck('id')->toArray();
+        $route      = route('transactions.bulk.edit', join(',', $allIds));
         $this->be($this->user());
         $response = $this->get($route);
         $response->assertStatus(200);
@@ -122,8 +121,8 @@ class BulkControllerTest extends TestCase
 
         // default transactions
         $collection = $this->user()->transactionJournals()->take(4)->get();
-        $allIds = $collection->pluck('id')->toArray();
-        $route  = route('transactions.bulk.edit', join(',', $allIds));
+        $allIds     = $collection->pluck('id')->toArray();
+        $route      = route('transactions.bulk.edit', join(',', $allIds));
         $this->be($this->user());
         $response = $this->get($route);
         $response->assertStatus(200);

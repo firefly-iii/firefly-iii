@@ -56,7 +56,7 @@ class LinkControllerTest extends TestCase
     public function testDestroy()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository = $this->mock(LinkTypeRepositoryInterface::class);
+        $repository   = $this->mock(LinkTypeRepositoryInterface::class);
 
         $repository->shouldReceive('destroyLink');
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
@@ -127,7 +127,7 @@ class LinkControllerTest extends TestCase
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $linkRepos    = $this->mock(LinkTypeRepositoryInterface::class);
-        $data = [
+        $data         = [
             'link_other' => 0,
             'link_type'  => '1_inward',
         ];
@@ -147,7 +147,7 @@ class LinkControllerTest extends TestCase
     public function testSwitchLink()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository = $this->mock(LinkTypeRepositoryInterface::class);
+        $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('switchLink')->andReturn(false);
         $this->be($this->user());

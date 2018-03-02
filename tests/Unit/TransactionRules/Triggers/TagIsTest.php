@@ -36,7 +36,7 @@ class TagIsTest extends TestCase
      */
     public function testNotTriggered()
     {
-        $journal = TransactionJournal::find(58);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->tags()->detach();
         $this->assertEquals(0, $journal->tags()->count());
 
@@ -50,7 +50,7 @@ class TagIsTest extends TestCase
      */
     public function testTriggered()
     {
-        $journal = TransactionJournal::find(57);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->tags()->detach();
         $tags   = $journal->user->tags()->take(3)->get();
         $search = '';

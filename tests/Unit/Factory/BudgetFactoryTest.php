@@ -67,19 +67,6 @@ class BudgetFactoryTest extends TestCase
     }
 
     /**
-     * Put in unknown, get NULL
-     *
-     * @covers \FireflyIII\Factory\BudgetFactory
-     */
-    public function testFindUnknown()
-    {
-        /** @var BudgetFactory $factory */
-        $factory = app(BudgetFactory::class);
-        $factory->setUser($this->user());
-        $this->assertNull($factory->find(null, 'I dont exist.'.rand(1,000)));
-    }
-
-    /**
      * Put in NULL, will find NULL.
      *
      * @covers \FireflyIII\Factory\BudgetFactory
@@ -92,6 +79,19 @@ class BudgetFactoryTest extends TestCase
 
         $this->assertNull($factory->find(null, null));
 
+    }
+
+    /**
+     * Put in unknown, get NULL
+     *
+     * @covers \FireflyIII\Factory\BudgetFactory
+     */
+    public function testFindUnknown()
+    {
+        /** @var BudgetFactory $factory */
+        $factory = app(BudgetFactory::class);
+        $factory->setUser($this->user());
+        $this->assertNull($factory->find(null, 'I dont exist.' . rand(1, 000)));
     }
 
 }

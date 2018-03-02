@@ -36,7 +36,7 @@ class HasNoCategoryTest extends TestCase
      */
     public function testTriggeredCategory()
     {
-        $journal  = TransactionJournal::find(31);
+        $journal  = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $category = $journal->user->categories()->first();
         $journal->categories()->detach();
         $journal->categories()->save($category);
@@ -52,7 +52,7 @@ class HasNoCategoryTest extends TestCase
      */
     public function testTriggeredNoCategory()
     {
-        $journal = TransactionJournal::find(32);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->categories()->detach();
         $this->assertEquals(0, $journal->categories()->count());
 
@@ -66,7 +66,7 @@ class HasNoCategoryTest extends TestCase
      */
     public function testTriggeredTransaction()
     {
-        $journal     = TransactionJournal::find(33);
+        $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $transaction = $journal->transactions()->first();
         $category    = $journal->user->categories()->first();
 

@@ -49,7 +49,8 @@ class TransactionCurrencyFactoryTest extends TestCase
      */
     public function testFindByCode()
     {
-        $currency = TransactionCurrency::find(1);
+        // ;
+        $currency = TransactionCurrency::inRandomOrder()->whereNull('deleted_at')->first();
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
         $result  = $factory->find(null, $currency->code);
@@ -61,7 +62,7 @@ class TransactionCurrencyFactoryTest extends TestCase
      */
     public function testFindByID()
     {
-        $currency = TransactionCurrency::find(1);
+        $currency = TransactionCurrency::inRandomOrder()->whereNull('deleted_at')->first();
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
         $result  = $factory->find($currency->id, null);

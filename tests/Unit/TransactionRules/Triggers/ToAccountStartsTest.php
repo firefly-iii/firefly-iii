@@ -36,7 +36,7 @@ class ToAccountStartsTest extends TestCase
      */
     public function testTriggered()
     {
-        $journal     = TransactionJournal::find(66);
+        $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $transaction = $journal->transactions()->where('amount', '>', 0)->first();
         $account     = $transaction->account;
 
@@ -50,7 +50,7 @@ class ToAccountStartsTest extends TestCase
      */
     public function testTriggeredLonger()
     {
-        $journal     = TransactionJournal::find(67);
+        $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $transaction = $journal->transactions()->where('amount', '>', 0)->first();
         $account     = $transaction->account;
 
@@ -64,7 +64,7 @@ class ToAccountStartsTest extends TestCase
      */
     public function testTriggeredNot()
     {
-        $journal = TransactionJournal::find(68);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
 
         $trigger = ToAccountStarts::makeFromStrings('some name' . rand(1, 234), false);
         $result  = $trigger->triggered($journal);

@@ -28,8 +28,8 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Laravel\Passport\Passport;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class AccountControllerTest

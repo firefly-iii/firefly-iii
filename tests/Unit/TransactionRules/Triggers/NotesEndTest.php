@@ -37,7 +37,7 @@ class NotesEndTest extends TestCase
      */
     public function testTriggered()
     {
-        $journal = TransactionJournal::find(51);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->notes()->delete();
         $note = new Note();
         $note->noteable()->associate($journal);
@@ -53,7 +53,7 @@ class NotesEndTest extends TestCase
      */
     public function testTriggeredLonger()
     {
-        $journal = TransactionJournal::find(53);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->notes()->delete();
         $note = new Note();
         $note->noteable()->associate($journal);
@@ -69,7 +69,7 @@ class NotesEndTest extends TestCase
      */
     public function testTriggeredNoMatch()
     {
-        $journal = TransactionJournal::find(52);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->notes()->delete();
         $note = new Note();
         $note->noteable()->associate($journal);

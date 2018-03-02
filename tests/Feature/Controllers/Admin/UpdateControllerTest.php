@@ -28,9 +28,9 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Services\Github\Object\Release;
 use FireflyIII\Services\Github\Request\UpdateRequest;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class UpdateControllerTest

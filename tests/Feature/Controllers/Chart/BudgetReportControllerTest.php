@@ -52,8 +52,8 @@ class BudgetReportControllerTest extends TestCase
     public function testAccountExpense()
     {
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $generator = $this->mock(GeneratorInterface::class);
-        $pieChart  = $this->mock(MetaPieChartInterface::class);
+        $generator   = $this->mock(GeneratorInterface::class);
+        $pieChart    = $this->mock(MetaPieChartInterface::class);
 
 
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
@@ -75,8 +75,8 @@ class BudgetReportControllerTest extends TestCase
     public function testBudgetExpense()
     {
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $generator = $this->mock(GeneratorInterface::class);
-        $pieChart  = $this->mock(MetaPieChartInterface::class);
+        $generator   = $this->mock(GeneratorInterface::class);
+        $pieChart    = $this->mock(MetaPieChartInterface::class);
 
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setBudgets')->once()->andReturnSelf();

@@ -111,8 +111,8 @@ class PiggyBankEventTransformerTest extends TestCase
         $accountMeta = AccountMeta::create(
             [
                 'account_id' => $account->id,
-                'name'         => 'currency_id',
-                'data'         => 1,
+                'name'       => 'currency_id',
+                'data'       => 1,
             ]
         );
 

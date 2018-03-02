@@ -271,8 +271,8 @@ class TransactionControllerTest extends TestCase
     public function testShow()
     {
         // mock stuff
-        $tasker     = $this->mock(JournalTaskerInterface::class);
-        $linkRepos  = $this->mock(LinkTypeRepositoryInterface::class);
+        $tasker    = $this->mock(JournalTaskerInterface::class);
+        $linkRepos = $this->mock(LinkTypeRepositoryInterface::class);
         $linkRepos->shouldReceive('get')->andReturn(new Collection);
         $linkRepos->shouldReceive('getLinks')->andReturn(new Collection);
 
@@ -291,8 +291,8 @@ class TransactionControllerTest extends TestCase
      */
     public function testShowOpeningBalance()
     {
-        $tasker     = $this->mock(JournalTaskerInterface::class);
-        $linkRepos  = $this->mock(LinkTypeRepositoryInterface::class);
+        $tasker    = $this->mock(JournalTaskerInterface::class);
+        $linkRepos = $this->mock(LinkTypeRepositoryInterface::class);
         $linkRepos->shouldReceive('get')->andReturn(new Collection);
         $linkRepos->shouldReceive('getLinks')->andReturn(new Collection);
 

@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Auth;
 
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class ForgotPasswordControllerTest
@@ -50,6 +50,7 @@ class ForgotPasswordControllerTest extends TestCase
      */
     public function testSendResetLinkEmail()
     {
+
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('hasRole')->andReturn(false)->once();
         $data = [

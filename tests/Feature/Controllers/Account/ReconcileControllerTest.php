@@ -31,8 +31,8 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class ConfigurationControllerTest

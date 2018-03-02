@@ -24,8 +24,9 @@ namespace Tests\Feature\Controllers\Admin;
 
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
+
 /**
  * Class UserControllerTest
  *

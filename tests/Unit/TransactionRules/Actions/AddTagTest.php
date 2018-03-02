@@ -39,14 +39,17 @@ class AddTagTest extends TestCase
      */
     public function testActExistingTag()
     {
-        $this->assertDatabaseHas('tag_transaction_journal', ['tag_id' => 2, 'transaction_journal_id' => 1]);
+        $tag     = Tag::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal->tags()->sync([$tag->id]);
+        $this->assertDatabaseHas('tag_transaction_journal', ['tag_id' => $tag->id, 'transaction_journal_id' => $journal->id]);
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'housing';
-        $journal                  = TransactionJournal::find(1);
-        $action                   = new AddTag($ruleAction);
-        $result                   = $action->act($journal);
+        $ruleAction->action_value = $tag->tag;
+
+        $action = new AddTag($ruleAction);
+        $result = $action->act($journal);
         $this->assertFalse($result);
-        $this->assertDatabaseHas('tag_transaction_journal', ['tag_id' => 2, 'transaction_journal_id' => 1]);
+        $this->assertDatabaseHas('tag_transaction_journal', ['tag_id' => $tag->id, 'transaction_journal_id' => $journal->id]);
     }
 
     /**
@@ -54,15 +57,15 @@ class AddTagTest extends TestCase
      */
     public function testActNoTag()
     {
+        $journal                  = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = 'TestTag-' . rand(1, 1000);
-        $journal                  = TransactionJournal::find(1);
         $action                   = new AddTag($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);
 
         // find newly created tag:
         $tag = Tag::orderBy('id', 'DESC')->first();
-        $this->assertDatabaseHas('tag_transaction_journal', ['tag_id' => $tag->id, 'transaction_journal_id' => 1]);
+        $this->assertDatabaseHas('tag_transaction_journal', ['tag_id' => $tag->id, 'transaction_journal_id' => $journal->id]);
     }
 }

@@ -95,8 +95,8 @@ class SetDestinationAccountTest extends TestCase
      */
     public function testActWithdrawalExisting()
     {
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $type          = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $type         = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
 
         // select split transactions to exclude them later:
         $set = TransactionJournal::where('transaction_type_id', $type->id)->get(['transaction_journals.*']);

@@ -22,10 +22,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Report;
 
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use Tests\TestCase;
 
@@ -43,7 +39,7 @@ class OperationsControllerTest extends TestCase
      */
     public function testExpenses()
     {
-        $tasker       = $this->mock(AccountTaskerInterface::class);
+        $tasker = $this->mock(AccountTaskerInterface::class);
         $tasker->shouldReceive('getExpenseReport')->andReturn([]);
 
         $this->be($this->user());
@@ -56,7 +52,7 @@ class OperationsControllerTest extends TestCase
      */
     public function testIncome()
     {
-        $tasker       = $this->mock(AccountTaskerInterface::class);
+        $tasker = $this->mock(AccountTaskerInterface::class);
         $tasker->shouldReceive('getIncomeReport')->andReturn([]);
 
         $this->be($this->user());
@@ -69,7 +65,7 @@ class OperationsControllerTest extends TestCase
      */
     public function testOperations()
     {
-        $tasker       = $this->mock(AccountTaskerInterface::class);
+        $tasker = $this->mock(AccountTaskerInterface::class);
         $tasker->shouldReceive('getExpenseReport')->andReturn([]);
         $tasker->shouldReceive('getIncomeReport')->andReturn([]);
 

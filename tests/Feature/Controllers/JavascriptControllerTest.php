@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
-use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;

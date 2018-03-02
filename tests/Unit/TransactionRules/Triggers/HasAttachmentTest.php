@@ -36,7 +36,13 @@ class HasAttachmentTest extends TestCase
      */
     public function testTriggered()
     {
-        $journal    = TransactionJournal::find(26);
+        $count = 0;
+        while($count === 0) {
+            // this is kind of cheating but OK.
+            $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+            $count = $journal->attachments()->count();
+        }
+        
         $attachment = $journal->user->attachments()->first();
         $journal->attachments()->save($attachment);
         $this->assertEquals(1, $journal->attachments()->count());
@@ -51,7 +57,13 @@ class HasAttachmentTest extends TestCase
      */
     public function testTriggeredFalse()
     {
-        $journal = TransactionJournal::find(27);
+        $count = 0;
+        while ($count === 0) {
+            // this is kind of cheating but OK.
+            $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+            $count   = $journal->attachments()->count();
+        }
+
         $this->assertEquals(0, $journal->attachments()->count());
 
         $trigger = HasAttachment::makeFromStrings('1', false);

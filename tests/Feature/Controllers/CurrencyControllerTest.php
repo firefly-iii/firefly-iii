@@ -46,8 +46,8 @@ class CurrencyControllerTest extends TestCase
     {
         // mock stuff
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
 
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $userRepos->shouldReceive('hasRole')->once()->andReturn(false);
@@ -106,8 +106,8 @@ class CurrencyControllerTest extends TestCase
     {
         // mock stuff
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
 
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
@@ -126,8 +126,8 @@ class CurrencyControllerTest extends TestCase
     {
         // mock stuff
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
 
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
@@ -187,8 +187,8 @@ class CurrencyControllerTest extends TestCase
     {
         // mock stuff
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
 
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $userRepos->shouldReceive('hasRole')->once()->andReturn(true);

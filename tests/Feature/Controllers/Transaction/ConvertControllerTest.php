@@ -369,7 +369,7 @@ class ConvertControllerTest extends TestCase
     {
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('convert')->andReturn(new MessageBag);
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 

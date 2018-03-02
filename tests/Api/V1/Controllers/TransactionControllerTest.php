@@ -26,6 +26,7 @@ namespace Tests\Api\V1\Controllers;
 
 use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -1349,7 +1350,7 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('setJournals')->andReturnSelf()->once();
-        $collector->shouldReceive('addFilter')->andReturnSelf()->once();
+        $collector->shouldReceive('addFilter')->withArgs([NegativeAmountFilter::class])->andReturnSelf()->once();
         $collector->shouldReceive('getJournals')->andReturn($transactions);
 
         // test API
@@ -1360,6 +1361,7 @@ class TransactionControllerTest extends TestCase
                 'data' => [
                     'attributes' => [
                         'description' => $journal->description,
+                        'type'        => 'Deposit',
                     ],
                     'links'      => [
                         0      => [],
@@ -2172,8 +2174,8 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$source]), new Collection([$dest]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
-        $piggy  = $this->user()->piggyBanks()->first();
-        $data   = [
+        $piggy = $this->user()->piggyBanks()->first();
+        $data  = [
             'description'     => 'Some transfer #' . rand(1, 1000),
             'date'            => '2018-01-01',
             'type'            => 'transfer',
@@ -2209,7 +2211,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-        $data    = [
+        $data = [
             'description'  => 'Some transaction #' . rand(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
@@ -2247,7 +2249,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-        $data    = [
+        $data = [
             'description'  => 'Some transaction #' . rand(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
@@ -2285,7 +2287,7 @@ class TransactionControllerTest extends TestCase
      */
     public function testSuccessStoreTags()
     {
-        $tags    = [
+        $tags         = [
             'TagOne' . rand(1, 1000),
             'TagTwoBlarg' . rand(1, 1000),
             'SomeThreeTag' . rand(1, 1000),
@@ -2299,7 +2301,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-        $data    = [
+        $data = [
             'description'  => 'Some transaction #' . rand(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
@@ -2319,5 +2321,4 @@ class TransactionControllerTest extends TestCase
         $response = $this->post('/api/v1/transactions?include=tags', $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
     }
-
 }

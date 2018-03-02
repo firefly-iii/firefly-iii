@@ -41,7 +41,7 @@ class SetDescriptionTest extends TestCase
         // get journal, give fixed description
         $description          = 'text' . rand(1, 1000);
         $newDescription       = 'new description' . rand(1, 1234);
-        $journal              = TransactionJournal::find(14);
+        $journal              = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->description = $description;
         $journal->save();
 
@@ -51,7 +51,7 @@ class SetDescriptionTest extends TestCase
         $action                   = new SetDescription($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);
-        $journal = TransactionJournal::find(14);
+        $journal = TransactionJournal::find($journal->id);
 
         // assert result
         $this->assertEquals($newDescription, $journal->description);

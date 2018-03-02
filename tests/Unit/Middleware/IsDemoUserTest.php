@@ -46,7 +46,6 @@ class IsDemoUserTest extends TestCase
     }
 
 
-
     /**
      * @covers \FireflyIII\Http\Middleware\IsDemoUser::handle
      */

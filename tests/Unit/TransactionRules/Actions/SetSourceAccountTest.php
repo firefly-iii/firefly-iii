@@ -49,7 +49,7 @@ class SetSourceAccountTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
 
-        $type        = TransactionType::whereType(TransactionType::DEPOSIT)->first();
+        $type = TransactionType::whereType(TransactionType::DEPOSIT)->first();
 
         // select split transactions to exclude them later:
         $set = TransactionJournal::where('transaction_type_id', $type->id)->get(['transaction_journals.*']);
@@ -107,11 +107,11 @@ class SetSourceAccountTest extends TestCase
             }
         }
 
-        $sourceTr     = $journal->transactions()->where('amount', '<', 0)->first();
-        $source       = $sourceTr->account;
-        $user         = $journal->user;
-        $accountType  = AccountType::whereType(AccountType::ASSET)->first();
-        $account      = $user->accounts()->where('account_type_id', $accountType->id)->where('id', '!=', $source->id)->first();
+        $sourceTr    = $journal->transactions()->where('amount', '<', 0)->first();
+        $source      = $sourceTr->account;
+        $user        = $journal->user;
+        $accountType = AccountType::whereType(AccountType::ASSET)->first();
+        $account     = $user->accounts()->where('account_type_id', $accountType->id)->where('id', '!=', $source->id)->first();
         $this->assertNotEquals($source->id, $account->id);
 
 

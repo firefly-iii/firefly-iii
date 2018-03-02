@@ -295,7 +295,7 @@ class BudgetControllerTest extends TestCase
     {
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
 
         $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
         $accountRepos->shouldReceive('setUser');
@@ -314,7 +314,7 @@ class BudgetControllerTest extends TestCase
     {
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
         $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);

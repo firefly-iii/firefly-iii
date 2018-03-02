@@ -155,7 +155,7 @@ class AmountTest extends TestCase
             '€1,44'                   => '1.44',
             '(33.52)'                 => '-33.52',
             '€(63.12)'                => '-63.12',
-            '($182.77)'                => '-182.77',
+            '($182.77)'               => '-182.77',
         ];
         foreach ($values as $value => $expected) {
             $converter = new Amount;

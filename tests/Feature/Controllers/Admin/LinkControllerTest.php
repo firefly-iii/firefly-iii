@@ -25,8 +25,9 @@ namespace Tests\Feature\Controllers\Admin;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use Illuminate\Support\Collection;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
+
 /**
  * Class LinkControllerTest
  *
@@ -226,7 +227,7 @@ class LinkControllerTest extends TestCase
     public function testUpdateNonEditable()
     {
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
-        $linkType = LinkType::where('editable', 0)->first();
+        $linkType   = LinkType::where('editable', 0)->first();
 
         $data = [
             'name'           => 'test ' . rand(1, 1000),

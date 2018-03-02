@@ -24,8 +24,9 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 use Laravel\Passport\Passport;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
+
 /**
  * Class AboutControllerTest
  */

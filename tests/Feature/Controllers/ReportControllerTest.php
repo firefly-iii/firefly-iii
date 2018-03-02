@@ -549,7 +549,7 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
-        $tag = $this->user()->tags()->find(1);
+        $tag              = $this->user()->tags()->find(1);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
         $tagRepos->shouldReceive('findByTag')->andReturn($tag)->twice();
@@ -603,7 +603,7 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
         $generator        = $this->mock(TYRG::class);
-        $tag = $this->user()->tags()->find(1);
+        $tag              = $this->user()->tags()->find(1);
 
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));

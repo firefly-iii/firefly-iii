@@ -24,9 +24,9 @@ namespace Tests\Feature\Controllers\Auth;
 
 use FireflyIII\Models\Preference;
 use Google2FA;
+use Log;
 use Preferences;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class TwoFactorControllerTest

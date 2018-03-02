@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
 
-use DB;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -92,7 +91,7 @@ class MassControllerTest extends TestCase
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
-        $transfers = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(2)->get();
+        $transfers      = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(2)->get();
         $transfersArray = $transfers->pluck('id')->toArray();
 
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
@@ -111,7 +110,6 @@ class MassControllerTest extends TestCase
         // mock more stuff:
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
-
 
 
         $this->be($this->user());
@@ -151,8 +149,8 @@ class MassControllerTest extends TestCase
 
         // default transactions
         $collection = $this->user()->transactionJournals()->take(4)->get();
-        $allIds = $collection->pluck('id')->toArray();
-        $route  = route('transactions.mass.edit', join(',', $allIds));
+        $allIds     = $collection->pluck('id')->toArray();
+        $route      = route('transactions.mass.edit', join(',', $allIds));
         $this->be($this->user());
         $response = $this->get($route);
         $response->assertStatus(200);
@@ -191,13 +189,13 @@ class MassControllerTest extends TestCase
 
         // default transactions
         $collection = $this->user()->transactionJournals()->take(4)->get();
-        $allIds = $collection->pluck('id')->toArray();
+        $allIds     = $collection->pluck('id')->toArray();
 
         $this->be($this->user());
         $response = $this->get(route('transactions.mass.edit', join(',', $allIds)));
         $response->assertStatus(200);
         $response->assertSee('Edit a number of transactions');
-        $response->assertSessionHas('error','You have selected no valid transactions to edit.');
+        $response->assertSessionHas('error', 'You have selected no valid transactions to edit.');
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
     }

@@ -36,7 +36,7 @@ class BudgetIsTest extends TestCase
      */
     public function testTriggeredJournal()
     {
-        $journal = TransactionJournal::find(17);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $budget  = $journal->user->budgets()->first();
         $journal->budgets()->detach();
         $journal->budgets()->save($budget);
@@ -52,7 +52,7 @@ class BudgetIsTest extends TestCase
      */
     public function testTriggeredNotJournal()
     {
-        $journal     = TransactionJournal::find(18);
+        $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $budget      = $journal->user->budgets()->first();
         $otherBudget = $journal->user->budgets()->where('id', '!=', $budget->id)->first();
         $journal->budgets()->detach();
@@ -69,7 +69,7 @@ class BudgetIsTest extends TestCase
      */
     public function testTriggeredTransaction()
     {
-        $journal     = TransactionJournal::find(19);
+        $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $transaction = $journal->transactions()->first();
         $budget      = $journal->user->budgets()->first();
 

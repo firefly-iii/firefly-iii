@@ -54,7 +54,7 @@ class CategoryControllerTest extends TestCase
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $generator    = $this->mock(GeneratorInterface::class);
-        $firstUse = new Carbon;
+        $firstUse     = new Carbon;
         $firstUse->subDays(3);
 
         $repository->shouldReceive('spentInPeriod')->andReturn('0');

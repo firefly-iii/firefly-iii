@@ -182,8 +182,8 @@ class AccountControllerTest extends TestCase
         $this->session(['start' => $date, 'end' => clone $date]);
 
         // mock stuff:
-        $tasker       = $this->mock(AccountTaskerInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $tasker        = $this->mock(AccountTaskerInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
@@ -222,7 +222,7 @@ class AccountControllerTest extends TestCase
     public function testShowBrokenInitial()
     {
         // mock
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $date = new Carbon;
@@ -244,8 +244,8 @@ class AccountControllerTest extends TestCase
     public function testShowByDateEmpty(string $range)
     {
         // mock stuff
-        $collector    = $this->mock(JournalCollectorInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $collector     = $this->mock(JournalCollectorInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $collector->shouldReceive('setAccounts')->andReturnSelf();
@@ -278,9 +278,9 @@ class AccountControllerTest extends TestCase
     public function testShowInitial()
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $date = new Carbon;
         $this->session(['start' => $date, 'end' => clone $date]);
@@ -298,8 +298,8 @@ class AccountControllerTest extends TestCase
     public function testStore()
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $repository    = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
@@ -326,8 +326,8 @@ class AccountControllerTest extends TestCase
     public function testStoreAnother()
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $repository    = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
@@ -352,8 +352,8 @@ class AccountControllerTest extends TestCase
     public function testUpdate()
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $repository    = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $repository->shouldReceive('update')->once();
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
@@ -378,8 +378,8 @@ class AccountControllerTest extends TestCase
     public function testUpdateAgain()
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $repository    = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $repository->shouldReceive('update')->once();
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);

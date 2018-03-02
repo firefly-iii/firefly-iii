@@ -81,7 +81,7 @@ class IndexControllerTest extends TestCase
     public function testStart()
     {
         $repository = $this->mock(ImportJobRepositoryInterface::class);
-        $routine = $this->mock(FileRoutine::class);
+        $routine    = $this->mock(FileRoutine::class);
         $routine->shouldReceive('setJob')->once();
         $routine->shouldReceive('run')->once()->andReturn(true);
 
@@ -97,7 +97,7 @@ class IndexControllerTest extends TestCase
     public function testStartFailed()
     {
         $repository = $this->mock(ImportJobRepositoryInterface::class);
-        $routine = $this->mock(FileRoutine::class);
+        $routine    = $this->mock(FileRoutine::class);
         $routine->shouldReceive('setJob')->once();
         $routine->shouldReceive('run')->once()->andReturn(false);
 

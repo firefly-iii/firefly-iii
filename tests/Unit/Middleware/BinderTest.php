@@ -1232,7 +1232,7 @@ class BinderTest extends TestCase
     {
         $tagRepos = $this->mock(TagRepositoryInterface::class);
         $tagRepos->shouldReceive('setUser');
-        $tags  = $this->user()->tags()->whereIn('id', [1, 2])->get(['tags.*']);
+        $tags = $this->user()->tags()->whereIn('id', [1, 2])->get(['tags.*']);
         $tagRepos->shouldReceive('get')->once()->andReturn($tags);
 
         Route::middleware(Binder::class)->any(
@@ -1242,7 +1242,6 @@ class BinderTest extends TestCase
         );
 
         $names = join(',', $tags->pluck('tag')->toArray());
-
 
 
         $this->be($this->user());
