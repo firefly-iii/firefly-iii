@@ -47,7 +47,7 @@ trait JournalServiceTrait
     {
         /** @var BillFactory $factory */
         $factory = app(BillFactory::class);
-        $factory->setUser($this->user);
+        $factory->setUser($journal->user);
         $bill = $factory->find($data['bill_id'], $data['bill_name']);
 
         if (!is_null($bill)) {

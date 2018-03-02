@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
-use Exception;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -585,13 +583,7 @@ class JournalRepository implements JournalRepositoryInterface
     {
         /** @var JournalUpdateService $service */
         $service = app(JournalUpdateService::class);
-        $service->setUser($this->user);
-
-        try {
-            $journal = $service->update($journal, $data);
-        } catch (FireflyException | Exception $e) {
-            throw new FireflyException($e->getMessage());
-        }
+        $journal = $service->update($journal, $data);
 
         return $journal;
     }
@@ -608,7 +600,6 @@ class JournalRepository implements JournalRepositoryInterface
     {
         /** @var JournalUpdateService $service */
         $service = app(JournalUpdateService::class);
-        $service->setUser($this->user);
 
         return $service->updateBudget($journal, $budgetId);
     }
@@ -625,7 +616,6 @@ class JournalRepository implements JournalRepositoryInterface
     {
         /** @var JournalUpdateService $service */
         $service = app(JournalUpdateService::class);
-        $service->setUser($this->user);
 
         return $service->updateCategory($journal, $category);
     }
@@ -642,7 +632,6 @@ class JournalRepository implements JournalRepositoryInterface
     {
         /** @var JournalUpdateService $service */
         $service = app(JournalUpdateService::class);
-        $service->setUser($this->user);
         $service->connectTags($journal, $tags);
 
         return $journal;

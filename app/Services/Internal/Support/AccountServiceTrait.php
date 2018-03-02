@@ -35,6 +35,7 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\User;
 use Log;
 use Validator;
@@ -66,11 +67,9 @@ trait AccountServiceTrait
         // opening balance data? update it!
         if (null !== $openingBalance) {
             Log::debug('Opening balance journal found, delete journal.');
-            try {
-                $openingBalance->delete();
-            } catch (Exception $e) {
-                Log::error(sprintf('Could not delete opening balance: %s', $e->getMessage()));
-            }
+            /** @var JournalDestroyService $service */
+            $service = app(JournalDestroyService::class);
+            $service->destroy($openingBalance);
 
             return true;
         }
@@ -277,11 +276,9 @@ trait AccountServiceTrait
         Log::debug(sprintf('Submitted amount for opening balance to update is "%s"', $amount));
         if (0 === bccomp($amount, '0')) {
             Log::notice(sprintf('Amount "%s" is zero, delete opening balance.', $amount));
-            try {
-                $journal->delete();
-            } catch (Exception $e) {
-                Log::error(sprintf('Could not delete opening balance: %s', $e->getMessage()));
-            }
+            /** @var JournalDestroyService $service */
+            $service = app(JournalDestroyService::class);
+            $service->destroy($journal);
 
 
             return true;

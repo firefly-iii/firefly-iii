@@ -24,8 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Destroy;
 
 use DB;
+use Exception;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
@@ -49,17 +51,19 @@ class AccountDestroyService
         /** @var Transaction $transaction */
         foreach ($account->transactions()->get() as $transaction) {
             Log::debug('Now at transaction #' . $transaction->id);
+            /** @var TransactionJournal $journal */
             $journal = $transaction->transactionJournal()->first();
             if (null !== $journal) {
                 Log::debug('Call for deletion of journal #' . $journal->id);
-                $journal->delete();
+                /** @var JournalDestroyService $service */
+                $service = app(JournalDestroyService::class);
+                $service->destroy($journal);
             }
         }
         try {
             $account->delete();
-        } catch (\Exception $e) {
-            // don't care
-            Log::error($e->getMessage());
+        } catch (Exception $e) { // @codeCoverageIgnore
+            Log::error(sprintf('Could not delete account: %s',$e->getMessage())); // @codeCoverageIgnore
         }
 
         return true;

@@ -48,8 +48,6 @@ class AccountUpdateService
      * @param array   $data
      *
      * @return Account
-     * @throws FireflyException
-     * @throws Exception
      */
     public function update(Account $account, array $data): Account
     {

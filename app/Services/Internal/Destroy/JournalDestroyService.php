@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionJournalMeta;
 use Log;
 
 /**
+ * @codeCoverageIgnore
  * Class JournalDestroyService
  */
 class JournalDestroyService
@@ -55,7 +56,7 @@ class JournalDestroyService
             }
             $journal->delete();
         } catch (Exception $e) {
-            // don't care
+            Log::error(sprintf('Could not delete bill: %s',$e->getMessage())); // @codeCoverageIgnore
         }
 
         return;

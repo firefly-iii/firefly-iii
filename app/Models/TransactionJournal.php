@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Models\TransactionJournalTrait;
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -38,6 +39,7 @@ use Watson\Validating\ValidatingTrait;
 
 /**
  * Class TransactionJournal.
+ * @property User $user
  */
 class TransactionJournal extends Model
 {

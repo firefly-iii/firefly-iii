@@ -228,7 +228,6 @@ class TransactionController extends Controller
 
         /** @var JournalUpdateService $service */
         $service = app(JournalUpdateService::class);
-        $service->setUser(auth()->user());
         $journal = $service->update($transaction->transactionJournal, $data);
 
         $manager = new Manager();

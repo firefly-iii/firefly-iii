@@ -27,6 +27,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 
 /**
+ * @codeCoverageIgnore
  * Class BillUpdateService
  */
 class BillUpdateService
@@ -36,6 +37,8 @@ class BillUpdateService
     /**
      * @param Bill  $bill
      * @param array $data
+     *
+     * @return Bill
      */
     public function update(Bill $bill, array $data): Bill
     {

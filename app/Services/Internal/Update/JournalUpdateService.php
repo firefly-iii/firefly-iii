@@ -27,8 +27,8 @@ use FireflyIII\Factory\TransactionFactory;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
-use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class to centralise code that updates a journal given the input by system.
@@ -38,24 +38,12 @@ use Illuminate\Support\Collection;
 class JournalUpdateService
 {
     use JournalServiceTrait;
-    /** @var User */
-    private $user;
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
 
     /**
      * @param TransactionJournal $journal
      * @param array              $data
      *
      * @return TransactionJournal
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \Exception
      */
     public function update(TransactionJournal $journal, array $data): TransactionJournal
     {
@@ -67,12 +55,14 @@ class JournalUpdateService
         // update transactions:
         /** @var TransactionUpdateService $service */
         $service = app(TransactionUpdateService::class);
-        $service->setUser($this->user);
+        $service->setUser($journal->user);
 
         // create transactions
         /** @var TransactionFactory $factory */
         $factory = app(TransactionFactory::class);
-        $factory->setUser($this->user);
+        $factory->setUser($journal->user);
+
+        Log::debug(sprintf('Found %d rows in array (should result in %d transactions', count($data['transactions']), count($data['transactions']) * 2));
 
         /**
          * @var int   $identifier
@@ -82,25 +72,32 @@ class JournalUpdateService
             // exists transaction(s) with this identifier? update!
             /** @var Collection $existing */
             $existing = $journal->transactions()->where('identifier', $identifier)->get();
+            Log::debug(sprintf('Found %d transactions with identifier %d', $existing->count(), $identifier));
             if ($existing->count() > 0) {
                 $existing->each(
                     function (Transaction $transaction) use ($service, $trData) {
+                        Log::debug(sprintf('Update transaction #%d (identifier %d)', $transaction->id, $trData['identifier']));
                         $service->update($transaction, $trData);
                     }
                 );
                 continue;
             }
+            Log::debug('Found none, so create a pair.');
             // otherwise, create!
             $factory->createPair($journal, $trData);
         }
         // could be that journal has more transactions than submitted (remove split)
         $transactions = $journal->transactions()->where('amount', '>', 0)->get();
+        Log::debug(sprintf('Journal #%d has %d transactions', $journal->id, $transactions->count()));
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
+            Log::debug(sprintf('Now at transaction %d with identifier %d', $transaction->id, $transaction->identifier));
             if (!isset($data['transactions'][$transaction->identifier])) {
+                Log::debug('No such entry in array, delete this set of transactions.');
                 $journal->transactions()->where('identifier', $transaction->identifier)->delete();
             }
         }
+        Log::debug(sprintf('New count is %d, transactions array held %d items', $journal->transactions()->count(), count($data['transactions'])));
 
         // connect bill:
         $this->connectBill($journal, $data);
@@ -137,7 +134,7 @@ class JournalUpdateService
     {
         /** @var TransactionUpdateService $service */
         $service = app(TransactionUpdateService::class);
-        $service->setUser($this->user);
+        $service->setUser($journal->user);
 
         /** @var Transaction $transaction */
         foreach ($journal->transactions as $transaction) {
@@ -159,7 +156,7 @@ class JournalUpdateService
     {
         /** @var TransactionUpdateService $service */
         $service = app(TransactionUpdateService::class);
-        $service->setUser($this->user);
+        $service->setUser($journal->user);
 
         /** @var Transaction $transaction */
         foreach ($journal->transactions as $transaction) {

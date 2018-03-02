@@ -25,8 +25,9 @@ namespace FireflyIII\Services\Internal\Destroy;
 
 use Exception;
 use FireflyIII\Models\Bill;
-
+use Log;
 /**
+ * @codeCoverageIgnore
  * Class BillDestroyService
  */
 class BillDestroyService
@@ -38,8 +39,8 @@ class BillDestroyService
     {
         try {
             $bill->delete();
-        } catch (Exception $e) {
-            // don't care.
+        } catch (Exception $e) { // @codeCoverageIgnore
+            Log::error(sprintf('Could not delete bill: %s',$e->getMessage())); // @codeCoverageIgnore
         }
     }
 
