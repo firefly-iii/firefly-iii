@@ -131,8 +131,15 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     {
         $outward = TransactionJournalLink::whereSourceId($journal->id)->get();
         $inward  = TransactionJournalLink::whereDestinationId($journal->id)->get();
+        $merged  = $outward->merge($inward);
 
-        return $outward->merge($inward);
+        $filtered = $merged->filter(
+            function (TransactionJournalLink $link) {
+                return (!is_null($link->source) && !is_null($link->destination));
+            }
+        );
+
+        return $filtered;
     }
 
     /**
