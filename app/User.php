@@ -43,12 +43,22 @@ class User extends Authenticatable
     use Notifiable, HasApiTokens;
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'blocked'    => 'boolean',
+        ];
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = ['email', 'password', 'blocked', 'blocked_code'];
-
     /**
      * The attributes excluded from the model's JSON form.
      *
@@ -63,7 +73,6 @@ class User extends Authenticatable
     protected $table = 'users';
 
     /**
-     * @param        $guard
      * @param string $value
      *
      * @return User

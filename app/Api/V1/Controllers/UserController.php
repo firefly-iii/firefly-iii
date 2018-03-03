@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
+use FireflyIII\Api\V1\Requests\UserRequest;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Transformers\UserTransformer;
 use FireflyIII\User;
@@ -89,21 +90,28 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $pageSize   = intval(Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data);
+        // user preferences
+        $pageSize = intval(Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data);
+
+        // make manager
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        // build collection
         $collection = $this->repository->all();
         $count      = $collection->count();
         $users      = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
         $paginator = new LengthAwarePaginator($users, $count, $pageSize, $this->parameters->get('page'));
-        $manager   = new Manager();
-        $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $paginator->setPath(route('api.v1.users.index') . $this->buildParams());
 
+        // make resource
         $resource = new FractalCollection($users, new UserTransformer($this->parameters), 'users');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
-        return response()->json($manager->createData($resource)->toArray());
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**
@@ -114,35 +122,70 @@ class UserController extends Controller
      */
     public function show(Request $request, User $user)
     {
-
+        // make manager
         $manager = new Manager();
-        //$manager->parseIncludes(['attachments', 'journals', 'user']);
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        // add include parameter:
+        $include = $request->get('include') ?? '';
+        $manager->parseIncludes($include);
+
+        // make resource
         $resource = new Item($user, new UserTransformer($this->parameters), 'users');
 
-        return response()->json($manager->createData($resource)->toArray());
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**
-     * @param AccountRequest $request
+     * @param UserRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(AccountRequest $request)
+    public function store(UserRequest $request)
     {
+        $data = $request->getAll();
+        $user = $this->repository->store($data);
 
+        // make manager
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        // add include parameter:
+        $include = $request->get('include') ?? '';
+        $manager->parseIncludes($include);
+
+        // make resource
+        $resource = new Item($user, new UserTransformer($this->parameters), 'users');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**
-     * @param AccountRequest $request
-     * @param Account        $account
+     * @param UserRequest $request
+     * @param User        $user
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(AccountRequest $request, Account $account)
+    public function update(UserRequest $request, User $user)
     {
+        $data = $request->getAll();
+        $user = $this->repository->update($user, $data);
 
+        // make manager
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        // add include parameter:
+        $include = $request->get('include') ?? '';
+        $manager->parseIncludes($include);
+
+        // make resource
+        $resource = new Item($user, new UserTransformer($this->parameters), 'users');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
     }
 

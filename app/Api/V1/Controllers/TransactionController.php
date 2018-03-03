@@ -29,10 +29,8 @@ use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Services\Internal\Update\JournalUpdateService;
 use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -41,6 +39,7 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
+use Log;
 use Preferences;
 
 /**
@@ -176,7 +175,6 @@ class TransactionController extends Controller
      * @param TransactionRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function store(TransactionRequest $request, JournalRepositoryInterface $repository)
     {
@@ -216,19 +214,20 @@ class TransactionController extends Controller
 
 
     /**
-     * @param TransactionRequest $request
-     * @param TransactionJournal $journal
+     * @param TransactionRequest         $request
+     * @param JournalRepositoryInterface $repository
+     * @param Transaction                $transaction
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(TransactionRequest $request, Transaction $transaction)
+    public function update(TransactionRequest $request, JournalRepositoryInterface $repository, Transaction $transaction)
     {
         $data         = $request->getAll();
         $data['user'] = auth()->user()->id;
 
-        /** @var JournalUpdateService $service */
-        $service = app(JournalUpdateService::class);
-        $journal = $service->update($transaction->transactionJournal, $data);
+        Log::debug('Inside transaction update');
+
+        $journal = $repository->update($transaction->transactionJournal, $data);
 
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';

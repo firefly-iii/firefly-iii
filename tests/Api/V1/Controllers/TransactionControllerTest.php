@@ -37,7 +37,6 @@ use Log;
 use Tests\TestCase;
 
 /**
- * todo test fire of rules with parameter
  * Class TransactionControllerTest
  */
 class TransactionControllerTest extends TestCase
@@ -1527,6 +1526,46 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
+     * Add opposing account by a new name.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     */
+    public function testSuccessNewStoreOpposingName()
+    {
+        $journal      = $this->user()->transactionJournals()->where('transaction_type_id', 1)->first();
+        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $journalRepos->shouldReceive('setUser')->once();
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
+        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        $data = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'transactions' => [
+                [
+                    'amount'           => '10',
+                    'currency_id'      => 1,
+                    'source_id'        => $account->id,
+                    'destination_name' => 'New expense account #' . rand(1, 1000),
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+
+    }
+
+    /**
      * Submit the minimum amount of data required to create a withdrawal.
      *
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
@@ -1574,7 +1613,7 @@ class TransactionControllerTest extends TestCase
     public function testSuccessStoreBasic()
     {
         // default journal:
-        $journal      = $this->user()->transactionJournals()->first();
+        $journal      = $this->user()->transactionJournals()->where('transaction_type_id', 1)->first();
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -1613,7 +1652,7 @@ class TransactionControllerTest extends TestCase
     public function testSuccessStoreBasicDeposit()
     {
         // default journal:
-        $journal      = $this->user()->transactionJournals()->first();
+        $journal      = $this->user()->transactionJournals()->where('transaction_type_id', 2)->first();
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -2328,6 +2367,80 @@ class TransactionControllerTest extends TestCase
 
         // test API
         $response = $this->post('/api/v1/transactions?include=tags', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+    }
+
+    /**
+     * Fire enough to trigger an update. Since the create code already fires on the Request, no
+     * need to verify all of that.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::update
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     */
+    public function testUpdateBasicDeposit()
+    {
+        $account    = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $data       = [
+            'description'  => 'Some deposit #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'transactions' => [
+                [
+                    'amount'         => '10',
+                    'currency_id'    => 1,
+                    'destination_id' => $account->id,
+                ],
+            ],
+        ];
+        do {
+            /** @var TransactionJournal $deposit */
+            $deposit = $this->user()->transactionJournals()->where('transaction_type_id', 2)->first();
+            $count   = $deposit->transactions()->count();
+        } while ($count !== 2);
+
+        $transaction = $deposit->transactions()->first();
+        $repository->shouldReceive('setUser');
+        $repository->shouldReceive('update')->andReturn($deposit)->once();
+
+        // call API
+        $response = $this->put('/api/v1/transactions/' . $transaction->id, $data);
+        $response->assertStatus(200);
+    }
+
+    /**
+     * Fire enough to trigger an update. Since the create code already fires on the Request, no
+     * need to verify all of that.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::update
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     */
+    public function testUpdateBasicWithdrawal()
+    {
+        $account    = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $data       = [
+            'description'  => 'Some transaction #' . rand(1, 1000),
+            'date'         => '2018-01-01',
+            'transactions' => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_id'   => $account->id,
+                ],
+            ],
+        ];
+        do {
+            /** @var TransactionJournal $withdrawal */
+            $withdrawal = $this->user()->transactionJournals()->where('transaction_type_id', 1)->first();
+            $count      = $withdrawal->transactions()->count();
+        } while ($count !== 2);
+
+        $transaction = $withdrawal->transactions()->first();
+        $repository->shouldReceive('setUser');
+        $repository->shouldReceive('update')->andReturn($withdrawal)->once();
+
+        // call API
+        $response = $this->put('/api/v1/transactions/' . $transaction->id, $data);
         $response->assertStatus(200);
     }
 }

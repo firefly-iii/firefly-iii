@@ -61,7 +61,7 @@ Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transactions', 'as' => 'api.v1.transactions.'],
     function () {
 
-        // Users API routes:
+        // Transaction API routes:
         Route::get('', ['uses' => 'TransactionController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'TransactionController@store', 'as' => 'store']);
         Route::get('{transaction}', ['uses' => 'TransactionController@show', 'as' => 'show']);
