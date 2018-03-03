@@ -276,11 +276,13 @@ class MetaPieChart implements MetaPieChartInterface
         $collector->setBudgets($this->budgets);
         $collector->setCategories($this->categories);
 
+        // @codeCoverageIgnoreStart
         if ($this->tags->count() > 0) {
             $collector->setTags($this->tags);
             $collector->withCategoryInformation();
             $collector->withBudgetInformation();
         }
+        // @codeCoverageIgnoreEnd
 
         return $collector->getJournals();
     }
@@ -297,7 +299,7 @@ class MetaPieChart implements MetaPieChartInterface
     {
         if (0 === count($fields) && $this->tags->count() > 0) {
             // do a special group on tags:
-            return $this->groupByTag($set);
+            return $this->groupByTag($set); // @codeCoverageIgnore
         }
 
         $grouped = [];
@@ -341,6 +343,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param Collection $set
      *
      * @return array

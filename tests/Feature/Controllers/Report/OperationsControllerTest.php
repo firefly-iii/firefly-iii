@@ -39,8 +39,17 @@ class OperationsControllerTest extends TestCase
      */
     public function testExpenses()
     {
+        $return = [
+            1 => [
+            'id'      => 1,
+            'name'    => 'Some name',
+            'sum'     => '5',
+            'average' => '5',
+            'count'   => 1,
+            ]
+        ];
         $tasker = $this->mock(AccountTaskerInterface::class);
-        $tasker->shouldReceive('getExpenseReport')->andReturn([]);
+        $tasker->shouldReceive('getExpenseReport')->andReturn($return);
 
         $this->be($this->user());
         $response = $this->get(route('report-data.operations.expenses', ['1', '20160101', '20160131']));
@@ -65,9 +74,19 @@ class OperationsControllerTest extends TestCase
      */
     public function testOperations()
     {
+        $return = [
+            1 => [
+                'id'      => 1,
+                'name'    => 'Some name',
+                'sum'     => '5',
+                'average' => '5',
+                'count'   => 1,
+            ]
+        ];
+
         $tasker = $this->mock(AccountTaskerInterface::class);
-        $tasker->shouldReceive('getExpenseReport')->andReturn([]);
-        $tasker->shouldReceive('getIncomeReport')->andReturn([]);
+        $tasker->shouldReceive('getExpenseReport')->andReturn($return);
+        $tasker->shouldReceive('getIncomeReport')->andReturn($return);
 
         $this->be($this->user());
         $response = $this->get(route('report-data.operations.operations', ['1', '20160101', '20160131']));

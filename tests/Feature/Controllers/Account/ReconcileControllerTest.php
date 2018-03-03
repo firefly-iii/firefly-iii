@@ -91,9 +91,10 @@ class ReconcileControllerTest extends TestCase
      */
     public function testOverview()
     {
+        $transactions = $this->user()->transactions()->inRandomOrder()->take(3)->get();
         $repository = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('first')->andReturn(new TransactionJournal);
-        $repository->shouldReceive('getTransactionsById')->andReturn(new Collection())->twice();
+        $repository->shouldReceive('getTransactionsById')->andReturn($transactions)->twice();
 
         $parameters = [
             'startBalance' => '0',

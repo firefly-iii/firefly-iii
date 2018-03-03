@@ -316,7 +316,7 @@ class AccountController extends Controller
         $step   = '1D';
         $months = $start->diffInMonths($end);
         if ($months > 3) {
-            $step = '1W';
+            $step = '1W'; // @codeCoverageIgnore
         }
         if ($months > 24) {
             $step = '1M'; // @codeCoverageIgnore
@@ -340,9 +340,10 @@ class AccountController extends Controller
                     $current->addDay();
                 }
                 break;
+            // @codeCoverageIgnoreStart
             case '1W':
-            case '1M': // @codeCoverageIgnore
-            case '1Y': // @codeCoverageIgnore
+            case '1M':
+            case '1Y':
                 while ($end >= $current) {
                     $balance           = floatval(app('steam')->balance($account, $current));
                     $label             = app('navigation')->periodShow($current, $step);
@@ -350,6 +351,7 @@ class AccountController extends Controller
                     $current           = app('navigation')->addPeriod($current, $step, 1);
                 }
                 break;
+            // @codeCoverageIgnoreEnd
         }
         $data = $this->generator->singleSet($account->name, $chartData);
         $cache->store($data);

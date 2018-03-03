@@ -95,7 +95,7 @@ class SplitController extends Controller
     public function edit(Request $request, TransactionJournal $journal)
     {
         if ($this->isOpeningBalance($journal)) {
-            return $this->redirectToAccount($journal);
+            return $this->redirectToAccount($journal); // @codeCoverageIgnore
         }
 
         $uploadSize     = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
@@ -140,7 +140,7 @@ class SplitController extends Controller
     public function update(SplitJournalFormRequest $request, TransactionJournal $journal)
     {
         if ($this->isOpeningBalance($journal)) {
-            return $this->redirectToAccount($journal);
+            return $this->redirectToAccount($journal); // @codeCoverageIgnore
         }
         $data    = $request->getAll();
         $journal = $this->repository->update($journal, $data);

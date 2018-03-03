@@ -67,6 +67,8 @@ class SplitControllerTest extends TestCase
         $destination  = $deposit->transactions()->where('amount', '>', 0)->first();
         $account      = $destination->account;
         $transactions = factory(Transaction::class, 3)->make();
+        $array = $transactions->toArray();
+        $array[0]['category'] = '';
 
         $journalRepos->shouldReceive('first')->once()->andReturn($deposit);
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]));
@@ -78,13 +80,14 @@ class SplitControllerTest extends TestCase
         $journalRepos->shouldReceive('getJournalBudgetId')->andReturn(0);
         $journalRepos->shouldReceive('getCategoryName')->andReturn('');
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('0');
+        $journalRepos->shouldReceive('getJournalCategoryName')->andReturn('Some');
 
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
         $accountRepository->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])
                           ->andReturn(new Collection([$account]))->once();
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-        $tasker->shouldReceive('getTransactionsOverview')->andReturn($transactions->toArray());
+        $tasker->shouldReceive('getTransactionsOverview')->andReturn($array);
 
         $this->be($this->user());
         $response = $this->get(route('transactions.split.edit', [$deposit->id]));

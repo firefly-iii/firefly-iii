@@ -93,11 +93,12 @@ class MassControllerTest extends TestCase
 
         $transfers      = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(2)->get();
         $transfersArray = $transfers->pluck('id')->toArray();
+        $source = $this->user()->accounts()->first();
 
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         // mock data for edit page:
-        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection);
-        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection);
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]));
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$source]));
         $journalRepos->shouldReceive('getTransactionType')->andReturn('Transfer');
         $journalRepos->shouldReceive('isJournalReconciled')->andReturn(false);
         $journalRepos->shouldReceive('getFirstPosTransaction')->andReturn($transfers->first()->transactions()->first());

@@ -103,7 +103,7 @@ class UserControllerTest extends TestCase
         $response = $this->get('/api/v1/users');
         $response->assertStatus(200);
         $response->assertJson(['data' => [],]);
-        $response->assertJson(['meta' => ['pagination' => ['total' => 10, 'count' => 10, 'per_page' => 50, 'current_page' => 1, 'total_pages' => 1]],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => 10, 'count' => 10, 'current_page' => 1, 'total_pages' => 1]],]);
         $response->assertJson(
             ['links' => ['self' => true, 'first' => true, 'last' => true,],]
         );

@@ -328,28 +328,4 @@ class BillController extends Controller
 
         return redirect($this->getPreviousUri('bills.edit.uri'));
     }
-
-    /**
-     * Returns the latest date in the set, or start when set is empty.
-     *
-     * @param Collection $dates
-     * @param Carbon     $default
-     *
-     * @return Carbon
-     */
-    private function lastPaidDate(Collection $dates, Carbon $default): Carbon
-    {
-        if (0 === $dates->count()) {
-            return $default; // @codeCoverageIgnore
-        }
-        $latest = $dates->first();
-        /** @var Carbon $date */
-        foreach ($dates as $date) {
-            if ($date->gte($latest)) {
-                $latest = $date;
-            }
-        }
-
-        return $latest;
-    }
 }

@@ -139,8 +139,10 @@ class LinkControllerTest extends TestCase
      */
     public function testIndex()
     {
+        $linkTypes = LinkType::inRandomOrder()->take(3)->get();
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
-        $repository->shouldReceive('get')->andReturn(new Collection);
+        $repository->shouldReceive('get')->andReturn($linkTypes);
+        $repository->shouldReceive('countJournals')->andReturn(3);
         $this->be($this->user());
         $response = $this->get(route('admin.links.index'));
         $response->assertStatus(200);

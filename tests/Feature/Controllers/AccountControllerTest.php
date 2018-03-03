@@ -216,6 +216,23 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers                   \FireflyIII\Http\Controllers\AccountController::show
+     * @expectedExceptionMessage End is after start!
+     */
+    public function testShowBrokenBadDates()
+    {
+        // mock
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $this->session(['start' => '2018-01-01', 'end' => '2017-12-01']);
+
+        $this->be($this->user());
+        $account  = $this->user()->accounts()->where('account_type_id', 3)->orderBy('id', 'ASC')->whereNull('deleted_at')->first();
+        $response = $this->get(route('accounts.show', [$account->id, '2018-01-01', '2017-12-01']));
+        $response->assertStatus(500);
+    }
+
+    /**
+     * @covers                   \FireflyIII\Http\Controllers\AccountController::show
      * @covers                   \FireflyIII\Http\Controllers\AccountController::redirectToOriginalAccount
      * @expectedExceptionMessage Expected a transaction
      */
@@ -233,7 +250,6 @@ class AccountControllerTest extends TestCase
         $response = $this->get(route('accounts.show', [$account->id]));
         $response->assertStatus(500);
     }
-
 
     /**
      * @covers       \FireflyIII\Http\Controllers\AccountController::show

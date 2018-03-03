@@ -297,7 +297,7 @@ class AccountController extends Controller
             $end = app('navigation')->endOfPeriod($start, $range);
         }
         if ($end < $start) {
-            throw new FireflyException('End is after start!');
+            throw new FireflyException('End is after start!'); // @codeCoverageIgnore
         }
 
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
@@ -417,7 +417,7 @@ class AccountController extends Controller
         $start = $this->repository->oldestJournalDate($account);
         $end   = $date ?? new Carbon;
         if ($end < $start) {
-            list($start, $end) = [$end, $start];
+            list($start, $end) = [$end, $start]; // @codeCoverageIgnore
         }
 
         // properties for cache
