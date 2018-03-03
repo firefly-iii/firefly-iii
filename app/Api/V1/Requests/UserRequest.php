@@ -38,12 +38,12 @@ class UserRequest extends Request
     {
         // Only allow authenticated users
         if (!auth()->check()) {
-            return false;
+            return false; // @codeCoverageIgnore
         }
         /** @var User $user */
         $user = auth()->user();
         if (!$user->hasRole('owner')) {
-            return false;
+            return false; // @codeCoverageIgnore
         }
 
         return true;

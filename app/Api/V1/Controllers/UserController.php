@@ -78,7 +78,7 @@ class UserController extends Controller
 
             return response()->json([], 204);
         }
-        throw new AccessDeniedException('');
+        throw new AccessDeniedException(''); // @codeCoverageIgnore
     }
 
     /**

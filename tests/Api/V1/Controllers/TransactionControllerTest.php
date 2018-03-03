@@ -2394,7 +2394,7 @@ class TransactionControllerTest extends TestCase
         ];
         do {
             /** @var TransactionJournal $deposit */
-            $deposit = $this->user()->transactionJournals()->where('transaction_type_id', 2)->first();
+            $deposit = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 2)->first();
             $count   = $deposit->transactions()->count();
         } while ($count !== 2);
 
@@ -2431,7 +2431,7 @@ class TransactionControllerTest extends TestCase
         ];
         do {
             /** @var TransactionJournal $withdrawal */
-            $withdrawal = $this->user()->transactionJournals()->where('transaction_type_id', 1)->first();
+            $withdrawal = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 1)->first();
             $count      = $withdrawal->transactions()->count();
         } while ($count !== 2);
 
