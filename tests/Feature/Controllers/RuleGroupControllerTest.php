@@ -170,7 +170,8 @@ class RuleGroupControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleGroupController::store
+     * @covers       \FireflyIII\Http\Controllers\RuleGroupController::store
+     * @covers       \FireflyIII\Http\Requests\RuleGroupFormRequest
      */
     public function testStore()
     {
@@ -211,7 +212,8 @@ class RuleGroupControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleGroupController::update
+     * @covers       \FireflyIII\Http\Controllers\RuleGroupController::update
+     * @covers       \FireflyIII\Http\Requests\RuleGroupFormRequest
      */
     public function testUpdate()
     {
@@ -221,13 +223,14 @@ class RuleGroupControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $data = [
+            'id'          => 1,
             'title'       => 'C',
             'description' => 'XX',
         ];
         $this->session(['rule-groups.edit.uri' => 'http://localhost']);
 
         $repository->shouldReceive('update');
-        $repository->shouldReceive('find')->andReturn(new RuleGroup);
+        $repository->shouldReceive('find')->andReturn(RuleGroup::first());
 
         $this->be($this->user());
         $response = $this->post(route('rule-groups.update', [1]), $data);

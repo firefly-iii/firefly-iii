@@ -432,6 +432,7 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\CategoryController::store
+     * @covers \FireflyIII\Http\Requests\CategoryFormRequest
      */
     public function testStore()
     {
@@ -455,15 +456,17 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\CategoryController::update
+     * @covers \FireflyIII\Http\Requests\CategoryFormRequest
      */
     public function testUpdate()
     {
+        $category = Category::first();
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('update');
-        $repository->shouldReceive('find')->andReturn(new Category);
+        $repository->shouldReceive('find')->andReturn($category);
 
         $this->session(['categories.edit.uri' => 'http://localhost']);
 

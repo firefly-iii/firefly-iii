@@ -302,6 +302,7 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexAccountOK()
     {
@@ -328,6 +329,7 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexAuditOK()
     {
@@ -353,6 +355,7 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexBudgetError()
     {
@@ -381,6 +384,7 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexBudgetOK()
     {
@@ -409,6 +413,7 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexCategoryError()
     {
@@ -437,6 +442,7 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexCategoryOK()
     {
@@ -464,6 +470,7 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexDefaultOK()
     {
@@ -489,6 +496,7 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexDefaultStartEnd()
     {
@@ -514,6 +522,7 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexTagError()
     {
@@ -541,6 +550,7 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexTagOK()
     {
@@ -569,6 +579,7 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexZeroAccounts()
     {

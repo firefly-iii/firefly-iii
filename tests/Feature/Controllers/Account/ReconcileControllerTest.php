@@ -237,6 +237,7 @@ class ReconcileControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::submit()
+     * @covers       \FireflyIII\Http\Requests\ReconciliationStoreRequest
      */
     public function testSubmit()
     {
@@ -288,6 +289,7 @@ class ReconcileControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::update
+     * @covers       \FireflyIII\Http\Requests\ReconciliationUpdateRequest
      */
     public function testUpdate()
     {
@@ -310,6 +312,7 @@ class ReconcileControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::update
+     * @covers       \FireflyIII\Http\Requests\ReconciliationUpdateRequest
      */
     public function testUpdateNotReconcile()
     {
@@ -326,6 +329,7 @@ class ReconcileControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::update
+     * @covers       \FireflyIII\Http\Requests\ReconciliationUpdateRequest
      */
     public function testUpdateZero()
     {

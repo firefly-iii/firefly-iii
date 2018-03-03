@@ -207,7 +207,7 @@ class JournalFormRequest extends Request
 
                 break;
             default:
-                throw new FireflyException('Cannot handle transaction type of type ' . e($what) . ' . ');
+                throw new FireflyException(sprintf('Cannot handle transaction type of type "%s"', $what)); // @codeCoverageIgnore
         }
 
         return $rules;

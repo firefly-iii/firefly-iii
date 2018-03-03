@@ -209,6 +209,8 @@ class BillControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\BillController::store
+     * @covers \FireflyIII\Http\Requests\BillFormRequest
+     * @covers \FireflyIII\Http\Requests\Request
      */
     public function testStore()
     {
@@ -241,6 +243,8 @@ class BillControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\BillController::update
+     * @covers \FireflyIII\Http\Requests\BillFormRequest
+     * @covers \FireflyIII\Http\Requests\Request
      */
     public function testUpdate()
     {
@@ -254,6 +258,7 @@ class BillControllerTest extends TestCase
         $attachHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
 
         $data = [
+            'id'                            => 1,
             'name'                          => 'Updated Bill ' . rand(1000, 9999),
             'match'                         => 'some more words',
             'amount_min'                    => '100',

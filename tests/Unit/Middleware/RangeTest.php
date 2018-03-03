@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace Tests\Unit\Middleware;
 
 use FireflyIII\Http\Middleware\Range;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -34,14 +36,12 @@ use Tests\TestCase;
 class RangeTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Http\Middleware\Range::handle
-     * @covers \FireflyIII\Http\Middleware\Range::__construct
-     * @covers \FireflyIII\Http\Middleware\Range::configureList
-     * @covers \FireflyIII\Http\Middleware\Range::configureView
-     * @covers \FireflyIII\Http\Middleware\Range::setRange
+     * @covers \FireflyIII\Http\Middleware\Range
      */
     public function testMiddlewareAuthenticated()
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository->shouldReceive('first')->andReturn(TransactionJournal::first());
         $this->withoutExceptionHandling();
         $this->be($this->user());
         $response = $this->get('/_test/range');
@@ -54,8 +54,7 @@ class RangeTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Range::handle
-     * @covers \FireflyIII\Http\Middleware\Range::__construct
+     * @covers \FireflyIII\Http\Middleware\Range
      */
     public function testMiddlewareNotAuthenticated()
     {

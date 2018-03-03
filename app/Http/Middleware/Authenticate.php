@@ -98,6 +98,7 @@ class Authenticate
             return $this->auth->authenticate();
         }
 
+        // @codeCoverageIgnoreStart
         foreach ($guards as $guard) {
             if ($this->auth->guard($guard)->check()) {
                 return $this->auth->shouldUse($guard);
@@ -105,5 +106,6 @@ class Authenticate
         }
 
         throw new AuthenticationException('Unauthenticated.', $guards);
+        // @codeCoverageIgnoreEnd
     }
 }

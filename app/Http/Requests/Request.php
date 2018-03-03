@@ -120,15 +120,4 @@ class Request extends FormRequest
     {
         return $this->get($field) ? new Carbon($this->get($field)) : null;
     }
-
-    /**
-     * @param string $field
-     *
-     * @return float
-     */
-    protected function float(string $field): float
-    {
-        return round($this->input($field), 12);
-    }
-
 }

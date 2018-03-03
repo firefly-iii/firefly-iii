@@ -73,6 +73,7 @@ class LinkControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::store
+     * @covers       \FireflyIII\Http\Requests\JournalLinkRequest
      */
     public function testStore()
     {
@@ -98,6 +99,7 @@ class LinkControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::store
+     * @covers       \FireflyIII\Http\Requests\JournalLinkRequest
      */
     public function testStoreAlreadyLinked()
     {
@@ -122,6 +124,7 @@ class LinkControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::store
+     * @covers       \FireflyIII\Http\Requests\JournalLinkRequest
      */
     public function testStoreInvalid()
     {

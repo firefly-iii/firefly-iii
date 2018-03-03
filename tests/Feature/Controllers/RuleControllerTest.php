@@ -300,6 +300,7 @@ class RuleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::store
+     * @covers       \FireflyIII\Http\Requests\RuleFormRequest
      */
     public function testStore()
     {
@@ -449,6 +450,7 @@ class RuleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::update
+     * @covers       \FireflyIII\Http\Requests\RuleFormRequest
      */
     public function testUpdate()
     {

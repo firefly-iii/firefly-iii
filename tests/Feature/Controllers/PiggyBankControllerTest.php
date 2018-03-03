@@ -334,7 +334,8 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::store
+     * @covers       \FireflyIII\Http\Controllers\PiggyBankController::store
+     * @covers       \FireflyIII\Http\Requests\PiggyBankFormRequest
      */
     public function testStore()
     {
@@ -359,7 +360,8 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::update
+     * @covers       \FireflyIII\Http\Controllers\PiggyBankController::update
+     * @covers       \FireflyIII\Http\Requests\PiggyBankFormRequest
      */
     public function testUpdate()
     {
@@ -371,6 +373,7 @@ class PiggyBankControllerTest extends TestCase
 
         $this->session(['piggy-banks.edit.uri' => 'http://localhost']);
         $data = [
+            'id'                              => 3,
             'name'                            => 'Updated Piggy ' . rand(999, 10000),
             'targetamount'                    => '100.123',
             'account_id'                      => 2,

@@ -161,6 +161,7 @@ class LinkControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\LinkController::store
+     * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
     public function testStore()
     {
@@ -182,6 +183,7 @@ class LinkControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\LinkController::store
+     * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
     public function testStoreRedirect()
     {
@@ -202,6 +204,7 @@ class LinkControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\LinkController::update
+     * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
     public function testUpdate()
     {
@@ -225,6 +228,7 @@ class LinkControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\LinkController::update
+     * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
     public function testUpdateNonEditable()
     {
@@ -246,6 +250,7 @@ class LinkControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\LinkController::update
+     * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
     public function testUpdateRedirect()
     {

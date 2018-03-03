@@ -251,6 +251,7 @@ class CurrencyControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController::store
+     * @covers \FireflyIII\Http\Requests\CurrencyFormRequest
      */
     public function testStore()
     {
@@ -278,6 +279,7 @@ class CurrencyControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController::store
+     * @covers \FireflyIII\Http\Requests\CurrencyFormRequest
      */
     public function testStoreNoRights()
     {
@@ -305,6 +307,7 @@ class CurrencyControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController::update
+     * @covers \FireflyIII\Http\Requests\CurrencyFormRequest
      */
     public function testUpdate()
     {
@@ -319,6 +322,7 @@ class CurrencyControllerTest extends TestCase
 
         $this->session(['currencies.edit.uri' => 'http://localhost']);
         $data = [
+            'id'             => 2,
             'name'           => 'XA',
             'code'           => 'XAX',
             'symbol'         => 'a',

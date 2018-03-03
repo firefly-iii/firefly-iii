@@ -117,6 +117,7 @@ class ExportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ExportController::postIndex
+     * @covers \FireflyIII\Http\Requests\ExportFormRequest
      */
     public function testPostIndex()
     {

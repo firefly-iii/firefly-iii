@@ -230,7 +230,9 @@ class SingleControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $account = $this->user()->accounts()->first();
-        $accountRepos->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection([$account]));
+        $accountRepos->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(
+            new Collection([$account])
+        );
 
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
 
@@ -574,6 +576,7 @@ class SingleControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
+     * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testStoreError()
     {
@@ -610,6 +613,7 @@ class SingleControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
+     * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testStoreSuccess()
     {
@@ -660,7 +664,169 @@ class SingleControllerTest extends TestCase
     }
 
     /**
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
+     * @covers       \FireflyIII\Http\Requests\JournalFormRequest
+     */
+    public function testStoreSuccessDeposit()
+    {
+
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
+        $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
+        $attRepos      = $this->mock(AttachmentHelperInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+
+        // mock results:
+        $journal              = new TransactionJournal();
+        $journal->id          = 1000;
+        $journal->description = 'New deposit';
+        $journalRepos->shouldReceive('store')->andReturn($journal);
+        $this->expectsEvents(StoredTransactionJournal::class);
+
+        $errors = new MessageBag;
+        $errors->add('attachments', 'Fake error');
+
+        $messages = new MessageBag;
+        $messages->add('attachments', 'Fake error');
+
+        // mock attachment helper, trigger an error AND and info thing.
+        $attRepos->shouldReceive('saveAttachmentsForModel');
+        $attRepos->shouldReceive('getErrors')->andReturn($errors);
+        $attRepos->shouldReceive('getMessages')->andReturn($messages);
+
+        $this->session(['transactions.create.uri' => 'http://localhost']);
+        $this->be($this->user());
+
+        $data     = [
+            'what'                      => 'deposit',
+            'amount'                    => '10',
+            'amount_currency_id_amount' => 1,
+            'destination_account_id'    => 1,
+            'source_account_name'       => 'Some source',
+            'date'                      => '2016-01-01',
+            'description'               => 'Test descr',
+        ];
+        $response = $this->post(route('transactions.store', ['deposit']), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+        $response->assertSessionHas('error');
+        $response->assertSessionHas('info');
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
+     * @covers       \FireflyIII\Http\Requests\JournalFormRequest
+     */
+    public function testStoreSuccessTransfer()
+    {
+
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
+        $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
+        $attRepos      = $this->mock(AttachmentHelperInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+
+        // mock results:
+        $journal              = new TransactionJournal();
+        $journal->id          = 1000;
+        $journal->description = 'New transfer';
+        $journalRepos->shouldReceive('store')->andReturn($journal);
+        $this->expectsEvents(StoredTransactionJournal::class);
+
+        $errors = new MessageBag;
+        $errors->add('attachments', 'Fake error');
+
+        $messages = new MessageBag;
+        $messages->add('attachments', 'Fake error');
+
+        // mock attachment helper, trigger an error AND and info thing.
+        $attRepos->shouldReceive('saveAttachmentsForModel');
+        $attRepos->shouldReceive('getErrors')->andReturn($errors);
+        $attRepos->shouldReceive('getMessages')->andReturn($messages);
+
+        $this->session(['transactions.create.uri' => 'http://localhost']);
+        $this->be($this->user());
+
+        $data     = [
+            'what'                      => 'transfer',
+            'amount'                    => '10',
+            'amount_currency_id_amount' => 1,
+            'destination_account_id'    => 1,
+            'source_account_id'         => 2,
+            'date'                      => '2016-01-01',
+            'description'               => 'Test descr',
+        ];
+        $response = $this->post(route('transactions.store', ['transfer']), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+        $response->assertSessionHas('error');
+        $response->assertSessionHas('info');
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
+     * @covers       \FireflyIII\Http\Requests\JournalFormRequest
+     */
+    public function testStoreSuccessTransferForeign()
+    {
+
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
+        $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
+        $attRepos      = $this->mock(AttachmentHelperInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+
+        // mock results:
+        $journal              = new TransactionJournal();
+        $journal->id          = 1000;
+        $journal->description = 'New transfer';
+        $journalRepos->shouldReceive('store')->andReturn($journal);
+        $this->expectsEvents(StoredTransactionJournal::class);
+
+        $errors = new MessageBag;
+        $errors->add('attachments', 'Fake error');
+
+        $messages = new MessageBag;
+        $messages->add('attachments', 'Fake error');
+
+        // mock attachment helper, trigger an error AND and info thing.
+        $attRepos->shouldReceive('saveAttachmentsForModel');
+        $attRepos->shouldReceive('getErrors')->andReturn($errors);
+        $attRepos->shouldReceive('getMessages')->andReturn($messages);
+
+        $this->session(['transactions.create.uri' => 'http://localhost']);
+        $this->be($this->user());
+
+        $data     = [
+            'what'                         => 'transfer',
+            'amount'                       => '10',
+            'amount_currency_id_amount'    => 1,
+            'source_account_currency'      => 1,
+            'destination_account_currency' => 2,
+            'destination_account_id'       => 1,
+            'source_account_id'            => 2,
+            'date'                         => '2016-01-01',
+            'description'                  => 'Test descr',
+        ];
+        $response = $this->post(route('transactions.store', ['transfer']), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+        $response->assertSessionHas('error');
+        $response->assertSessionHas('info');
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::update
+     * @covers \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testUpdate()
     {

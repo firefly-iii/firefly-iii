@@ -26,27 +26,29 @@ namespace Tests\Unit\Middleware;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
-
+use Log;
 /**
  * Class AuthenticateTest
  */
 class AuthenticateTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Http\Middleware\Authenticate::handle
+     * @covers \FireflyIII\Http\Middleware\Authenticate
      */
     public function testMiddleware()
     {
+        Log::debug('Now at testMiddleware');
         $response = $this->get('/_test/authenticate');
         $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
         $response->assertRedirect(route('login'));
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Authenticate::handle
+     * @covers \FireflyIII\Http\Middleware\Authenticate
      */
     public function testMiddlewareAjax()
     {
+        Log::debug('Now at testMiddlewareAjax');
         //$this->withoutExceptionHandling();
         $server   = ['HTTP_X-Requested-With' => 'XMLHttpRequest'];
         $response = $this->get('/_test/authenticate', $server);
@@ -54,20 +56,22 @@ class AuthenticateTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Authenticate::handle
+     * @covers \FireflyIII\Http\Middleware\Authenticate
      */
     public function testMiddlewareAuth()
     {
+        Log::debug('Now at testMiddlewareAuth');
         $this->be($this->user());
         $response = $this->get('/_test/authenticate');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Authenticate::handle
+     * @covers \FireflyIII\Http\Middleware\Authenticate
      */
     public function testMiddlewareBlockedUser()
     {
+        Log::debug('Now at testMiddlewareBlockedUser');
         $user          = $this->user();
         $user->blocked = 1;
 
@@ -80,10 +84,11 @@ class AuthenticateTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Authenticate::handle
+     * @covers \FireflyIII\Http\Middleware\Authenticate
      */
     public function testMiddlewareEmail()
     {
+        Log::debug('Now at testMiddlewareEmail');
         //$this->withoutExceptionHandling();
         $user               = $this->user();
         $user->blocked      = 1;

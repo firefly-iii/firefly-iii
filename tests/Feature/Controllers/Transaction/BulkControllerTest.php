@@ -138,6 +138,7 @@ class BulkControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\BulkController::update
+     * @covers \FireflyIII\Http\Requests\BulkEditJournalRequest
      */
     public function testUpdate()
     {

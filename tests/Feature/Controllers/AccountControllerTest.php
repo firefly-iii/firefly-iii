@@ -309,6 +309,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\AccountController::store
+     * @covers \FireflyIII\Http\Requests\AccountFormRequest
      * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
     public function testStore()
@@ -337,6 +338,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\AccountController::store
+     * @covers \FireflyIII\Http\Requests\AccountFormRequest
      * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
     public function testStoreAnother()
@@ -363,6 +365,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\AccountController::update
+     * @covers \FireflyIII\Http\Requests\AccountFormRequest
      * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
     public function testUpdate()
@@ -389,6 +392,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\AccountController::update
+     * @covers \FireflyIII\Http\Requests\AccountFormRequest
      * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
     public function testUpdateAgain()
