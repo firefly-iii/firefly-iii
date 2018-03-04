@@ -382,11 +382,12 @@ class ImportAccount
         Log::debug(sprintf('Found no account of type %s so must create one ourselves.', $this->expectedType));
 
         $data = [
-            'accountType'    => config('firefly.shortNamesByFullName.' . $this->expectedType),
-            'name'           => $this->accountName['value'] ?? '(no name)',
-            'iban'           => $this->accountIban['value'] ?? null,
-            'active'         => true,
-            'virtualBalance' => '0',
+            'accountType'     => config('firefly.shortNamesByFullName.' . $this->expectedType),
+            'name'            => $this->accountName['value'] ?? '(no name)',
+            'iban'            => $this->accountIban['value'] ?? null,
+            'active'          => true,
+            'virtualBalance'  => '0',
+            'account_type_id' => null,
         ];
 
         $this->account = $this->repository->store($data);
