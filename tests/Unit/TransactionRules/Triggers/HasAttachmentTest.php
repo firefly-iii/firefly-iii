@@ -37,7 +37,6 @@ class HasAttachmentTest extends TestCase
     public function testTriggered()
     {
         do {
-            // this is kind of cheating but OK.
             $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
             $count = $journal->attachments()->count();
         } while($count !== 0);

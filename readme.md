@@ -47,14 +47,15 @@ You can read more about this in the [official documentation](http://firefly-iii.
 ### Features
 Most importantly...
 
-* Firefly III runs on your own server, so you are fully in control of your data. It will not contact other sites or servers
-* You can import from over 2500 financial providers, in 55 countries when you enable the [Spectre API](http://firefly-iii.readthedocs.io/en/latest/import/spectre.html)
-* You can import CSV files from practically any bank
+* Firefly III runs on your own server, so you are fully in control of your data. It will not contact other sites or servers.
+* You can import from over 2500 financial providers, in 55 countries when you enable the [Spectre API](http://firefly-iii.readthedocs.io/en/latest/import/spectre.html).
+* You can import CSV files from practically any bank.
+* Firefly III features an JSON REST API.
 * If you feel you’re missing something you can just ask me and I’ll add it!
 
 But actually, it features:
 
-* [A double-entry bookkeeping system](https://en.wikipedia.org/wiki/Double-entry_bookkeeping_system)
+* [A double-entry bookkeeping system](http://firefly-iii.readthedocs.io/en/latest/concepts/transactions.html)
 * You can store, edit and remove [withdrawals, deposits and transfers](http://firefly-iii.readthedocs.io/en/latest/concepts/transactions.html). This allows you full financial management
 * You can manage different types of accounts
   * [Asset](http://firefly-iii.readthedocs.io/en/latest/concepts/accounts.html) accounts

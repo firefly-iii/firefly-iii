@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tests\Unit\TransactionRules\Actions;
 
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\SetCategory;
 use Tests\TestCase;
@@ -50,7 +51,13 @@ class SetCategoryTest extends TestCase
         $action                   = new SetCategory($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);
-        $this->assertEquals(1, $journal->categories()->count());
-        $this->assertEquals($category->name, $journal->categories()->first()->name);
+
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions as $transaction) {
+            $this->assertEquals(1, $transaction->categories()->count());
+            $this->assertEquals($category->name, $transaction->categories()->first()->name);
+        }
+
+
     }
 }

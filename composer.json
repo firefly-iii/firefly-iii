@@ -118,8 +118,7 @@
 		],
 		"post-install-cmd": [
 			"php artisan optimize",
-			"php artisan firefly:instructions install",
-			"php artisan passport:install"
+			"php artisan firefly:instructions install"
 		]
 	},
 	"config": {

@@ -1362,16 +1362,12 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data' => [
-                    'attributes' => [
-                        'description' => $journal->description,
-                        'type'        => 'Deposit',
-                    ],
-                    'links'      => [
-                        0      => [],
-                        'self' => true,
-                    ],
-                ],
+                'data' => [[
+                               'attributes' => [
+                                   'description' => $journal->description,
+                                   'type'        => 'Deposit',
+                               ],
+                           ]],
 
             ]
         );
@@ -1427,12 +1423,14 @@ class TransactionControllerTest extends TestCase
         $response->assertJson(
             [
                 'data' => [
-                    'attributes' => [
-                        'description' => $journal->description,
-                    ],
-                    'links'      => [
-                        0      => [],
-                        'self' => true,
+                    [
+                        'attributes' => [
+                            'description' => $journal->description,
+                        ],
+                        'links'      => [
+                            0      => [],
+                            'self' => true,
+                        ],
                     ],
                 ],
 

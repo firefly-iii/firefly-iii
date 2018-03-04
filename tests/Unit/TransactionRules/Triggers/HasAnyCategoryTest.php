@@ -70,13 +70,11 @@ class HasAnyCategoryTest extends TestCase
         $journal->categories()->detach();
         $this->assertEquals(0, $journal->categories()->count());
 
-        // append to transaction
+        // append to transaction, not to journal.
         foreach ($journal->transactions()->get() as $index => $transaction) {
-            $transaction->categories()->detach();
-            if (0 === $index) {
-                $transaction->categories()->save($category);
-            }
+            $transaction->categories()->sync([$category->id]);
         }
+        $this->assertEquals(0, $journal->categories()->count());
 
         $trigger = HasAnyCategory::makeFromStrings('', false);
         $result  = $trigger->triggered($journal);
