@@ -1367,10 +1367,6 @@ class TransactionControllerTest extends TestCase
                         'description' => $journal->description,
                         'type'        => 'Deposit',
                     ],
-                    'links'      => [
-                        0      => [],
-                        'self' => true,
-                    ],
                 ],
 
             ]
