@@ -28,7 +28,7 @@ services:
       - MYSQL_USER=firefly_db
       - MYSQL_PASSWORD=firefly_db_secret
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
-    image: "mysql:8"
+    image: "mysql:latest"
     volumes: 
       - "firefly_iii_db:/var/lib/mysql"
 version: "3.2"
