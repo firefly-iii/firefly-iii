@@ -38,6 +38,28 @@ trait JournalServiceTrait
 {
 
     /**
+     * @param TransactionJournal $journal
+     * @param array              $data
+     */
+    public function connectTags(TransactionJournal $journal, array $data): void
+    {
+        /** @var TagFactory $factory */
+        $factory = app(TagFactory::class);
+        $factory->setUser($journal->user);
+        $set = [];
+        if (!is_array($data['tags'])) {
+            return; // @codeCoverageIgnore
+        }
+        foreach ($data['tags'] as $string) {
+            if (strlen($string) > 0) {
+                $tag   = $factory->findOrCreate($string);
+                $set[] = $tag->id;
+            }
+        }
+        $journal->tags()->sync($set);
+    }
+
+    /**
      * Connect bill if present.
      *
      * @param TransactionJournal $journal
@@ -60,28 +82,6 @@ trait JournalServiceTrait
         $journal->save();
 
         return;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param array              $data
-     */
-    protected function connectTags(TransactionJournal $journal, array $data): void
-    {
-        /** @var TagFactory $factory */
-        $factory = app(TagFactory::class);
-        $factory->setUser($journal->user);
-        $set = [];
-        if (!is_array($data['tags'])) {
-            return; // @codeCoverageIgnore
-        }
-        foreach ($data['tags'] as $string) {
-            if (strlen($string) > 0) {
-                $tag   = $factory->findOrCreate($string);
-                $set[] = $tag->id;
-            }
-        }
-        $journal->tags()->sync($set);
     }
 
     /**

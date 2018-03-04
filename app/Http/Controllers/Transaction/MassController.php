@@ -115,6 +115,8 @@ class MassController extends Controller
     }
 
     /**
+     * TODO this code is a mess.
+     *
      * @param Collection $journals
      *
      * @return View
@@ -222,10 +224,11 @@ class MassController extends Controller
                 if (!is_null($journal)) {
                     // get optional fields:
                     $what              = strtolower($this->repository->getTransactionType($journal));
-                    $sourceAccountId   = $request->get('source_account_id')[$journal->id] ?? 0;
-                    $sourceAccountName = $request->get('source_account_name')[$journal->id] ?? '';
-                    $destAccountId     = $request->get('destination_account_id')[$journal->id] ?? 0;
-                    $destAccountName   = $request->get('destination_account_name')[$journal->id] ?? '';
+                    $sourceAccountId   = $request->get('source_account_id')[$journal->id] ?? null;
+                    $currencyId        = $request->get('transaction_currency_id')[$journal->id] ?? 1;
+                    $sourceAccountName = $request->get('source_account_name')[$journal->id] ?? null;
+                    $destAccountId     = $request->get('destination_account_id')[$journal->id] ?? null;
+                    $destAccountName   = $request->get('destination_account_name')[$journal->id] ?? null;
                     $budgetId          = $request->get('budget_id')[$journal->id] ?? 0;
                     $category          = $request->get('category')[$journal->id];
                     $tags              = $journal->tags->pluck('tag')->toArray();
@@ -233,29 +236,47 @@ class MassController extends Controller
                     $foreignAmount     = isset($request->get('foreign_amount')[$journal->id]) ? round($request->get('foreign_amount')[$journal->id], 12) : null;
                     $foreignCurrencyId = isset($request->get('foreign_currency_id')[$journal->id]) ?
                         intval($request->get('foreign_currency_id')[$journal->id]) : null;
-
+                    $notes             = $repository->getNoteText($journal);
                     // build data array
                     $data = [
-                        'id'                       => $journal->id,
-                        'what'                     => $what,
-                        'description'              => $request->get('description')[$journal->id],
-                        'source_account_id'        => intval($sourceAccountId),
-                        'source_account_name'      => $sourceAccountName,
-                        'destination_account_id'   => intval($destAccountId),
-                        'destination_account_name' => $destAccountName,
-                        'amount'                   => $foreignAmount,
-                        'native_amount'            => $amount,
-                        'source_amount'            => $amount,
-                        'date'                     => new Carbon($request->get('date')[$journal->id]),
-                        'interest_date'            => $journal->interest_date,
-                        'book_date'                => $journal->book_date,
-                        'process_date'             => $journal->process_date,
-                        'budget_id'                => intval($budgetId),
-                        'currency_id'              => $foreignCurrencyId,
-                        'foreign_amount'           => $foreignAmount,
-                        'destination_amount'       => $foreignAmount,
-                        'category'                 => $category,
-                        'tags'                     => $tags,
+                        'id'            => $journal->id,
+                        'what'          => $what,
+                        'description'   => $request->get('description')[$journal->id],
+                        'date'          => new Carbon($request->get('date')[$journal->id]),
+                        'bill_id'       => null,
+                        'bill_name'     => null,
+                        'notes'         => $notes,
+                        'transactions'  => [[
+
+                                                'category_id'           => null,
+                                                'category_name'         => $category,
+                                                'budget_id'             => intval($budgetId),
+                                                'budget_name'           => null,
+                                                'source_id'             => intval($sourceAccountId),
+                                                'source_name'           => $sourceAccountName,
+                                                'destination_id'        => intval($destAccountId),
+                                                'destination_name'      => $destAccountName,
+                                                'amount'                => $amount,
+                                                'identifier'            => 0,
+                                                'reconciled'            => false,
+                                                'currency_id'           => intval($currencyId),
+                                                'currency_code'         => null,
+                                                'description'           => null,
+                                                'foreign_amount'        => null,
+                                                'foreign_currency_id'   => $foreignCurrencyId,
+                                                'foreign_currency_code' => null,
+                                                //'native_amount'            => $amount,
+                                                //'source_amount'            => $amount,
+                                                //'foreign_amount'           => $foreignAmount,
+                                                //'destination_amount'       => $foreignAmount,
+                                                //'amount'                   => $foreignAmount,
+                                            ]],
+                        'currency_id'   => $foreignCurrencyId,
+                        'tags'          => $tags,
+                        'interest_date' => $journal->interest_date,
+                        'book_date'     => $journal->book_date,
+                        'process_date'  => $journal->process_date,
+
                     ];
                     // call repository update function.
                     $repository->update($journal, $data);
