@@ -53,8 +53,8 @@ function setCommonAutocomplete() {
                 source: data,
                 afterSelect: function () {
                     this.$element.val("");
-
-                }
+                },
+                autoSelect: false,
             },
             autoSelect: false,
         };
