@@ -164,7 +164,7 @@ class BulkControllerTest extends TestCase
                    ->withArgs([Mockery::any(), $data['budget_id']]);
 
         $repository->shouldReceive('updateTags')->times(4)->andReturn(new TransactionJournal())
-                   ->withArgs([Mockery::any(), $tags]);
+                   ->withArgs([Mockery::any(), ['tags' => $tags]]);
 
 
         $route = route('transactions.bulk.update');

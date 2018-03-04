@@ -216,6 +216,7 @@ class MassControllerTest extends TestCase
         $repository->shouldReceive('update')->once();
         $repository->shouldReceive('find')->once()->andReturn($deposit);
         $repository->shouldReceive('getTransactionType')->andReturn('Deposit');
+        $repository->shouldReceive('getNoteText')->andReturn('Some note');
 
         $this->session(['transactions.mass-edit.uri' => 'http://localhost']);
 
