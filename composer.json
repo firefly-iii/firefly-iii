@@ -113,11 +113,13 @@
 			"php artisan firefly:upgrade-database",
 			"php artisan firefly:verify",
 			"php artisan firefly:instructions update",
-			"php artisan optimize"
+			"php artisan optimize",
+			"php artisan passport:install"
 		],
 		"post-install-cmd": [
 			"php artisan optimize",
-			"php artisan firefly:instructions install"
+			"php artisan firefly:instructions install",
+			"php artisan passport:install"
 		]
 	},
 	"config": {
