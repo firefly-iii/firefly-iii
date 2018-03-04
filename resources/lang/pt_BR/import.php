@@ -50,7 +50,7 @@ return [
     'status_sub_title'                     => 'Status de importação',
     'config_sub_title'                     => 'Configurar a sua importação',
     'status_finished_job'                  => 'As transações de :count importadas podem ser encontradas na tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
-    'status_finished_no_tag'               => 'O Firefly III não coletou nenhum periódico do seu arquivo de importação.',
+    'status_finished_no_tag'               => 'Firefly III has not collected any transactions from your import file.',
     'import_with_key'                      => 'Importar com a chave \':key\'',
 
     // file, upload something
@@ -73,7 +73,7 @@ return [
     'csv_initial_header_help'              => 'Marque esta caixa se a primeira linha do seu arquivo CSV for os títulos das colunas.',
     'csv_initial_date_help'                => 'Formato de data e hora em seu CSV. Siga o formato como indica <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">esta página</a>. O valor padrão analisará datas que se parecem com isso: :dateExample.',
     'csv_initial_delimiter_help'           => 'Escolha o delimitador de campo que é usado em seu arquivo de entrada. Se não tiver certeza, a vírgula é a opção mais segura.',
-    'csv_initial_import_account_help'      => 'Se o seu arquivo CSV NÃO contém informações sobre sua(s) conta(s) ativa(s), use este combobox para selecionar para qual conta pertencem as transações no CSV.',
+    'csv_initial_import_account_help'      => 'Se o seu arquivo CSV NÃO contém informações sobre sua(s) conta(s) de ativo(s), use este combobox para selecionar para qual conta pertencem as transações no CSV.',
     'csv_initial_submit'                   => 'Continue com o passo 3/4',
 
     // file, new options:
@@ -108,9 +108,9 @@ return [
 
     // map things.
     'column__ignore'                       => '(ignorar esta coluna)',
-    'column_account-iban'                  => 'Conta Ativa (IBAN)',
-    'column_account-id'                    => 'ID da conta ativa (correspondência FF3)',
-    'column_account-name'                  => 'Conta Ativa (nome)',
+    'column_account-iban'                  => 'Conta de Ativo (IBAN)',
+    'column_account-id'                    => 'ID da Conta de Ativo (correspondente FF3)',
+    'column_account-name'                  => 'Conta de Ativo (nome)',
     'column_amount'                        => 'Montante',
     'column_amount_foreign'                => 'Montante (em moeda estrangeira)',
     'column_amount_debit'                  => 'Montante (coluna de débito)',
@@ -143,7 +143,7 @@ return [
     'column_sepa-db'                       => 'Débito direto SEPA',
     'column_tags-comma'                    => 'Tags (separadas por vírgula)',
     'column_tags-space'                    => 'Tags (separadas por espaço)',
-    'column_account-number'                => 'Conta ativa (número da conta)',
+    'column_account-number'                => 'Conta de ativo (número da conta)',
     'column_opposing-number'               => 'Conta Contrária (número da conta)',
     'column_note'                          => 'Nota(s)',
 
@@ -160,7 +160,7 @@ return [
     'spectre_prerequisites_text'           => 'Para importar dados usando a Spectre API, você deve fornecer ao Firefly III dois valores secretos. Eles podem ser encontrados na <a href="https://www.saltedge.com/clients/profile/secrets">página de segredos</a>.',
     'spectre_enter_pub_key'                => 'A importação só funcionará quando você inserir essa chave pública em sua <a href="https://www.saltedge.com/clients/security/edit">página de segurança</a>.',
     'spectre_accounts_title'               => 'Selecione as contas a serem importadas',
-    'spectre_accounts_text'                => 'Cada conta à esquerda abaixo foi encontrada pela Spectre e pode ser importada para Firefly III. Por favor selecione a conta ativa que deve armazenar as transações. Se você não deseja importar de qualquer conta específica, desmarque a caixa de seleção.',
+    'spectre_accounts_text'                => 'Cada conta à esquerda abaixo foi encontrada pela Spectre e pode ser importada para Firefly III. Por favor selecione a conta de ativo que deve armazenar as transações. Se você não deseja importar de qualquer conta específica, desmarque a caixa de seleção.',
     'spectre_do_import'                    => 'Sim, importe a partir desta conta',
 
     // keys from "extra" array:

@@ -50,7 +50,7 @@ return [
     'status_sub_title'                     => 'Статус импорта',
     'config_sub_title'                     => 'Настройте свой импорт',
     'status_finished_job'                  => 'Всего :count транзакций было импортировано. Они могу быть найдены по метке <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
-    'status_finished_no_tag'               => 'Firefly III не собрал никаких журналов из вашего файла импорта.',
+    'status_finished_no_tag'               => 'Firefly III не собрал никаких транзакций из вашего файла импорта.',
     'import_with_key'                      => 'Импорт с ключем \':key\'',
 
     // file, upload something

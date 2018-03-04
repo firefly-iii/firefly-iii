@@ -169,6 +169,13 @@ return [
     'reset_button'                               => 'Réinitialiser',
     'want_to_login'                              => 'Je veux me connecter',
     'button_register'                            => 'S\'inscrire',
+    'authorization'                              => 'Authorization',
+
+    // API access
+    'authorization_request'                      => 'Firefly III v:version Authorization Request',
+    'authorization_request_intro'                => '<strong>:client</strong> is requesting permission to access your financial administration. Would you like to authorize <strong>:client</strong> to access these records?',
+    'scopes_will_be_able'                        => 'This application will be able to:',
+    'button_authorize'                           => 'Authorize',
 
     // check for updates:
     'update_check_title'                         => 'Vérifier les mises à jour',
@@ -498,10 +505,10 @@ return [
     'secure_pw_should'                         => 'Dois-je cocher la case ?',
     'secure_pw_long_password'                  => 'Si vous venez de générer un long mot de passe unique pour Firefly III à l\'aide d\'un type de générateur de mot de passe : <strong>non</strong>.',
     'secure_pw_short'                          => 'Si vous venez d\'entrer le mot de passe que vous utilisez toujours : <em>oui</em>.',
-    'personal_access_token'                    => 'Token d\'accès personnel',
-    'explain_access_token'                     => 'Vous avez besoin de ce token pour exécuter des opérations optionnelles en ligne de commandes telles qu\'import et export de données. Sans celui-ci, de telles commandes sensibles ne fonctionneront pas. Personne ne vous le demandera, pas même moi. Si vous craignez de le perdre, ou si vous êtes parano, régénérez ce token à l\'aide du bouton.',
-    'regenerate_access_token'                  => 'Régénérer le token d\'accès',
-    'token_regenerated'                        => 'Un nouveau token a été généré',
+    'command_line_token'                       => 'Command line token',
+    'explain_command_line_token'               => 'You need this token to perform command line options, such as importing or exporting data. Without it, such sensitive commands will not work. Do not share your command line token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
+    'regenerate_command_line_token'            => 'Regenerate command line token',
+    'token_regenerated'                        => 'A new command line token was generated',
     'change_your_email'                        => 'Changer votre adresse e-mail',
     'email_verification'                       => 'Un e-mail sera envoyé à votre ancienne ET votre nouvelle adresse. Pour des raisons de sécurité, vous ne pourrez pas vous connecter jusqu\'à ce que vous ayez vérifié votre nouvelle adresse. Si vous n\'êtes pas certain que votre installation de Firefly III soit capable d\'envoyer un e-mail, n\'utilisez pas cette fonctionnalité. Si vous êtes un administrateur, vous pouvez tester l\'envoi des e-mails en allant dans le menu <a href="/admin">Administration</a>.',
     'email_changed_logout'                     => 'Vous ne pouvez pas vous connecter tant que vous n\'aurez pas vérifié votre adresse e-mail.',
@@ -634,8 +641,6 @@ return [
     'rescanned_bill'                           => 'Réanalyser tout.',
     'average_bill_amount_year'                 => 'Montant moyen des factures ( :year)',
     'average_bill_amount_overall'              => 'Montant moyen de la facture (global)',
-    'not_or_not_yet'                           => 'Pas du tout (pas encore)',
-    'not_expected_period'                      => 'Cette période n\'est pas prévue',
     'bill_is_active'                           => 'Facture en cours',
     'bill_expected_between'                    => 'Attendu entre le :start et le :end',
     'bill_will_automatch'                      => 'La facture sera automatiquement liée aux transactions correspondantes',
@@ -678,9 +683,9 @@ return [
     'start_of_reconcile_period'                => 'Début de la période de rapprochement : :period',
     'start_balance'                            => 'Solde initial',
     'end_balance'                              => 'Solde de clotûre',
-    'update_balance_dates_instruction'         => 'Faites correspondre les montants et les dates ci-dessus à votre relevé bancaire et appuyez sur "Démarrer le rapprochement"',
+    'update_balance_dates_instruction'         => 'Faites correspondre les montants et les dates ci-dessus à votre relevé bancaire et appuyez sur "Commencer le rapprochement"',
     'select_transactions_instruction'          => 'Sélectionnez les transactions qui apparaissent sur votre relevé bancaire.',
-    'select_range_and_balance'                 => 'Vérifiez d\'abord la plage des dates et les soldes. Puis appuyez sur "Démarrer le rapprochement"',
+    'select_range_and_balance'                 => 'Vérifiez d\'abord la plage des dates et les soldes. Puis appuyez sur "Commencer le rapprochement"',
     'date_change_instruction'                  => 'Si vous modifiez la plage des dates maintenant, toute progression sera perdue.',
     'update_selection'                         => 'Mettre à jour la sélection',
     'store_reconcile'                          => 'Stocker le rapprochement',
@@ -1127,7 +1132,7 @@ return [
     // import index page:
     'import_index_title'                    => 'Importer des données dans Firefly III',
     'import_index_sub_title'                => 'Index',
-    'import_general_index_intro'            => 'Bienvenue dans la routine d\'importation de Firefly. Il existe différentes façons d\'importer des données dans Firefly III, affichées ici sous forme de boutons.',
+    'import_general_index_intro'            => 'Welcome to Firefly III\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Cette fonction n\'est pas disponible lorsque vous utilisez Firefly III dans un environnement Sandstorm.io.',

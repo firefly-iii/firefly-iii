@@ -50,7 +50,7 @@ return [
     'status_sub_title'                     => 'Status impor',
     'config_sub_title'                     => 'Siapkan impor Anda',
     'status_finished_job'                  => 'The :count transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
-    'status_finished_no_tag'               => 'Firefly III has not collected any journals from your import file.',
+    'status_finished_no_tag'               => 'Firefly III has not collected any transactions from your import file.',
     'import_with_key'                      => 'Impor dengan kunci \':key\'',
 
     // file, upload something

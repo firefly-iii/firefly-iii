@@ -158,7 +158,7 @@ return [
     'tag_areYouSure'             => 'Weet je zeker dat je de tag met naam ":tag" wilt verwijderen?',
     'journal_link_areYouSure'    => 'Weet je zeker dat je de koppeling tussen <a href=":source_link">:source</a> en <a href=":destination_link">:destination</a> wilt verwijderen?',
     'linkType_areYouSure'        => 'Weet je zeker dat je linktype ":name" (":inward" / ":outward") wilt verwijderen?',
-    'permDeleteWarning'          => 'Dingen verwijderen uit Firefly is permanent en kan niet ongedaan gemaakt worden.',
+    'permDeleteWarning'          => 'Dingen verwijderen uit Firefly III is permanent en kan niet ongedaan gemaakt worden.',
     'mass_make_selection'        => 'Je kan items alsnog redden van de ondergang door het vinkje weg te halen.',
     'delete_all_permanently'     => 'Verwijder geselecteerde items permanent',
     'update_all_journals'        => 'Wijzig deze transacties',

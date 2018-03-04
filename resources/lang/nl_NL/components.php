@@ -1,7 +1,7 @@
 <?php
 /**
- * config.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * components.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -21,20 +21,10 @@
 declare(strict_types=1);
 
 return [
-    'html_language'    => 'nl',
-    'locale'           => 'nl, Dutch, nl_NL, nl_NL.utf8, nl_NL.UTF-8',
-    'month'            => '%B %Y',
-    'month_and_day'    => '%e %B %Y',
-    'date_time'        => '%e %B %Y, @ %T',
-    'specific_day'     => '%e %B %Y',
-    'week_in_year'     => 'week %W, %Y',
-    'year'             => '%Y',
-    'half_year'        => '%B %Y',
-    'month_js'         => 'MMMM YYYY',
-    'month_and_day_js' => 'D MMMM YYYY',
-    'date_time_js'     => 'D MMMM YYYY @ HH:mm:ss',
-    'specific_day_js'  => 'D MMMM YYYY',
-    'week_in_year_js'  => '[Week] w, YYYY',
-    'year_js'          => 'YYYY',
-    'half_year_js'     => 'Q YYYY',
+    // profile
+    'personal_access_tokens' => 'Persoonlijke toegangstokens',
+
+    // bills:
+    'not_expected_period'    => 'Niet verwacht deze periode',
+    'not_or_not_yet'         => '(nog) niet',
 ];

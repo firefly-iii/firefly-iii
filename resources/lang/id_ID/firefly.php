@@ -169,6 +169,13 @@ return [
     'reset_button'                               => 'Reset',
     'want_to_login'                              => 'I want to login',
     'button_register'                            => 'Register',
+    'authorization'                              => 'Authorization',
+
+    // API access
+    'authorization_request'                      => 'Firefly III v:version Authorization Request',
+    'authorization_request_intro'                => '<strong>:client</strong> is requesting permission to access your financial administration. Would you like to authorize <strong>:client</strong> to access these records?',
+    'scopes_will_be_able'                        => 'This application will be able to:',
+    'button_authorize'                           => 'Authorize',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',
@@ -498,10 +505,10 @@ return [
     'secure_pw_should'                         => 'Haruskah saya mencentang kotaknya?',
     'secure_pw_long_password'                  => 'Jika Anda baru saja menghasilkan kata sandi penggunaan tunggal yang hebat untuk Firefly III menggunakan beberapa jenis generator kata kunci: <strong>tidak</strong>.',
     'secure_pw_short'                          => 'Jika Anda baru memasukkan kata sandi yang selalu Anda gunakan: <em>Please yes</em>.',
-    'personal_access_token'                    => 'Token akses pribadi',
-    'explain_access_token'                     => 'Anda memerlukan token ini untuk melakukan opsi baris perintah, seperti mengimpor atau mengekspor data. Tanpa itu, perintah sensitif semacam itu tidak akan berhasil. Jangan berbagi token akses Anda. Tidak ada yang akan menanyakan token ini, bahkan saya pun tidak. Jika Anda takut kehilangan ini, atau saat Anda paranoid, pulihkan token ini dengan menggunakan tombolnya.',
-    'regenerate_access_token'                  => 'Regenerasi token akses',
-    'token_regenerated'                        => 'Token baru dihasilkan',
+    'command_line_token'                       => 'Command line token',
+    'explain_command_line_token'               => 'You need this token to perform command line options, such as importing or exporting data. Without it, such sensitive commands will not work. Do not share your command line token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
+    'regenerate_command_line_token'            => 'Regenerate command line token',
+    'token_regenerated'                        => 'A new command line token was generated',
     'change_your_email'                        => 'Ubah alamat email anda',
     'email_verification'                       => 'Pesan email akan dikirim ke alamat email lama DAN baru Anda. Untuk tujuan keamanan, Anda tidak dapat masuk sampai Anda memverifikasi alamat email baru Anda. Jika Anda tidak yakin apakah instalasi Firefly III Anda bisa mengirim email, tolong jangan gunakan fitur ini. Jika Anda seorang administrator, Anda dapat mengujinya di <a href="/admin">Administrasi</a>.',
     'email_changed_logout'                     => 'Sampai Anda memverifikasi alamat email Anda, Anda tidak dapat login.',
@@ -634,8 +641,6 @@ return [
     'rescanned_bill'                           => 'Rescanned semuanya.',
     'average_bill_amount_year'                 => 'Jumlah tagihan rata-rata (:year)',
     'average_bill_amount_overall'              => 'Jumlah tagihan rata-rata (keseluruhan)',
-    'not_or_not_yet'                           => 'Belum)',
-    'not_expected_period'                      => 'Tidak diharapkan periode ini',
     'bill_is_active'                           => 'Tagihan aktif',
     'bill_expected_between'                    => 'Diharapkan antara :start dan :end',
     'bill_will_automatch'                      => 'Tagihan akan secara otomatis terhubung ke transaksi yang sesuai',
@@ -1127,7 +1132,7 @@ return [
     // import index page:
     'import_index_title'                    => 'Impor data ke Firefly III',
     'import_index_sub_title'                => 'Indeks',
-    'import_general_index_intro'            => 'Selamat datang di rutinitas impor Firefly. Ada beberapa cara untuk mengimpor data ke Firefly III, yang ditampilkan di sini sebagai tombol.',
+    'import_general_index_intro'            => 'Welcome to Firefly III\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Fungsi ini tidak tersedia saat Anda menggunakan Firefly III di dalam lingkungan Sandstorm.io.',

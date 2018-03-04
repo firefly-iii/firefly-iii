@@ -50,7 +50,7 @@ return [
     'status_sub_title'                     => 'Aktarma durumu',
     'config_sub_title'                     => 'Hesabınızı oluşturunuz',
     'status_finished_job'                  => 'The :count transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
-    'status_finished_no_tag'               => 'Firefly III has not collected any journals from your import file.',
+    'status_finished_no_tag'               => 'Firefly III has not collected any transactions from your import file.',
     'import_with_key'                      => '\':key\' ile içe aktarın',
 
     // file, upload something

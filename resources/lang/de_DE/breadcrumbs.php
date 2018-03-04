@@ -51,5 +51,5 @@ return [
     'createTag'           => 'Neuen Tag erstellen',
     'edit_tag'            => 'Tag ":tag" bearbeiten',
     'delete_tag'          => 'Tag ":tag" löschen',
-    'delete_journal_link' => 'Verbindung zwischen Transaktionen löschen',
+    'delete_journal_link' => 'Transaktions-Verknüpfung löschen',
 ];

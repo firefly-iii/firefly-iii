@@ -158,7 +158,7 @@ return [
     'tag_areYouSure'             => 'Você tem certeza que quer apagar a tag ":tag"?',
     'journal_link_areYouSure'    => 'Tem certeza que deseja excluir a ligação entre <a href=":source_link">:source</a> e <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'        => 'Tem certeza que deseja excluir o tipo de link ":name" (":inward" / ":outward")?',
-    'permDeleteWarning'          => 'Exclusão de dados do Firely são permanentes e não podem ser desfeitos.',
+    'permDeleteWarning'          => 'Exclusão de dados do Firefly III são permanentes e não podem ser desfeitos.',
     'mass_make_selection'        => 'Você ainda pode evitar que itens sejam excluídos, removendo a caixa de seleção.',
     'delete_all_permanently'     => 'Exclua os selecionados permanentemente',
     'update_all_journals'        => 'Atualizar essas transações',

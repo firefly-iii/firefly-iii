@@ -158,7 +158,7 @@ return [
     'tag_areYouSure'             => 'Czy na pewno chcesz usunąć tag ":tag"?',
     'journal_link_areYouSure'    => 'Czy na pewno chcesz usunąć powiązanie między <a href=":source_link">:source</a> a <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'        => 'Czy na pewno chcesz usunąć typ łącza ":name" (":inward" / ":outward")?',
-    'permDeleteWarning'          => 'Usuwanie rzeczy z Firefly jest trwałe i nie można tego cofnąć.',
+    'permDeleteWarning'          => 'Usuwanie rzeczy z Firefly III jest trwałe i nie można tego cofnąć.',
     'mass_make_selection'        => 'Nadal możesz zapobiec usunięciu elementów, odznaczając je.',
     'delete_all_permanently'     => 'Trwale usuń zaznaczone',
     'update_all_journals'        => 'Zmodyfikuj te transakcje',

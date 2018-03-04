@@ -50,7 +50,7 @@ return [
     'status_sub_title'                     => 'Status importu',
     'config_sub_title'                     => 'Skonfiguruj import',
     'status_finished_job'                  => 'Zaimportowane transakcje (:count) znajdują się w tagu <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
-    'status_finished_no_tag'               => 'Firefly III nie zaimportował żadnych wpisów z twojego pliku.',
+    'status_finished_no_tag'               => 'Firefly III nie zaimportował żadnych transakcji z twojego pliku.',
     'import_with_key'                      => 'Import z kluczem \':key\'',
 
     // file, upload something

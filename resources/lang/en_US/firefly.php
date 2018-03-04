@@ -169,6 +169,7 @@ return [
     'reset_button'                               => 'Reset',
     'want_to_login'                              => 'I want to login',
     'button_register'                            => 'Register',
+    'authorization'                              => 'Authorization',
 
     // API access
     'authorization_request'                      => 'Firefly III v:version Authorization Request',

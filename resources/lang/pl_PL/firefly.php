@@ -169,6 +169,13 @@ return [
     'reset_button'                               => 'Zresetuj',
     'want_to_login'                              => 'Chcę się zalogować',
     'button_register'                            => 'Zarejestruj',
+    'authorization'                              => 'Autoryzacja',
+
+    // API access
+    'authorization_request'                      => 'Żądanie autoryzacji Firefly III v:version',
+    'authorization_request_intro'                => '<strong>:client</strong> prosi o pozwolenie na dostęp do Twojej administracji finansowej. Czy chcesz pozwolić <strong>:client</strong> na dostęp do tych danych?',
+    'scopes_will_be_able'                        => 'Ta aplikacja będzie mogła:',
+    'button_authorize'                           => 'Autoryzuj',
 
     // check for updates:
     'update_check_title'                         => 'Sprawdź aktualizacje',
@@ -498,10 +505,10 @@ return [
     'secure_pw_should'                         => 'Czy powinienem zaznaczyć to pole?',
     'secure_pw_long_password'                  => 'Jeśli wygenerowałeś długie, jednorazowe hasło dla Firefly III, używając pewnego rodzaju generatora haseł: <strong>no</strong>.',
     'secure_pw_short'                          => 'Jeśli wpisałeś hasło, którego zawsze używasz: <em>tak, proszę</em>.',
-    'personal_access_token'                    => 'Osobisty kod dostępowy',
-    'explain_access_token'                     => 'Potrzebujesz tego kodu aby wykonywać operacje (takie jak importowanie lub eksportowanie danych) za pomocą wiersza poleceń. Bez niego takie wrażliwe polecenia nie będą działać. Nie udostępniaj nikomu swojego kodu dostępowego. Nikt nie zapyta Cię o ten kod, nawet ja. Jeżeli obawiasz się, że straciłeś go lub jesteś paranoikiem, wygeneruj nowy kod używając przycisku.',
-    'regenerate_access_token'                  => 'Wygeneruj nowy kod',
-    'token_regenerated'                        => 'Nowy kod dostępowy został wygenerowany',
+    'command_line_token'                       => 'Token wiersza poleceń',
+    'explain_command_line_token'               => 'Potrzebujesz tego tokenu aby wykonywać operacje (takie jak importowanie lub eksportowanie danych) za pomocą wiersza poleceń. Bez niego takie wrażliwe polecenia nie będą działać. Nie udostępniaj nikomu swojego tokenu. Nikt Cię o niego nie zapyta, nawet ja. Jeżeli obawiasz się, że straciłeś go lub jesteś paranoikiem, wygeneruj nowy token używając przycisku.',
+    'regenerate_command_line_token'            => 'Wygeneruj nowy token wiersza poleceń',
+    'token_regenerated'                        => 'Wygenerowano nowy token wiersza poleceń',
     'change_your_email'                        => 'Zmień swój adres e-mail',
     'email_verification'                       => 'Wiadomość e-mail zostanie wysłana na stary ORAZ nowy adres e-mail. Ze względów bezpieczeństwa, nie będziesz mógł się zalogować, dopóki nie zweryfikujesz nowego adresu e-mail. Jeśli nie masz pewności, czy twoja instalacja Firefly III umożliwia wysyłanie wiadomości e-mail, nie korzystaj z tej funkcji. Jeśli jesteś administratorem, możesz przetestować to w <a href="/admin">panelu administracyjnym</a>.',
     'email_changed_logout'                     => 'Dopóki nie zweryfikujesz swojego adresu e-mail, nie możesz się zalogować.',
@@ -634,8 +641,6 @@ return [
     'rescanned_bill'                           => 'Zeskanowano wszystko.',
     'average_bill_amount_year'                 => 'Średnia kwota rachunku (:year)',
     'average_bill_amount_overall'              => 'Średnia kwota rachunku (ogólnie)',
-    'not_or_not_yet'                           => 'Nie (jeszcze)',
-    'not_expected_period'                      => 'Nie oczekiwany w tym okresie',
     'bill_is_active'                           => 'Rachunek jest aktywny',
     'bill_expected_between'                    => 'Oczekiwano między :start a :end',
     'bill_will_automatch'                      => 'Rachunek będzie automatycznie powiązany z pasującymi transakcjami',

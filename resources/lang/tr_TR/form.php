@@ -158,7 +158,7 @@ return [
     'tag_areYouSure'             => '":tag" etiketini silmek istediğinizden emin misiniz?',
     'journal_link_areYouSure'    => '<a href=":source_link">:source</a> and <a href=":destination_link">:destination</a> arasındaki bağlantıyı silmek istediğinizden emin misiniz?',
     'linkType_areYouSure'        => '":name" (":inward" / ":outward") bağlantı türünü silmek istediğinizden emin misiniz?',
-    'permDeleteWarning'          => 'Firely\'den bir şeyler silmek kalıcıdır ve geri alınamaz.',
+    'permDeleteWarning'          => 'Deleting stuff from Firefly III is permanent and cannot be undone.',
     'mass_make_selection'        => 'Onay kutusunu kaldırarak öğelerin silinmesini engelleyebilirsiniz.',
     'delete_all_permanently'     => 'Seçilenleri kalıcı olarak sil',
     'update_all_journals'        => 'Bu işlemleri güncelleyin',
