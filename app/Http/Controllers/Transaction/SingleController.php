@@ -104,13 +104,13 @@ class SingleController extends Controller
      */
     public function cloneTransaction(TransactionJournal $journal)
     {
-        $source       = $journal->sourceAccountList()->first();
-        $destination  = $journal->destinationAccountList()->first();
-        $budget       = $journal->budgets()->first();
-        $budgetId     = null === $budget ? 0 : $budget->id;
-        $category     = $journal->categories()->first();
-        $categoryName = null === $category ? '' : $category->name;
-        $tags         = join(',', $journal->tags()->get()->pluck('tag')->toArray());
+        $source       = $this->repository->getJournalSourceAccounts($journal)->first();
+        $destination  = $this->repository->getJournalDestinationAccounts($journal)->first();
+        $budgetId     = $this->repository->getJournalBudgetId($journal);
+        $categoryName = $this->repository->getJournalCategoryName($journal);
+
+        $tags = join(',', $this->repository->getTags($journal));
+        // todo less direct database access. Use collector?
         /** @var Transaction $transaction */
         $transaction   = $journal->transactions()->first();
         $amount        = app('steam')->positive($transaction->amount);
@@ -171,6 +171,14 @@ class SingleController extends Controller
         $subTitle       = trans('form.add_new_' . $what);
         $subTitleIcon   = 'fa-plus';
         $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $source         = intval($request->get('source'));
+
+        if (($what === 'withdrawal' || $what === 'transfer') && $source > 0) {
+            $preFilled['source_account_id'] = $source;
+        }
+        if ($what === 'deposit' && $source > 0) {
+            $preFilled['destination_account_id'] = $source;
+        }
 
         Session::put('preFilled', $preFilled);
 
@@ -230,7 +238,7 @@ class SingleController extends Controller
         $type = $transactionJournal->transactionTypeStr();
         Session::flash('success', strval(trans('firefly.deleted_' . strtolower($type), ['description' => $transactionJournal->description])));
 
-        $this->repository->delete($transactionJournal);
+        $this->repository->destroy($transactionJournal);
 
         Preferences::mark();
 
@@ -242,53 +250,56 @@ class SingleController extends Controller
      *
      * @return mixed
      */
-    public function edit(TransactionJournal $journal)
+    public function edit(TransactionJournal $journal, JournalRepositoryInterface $repository)
     {
-        // @codeCoverageIgnoreStart
-        if ($this->isOpeningBalance($journal)) {
+        $transactionType = $repository->getTransactionType($journal);
+
+        // redirect to account:
+        if ($transactionType === TransactionType::OPENING_BALANCE) {
             return $this->redirectToAccount($journal);
         }
-        // @codeCoverageIgnoreEnd
+        // redirect to reconcile edit:
+        if ($transactionType === TransactionType::RECONCILIATION) {
+            return redirect(route('accounts.reconcile.edit', [$journal->id]));
+        }
+
+        // redirect to split edit:
         if ($this->isSplitJournal($journal)) {
             return redirect(route('transactions.split.edit', [$journal->id]));
         }
 
-        $what          = strtolower($journal->transactionTypeStr());
+        $what          = strtolower($transactionType);
         $assetAccounts = $this->groupedAccountList();
         $budgetList    = ExpandedForm::makeSelectListWithEmpty($this->budgets->getBudgets());
-
-        if (TransactionType::RECONCILIATION === $journal->transactionType->type) {
-            return redirect(route('accounts.reconcile.edit', [$journal->id]));
-        }
 
         // view related code
         $subTitle = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
 
         // journal related code
-        $sourceAccounts      = $journal->sourceAccountList();
-        $destinationAccounts = $journal->destinationAccountList();
+        $sourceAccounts      = $repository->getJournalSourceAccounts($journal);
+        $destinationAccounts = $repository->getJournalDestinationAccounts($journal);
         $optionalFields      = Preferences::get('transaction_journal_optional_fields', [])->data;
-        $pTransaction        = $journal->positiveTransaction();
+        $pTransaction        = $repository->getFirstPosTransaction($journal);
         $foreignCurrency     = null !== $pTransaction->foreignCurrency ? $pTransaction->foreignCurrency : $pTransaction->transactionCurrency;
         $preFilled           = [
-            'date'                     => $journal->dateAsString(),
-            'interest_date'            => $journal->dateAsString('interest_date'),
-            'book_date'                => $journal->dateAsString('book_date'),
-            'process_date'             => $journal->dateAsString('process_date'),
-            'category'                 => $journal->categoryAsString(),
-            'budget_id'                => $journal->budgetId(),
-            'tags'                     => join(',', $journal->tags->pluck('tag')->toArray()),
+            'date'                     => $repository->getJournalDate($journal, null), //  $journal->dateAsString()
+            'interest_date'            => $repository->getJournalDate($journal, 'interest_date'),
+            'book_date'                => $repository->getJournalDate($journal, 'book_date'),
+            'process_date'             => $repository->getJournalDate($journal, 'process_date'),
+            'category'                 => $repository->getJournalCategoryName($journal),
+            'budget_id'                => $repository->getJournalBudgetId($journal),
+            'tags'                     => join(',', $repository->getTags($journal)),
             'source_account_id'        => $sourceAccounts->first()->id,
             'source_account_name'      => $sourceAccounts->first()->edit_name,
             'destination_account_id'   => $destinationAccounts->first()->id,
             'destination_account_name' => $destinationAccounts->first()->edit_name,
 
             // new custom fields:
-            'due_date'                 => $journal->dateAsString('due_date'),
-            'payment_date'             => $journal->dateAsString('payment_date'),
-            'invoice_date'             => $journal->dateAsString('invoice_date'),
-            'interal_reference'        => $journal->getMeta('internal_reference'),
-            'notes'                    => '',
+            'due_date'                 => $repository->getJournalDate($journal, 'due_date'),
+            'payment_date'             => $repository->getJournalDate($journal, 'payment_date'),
+            'invoice_date'             => $repository->getJournalDate($journal, 'invoice_date'),
+            'interal_reference'        => $repository->getMetaField($journal, 'internal_reference'),
+            'notes'                    => $repository->getNoteText($journal),
 
             // amount fields
             'amount'                   => $pTransaction->amount,
@@ -301,11 +312,6 @@ class SingleController extends Controller
             'foreign_currency'         => $foreignCurrency,
             'destination_currency'     => $foreignCurrency,
         ];
-        /** @var Note $note */
-        $note = $this->repository->getNote($journal);
-        if (null !== $note) {
-            $preFilled['notes'] = $note->text;
-        }
 
         // amounts for withdrawals and deposits:
         // amount, native_amount, source_amount, destination_amount
@@ -340,6 +346,8 @@ class SingleController extends Controller
         $createAnother = 1 === intval($request->get('create_another'));
         $data          = $request->getJournalData();
         $journal       = $repository->store($data);
+
+
         if (null === $journal->id) {
             // error!
             Log::error('Could not store transaction journal: ', $journal->getErrors()->toArray());
@@ -416,7 +424,7 @@ class SingleController extends Controller
         event(new UpdatedTransactionJournal($journal));
         // update, get events by date and sort DESC
 
-        $type = strtolower($journal->transactionTypeStr());
+        $type = strtolower($this->repository->getTransactionType($journal));
         Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => $data['description']])));
         Preferences::mark();
 

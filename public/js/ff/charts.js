@@ -83,6 +83,10 @@ const verticalLinePlugin = {
         // write label
         context.fillStyle = "#444444";
         context.textAlign = 'left';
+        if(pointIndex > 23) {
+            todayText = todayText + ' ';
+            context.textAlign = 'right';
+        }
         context.fillText(todayText, lineLeftOffset, scale.top * 3); // (scale.bottom - scale.top) / 2 + scale.top
     },
 

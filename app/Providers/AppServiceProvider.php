@@ -24,6 +24,7 @@ namespace FireflyIII\Providers;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Passport\Passport;
 
 /**
  * @codeCoverageIgnore
@@ -44,5 +45,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        Passport::ignoreMigrations();
     }
 }

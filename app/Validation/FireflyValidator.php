@@ -65,7 +65,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validate2faCode(/** @scrutinizer ignore-unused */ $attribute, $value): bool
+    public function validate2faCode($attribute, $value): bool
     {
         if (!is_string($value) || null === $value || 6 != strlen($value)) {
             return false;
@@ -85,7 +85,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateBelongsToUser(/** @scrutinizer ignore-unused */ $attribute, $value, $parameters): bool
+    public function validateBelongsToUser($attribute, $value, $parameters): bool
     {
         $field = $parameters[1] ?? 'id';
 
@@ -108,7 +108,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateBic(/** @scrutinizer ignore-unused */ $attribute, $value): bool
+    public function validateBic($attribute, $value): bool
     {
         $regex  = '/^[a-z]{6}[0-9a-z]{2}([0-9a-z]{3})?\z/i';
         $result = preg_match($regex, $value);
@@ -130,7 +130,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateIban(/** @scrutinizer ignore-unused */ $attribute, $value): bool
+    public function validateIban($attribute, $value): bool
     {
         if (!is_string($value) || null === $value || strlen($value) < 6) {
             return false;
@@ -210,11 +210,11 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateMore(/** @scrutinizer ignore-unused */ $attribute, $value, $parameters): bool
+    public function validateMore($attribute, $value, $parameters): bool
     {
-        $compare = $parameters[0] ?? '0';
+        $compare = strval($parameters[0] ?? '0');
 
-        return bccomp($value, $compare) > 0;
+        return bccomp(strval($value), $compare) > 0;
     }
 
     /**
@@ -226,7 +226,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateMustExist(/** @scrutinizer ignore-unused */ $attribute, $value, $parameters): bool
+    public function validateMustExist($attribute, $value, $parameters): bool
     {
         $field = $parameters[1] ?? 'id';
 
@@ -335,7 +335,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateSecurePassword(/** @scrutinizer ignore-unused */ $attribute, $value): bool
+    public function validateSecurePassword($attribute, $value): bool
     {
         $verify = false;
         if (isset($this->data['verify_password'])) {
@@ -360,7 +360,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateUniqueAccountForUser(/** @scrutinizer ignore-unused */ $attribute, $value, $parameters): bool
+    public function validateUniqueAccountForUser($attribute, $value, $parameters): bool
     {
         // because a user does not have to be logged in (tests and what-not).
         if (!auth()->check()) {
@@ -368,7 +368,10 @@ class FireflyValidator extends Validator
         }
 
         if (isset($this->data['what'])) {
-            return $this->validateByAccountTypeString($value, $parameters);
+            return $this->validateByAccountTypeString($value, $parameters, $this->data['what']);
+        }
+        if (isset($this->data['type'])) {
+            return $this->validateByAccountTypeString($value, $parameters, $this->data['type']);
         }
 
         if (isset($this->data['account_type_id'])) {
@@ -390,11 +393,15 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateUniqueAccountNumberForUser(/** @scrutinizer ignore-unused */ $attribute, $value): bool
+    public function validateUniqueAccountNumberForUser($attribute, $value, $parameters): bool
     {
         $accountId = $this->data['id'] ?? 0;
+        if($accountId === 0) {
+            $accountId = $parameters[0] ?? 0;
+        }
 
         $query = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
+                            ->whereNull('accounts.deleted_at')
                             ->where('accounts.user_id', auth()->user()->id)
                             ->where('account_meta.name', 'accountNumber');
 
@@ -428,13 +435,23 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateUniqueObjectForUser(/** @scrutinizer ignore-unused */ $attribute, $value, $parameters): bool
+    public function validateUniqueObjectForUser($attribute, $value, $parameters): bool
     {
         $value = $this->tryDecrypt($value);
         // exclude?
         $table   = $parameters[0];
         $field   = $parameters[1];
         $exclude = $parameters[2] ?? 0;
+
+        /*
+         * If other data (in $this->getData()) contains
+         * ID field, set that field to be the $exclude.
+         */
+        $data = $this->getData();
+        if (!isset($parameters[2]) && isset($data['id']) && intval($data['id']) > 0) {
+            $exclude = intval($data['id']);
+        }
+
 
         // get entries from table
         $set = DB::table($table)->where('user_id', auth()->user()->id)->whereNull('deleted_at')
@@ -460,7 +477,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateUniquePiggyBankForUser(/** @scrutinizer ignore-unused */ $attribute, $value, $parameters): bool
+    public function validateUniquePiggyBankForUser($attribute, $value, $parameters): bool
     {
         $exclude = $parameters[0] ?? null;
         $query   = DB::table('piggy_banks')->whereNull('piggy_banks.deleted_at')
@@ -590,18 +607,19 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $value
-     * @param $parameters
+     * @param string $value
+     * @param array  $parameters
+     * @param string $type
      *
      * @return bool
      */
-    private function validateByAccountTypeString($value, $parameters): bool
+    private function validateByAccountTypeString(string $value, array $parameters, string $type): bool
     {
-        $search = Config::get('firefly.accountTypeByIdentifier.' . $this->data['what']);
-        $type   = AccountType::whereType($search)->first();
-        $ignore = $parameters[0] ?? 0;
+        $search      = Config::get('firefly.accountTypeByIdentifier.' . $type);
+        $accountType = AccountType::whereType($search)->first();
+        $ignore      = $parameters[0] ?? 0;
 
-        $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
+        $set = auth()->user()->accounts()->where('account_type_id', $accountType->id)->where('id', '!=', $ignore)->get();
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name === $value) {

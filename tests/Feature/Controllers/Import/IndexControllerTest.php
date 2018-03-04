@@ -55,6 +55,7 @@ class IndexControllerTest extends TestCase
      */
     public function testDownload()
     {
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
         //$job = $this->user()->importJobs()->where('key', 'testImport')->first();
         $this->be($this->user());
         $response = $this->get(route('import.download', ['testImport']));
@@ -67,7 +68,7 @@ class IndexControllerTest extends TestCase
      */
     public function testIndex()
     {
-
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
         $this->be($this->user());
         $response = $this->get(route('import.index'));
         $response->assertStatus(200);
@@ -79,7 +80,8 @@ class IndexControllerTest extends TestCase
      */
     public function testStart()
     {
-        $routine = $this->mock(FileRoutine::class);
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $routine    = $this->mock(FileRoutine::class);
         $routine->shouldReceive('setJob')->once();
         $routine->shouldReceive('run')->once()->andReturn(true);
 
@@ -94,7 +96,8 @@ class IndexControllerTest extends TestCase
      */
     public function testStartFailed()
     {
-        $routine = $this->mock(FileRoutine::class);
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $routine    = $this->mock(FileRoutine::class);
         $routine->shouldReceive('setJob')->once();
         $routine->shouldReceive('run')->once()->andReturn(false);
 

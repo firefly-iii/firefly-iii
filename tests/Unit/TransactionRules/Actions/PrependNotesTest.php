@@ -40,7 +40,7 @@ class PrependNotesTest extends TestCase
     public function testAct()
     {
         // give journal some notes.
-        $journal   = TransactionJournal::find(8);
+        $journal   = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $note      = $journal->notes()->first();
         $start     = 'Default note text';
         $toPrepend = 'This is prepended';
@@ -69,7 +69,7 @@ class PrependNotesTest extends TestCase
     public function testActNewNote()
     {
         // give journal some notes.
-        $journal = TransactionJournal::find(4);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $note    = $journal->notes()->first();
         if (!is_null($note)) {
             $note->forceDelete();

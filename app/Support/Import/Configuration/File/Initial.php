@@ -113,6 +113,7 @@ class Initial implements ConfigurationInterface
 
         // process config, if present:
         if (isset($data['configuration_file'])) {
+            Log::debug('Will also upload configuration.');
             $this->repository->processConfiguration($this->job, $data['configuration_file']);
         }
 

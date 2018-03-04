@@ -60,11 +60,12 @@ class General extends Twig_Extension
             $this->getCurrencySymbol(),
             $this->phpdate(),
             $this->env(),
-            $this->getAmountFromJournal(),
+            //$this->getAmountFromJournal(),
             $this->activeRouteStrict(),
-            $this->steamPositive(),
+            //$this->steamPositive(),
             $this->activeRoutePartial(),
             $this->activeRoutePartialWhat(),
+            $this->formatDate(),
         ];
     }
 
@@ -175,6 +176,21 @@ class General extends Twig_Extension
             'env',
             function (string $name, string $default): string {
                 return env($name, $default);
+            }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    protected function formatDate()
+    {
+        return new Twig_SimpleFunction(
+            'formatDate',
+            function (string $date, string $format): string {
+                $carbon = new Carbon($date);
+
+                return $carbon->formatLocalized($format);
             }
         );
     }
@@ -333,29 +349,4 @@ class General extends Twig_Extension
         );
     }
 
-    /**
-     * @return Twig_SimpleFunction
-     */
-    protected function steamPositive()
-    {
-        return new Twig_SimpleFunction(
-            'steam_positive',
-            function (string $str): string {
-                return Steam::positive($str);
-            }
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    private function getAmountFromJournal()
-    {
-        return new Twig_SimpleFunction(
-            'getAmount',
-            function (TransactionJournal $journal): string {
-                return $journal->amount();
-            }
-        );
-    }
 }

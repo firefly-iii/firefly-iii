@@ -69,6 +69,8 @@ class JournalCollector implements JournalCollectorInterface
             'transaction_journals.description',
             'transaction_journals.date',
             'transaction_journals.encrypted',
+            'transaction_journals.created_at',
+            'transaction_journals.updated_at',
             'transaction_types.type as transaction_type_type',
             'transaction_journals.bill_id',
             'transaction_journals.updated_at',
@@ -252,6 +254,7 @@ class JournalCollector implements JournalCollectorInterface
         $cache->addProperty($key);
         if ($cache->has()) {
             Log::debug(sprintf('Return cache of query with ID "%s".', $key));
+
             return $cache->get(); // @codeCoverageIgnore
         }
 
@@ -270,10 +273,19 @@ class JournalCollector implements JournalCollectorInterface
                 if (null !== $transaction->bill_name) {
                     $transaction->bill_name = Steam::decrypt(intval($transaction->bill_name_encrypted), $transaction->bill_name);
                 }
+                $transaction->account_name          = app('steam')->tryDecrypt($transaction->account_name);
                 $transaction->opposing_account_name = app('steam')->tryDecrypt($transaction->opposing_account_name);
                 $transaction->account_iban          = app('steam')->tryDecrypt($transaction->account_iban);
                 $transaction->opposing_account_iban = app('steam')->tryDecrypt($transaction->opposing_account_iban);
+
+                // budget name
+                $transaction->transaction_journal_budget_name = app('steam')->tryDecrypt($transaction->transaction_journal_budget_name);
+                $transaction->transaction_budget_name         = app('steam')->tryDecrypt($transaction->transaction_budget_name);
+                // category name:
+                $transaction->transaction_journal_category_name = app('steam')->tryDecrypt($transaction->transaction_journal_category_name);
+                $transaction->transaction_category_name         = app('steam')->tryDecrypt($transaction->transaction_category_name);
             }
+
         );
         Log::debug(sprintf('Cached query with ID "%s".', $key));
         $cache->store($set);
@@ -342,7 +354,7 @@ class JournalCollector implements JournalCollectorInterface
      */
     public function setAfter(Carbon $after): JournalCollectorInterface
     {
-        $afterStr = $after->format('Y-m-d');
+        $afterStr = $after->format('Y-m-d 00:00:00');
         $this->query->where('transaction_journals.date', '>=', $afterStr);
         Log::debug(sprintf('JournalCollector range is now after %s (inclusive)', $afterStr));
 
@@ -378,7 +390,7 @@ class JournalCollector implements JournalCollectorInterface
      */
     public function setBefore(Carbon $before): JournalCollectorInterface
     {
-        $beforeStr = $before->format('Y-m-d');
+        $beforeStr = $before->format('Y-m-d 00:00:00');
         $this->query->where('transaction_journals.date', '<=', $beforeStr);
         Log::debug(sprintf('JournalCollector range is now before %s (inclusive)', $beforeStr));
 
@@ -486,6 +498,23 @@ class JournalCollector implements JournalCollectorInterface
     }
 
     /**
+     * @param Collection $journals
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setJournals(Collection $journals): JournalCollectorInterface
+    {
+        $ids = $journals->pluck('id')->toArray();
+        $this->query->where(
+            function (EloquentBuilder $q) use ($ids) {
+                $q->whereIn('transaction_journals.id', $ids);
+            }
+        );
+
+        return $this;
+    }
+
+    /**
      * @param int $limit
      *
      * @return JournalCollectorInterface
@@ -565,8 +594,8 @@ class JournalCollector implements JournalCollectorInterface
     public function setRange(Carbon $start, Carbon $end): JournalCollectorInterface
     {
         if ($start <= $end) {
-            $startStr = $start->format('Y-m-d');
-            $endStr   = $end->format('Y-m-d');
+            $startStr = $start->format('Y-m-d 00:00:00');
+            $endStr   = $end->format('Y-m-d 23:59:59');
             $this->query->where('transaction_journals.date', '>=', $startStr);
             $this->query->where('transaction_journals.date', '<=', $endStr);
             Log::debug(sprintf('JournalCollector range is now %s - %s (inclusive)', $startStr, $endStr));

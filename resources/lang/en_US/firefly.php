@@ -169,6 +169,13 @@ return [
     'reset_button'                               => 'Reset',
     'want_to_login'                              => 'I want to login',
     'button_register'                            => 'Register',
+    'authorization'                              => 'Authorization',
+
+    // API access
+    'authorization_request'                      => 'Firefly III v:version Authorization Request',
+    'authorization_request_intro'                => '<strong>:client</strong> is requesting permission to access your financial administration. Would you like to authorize <strong>:client</strong> to access these records?',
+    'scopes_will_be_able'                        => 'This application will be able to:',
+    'button_authorize'                           => 'Authorize',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',
@@ -498,10 +505,10 @@ return [
     'secure_pw_should'                         => 'Should I check the box?',
     'secure_pw_long_password'                  => 'If you just generated a long, single-use password for Firefly III using some kind of password generator: <strong>no</strong>.',
     'secure_pw_short'                          => 'If you just entered the password you always use: <em>Please yes</em>.',
-    'personal_access_token'                    => 'Personal access token',
-    'explain_access_token'                     => 'You need this token to perform command line options, such as importing or exporting data. Without it, such sensitive commands will not work. Do not share your access token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
-    'regenerate_access_token'                  => 'Regenerate access token',
-    'token_regenerated'                        => 'A new token was generated',
+    'command_line_token'                       => 'Command line token',
+    'explain_command_line_token'               => 'You need this token to perform command line options, such as importing or exporting data. Without it, such sensitive commands will not work. Do not share your command line token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
+    'regenerate_command_line_token'            => 'Regenerate command line token',
+    'token_regenerated'                        => 'A new command line token was generated',
     'change_your_email'                        => 'Change your email address',
     'email_verification'                       => 'An email message will be sent to your old AND new email address. For security purposes, you will not be able to login until you verify your new email address. If you are unsure if your Firefly III installation is capable of sending email, please do not use this feature. If you are an administrator, you can test this in the <a href="/admin">Administration</a>.',
     'email_changed_logout'                     => 'Until you verify your email address, you cannot login.',
@@ -634,8 +641,6 @@ return [
     'rescanned_bill'                           => 'Rescanned everything.',
     'average_bill_amount_year'                 => 'Average bill amount (:year)',
     'average_bill_amount_overall'              => 'Average bill amount (overall)',
-    'not_or_not_yet'                           => 'Not (yet)',
-    'not_expected_period'                      => 'Not expected this period',
     'bill_is_active'                           => 'Bill is active',
     'bill_expected_between'                    => 'Expected between :start and :end',
     'bill_will_automatch'                      => 'Bill will automatically linked to matching transactions',
@@ -1127,7 +1132,7 @@ return [
     // import index page:
     'import_index_title'                    => 'Import data into Firefly III',
     'import_index_sub_title'                => 'Index',
-    'import_general_index_intro'            => 'Welcome to Firefly\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
+    'import_general_index_intro'            => 'Welcome to Firefly III\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',

@@ -78,7 +78,7 @@ class LinkController extends Controller
     }
 
     /**
-     * @param TransactionJournalLink      $link
+     * @param TransactionJournalLink $link
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -93,8 +93,8 @@ class LinkController extends Controller
     }
 
     /**
-     * @param JournalLinkRequest          $request
-     * @param TransactionJournal          $journal
+     * @param JournalLinkRequest $request
+     * @param TransactionJournal $journal
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -123,7 +123,7 @@ class LinkController extends Controller
     }
 
     /**
-     * @param TransactionJournalLink      $link
+     * @param TransactionJournalLink $link
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */

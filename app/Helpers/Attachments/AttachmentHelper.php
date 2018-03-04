@@ -50,8 +50,9 @@ class AttachmentHelper implements AttachmentHelperInterface
     /** @var \Illuminate\Contracts\Filesystem\Filesystem */
     protected $uploadDisk;
 
+
     /**
-     *
+     * AttachmentHelper constructor.
      */
     public function __construct()
     {

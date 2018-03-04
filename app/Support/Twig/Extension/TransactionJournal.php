@@ -64,7 +64,9 @@ class TransactionJournal extends Twig_Extension
                         'currency' => $foreign,
                     ];
                 }
-                $totals[$foreignId]['amount'] = bcadd($transaction->foreign_amount, $totals[$foreignId]['amount']);
+                $totals[$foreignId]['amount'] = bcadd(
+                    $transaction->foreign_amount,
+                    $totals[$foreignId]['amount']);
             }
         }
         $array = [];

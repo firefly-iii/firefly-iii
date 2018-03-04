@@ -82,9 +82,9 @@ class BudgetController extends Controller
      */
     public function amount(Request $request, BudgetRepositoryInterface $repository, Budget $budget)
     {
-        $amount      = strval($request->get('amount'));
-        $start       = Carbon::createFromFormat('Y-m-d', $request->get('start'));
-        $end         = Carbon::createFromFormat('Y-m-d', $request->get('end'));
+        $amount = strval($request->get('amount'));
+        $start  = Carbon::createFromFormat('Y-m-d', $request->get('start'));
+        $end    = Carbon::createFromFormat('Y-m-d', $request->get('end'));
         $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
         if (0 === bccomp($amount, '0')) {
             $budgetLimit = null;
@@ -198,13 +198,13 @@ class BudgetController extends Controller
         $prev->subDay();
         $prev = app('navigation')->startOfPeriod($prev, $range);
         $this->repository->cleanupBudgets();
-        $budgets           = $this->repository->getActiveBudgets();
-        $total             = $budgets->count();
-        $budgets           = $budgets->slice(($page - 1) * $pageSize, $pageSize);
+        $allBudgets        = $this->repository->getActiveBudgets();
+        $total             = $allBudgets->count();
+        $budgets           = $allBudgets->slice(($page - 1) * $pageSize, $pageSize);
         $inactive          = $this->repository->getInactiveBudgets();
         $periodStart       = $start->formatLocalized($this->monthAndDayFormat);
         $periodEnd         = $end->formatLocalized($this->monthAndDayFormat);
-        $budgetInformation = $this->repository->collectBudgetInformation($budgets, $start, $end);
+        $budgetInformation = $this->repository->collectBudgetInformation($allBudgets, $start, $end);
         $defaultCurrency   = app('amount')->getDefaultCurrency();
         $available         = $this->repository->getAvailableBudget($defaultCurrency, $start, $end);
         $spent             = array_sum(array_column($budgetInformation, 'spent'));
@@ -252,7 +252,7 @@ class BudgetController extends Controller
                 'currentMonth',
                 'next',
                 'nextText',
-                'prev',
+                'prev', 'allBudgets',
                 'prevText',
                 'periodStart',
                 'periodEnd',
@@ -420,11 +420,12 @@ class BudgetController extends Controller
         $end             = Carbon::createFromFormat('Y-m-d', $request->string('end'));
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $amount          = $request->get('amount');
-
+        $page            = $request->integer('page') === 0 ? 1 : $request->integer('page');
+        $this->repository->cleanupBudgets();
         $this->repository->setAvailableBudget($defaultCurrency, $start, $end, $amount);
         Preferences::mark();
 
-        return redirect(route('budgets.index', [$start->format('Y-m-d')]));
+        return redirect(route('budgets.index', [$start->format('Y-m-d')]) . '?page=' . $page);
     }
 
     /**
@@ -503,7 +504,7 @@ class BudgetController extends Controller
     {
         $data   = $request->getBudgetData();
         $budget = $this->repository->store($data);
-
+        $this->repository->cleanupBudgets();
         $request->session()->flash('success', strval(trans('firefly.stored_new_budget', ['name' => $budget->name])));
         Preferences::mark();
 
@@ -530,6 +531,7 @@ class BudgetController extends Controller
         $this->repository->update($budget, $data);
 
         $request->session()->flash('success', strval(trans('firefly.updated_budget', ['name' => $budget->name])));
+        $this->repository->cleanupBudgets();
         Preferences::mark();
 
         if (1 === intval($request->get('return_to_edit'))) {
@@ -549,13 +551,14 @@ class BudgetController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function updateIncome(Carbon $start, Carbon $end)
+    public function updateIncome(Request $request, Carbon $start, Carbon $end)
     {
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $available       = $this->repository->getAvailableBudget($defaultCurrency, $start, $end);
         $available       = round($available, $defaultCurrency->decimal_places);
+        $page            = intval($request->get('page'));
 
-        return view('budgets.income', compact('available', 'start', 'end'));
+        return view('budgets.income', compact('available', 'start', 'end', 'page'));
     }
 
     /**

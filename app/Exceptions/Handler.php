@@ -25,8 +25,11 @@ namespace FireflyIII\Exceptions;
 use ErrorException;
 use Exception;
 use FireflyIII\Jobs\MailError;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Handler
@@ -62,6 +65,36 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof ValidationException && $request->expectsJson()) {
+            // ignore it: controller will handle it.
+            return parent::render($request, $exception);
+        }
+        if ($exception instanceof NotFoundHttpException && $request->expectsJson()) {
+            return response()->json(['message' => 'Resource not found', 'exception' => 'NotFoundHttpException'], 404);
+        }
+
+        if ($exception instanceof AuthenticationException && $request->expectsJson()) {
+            return response()->json(['message' => 'Unauthenticated', 'exception' => 'AuthenticationException'], 401);
+        }
+
+
+        if ($request->expectsJson()) {
+            $isDebug = config('app.debug', false);
+            if ($isDebug) {
+                return response()->json(
+                    [
+                        'message'   => $exception->getMessage(),
+                        'exception' => get_class($exception),
+                        'line'      => $exception->getLine(),
+                        'file'      => $exception->getFile(),
+                        'trace'     => $exception->getTrace(),
+                    ], 500
+                );
+            }
+
+            return response()->json(['message' => 'Internal Firefly III Exception. See log files.', 'exception' => get_class($exception)], 500);
+        }
+
         if ($exception instanceof FireflyException || $exception instanceof ErrorException) {
             $isDebug = env('APP_DEBUG', false);
 

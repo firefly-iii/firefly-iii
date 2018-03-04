@@ -28,6 +28,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
@@ -164,6 +165,44 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
+     * Find by name or return NULL.
+     *
+     * @param string $name
+     *
+     * @return PiggyBank|null
+     */
+    public function findByName(string $name): ?PiggyBank
+    {
+        $set = $this->user->piggyBanks()->get(['piggy_banks.*']);
+        /** @var PiggyBank $piggy */
+        foreach ($set as $piggy) {
+            if ($piggy->name === $name) {
+                return $piggy;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get current amount saved in piggy bank.
+     *
+     * @param PiggyBank $piggyBank
+     *
+     * @return string
+     */
+    public function getCurrentAmount(PiggyBank $piggyBank): string
+    {
+        /** @var PiggyBankRepetition $rep */
+        $rep = $piggyBank->piggyBankRepetitions()->first(['piggy_bank_repetitions.*']);
+        if (null === $rep) {
+            return '0';
+        }
+
+        return strval($rep->currentamount);
+    }
+
+    /**
      * @param PiggyBank $piggyBank
      *
      * @return Collection
@@ -184,8 +223,12 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getExactAmount(PiggyBank $piggyBank, PiggyBankRepetition $repetition, TransactionJournal $journal): string
     {
-        $amount  = $journal->amountPositive();
-        $sources = $journal->sourceAccountList()->pluck('id')->toArray();
+        /** @var JournalRepositoryInterface $repos */
+        $repos = app(JournalRepositoryInterface::class);
+        $repos->setUser($this->user);
+
+        $amount  = $repos->getJournalTotal($journal);
+        $sources = $repos->getJournalSourceAccounts($journal)->pluck('id')->toArray();
         $room    = bcsub(strval($piggyBank->targetamount), strval($repetition->currentamount));
         $compare = bcmul($repetition->currentamount, '-1');
 

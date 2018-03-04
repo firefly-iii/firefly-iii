@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
 /**
@@ -90,7 +91,7 @@ class Transaction extends Model
      */
     protected $fillable
         = ['account_id', 'transaction_journal_id', 'description', 'amount', 'identifier', 'transaction_currency_id', 'foreign_currency_id',
-           'foreign_amount',];
+           'foreign_amount','reconciled'];
     /**
      * @var array
      */
@@ -128,6 +129,25 @@ class Transaction extends Model
         }
 
         return false;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return Transaction
+     */
+    public static function routeBinder(string $value): Transaction
+    {
+        if (auth()->check()) {
+            $transactionId = intval($value);
+            $transaction   = auth()->user()->transactions()->where('transactions.id', $transactionId)
+                                   ->first(['transactions.*']);
+            if (!is_null($transaction)) {
+                return $transaction;
+            }
+        }
+
+        throw new NotFoundHttpException;
     }
 
     use SoftDeletes, ValidatingTrait;

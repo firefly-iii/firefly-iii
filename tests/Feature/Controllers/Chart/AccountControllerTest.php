@@ -29,10 +29,12 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Preferences;
 use Steam;
@@ -47,42 +49,6 @@ use Tests\TestCase;
  */
 class AccountControllerTest extends TestCase
 {
-    /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::all
-     */
-    public function testAll()
-    {
-        $generator    = $this->mock(GeneratorInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-
-        $accountRepos->shouldReceive('oldestJournalDate')->once()->andReturn(Carbon::now()->subMonth());
-        Steam::shouldReceive('balanceInRange')->andReturn(['2012-01-01' => '0']);
-        $generator->shouldReceive('singleSet')->andReturn([]);
-
-        $this->be($this->user());
-        $response = $this->get(route('chart.account.all', [1]));
-        $response->assertStatus(200);
-    }
-
-    /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::all
-     */
-    public function testAllLongRange()
-    {
-        $generator    = $this->mock(GeneratorInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-
-        $carbon = new Carbon;
-        $carbon->subMonths(5);
-        $accountRepos->shouldReceive('oldestJournalDate')->once()->andReturn($carbon);
-        Steam::shouldReceive('balance')->andReturn('0');
-
-        $generator->shouldReceive('singleSet')->andReturn([]);
-
-        $this->be($this->user());
-        $response = $this->get(route('chart.account.all', [1]));
-        $response->assertStatus(200);
-    }
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseAccounts
@@ -93,9 +59,10 @@ class AccountControllerTest extends TestCase
      */
     public function testExpenseAccounts(string $range)
     {
-        $account      = factory(Account::class)->make();
-        $generator    = $this->mock(GeneratorInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $account       = factory(Account::class)->make();
+        $generator     = $this->mock(GeneratorInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::EXPENSE, AccountType::BENEFICIARY]])->andReturn(new Collection([$account]));
         $generator->shouldReceive('singleSet')->andReturn([]);
@@ -236,8 +203,9 @@ class AccountControllerTest extends TestCase
      */
     public function testFrontpage(string $range)
     {
-        $generator    = $this->mock(GeneratorInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $generator     = $this->mock(GeneratorInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
         // change the preference:
         Preferences::setForUser($this->user(), 'frontPageAccounts', []);
@@ -246,6 +214,7 @@ class AccountControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection);
         Steam::shouldReceive('balanceInRange')->andReturn([]);
         $generator->shouldReceive('multiSet')->andReturn([]);
+
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -328,7 +297,7 @@ class AccountControllerTest extends TestCase
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('chart.account.period', [1, '2012-01-01']));
+        $response = $this->get(route('chart.account.period', [1, '2012-01-01', '2012-01-31']));
         $response->assertStatus(200);
     }
 
@@ -338,6 +307,8 @@ class AccountControllerTest extends TestCase
      */
     public function testReport()
     {
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
         $generator = $this->mock(GeneratorInterface::class);
         $generator->shouldReceive('multiSet')->andreturn([]);
         Steam::shouldReceive('balanceInRange')->andReturn(['2012-01-01' => '0']);
@@ -369,22 +340,4 @@ class AccountControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::single
-     * @dataProvider dateRangeProvider
-     *
-     * @param string $range
-     */
-    public function testSingle(string $range)
-    {
-        $generator = $this->mock(GeneratorInterface::class);
-
-        Steam::shouldReceive('balanceInRange')->andReturn(['2012-01-01' => '0']);
-        $generator->shouldReceive('singleSet')->andReturn([]);
-
-        $this->be($this->user());
-        $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('chart.account.single', [1]));
-        $response->assertStatus(200);
-    }
 }

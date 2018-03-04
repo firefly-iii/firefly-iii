@@ -27,6 +27,7 @@ use FireflyIII\Helpers\Chart\MetaPieChart;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\OpposingAccountFilter;
+use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -45,11 +46,119 @@ use Tests\TestCase;
 class MetaPieChartTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Helpers\Chart\MetaPieChart::__construct
-     * @covers \FireflyIII\Helpers\Chart\MetaPieChart::generate
-     * @covers \FireflyIII\Helpers\Chart\MetaPieChart::getTransactions
-     * @covers \FireflyIII\Helpers\Chart\MetaPieChart::groupByFields
-     * @covers \FireflyIII\Helpers\Chart\MetaPieChart::organizeByType
+     * @covers \FireflyIII\Helpers\Chart\MetaPieChart
+     */
+    public function testGenerateExpenseAccount()
+    {
+        $som        = (new Carbon())->startOfMonth();
+        $eom        = (new Carbon())->endOfMonth();
+        $collection = $this->fakeTransactions();
+        $accounts   = [
+            1 => factory(Account::class)->make(),
+            2 => factory(Account::class)->make(),
+        ];
+
+        // mock collector so the correct set of journals is returned:
+        // then verify the results.
+        $collector = $this->mock(JournalCollectorInterface::class);
+
+        $collector->shouldReceive('addFilter')->withArgs([PositiveAmountFilter::class])->andReturnSelf()->once();
+        $collector->shouldReceive('removeFilter')->withArgs([NegativeAmountFilter::class])->andReturnSelf()->once();
+        $collector->shouldReceive('addFilter')->withArgs([NegativeAmountFilter::class])->andReturnSelf()->once();
+        $collector->shouldReceive('addFilter')->withArgs([OpposingAccountFilter::class])->andReturnSelf()->once();
+        $collector->shouldReceive('setUser')->andReturnSelf()->once();
+        $collector->shouldReceive('setAccounts')->andReturnSelf()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->once();
+        $collector->shouldReceive('setBudgets')->andReturnSelf()->once();
+        $collector->shouldReceive('setCategories')->andReturnSelf()->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf()->once();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
+        $collector->shouldReceive('getJournals')->andReturn($collection);
+
+        // mock all repositories:
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('find')->withArgs([1])->andReturn($accounts[1]);
+        $accountRepos->shouldReceive('find')->withArgs([2])->andReturn($accounts[2]);
+
+        $helper = new MetaPieChart();
+        $helper->setUser($this->user());
+        $helper->setStart($som);
+        $helper->setEnd($eom);
+        $chart = $helper->generate('expense', 'account');
+
+        // since the set is pretty basic the result is easy to validate:
+        $keys = array_keys($chart);
+        $this->assertEquals($keys[0], $accounts[1]->name);
+        $this->assertEquals($keys[1], $accounts[2]->name);
+        $this->assertTrue(0 === bccomp('1000', $chart[$accounts[1]->name]));
+        $this->assertTrue(0 === bccomp('1000', $chart[$accounts[2]->name]));
+
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @covers \FireflyIII\Helpers\Chart\MetaPieChart
+     */
+    public function testGenerateExpenseAccountWithOthers()
+    {
+        $som        = (new Carbon())->startOfMonth();
+        $eom        = (new Carbon())->endOfMonth();
+        $collection = $this->fakeTransactions();
+        $others     = $this->fakeOthers();
+        $accounts   = [
+            1 => factory(Account::class)->make(),
+            2 => factory(Account::class)->make(),
+        ];
+
+        // mock collector so the correct set of journals is returned:
+        // then verify the results.
+        $collector = $this->mock(JournalCollectorInterface::class);
+        $collector->shouldReceive('addFilter')->withArgs([NegativeAmountFilter::class])->andReturnSelf()->once();
+        $collector->shouldReceive('addFilter')->withArgs([PositiveAmountFilter::class])->andReturnSelf()->once();
+        $collector->shouldReceive('addFilter')->withArgs([OpposingAccountFilter::class])->andReturnSelf()->once();
+        $collector->shouldReceive('removeFilter')->withArgs([NegativeAmountFilter::class])->andReturnSelf()->once();
+        $collector->shouldReceive('setUser')->andReturnSelf()->twice();
+        $collector->shouldReceive('setAccounts')->andReturnSelf()->twice();
+        $collector->shouldReceive('setRange')->andReturnSelf()->twice();
+        $collector->shouldReceive('setBudgets')->andReturnSelf()->once();
+        $collector->shouldReceive('setCategories')->andReturnSelf()->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf()->once();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
+        $collector->shouldReceive('getJournals')->andReturn($collection)->once();
+
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf()->once();
+        $collector->shouldReceive('getJournals')->andReturn($others)->once();
+
+        // mock all repositories:
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('find')->withArgs([1])->andReturn($accounts[1]);
+        $accountRepos->shouldReceive('find')->withArgs([2])->andReturn($accounts[2]);
+
+        $helper = new MetaPieChart();
+        $helper->setCollectOtherObjects(true);
+        $helper->setUser($this->user());
+        $helper->setStart($som);
+        $helper->setEnd($eom);
+        $chart = $helper->generate('expense', 'account');
+
+        // since the set is pretty basic the result is easy to validate:
+        $keys = array_keys($chart);
+        $this->assertEquals($keys[0], $accounts[1]->name);
+        $this->assertEquals($keys[1], $accounts[2]->name);
+        $this->assertTrue(0 === bccomp('1000', $chart[$accounts[1]->name]));
+        $this->assertTrue(0 === bccomp('1000', $chart[$accounts[2]->name]));
+        $this->assertTrue(0 === bccomp('-5000', $chart['Everything else']));
+
+        $this->assertTrue(true);
+    }
+
+
+    /**
+     * @covers \FireflyIII\Helpers\Chart\MetaPieChart
      */
     public function testGenerateIncomeAccount()
     {
@@ -101,11 +210,7 @@ class MetaPieChartTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Helpers\Chart\MetaPieChart::__construct
-     * @covers \FireflyIII\Helpers\Chart\MetaPieChart::generate
-     * @covers \FireflyIII\Helpers\Chart\MetaPieChart::getTransactions
-     * @covers \FireflyIII\Helpers\Chart\MetaPieChart::groupByFields
-     * @covers \FireflyIII\Helpers\Chart\MetaPieChart::organizeByType
+     * @covers \FireflyIII\Helpers\Chart\MetaPieChart
      */
     public function testGenerateIncomeAccountWithOthers()
     {

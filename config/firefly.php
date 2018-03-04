@@ -33,7 +33,8 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'     => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
-    'version'        => '4.7.0',
+    'version'        => '4.7.1',
+    'api_version'    => '0.1',
     'maxUploadSize'  => 15242880,
     'allowedMimes'   => [
         /* plain files */
@@ -175,6 +176,7 @@ return [
     'languages'                  => [
         // completed languages
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English'],
+        'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'],
         'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],
         'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'],
         'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'],
@@ -185,9 +187,7 @@ return [
         'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'],
 
         // incomplete languages:
-        //'id_ID' => ['name_locale' => 'Indonesian', 'name_english' => 'Indonesian'],
-        //'es_ES' => ['name_locale' => 'Spanish', 'name_english' => 'Spanish'],
-        //'sl_SI' => ['name_locale' => 'Slovenščina', 'name_english' => 'Slovenian'],
+        // 'ca_ES' => ['name_locale' => 'Català', 'name_english' => 'Catalan'],
     ],
     'transactionTypesByWhat'     => [
         'expenses'   => ['Withdrawal'],
@@ -225,6 +225,7 @@ return [
         'ruleGroup'         => \FireflyIII\Models\RuleGroup::class,
         'exportJob'         => \FireflyIII\Models\ExportJob::class,
         'importJob'         => \FireflyIII\Models\ImportJob::class,
+        'transaction'       => \FireflyIII\Models\Transaction::class,
         'user'              => \FireflyIII\User::class,
 
         // strings

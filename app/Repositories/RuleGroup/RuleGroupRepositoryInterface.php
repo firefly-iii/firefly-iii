@@ -52,6 +52,8 @@ interface RuleGroupRepositoryInterface
     public function find(int $ruleGroupId): RuleGroup;
 
     /**
+     * Get all rule groups.
+     *
      * @return Collection
      */
     public function get(): Collection;

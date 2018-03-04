@@ -43,8 +43,6 @@ class BudgetLimit extends Model
             'end_date'   => 'date',
             'repeats'    => 'boolean',
         ];
-    /** @var array */
-    protected $dates = ['start_date', 'end_date'];
 
     /**
      * @param string $value

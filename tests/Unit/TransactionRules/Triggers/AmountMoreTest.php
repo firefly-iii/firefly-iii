@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tests\Unit\TransactionRules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\TransactionRules\Triggers\AmountMore;
 use Tests\TestCase;
 
@@ -36,7 +37,12 @@ class AmountMoreTest extends TestCase
      */
     public function testTriggeredExact()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('setUser');
+        $journalRepos->shouldReceive('getJournalTotal')->andReturn('12.35');
+
         $journal                     = new TransactionJournal;
+        $journal->user               = $this->user();
         $journal->destination_amount = '12.35';
         $trigger                     = AmountMore::makeFromStrings('12.35', false);
         $result                      = $trigger->triggered($journal);
@@ -48,7 +54,12 @@ class AmountMoreTest extends TestCase
      */
     public function testTriggeredMore()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('setUser');
+        $journalRepos->shouldReceive('getJournalTotal')->andReturn('12.34');
+
         $journal                     = new TransactionJournal;
+        $journal->user               = $this->user();
         $journal->destination_amount = '12.34';
         $trigger                     = AmountMore::makeFromStrings('12.10', false);
         $result                      = $trigger->triggered($journal);
@@ -60,7 +71,12 @@ class AmountMoreTest extends TestCase
      */
     public function testTriggeredNotMore()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('setUser');
+        $journalRepos->shouldReceive('getJournalTotal')->andReturn('12.35');
+
         $journal                     = new TransactionJournal;
+        $journal->user               = $this->user();
         $journal->destination_amount = '12.35';
         $trigger                     = AmountMore::makeFromStrings('12.50', false);
         $result                      = $trigger->triggered($journal);

@@ -158,7 +158,7 @@ return [
     'tag_areYouSure'             => 'Yakin ingin menghapus tag ":tag"?',
     'journal_link_areYouSure'    => 'Yakin ingin menghapus tautan antara <a href=":source_link">:source</a> and <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'        => 'Yakin ingin menghapus jenis tautan ":name" (":inward" / ":outward")?',
-    'permDeleteWarning'          => 'Menghapus barang dari Firely bersifat permanen dan tidak dapat dibatalkan.',
+    'permDeleteWarning'          => 'Deleting stuff from Firefly III is permanent and cannot be undone.',
     'mass_make_selection'        => 'Anda masih dapat mencegah agar item dihapus dengan menghapus kotak centang.',
     'delete_all_permanently'     => 'Hapus yang dipilih secara permanen',
     'update_all_journals'        => 'Perbarui transaksi ini',

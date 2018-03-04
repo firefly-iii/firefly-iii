@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
 
-use DB;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -46,6 +45,10 @@ class MassControllerTest extends TestCase
      */
     public function testDelete()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+
         $withdrawals = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->take(2)->get()->pluck('id')->toArray();
         $this->be($this->user());
         $response = $this->get(route('transactions.mass.delete', $withdrawals));
@@ -60,6 +63,7 @@ class MassControllerTest extends TestCase
      */
     public function testDestroy()
     {
+
         $deposits   = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->take(2)->get();
         $depositIds = $deposits->pluck('id')->toArray();
 
@@ -85,6 +89,21 @@ class MassControllerTest extends TestCase
      */
     public function testEdit()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+
+        $transfers      = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(2)->get();
+        $transfersArray = $transfers->pluck('id')->toArray();
+        $source = $this->user()->accounts()->first();
+
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        // mock data for edit page:
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]));
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$source]));
+        $journalRepos->shouldReceive('getTransactionType')->andReturn('Transfer');
+        $journalRepos->shouldReceive('isJournalReconciled')->andReturn(false);
+        $journalRepos->shouldReceive('getFirstPosTransaction')->andReturn($transfers->first()->transactions()->first());
+
+
         // mock stuff:
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
@@ -93,10 +112,9 @@ class MassControllerTest extends TestCase
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
 
-        $transfers = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(2)->get()->pluck('id')->toArray();
 
         $this->be($this->user());
-        $response = $this->get(route('transactions.mass.edit', $transfers));
+        $response = $this->get(route('transactions.mass.edit', $transfersArray));
         $response->assertStatus(200);
         $response->assertSee('Edit a number of transactions');
         // has bread crumb
@@ -108,47 +126,32 @@ class MassControllerTest extends TestCase
      */
     public function testEditMultiple()
     {
+        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
+
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+
         // mock stuff:
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
 
+        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('getJournalSourceAccounts')
+                     ->andReturn(new Collection([1, 2, 3]), new Collection, new Collection, new Collection);
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')
+                     ->andReturn(new Collection, new Collection([1, 2, 3]), new Collection, new Collection);
+        $journalRepos->shouldReceive('getTransactionType')
+                     ->andReturn('Withdrawal', 'Opening balance');
+        $journalRepos->shouldReceive('isJournalReconciled')
+                     ->andReturn(true, false);
+
+
         // default transactions
-        $collection = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(2)->get();
-
-        // add deposit (with multiple sources)
-        $collection->push(
-            TransactionJournal::where('transaction_type_id', 2)
-                              ->whereNull('transaction_journals.deleted_at')
-                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                              ->groupBy('transaction_journals.id')
-                              ->orderBy('ct', 'DESC')
-                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
-        );
-
-        // add withdrawal (with multiple destinations)
-        $collection->push(
-            TransactionJournal::where('transaction_type_id', 1)
-                              ->whereNull('transaction_journals.deleted_at')
-                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                              ->groupBy('transaction_journals.id')
-                              ->orderBy('ct', 'DESC')
-                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
-        );
-
-        // add reconcile transaction
-        $collection->push(
-            TransactionJournal::where('transaction_type_id', 5)
-                              ->whereNull('transaction_journals.deleted_at')
-                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                              ->groupBy('transaction_journals.id')
-                              ->orderBy('ct', 'DESC')
-                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
-        );
-
-        // add opening balance:
-        $collection->push(TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first());
-        $allIds = $collection->pluck('id')->toArray();
-        $route  = route('transactions.mass.edit', join(',', $allIds));
+        $collection = $this->user()->transactionJournals()->take(4)->get();
+        $allIds     = $collection->pluck('id')->toArray();
+        $route      = route('transactions.mass.edit', join(',', $allIds));
         $this->be($this->user());
         $response = $this->get($route);
         $response->assertStatus(200);
@@ -165,27 +168,35 @@ class MassControllerTest extends TestCase
      */
     public function testEditMultipleNothingLeft()
     {
+        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
+
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+
         // mock stuff:
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
 
+        $journalRepos->shouldReceive('getJournalSourceAccounts')
+                     ->andReturn(new Collection([1, 2, 3]), new Collection, new Collection, new Collection);
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')
+                     ->andReturn(new Collection, new Collection([1, 2, 3]), new Collection, new Collection);
+        $journalRepos->shouldReceive('getTransactionType')
+                     ->andReturn('Withdrawal', 'Opening balance');
+        $journalRepos->shouldReceive('isJournalReconciled')
+                     ->andReturn(true, true);
+
         // default transactions
-        $collection = new Collection;
-        $collection->push(
-            TransactionJournal::where('transaction_type_id', 1)
-                              ->whereNull('transaction_journals.deleted_at')
-                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                              ->groupBy('transaction_journals.id')
-                              ->orderBy('ct', 'DESC')
-                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
-        );
-        $allIds = $collection->pluck('id')->toArray();
+        $collection = $this->user()->transactionJournals()->take(4)->get();
+        $allIds     = $collection->pluck('id')->toArray();
 
         $this->be($this->user());
         $response = $this->get(route('transactions.mass.edit', join(',', $allIds)));
         $response->assertStatus(200);
         $response->assertSee('Edit a number of transactions');
-        $response->assertSessionHas('error','You have selected no valid transactions to edit.');
+        $response->assertSessionHas('error', 'You have selected no valid transactions to edit.');
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
     }
@@ -198,11 +209,14 @@ class MassControllerTest extends TestCase
         $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)
                                      ->whereNull('deleted_at')
                                      ->first();
+
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('update')->once();
         $repository->shouldReceive('find')->once()->andReturn($deposit);
+        $repository->shouldReceive('getTransactionType')->andReturn('Deposit');
+        $repository->shouldReceive('getNoteText')->andReturn('Some note');
 
         $this->session(['transactions.mass-edit.uri' => 'http://localhost']);
 

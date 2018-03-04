@@ -22,7 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Models\Account;
+use FireflyIII\Rules\UniqueIban;
 
 /**
  * Class AccountFormRequest.
@@ -47,6 +48,7 @@ class AccountFormRequest extends Request
             'name'                 => $this->string('name'),
             'active'               => $this->boolean('active'),
             'accountType'          => $this->string('what'),
+            'account_type_id'      => 0,
             'currency_id'          => $this->integer('currency_id'),
             'virtualBalance'       => $this->string('virtualBalance'),
             'iban'                 => $this->string('iban'),
@@ -66,25 +68,14 @@ class AccountFormRequest extends Request
      */
     public function rules()
     {
-        /** @var AccountRepositoryInterface $repository */
-        $repository     = app(AccountRepositoryInterface::class);
         $accountRoles   = join(',', config('firefly.accountRoles'));
         $types          = join(',', array_keys(config('firefly.subTitlesByIdentifier')));
         $ccPaymentTypes = join(',', array_keys(config('firefly.ccTypes')));
-
-        $nameRule = 'required|min:1|uniqueAccountForUser';
-        $idRule   = '';
-        if (null !== $repository->find(intval($this->get('id')))->id) {
-            $idRule   = 'belongsToUser:accounts';
-            $nameRule = 'required|min:1|uniqueAccountForUser:' . intval($this->get('id'));
-        }
-
-        return [
-            'id'                                => $idRule,
-            'name'                              => $nameRule,
+        $rules          = [
+            'name'                              => 'required|min:1|uniqueAccountForUser',
             'openingBalance'                    => 'numeric|required_with:openingBalanceDate|nullable',
             'openingBalanceDate'                => 'date|required_with:openingBalance|nullable',
-            'iban'                              => 'iban|nullable',
+            'iban'                              => ['iban', 'nullable', new UniqueIban(null)],
             'BIC'                               => 'bic|nullable',
             'virtualBalance'                    => 'numeric|nullable',
             'currency_id'                       => 'exists:transaction_currencies,id',
@@ -97,5 +88,16 @@ class AccountFormRequest extends Request
             'amount_currency_id_virtualBalance' => 'exists:transaction_currencies,id',
             'what'                              => 'in:' . $types,
         ];
+
+        /** @var Account $account */
+        $account = $this->route()->parameter('account');
+        if (!is_null($account)) {
+            // add rules:
+            $rules['id']   = 'belongsToUser:accounts';
+            $rules['name'] = 'required|min:1|uniqueAccountForUser:' . intval($this->get('id'));
+            $rules['iban'] = ['iban', 'nullable', new UniqueIban($account)];
+        }
+
+        return $rules;
     }
 }

@@ -24,14 +24,15 @@ namespace Tests\Feature\Controllers\Transaction;
 
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Tests\TestCase;
@@ -57,17 +58,36 @@ class SplitControllerTest extends TestCase
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepository  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
-        $deposit            = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
-        $destination        = $deposit->transactions()->where('amount', '>', 0)->first();
-        $account            = $destination->account;
-        $transactions       = factory(Transaction::class, 3)->make();
+        $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $tasker             = $this->mock(JournalTaskerInterface::class);
+        $attHelper          = $this->mock(AttachmentHelperInterface::class);
+
+
+        $deposit              = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
+        $destination          = $deposit->transactions()->where('amount', '>', 0)->first();
+        $account              = $destination->account;
+        $transactions         = factory(Transaction::class, 3)->make();
+        $array                = $transactions->toArray();
+        $array[0]['category'] = '';
+
+        $journalRepos->shouldReceive('first')->once()->andReturn($deposit);
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]));
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$account]));
+        $journalRepos->shouldReceive('getTransactionType')->once()->andReturn('Deposit');
+        $journalRepos->shouldReceive('getJournalDate')->andReturn('2018-01-01')->once();
+        $journalRepos->shouldReceive('getMetaField')->andReturn('');
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Some note')->once();
+        $journalRepos->shouldReceive('getJournalBudgetId')->andReturn(0);
+        $journalRepos->shouldReceive('getCategoryName')->andReturn('');
+        $journalRepos->shouldReceive('getJournalTotal')->andReturn('0');
+        $journalRepos->shouldReceive('getJournalCategoryName')->andReturn('Some');
+
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
         $accountRepository->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])
                           ->andReturn(new Collection([$account]))->once();
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-        $tasker->shouldReceive('getTransactionsOverview')->andReturn($transactions->toArray());
+        $tasker->shouldReceive('getTransactionsOverview')->andReturn($array);
 
         $this->be($this->user());
         $response = $this->get(route('transactions.split.edit', [$deposit->id]));
@@ -88,17 +108,32 @@ class SplitControllerTest extends TestCase
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepository  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
+        $journalRepos       = $this->mock(JournalRepositoryInterface::class);
+        $attHelper          = $this->mock(AttachmentHelperInterface::class);
+        $tasker             = $this->mock(JournalTaskerInterface::class);
         $deposit            = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
         $destination        = $deposit->transactions()->where('amount', '>', 0)->first();
         $account            = $destination->account;
         $transactions       = factory(Transaction::class, 3)->make();
-        $tasker             = $this->mock(JournalTaskerInterface::class);
+
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
         $accountRepository->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])
                           ->andReturn(new Collection([$account]))->once();
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
         $tasker->shouldReceive('getTransactionsOverview')->andReturn($transactions->toArray());
+
+        $journalRepos->shouldReceive('first')->once()->andReturn($deposit);
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]));
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$account]));
+        $journalRepos->shouldReceive('getTransactionType')->once()->andReturn('Deposit');
+        $journalRepos->shouldReceive('getJournalDate')->andReturn('2018-01-01')->once();
+        $journalRepos->shouldReceive('getMetaField')->andReturn('');
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Some note')->once();
+        $journalRepos->shouldReceive('getJournalBudgetId')->andReturn(0);
+        $journalRepos->shouldReceive('getCategoryName')->andReturn('');
+        $journalRepos->shouldReceive('getJournalTotal')->andReturn('0');
+
 
         $old = [
             'transactions' => [
@@ -165,7 +200,15 @@ class SplitControllerTest extends TestCase
      */
     public function testEditOpeningBalance()
     {
+        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepository  = $this->mock(AccountRepositoryInterface::class);
+        $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
+        $journalRepos       = $this->mock(JournalRepositoryInterface::class);
+        $attHelper          = $this->mock(AttachmentHelperInterface::class);
+        $tasker             = $this->mock(JournalTaskerInterface::class);
+
         $opening = TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first();
+        $journalRepos->shouldReceive('first')->once()->andReturn($opening);
         $this->be($this->user());
         $response = $this->get(route('transactions.split.edit', [$opening->id]));
         $response->assertStatus(302);
@@ -183,18 +226,25 @@ class SplitControllerTest extends TestCase
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepository  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
-        $repository         = $this->mock(JournalRepositoryInterface::class);
-        $note               = new Note();
-        $note->id           = 1;
-        $note->text         = 'Hallo';
-        $transactions       = factory(Transaction::class, 1)->make();
+        $journalRepos       = $this->mock(JournalRepositoryInterface::class);
+        $attHelper          = $this->mock(AttachmentHelperInterface::class);
         $tasker             = $this->mock(JournalTaskerInterface::class);
-        $deposit            = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
-        $destination        = $deposit->transactions()->where('amount', '>', 0)->first();
-        $account            = $destination->account;
 
-        $repository->shouldReceive('getNote')->andReturn($note);
-        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $transactions = factory(Transaction::class, 1)->make();
+        $deposit      = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
+        $destination  = $deposit->transactions()->where('amount', '>', 0)->first();
+        $account      = $destination->account;
+
+        $journalRepos->shouldReceive('first')->once()->andReturn($deposit);
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]));
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$account]));
+        $journalRepos->shouldReceive('getTransactionType')->once()->andReturn('Deposit');
+        $journalRepos->shouldReceive('getJournalDate')->once()->andReturn('2018-01-01');
+        $journalRepos->shouldReceive('getMetaField')->andReturn('');
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Some note')->once();
+        $journalRepos->shouldReceive('getJournalBudgetId')->andReturn(0);
+        $journalRepos->shouldReceive('getCategoryName')->andReturn('');
+        $journalRepos->shouldReceive('getJournalTotal')->andReturn('1');
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
         $accountRepository->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])
@@ -210,12 +260,24 @@ class SplitControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::update
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::arrayFromInput
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromRequest
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::update
+     * @covers       \FireflyIII\Http\Requests\SplitJournalFormRequest
      */
     public function testUpdate()
     {
+        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepository  = $this->mock(AccountRepositoryInterface::class);
+        $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
+        $journalRepos       = $this->mock(JournalRepositoryInterface::class);
+        $attHelper          = $this->mock(AttachmentHelperInterface::class);
+        $tasker             = $this->mock(JournalTaskerInterface::class);
+        $ruleRepos          = $this->mock(RuleGroupRepositoryInterface::class);
+        $billRepos          = $this->mock(BillRepositoryInterface::class);
+
+        $billRepos->shouldReceive('scan');
+        $ruleRepos->shouldReceive('getActiveGroups')->andReturn(new Collection);
+
+
         $this->session(['transactions.edit-split.uri' => 'http://localhost']);
         $deposit = $this->user()->transactionJournals()->where('transaction_type_id', 2)->first();
         $data    = [
@@ -239,39 +301,39 @@ class SplitControllerTest extends TestCase
         ];
 
         // mock stuff
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('updateSplitJournal')->andReturn($deposit);
-        $repository->shouldReceive('first')->times(2)->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('update')->andReturn($deposit);
+        $journalRepos->shouldReceive('first')->andReturn($deposit);
+        $journalRepos->shouldReceive('getTransactionType')->andReturn('Deposit');
 
-        $attachmentRepos = $this->mock(AttachmentHelperInterface::class);
-        $attachmentRepos->shouldReceive('saveAttachmentsForModel');
-        $attachmentRepos->shouldReceive('getMessages')->andReturn(new MessageBag);
+        $attHelper->shouldReceive('saveAttachmentsForModel');
+        $attHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
 
         $this->be($this->user());
         $response = $this->post(route('transactions.split.update', [$deposit->id]), $data);
         $response->assertStatus(302);
         $response->assertRedirect(route('index'));
         $response->assertSessionHas('success');
-
-        // journal is updated?
-        $response = $this->get(route('transactions.show', [$deposit->id]));
-        $response->assertStatus(200);
-        $response->assertSee('Updated salary');
-        // has bread crumb
-        $response->assertSee('<ol class="breadcrumb">');
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::update
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::isOpeningBalance
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::update
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::isOpeningBalance
+     * @covers       \FireflyIII\Http\Requests\SplitJournalFormRequest
      */
     public function testUpdateOpeningBalance()
     {
+        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepository  = $this->mock(AccountRepositoryInterface::class);
+        $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
+        $journalRepos       = $this->mock(JournalRepositoryInterface::class);
+        $attHelper          = $this->mock(AttachmentHelperInterface::class);
+        $tasker             = $this->mock(JournalTaskerInterface::class);
+
         $this->session(['transactions.edit-split.uri' => 'http://localhost']);
         $opening = TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first();
         $data    = [
             'id'                             => $opening->id,
-            'what'                           => 'deposit',
+            'what'                           => 'opening balance',
             'journal_description'            => 'Updated salary',
             'journal_currency_id'            => 1,
             'journal_destination_account_id' => 1,
@@ -288,9 +350,126 @@ class SplitControllerTest extends TestCase
                 ],
             ],
         ];
+
+        $journalRepos->shouldReceive('first')->once()->andReturn($opening);
+
         $this->be($this->user());
         $response = $this->post(route('transactions.split.update', [$opening->id]), $data);
         $response->assertStatus(302);
         $response->assertSessionMissing('success');
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::update
+     * @covers       \FireflyIII\Http\Requests\SplitJournalFormRequest
+     */
+    public function testUpdateTransfer()
+    {
+        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepository  = $this->mock(AccountRepositoryInterface::class);
+        $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
+        $journalRepos       = $this->mock(JournalRepositoryInterface::class);
+        $attHelper          = $this->mock(AttachmentHelperInterface::class);
+        $tasker             = $this->mock(JournalTaskerInterface::class);
+        $ruleRepos          = $this->mock(RuleGroupRepositoryInterface::class);
+        $billRepos          = $this->mock(BillRepositoryInterface::class);
+
+        $billRepos->shouldReceive('scan');
+        $ruleRepos->shouldReceive('getActiveGroups')->andReturn(new Collection);
+
+
+        $this->session(['transactions.edit-split.uri' => 'http://localhost']);
+        $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
+        $data       = [
+            'id'                        => $transfer->id,
+            'what'                      => 'transfer',
+            'journal_description'       => 'Some updated withdrawal',
+            'journal_currency_id'       => 1,
+            'journal_source_account_id' => 1,
+            'journal_amount'            => 1591,
+            'date'                      => '2014-01-24',
+            'tags'                      => '',
+            'transactions'              => [
+                [
+                    'description'             => 'Split #1',
+                    'source_account_id'       => '1',
+                    'destination_account_id'  => '2',
+                    'transaction_currency_id' => 1,
+                    'amount'                  => 1591,
+                    'category'                => '',
+                ],
+            ],
+        ];
+
+        // mock stuff
+        $journalRepos->shouldReceive('update')->andReturn($transfer);
+        $journalRepos->shouldReceive('first')->andReturn($transfer);
+        $journalRepos->shouldReceive('getTransactionType')->andReturn('Withdrawal');
+
+        $attHelper->shouldReceive('saveAttachmentsForModel');
+        $attHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
+
+        $this->be($this->user());
+        $response = $this->post(route('transactions.split.update', [$transfer->id]), $data);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('index'));
+        $response->assertSessionHas('success');
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::update
+     * @covers       \FireflyIII\Http\Requests\SplitJournalFormRequest
+     */
+    public function testUpdateWithdrawal()
+    {
+        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepository  = $this->mock(AccountRepositoryInterface::class);
+        $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
+        $journalRepos       = $this->mock(JournalRepositoryInterface::class);
+        $attHelper          = $this->mock(AttachmentHelperInterface::class);
+        $tasker             = $this->mock(JournalTaskerInterface::class);
+        $ruleRepos          = $this->mock(RuleGroupRepositoryInterface::class);
+        $billRepos          = $this->mock(BillRepositoryInterface::class);
+
+        $billRepos->shouldReceive('scan');
+        $ruleRepos->shouldReceive('getActiveGroups')->andReturn(new Collection);
+
+
+        $this->session(['transactions.edit-split.uri' => 'http://localhost']);
+        $withdrawal = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 1)->first();
+        $data       = [
+            'id'                        => $withdrawal->id,
+            'what'                      => 'withdrawal',
+            'journal_description'       => 'Some updated withdrawal',
+            'journal_currency_id'       => 1,
+            'journal_source_account_id' => 1,
+            'journal_amount'            => 1591,
+            'date'                      => '2014-01-24',
+            'tags'                      => '',
+            'transactions'              => [
+                [
+                    'description'              => 'Split #1',
+                    'source_account_id'        => '1',
+                    'destination_account_name' => 'some expense',
+                    'transaction_currency_id'  => 1,
+                    'amount'                   => 1591,
+                    'category'                 => '',
+                ],
+            ],
+        ];
+
+        // mock stuff
+        $journalRepos->shouldReceive('update')->andReturn($withdrawal);
+        $journalRepos->shouldReceive('first')->andReturn($withdrawal);
+        $journalRepos->shouldReceive('getTransactionType')->andReturn('Withdrawal');
+
+        $attHelper->shouldReceive('saveAttachmentsForModel');
+        $attHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
+
+        $this->be($this->user());
+        $response = $this->post(route('transactions.split.update', [$withdrawal->id]), $data);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('index'));
+        $response->assertSessionHas('success');
     }
 }

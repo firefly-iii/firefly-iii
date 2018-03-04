@@ -26,6 +26,7 @@ namespace FireflyIII\Services\Spectre\Request;
 use FireflyIII\Services\Spectre\Object\Customer;
 use FireflyIII\Services\Spectre\Object\Login;
 use Log;
+
 /**
  * Class ListLoginsRequest
  */
@@ -36,14 +37,6 @@ class ListLoginsRequest extends SpectreRequest
 
     /** @var array */
     private $logins = [];
-
-    /**
-     * @return array
-     */
-    public function getLogins(): array
-    {
-        return $this->logins;
-    }
 
     /**
      *
@@ -77,6 +70,14 @@ class ListLoginsRequest extends SpectreRequest
                 $this->logins[] = new Login($loginArray);
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getLogins(): array
+    {
+        return $this->logins;
     }
 
     /**

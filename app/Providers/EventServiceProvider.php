@@ -77,7 +77,6 @@ class EventServiceProvider extends ServiceProvider
             // is a Transaction Journal related event.
             'FireflyIII\Events\StoredTransactionJournal'  => [
                 'FireflyIII\Handlers\Events\StoredJournalEventHandler@scanBills',
-                'FireflyIII\Handlers\Events\StoredJournalEventHandler@connectToPiggyBank',
                 'FireflyIII\Handlers\Events\StoredJournalEventHandler@processRules',
             ],
             // is a Transaction Journal related event.
@@ -122,39 +121,6 @@ class EventServiceProvider extends ServiceProvider
      */
     protected function registerDeleteEvents()
     {
-        Account::deleted(
-            function (Account $account) {
-                Log::debug('Now trigger account delete response #' . $account->id);
-                /** @var Transaction $transaction */
-                foreach ($account->transactions()->get() as $transaction) {
-                    Log::debug('Now at transaction #' . $transaction->id);
-                    $journal = $transaction->transactionJournal()->first();
-                    if (null !== $journal) {
-                        Log::debug('Call for deletion of journal #' . $journal->id);
-                        $journal->delete();
-                    }
-                }
-            }
-        );
 
-        TransactionJournal::deleted(
-            function (TransactionJournal $journal) {
-                Log::debug(sprintf('Now triggered journal delete response #%d', $journal->id));
-
-                /** @var Transaction $transaction */
-                foreach ($journal->transactions()->get() as $transaction) {
-                    Log::debug(sprintf('Will now delete transaction #%d', $transaction->id));
-                    $transaction->delete();
-                }
-
-                // also delete journal_meta entries.
-
-                /** @var TransactionJournalMeta $meta */
-                foreach ($journal->transactionJournalMeta()->get() as $meta) {
-                    Log::debug(sprintf('Will now delete meta-entry #%d', $meta->id));
-                    $meta->delete();
-                }
-            }
-        );
     }
 }

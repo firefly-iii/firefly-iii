@@ -68,7 +68,7 @@ class RemoveTagTest extends TestCase
     {
         // get journal, link al tags:
         /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::find(11);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $tags    = $journal->user->tags()->get();
         $journal->tags()->sync($tags->pluck('id')->toArray());
         $this->assertEquals($tags->count(), $journal->tags()->get()->count());

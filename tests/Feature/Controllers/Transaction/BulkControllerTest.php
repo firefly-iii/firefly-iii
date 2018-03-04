@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
 
-use DB;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -46,8 +45,14 @@ class BulkControllerTest extends TestCase
     public function testEdit()
     {
         // mock stuff:
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection);
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection);
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection);
+        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('getTransactionType')->andReturn('Transfer');
+        $journalRepos->shouldReceive('isJournalReconciled')->andReturn(false);
 
         $transfers = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(4)->get()->pluck('id')->toArray();
 
@@ -65,46 +70,23 @@ class BulkControllerTest extends TestCase
     public function testEditMultiple()
     {
         // mock stuff:
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection);
+        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('getJournalSourceAccounts')
+                     ->andReturn(new Collection([1, 2, 3]), new Collection, new Collection, new Collection);
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')
+                     ->andReturn(new Collection, new Collection([1, 2, 3]), new Collection, new Collection);
+        $journalRepos->shouldReceive('getTransactionType')
+                     ->andReturn('Withdrawal', 'Opening balance');
+        $journalRepos->shouldReceive('isJournalReconciled')
+                     ->andReturn(true, false);
 
         // default transactions
-        $collection = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(2)->get();
-
-        // add deposit (with multiple sources)
-        $collection->push(
-            TransactionJournal::where('transaction_type_id', 2)
-                              ->whereNull('transaction_journals.deleted_at')
-                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                              ->groupBy('transaction_journals.id')
-                              ->orderBy('ct', 'DESC')
-                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
-        );
-
-        // add withdrawal (with multiple destinations)
-        $collection->push(
-            TransactionJournal::where('transaction_type_id', 1)
-                              ->whereNull('transaction_journals.deleted_at')
-                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                              ->groupBy('transaction_journals.id')
-                              ->orderBy('ct', 'DESC')
-                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
-        );
-
-        // add reconcile transaction
-        $collection->push(
-            TransactionJournal::where('transaction_type_id', 5)
-                              ->whereNull('transaction_journals.deleted_at')
-                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                              ->groupBy('transaction_journals.id')
-                              ->orderBy('ct', 'DESC')
-                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
-        );
-
-        // add opening balance:
-        $collection->push(TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first());
-        $allIds = $collection->pluck('id')->toArray();
-        $route  = route('transactions.bulk.edit', join(',', $allIds));
+        $collection = $this->user()->transactionJournals()->take(4)->get();
+        $allIds     = $collection->pluck('id')->toArray();
+        $route      = route('transactions.bulk.edit', join(',', $allIds));
         $this->be($this->user());
         $response = $this->get($route);
         $response->assertStatus(200);
@@ -123,46 +105,24 @@ class BulkControllerTest extends TestCase
     public function testEditMultipleNothingLeft()
     {
         // mock stuff:
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection);
+        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('getJournalSourceAccounts')
+                     ->andReturn(new Collection([1, 2, 3]), new Collection, new Collection, new Collection);
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')
+                     ->andReturn(new Collection, new Collection([1, 2, 3]), new Collection, new Collection);
+        $journalRepos->shouldReceive('getTransactionType')
+                     ->andReturn('Withdrawal', 'Opening balance');
+        $journalRepos->shouldReceive('isJournalReconciled')
+                     ->andReturn(true, true);
+
 
         // default transactions
-        $collection = new Collection;
-
-        // add deposit (with multiple sources)
-        $collection->push(
-            TransactionJournal::where('transaction_type_id', 2)
-                              ->whereNull('transaction_journals.deleted_at')
-                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                              ->groupBy('transaction_journals.id')
-                              ->orderBy('ct', 'DESC')
-                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
-        );
-
-        // add withdrawal (with multiple destinations)
-        $collection->push(
-            TransactionJournal::where('transaction_type_id', 1)
-                              ->whereNull('transaction_journals.deleted_at')
-                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                              ->groupBy('transaction_journals.id')
-                              ->orderBy('ct', 'DESC')
-                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
-        );
-
-        // add reconcile transaction
-        $collection->push(
-            TransactionJournal::where('transaction_type_id', 5)
-                              ->whereNull('transaction_journals.deleted_at')
-                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                              ->groupBy('transaction_journals.id')
-                              ->orderBy('ct', 'DESC')
-                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
-        );
-
-        // add opening balance:
-        $collection->push(TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first());
-        $allIds = $collection->pluck('id')->toArray();
-        $route  = route('transactions.bulk.edit', join(',', $allIds));
+        $collection = $this->user()->transactionJournals()->take(4)->get();
+        $allIds     = $collection->pluck('id')->toArray();
+        $route      = route('transactions.bulk.edit', join(',', $allIds));
         $this->be($this->user());
         $response = $this->get($route);
         $response->assertStatus(200);
@@ -178,10 +138,10 @@ class BulkControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\BulkController::update
+     * @covers \FireflyIII\Http\Requests\BulkEditJournalRequest
      */
     public function testUpdate()
     {
-
         $tags       = ['a', 'b', 'c'];
         $collection = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->take(4)->get();
         $allIds     = $collection->pluck('id')->toArray();
@@ -198,14 +158,13 @@ class BulkControllerTest extends TestCase
         $repository->shouldReceive('find')->times(4)->andReturn(new TransactionJournal);
 
         $repository->shouldReceive('updateCategory')->times(4)->andReturn(new TransactionJournal())
-            ->withArgs([Mockery::any(), $data['category']]);
+                   ->withArgs([Mockery::any(), $data['category']]);
 
         $repository->shouldReceive('updateBudget')->times(4)->andReturn(new TransactionJournal())
                    ->withArgs([Mockery::any(), $data['budget_id']]);
 
-        $repository->shouldReceive('updateTags')->times(4)->andReturn(true)
-                   ->withArgs([Mockery::any(), $tags]);
-
+        $repository->shouldReceive('updateTags')->times(4)->andReturn(new TransactionJournal())
+                   ->withArgs([Mockery::any(), ['tags' => $tags]]);
 
 
         $route = route('transactions.bulk.update');

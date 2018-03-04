@@ -24,9 +24,11 @@ namespace FireflyIII\Http\Controllers\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Http\Requests\ReconciliationFormRequest;
+use FireflyIII\Http\Requests\ReconciliationStoreRequest;
+use FireflyIII\Http\Requests\ReconciliationUpdateRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
@@ -35,8 +37,10 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Services\Internal\Update\TransactionUpdateService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Log;
 use Preferences;
 use Response;
 use Session;
@@ -48,6 +52,9 @@ use Session;
  */
 class ReconcileController extends Controller
 {
+    /** @var JournalRepositoryInterface */
+    private $repository;
+
     /**
      *
      */
@@ -60,6 +67,7 @@ class ReconcileController extends Controller
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
                 app('view')->share('title', trans('firefly.accounts'));
+                $this->repository = app(JournalRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -80,10 +88,10 @@ class ReconcileController extends Controller
         $subTitle = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
 
         // journal related code
-        $pTransaction = $journal->positiveTransaction();
+        $pTransaction = $this->repository->getFirstPosTransaction($journal);
         $preFilled    = [
-            'date'     => $journal->dateAsString(),
-            'category' => $journal->categoryAsString(),
+            'date'     => $this->repository->getJournalDate($journal, null),
+            'category' => $this->repository->getJournalCategoryName($journal),
             'tags'     => join(',', $journal->tags->pluck('tag')->toArray()),
             'amount'   => $pTransaction->amount,
         ];
@@ -126,10 +134,8 @@ class ReconcileController extends Controller
         $clearedAmount  = '0';
         $route          = route('accounts.reconcile.submit', [$account->id, $start->format('Ymd'), $end->format('Ymd')]);
         // get sum of transaction amounts:
-        /** @var JournalRepositoryInterface $repository */
-        $repository   = app(JournalRepositoryInterface::class);
-        $transactions = $repository->getTransactionsById($transactionIds);
-        $cleared      = $repository->getTransactionsById($clearedIds);
+        $transactions = $this->repository->getTransactionsById($transactionIds);
+        $cleared      = $this->repository->getTransactionsById($clearedIds);
         $countCleared = 0;
 
         /** @var Transaction $transaction */
@@ -182,7 +188,7 @@ class ReconcileController extends Controller
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
         $currencyId    = intval($account->getMeta('currency_id'));
-        $currency      = $currencyRepos->find($currencyId);
+        $currency      = $currencyRepos->findNull($currencyId);
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
@@ -220,71 +226,105 @@ class ReconcileController extends Controller
     }
 
     /**
-     * @param JournalRepositoryInterface $repository
-     * @param TransactionJournal         $journal
+     * @param TransactionJournal $journal
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
-    public function show(JournalRepositoryInterface $repository, TransactionJournal $journal)
+    public function show(TransactionJournal $journal)
     {
+
         if (TransactionType::RECONCILIATION !== $journal->transactionType->type) {
             return redirect(route('transactions.show', [$journal->id]));
         }
         $subTitle = trans('firefly.reconciliation') . ' "' . $journal->description . '"';
 
         // get main transaction:
-        $transaction = $repository->getAssetTransaction($journal);
+        $transaction = $this->repository->getAssetTransaction($journal);
         $account     = $transaction->account;
 
         return view('accounts.reconcile.show', compact('journal', 'subTitle', 'transaction', 'account'));
     }
 
     /**
-     * @param Request $request
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param ReconciliationStoreRequest $request
+     * @param Account                    $account
+     * @param Carbon                     $start
+     * @param Carbon                     $end
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws FireflyException
      */
-    public function submit(Request $request, Account $account, Carbon $start, Carbon $end)
+    public function submit(ReconciliationStoreRequest $request, JournalRepositoryInterface $repository, Account $account, Carbon $start, Carbon $end)
     {
-        /** @var JournalRepositoryInterface $repository */
-        $repository   = app(JournalRepositoryInterface::class);
-        $transactions = $repository->getTransactionsById($request->get('transactions') ?? []);
+        Log::debug('In ReconcileController::submit()');
+        $data = $request->getAll();
+
         /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $repository->reconcile($transaction); // mark as reconciled.
+        foreach ($data['transactions'] as $transactionId) {
+            $repository->reconcileById(intval($transactionId));
         }
+        Log::debug('Reconciled all transactions.');
 
         // create reconciliation transaction (if necessary):
-        if ('create' === $request->get('reconcile')) {
+        if ('create' === $data['reconcile']) {
+            // get "opposing" account.
             /** @var AccountRepositoryInterface $accountRepos */
             $accountRepos   = app(AccountRepositoryInterface::class);
             $reconciliation = $accountRepos->getReconciliation($account);
-            $difference     = $request->get('difference');
 
-            // store journal between these two.
-            $data    = [
-                'what'        => 'Reconciliation',
-                'source'      => $account,
-                'destination' => $reconciliation,
-                'category'    => '',
-                'budget_id'   => 0,
-                'amount'      => $difference,
-                'currency_id' => $account->getMeta('currency_id'),
-                'description' => trans(
-                    'firefly.reconcilliation_transaction_title',
-                    ['from' => $start->formatLocalized($this->monthAndDayFormat), 'to' => $end->formatLocalized($this->monthAndDayFormat)]
-                ),
-                'date'        => $request->get('end'),
-                'notes'       => join(',', $transactions->pluck('id')->toArray()),
+
+            $difference  = $data['difference'];
+            $source      = $reconciliation;
+            $destination = $account;
+            if (bccomp($difference, '0') === 1) {
+                // amount is positive. Add it to reconciliation?
+                $source      = $account;
+                $destination = $reconciliation;
+
+            }
+
+            // data for journal
+            $description = trans(
+                'firefly.reconcilliation_transaction_title',
+                ['from' => $start->formatLocalized($this->monthAndDayFormat), 'to' => $end->formatLocalized($this->monthAndDayFormat)]
+            );
+            $journalData = [
+                'type'            => 'Reconciliation',
+                'description'     => $description,
+                'user'            => auth()->user()->id,
+                'date'            => $data['end'],
+                'bill_id'         => null,
+                'bill_name'       => null,
+                'piggy_bank_id'   => null,
+                'piggy_bank_name' => null,
+                'tags'            => null,
+                'interest_date'   => null,
+                'transactions'    => [[
+                                          'currency_id'           => intval($account->getMeta('currency_id')),
+                                          'currency_code'         => null,
+                                          'description'           => null,
+                                          'amount'                => app('steam')->positive($difference),
+                                          'source_id'             => $source->id,
+                                          'source_name'           => null,
+                                          'destination_id'        => $destination->id,
+                                          'destination_name'      => null,
+                                          'reconciled'            => true,
+                                          'identifier'            => 0,
+                                          'foreign_currency_id'   => null,
+                                          'foreign_currency_code' => null,
+                                          'foreign_amount'        => null,
+                                          'budget_id'             => null,
+                                          'budget_name'           => null,
+                                          'category_id'           => null,
+                                          'category_name'         => null,
+                                      ],
+                ],
+                'notes'           => join(', ', $data['transactions']),
             ];
-            $journal = $repository->store($data);
-            // reconcile this transaction too:
-            $transaction = $journal->transactions()->first();
-            $repository->reconcile($transaction);
+
+            $journal = $repository->store($journalData);
         }
+        Log::debug('End of routine.');
 
         Session::flash('success', trans('firefly.reconciliation_stored'));
 
@@ -313,7 +353,7 @@ class ReconcileController extends Controller
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
         $currencyId    = intval($account->getMeta('currency_id'));
-        $currency      = $currencyRepos->find($currencyId);
+        $currency      = $currencyRepos->findNull($currencyId);
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
@@ -339,13 +379,12 @@ class ReconcileController extends Controller
     }
 
     /**
-     * @param ReconciliationFormRequest  $request
-     * @param AccountRepositoryInterface $repository
-     * @param TransactionJournal         $journal
+     * @param ReconciliationUpdateRequest $request
+     * @param TransactionJournal          $journal
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(ReconciliationFormRequest $request, AccountRepositoryInterface $repository, TransactionJournal $journal)
+    public function update(ReconciliationUpdateRequest $request, TransactionJournal $journal)
     {
         if (TransactionType::RECONCILIATION !== $journal->transactionType->type) {
             return redirect(route('transactions.show', [$journal->id]));
@@ -356,8 +395,53 @@ class ReconcileController extends Controller
             return redirect(route('accounts.reconcile.edit', [$journal->id]))->withInput();
         }
         // update journal using account repository. Keep it consistent.
-        $data = $request->getJournalData();
-        $repository->updateReconciliation($journal, $data);
+        $submitted = $request->getJournalData();
+
+        // amount pos neg influences the accounts:
+        $source      = $this->repository->getJournalSourceAccounts($journal)->first();
+        $destination = $this->repository->getJournalDestinationAccounts($journal)->first();
+        if (bccomp($submitted['amount'], '0') === 1) {
+            // amount is positive, switch accounts:
+            list($source, $destination) = [$destination, $source];
+
+        }
+        // expand data with journal data:
+        $data = [
+            'type'            => $journal->transactionType->type,
+            'description'     => $journal->description,
+            'user'            => $journal->user_id,
+            'date'            => $journal->date,
+            'bill_id'         => null,
+            'bill_name'       => null,
+            'piggy_bank_id'   => null,
+            'piggy_bank_name' => null,
+            'tags'            => $submitted['tags'],
+            'interest_date'   => null,
+            'book_date'       => null,
+            'transactions'    => [[
+                                      'currency_id'           => intval($journal->transaction_currency_id),
+                                      'currency_code'         => null,
+                                      'description'           => null,
+                                      'amount'                => app('steam')->positive($submitted['amount']),
+                                      'source_id'             => $source->id,
+                                      'source_name'           => null,
+                                      'destination_id'        => $destination->id,
+                                      'destination_name'      => null,
+                                      'reconciled'            => true,
+                                      'identifier'            => 0,
+                                      'foreign_currency_id'   => null,
+                                      'foreign_currency_code' => null,
+                                      'foreign_amount'        => null,
+                                      'budget_id'             => null,
+                                      'budget_name'           => null,
+                                      'category_id'           => null,
+                                      'category_name'         => $submitted['category'],
+                                  ],
+            ],
+            'notes'           => $this->repository->getNoteText($journal),
+        ];
+
+        $this->repository->update($journal, $data);
 
         // @codeCoverageIgnoreStart
         if (1 === intval($request->get('return_to_edit'))) {

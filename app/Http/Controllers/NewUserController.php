@@ -85,13 +85,27 @@ class NewUserController extends Controller
         $this->createSavingsAccount($request, $repository);
 
         // also store currency preference from input:
-        $currency = $currencyRepository->find(intval($request->input('amount_currency_id_bank_balance')));
+        $currency = $currencyRepository->findNull(intval($request->input('amount_currency_id_bank_balance')));
 
-        if (null !== $currency->id) {
+        if (null !== $currency) {
             // store currency preference:
             Preferences::set('currencyPreference', $currency->code);
             Preferences::mark();
         }
+
+        // set default optional fields:
+        $visibleFields = [
+            'interest_date'      => true,
+            'book_date'          => false,
+            'process_date'       => false,
+            'due_date'           => false,
+            'payment_date'       => false,
+            'invoice_date'       => false,
+            'internal_reference' => false,
+            'notes'              => true,
+            'attachments'        => true,
+        ];
+        Preferences::set('transaction_journal_optional_fields', $visibleFields);
 
         Session::flash('success', strval(trans('firefly.stored_new_accounts_new_user')));
         Preferences::mark();
@@ -112,6 +126,7 @@ class NewUserController extends Controller
             'iban'               => null,
             'accountType'        => 'asset',
             'virtualBalance'     => 0,
+            'account_type_id'    => null,
             'active'             => true,
             'accountRole'        => 'defaultAsset',
             'openingBalance'     => $request->input('bank_balance'),
@@ -136,6 +151,7 @@ class NewUserController extends Controller
             'name'               => $request->get('bank_name') . ' savings account',
             'iban'               => null,
             'accountType'        => 'asset',
+            'account_type_id'    => null,
             'virtualBalance'     => 0,
             'active'             => true,
             'accountRole'        => 'savingAsset',

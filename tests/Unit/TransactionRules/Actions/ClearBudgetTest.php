@@ -39,7 +39,7 @@ class ClearBudgetTest extends TestCase
     public function testAct()
     {
         // associate budget with journal:
-        $journal = TransactionJournal::find(5);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $budget  = $journal->user->budgets()->first();
         $journal->budgets()->save($budget);
         $this->assertGreaterThan(0, $journal->budgets()->count());

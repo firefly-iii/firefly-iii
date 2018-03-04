@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 use Log;
 use Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -39,15 +40,25 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, HasApiTokens;
 
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'blocked'    => 'boolean',
+        ];
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = ['email', 'password', 'blocked', 'blocked_code'];
-
     /**
      * The attributes excluded from the model's JSON form.
      *

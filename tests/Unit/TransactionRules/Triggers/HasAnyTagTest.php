@@ -36,7 +36,7 @@ class HasAnyTagTest extends TestCase
      */
     public function testTriggered()
     {
-        $journal = TransactionJournal::find(25);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $tag     = $journal->user->tags()->first();
         $journal->tags()->detach();
         $journal->tags()->save($tag);
@@ -52,7 +52,7 @@ class HasAnyTagTest extends TestCase
      */
     public function testTriggeredNot()
     {
-        $journal = TransactionJournal::find(24);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->tags()->detach();
         $this->assertEquals(0, $journal->tags()->count());
         $trigger = HasAnyTag::makeFromStrings('', false);

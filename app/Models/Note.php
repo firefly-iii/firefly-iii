@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use League\CommonMark\CommonMarkConverter;
 
 /**
  * Class Note.
@@ -42,18 +41,7 @@ class Note extends Model
             'deleted_at' => 'datetime',
         ];
     /** @var array */
-    protected $fillable = ['title', 'text'];
-
-    /**
-     * @codeCoverageIgnore
-     * @return string
-     */
-    public function getMarkdownAttribute(): string
-    {
-        $converter = new CommonMarkConverter;
-
-        return $converter->convertToHtml($this->text);
-    }
+    protected $fillable = ['title', 'text', 'noteable_id', 'noteable_type'];
 
     /**
      * @codeCoverageIgnore

@@ -139,7 +139,7 @@ class AccountController extends Controller
         $type     = $account->accountType->type;
         $typeName = config('firefly.shortNamesByFullName.' . $type);
         $name     = $account->name;
-        $moveTo   = $this->repository->find(intval($request->get('move_account_before_delete')));
+        $moveTo   = $this->repository->findNull(intval($request->get('move_account_before_delete')));
 
         $this->repository->destroy($account, $moveTo);
 
@@ -162,7 +162,7 @@ class AccountController extends Controller
      *
      * @throws FireflyException
      */
-    public function edit(Request $request, Account $account)
+    public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
     {
         $what               = config('firefly.shortNamesByFullName')[$account->accountType->type];
         $subTitle           = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
@@ -183,11 +183,9 @@ class AccountController extends Controller
         // pre fill some useful values.
 
         // the opening balance is tricky:
-        $openingBalanceAmount = $account->getOpeningBalanceAmount();
-        $openingBalanceAmount = '0' === $account->getOpeningBalanceAmount() ? '' : $openingBalanceAmount;
-        $openingBalanceDate   = $account->getOpeningBalanceDate();
-        $openingBalanceDate   = 1900 === $openingBalanceDate->year ? null : $openingBalanceDate->format('Y-m-d');
-        $currency             = $this->currencyRepos->find(intval($account->getMeta('currency_id')));
+        $openingBalanceAmount = strval($repository->getOpeningBalanceAmount($account));
+        $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
+        $currency             = $this->currencyRepos->findNull(intval($account->getMeta('currency_id')));
 
         $preFilled = [
             'accountNumber'        => $account->getMeta('accountNumber'),
@@ -200,6 +198,7 @@ class AccountController extends Controller
             'virtualBalance'       => $account->virtual_balance,
             'currency_id'          => $currency->id,
             'notes'                => '',
+            'active'               => $account->active,
         ];
         /** @var Note $note */
         $note = $this->repository->getNote($account);
@@ -285,68 +284,46 @@ class AccountController extends Controller
      *
      * @throws FireflyException
      */
-    public function show(Request $request, Account $account, string $moment = '')
+    public function show(Request $request, Account $account, Carbon $start = null, Carbon $end = null)
     {
         if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
             return $this->redirectToOriginalAccount($account);
         }
-        $range        = Preferences::get('viewRange', '1M')->data;
+        $range = Preferences::get('viewRange', '1M')->data;
+        if (null === $start) {
+            $start = session('start');
+        }
+        if (null === $end) {
+            $end = app('navigation')->endOfPeriod($start, $range);
+        }
+        if ($end < $start) {
+            throw new FireflyException('End is after start!'); // @codeCoverageIgnore
+        }
+
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $page         = intval($request->get('page'));
         $pageSize     = intval(Preferences::get('listPageSize', 50)->data);
-        $chartUri     = route('chart.account.single', [$account->id]);
-        $start        = null;
-        $end          = null;
-        $periods      = new Collection;
         $currencyId   = intval($account->getMeta('currency_id'));
-        $currency     = $this->currencyRepos->find($currencyId);
+        $currency     = $this->currencyRepos->findNull($currencyId);
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
-
-        // prep for "all" view.
-        if ('all' === $moment) {
-            $subTitle = trans('firefly.all_journals_for_account', ['name' => $account->name]);
-            $chartUri = route('chart.account.all', [$account->id]);
-            $first    = $this->journalRepos->first();
-            $start    = $first->date ?? new Carbon;
-            $end      = new Carbon;
-        }
-
-        // prep for "specific date" view.
-        if (strlen($moment) > 0 && 'all' !== $moment) {
-            $start    = new Carbon($moment);
-            $start    = app('navigation')->startOfPeriod($start, $range);
-            $end      = app('navigation')->endOfPeriod($start, $range);
-            $fStart   = $start->formatLocalized($this->monthAndDayFormat);
-            $fEnd     = $end->formatLocalized($this->monthAndDayFormat);
-            $subTitle = trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
-            $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d')]);
-            $periods  = $this->getPeriodOverview($account, $start);
-        }
-
-        // prep for current period view
-        if (0 === strlen($moment)) {
-            $start    = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
-            $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
-            $fStart   = $start->formatLocalized($this->monthAndDayFormat);
-            $fEnd     = $end->formatLocalized($this->monthAndDayFormat);
-            $subTitle = trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
-            $periods  = $this->getPeriodOverview($account, null);
-        }
-
-        // grab journals:
+        $fStart    = $start->formatLocalized($this->monthAndDayFormat);
+        $fEnd      = $end->formatLocalized($this->monthAndDayFormat);
+        $subTitle  = trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
+        $chartUri  = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+        $periods   = $this->getPeriodOverview($account, $end);
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
         if (null !== $start) {
             $collector->setRange($start, $end);
         }
         $transactions = $collector->getPaginatedJournals();
-        $transactions->setPath(route('accounts.show', [$account->id, $moment]));
+        $transactions->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
 
         return view(
             'accounts.show',
-            compact('account', 'currency', 'moment', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end', 'chartUri')
+            compact('account', 'currency', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end', 'chartUri')
         );
     }
 
@@ -439,6 +416,9 @@ class AccountController extends Controller
         $range = Preferences::get('viewRange', '1M')->data;
         $start = $this->repository->oldestJournalDate($account);
         $end   = $date ?? new Carbon;
+        if ($end < $start) {
+            list($start, $end) = [$end, $start]; // @codeCoverageIgnore
+        }
 
         // properties for cache
         $cache = new CacheProperties;
@@ -449,11 +429,8 @@ class AccountController extends Controller
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-
-
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
         $entries = new Collection;
-
         // loop dates
         foreach ($dates as $date) {
 
@@ -471,15 +448,15 @@ class AccountController extends Controller
                       ->withOpposingAccount();
             $spent = strval($collector->getJournals()->sum('transaction_amount'));
 
-            $dateStr  = $date['end']->format('Y-m-d');
             $dateName = app('navigation')->periodShow($date['start'], $date['period']);
             $entries->push(
                 [
-                    'string' => $dateStr,
                     'name'   => $dateName,
                     'spent'  => $spent,
                     'earned' => $earned,
-                    'date'   => clone $date['end'],]
+                    'start'  => $date['start']->format('Y-m-d'),
+                    'end'    => $date['end']->format('Y-m-d'),
+                ]
             );
         }
 

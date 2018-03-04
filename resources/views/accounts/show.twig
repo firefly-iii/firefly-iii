@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, account, moment, start, end) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, account, start, end) }}
 {% endblock %}
 
 {% block content %}
@@ -10,11 +10,7 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        {% if moment == 'all' %}
-                            {{ trans('firefly.chart_all_journals_for_account', {name:account.name}) }}
-                        {% else %}
-                            {{ trans('firefly.chart_account_in_period', {name: account.name, start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat) }) }}
-                        {% endif %}
+                        {{ trans('firefly.chart_account_in_period', {name: account.name, start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat) }) }}
                     </h3>
                     <div class="box-tools pull-right">
                         <div class="btn-group">
@@ -83,14 +79,6 @@
         </div>
     {% endif %}
 
-    {% if periods.count > 0 %}
-        <div class="row">
-            <div class="col-lg-offset-10 col-lg-2 col-md-offset-8 col-md-4 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('accounts.show',[account.id, 'all']) }}">{{ 'showEverything'|_ }}</a></p>
-            </div>
-        </div>
-    {% endif %}
-
     <div class="row">
         <div class="{% if periods.count > 0 %}col-lg-10 col-md-8 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
             <div class="box">
@@ -104,21 +92,12 @@
                         {% set showReconcile = false %}
                     {% endif %}
                     {% include 'list.journals' with {sorting:true, hideBills:true, hideBudgets: true, hideCategories: true, showReconcile: showReconcile} %}
-                    {% if periods.count > 0 %}
-                        <p>
-                            <i class="fa fa-calendar"></i>
-                            <a href="{{ route('accounts.show', [account.id, 'all']) }}">
-                                {{ 'show_all_no_filter'|_ }}
-                            </a>
-                        </p>
-                    {% else %}
-                        <p>
-                            <i class="fa fa-calendar"></i>
-                            <a href="{{ route('accounts.show', [account.id]) }}">
-                                {{ 'show_the_current_period_and_overview'|_ }}
-                            </a>
-                        </p>
-                    {% endif %}
+                    <p>
+                        <i class="fa fa-calendar"></i>
+                        <a href="{{ route('accounts.show', [account.id]) }}">
+                            {{ 'show_the_current_period_and_overview'|_ }}
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -128,7 +107,7 @@
                     {% if (period.spent != 0 or period.earned != 0) %}
                         <div class="box {% if period.date == end %}box-solid box-primary{% endif %}">
                             <div class="box-header with-border">
-                                <h3 class="box-title"><a href="{{ route('accounts.show',[account.id,period.string]) }}">{{ period.name }}</a>
+                                <h3 class="box-title"><a href="{{ route('accounts.show',[account.id,period.start,period.end]) }}">{{ period.name }}</a>
                                 </h3>
                             </div>
                             <div class="box-body no-padding">
@@ -150,7 +129,6 @@
                         </div>
                     {% endif %}
                 {% endfor %}
-                <p class="small text-center"><a href="{{ route('accounts.show',[account.id, 'all']) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         {% endif %}
     </div>
@@ -166,22 +144,12 @@
         // uri's for charts:
         var chartUri = '{{ chartUri }}';
         {% if start and end %}
-        var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
-        var expenseCategoryUri = '{{ route('chart.account.expense-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
-        var expenseBudgetUri = '{{ route('chart.account.expense-budget', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
-        {% else %}
-        var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, 'all', 'all']) }}';
-        var expenseCategoryUri = '{{ route('chart.account.expense-category', [account.id, 'all', 'all']) }}';
-        var expenseBudgetUri = '{{ route('chart.account.expense-budget', [account.id, 'all', 'all']) }}';
+            var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+            var expenseCategoryUri = '{{ route('chart.account.expense-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+            var expenseBudgetUri = '{{ route('chart.account.expense-budget', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
         {% endif %}
 
     </script>
-
-    <script type="text/javascript">
-        {# overrule currency symbol for charts: #}
-
-    </script>
-
     <script type="text/javascript" src="js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="js/ff/charts.defaults.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="js/ff/charts.js?v={{ FF_VERSION }}"></script>

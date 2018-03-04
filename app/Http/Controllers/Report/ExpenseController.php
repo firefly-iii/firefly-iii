@@ -313,7 +313,7 @@ class ExpenseController extends Controller
             $collection->push($expenseAccount);
 
             $revenue = $this->accountRepository->findByName($expenseAccount->name, [AccountType::REVENUE]);
-            if (!is_null($revenue->id)) {
+            if (!is_null($revenue)) {
                 $collection->push($revenue);
             }
             $combined[$expenseAccount->name] = $collection;

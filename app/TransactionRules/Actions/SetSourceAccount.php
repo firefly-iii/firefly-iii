@@ -116,7 +116,7 @@ class SetSourceAccount implements ActionInterface
     {
         $account = $this->repository->findByName($this->action->action_value, [AccountType::DEFAULT, AccountType::ASSET]);
 
-        if (null === $account->id) {
+        if (null === $account) {
             Log::debug(sprintf('There is NO asset account called "%s".', $this->action->action_value));
 
             return false;
@@ -133,14 +133,15 @@ class SetSourceAccount implements ActionInterface
     private function findRevenueAccount()
     {
         $account = $this->repository->findByName($this->action->action_value, [AccountType::REVENUE]);
-        if (null === $account->id) {
+        if (null === $account) {
             // create new revenue account with this name:
             $data    = [
-                'name'           => $this->action->action_value,
-                'accountType'    => 'revenue',
-                'virtualBalance' => 0,
-                'active'         => true,
-                'iban'           => null,
+                'name'            => $this->action->action_value,
+                'accountType'     => 'revenue',
+                'account_type_id' => null,
+                'virtualBalance'  => 0,
+                'active'          => true,
+                'iban'            => null,
             ];
             $account = $this->repository->store($data);
         }

@@ -117,7 +117,7 @@ class SetDestinationAccount implements ActionInterface
     {
         $account = $this->repository->findByName($this->action->action_value, [AccountType::DEFAULT, AccountType::ASSET]);
 
-        if (null === $account->id) {
+        if (null === $account) {
             Log::debug(sprintf('There is NO asset account called "%s".', $this->action->action_value));
 
             return false;
@@ -134,14 +134,14 @@ class SetDestinationAccount implements ActionInterface
     private function findExpenseAccount()
     {
         $account = $this->repository->findByName($this->action->action_value, [AccountType::EXPENSE]);
-        if (null === $account->id) {
-            // create new revenue account with this name:
+        if (null === $account) {
             $data    = [
-                'name'           => $this->action->action_value,
-                'accountType'    => 'expense',
-                'virtualBalance' => 0,
-                'active'         => true,
-                'iban'           => null,
+                'name'            => $this->action->action_value,
+                'accountType'     => 'expense',
+                'account_type_id' => null,
+                'virtualBalance'  => 0,
+                'active'          => true,
+                'iban'            => null,
             ];
             $account = $this->repository->store($data);
         }

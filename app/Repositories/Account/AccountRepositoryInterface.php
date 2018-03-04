@@ -48,15 +48,16 @@ interface AccountRepositoryInterface
      * Moved here from account CRUD.
      *
      * @param Account $account
-     * @param Account $moveTo
+     * @param Account|null $moveTo
      *
      * @return bool
      */
-    public function destroy(Account $account, Account $moveTo): bool;
+    public function destroy(Account $account, ?Account $moveTo): bool;
 
     /**
      * @param int $accountId
      *
+     * @deprecated
      * @return Account
      */
     public function find(int $accountId): Account;
@@ -81,9 +82,16 @@ interface AccountRepositoryInterface
      * @param string $name
      * @param array  $types
      *
-     * @return Account
+     * @return Account|null
      */
-    public function findByName(string $name, array $types): Account;
+    public function findByName(string $name, array $types): ?Account;
+
+    /**
+     * @param int $accountId
+     *
+     * @return Account|null
+     */
+    public function findNull(int $accountId): ?Account;
 
     /**
      * Return account type by string.
@@ -126,6 +134,25 @@ interface AccountRepositoryInterface
      * @return Note|null
      */
     public function getNote(Account $account): ?Note;
+
+    /**
+     * Returns the amount of the opening balance for this account.
+     *
+     * @param Account $account
+     *
+     * @return string
+     */
+    public function getOpeningBalanceAmount(Account $account): ?string;
+
+
+    /**
+     * Return date of opening balance as string or null.
+     *
+     * @param Account $account
+     *
+     * @return null|string
+     */
+    public function getOpeningBalanceDate(Account $account): ?string;
 
     /**
      * Find or create the opposing reconciliation account.

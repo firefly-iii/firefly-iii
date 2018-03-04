@@ -17,11 +17,14 @@ featuretestclass=''
 unitflag=''
 unittestclass=''
 
+apiflag=''
+apitestclass=''
+
 verbalflag=''
 testsuite=''
 configfile='phpunit.xml';
 
-while getopts 'vcrtf:u:s:' flag; do
+while getopts 'vcratf:u:s:' flag; do
   case "${flag}" in
     r)
         resetTestFlag='true'
@@ -47,6 +50,11 @@ while getopts 'vcrtf:u:s:' flag; do
         unittestclass=./tests/Unit/$OPTARG
         echo "Will only run Unit test $OPTARG"
     ;;
+    a)
+        apiflag='true'
+        apitestclass=./tests/Api/$OPTARG
+        echo "Will only run Api test $OPTARG"
+    ;;
     s)
         testsuite="--testsuite $OPTARG"
         echo "Will only run test suite '$OPTARG'"
@@ -55,12 +63,11 @@ while getopts 'vcrtf:u:s:' flag; do
   esac
 done
 
-if [[ $coverageflag == "true" && ($featureflag == "true" || $unitflag == "true") ]]
+if [[ $coverageflag == "true" && ($featureflag == "true" || $unitflag == "true" || $apiflag == "true") ]]
 then
     echo "Use config file specific.xml"
     configfile='phpunit.coverage.specific.xml'
 fi
-
 
 # backup current config (if it exists):
 if [ -f $ORIGINALENV ]; then
@@ -110,10 +117,10 @@ cp $DATABASECOPY $DATABASE
 
 echo "clear caches and what-not.."
 php artisan cache:clear
-php artisan config:clear
-php artisan route:clear
+# php artisan config:clear
+# php artisan route:clear
 # php artisan twig:clean
-php artisan view:clear
+# php artisan view:clear
 
 # run PHPUnit
 if [[ $testflag == "" ]]
@@ -125,15 +132,13 @@ else
     if [[ $coverageflag == "" ]]
     then
         echo "Must run PHPUnit without coverage:"
-
-        echo "phpunit $verbalflag --configuration $configfile $featuretestclass $unittestclass $testsuite"
-        phpunit $verbalflag  --configuration $configfile $featuretestclass $unittestclass $testsuite
     else
         echo "Must run PHPUnit with coverage"
-        echo "phpunit $verbalflag --configuration $configfile $featuretestclass $unittestclass $testsuite"
-        phpunit $verbalflag --configuration $configfile $featuretestclass $unittestclass $testsuite
     fi
 fi
+
+echo "./vendor/bin/phpunit $verbalflag --configuration $configfile $featuretestclass $unittestclass $apitestclass $testsuite"
+./vendor/bin/phpunit $verbalflag --configuration $configfile $featuretestclass $unittestclass $apitestclass $testsuite
 
 # restore current config:
 if [ -f $BACKUPENV ]; then

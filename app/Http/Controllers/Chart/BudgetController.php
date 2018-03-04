@@ -83,6 +83,7 @@ class BudgetController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.budget.budget');
+        $cache->addProperty($budget->id);
 
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
@@ -149,6 +150,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.budget.budget.limit');
         $cache->addProperty($budgetLimit->id);
+        $cache->addProperty($budget->id);
 
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore

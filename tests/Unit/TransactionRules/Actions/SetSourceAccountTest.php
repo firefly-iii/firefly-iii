@@ -28,6 +28,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\TransactionRules\Actions\SetSourceAccount;
 use Tests\TestCase;
 
@@ -39,14 +40,21 @@ class SetSourceAccountTest extends TestCase
     /**
      * Give deposit existing revenue account.
      *
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::act()
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::findRevenueAccount()
+     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount
      */
     public function testActDepositExistingUpdated()
     {
-        $type        = TransactionType::whereType(TransactionType::DEPOSIT)->first();
-        $journal     = TransactionJournal::where('transaction_type_id', $type->id)->first();
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+
+        $type = TransactionType::whereType(TransactionType::DEPOSIT)->first();
+
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = $this->user()->transactionJournals()->where('transaction_type_id', $type->id)->inRandomOrder()->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
+
         $sourceTr    = $journal->transactions()->where('amount', '<', 0)->first();
         $source      = $sourceTr->account;
         $user        = $journal->user;
@@ -54,6 +62,10 @@ class SetSourceAccountTest extends TestCase
         $account     = $user->accounts()->where('account_type_id', $accountType->id)->where('id', '!=', $source->id)->first();
         $this->assertNotEquals($source->id, $account->id);
 
+        // find account? Return account:
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('findByName')->andReturn($account);
+
         // fire the action:
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $account->name;
@@ -70,44 +82,50 @@ class SetSourceAccountTest extends TestCase
     }
 
     /**
-     * Give deposit new revenue account.
+     * Give deposit new revenueaccount.
      *
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::act()
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::findRevenueAccount
+     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount
      */
-    public function testActDepositNewUpdated()
+    public function testActDepositRevenue()
     {
-        $type     = TransactionType::whereType(TransactionType::DEPOSIT)->first();
-        $journal  = TransactionJournal::where('transaction_type_id', $type->id)->first();
-        $sourceTr = $journal->transactions()->where('amount', '<', 0)->first();
-        $source   = $sourceTr->account;
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $type         = TransactionType::whereType(TransactionType::DEPOSIT)->first();
+        $account      = $this->user()->accounts()->inRandomOrder()->where('account_type_id', 5)->first();
+
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = $this->user()->transactionJournals()->where('transaction_type_id', $type->id)->inRandomOrder()->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
+
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('findByName')->andReturn(null);
+        $accountRepos->shouldReceive('store')->once()->andReturn($account);
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Some new revenue ' . rand(1, 1000);
+        $ruleAction->action_value = 'Some new revenue #' . rand(1, 1000);
         $action                   = new SetSourceAccount($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);
-
-        // test journal for new account
-        $journal   = TransactionJournal::find($journal->id);
-        $sourceTr  = $journal->transactions()->where('amount', '<', 0)->first();
-        $newSource = $sourceTr->account;
-        $this->assertNotEquals($source->id, $newSource->id);
     }
 
     /**
      * Give withdrawal existing asset account.
      *
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::act()
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::findAssetAccount()
+     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount
      */
     public function testActWithdrawalExistingUpdated()
     {
-        $type        = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
-        $journal     = TransactionJournal::where('transaction_type_id', $type->id)->first();
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $type         = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
+
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = $this->user()->transactionJournals()->where('transaction_type_id', $type->id)->inRandomOrder()->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
+
         $sourceTr    = $journal->transactions()->where('amount', '<', 0)->first();
         $source      = $sourceTr->account;
         $user        = $journal->user;
@@ -115,6 +133,10 @@ class SetSourceAccountTest extends TestCase
         $account     = $user->accounts()->where('account_type_id', $accountType->id)->where('id', '!=', $source->id)->first();
         $this->assertNotEquals($source->id, $account->id);
 
+
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('findByName')->andReturn($account);
+
         // fire the action:
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $account->name;
@@ -131,45 +153,47 @@ class SetSourceAccountTest extends TestCase
     }
 
     /**
-     * Give withdrawal new asset account (will fail)
+     * Give withdrawal not existing asset account.
      *
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::act()
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::findAssetAccount()
+     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount
      */
-    public function testActWithdrawalNew()
+    public function testActWithdrawalNotExisting()
     {
-        $type     = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
-        $journal  = TransactionJournal::where('transaction_type_id', $type->id)->first();
-        $sourceTr = $journal->transactions()->where('amount', '<', 0)->first();
-        $source   = $sourceTr->account;
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $type         = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
+
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = $this->user()->transactionJournals()->where('transaction_type_id', $type->id)->inRandomOrder()->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
+
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('findByName')->andReturn(null);
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Some new asset ' . rand(1, 1000);
+        $ruleAction->action_value = 'Some new account #' . rand(1, 1000);
         $action                   = new SetSourceAccount($ruleAction);
         $result                   = $action->act($journal);
         $this->assertFalse($result);
-
-        // test journal for still having old account
-        $journal   = TransactionJournal::find($journal->id);
-        $sourceTr  = $journal->transactions()->where('amount', '<', 0)->first();
-        $newSource = $sourceTr->account;
-        $this->assertEquals($source->id, $newSource->id);
     }
 
     /**
      * Test this on a split journal.
      *
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::act()
+     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount
      */
     public function testSplitJournal()
     {
-        $transaction = Transaction::orderBy('count', 'DESC')->groupBy('transaction_journal_id')
-                                  ->get(['transaction_journal_id', DB::raw('COUNT(transaction_journal_id) as count')])
-                                  ->first();
-        $journal     = TransactionJournal::find($transaction->transaction_journal_id);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $transaction  = Transaction::orderBy('count', 'DESC')->groupBy('transaction_journal_id')
+                                   ->get(['transaction_journal_id', DB::raw('COUNT(transaction_journal_id) as count')])
+                                   ->first();
+        $journal      = TransactionJournal::find($transaction->transaction_journal_id);
+
+        // mock
+        $accountRepos->shouldReceive('setUser');
         // fire the action:
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = 'Some new asset ' . rand(1, 1000);

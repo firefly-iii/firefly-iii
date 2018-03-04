@@ -36,7 +36,7 @@ class TransactionTypeTest extends TestCase
      */
     public function testTriggered()
     {
-        $journal = TransactionJournal::find(69);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $type    = $journal->transactionType->type;
         $trigger = TransactionType::makeFromStrings($type, false);
         $result  = $trigger->triggered($journal);
@@ -48,7 +48,7 @@ class TransactionTypeTest extends TestCase
      */
     public function testTriggeredFalse()
     {
-        $journal = TransactionJournal::find(70);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $trigger = TransactionType::makeFromStrings('NonExisting', false);
         $result  = $trigger->triggered($journal);
         $this->assertFalse($result);

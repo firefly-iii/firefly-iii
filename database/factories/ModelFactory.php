@@ -100,7 +100,6 @@ $factory->define(
             'user_id'                 => 1,
             'transaction_type_id'     => 1,
             'bill_id'                 => null,
-            // TODO update this transaction currency reference.
             'transaction_currency_id' => 1,
             'description'             => $faker->words(3, true),
             'date'                    => '2017-01-01',
@@ -119,7 +118,8 @@ $factory->define(
     FireflyIII\Models\Bill::class,
     function (Faker\Generator $faker) {
         return [
-            'id'              => $faker->numberBetween(1, 10),
+            'created_at'      => new Carbon,
+            'updated_at'      => new Carbon,
             'user_id'         => 1,
             'name'            => $faker->words(3, true),
             'match'           => $faker->words(3, true),
@@ -128,9 +128,7 @@ $factory->define(
             'date'            => '2017-01-01',
             'repeat_freq'     => 'monthly',
             'skip'            => 0,
-            'automatch'       => 1,
-            'name_encrypted'  => 0,
-            'match_encrypted' => 0,
+            'automatch'       => 1
         ];
     }
 );
@@ -227,6 +225,9 @@ $factory->define(
     function (Faker\Generator $faker) {
         return [
             'id'              => $faker->unique()->numberBetween(1000, 10000),
+            'user_id'         => 1,
+            'created_at'      => new Carbon,
+            'updated_at'      => new Carbon,
             'name'            => $faker->words(3, true),
             'account_type_id' => 1,
             'active'          => true,

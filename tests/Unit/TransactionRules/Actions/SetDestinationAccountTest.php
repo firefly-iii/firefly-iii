@@ -28,6 +28,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\TransactionRules\Actions\SetDestinationAccount;
 use Tests\TestCase;
 
@@ -41,14 +42,19 @@ class SetDestinationAccountTest extends TestCase
     /**
      * Give deposit existing asset account.
      *
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::act()
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::findAssetAccount()
+     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount
      */
     public function testActDepositExisting()
     {
-        $type          = TransactionType::whereType(TransactionType::DEPOSIT)->first();
-        $journal       = TransactionJournal::where('transaction_type_id', $type->id)->first();
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $type         = TransactionType::whereType(TransactionType::DEPOSIT)->first();
+
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = $this->user()->transactionJournals()->where('transaction_type_id', $type->id)->inRandomOrder()->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
+
         $destinationTr = $journal->transactions()->where('amount', '>', 0)->first();
         $destination   = $destinationTr->account;
         $user          = $journal->user;
@@ -56,6 +62,10 @@ class SetDestinationAccountTest extends TestCase
         $account       = $user->accounts()->where('account_type_id', $accountType->id)->where('id', '!=', $destination->id)->first();
         $this->assertNotEquals($destination->id, $account->id);
 
+        // find account? Return account:
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('findByName')->andReturn($account);
+
         // fire the action:
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $account->name;
@@ -72,44 +82,82 @@ class SetDestinationAccountTest extends TestCase
     }
 
     /**
-     * Give deposit new asset account (will fail)
+     * Give deposit not existing asset account.
      *
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::act()
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::findAssetAccount()
+     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount
      */
-    public function testActDepositNew()
+    public function testActDepositNotExisting()
     {
-        $type          = TransactionType::whereType(TransactionType::DEPOSIT)->first();
-        $journal       = TransactionJournal::where('transaction_type_id', $type->id)->first();
-        $destinationTr = $journal->transactions()->where('amount', '>', 0)->first();
-        $destination   = $destinationTr->account;
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $type         = TransactionType::whereType(TransactionType::DEPOSIT)->first();
+
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = $this->user()->transactionJournals()->where('transaction_type_id', $type->id)->inRandomOrder()->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
+
+        // find account? Return account:
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('findByName')->andReturn(null);
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Some new asset ' . rand(1, 1000);
+        $ruleAction->action_value = 'Not existing asset account #' . rand(1, 1000);
         $action                   = new SetDestinationAccount($ruleAction);
         $result                   = $action->act($journal);
         $this->assertFalse($result);
+    }
 
-        // test journal for still having old account
-        $journal        = TransactionJournal::find($journal->id);
-        $destinationTr  = $journal->transactions()->where('amount', '>', 0)->first();
-        $newDestination = $destinationTr->account;
-        $this->assertEquals($destination->id, $newDestination->id);
+    /**
+     * Give withdrawal not existing expense account.
+     *
+     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount
+     */
+    public function testActWithDrawalNotExisting()
+    {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $type         = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
+        $account      = $this->user()->accounts()->inRandomOrder()->where('account_type_id', 4)->first();
+
+
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = $this->user()->transactionJournals()->where('transaction_type_id', $type->id)->inRandomOrder()->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
+
+        // find account? Return account:
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('findByName')->andReturn(null);
+        $accountRepos->shouldReceive('store')->once()->andReturn($account);
+
+        // fire the action:
+        $ruleAction               = new RuleAction;
+        $ruleAction->action_value = 'Not existing expense account #' . rand(1, 1000);
+        $action                   = new SetDestinationAccount($ruleAction);
+        $result                   = $action->act($journal);
+
+        $this->assertTrue($result);
     }
 
     /**
      * Give withdrawal existing expense account.
      *
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::act()
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::findExpenseAccount
+     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount
      */
     public function testActWithdrawalExisting()
     {
-        $type          = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
-        $journal       = TransactionJournal::where('transaction_type_id', $type->id)->first();
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $type         = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
+
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = $this->user()->transactionJournals()->where('transaction_type_id', $type->id)->inRandomOrder()->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
+
+
         $destinationTr = $journal->transactions()->where('amount', '>', 0)->first();
         $destination   = $destinationTr->account;
         $user          = $journal->user;
@@ -117,6 +165,10 @@ class SetDestinationAccountTest extends TestCase
         $account       = $user->accounts()->where('account_type_id', $accountType->id)->where('id', '!=', $destination->id)->first();
         $this->assertNotEquals($destination->id, $account->id);
 
+        // find account? Return account:
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('findByName')->andReturn($account);
+
         // fire the action:
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $account->name;
@@ -133,45 +185,21 @@ class SetDestinationAccountTest extends TestCase
     }
 
     /**
-     * Give withdrawal new expense account.
-     *
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::act()
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::findExpenseAccount
-     */
-    public function testActWithdrawalNew()
-    {
-        $type          = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
-        $journal       = TransactionJournal::where('transaction_type_id', $type->id)->first();
-        $destinationTr = $journal->transactions()->where('amount', '>', 0)->first();
-        $destination   = $destinationTr->account;
-
-        // fire the action:
-        $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Some new expense ' . rand(1, 1000);
-        $action                   = new SetDestinationAccount($ruleAction);
-        $result                   = $action->act($journal);
-        $this->assertTrue($result);
-
-        // test journal for new account
-        $journal        = TransactionJournal::find($journal->id);
-        $destinationTr  = $journal->transactions()->where('amount', '>', 0)->first();
-        $newDestination = $destinationTr->account;
-        $this->assertNotEquals($destination->id, $newDestination->id);
-    }
-
-    /**
      * Test this on a split journal.
      *
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::act()
+     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount
      */
     public function testSplitJournal()
     {
-        $transaction = Transaction::orderBy('count', 'DESC')->groupBy('transaction_journal_id')
-                                  ->get(['transaction_journal_id', DB::raw('COUNT(transaction_journal_id) as count')])
-                                  ->first();
-        $journal     = TransactionJournal::find($transaction->transaction_journal_id);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $transaction  = Transaction::orderBy('count', 'DESC')->groupBy('transaction_journal_id')
+                                   ->get(['transaction_journal_id', DB::raw('COUNT(transaction_journal_id) as count')])
+                                   ->first();
+        $journal      = TransactionJournal::find($transaction->transaction_journal_id);
+
+        // mock
+        $accountRepos->shouldReceive('setUser');
+
         // fire the action:
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = 'Some new asset ' . rand(1, 1000);

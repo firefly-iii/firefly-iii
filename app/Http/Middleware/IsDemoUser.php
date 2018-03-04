@@ -34,26 +34,28 @@ use Session;
 class IsDemoUser
 {
     /**
-     * Handle an incoming request. May not be a limited user (ie. Sandstorm env. or demo user).
+     * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
-     * @param string|null              $guard
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure                 $next
+     * @param  string[]                 ...$guards
      *
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $guard = null)
+    public function handle(Request $request, Closure $next)
     {
-        if (Auth::guard($guard)->guest()) {
-            // don't care when not logged in, usual stuff applies:
+        /** @var User $user */
+        $user = $request->user();
+        if (is_null($user)) {
             return $next($request);
         }
-        /** @var User $user */
-        $user = auth()->user();
+
         if ($user->hasRole('demo')) {
             Session::flash('info', strval(trans('firefly.not_available_demo_user')));
 
-            return redirect($request->session()->previousUrl());
+            redirect($request->session()->previousUrl());
+
+            return $next($request);
         }
 
         return $next($request);

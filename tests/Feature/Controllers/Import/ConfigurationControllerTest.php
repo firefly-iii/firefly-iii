@@ -88,6 +88,7 @@ class ConfigurationControllerTest extends TestCase
         $job          = $this->user()->importJobs()->where('key', 'configuring')->first();
         $data         = ['some' => 'config'];
         $configurator = $this->mock(FileConfigurator::class);
+        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $configurator->shouldReceive('setJob')->once();
         $configurator->shouldReceive('isJobConfigured')->once()->andReturn(false);
         $configurator->shouldReceive('configureJob')->once()->withArgs([$data]);
@@ -108,6 +109,7 @@ class ConfigurationControllerTest extends TestCase
         $job          = $this->user()->importJobs()->where('key', 'configuring')->first();
         $data         = ['some' => 'config'];
         $configurator = $this->mock(FileConfigurator::class);
+        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $configurator->shouldReceive('setJob')->once();
         $configurator->shouldReceive('isJobConfigured')->once()->andReturn(true);
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * Authenticate.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,50 +18,94 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Session;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Contracts\Auth\Factory as Auth;
 
 /**
- * Class Authenticate.
+ * Class Authenticate
  */
 class Authenticate
 {
     /**
+     * The authentication factory instance.
+     *
+     * @var \Illuminate\Contracts\Auth\Factory
+     */
+    protected $auth;
+
+    /**
+     * Create a new middleware instance.
+     *
+     * @param  \Illuminate\Contracts\Auth\Factory $auth
+     *
+     * @return void
+     */
+    public function __construct(Auth $auth)
+    {
+        $this->auth = $auth;
+    }
+
+    /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
-     * @param string|null              $guard
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure                 $next
+     * @param  string[]                 ...$guards
      *
      * @return mixed
+     *
+     * @throws \Illuminate\Auth\AuthenticationException
      */
-    public function handle(Request $request, Closure $next, $guard = null)
+    public function handle($request, Closure $next, ...$guards)
     {
-        if (Auth::guard($guard)->guest()) {
-            if ($request->ajax()) {
-                return response('Unauthorized.', 401);
-            }
-
-            return redirect()->guest('login');
-        }
-        if (1 === intval(auth()->user()->blocked)) {
-            $message = strval(trans('firefly.block_account_logout'));
-            if ('email_changed' === auth()->user()->blocked_code) {
-                $message = strval(trans('firefly.email_changed_logout'));
-            }
-
-            Session::flash('logoutMessage', $message);
-            Auth::guard($guard)->logout();
-
-            return redirect()->guest('login');
-        }
+        $this->authenticate($guards);
 
         return $next($request);
+    }
+
+    /**
+     * Determine if the user is logged in to any of the given guards.
+     *
+     * @param  array $guards
+     *
+     * @return void
+     *
+     * @throws \Illuminate\Auth\AuthenticationException
+     */
+    protected function authenticate(array $guards)
+    {
+        if (empty($guards)) {
+            // go for default guard:
+            if ($this->auth->check()) {
+                // do an extra check on user object.
+                $user = $this->auth->authenticate();
+                if (1 === intval($user->blocked)) {
+                    $message = strval(trans('firefly.block_account_logout'));
+                    if ('email_changed' === $user->blocked_code) {
+                        $message = strval(trans('firefly.email_changed_logout'));
+                    }
+                    app('session')->flash('logoutMessage', $message);
+                    $this->auth->logout();
+
+                    throw new AuthenticationException('Blocked account.', $guards);
+                }
+            }
+
+            return $this->auth->authenticate();
+        }
+
+        // @codeCoverageIgnoreStart
+        foreach ($guards as $guard) {
+            if ($this->auth->guard($guard)->check()) {
+                return $this->auth->shouldUse($guard);
+            }
+        }
+
+        throw new AuthenticationException('Unauthenticated.', $guards);
+        // @codeCoverageIgnoreEnd
     }
 }

@@ -263,6 +263,7 @@ class FileConfigurator implements ConfiguratorInterface
      * Shorthand method to set the extended status.
      *
      * @codeCoverageIgnore
+     *
      * @param array $extended
      */
     private function setExtendedStatus(array $extended): void

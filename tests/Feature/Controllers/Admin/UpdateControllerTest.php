@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Services\Github\Object\Release;
 use FireflyIII\Services\Github\Request\UpdateRequest;
+use Log;
 use Mockery;
 use Tests\TestCase;
 
@@ -40,6 +41,15 @@ use Tests\TestCase;
  */
 class UpdateControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug('Now in Feature/Controllers/Admin/UpdateControllerTest.');
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::index
      * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::__construct

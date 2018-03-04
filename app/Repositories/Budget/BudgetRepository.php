@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
-use DB;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\AvailableBudget;
@@ -60,19 +59,17 @@ class BudgetRepository implements BudgetRepositoryInterface
         // delete limits with amount 0:
         BudgetLimit::where('amount', 0)->delete();
 
-        // clean up:
-        $set = BudgetLimit::groupBy(['budget_id', 'start_date', 'end_date'])
-                          ->get(['budget_id', 'start_date', 'end_date', DB::raw('COUNT(*) as ct')]);
-        foreach ($set as $entry) {
-            if ($entry->ct > 1) {
-                $newest = BudgetLimit::where('start_date', $entry->start_date)->where('end_date', $entry->end_date)
-                                     ->where('budget_id', $entry->budget_id)->orderBy('updated_at', 'DESC')->first(['budget_limits.*']);
-                if (!is_null($newest)) {
-                    BudgetLimit::where('start_date', $entry->start_date)->where('end_date', $entry->end_date)
-                               ->where('budget_id', $entry->budget_id)
-                               ->where('id', '!=', $newest->id)->delete();
-                }
+        // do the clean up by hand because Sqlite can be tricky with this.
+        $budgetLimits = BudgetLimit::orderBy('created_at', 'DESC')->get(['id', 'budget_id', 'start_date', 'end_date']);
+        $count        = [];
+        /** @var BudgetLimit $budgetLimit */
+        foreach ($budgetLimits as $budgetLimit) {
+            $key = $budgetLimit->budget_id . '-' . $budgetLimit->start_date->format('Y-m-d') . $budgetLimit->end_date->format('Y-m-d');
+            if (isset($count[$key])) {
+                // delete it!
+                BudgetLimit::find($budgetLimit->id)->delete();
             }
+            $count[$key] = true;
         }
 
         return true;
@@ -194,9 +191,9 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @param string $name
      *
-     * @return Budget
+     * @return Budget|null
      */
-    public function findByName(string $name): Budget
+    public function findByName(string $name): ?Budget
     {
         $budgets = $this->user->budgets()->get(['budgets.*']);
         /** @var Budget $budget */
@@ -206,7 +203,19 @@ class BudgetRepository implements BudgetRepositoryInterface
             }
         }
 
-        return new Budget;
+        return null;
+    }
+
+    /**
+     * Find a budget or return NULL
+     *
+     * @param int $budgetId
+     *
+     * @return Budget|null
+     */
+    public function findNull(int $budgetId): ?Budget
+    {
+        return $this->user->budgets()->find($budgetId);
     }
 
     /**
@@ -489,8 +498,8 @@ class BudgetRepository implements BudgetRepositoryInterface
             $availableBudget = new AvailableBudget;
             $availableBudget->user()->associate($this->user);
             $availableBudget->transactionCurrency()->associate($currency);
-            $availableBudget->start_date = $start;
-            $availableBudget->end_date   = $end;
+            $availableBudget->start_date = $start->format('Y-m-d 00:00:00');
+            $availableBudget->end_date   = $end->format('Y-m-d 00:00:00');
         }
         $availableBudget->amount = $amount;
         $availableBudget->save();
@@ -617,25 +626,26 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): BudgetLimit
     {
+        $this->cleanupBudgets();
         // count the limits:
         $limits = $budget->budgetlimits()
-                         ->where('budget_limits.start_date', $start->format('Y-m-d'))
-                         ->where('budget_limits.end_date', $end->format('Y-m-d'))
+                         ->where('budget_limits.start_date', $start->format('Y-m-d 00:00:00'))
+                         ->where('budget_limits.end_date', $end->format('Y-m-d 00:00:00'))
                          ->get(['budget_limits.*'])->count();
         Log::debug(sprintf('Found %d budget limits.', $limits));
         // there might be a budget limit for these dates:
         /** @var BudgetLimit $limit */
         $limit = $budget->budgetlimits()
-                        ->where('budget_limits.start_date', $start->format('Y-m-d'))
-                        ->where('budget_limits.end_date', $end->format('Y-m-d'))
+                        ->where('budget_limits.start_date', $start->format('Y-m-d 00:00:00'))
+                        ->where('budget_limits.end_date', $end->format('Y-m-d 00:00:00'))
                         ->first(['budget_limits.*']);
 
         // if more than 1 limit found, delete the others:
         if ($limits > 1 && null !== $limit) {
             Log::debug(sprintf('Found more than 1, delete all except #%d', $limit->id));
             $budget->budgetlimits()
-                   ->where('budget_limits.start_date', $start->format('Y-m-d'))
-                   ->where('budget_limits.end_date', $end->format('Y-m-d'))
+                   ->where('budget_limits.start_date', $start->format('Y-m-d 00:00:00'))
+                   ->where('budget_limits.end_date', $end->format('Y-m-d 00:00:00'))
                    ->where('budget_limits.id', '!=', $limit->id)->delete();
         }
 
@@ -660,8 +670,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         // or create one and return it.
         $limit = new BudgetLimit;
         $limit->budget()->associate($budget);
-        $limit->start_date = $start;
-        $limit->end_date   = $end;
+        $limit->start_date = $start->format('Y-m-d 00:00:00');
+        $limit->end_date   = $end->format('Y-m-d 00:00:00');
         $limit->amount     = $amount;
         $limit->save();
         Log::debug(sprintf('Created new budget limit with ID #%d and amount %s', $limit->id, $amount));

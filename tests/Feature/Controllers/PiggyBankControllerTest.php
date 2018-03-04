@@ -48,9 +48,10 @@ class PiggyBankControllerTest extends TestCase
     public function testAdd()
     {
         // mock stuff
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-
+        $piggyRepos->shouldReceive('getCurrentAmount')->andReturn('0');
         $this->be($this->user());
         $response = $this->get(route('piggy-banks.add', [1]));
         $response->assertStatus(200);
@@ -62,8 +63,10 @@ class PiggyBankControllerTest extends TestCase
     public function testAddMobile()
     {
         // mock stuff
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $piggyRepos->shouldReceive('getCurrentAmount')->andReturn('0');
 
         $this->be($this->user());
         $response = $this->get(route('piggy-banks.add-money-mobile', [1]));
@@ -177,6 +180,7 @@ class PiggyBankControllerTest extends TestCase
         $two->account_id = $one->account_id;
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getPiggyBanks')->andReturn(new Collection([$one, $two]));
+        $repository->shouldReceive('getCurrentAmount')->andReturn('10');
 
         Steam::shouldReceive('balanceIgnoreVirtual')->twice()->andReturn('1');
 
@@ -330,7 +334,8 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::store
+     * @covers       \FireflyIII\Http\Controllers\PiggyBankController::store
+     * @covers       \FireflyIII\Http\Requests\PiggyBankFormRequest
      */
     public function testStore()
     {
@@ -355,7 +360,8 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::update
+     * @covers       \FireflyIII\Http\Controllers\PiggyBankController::update
+     * @covers       \FireflyIII\Http\Requests\PiggyBankFormRequest
      */
     public function testUpdate()
     {
@@ -367,6 +373,7 @@ class PiggyBankControllerTest extends TestCase
 
         $this->session(['piggy-banks.edit.uri' => 'http://localhost']);
         $data = [
+            'id'                              => 3,
             'name'                            => 'Updated Piggy ' . rand(999, 10000),
             'targetamount'                    => '100.123',
             'account_id'                      => 2,

@@ -30,10 +30,14 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Transformers\BillTransformer;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use League\Fractal\Manager;
+use League\Fractal\Resource\Item;
+use League\Fractal\Serializer\DataArraySerializer;
 use Preferences;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use URL;
 use View;
 
@@ -167,36 +171,26 @@ class BillController extends Controller
      *
      * @return View
      */
-    public function index(Request $request, BillRepositoryInterface $repository)
+    public function index(BillRepositoryInterface $repository)
     {
-        /** @var Carbon $start */
-        $start = session('start');
-        /** @var Carbon $end */
+        $start      = session('start');
         $end        = session('end');
-        $page       = 0 === intval($request->get('page')) ? 1 : intval($request->get('page'));
         $pageSize   = intval(Preferences::get('listPageSize', 50)->data);
-        $collection = $repository->getBills();
-        $total      = $collection->count();
-        $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
-
-        $collection->each(
-            function (Bill $bill) use ($repository, $start, $end) {
-                // paid in this period?
-                $bill->paidDates = $repository->getPaidDatesInRange($bill, $start, $end);
-                $bill->payDates  = $repository->getPayDatesInRange($bill, $start, $end);
-                $lastPaidDate    = $this->lastPaidDate($repository->getPaidDatesInRange($bill, $start, $end), $start);
-                if ($bill->paidDates->count() >= $bill->payDates->count()) {
-                    // if all bills have been been paid, jump to next period.
-                    $lastPaidDate = $end;
-                }
-                $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, $lastPaidDate);
+        $paginator  = $repository->getPaginator($pageSize);
+        $parameters = new ParameterBag();
+        $parameters->set('start', $start);
+        $parameters->set('end', $end);
+        $transformer = new BillTransformer($parameters);
+        /** @var Collection $bills */
+        $bills = $paginator->getCollection()->map(
+            function (Bill $bill) use ($transformer) {
+                return $transformer->transform($bill);
             }
         );
-        // paginate bills
-        $bills = new LengthAwarePaginator($collection, $total, $pageSize, $page);
-        $bills->setPath(route('bills.index'));
 
-        return view('bills.index', compact('bills'));
+        $paginator->setPath(route('bills.index'));
+
+        return view('bills.index', compact('bills', 'paginator'));
     }
 
     /**
@@ -235,15 +229,24 @@ class BillController extends Controller
      */
     public function show(Request $request, BillRepositoryInterface $repository, Bill $bill)
     {
-        /** @var Carbon $date */
-        $date = session('start');
-        /** @var Carbon $end */
+        $subTitle       = $bill->name;
+        $start          = session('start');
         $end            = session('end');
-        $year           = $date->year;
+        $year           = $start->year;
         $page           = intval($request->get('page'));
         $pageSize       = intval(Preferences::get('listPageSize', 50)->data);
-        $yearAverage    = $repository->getYearAverage($bill, $date);
+        $yearAverage    = $repository->getYearAverage($bill, $start);
         $overallAverage = $repository->getOverallAverage($bill);
+        $manager        = new Manager();
+        $manager->setSerializer(new DataArraySerializer());
+        $manager->parseIncludes(['attachments']);
+
+        // Make a resource out of the data and
+        $parameters = new ParameterBag();
+        $parameters->set('start', $start);
+        $parameters->set('end', $end);
+        $resource = new Item($bill, new BillTransformer($parameters), 'bill');
+        $object   = $manager->createData($resource)->toArray();
 
         // use collector:
         /** @var JournalCollectorInterface $collector */
@@ -253,18 +256,8 @@ class BillController extends Controller
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath(route('bills.show', [$bill->id]));
 
-        $bill->paidDates = $repository->getPaidDatesInRange($bill, $date, $end);
-        $bill->payDates  = $repository->getPayDatesInRange($bill, $date, $end);
-        $lastPaidDate    = $this->lastPaidDate($repository->getPaidDatesInRange($bill, $date, $end), $date);
-        if ($bill->paidDates->count() >= $bill->payDates->count()) {
-            // if all bills have been been paid, jump to next period.
-            $lastPaidDate = $end;
-        }
-        $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, $lastPaidDate);
-        $hideBill                = true;
-        $subTitle                = $bill->name;
 
-        return view('bills.show', compact('transactions', 'yearAverage', 'overallAverage', 'year', 'hideBill', 'bill', 'subTitle'));
+        return view('bills.show', compact('transactions', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
     }
 
     /**
@@ -334,29 +327,5 @@ class BillController extends Controller
         }
 
         return redirect($this->getPreviousUri('bills.edit.uri'));
-    }
-
-    /**
-     * Returns the latest date in the set, or start when set is empty.
-     *
-     * @param Collection $dates
-     * @param Carbon     $default
-     *
-     * @return Carbon
-     */
-    private function lastPaidDate(Collection $dates, Carbon $default): Carbon
-    {
-        if (0 === $dates->count()) {
-            return $default; // @codeCoverageIgnore
-        }
-        $latest = $dates->first();
-        /** @var Carbon $date */
-        foreach ($dates as $date) {
-            if ($date->gte($latest)) {
-                $latest = $date;
-            }
-        }
-
-        return $latest;
     }
 }

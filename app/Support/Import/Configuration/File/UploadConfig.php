@@ -121,7 +121,7 @@ class UploadConfig implements ConfigurationInterface
         // set "headers":
         $config['has-headers'] = intval($data['has_headers'] ?? 0) === 1;
         $config['date-format'] = strval($data['date_format']);
-        $config['delimiter']   = 'tab' === $delimiter ? "\t" : $config['delimiter'];
+        $config['delimiter']   = 'tab' === $delimiter ? "\t" : $delimiter;
         $config['apply-rules'] = intval($data['apply_rules'] ?? 0) === 1;
         $config['match-bills'] = intval($data['match_bills'] ?? 0) === 1;
 
@@ -136,7 +136,6 @@ class UploadConfig implements ConfigurationInterface
         if (null === $account->id) {
             Log::error('Could not find anything for csv_import_account.', ['id' => $importId]);
         }
-
         $config = $this->storeSpecifics($data, $config);
         Log::debug('Final config is ', $config);
 

@@ -94,6 +94,9 @@ class BudgetControllerTest extends TestCase
      */
     public function testBudgetLimitWrongLimit()
     {
+        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $generator  = $this->mock(GeneratorInterface::class);
+
         $this->be($this->user());
         $response = $this->get(route('chart.budget.budget-limit', [1, 8]));
         $response->assertStatus(500);
@@ -108,10 +111,13 @@ class BudgetControllerTest extends TestCase
      */
     public function testExpenseAsset(string $range)
     {
-        $generator    = $this->mock(GeneratorInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
-        $transactions = factory(Transaction::class, 10)->make();
+        $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $generator        = $this->mock(GeneratorInterface::class);
+        $collector        = $this->mock(JournalCollectorInterface::class);
+        $transactions     = factory(Transaction::class, 10)->make();
+        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
 
+        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
         $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
         $collector->shouldReceive('setBudget')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -134,9 +140,11 @@ class BudgetControllerTest extends TestCase
      */
     public function testExpenseCategory(string $range)
     {
-        $generator = $this->mock(GeneratorInterface::class);
-        $collector = $this->mock(JournalCollectorInterface::class);
-        $catRepos  = $this->mock(CategoryRepositoryInterface::class);
+        $generator  = $this->mock(GeneratorInterface::class);
+        $collector  = $this->mock(JournalCollectorInterface::class);
+        $catRepos   = $this->mock(CategoryRepositoryInterface::class);
+        $repository = $this->mock(BudgetRepositoryInterface::class);
+
 
         $transactions = factory(Transaction::class, 10)->make();
         $categories   = factory(Category::class, 10)->make();
@@ -169,6 +177,8 @@ class BudgetControllerTest extends TestCase
         $generator    = $this->mock(GeneratorInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+
         $transactions = factory(Transaction::class, 10)->make();
         $accounts     = factory(Account::class, 10)->make();
 

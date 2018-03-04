@@ -39,7 +39,7 @@ class SetCategoryTest extends TestCase
     public function testAct()
     {
         // get journal, remove all budgets
-        $journal  = TransactionJournal::find(13);
+        $journal  = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $category = $journal->user->categories()->first();
         $journal->categories()->detach();
         $this->assertEquals(0, $journal->categories()->count());

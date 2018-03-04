@@ -169,6 +169,13 @@ return [
     'reset_button'                               => 'Reset',
     'want_to_login'                              => 'Ik wil inloggen',
     'button_register'                            => 'Registreren',
+    'authorization'                              => 'Toestemming',
+
+    // API access
+    'authorization_request'                      => 'Firefly III v:version autorisatieverzoek',
+    'authorization_request_intro'                => '<strong>:client</strong> vraagt ​​toestemming om toegang te krijgen tot je financiële administratie. Wil je <strong>:client</strong> autoriseren om toegang te krijgen tot je gegevens?',
+    'scopes_will_be_able'                        => 'Deze applicatie krijgt toegang tot:',
+    'button_authorize'                           => 'Toestaan',
 
     // check for updates:
     'update_check_title'                         => 'Op updates controleren',
@@ -433,7 +440,7 @@ return [
     'pref_two_factor_auth_help'                => 'Als je authenticatie in twee stappen (ook wel twee-factor authenticatie genoemd) inschakelt voeg je een extra beveiligingslaag toe aan je account. Je logt in met iets dat je weet (je wachtwoord) en iets dat je hebt (een verificatiecode). Verificatiecodes worden gegeneerd door apps op je telefoon, zoals Authy en Google Authenticator.',
     'pref_enable_two_factor_auth'              => 'Authenticatie in twee stappen inschakelen',
     'pref_two_factor_auth_disabled'            => 'Je verificatiecode voor authenticatie in twee stappen is verwijderd, en uitgeschakeld',
-    'pref_two_factor_auth_remove_it'           => 'Vergeet niet om je Firefly account uit je authenticatie appje te verwijderen!',
+    'pref_two_factor_auth_remove_it'           => 'Vergeet niet om je Firefly III account uit je authenticatie appje te verwijderen!',
     'pref_two_factor_auth_code'                => 'Bevestig de code',
     'pref_two_factor_auth_code_help'           => 'Scan deze QR code met een app op je telefoon (zoals Authy of Google Authenticator). Vul de code die je terug krijgt hier in.',
     'pref_two_factor_auth_reset_code'          => 'Reset de verificatiecode',
@@ -498,10 +505,10 @@ return [
     'secure_pw_should'                         => 'Vinkje zetten of niet?',
     'secure_pw_long_password'                  => 'Als je net een lang wachtwoord hebt gegenereerd met een password generator tool: <strong>nee</strong>.',
     'secure_pw_short'                          => 'Gebruik je het wachtwoord dat je altijd gebruikt? <em>Ja, doen!</em>',
-    'personal_access_token'                    => 'Persoonlijk toegangstoken',
-    'explain_access_token'                     => 'Je hebt dit token nodig als je commando\'s op de commandline draait, zoals het invoeren of uitvoeren van data. Zonder dit token werken zulke gevoelige opdrachten niet. Deel je toegangstoken niet. Niemand zal hier naar vragen, zelfs ik niet. Als je bang bent dat-ie op straat ligt, genereer dan een nieuw token.',
-    'regenerate_access_token'                  => 'Genereer nieuw token',
-    'token_regenerated'                        => 'Er is een nieuw token gegenereerd',
+    'command_line_token'                       => 'Opdrachtprompt-token',
+    'explain_command_line_token'               => 'Je hebt dit token nodig als je commando\'s op de commandline draait, zoals het invoeren of uitvoeren van data. Zonder dit token werken zulke gevoelige opdrachten niet. Deel je opdrachtprompt-token niet. Niemand zal hier naar vragen, zelfs ik niet. Als je bang bent dat-ie op straat ligt, genereer dan een nieuw token.',
+    'regenerate_command_line_token'            => 'Nieuw opdrachtprompt-token genereren',
+    'token_regenerated'                        => 'Er is een nieuw opdrachtprompt-token gegenereerd',
     'change_your_email'                        => 'Verander je emailadres',
     'email_verification'                       => 'Het systeem verstuurt een mailtje naar je oude EN nieuwe emailadres. Uit veiligheidsoverwegingen ben je zometeen uitgelogd en kan je pas weer inloggen als je je emailadres hebt bevestigd. Doe dit niet als je niet zeker weet of je Firefly III installatie wel mail kan versturen. Als je een admin bent, test dit dan eerst in de <a href="/admin">administratie</a>.',
     'email_changed_logout'                     => 'Je kan niet inloggen tot je je emailadres bevestigd.',
@@ -634,8 +641,6 @@ return [
     'rescanned_bill'                           => 'Alles is opnieuw gescand.',
     'average_bill_amount_year'                 => 'Gemiddeld contractbedrag (:year)',
     'average_bill_amount_overall'              => 'Gemiddeld contractbedrag (gehele periode)',
-    'not_or_not_yet'                           => '(nog) niet',
-    'not_expected_period'                      => 'Niet verwacht deze periode',
     'bill_is_active'                           => 'Contract is actief',
     'bill_expected_between'                    => 'Verwacht tussen :start en :end',
     'bill_will_automatch'                      => 'Waar van toepassing wordt dit contract automatisch gekoppeld aan transacties',
@@ -1127,7 +1132,7 @@ return [
     // import index page:
     'import_index_title'                    => 'Gegevens importeren in Firefly III',
     'import_index_sub_title'                => 'Index',
-    'import_general_index_intro'            => 'Dit is de import-routine van Firefly. Er zijn verschillende manieren om gegevens te importeren in Firefly III, hier als knoppen weergegeven.',
+    'import_general_index_intro'            => 'Dit is de import-routine van Firefly III. Er zijn verschillende manieren om gegevens te importeren in Firefly III, hier als knoppen weergegeven.',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Deze functie werkt niet als je Firefly III gebruikt in combinatie met Sandstorm.IO.',

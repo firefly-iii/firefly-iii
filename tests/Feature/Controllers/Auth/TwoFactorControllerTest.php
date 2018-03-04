@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers\Auth;
 
 use FireflyIII\Models\Preference;
 use Google2FA;
+use Log;
 use Preferences;
 use Tests\TestCase;
 
@@ -36,6 +37,15 @@ use Tests\TestCase;
  */
 class TwoFactorControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug('Now in Feature/Controllers/Auth/TwoFactorControllerTest.');
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController::index
      */

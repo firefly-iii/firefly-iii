@@ -27,7 +27,6 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\User;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -42,6 +41,13 @@ interface JournalCollectorInterface
      * @return JournalCollectorInterface
      */
     public function addFilter(string $filter): JournalCollectorInterface;
+
+    /**
+     * @param Collection $journals
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setJournals(Collection $journals): JournalCollectorInterface;
 
     /**
      * @param string $amount

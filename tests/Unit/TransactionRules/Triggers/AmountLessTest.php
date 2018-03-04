@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tests\Unit\TransactionRules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\TransactionRules\Triggers\AmountLess;
 use Tests\TestCase;
 
@@ -36,8 +37,13 @@ class AmountLessTest extends TestCase
      */
     public function testTriggeredExact()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('setUser');
+        $journalRepos->shouldReceive('getJournalTotal')->andReturn('12.35');
+
         $journal                     = new TransactionJournal;
         $journal->destination_amount = '12.35';
+        $journal->user               = $this->user();
         $trigger                     = AmountLess::makeFromStrings('12.35', false);
         $result                      = $trigger->triggered($journal);
         $this->assertFalse($result);
@@ -48,8 +54,13 @@ class AmountLessTest extends TestCase
      */
     public function testTriggeredLess()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('setUser');
+        $journalRepos->shouldReceive('getJournalTotal')->andReturn('12.34');
+
         $journal                     = new TransactionJournal;
         $journal->destination_amount = '12.34';
+        $journal->user               = $this->user();
         $trigger                     = AmountLess::makeFromStrings('12.50', false);
         $result                      = $trigger->triggered($journal);
         $this->assertTrue($result);
@@ -60,8 +71,13 @@ class AmountLessTest extends TestCase
      */
     public function testTriggeredNotLess()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('setUser');
+        $journalRepos->shouldReceive('getJournalTotal')->andReturn('12.35');
+
         $journal                     = new TransactionJournal;
         $journal->destination_amount = '12.35';
+        $journal->user               = $this->user();
         $trigger                     = AmountLess::makeFromStrings('12.00', false);
         $result                      = $trigger->triggered($journal);
         $this->assertFalse($result);

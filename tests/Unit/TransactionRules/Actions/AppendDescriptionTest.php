@@ -41,13 +41,13 @@ class AppendDescriptionTest extends TestCase
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = 'APPEND';
 
-        $journal        = TransactionJournal::find(1);
+        $journal        = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $oldDescription = $journal->description;
         $action         = new AppendDescription($ruleAction);
         $result         = $action->act($journal);
         $this->assertTrue($result);
 
-        $journal = TransactionJournal::find(1);
+        $journal = TransactionJournal::find($journal->id);
         $this->assertEquals($oldDescription . 'APPEND', $journal->description);
     }
 }

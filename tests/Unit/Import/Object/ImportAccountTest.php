@@ -40,12 +40,7 @@ class ImportAccountTest extends TestCase
     /**
      * Should error because it requires a default asset account.
      *
-     * @covers \FireflyIII\Import\Object\ImportAccount::__construct
-     * @covers \FireflyIII\Import\Object\ImportAccount::getAccount
-     * @covers \FireflyIII\Import\Object\ImportAccount::store
-     * @covers \FireflyIII\Import\Object\ImportAccount::findMappedObject
-     * @covers \FireflyIII\Import\Object\ImportAccount::findExistingObject
-     * @covers \FireflyIII\Import\Object\ImportAccount::getMappedObject
+     * @covers \FireflyIII\Import\Object\ImportAccount
      */
     public function testBasic()
     {
@@ -72,12 +67,7 @@ class ImportAccountTest extends TestCase
     /**
      * Should error because it requires a default asset account.
      *
-     * @covers \FireflyIII\Import\Object\ImportAccount::__construct
-     * @covers \FireflyIII\Import\Object\ImportAccount::getAccount
-     * @covers \FireflyIII\Import\Object\ImportAccount::store
-     * @covers \FireflyIII\Import\Object\ImportAccount::findMappedObject
-     * @covers \FireflyIII\Import\Object\ImportAccount::findExistingObject
-     * @covers \FireflyIII\Import\Object\ImportAccount::getMappedObject
+     * @covers \FireflyIII\Import\Object\ImportAccount
      */
     public function testEmptyMappingAccountId()
     {
@@ -112,9 +102,7 @@ class ImportAccountTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Import\Object\ImportAccount::__construct
-     * @covers                   \FireflyIII\Import\Object\ImportAccount::getAccount
-     * @covers                   \FireflyIII\Import\Object\ImportAccount::store
+     * @covers                   \FireflyIII\Import\Object\ImportAccount
      * @expectedException \FireflyIII\Exceptions\FireflyException
      * @expectedExceptionMessage ImportAccount cannot continue without a default account to fall back on.
      */
@@ -128,9 +116,7 @@ class ImportAccountTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Import\Object\ImportAccount::__construct
-     * @covers                   \FireflyIII\Import\Object\ImportAccount::getAccount
-     * @covers                   \FireflyIII\Import\Object\ImportAccount::store
+     * @covers                   \FireflyIII\Import\Object\ImportAccount
      * @expectedException \FireflyIII\Exceptions\FireflyException
      * @expectedExceptionMessage ImportAccount cannot continue without user.
      */

@@ -115,7 +115,6 @@ class ProfileControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::index
      * @covers \FireflyIII\Http\Controllers\ProfileController::__construct
-     * @throws \Exception
      */
     public function testIndex()
     {
@@ -155,6 +154,7 @@ class ProfileControllerTest extends TestCase
      */
     public function testPostChangeEmailExisting()
     {
+
         $data       = [
             'email' => 'existing@example.com',
         ];
@@ -173,7 +173,8 @@ class ProfileControllerTest extends TestCase
      */
     public function testPostChangeEmailSame()
     {
-        $data = [
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $data       = [
             'email' => $this->user()->email,
         ];
         $this->be($this->user());
@@ -277,6 +278,7 @@ class ProfileControllerTest extends TestCase
     public function testPostDeleteAccountWrong()
     {
         // mock stuff
+        $repository   = $this->mock(UserRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $data = [
@@ -345,6 +347,7 @@ class ProfileControllerTest extends TestCase
      */
     public function testUndoEmailChangeBadHash()
     {
+        $repository            = $this->mock(UserRepositoryInterface::class);
         $hash                  = hash('sha256', 'previous@example.comX');
         $tokenPreference       = new Preference;
         $tokenPreference->data = 'token';
@@ -369,6 +372,7 @@ class ProfileControllerTest extends TestCase
      */
     public function testUndoEmailChangeBadToken()
     {
+        $repository = $this->mock(UserRepositoryInterface::class);
         Preferences::shouldReceive('findByName')->once()->andReturn(new Collection);
 
         $response = $this->get(route('profile.undo-email-change', ['token', 'some-hash']));

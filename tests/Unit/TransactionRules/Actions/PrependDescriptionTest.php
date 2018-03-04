@@ -41,7 +41,7 @@ class PrependDescriptionTest extends TestCase
         // get journal, give fixed description
         $description          = 'text' . rand(1, 1000);
         $prepend              = 'prepend' . rand(1, 1234);
-        $journal              = TransactionJournal::find(7);
+        $journal              = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->description = $description;
         $journal->save();
 
@@ -51,7 +51,7 @@ class PrependDescriptionTest extends TestCase
         $action                   = new PrependDescription($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);
-        $journal = TransactionJournal::find(7);
+        $journal = TransactionJournal::find($journal->id);
 
         // assert result
         $this->assertEquals($prepend . $description, $journal->description);

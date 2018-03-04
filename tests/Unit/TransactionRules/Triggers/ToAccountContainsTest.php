@@ -36,7 +36,7 @@ class ToAccountContainsTest extends TestCase
      */
     public function testTriggered()
     {
-        $journal     = TransactionJournal::find(59);
+        $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $transaction = $journal->transactions()->where('amount', '>', 0)->first();
         $account     = $transaction->account;
         $trigger     = ToAccountContains::makeFromStrings($account->name, false);
@@ -49,7 +49,7 @@ class ToAccountContainsTest extends TestCase
      */
     public function testTriggeredNot()
     {
-        $journal = TransactionJournal::find(60);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $trigger = ToAccountContains::makeFromStrings('some name' . rand(1, 234), false);
         $result  = $trigger->triggered($journal);
         $this->assertFalse($result);

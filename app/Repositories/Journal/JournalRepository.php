@@ -22,15 +22,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
 
-use DB;
+use Carbon\Carbon;
+use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Note;
-use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
+use FireflyIII\Services\Internal\Update\JournalUpdateService;
+use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
@@ -42,12 +44,8 @@ use Preferences;
  */
 class JournalRepository implements JournalRepositoryInterface
 {
-    use CreateJournalsTrait, UpdateJournalsTrait, SupportJournalsTrait;
-
     /** @var User */
     private $user;
-    /** @var array */
-    private $validMetaFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date', 'internal_reference'];
 
     /**
      * @param TransactionJournal $journal
@@ -106,9 +104,11 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @throws \Exception
      */
-    public function delete(TransactionJournal $journal): bool
+    public function destroy(TransactionJournal $journal): bool
     {
-        $journal->delete();
+        /** @var JournalDestroyService $service */
+        $service = app(JournalDestroyService::class);
+        $service->destroy($journal);
 
         return true;
     }
@@ -120,6 +120,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function find(int $journalId): TransactionJournal
     {
+        /** @var TransactionJournal $journal */
         $journal = $this->user->transactionJournals()->where('id', $journalId)->first();
         if (null === $journal) {
             return new TransactionJournal;
@@ -167,6 +168,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function first(): TransactionJournal
     {
+        /** @var TransactionJournal $entry */
         $entry = $this->user->transactionJournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
 
         if (null === $entry) {
@@ -194,6 +196,208 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Returns the first positive transaction for the journal. Useful when editing journals.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Transaction
+     */
+    public function getFirstPosTransaction(TransactionJournal $journal): Transaction
+    {
+        /** @var Transaction $transaction */
+        $transaction = $journal->transactions()->where('amount', '>', 0)->first();
+
+        return $transaction;
+    }
+
+    /**
+     * Return the ID of the budget linked to the journal (if any) or the transactions (if any).
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return int
+     */
+    public function getJournalBudgetId(TransactionJournal $journal): int
+    {
+        $budget = $journal->budgets()->first();
+        if (null !== $budget) {
+            return $budget->id;
+        }
+        $budget = $journal->transactions()->first()->budgets()->first();
+        if (null !== $budget) {
+            return $budget->id;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Return the name of the category linked to the journal (if any) or to the transactions (if any).
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    public function getJournalCategoryName(TransactionJournal $journal): string
+    {
+        $category = $journal->categories()->first();
+        if (null !== $category) {
+            return $category->name;
+        }
+        $category = $journal->transactions()->first()->categories()->first();
+        if (null !== $category) {
+            return $category->name;
+        }
+
+        return '';
+    }
+
+    /**
+     * Return requested date as string. When it's a NULL return the date of journal,
+     * otherwise look for meta field and return that one.
+     *
+     * @param TransactionJournal $journal
+     * @param null|string        $field
+     *
+     * @return string
+     */
+    public function getJournalDate(TransactionJournal $journal, ?string $field): string
+    {
+        if (is_null($field)) {
+            return $journal->date->format('Y-m-d');
+        }
+        if (null !== $journal->$field && $journal->$field instanceof Carbon) {
+            // make field NULL
+            $carbon          = clone $journal->$field;
+            $journal->$field = null;
+            $journal->save();
+
+            // create meta entry
+            $journal->setMeta($field, $carbon);
+
+            // return that one instead.
+            return $carbon->format('Y-m-d');
+        }
+        $metaField = $journal->getMeta($field);
+        if (null !== $metaField) {
+            $carbon = new Carbon($metaField);
+
+            return $carbon->format('Y-m-d');
+        }
+
+        return '';
+    }
+
+    /**
+     * Return a list of all destination accounts related to journal.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getJournalDestinationAccounts(TransactionJournal $journal): Collection
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($journal->id);
+        $cache->addProperty('destination-account-list');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+        $transactions = $journal->transactions()->where('amount', '>', 0)->orderBy('transactions.account_id')->with('account')->get();
+        $list         = new Collection;
+        /** @var Transaction $t */
+        foreach ($transactions as $t) {
+            $list->push($t->account);
+        }
+        $list = $list->unique('id');
+        $cache->store($list);
+
+        return $list;
+    }
+
+    /**
+     * Return a list of all source accounts related to journal.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getJournalSourceAccounts(TransactionJournal $journal): Collection
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($journal->id);
+        $cache->addProperty('source-account-list');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+        $transactions = $journal->transactions()->where('amount', '<', 0)->orderBy('transactions.account_id')->with('account')->get();
+        $list         = new Collection;
+        /** @var Transaction $t */
+        foreach ($transactions as $t) {
+            $list->push($t->account);
+        }
+        $list = $list->unique('id');
+        $cache->store($list);
+
+        return $list;
+    }
+
+    /**
+     * Return total amount of journal. Is always positive.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    public function getJournalTotal(TransactionJournal $journal): string
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($journal->id);
+        $cache->addProperty('amount-positive');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        // saves on queries:
+        $amount = $journal->transactions()->where('amount', '>', 0)->get()->sum('amount');
+        $amount = strval($amount);
+        $cache->store($amount);
+
+        return $amount;
+    }
+
+    /**
+     * Return value of a meta field (or NULL) as a string.
+     *
+     * @param TransactionJournal $journal
+     * @param string             $field
+     *
+     * @return null|string
+     */
+    public function getMetaField(TransactionJournal $journal, string $field): ?string
+    {
+        $value = null;
+        $cache = new CacheProperties;
+        $cache->addProperty('journal-meta');
+        $cache->addProperty($journal->id);
+        $cache->addProperty($field);
+
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        Log::debug(sprintf('Looking for journal #%d meta field "%s".', $journal->id, $field));
+        $entry = $journal->transactionJournalMeta()->where('name', $field)->first();
+        if (is_null($entry)) {
+            return null;
+        }
+        $value = $entry->data;
+        $cache->store($value);
+
+        return $value;
+    }
+
+    /**
      * @param TransactionJournal $journal
      *
      * @return Note|null
@@ -201,6 +405,47 @@ class JournalRepository implements JournalRepositoryInterface
     public function getNote(TransactionJournal $journal): ?Note
     {
         return $journal->notes()->first();
+    }
+
+    /**
+     * Return text of a note attached to journal, or ''.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    public function getNoteText(TransactionJournal $journal): string
+    {
+        $note = $this->getNote($journal);
+        if (is_null($note)) {
+            return '';
+        }
+
+        return $note->text;
+    }
+
+    /**
+     * Return all tags as strings in an array.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return array
+     */
+    public function getTags(TransactionJournal $journal): array
+    {
+        return $journal->tags()->get()->pluck('tag')->toArray();
+    }
+
+    /**
+     * Return the transaction type of the journal.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    public function getTransactionType(TransactionJournal $journal): string
+    {
+        return $journal->transactionType->type;
     }
 
     /**
@@ -229,13 +474,21 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Will tell you if journal is reconciled or not.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool
      */
-    public function isTransfer(TransactionJournal $journal): bool
+    public function isJournalReconciled(TransactionJournal $journal): bool
     {
-        return TransactionType::TRANSFER === $journal->transactionType->type;
+        foreach ($journal->transactions as $transaction) {
+            if ($transaction->reconciled) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -261,6 +514,22 @@ class JournalRepository implements JournalRepositoryInterface
         $opposing->save();
 
         return true;
+    }
+
+    /**
+     * @param int $transactionId
+     *
+     * @return bool
+     */
+    public function reconcileById(int $transactionId): bool
+    {
+        /** @var Transaction $transaction */
+        $transaction = $this->user->transactions()->find($transactionId);
+        if (!is_null($transaction)) {
+            return $this->reconcile($transaction);
+        }
+
+        return false;
     }
 
     /**
@@ -295,81 +564,11 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function store(array $data): TransactionJournal
     {
-        // find transaction type.
-        /** @var TransactionType $transactionType */
-        $transactionType = TransactionType::where('type', ucfirst($data['what']))->first();
-        $accounts        = $this->storeAccounts($this->user, $transactionType, $data);
-        $data            = $this->verifyNativeAmount($data, $accounts);
-        $amount          = strval($data['amount']);
-        $journal         = new TransactionJournal(
-            [
-                'user_id'                 => $this->user->id,
-                'transaction_type_id'     => $transactionType->id,
-                'transaction_currency_id' => $data['currency_id'], // no longer used.
-                'description'             => $data['description'],
-                'completed'               => 0,
-                'date'                    => $data['date'],
-            ]
-        );
-        $journal->save();
+        /** @var TransactionJournalFactory $factory */
+        $factory = app(TransactionJournalFactory::class);
+        $factory->setUser($this->user);
 
-        // store stuff:
-        $this->storeCategoryWithJournal($journal, strval($data['category']));
-        $this->storeBudgetWithJournal($journal, $data['budget_id']);
-
-        // store two transactions:
-
-        $one = [
-            'journal'                 => $journal,
-            'account'                 => $accounts['source'],
-            'amount'                  => bcmul($amount, '-1'),
-            'transaction_currency_id' => $data['currency_id'],
-            'foreign_amount'          => null === $data['foreign_amount'] ? null : bcmul(strval($data['foreign_amount']), '-1'),
-            'foreign_currency_id'     => $data['foreign_currency_id'],
-            'description'             => null,
-            'category'                => null,
-            'budget'                  => null,
-            'identifier'              => 0,
-        ];
-        $this->storeTransaction($one);
-
-        $two = [
-            'journal'                 => $journal,
-            'account'                 => $accounts['destination'],
-            'amount'                  => $amount,
-            'transaction_currency_id' => $data['currency_id'],
-            'foreign_amount'          => $data['foreign_amount'],
-            'foreign_currency_id'     => $data['foreign_currency_id'],
-            'description'             => null,
-            'category'                => null,
-            'budget'                  => null,
-            'identifier'              => 0,
-        ];
-
-        $this->storeTransaction($two);
-
-        // store tags
-        if (isset($data['tags']) && is_array($data['tags'])) {
-            $this->saveTags($journal, $data['tags']);
-        }
-
-        // update note:
-        if (isset($data['notes'])) {
-            $this->updateNote($journal, $data['notes']);
-        }
-
-        foreach ($data as $key => $value) {
-            if (in_array($key, $this->validMetaFields)) {
-                $journal->setMeta($key, $value);
-                continue;
-            }
-            Log::debug(sprintf('Could not store meta field "%s" with value "%s" for journal #%d', json_encode($key), json_encode($value), $journal->id));
-        }
-
-        $journal->completed = 1;
-        $journal->save();
-
-        return $journal;
+        return $factory->create($data);
     }
 
     /**
@@ -379,63 +578,19 @@ class JournalRepository implements JournalRepositoryInterface
      * @return TransactionJournal
      *
      * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function update(TransactionJournal $journal, array $data): TransactionJournal
     {
-        // update actual journal:
-        $journal->description   = $data['description'];
-        $journal->date          = $data['date'];
-        $accounts               = $this->storeAccounts($this->user, $journal->transactionType, $data);
-        $data                   = $this->verifyNativeAmount($data, $accounts);
-        $data['amount']         = strval($data['amount']);
-        $data['foreign_amount'] = null === $data['foreign_amount'] ? null : strval($data['foreign_amount']);
-
-        // unlink all categories, recreate them:
-        $journal->categories()->detach();
-        $journal->budgets()->detach();
-
-        $this->storeCategoryWithJournal($journal, strval($data['category']));
-        $this->storeBudgetWithJournal($journal, $data['budget_id']);
-
-        // negative because source loses money.
-        $this->updateSourceTransaction($journal, $accounts['source'], $data);
-
-        // positive because destination gets money.
-        $this->updateDestinationTransaction($journal, $accounts['destination'], $data);
-
-        $journal->save();
-
-        // update tags:
-        if (isset($data['tags']) && is_array($data['tags'])) {
-            $this->updateTags($journal, $data['tags']);
-        }
-
-        // update note:
-        if (isset($data['notes']) && null !== $data['notes']) {
-            $this->updateNote($journal, strval($data['notes']));
-        }
-
-        // update meta fields:
-        $result = $journal->save();
-        if ($result) {
-            foreach ($data as $key => $value) {
-                if (in_array($key, $this->validMetaFields)) {
-                    $journal->setMeta($key, $value);
-                    continue;
-                }
-                Log::debug(sprintf('Could not store meta field "%s" with value "%s" for journal #%d', json_encode($key), json_encode($value), $journal->id));
-            }
-
-            return $journal;
-        }
+        /** @var JournalUpdateService $service */
+        $service = app(JournalUpdateService::class);
+        $journal = $service->update($journal, $data);
 
         return $journal;
     }
 
     /**
+     * Update budget for a journal.
+     *
      * @param TransactionJournal $journal
      * @param int                $budgetId
      *
@@ -443,18 +598,15 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function updateBudget(TransactionJournal $journal, int $budgetId): TransactionJournal
     {
-        if ($budgetId === 0) {
-            $journal->budgets()->detach();
-            $journal->save();
+        /** @var JournalUpdateService $service */
+        $service = app(JournalUpdateService::class);
 
-            return $journal;
-        }
-        $this->storeBudgetWithJournal($journal, $budgetId);
-
-        return $journal;
+        return $service->updateBudget($journal, $budgetId);
     }
 
     /**
+     * Update category for a journal.
+     *
      * @param TransactionJournal $journal
      * @param string             $category
      *
@@ -462,118 +614,27 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function updateCategory(TransactionJournal $journal, string $category): TransactionJournal
     {
-        Log::debug(sprintf('In updateCategory("%s")', $category));
-        $journal->categories()->detach();
-        if (strlen($category) === 0) {
-            return $journal;
-        }
-        $this->storeCategoryWithJournal($journal, $category);
+        /** @var JournalUpdateService $service */
+        $service = app(JournalUpdateService::class);
 
-        return $journal;
+        return $service->updateCategory($journal, $category);
     }
 
     /**
-     * Same as above but for transaction journal with multiple transactions.
+     * Update tag(s) for a journal.
      *
      * @param TransactionJournal $journal
-     * @param array              $data
+     * @param array              $tags
      *
      * @return TransactionJournal
      */
-    public function updateSplitJournal(TransactionJournal $journal, array $data): TransactionJournal
+    public function updateTags(TransactionJournal $journal, array $tags): TransactionJournal
     {
-        // update actual journal:
-        $journal->description = $data['journal_description'];
-        $journal->date        = $data['date'];
-        $journal->save();
-        Log::debug(sprintf('Updated split journal #%d', $journal->id));
-
-        // unlink all categories:
-        $journal->categories()->detach();
-        $journal->budgets()->detach();
-
-        // update note:
-        if (isset($data['notes']) && null !== $data['notes']) {
-            $this->updateNote($journal, strval($data['notes']));
-        }
-
-        // update meta fields:
-        $result = $journal->save();
-        if ($result) {
-            foreach ($data as $key => $value) {
-                if (in_array($key, $this->validMetaFields)) {
-                    $journal->setMeta($key, $value);
-                    continue;
-                }
-                Log::debug(sprintf('Could not store meta field "%s" with value "%s" for journal #%d', json_encode($key), json_encode($value), $journal->id));
-            }
-        }
-
-        // update tags:
-        if (isset($data['tags']) && is_array($data['tags'])) {
-            $this->updateTags($journal, $data['tags']);
-        }
-
-        // delete original transactions, and recreate them.
-        $journal->transactions()->delete();
-
-        // store each transaction.
-        $identifier = 0;
-        Log::debug(sprintf('Count %d transactions in updateSplitJournal()', count($data['transactions'])));
-
-        foreach ($data['transactions'] as $transaction) {
-            Log::debug(sprintf('Split journal update split transaction %d', $identifier));
-            $transaction = $this->appendTransactionData($transaction, $data);
-            $this->storeSplitTransaction($journal, $transaction, $identifier);
-            ++$identifier;
-        }
-
-        $journal->save();
+        /** @var JournalUpdateService $service */
+        $service = app(JournalUpdateService::class);
+        $service->connectTags($journal, $tags);
 
         return $journal;
-    }
 
-    /**
-     * Update tags.
-     *
-     * @param TransactionJournal $journal
-     * @param array              $array
-     *
-     * @return bool
-     */
-    public function updateTags(TransactionJournal $journal, array $array): bool
-    {
-        // create tag repository
-        /** @var TagRepositoryInterface $tagRepository */
-        $tagRepository = app(TagRepositoryInterface::class);
-
-        // find or create all tags:
-        $tags = [];
-        $ids  = [];
-        foreach ($array as $name) {
-            if (strlen(trim($name)) > 0) {
-                $tag    = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
-                $tags[] = $tag;
-                $ids[]  = $tag->id;
-            }
-        }
-
-        // delete all tags connected to journal not in this array:
-        if (count($ids) > 0) {
-            DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->whereNotIn('tag_id', $ids)->delete();
-        }
-        // if count is zero, delete them all:
-        if (0 === count($ids)) {
-            DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->delete();
-        }
-
-        // connect each tag to journal (if not yet connected):
-        /** @var Tag $tag */
-        foreach ($tags as $tag) {
-            Log::debug(sprintf('Will try to connect tag #%d to journal #%d.', $tag->id, $journal->id));
-            $tagRepository->connect($journal, $tag);
-        }
-
-        return true;
     }
 }

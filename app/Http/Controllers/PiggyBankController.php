@@ -67,12 +67,12 @@ class PiggyBankController extends Controller
      *
      * @return View
      */
-    public function add(PiggyBank $piggyBank)
+    public function add(PiggyBank $piggyBank, PiggyBankRepositoryInterface $repository)
     {
         /** @var Carbon $date */
         $date          = session('end', Carbon::now()->endOfMonth());
         $leftOnAccount = $piggyBank->leftOnAccount($date);
-        $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount ?? '0';
+        $savedSoFar    = $repository->getCurrentAmount($piggyBank);
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
         $maxAmount     = min($leftOnAccount, $leftToSave);
 
@@ -86,12 +86,12 @@ class PiggyBankController extends Controller
      *
      * @return View
      */
-    public function addMobile(PiggyBank $piggyBank)
+    public function addMobile(PiggyBank $piggyBank, PiggyBankRepositoryInterface $repository)
     {
         /** @var Carbon $date */
         $date          = session('end', Carbon::now()->endOfMonth());
         $leftOnAccount = $piggyBank->leftOnAccount($date);
-        $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount ?? '0';
+        $savedSoFar    = $repository->getCurrentAmount($piggyBank);
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
         $maxAmount     = min($leftOnAccount, $leftToSave);
 
@@ -212,7 +212,8 @@ class PiggyBankController extends Controller
         Log::debug('Looping piggues');
         /** @var PiggyBank $piggyBank */
         foreach ($collection as $piggyBank) {
-            $piggyBank->savedSoFar = $piggyBank->currentRelevantRep()->currentamount ?? '0';
+
+            $piggyBank->savedSoFar = $piggyRepository->getCurrentAmount($piggyBank);
             $piggyBank->percentage = 0 !== bccomp('0', $piggyBank->savedSoFar) ? intval($piggyBank->savedSoFar / $piggyBank->targetamount * 100) : 0;
             $piggyBank->leftToSave = bcsub($piggyBank->targetamount, strval($piggyBank->savedSoFar));
             $piggyBank->percentage = $piggyBank->percentage > 100 ? 100 : $piggyBank->percentage;

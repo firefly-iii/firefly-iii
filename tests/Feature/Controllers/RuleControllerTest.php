@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use Carbon\Carbon;
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
 use FireflyIII\Jobs\Job;
 use FireflyIII\Models\Rule;
@@ -147,10 +148,12 @@ class RuleControllerTest extends TestCase
     public function testEdit()
     {
         // mock stuff
+        $groupRepos   = $this->mock(RuleGroupRepositoryInterface::class);
         $repository   = $this->mock(RuleRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getPrimaryTrigger')->andReturn(new Rule);
+        $groupRepos->shouldReceive('get')->andReturn(new Collection);
 
         $this->be($this->user());
         $response = $this->get(route('rules.edit', [1]));
@@ -176,10 +179,12 @@ class RuleControllerTest extends TestCase
         $this->session(['_old_input' => $old]);
 
         // mock stuff
+        $groupRepos   = $this->mock(RuleGroupRepositoryInterface::class);
         $repository   = $this->mock(RuleRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getPrimaryTrigger')->andReturn(new Rule);
+        $groupRepos->shouldReceive('get')->andReturn(new Collection);
 
         $this->be($this->user());
         $response = $this->get(route('rules.edit', [1]));
@@ -192,6 +197,11 @@ class RuleControllerTest extends TestCase
      */
     public function testExecute()
     {
+        $account      = $this->user()->accounts()->find(1);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $repository   = $this->mock(RuleRepositoryInterface::class);
+        $this->session(['first' => new Carbon('2010-01-01')]);
+        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         Queue::fake();
 
         $data = [
@@ -290,6 +300,7 @@ class RuleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::store
+     * @covers       \FireflyIII\Http\Requests\RuleFormRequest
      */
     public function testStore()
     {
@@ -439,6 +450,7 @@ class RuleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::update
+     * @covers       \FireflyIII\Http\Requests\RuleFormRequest
      */
     public function testUpdate()
     {

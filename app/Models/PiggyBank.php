@@ -56,7 +56,7 @@ class PiggyBank extends Model
     /** @var array */
     protected $dates = ['startdate', 'targetdate'];
     /** @var array */
-    protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate'];
+    protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate', 'active'];
     /** @var array */
     protected $hidden = ['targetamount_encrypted', 'encrypted'];
 
@@ -90,7 +90,7 @@ class PiggyBank extends Model
 
     /**
      * Grabs the PiggyBankRepetition that's currently relevant / active.
-     *
+     * @deprecated
      * @returns PiggyBankRepetition
      */
     public function currentRelevantRep(): PiggyBankRepetition
@@ -126,6 +126,7 @@ class PiggyBank extends Model
     }
 
     /**
+     * @deprecated
      * @return string
      */
     public function getSuggestedMonthlyAmount(): string
@@ -152,7 +153,7 @@ class PiggyBank extends Model
 
     /**
      * @param Carbon $date
-     *
+     * @deprecated
      * @return string
      */
     public function leftOnAccount(Carbon $date): string

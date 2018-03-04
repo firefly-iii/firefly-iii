@@ -258,9 +258,9 @@ class FileConfiguratorTest extends TestCase
     public function testGetNextDataUploadConfig()
     {
         // data
-        $config = ['stage' => 'upload-config'];
+        $config   = ['stage' => 'upload-config'];
         $extended = ['steps' => 0, 'done' => 0];
-        $job    = $this->getJob($config);
+        $job      = $this->getJob($config);
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -289,9 +289,9 @@ class FileConfiguratorTest extends TestCase
     public function testGetNextDataUploadInvalid()
     {
         // data
-        $config = ['stage' => 'ksksjje'];
+        $config   = ['stage' => 'ksksjje'];
         $extended = ['steps' => 0, 'done' => 0];
-        $job    = $this->getJob($config);
+        $job      = $this->getJob($config);
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -313,9 +313,9 @@ class FileConfiguratorTest extends TestCase
     public function testGetNextDataUploadMap()
     {
         // data:
-        $config = ['stage' => 'map'];
+        $config   = ['stage' => 'map'];
         $extended = ['steps' => 0, 'done' => 0];
-        $job    = $this->getJob($config);
+        $job      = $this->getJob($config);
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -344,9 +344,9 @@ class FileConfiguratorTest extends TestCase
     public function testGetNextDataUploadReady()
     {
         // data
-        $config = ['stage' => 'ready'];
+        $config   = ['stage' => 'ready'];
         $extended = ['steps' => 0, 'done' => 0];
-        $job    = $this->getJob($config);
+        $job      = $this->getJob($config);
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -368,9 +368,9 @@ class FileConfiguratorTest extends TestCase
     public function testGetNextDataUploadRoles()
     {
         // data
-        $config = ['stage' => 'roles'];
+        $config   = ['stage' => 'roles'];
         $extended = ['steps' => 0, 'done' => 0];
-        $job    = $this->getJob($config);
+        $job      = $this->getJob($config);
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -397,9 +397,9 @@ class FileConfiguratorTest extends TestCase
     public function testGetNextViewInitial()
     {
         // data
-        $config = ['stage' => 'initial'];
+        $config   = ['stage' => 'initial'];
         $extended = ['steps' => 0, 'done' => 0];
-        $job    = $this->getJob($config);
+        $job      = $this->getJob($config);
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -426,9 +426,9 @@ class FileConfiguratorTest extends TestCase
     public function testGetNextViewInvalid()
     {
         // data
-        $config = ['stage' => 'slkds903ms90k'];
+        $config   = ['stage' => 'slkds903ms90k'];
         $extended = ['steps' => 0, 'done' => 0];
-        $job    = $this->getJob($config);
+        $job      = $this->getJob($config);
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -450,9 +450,9 @@ class FileConfiguratorTest extends TestCase
     public function testGetNextViewMap()
     {
         // data
-        $config = ['stage' => 'map'];
+        $config   = ['stage' => 'map'];
         $extended = ['steps' => 0, 'done' => 0];
-        $job    = $this->getJob($config);
+        $job      = $this->getJob($config);
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -491,9 +491,9 @@ class FileConfiguratorTest extends TestCase
     public function testGetNextViewReady()
     {
         // data
-        $config = ['stage' => 'ready'];
+        $config   = ['stage' => 'ready'];
         $extended = ['steps' => 0, 'done' => 0];
-        $job    = $this->getJob($config);
+        $job      = $this->getJob($config);
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -515,9 +515,9 @@ class FileConfiguratorTest extends TestCase
     public function testGetNextViewRoles()
     {
         // data
-        $config = ['stage' => 'roles'];
+        $config   = ['stage' => 'roles'];
         $extended = ['steps' => 0, 'done' => 0];
-        $job    = $this->getJob($config);
+        $job      = $this->getJob($config);
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -542,9 +542,9 @@ class FileConfiguratorTest extends TestCase
     public function testGetNextViewUploadConfig()
     {
         // data
-        $config = ['stage' => 'upload-config'];
+        $config   = ['stage' => 'upload-config'];
         $extended = ['steps' => 0, 'done' => 0];
-        $job    = $this->getJob($config);
+        $job      = $this->getJob($config);
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -569,9 +569,9 @@ class FileConfiguratorTest extends TestCase
     public function testGetWarningMessage()
     {
         // data
-        $config = ['stage' => 'upload-config'];
+        $config   = ['stage' => 'upload-config'];
         $extended = ['steps' => 0, 'done' => 0];
-        $job    = $this->getJob($config);
+        $job      = $this->getJob($config);
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -609,9 +609,9 @@ class FileConfiguratorTest extends TestCase
     public function testIsJobConfiguredFalse()
     {
         // data
-        $config = ['stage' => 'upload-config'];
+        $config   = ['stage' => 'upload-config'];
         $extended = ['steps' => 0, 'done' => 0];
-        $job    = $this->getJob($config);
+        $job      = $this->getJob($config);
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -648,9 +648,9 @@ class FileConfiguratorTest extends TestCase
     public function testIsJobConfiguredTrue()
     {
         // data
-        $config = ['stage' => 'ready'];
+        $config   = ['stage' => 'ready'];
         $extended = ['steps' => 0, 'done' => 0];
-        $job    = $this->getJob($config);
+        $job      = $this->getJob($config);
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);

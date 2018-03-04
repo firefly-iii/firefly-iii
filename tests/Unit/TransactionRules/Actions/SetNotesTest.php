@@ -40,7 +40,7 @@ class SetNotesTest extends TestCase
     public function testAct()
     {
         // give journal a note:
-        $journal = TransactionJournal::find(15);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $note    = $journal->notes()->first();
         if (is_null($note)) {
             $note = new Note;
@@ -69,7 +69,7 @@ class SetNotesTest extends TestCase
     public function testActNoNotes()
     {
         // give journal a note:
-        $journal = TransactionJournal::find(16);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->notes()->forceDelete();
         $this->assertEquals(0, $journal->notes()->count());
 

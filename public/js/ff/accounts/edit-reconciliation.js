@@ -41,7 +41,8 @@ function setAutocompletes() {
                 source: data,
                 afterSelect: function () {
                     this.$element.val("");
-                }
+                },
+                autoSelect: false,
             }
         };
         $('input[name="tags"]').tagsinput(

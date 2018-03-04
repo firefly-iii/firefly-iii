@@ -24,7 +24,11 @@
                 </div>
                 <div class="box-body no-padding">
                     <div style="padding:8px;">
-                        <a href="{{ route('transactions.create', what) }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ ('new_' ~ what)|_ }}</a>
+                        {% if what == 'transfers' %}
+                            <a href="{{ route('transactions.create', 'transfer') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ ('new_' ~ what)|_ }}</a>
+                        {% else %}
+                            <a href="{{ route('transactions.create', what) }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ ('new_' ~ what)|_ }}</a>
+                        {% endif %}
                     </div>
                     {# actual list #}
                     {% include 'list.journals' with {'journals': journals} %}

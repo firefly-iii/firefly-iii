@@ -104,24 +104,6 @@ class Tag extends Model
     }
 
     /**
-     * @param Tag $tag
-     *
-     * @return string
-     *
-     * @throws \FireflyIII\Exceptions\FireflyException
-     */
-    public static function tagSum(Tag $tag): string
-    {
-        $sum = '0';
-        /** @var TransactionJournal $journal */
-        foreach ($tag->transactionjournals as $journal) {
-            bcadd($sum, $journal->amount());
-        }
-
-        return $sum;
-    }
-
-    /**
      * @codeCoverageIgnore
      *
      * @param $value

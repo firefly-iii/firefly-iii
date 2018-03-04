@@ -29,7 +29,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SplitJournalFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -37,7 +36,6 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use Illuminate\Http\Request;
-use Log;
 use Preferences;
 use Session;
 use Steam;
@@ -97,7 +95,7 @@ class SplitController extends Controller
     public function edit(Request $request, TransactionJournal $journal)
     {
         if ($this->isOpeningBalance($journal)) {
-            return $this->redirectToAccount($journal);
+            return $this->redirectToAccount($journal); // @codeCoverageIgnore
         }
 
         $uploadSize     = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
@@ -125,20 +123,11 @@ class SplitController extends Controller
         Session::forget('transactions.edit-split.fromUpdate');
 
         return view(
-            'transactions.split.edit',
-            compact(
-                'subTitleIcon',
-                'currencies',
-                'optionalFields',
-                'preFilled',
-                'subTitle',
-                'uploadSize',
-                'assetAccounts',
-                'budgets',
-                'journal',
-                'accountArray',
-                'previous'
-            )
+            'transactions.split.edit', compact(
+                                         'subTitleIcon', 'currencies', 'optionalFields', 'preFilled', 'subTitle', 'uploadSize', 'assetAccounts', 'budgets',
+                                         'journal', 'accountArray',
+                                         'previous'
+                                     )
         );
     }
 
@@ -151,10 +140,11 @@ class SplitController extends Controller
     public function update(SplitJournalFormRequest $request, TransactionJournal $journal)
     {
         if ($this->isOpeningBalance($journal)) {
-            return $this->redirectToAccount($journal);
+            return $this->redirectToAccount($journal); // @codeCoverageIgnore
         }
-        $data    = $this->arrayFromInput($request);
-        $journal = $this->repository->updateSplitJournal($journal, $data);
+        $data    = $request->getAll();
+        $journal = $this->repository->update($journal, $data);
+
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         // save attachments:
@@ -168,8 +158,8 @@ class SplitController extends Controller
         }
         // @codeCoverageIgnoreEnd
 
-        $type = strtolower($journal->transactionTypeStr());
-        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => $data['journal_description']])));
+        $type = strtolower($this->repository->getTransactionType($journal));
+        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => $data['description']])));
         Preferences::mark();
 
         // @codeCoverageIgnoreStart
@@ -186,39 +176,6 @@ class SplitController extends Controller
     }
 
     /**
-     * @param SplitJournalFormRequest $request
-     *
-     * @return array
-     */
-    private function arrayFromInput(SplitJournalFormRequest $request): array
-    {
-        $tags  = null === $request->get('tags') ? '' : $request->get('tags');
-        $array = [
-            'journal_description'            => $request->get('journal_description'),
-            'journal_source_account_id'      => $request->get('journal_source_account_id'),
-            'journal_source_account_name'    => $request->get('journal_source_account_name'),
-            'journal_destination_account_id' => $request->get('journal_destination_account_id'),
-            'what'                           => $request->get('what'),
-            'date'                           => $request->get('date'),
-            // all custom fields:
-            'interest_date'                  => $request->get('interest_date'),
-            'book_date'                      => $request->get('book_date'),
-            'process_date'                   => $request->get('process_date'),
-            'due_date'                       => $request->get('due_date'),
-            'payment_date'                   => $request->get('payment_date'),
-            'invoice_date'                   => $request->get('invoice_date'),
-            'internal_reference'             => $request->get('internal_reference'),
-            'notes'                          => $request->get('notes'),
-            'tags'                           => explode(',', $tags),
-
-            // transactions.
-            'transactions'                   => $this->getTransactionDataFromRequest($request),
-        ];
-
-        return $array;
-    }
-
-    /**
      * @param SplitJournalFormRequest|Request $request
      * @param TransactionJournal              $journal
      *
@@ -226,36 +183,29 @@ class SplitController extends Controller
      */
     private function arrayFromJournal(Request $request, TransactionJournal $journal): array
     {
-        $sourceAccounts      = $journal->sourceAccountList();
-        $destinationAccounts = $journal->destinationAccountList();
-        $notes               = '';
-        /** @var Note $note */
-
-        $note = $this->repository->getNote($journal);
-        if (null !== $note) {
-            $notes = $note->text;
-        }
-        $array = [
+        $sourceAccounts      = $this->repository->getJournalSourceAccounts($journal);
+        $destinationAccounts = $this->repository->getJournalDestinationAccounts($journal);
+        $array               = [
             'journal_description'            => $request->old('journal_description', $journal->description),
-            'journal_amount'                 => $journal->amountPositive(),
+            'journal_amount'                 => $this->repository->getJournalTotal($journal),
             'sourceAccounts'                 => $sourceAccounts,
             'journal_source_account_id'      => $request->old('journal_source_account_id', $sourceAccounts->first()->id),
             'journal_source_account_name'    => $request->old('journal_source_account_name', $sourceAccounts->first()->name),
             'journal_destination_account_id' => $request->old('journal_destination_account_id', $destinationAccounts->first()->id),
             'destinationAccounts'            => $destinationAccounts,
-            'what'                           => strtolower($journal->transactionTypeStr()),
-            'date'                           => $request->old('date', $journal->date->format('Y-m-d')),
+            'what'                           => strtolower($this->repository->getTransactionType($journal)),
+            'date'                           => $request->old('date', $this->repository->getJournalDate($journal, null)),
             'tags'                           => join(',', $journal->tags->pluck('tag')->toArray()),
 
             // all custom fields:
-            'interest_date'                  => $request->old('interest_date', $journal->getMeta('interest_date')),
-            'book_date'                      => $request->old('book_date', $journal->getMeta('book_date')),
-            'process_date'                   => $request->old('process_date', $journal->getMeta('process_date')),
-            'due_date'                       => $request->old('due_date', $journal->getMeta('due_date')),
-            'payment_date'                   => $request->old('payment_date', $journal->getMeta('payment_date')),
-            'invoice_date'                   => $request->old('invoice_date', $journal->getMeta('invoice_date')),
-            'internal_reference'             => $request->old('internal_reference', $journal->getMeta('internal_reference')),
-            'notes'                          => $request->old('notes', $notes),
+            'interest_date'                  => $request->old('interest_date', $this->repository->getMetaField($journal, 'interest_date')),
+            'book_date'                      => $request->old('book_date', $this->repository->getMetaField($journal, 'book_date')),
+            'process_date'                   => $request->old('process_date', $this->repository->getMetaField($journal, 'process_date')),
+            'due_date'                       => $request->old('due_date', $this->repository->getMetaField($journal, 'due_date')),
+            'payment_date'                   => $request->old('payment_date', $this->repository->getMetaField($journal, 'payment_date')),
+            'invoice_date'                   => $request->old('invoice_date', $this->repository->getMetaField($journal, 'invoice_date')),
+            'internal_reference'             => $request->old('internal_reference', $this->repository->getMetaField($journal, 'internal_reference')),
+            'notes'                          => $request->old('notes', $this->repository->getNoteText($journal)),
 
             // transactions.
             'transactions'                   => $this->getTransactionDataFromJournal($journal),
@@ -295,44 +245,17 @@ class SplitController extends Controller
                 'foreign_currency_code'       => $transaction['foreign_currency_code'],
                 'foreign_currency_symbol'     => $transaction['foreign_currency_symbol'],
             ];
-
             // set initial category and/or budget:
-            if (1 === count($transactions) && 0 === $index) {
-                $set['budget_id'] = $journal->budgetId();
-                $set['category']  = $journal->categoryAsString();
+            if ($set['budget_id'] === 0) {
+                $set['budget_id'] = $this->repository->getJournalBudgetId($journal);
             }
+            if (strlen($set['category']) === 0) {
+                $set['category'] = $this->repository->getJournalCategoryName($journal);
+            }
+
 
             $return[] = $set;
         }
-
-        return $return;
-    }
-
-    /**
-     * @param SplitJournalFormRequest|Request $request
-     *
-     * @return array
-     */
-    private function getTransactionDataFromRequest(SplitJournalFormRequest $request): array
-    {
-        $return       = [];
-        $transactions = $request->get('transactions');
-        foreach ($transactions as $transaction) {
-            $return[] = [
-                'description'              => $transaction['description'],
-                'source_account_id'        => $transaction['source_account_id'] ?? 0,
-                'source_account_name'      => $transaction['source_account_name'] ?? '',
-                'destination_account_id'   => $transaction['destination_account_id'] ?? 0,
-                'destination_account_name' => $transaction['destination_account_name'] ?? '',
-                'amount'                   => round($transaction['amount'] ?? 0, 12),
-                'foreign_amount'           => !isset($transaction['foreign_amount']) ? null : round($transaction['foreign_amount'] ?? 0, 12),
-                'budget_id'                => isset($transaction['budget_id']) ? intval($transaction['budget_id']) : 0,
-                'category'                 => $transaction['category'] ?? '',
-                'transaction_currency_id'  => intval($transaction['transaction_currency_id']),
-                'foreign_currency_id'      => $transaction['foreign_currency_id'] ?? null,
-            ];
-        }
-        Log::debug(sprintf('Found %d splits in request data.', count($return)));
 
         return $return;
     }

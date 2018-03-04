@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers\Admin;
 
 use Event;
 use FireflyIII\Events\AdminRequestedTestMessage;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -35,6 +36,15 @@ use Tests\TestCase;
  */
 class HomeControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug('Now in Feature/Controllers/Admin/HomeControllerTest.');
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\HomeController::index
      * @covers \FireflyIII\Http\Controllers\Admin\HomeController::__construct

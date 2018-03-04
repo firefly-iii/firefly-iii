@@ -36,7 +36,7 @@ class HasAnyBudgetTest extends TestCase
      */
     public function testTriggered()
     {
-        $journal = TransactionJournal::find(25);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $budget  = $journal->user->budgets()->first();
         $journal->budgets()->detach();
         $journal->budgets()->save($budget);
@@ -52,7 +52,7 @@ class HasAnyBudgetTest extends TestCase
      */
     public function testTriggeredNot()
     {
-        $journal = TransactionJournal::find(24);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->budgets()->detach();
         $this->assertEquals(0, $journal->budgets()->count());
         $trigger = HasAnyBudget::makeFromStrings('', false);
@@ -65,7 +65,7 @@ class HasAnyBudgetTest extends TestCase
      */
     public function testTriggeredTransactions()
     {
-        $journal = TransactionJournal::find(26);
+        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $budget  = $journal->user->budgets()->first();
         $journal->budgets()->detach();
         $this->assertEquals(0, $journal->budgets()->count());

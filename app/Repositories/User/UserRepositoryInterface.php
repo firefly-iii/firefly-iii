@@ -31,28 +31,12 @@ use Illuminate\Support\Collection;
  */
 interface UserRepositoryInterface
 {
-
-    /**
-     * @param string $name
-     * @param string $displayName
-     * @param string $description
-     *
-     * @return Role
-     */
-    public function createRole(string $name, string $displayName, string $description): Role;
     /**
      * Returns a collection of all users.
      *
      * @return Collection
      */
     public function all(): Collection;
-
-    /**
-     * @param string $role
-     *
-     * @return Role|null
-     */
-    public function getRole(string $role): ?Role;
 
     /**
      * Gives a user a role.
@@ -102,6 +86,15 @@ interface UserRepositoryInterface
     public function count(): int;
 
     /**
+     * @param string $name
+     * @param string $displayName
+     * @param string $description
+     *
+     * @return Role
+     */
+    public function createRole(string $name, string $displayName, string $description): Role;
+
+    /**
      * @param User $user
      *
      * @return bool
@@ -128,6 +121,13 @@ interface UserRepositoryInterface
      * @return null|User
      */
     public function first(): ?User;
+
+    /**
+     * @param string $role
+     *
+     * @return Role|null
+     */
+    public function getRole(string $role): ?Role;
 
     /**
      * Return basic user information.
@@ -157,6 +157,16 @@ interface UserRepositoryInterface
      * @param User $user
      */
     public function unblockUser(User $user): void;
+
+    /**
+     * Update user info.
+     *
+     * @param User  $user
+     * @param array $data
+     *
+     * @return User
+     */
+    public function update(User $user, array $data): User;
 
     /**
      * This updates the users email address. Same as changeEmail just without most logging. This makes sure that the undo/confirm routine can't catch this one.

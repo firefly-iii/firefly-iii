@@ -158,7 +158,7 @@ return [
     'tag_areYouSure'             => 'Sind Sie sicher, dass Sie den Tag ":name" löschen möchten?',
     'journal_link_areYouSure'    => 'Sind Sie sicher, dass Sie die Verknüpfung zwischen <a href=":source_link">:source</a> und <a href=":destination_link">:destination</a> löschen möchten?',
     'linkType_areYouSure'        => 'Are you sure you want to delete the link type ":name" (":inward" / ":outward")?',
-    'permDeleteWarning'          => 'Das Löschen von Dingen in Firefly ist dauerhaft und kann nicht rückgängig gemacht werden.',
+    'permDeleteWarning'          => 'Das Löschen von Dingen in Firefly III ist dauerhaft und kann nicht rückgängig gemacht werden.',
     'mass_make_selection'        => 'Sie können das Löschen von Elementen verhindern, indem Sie die Checkbox entfernen.',
     'delete_all_permanently'     => 'Ausgewähltes dauerhaft löschen',
     'update_all_journals'        => 'Diese Transaktionen aktualisieren',

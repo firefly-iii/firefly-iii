@@ -44,6 +44,7 @@ use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Laravel\Passport\Http\Middleware\CreateFreshApiToken;
 
 /**
  * @codeCoverageIgnore
@@ -84,7 +85,7 @@ class Kernel extends HttpKernel
                 StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
-                //SubstituteBindings::class,
+                CreateFreshApiToken::class,
             ],
 
             // MUST NOT be logged in. Does not care about 2FA or confirmation.
@@ -95,7 +96,6 @@ class Kernel extends HttpKernel
                 StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
-                //SubstituteBindings::class,
                 Binder::class,
                 RedirectIfAuthenticated::class,
             ],
@@ -109,7 +109,6 @@ class Kernel extends HttpKernel
                 StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
-                //SubstituteBindings::class,
                 Binder::class,
                 Authenticate::class,
                 RedirectIfTwoFactorAuthenticated::class,
@@ -125,7 +124,6 @@ class Kernel extends HttpKernel
                 StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
-                //SubstituteBindings::class,
                 Binder::class,
                 Authenticate::class,
             ],
@@ -141,11 +139,11 @@ class Kernel extends HttpKernel
                 StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
-                //SubstituteBindings::class,
                 Authenticate::class,
                 AuthenticateTwoFactor::class,
                 Range::class,
                 Binder::class,
+                CreateFreshApiToken::class,
             ],
             // MUST be logged in
             // MUST have 2fa
@@ -159,12 +157,12 @@ class Kernel extends HttpKernel
                 StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
-                //SubstituteBindings::class,
                 Authenticate::class,
                 AuthenticateTwoFactor::class,
                 IsAdmin::class,
                 Range::class,
                 Binder::class,
+                CreateFreshApiToken::class,
             ],
 
             'api' => [

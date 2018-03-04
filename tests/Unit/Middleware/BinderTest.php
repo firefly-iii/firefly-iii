@@ -1230,16 +1230,19 @@ class BinderTest extends TestCase
      */
     public function testTagList()
     {
+        $tagRepos = $this->mock(TagRepositoryInterface::class);
+        $tagRepos->shouldReceive('setUser');
+        $tags = $this->user()->tags()->whereIn('id', [1, 2])->get(['tags.*']);
+        $tagRepos->shouldReceive('get')->once()->andReturn($tags);
+
         Route::middleware(Binder::class)->any(
             '/_test/binder/{tagList}', function (Collection $tags) {
             return 'count: ' . $tags->count();
         }
         );
-        $tags  = $this->user()->tags()->whereIn('id', [1, 2])->get(['tags.*']);
+
         $names = join(',', $tags->pluck('tag')->toArray());
 
-        $repository = $this->mock(TagRepositoryInterface::class);
-        $repository->shouldReceive('get')->once()->andReturn($tags);
 
         $this->be($this->user());
         $response = $this->get('/_test/binder/' . $names);
@@ -1255,6 +1258,10 @@ class BinderTest extends TestCase
      */
     public function testTagListEmpty()
     {
+        $tagRepos = $this->mock(TagRepositoryInterface::class);
+        $tagRepos->shouldReceive('setUser');
+        $tagRepos->shouldReceive('get')->once()->andReturn(new Collection());
+
         Route::middleware(Binder::class)->any(
             '/_test/binder/{tagList}', function (Collection $tags) {
             return 'count: ' . $tags->count();

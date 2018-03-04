@@ -38,7 +38,7 @@ class Navigation
      *
      * @return \Carbon\Carbon
      *
-     * @throws FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function addPeriod(Carbon $theDate, string $repeatFreq, int $skip): Carbon
     {
@@ -86,12 +86,17 @@ class Navigation
      * @param string         $range
      *
      * @return array
-     * @throws FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function blockPeriods(\Carbon\Carbon $start, \Carbon\Carbon $end, string $range): array
     {
+        if ($end < $start) {
+            list($start, $end) = [$end, $start];
+        }
         $periods = [];
-        // Start by looping per period:
+        /*
+         * Start looping per months for 1 year + the rest of the year:
+         */
         $perMonthEnd   = clone $end;
         $perMonthStart = clone $end;
         $perMonthStart->startOfyear()->subYear();
@@ -148,7 +153,7 @@ class Navigation
      *
      * @return \Carbon\Carbon
      *
-     * @throws FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function endOfPeriod(\Carbon\Carbon $end, string $repeatFreq): Carbon
     {
@@ -211,7 +216,7 @@ class Navigation
      * @param string              $repeatFreq
      * @param \Carbon\Carbon|null $maxDate
      *
-     * @return Carbon
+     * @return \Carbon\Carbon
      */
     public function endOfX(Carbon $theCurrentEnd, string $repeatFreq, ?Carbon $maxDate): Carbon
     {
@@ -285,11 +290,11 @@ class Navigation
 
     /**
      * @param \Carbon\Carbon $theDate
-     * @param                $repeatFrequency
+     * @param  string        $repeatFrequency
      *
      * @return string
      *
-     * @throws FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function periodShow(Carbon $theDate, string $repeatFrequency): string
     {
@@ -444,7 +449,7 @@ class Navigation
      *
      * @return \Carbon\Carbon
      *
-     * @throws FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function startOfPeriod(Carbon $theDate, string $repeatFreq): Carbon
     {
@@ -496,7 +501,7 @@ class Navigation
      *
      * @return \Carbon\Carbon
      *
-     * @throws FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function subtractPeriod(Carbon $theDate, string $repeatFreq, int $subtract = 1): Carbon
     {
@@ -565,7 +570,7 @@ class Navigation
      *
      * @return \Carbon\Carbon
      *
-     * @throws FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function updateEndDate(string $range, Carbon $start): Carbon
     {
@@ -604,7 +609,7 @@ class Navigation
      *
      * @return \Carbon\Carbon
      *
-     * @throws FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function updateStartDate(string $range, Carbon $start): Carbon
     {

@@ -85,8 +85,8 @@ class Import extends Command
         $monolog->pushHandler($handler);
 
         // actually start job:
-        $type = 'csv' === $job->file_type ? 'file' : $job->file_type;
-        $key = sprintf('import.routine.%s', $type);
+        $type      = 'csv' === $job->file_type ? 'file' : $job->file_type;
+        $key       = sprintf('import.routine.%s', $type);
         $className = config($key);
         if (null === $className || !class_exists($className)) {
             throw new FireflyException(sprintf('Cannot find import routine class for job of type "%s".', $type)); // @codeCoverageIgnore

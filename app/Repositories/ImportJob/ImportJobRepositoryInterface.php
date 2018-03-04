@@ -133,7 +133,7 @@ interface ImportJobRepositoryInterface
      * @param ImportJob $job
      * @param array     $array
      *
-     * @return void
+     * @return ImportJob
      */
     public function setExtendedStatus(ImportJob $job, array $array): ImportJob;
 
@@ -147,7 +147,7 @@ interface ImportJobRepositoryInterface
 
     /**
      * @param ImportJob $job
-     * @param int       $count
+     * @param int       $steps
      *
      * @return ImportJob
      */
