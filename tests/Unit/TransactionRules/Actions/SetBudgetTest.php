@@ -41,7 +41,7 @@ class SetBudgetTest extends TestCase
     public function testAct()
     {
         // get journal, remove all budgets
-        $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal     = TransactionJournal::inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
         $budget      = $journal->user->budgets()->first();
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepos->shouldReceive('setUser');
