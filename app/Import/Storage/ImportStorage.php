@@ -57,11 +57,11 @@ class ImportStorage
     /** @var Collection */
     public $journals;
     /** @var BillRepositoryInterface */
-    protected $billRepository; // yes, hard coded
+    protected $billRepository;
     /** @var Collection */
     protected $bills;
     /** @var int */
-    protected $defaultCurrencyId = 1;
+    protected $defaultCurrencyId = 1; // yes, hard coded
     /** @var ImportJob */
     protected $job;
     /** @var ImportJobRepositoryInterface */
