@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tests\Unit\TransactionRules\Actions;
 
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\ClearBudget;
 use Tests\TestCase;
@@ -53,5 +54,12 @@ class ClearBudgetTest extends TestCase
 
         // assert result
         $this->assertEquals(0, $journal->budgets()->count());
+
+        /** @var Transaction $transaction */
+        foreach($journal->transactions as $transaction) {
+            $this->assertEquals(0, $transaction->budgets()->count());
+        }
+
+
     }
 }

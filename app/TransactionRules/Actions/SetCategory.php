@@ -61,7 +61,7 @@ class SetCategory implements ActionInterface
         $journal->categories()->detach();
         // set category on transactions:
         /** @var Transaction $transaction */
-        foreach ($journal->transaction as $transaction) {
+        foreach ($journal->transactions as $transaction) {
             $transaction->categories()->sync([$category->id]);
         }
         $journal->touch();

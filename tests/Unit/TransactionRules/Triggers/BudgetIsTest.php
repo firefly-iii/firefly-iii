@@ -36,8 +36,12 @@ class BudgetIsTest extends TestCase
      */
     public function testTriggeredJournal()
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-        $budget  = $journal->user->budgets()->first();
+        do {
+            $journal = TransactionJournal::inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
+
+        $budget = $journal->user->budgets()->first();
         $journal->budgets()->detach();
         $journal->budgets()->save($budget);
         $this->assertEquals(1, $journal->budgets()->count());
@@ -52,7 +56,11 @@ class BudgetIsTest extends TestCase
      */
     public function testTriggeredNotJournal()
     {
-        $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        do {
+            $journal = TransactionJournal::inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
+
         $budget      = $journal->user->budgets()->first();
         $otherBudget = $journal->user->budgets()->where('id', '!=', $budget->id)->first();
         $journal->budgets()->detach();
@@ -69,14 +77,21 @@ class BudgetIsTest extends TestCase
      */
     public function testTriggeredTransaction()
     {
-        $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-        $transaction = $journal->transactions()->first();
+        do {
+            $journal = TransactionJournal::inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
+
+        $transactions = $journal->transactions()->get();
         $budget      = $journal->user->budgets()->first();
 
         $journal->budgets()->detach();
-        $transaction->budgets()->save($budget);
+        foreach($transactions as $transaction) {
+            $transaction->budgets()->save($budget);
+            $this->assertEquals(1, $transaction->budgets()->count());
+        }
+
         $this->assertEquals(0, $journal->budgets()->count());
-        $this->assertEquals(1, $transaction->budgets()->count());
 
         $trigger = BudgetIs::makeFromStrings($budget->name, false);
         $result  = $trigger->triggered($journal);

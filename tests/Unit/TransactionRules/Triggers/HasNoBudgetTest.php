@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
 
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\HasNoBudget;
 use Tests\TestCase;
@@ -36,7 +37,7 @@ class HasNoBudgetTest extends TestCase
      */
     public function testTriggeredBudget()
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = TransactionJournal::inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
         $budget  = $journal->user->budgets()->first();
         $journal->budgets()->detach();
         $journal->budgets()->save($budget);
@@ -52,8 +53,13 @@ class HasNoBudgetTest extends TestCase
      */
     public function testTriggeredNoBudget()
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
         $journal->budgets()->detach();
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions as $transaction) {
+            $transaction->budgets()->detach();
+        }
         $this->assertEquals(0, $journal->budgets()->count());
 
         $trigger = HasNoBudget::makeFromStrings('', false);
@@ -66,14 +72,18 @@ class HasNoBudgetTest extends TestCase
      */
     public function testTriggeredTransaction()
     {
-        $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-        $transaction = $journal->transactions()->first();
-        $budget      = $journal->user->budgets()->first();
+        /** @var TransactionJournal $journal */
+        $journal      = TransactionJournal::inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
+        $transactions = $journal->transactions()->get();
+        $budget       = $journal->user->budgets()->first();
 
         $journal->budgets()->detach();
-        $transaction->budgets()->save($budget);
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $transaction->budgets()->sync([$budget->id]);
+            $this->assertEquals(1, $transaction->budgets()->count());
+        }
         $this->assertEquals(0, $journal->budgets()->count());
-        $this->assertEquals(1, $transaction->budgets()->count());
 
         $trigger = HasNoBudget::makeFromStrings('', false);
         $result  = $trigger->triggered($journal);

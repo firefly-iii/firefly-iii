@@ -91,7 +91,7 @@ class SetBudget implements ActionInterface
         $journal->budgets()->detach();
         // set budget on transactions:
         /** @var Transaction $transaction */
-        foreach ($journal->transaction as $transaction) {
+        foreach ($journal->transactions as $transaction) {
             $transaction->budgets()->sync([$budget->id]);
         }
         $journal->touch();

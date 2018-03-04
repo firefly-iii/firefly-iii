@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tests\Unit\TransactionRules\Actions;
 
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\TransactionRules\Actions\SetBudget;
@@ -56,7 +57,10 @@ class SetBudgetTest extends TestCase
         $action                   = new SetBudget($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);
-        $this->assertEquals(1, $journal->budgets()->count());
-        $this->assertEquals($budget->name, $journal->budgets()->first()->name);
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions as $transaction) {
+            $this->assertEquals(1, $transaction->budgets()->count());
+            $this->assertEquals($budget->name, $transaction->budgets()->first()->name);
+        }
     }
 }
