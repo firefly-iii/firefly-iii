@@ -216,6 +216,7 @@ trait TransactionServiceTrait
     protected function setBudget(Transaction $transaction, ?Budget $budget): void
     {
         if (is_null($budget)) {
+            $transaction->budgets()->sync([]);
             return;
         }
         $transaction->budgets()->sync([$budget->id]);
@@ -231,6 +232,7 @@ trait TransactionServiceTrait
     protected function setCategory(Transaction $transaction, ?Category $category): void
     {
         if (is_null($category)) {
+            $transaction->categories()->sync([]);
             return;
         }
         $transaction->categories()->sync([$category->id]);

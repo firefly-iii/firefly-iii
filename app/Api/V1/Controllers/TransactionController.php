@@ -80,7 +80,7 @@ class TransactionController extends Controller
     public function delete(Transaction $transaction)
     {
         $journal = $transaction->transactionJournal;
-        $this->repository->delete($journal);
+        $this->repository->destroy($journal);
 
         return response()->json([], 204);
     }

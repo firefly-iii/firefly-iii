@@ -64,7 +64,7 @@ class TransactionControllerTest extends TestCase
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('delete')->once()->andReturn(true);
+        $repository->shouldReceive('destroy')->once()->andReturn(true);
 
         // get account:
         $transaction = $this->user()->transactions()->first();

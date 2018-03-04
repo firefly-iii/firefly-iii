@@ -47,6 +47,7 @@ class AccountRequest extends Request
             'name'                 => $this->string('name'),
             'active'               => $this->boolean('active'),
             'accountType'          => $this->string('type'),
+            'account_type_id'      => null,
             'currency_id'          => $this->integer('currency_id'),
             'currency_code'        => $this->string('currency_code'),
             'virtualBalance'       => $this->string('virtual_balance'),
@@ -97,6 +98,7 @@ class AccountRequest extends Request
                 $account                 = $this->route()->parameter('account');
                 $rules['name']           .= ':' . $account->id;
                 $rules['account_number'] .= ':' . $account->id;
+                $rules['type']           = 'in:' . $types;
                 break;
         }
 

@@ -169,6 +169,8 @@ class AccountController extends Controller
     }
 
     /**
+     * Update account.
+     *
      * @param AccountRequest $request
      * @param Account        $account
      *

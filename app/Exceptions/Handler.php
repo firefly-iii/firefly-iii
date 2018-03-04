@@ -77,8 +77,9 @@ class Handler extends ExceptionHandler
             return response()->json(['message' => 'Unauthenticated', 'exception' => 'AuthenticationException'], 401);
         }
 
+
         if ($request->expectsJson()) {
-            $isDebug = env('APP_DEBUG', false);
+            $isDebug = config('app.debug', false);
             if ($isDebug) {
                 return response()->json(
                     [
