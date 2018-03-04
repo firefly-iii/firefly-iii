@@ -41,7 +41,7 @@ class ClearCategoryTest extends TestCase
         // associate budget with journal:
         $journal  = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $category = $journal->user->categories()->first();
-        $journal->budgets()->save($category);
+        $journal->categories()->save($category);
         $this->assertGreaterThan(0, $journal->categories()->count());
 
         // fire the action:

@@ -24,6 +24,7 @@ namespace FireflyIII\TransactionRules\Actions;
 
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -87,7 +88,12 @@ class SetBudget implements ActionInterface
 
         Log::debug(sprintf('RuleAction SetBudget set the budget of journal #%d to budget #%d ("%s").', $journal->id, $budget->id, $budget->name));
 
-        $journal->budgets()->sync([$budget->id]);
+        $journal->budgets()->detach();
+        // set budget on transactions:
+        /** @var Transaction $transaction */
+        foreach ($journal->transaction as $transaction) {
+            $transaction->budgets()->sync([$budget->id]);
+        }
         $journal->touch();
 
         return true;
