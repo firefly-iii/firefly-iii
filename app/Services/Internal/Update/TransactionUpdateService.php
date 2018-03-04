@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Services\Internal\Support\TransactionServiceTrait;
 use FireflyIII\User;
@@ -70,7 +69,6 @@ class TransactionUpdateService
      * @param array       $data
      *
      * @return Transaction
-     * @throws FireflyException
      */
     public function update(Transaction $transaction, array $data): Transaction
     {
@@ -159,6 +157,6 @@ class TransactionUpdateService
         $category = $this->findCategory(0, $category);
         $this->setCategory($transaction, $category);
 
-        return $category;
+        return $transaction;
     }
 }

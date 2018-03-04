@@ -45,7 +45,7 @@ trait BillServiceTrait
         if (0 === strlen($note)) {
             $dbNote = $bill->notes()->first();
             if (null !== $dbNote) {
-                $dbNote->delete();
+                $dbNote->delete(); // @codeCoverageIgnore
             }
 
             return true;

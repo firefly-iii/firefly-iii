@@ -135,7 +135,6 @@ class SetDestinationAccount implements ActionInterface
     {
         $account = $this->repository->findByName($this->action->action_value, [AccountType::EXPENSE]);
         if (null === $account) {
-            // create new revenue account with this name:
             $data    = [
                 'name'            => $this->action->action_value,
                 'accountType'     => 'expense',

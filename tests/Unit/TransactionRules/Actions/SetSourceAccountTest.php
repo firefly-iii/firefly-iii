@@ -40,9 +40,7 @@ class SetSourceAccountTest extends TestCase
     /**
      * Give deposit existing revenue account.
      *
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::act()
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::findRevenueAccount()
+     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount
      */
     public function testActDepositExistingUpdated()
     {
@@ -51,14 +49,11 @@ class SetSourceAccountTest extends TestCase
 
         $type = TransactionType::whereType(TransactionType::DEPOSIT)->first();
 
-        // select split transactions to exclude them later:
-        $set = TransactionJournal::where('transaction_type_id', $type->id)->get(['transaction_journals.*']);
-        foreach ($set as $current) {
-            if ($current->transactions()->count() === 2) {
-                $journal = $current;
-                break;
-            }
-        }
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = $this->user()->transactionJournals()->where('transaction_type_id', $type->id)->inRandomOrder()->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
 
         $sourceTr    = $journal->transactions()->where('amount', '<', 0)->first();
         $source      = $sourceTr->account;
@@ -87,25 +82,49 @@ class SetSourceAccountTest extends TestCase
     }
 
     /**
+     * Give deposit new revenueaccount.
+     *
+     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount
+     */
+    public function testActDepositRevenue()
+    {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $type         = TransactionType::whereType(TransactionType::DEPOSIT)->first();
+        $account      = $this->user()->accounts()->inRandomOrder()->where('account_type_id', 5)->first();
+
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = $this->user()->transactionJournals()->where('transaction_type_id', $type->id)->inRandomOrder()->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
+
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('findByName')->andReturn(null);
+        $accountRepos->shouldReceive('store')->once()->andReturn($account);
+
+        // fire the action:
+        $ruleAction               = new RuleAction;
+        $ruleAction->action_value = 'Some new revenue #' . rand(1, 1000);
+        $action                   = new SetSourceAccount($ruleAction);
+        $result                   = $action->act($journal);
+        $this->assertTrue($result);
+    }
+
+    /**
      * Give withdrawal existing asset account.
      *
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::act()
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::findAssetAccount()
+     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount
      */
     public function testActWithdrawalExistingUpdated()
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $type         = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
 
-        // select split transactions to exclude them later:
-        $set = TransactionJournal::where('transaction_type_id', $type->id)->get(['transaction_journals.*']);
-        foreach ($set as $current) {
-            if ($current->transactions()->count() === 2) {
-                $journal = $current;
-                break;
-            }
-        }
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = $this->user()->transactionJournals()->where('transaction_type_id', $type->id)->inRandomOrder()->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
 
         $sourceTr    = $journal->transactions()->where('amount', '<', 0)->first();
         $source      = $sourceTr->account;
@@ -134,10 +153,36 @@ class SetSourceAccountTest extends TestCase
     }
 
     /**
+     * Give withdrawal not existing asset account.
+     *
+     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount
+     */
+    public function testActWithdrawalNotExisting()
+    {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $type         = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
+
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = $this->user()->transactionJournals()->where('transaction_type_id', $type->id)->inRandomOrder()->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
+
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('findByName')->andReturn(null);
+
+        // fire the action:
+        $ruleAction               = new RuleAction;
+        $ruleAction->action_value = 'Some new account #' . rand(1, 1000);
+        $action                   = new SetSourceAccount($ruleAction);
+        $result                   = $action->act($journal);
+        $this->assertFalse($result);
+    }
+
+    /**
      * Test this on a split journal.
      *
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount::act()
+     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount
      */
     public function testSplitJournal()
     {

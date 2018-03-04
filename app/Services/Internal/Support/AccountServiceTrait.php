@@ -255,8 +255,7 @@ trait AccountServiceTrait
 
             return true;
         }
-
-        return true;
+        return true; // @codeCoverageIgnore
     }
 
     /**

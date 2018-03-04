@@ -69,6 +69,40 @@ class BillFactoryTest extends TestCase
     }
 
     /**
+     * Create basic bill with minimum data.
+     *
+     * @covers \FireflyIII\Factory\BillFactory
+     * @covers \FireflyIII\Services\Internal\Support\BillServiceTrait
+     */
+    public function testCreateEmptyNotes()
+    {
+        $data = [
+            'name'        => 'Some new bill #' . rand(1, 1000),
+            'match'       => 'i,am,word' . rand(1, 1000),
+            'amount_min'  => '5',
+            'amount_max'  => '10',
+            'date'        => '2018-01-01',
+            'repeat_freq' => 'monthly',
+            'skip'        => 0,
+            'automatch'   => true,
+            'active'      => true,
+            'notes'       => '',
+        ];
+
+        /** @var BillFactory $factory */
+        $factory = app(BillFactory::class);
+        $factory->setUser($this->user());
+        $bill = $factory->create($data);
+
+        $this->assertEquals($data['name'], $bill->name);
+        $this->assertEquals($data['match'], $bill->match);
+        $this->assertEquals($data['amount_min'], $bill->amount_min);
+        $this->assertEquals($data['repeat_freq'], $bill->repeat_freq);
+        $this->assertEquals(0, $bill->notes()->count());
+
+    }
+
+    /**
      * Find by ID
      *
      * @covers \FireflyIII\Factory\BillFactory

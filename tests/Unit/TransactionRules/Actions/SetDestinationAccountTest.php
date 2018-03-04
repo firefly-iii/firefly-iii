@@ -42,23 +42,18 @@ class SetDestinationAccountTest extends TestCase
     /**
      * Give deposit existing asset account.
      *
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::act()
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::findAssetAccount()
+     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount
      */
     public function testActDepositExisting()
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $type         = TransactionType::whereType(TransactionType::DEPOSIT)->first();
 
-        // select split transactions to exclude them later:
-        $set = TransactionJournal::where('transaction_type_id', $type->id)->get(['transaction_journals.*']);
-        foreach ($set as $current) {
-            if ($current->transactions()->count() === 2) {
-                $journal = $current;
-                break;
-            }
-        }
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = $this->user()->transactionJournals()->where('transaction_type_id', $type->id)->inRandomOrder()->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
 
         $destinationTr = $journal->transactions()->where('amount', '>', 0)->first();
         $destination   = $destinationTr->account;
@@ -87,25 +82,80 @@ class SetDestinationAccountTest extends TestCase
     }
 
     /**
+     * Give deposit not existing asset account.
+     *
+     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount
+     */
+    public function testActDepositNotExisting()
+    {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $type         = TransactionType::whereType(TransactionType::DEPOSIT)->first();
+
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = $this->user()->transactionJournals()->where('transaction_type_id', $type->id)->inRandomOrder()->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
+
+        // find account? Return account:
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('findByName')->andReturn(null);
+
+        // fire the action:
+        $ruleAction               = new RuleAction;
+        $ruleAction->action_value = 'Not existing asset account #' . rand(1, 1000);
+        $action                   = new SetDestinationAccount($ruleAction);
+        $result                   = $action->act($journal);
+        $this->assertFalse($result);
+    }
+
+    /**
+     * Give withdrawal not existing expense account.
+     *
+     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount
+     */
+    public function testActWithDrawalNotExisting()
+    {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $type         = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
+        $account      = $this->user()->accounts()->inRandomOrder()->where('account_type_id', 4)->first();
+
+
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = $this->user()->transactionJournals()->where('transaction_type_id', $type->id)->inRandomOrder()->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
+
+        // find account? Return account:
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('findByName')->andReturn(null);
+        $accountRepos->shouldReceive('store')->once()->andReturn($account);
+
+        // fire the action:
+        $ruleAction               = new RuleAction;
+        $ruleAction->action_value = 'Not existing expense account #' . rand(1, 1000);
+        $action                   = new SetDestinationAccount($ruleAction);
+        $result                   = $action->act($journal);
+
+        $this->assertTrue($result);
+    }
+
+    /**
      * Give withdrawal existing expense account.
      *
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::act()
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::findExpenseAccount
+     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount
      */
     public function testActWithdrawalExisting()
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $type         = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
 
-        // select split transactions to exclude them later:
-        $set = TransactionJournal::where('transaction_type_id', $type->id)->get(['transaction_journals.*']);
-        foreach ($set as $current) {
-            if ($current->transactions()->count() === 2) {
-                $journal = $current;
-                break;
-            }
-        }
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = $this->user()->transactionJournals()->where('transaction_type_id', $type->id)->inRandomOrder()->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 2);
 
 
         $destinationTr = $journal->transactions()->where('amount', '>', 0)->first();
@@ -137,8 +187,7 @@ class SetDestinationAccountTest extends TestCase
     /**
      * Test this on a split journal.
      *
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::act()
+     * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount
      */
     public function testSplitJournal()
     {
