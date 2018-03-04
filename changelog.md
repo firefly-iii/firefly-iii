@@ -2,6 +2,25 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.7.1] - 2018-03-04
+### Added
+- A brand new API. Read about it in the [documentation](http://firefly-iii.readthedocs.io/en/latest/).
+- Add support for Spanish. #1194
+- Some custom preferences are selected by default for a better user experience.
+- Some new currencies #1211
+
+### Fixed
+- Fixed #1155 (reported by @ndandanov)
+- #1156 #1182 and other issues related to SQLite databases.
+- Multi-page budget overview was broken (reported by @jinformatique)
+- Importing CSV files with semi-colons in them did not work #1172 #1183 #1210
+- Could not use account number that was in use by a deleted account #1174 
+- Fixed spelling error that lead to 404's #1175 #1190
+- Fixed tag autocomplete #1178
+- Better links for "new transaction" buttons #1185
+- Cache errors in budget charts #1192
+- Deleting transactions that are linked to other other transactions would lead to errors #1209
+
 ## [4.7.0] - 2018-01-31
 ### Added
 - Support for Russian and Portuguese (Brazil)
