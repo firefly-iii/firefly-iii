@@ -156,6 +156,9 @@ class Preferences
         if (null !== $preference) {
             $lastActivity = $preference->data;
         }
+        if (is_array($lastActivity)) {
+            $lastActivity = implode(',', $lastActivity);
+        }
 
         return md5($lastActivity);
     }

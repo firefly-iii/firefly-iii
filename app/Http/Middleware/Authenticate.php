@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Authenticate.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
