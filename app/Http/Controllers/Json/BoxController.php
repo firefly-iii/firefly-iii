@@ -196,7 +196,7 @@ class BoxController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $netWorth = [];
-        $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts = $repository->getActiveAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $currency = app('amount')->getDefaultCurrency();
         $balances = app('steam')->balancesByAccounts($accounts, $date);
 
