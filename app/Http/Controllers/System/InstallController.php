@@ -28,6 +28,8 @@ use Artisan;
 use FireflyIII\Http\Controllers\Controller;
 use Laravel\Passport\Passport;
 use phpseclib\Crypt\RSA;
+use Log;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 /**
  * Class InstallController
@@ -47,7 +49,11 @@ class InstallController extends Controller
      */
     public function migrate()
     {
+        Log::debug('Am now calling migrate routine...');
+        $output = new BufferedOutput();
         Artisan::call('migrate', ['--seed' => true]);
+        $result = $output->fetch();
+        Log::debug($result);
 
         // create keys manually because for some reason the passport namespace
         // does not exist
