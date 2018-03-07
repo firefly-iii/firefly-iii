@@ -22,6 +22,15 @@
 declare(strict_types=1);
 
 
+Route::group(
+    ['namespace' => 'FireflyIII\Http\Controllers\System',
+     'as' => 'installer.', 'prefix' => 'install'], function () {
+    Route::get('', ['uses' => 'InstallController@index', 'as' => 'index']);
+
+    Route::get('migrate', ['uses' => 'InstallController@migrate', 'as' => 'migrate']);
+}
+);
+
 /**
  * These routes only work when the user is NOT logged in.
  */
