@@ -44,7 +44,7 @@ class SplitJournalFormRequest extends Request
     public function getAll(): array
     {
         $data = [
-            'description'     => $this->string('description'),
+            'description'     => $this->string('journal_description'),
             'type'            => $this->string('what'),
             'date'            => $this->date('date'),
             'tags'            => explode(',', $this->string('tags')),
