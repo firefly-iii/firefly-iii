@@ -170,7 +170,9 @@ return [
     'want_to_login'                              => 'I want to login',
     'button_register'                            => 'Register',
     'authorization'                              => 'Authorization',
-
+    'active_bills_only'                          => 'active bills only',
+    'average_per_bill'                           => 'average per bill',
+    'expected_total'                             => 'expected total',
     // API access
     'authorization_request'                      => 'Firefly III v:version Authorization Request',
     'authorization_request_intro'                => '<strong>:client</strong> is requesting permission to access your financial administration. Would you like to authorize <strong>:client</strong> to access these records?',
