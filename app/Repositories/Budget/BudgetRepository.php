@@ -317,8 +317,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         $amount          = '0';
         $availableBudget = $this->user->availableBudgets()
                                       ->where('transaction_currency_id', $currency->id)
-                                      ->where('start_date', $start->format('Y-m-d'))
-                                      ->where('end_date', $end->format('Y-m-d'))->first();
+                                      ->where('start_date', $start->format('Y-m-d 00:00:00'))
+                                      ->where('end_date', $end->format('Y-m-d 00:00:00'))->first();
         if (null !== $availableBudget) {
             $amount = strval($availableBudget->amount);
         }
@@ -492,8 +492,8 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         $availableBudget = $this->user->availableBudgets()
                                       ->where('transaction_currency_id', $currency->id)
-                                      ->where('start_date', $start->format('Y-m-d'))
-                                      ->where('end_date', $end->format('Y-m-d'))->first();
+                                      ->where('start_date', $start->format('Y-m-d 00:00:00'))
+                                      ->where('end_date', $end->format('Y-m-d 00:00:00'))->first();
         if (null === $availableBudget) {
             $availableBudget = new AvailableBudget;
             $availableBudget->user()->associate($this->user);
