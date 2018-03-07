@@ -27,8 +27,8 @@ namespace FireflyIII\Http\Controllers\System;
 use Artisan;
 use FireflyIII\Http\Controllers\Controller;
 use Laravel\Passport\Passport;
-use phpseclib\Crypt\RSA;
 use Log;
+use phpseclib\Crypt\RSA;
 use Symfony\Component\Console\Output\BufferedOutput;
 
 /**
@@ -51,7 +51,7 @@ class InstallController extends Controller
     {
         Log::debug('Am now calling migrate routine...');
         $output = new BufferedOutput();
-        Artisan::call('migrate', ['--seed' => true]);
+        Artisan::call('migrate', ['--seed' => true, '--force' => true]);
         $result = $output->fetch();
         Log::debug($result);
         Log::debug(Artisan::output());
