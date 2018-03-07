@@ -185,7 +185,11 @@ class AccountController extends Controller
         // the opening balance is tricky:
         $openingBalanceAmount = strval($repository->getOpeningBalanceAmount($account));
         $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
+        $default              = app('amount')->getDefaultCurrency();
         $currency             = $this->currencyRepos->findNull(intval($account->getMeta('currency_id')));
+        if (is_null($currency)) {
+            $currency = $default;
+        }
 
         $preFilled = [
             'accountNumber'        => $account->getMeta('accountNumber'),
