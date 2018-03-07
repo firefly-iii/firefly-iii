@@ -2377,9 +2377,13 @@ class TransactionControllerTest extends TestCase
      */
     public function testUpdateBasicDeposit()
     {
-        $account    = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $data       = [
+        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $repository   = $this->mock(JournalRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getAccountsById')->withArgs([[$account->id]])->andReturn(new Collection([$account]));
+
+        $data         = [
             'description'  => 'Some deposit #' . rand(1, 1000),
             'date'         => '2018-01-01',
             'transactions' => [
@@ -2416,6 +2420,11 @@ class TransactionControllerTest extends TestCase
     {
         $account    = $this->user()->accounts()->where('account_type_id', 3)->first();
         $repository = $this->mock(JournalRepositoryInterface::class);
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getAccountsById')->withArgs([[$account->id]])->andReturn(new Collection([$account]));
+
         $data       = [
             'description'  => 'Some transaction #' . rand(1, 1000),
             'date'         => '2018-01-01',
@@ -2432,6 +2441,8 @@ class TransactionControllerTest extends TestCase
             $withdrawal = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 1)->first();
             $count      = $withdrawal->transactions()->count();
         } while ($count !== 2);
+
+
 
         $transaction = $withdrawal->transactions()->first();
         $repository->shouldReceive('setUser');
