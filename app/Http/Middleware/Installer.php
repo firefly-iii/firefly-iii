@@ -29,8 +29,10 @@ class Installer
         $url = $request->url();
         $strpos = stripos($url, '/install');
         if (!($strpos === false)) {
+            Log::debug(sprintf('URL is %s, will NOT run installer middleware', $url));
             return $next($request);
         }
+        Log::debug(sprintf('URL is %s, will run installer middleware', $url));
 
         // no tables present?
         try {
