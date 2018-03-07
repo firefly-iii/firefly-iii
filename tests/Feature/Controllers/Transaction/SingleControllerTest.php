@@ -91,7 +91,6 @@ class SingleControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::create
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::__construct
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      */
     public function testCreate()
     {
@@ -118,7 +117,6 @@ class SingleControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::create
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::__construct
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      */
     public function testCreateDepositWithSource()
     {
@@ -144,7 +142,6 @@ class SingleControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::create
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::__construct
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      */
     public function testCreateWithSource()
     {
@@ -213,7 +210,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::isSplitJournal
      */
     public function testEdit()
@@ -257,7 +253,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
     public function testEditCashDeposit()
     {
@@ -305,7 +300,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
     public function testEditCashWithdrawal()
     {
@@ -352,7 +346,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
     public function testEditReconcile()
     {
@@ -379,7 +372,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
     public function testEditRedirect()
     {
@@ -429,7 +421,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
     public function testEditTransferWithForeignAmount()
     {
@@ -477,7 +468,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::isSplitJournal
      */
     public function testEditWithForeign()
@@ -520,7 +510,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
     public function testEditWithForeignAmount()
     {
@@ -568,7 +557,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testStoreError()
@@ -605,7 +593,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testStoreSuccess()
@@ -658,7 +645,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testStoreSuccessDeposit()
@@ -711,7 +697,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testStoreSuccessTransfer()
@@ -764,7 +749,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testStoreSuccessTransferForeign()
