@@ -54,7 +54,7 @@ class Installer
 
         // older version in config than database?
         $configVersion = intval(config('firefly.db_version'));
-        $dbVersion     = intval(FireflyConfig::get('db_version', 1)->data);
+        $dbVersion     = intval(FireflyConfig::getFresh('db_version', 1)->data);
         if ($configVersion > $dbVersion) {
             Log::warning(sprintf(
                 'The current installed version (%d) is older than the required version (%d). Redirect to migrate routine.', $dbVersion, $configVersion
