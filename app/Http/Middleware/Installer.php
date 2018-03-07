@@ -26,6 +26,9 @@ class Installer
      */
     public function handle($request, Closure $next)
     {
+        if(env('APP_ENV') === 'testing') {
+            return $next($request);
+        }
         $url = $request->url();
         $strpos = stripos($url, '/install');
         if (!($strpos === false)) {
