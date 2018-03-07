@@ -33,7 +33,7 @@
                         {{ ExpandedForm.text('description') }}
 
                         {# SELECTABLE SOURCE ACCOUNT ONLY FOR WITHDRAWALS AND TRANSFERS #}
-                        {{ ExpandedForm.select('source_account_id', assetAccounts, null, {label: trans('form.asset_source_account')}) }}
+                        {{ ExpandedForm.assetAccountList('source_account_id', null, {label: trans('form.asset_source_account')}) }}
 
                         {# FREE FORMAT SOURCE ACCOUNT ONLY FOR DEPOSITS #}
                         {{ ExpandedForm.text('source_account_name', null, {label: trans('form.revenue_account')}) }}
@@ -42,7 +42,7 @@
                         {{ ExpandedForm.text('destination_account_name', null, {label: trans('form.expense_account')}) }}
 
                         {# SELECTABLE DESTINATION ACCOUNT ONLY FOR TRANSFERS AND DEPOSITS #}
-                        {{ ExpandedForm.select('destination_account_id', assetAccounts, null, {label: trans('form.asset_destination_account')} ) }}
+                        {{ ExpandedForm.assetAccountList('destination_account_id', null, {label: trans('form.asset_destination_account')} ) }}
 
                         {# ALWAYS SHOW AMOUNT #}
                         {{ ExpandedForm.amount('amount') }}

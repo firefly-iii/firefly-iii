@@ -29,13 +29,10 @@ use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\JournalFormRequest;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -51,9 +48,6 @@ use View;
  */
 class SingleController extends Controller
 {
-    /** @var AccountRepositoryInterface */
-    private $accounts;
-
     /** @var AttachmentHelperInterface */
     private $attachments;
 
@@ -82,7 +76,6 @@ class SingleController extends Controller
         // some useful repositories:
         $this->middleware(
             function ($request, $next) {
-                $this->accounts    = app(AccountRepositoryInterface::class);
                 $this->budgets     = app(BudgetRepositoryInterface::class);
                 $this->piggyBanks  = app(PiggyBankRepositoryInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
@@ -163,7 +156,6 @@ class SingleController extends Controller
     {
         $what           = strtolower($what);
         $what           = $request->old('what') ?? $what;
-        $assetAccounts  = $this->groupedActiveAccountList();
         $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $piggyBanks     = $this->piggyBanks->getPiggyBanksWithAmount();
         $piggies        = ExpandedForm::makeSelectListWithEmpty($piggyBanks);
@@ -192,7 +184,7 @@ class SingleController extends Controller
 
         return view(
             'transactions.single.create',
-            compact('assetAccounts', 'subTitleIcon', 'budgets', 'what', 'piggies', 'subTitle', 'optionalFields', 'preFilled')
+            compact('subTitleIcon', 'budgets', 'what', 'piggies', 'subTitle', 'optionalFields', 'preFilled')
         );
     }
 
@@ -268,9 +260,8 @@ class SingleController extends Controller
             return redirect(route('transactions.split.edit', [$journal->id]));
         }
 
-        $what          = strtolower($transactionType);
-        $assetAccounts = $this->groupedAccountList();
-        $budgetList    = ExpandedForm::makeSelectListWithEmpty($this->budgets->getBudgets());
+        $what       = strtolower($transactionType);
+        $budgetList = ExpandedForm::makeSelectListWithEmpty($this->budgets->getBudgets());
 
         // view related code
         $subTitle = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
@@ -330,7 +321,7 @@ class SingleController extends Controller
 
         return view(
             'transactions.single.edit',
-            compact('journal', 'optionalFields', 'assetAccounts', 'what', 'budgetList', 'subTitle')
+            compact('journal', 'optionalFields', 'what', 'budgetList', 'subTitle')
         )->with('data', $preFilled);
     }
 
@@ -438,46 +429,6 @@ class SingleController extends Controller
 
         // redirect to previous URL.
         return redirect($this->getPreviousUri('transactions.edit.uri'));
-    }
-
-    /**
-     * @return array
-     */
-    private function groupedAccountList(): array
-    {
-        $accounts = $this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $return   = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $type = $account->getMeta('accountRole');
-            if (0 === strlen($type)) {
-                $type = 'no_account_type'; // @codeCoverageIgnore
-            }
-            $key                        = strval(trans('firefly.opt_group_' . $type));
-            $return[$key][$account->id] = $account->name;
-        }
-
-        return $return;
-    }
-
-    /**
-     * @return array
-     */
-    private function groupedActiveAccountList(): array
-    {
-        $accounts = $this->accounts->getActiveAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $return   = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $type = $account->getMeta('accountRole');
-            if (0 === strlen($type)) {
-                $type = 'no_account_type'; // @codeCoverageIgnore
-            }
-            $key                        = strval(trans('firefly.opt_group_' . $type));
-            $return[$key][$account->id] = $account->name;
-        }
-
-        return $return;
     }
 
     /**

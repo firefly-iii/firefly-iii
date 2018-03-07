@@ -18,7 +18,7 @@
                     <div class="box-body">
 
                         {{ ExpandedForm.text('name') }}
-                        {{ ExpandedForm.select('account_id',accounts,null,{'label' : 'saveOnAccount'|_}) }}
+                        {{ ExpandedForm.assetAccountList('account_id', null, {label: 'saveOnAccount'|_   }) }}
                         {{ ExpandedForm.amount('targetamount') }}
 
                     </div>

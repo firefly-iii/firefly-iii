@@ -56,7 +56,7 @@ class SplitControllerTest extends TestCase
     public function testEdit()
     {
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepository  = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos       = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $tasker             = $this->mock(JournalTaskerInterface::class);
@@ -82,10 +82,11 @@ class SplitControllerTest extends TestCase
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('0');
         $journalRepos->shouldReceive('getJournalCategoryName')->andReturn('Some');
 
+        // mock for new account list and for account array
+        $accountRepos->shouldReceive('getAccountsByType')
+                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->twice();
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
-        $accountRepository->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])
-                          ->andReturn(new Collection([$account]))->once();
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
         $tasker->shouldReceive('getTransactionsOverview')->andReturn($array);
 
@@ -106,7 +107,7 @@ class SplitControllerTest extends TestCase
     public function testEditOldInput()
     {
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepository  = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos       = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
@@ -118,10 +119,13 @@ class SplitControllerTest extends TestCase
 
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
-        $accountRepository->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])
-                          ->andReturn(new Collection([$account]))->once();
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
         $tasker->shouldReceive('getTransactionsOverview')->andReturn($transactions->toArray());
+
+        // mock for new account list and for account array
+        $accountRepos->shouldReceive('getAccountsByType')
+                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->twice();
+
 
         $journalRepos->shouldReceive('first')->once()->andReturn($deposit);
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]));
@@ -247,10 +251,11 @@ class SplitControllerTest extends TestCase
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1');
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
-        $accountRepository->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])
-                          ->andReturn(new Collection([$account]))->once();
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
         $tasker->shouldReceive('getTransactionsOverview')->andReturn($transactions->toArray());
+        // mock for new account list and for account array
+        $accountRepository->shouldReceive('getAccountsByType')
+                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->twice();
 
         $this->be($this->user());
         $response = $this->get(route('transactions.split.edit', [$deposit->id]));
@@ -380,7 +385,7 @@ class SplitControllerTest extends TestCase
 
         $this->session(['transactions.edit-split.uri' => 'http://localhost']);
         $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
-        $data       = [
+        $data     = [
             'id'                        => $transfer->id,
             'what'                      => 'transfer',
             'journal_description'       => 'Some updated withdrawal',

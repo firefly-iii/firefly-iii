@@ -23,11 +23,8 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use ExpandedForm;
 use FireflyIII\Http\Requests\PiggyBankFormRequest;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -99,21 +96,12 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
-     *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create(AccountRepositoryInterface $repository)
+    public function create()
     {
-        $accounts     = ExpandedForm::makeSelectList($repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
         $subTitle     = trans('firefly.new_piggy_bank');
         $subTitleIcon = 'fa-plus';
-
-        if (0 === count($accounts)) {
-            Session::flash('error', strval(trans('firefly.need_at_least_one_account')));
-
-            return redirect(route('new-user.index'));
-        }
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('piggy-banks.create.fromStore')) {
@@ -121,7 +109,7 @@ class PiggyBankController extends Controller
         }
         Session::forget('piggy-banks.create.fromStore');
 
-        return view('piggy-banks.create', compact('accounts', 'subTitle', 'subTitleIcon'));
+        return view('piggy-banks.create', compact('subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -155,14 +143,12 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
-     * @param PiggyBank                  $piggyBank
+     * @param PiggyBank $piggyBank
      *
      * @return View
      */
-    public function edit(AccountRepositoryInterface $repository, PiggyBank $piggyBank)
+    public function edit(PiggyBank $piggyBank)
     {
-        $accounts     = ExpandedForm::makeSelectList($repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
         $subTitle     = trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
         $subTitleIcon = 'fa-pencil';
         $targetDate   = null;
@@ -191,7 +177,7 @@ class PiggyBankController extends Controller
         }
         Session::forget('piggy-banks.edit.fromUpdate');
 
-        return view('piggy-banks.edit', compact('subTitle', 'subTitleIcon', 'piggyBank', 'accounts', 'preFilled'));
+        return view('piggy-banks.edit', compact('subTitle', 'subTitleIcon', 'piggyBank', 'preFilled'));
     }
 
     /**

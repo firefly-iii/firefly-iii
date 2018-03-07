@@ -100,15 +100,13 @@ class SplitController extends Controller
 
         $uploadSize     = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
         $currencies     = $this->currencies->get();
-        $accountList    = $this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $assetAccounts  = ExpandedForm::makeSelectList($accountList);
         $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
         $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $preFilled      = $this->arrayFromJournal($request, $journal);
         $subTitle       = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
         $subTitleIcon   = 'fa-pencil';
-
-        $accountArray = [];
+        $accountList    = $this->accounts->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        $accountArray   = [];
         // account array to display currency info:
         /** @var Account $account */
         foreach ($accountList as $account) {
@@ -159,7 +157,7 @@ class SplitController extends Controller
         // @codeCoverageIgnoreEnd
 
         $type = strtolower($this->repository->getTransactionType($journal));
-        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => $data['description']])));
+        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => $journal->description])));
         Preferences::mark();
 
         // @codeCoverageIgnoreStart

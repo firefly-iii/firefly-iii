@@ -92,8 +92,7 @@
 
                                 </em>
                             </p>
-                            {{ ExpandedForm.select('destination_account_asset', assetAccounts) }}
-
+                            {{ ExpandedForm.assetAccountList('destination_account_asset', null) }}
 
                         {% endif %}
 
@@ -146,8 +145,7 @@
 
                                 </em>
                             </p>
-
-                            {{ ExpandedForm.select('source_account_asset', assetAccounts) }}
+                            {{ ExpandedForm.assetAccountList('source_account_asset', null) }}
                         {% endif %}
 
                         {# FIVE #}
