@@ -70,13 +70,14 @@ class Handler extends ExceptionHandler
             return parent::render($request, $exception);
         }
         if ($exception instanceof NotFoundHttpException && $request->expectsJson()) {
+            // JSON error:
             return response()->json(['message' => 'Resource not found', 'exception' => 'NotFoundHttpException'], 404);
         }
 
         if ($exception instanceof AuthenticationException && $request->expectsJson()) {
+            // somehow Laravel handler does not catch this:
             return response()->json(['message' => 'Unauthenticated', 'exception' => 'AuthenticationException'], 401);
         }
-
 
         if ($request->expectsJson()) {
             $isDebug = config('app.debug', false);

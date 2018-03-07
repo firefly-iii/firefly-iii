@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Exceptions;
 
+use Exception;
 /**
  * Class FireflyException.
  */
-class FireflyException extends \Exception
+class FireflyException extends Exception
 {
 }

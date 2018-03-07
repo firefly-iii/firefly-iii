@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
+use FireflyIII\Exceptions\IsDemoUserException;
 use FireflyIII\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Session;
 
 /**
@@ -38,7 +38,6 @@ class IsDemoUser
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure                 $next
-     * @param  string[]                 ...$guards
      *
      * @return mixed
      */
@@ -51,11 +50,14 @@ class IsDemoUser
         }
 
         if ($user->hasRole('demo')) {
-            Session::flash('info', strval(trans('firefly.not_available_demo_user')));
+            $request->session()->flash('info', strval(trans('firefly.not_available_demo_user')));
+            $current  = $request->url();
+            $previous = $request->session()->previousUrl();
+            if ($current !== $previous) {
+                return response()->redirectTo($previous);
+            }
 
-            redirect($request->session()->previousUrl());
-
-            return $next($request);
+            return response()->redirectTo(route('index'));
         }
 
         return $next($request);

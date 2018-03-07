@@ -39,7 +39,6 @@ class IsDemoUserTest extends TestCase
      */
     public function testMiddlewareAuthenticated()
     {
-        $this->withoutExceptionHandling();
         $this->be($this->user());
         $response = $this->get('/_test/is-demo');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
@@ -50,7 +49,6 @@ class IsDemoUserTest extends TestCase
      */
     public function testMiddlewareNotAuthenticated()
     {
-        $this->withoutExceptionHandling();
         $response = $this->get('/_test/is-demo');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
@@ -62,7 +60,7 @@ class IsDemoUserTest extends TestCase
     {
         $this->be($this->demoUser());
         $response = $this->get('/_test/is-demo');
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
         $response->assertSessionHas('info');
     }
 

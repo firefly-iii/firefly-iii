@@ -51,7 +51,7 @@ class RedirectIfTwoFactorAuthenticated
             $is2faAuthed = 'true' === $request->cookie('twoFactorAuthenticated');
 
             if ($is2faEnabled && $has2faSecret && $is2faAuthed) {
-                return redirect(route('index'));
+                return response()->redirectTo(route('index'));
             }
         }
 
