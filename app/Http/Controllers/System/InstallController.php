@@ -54,6 +54,7 @@ class InstallController extends Controller
         Artisan::call('migrate', ['--seed' => true]);
         $result = $output->fetch();
         Log::debug($result);
+        Log::debug(Artisan::output());
 
         // create keys manually because for some reason the passport namespace
         // does not exist
