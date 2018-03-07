@@ -35,6 +35,7 @@ return [
     'encryption'     => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
     'version'        => '4.7.1.4',
     'api_version'    => '0.1',
+    'db_version'     => 2,
     'maxUploadSize'  => 15242880,
     'allowedMimes'   => [
         /* plain files */
