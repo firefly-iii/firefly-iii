@@ -12,7 +12,6 @@ install:
   - composer update --no-scripts
   - cp .env.testing .env
   - php artisan clear-compiled
-  - php artisan optimize
   - php artisan env
   - cp .env.testing .env
   - wget -q https://github.com/firefly-iii/test-data/raw/master/storage/database.sqlite -O storage/database/database.sqlite
