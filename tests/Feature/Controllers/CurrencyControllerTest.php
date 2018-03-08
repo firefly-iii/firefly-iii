@@ -194,7 +194,7 @@ class CurrencyControllerTest extends TestCase
         $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
 
         $this->be($this->user());
-        $response = $this->get(route('currencies.edit', [2]));
+        $response = $this->get(route('currencies.edit', [1]));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -211,10 +211,10 @@ class CurrencyControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
 
-        $currencies = factory(TransactionCurrency::class, 3)->make();
+        $currencies = TransactionCurrency::get();
 
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('getCurrencyByPreference')->andReturn(new TransactionCurrency);
+        $repository->shouldReceive('getCurrencyByPreference')->andReturn($currencies->first());
         $repository->shouldReceive('get')->andReturn($currencies);
         $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
 
