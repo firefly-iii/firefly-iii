@@ -76,9 +76,8 @@ class DebugController extends Controller
         $packages       = $this->collectPackages();
         $cacheDriver    = env('CACHE_DRIVER', 'unknown');
 
-
         // get latest log file:
-        $logger     = Log::getMonolog();
+        $logger     = Log::driver();
         $handlers   = $logger->getHandlers();
         $logContent = '';
         foreach ($handlers as $handler) {
