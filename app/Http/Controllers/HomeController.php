@@ -165,7 +165,6 @@ class HomeController extends Controller
         /** @var Carbon $end */
         $end      = session('end', Carbon::now()->endOfMonth());
         $accounts = $repository->getAccountsById($frontPage->data);
-        $showDeps = Preferences::get('showDepositsFrontpage', false)->data;
         $today    = new Carbon;
 
         // zero bills? Hide some elements from view.
@@ -185,7 +184,7 @@ class HomeController extends Controller
 
         return view(
             'index',
-            compact('count', 'subTitle', 'transactions', 'showDeps', 'billCount', 'start', 'end', 'today')
+            compact('count', 'subTitle', 'transactions', 'billCount', 'start', 'end', 'today')
         );
     }
 
