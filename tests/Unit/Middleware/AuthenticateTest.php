@@ -51,7 +51,7 @@ class AuthenticateTest extends TestCase
         Log::debug('Now at testMiddlewareAjax');
         $server   = ['HTTP_X-Requested-With' => 'XMLHttpRequest'];
         $response = $this->get('/_test/authenticate', $server);
-        $this->assertEquals(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
     }
 
     /**

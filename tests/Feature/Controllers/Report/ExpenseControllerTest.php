@@ -208,6 +208,7 @@ class ExpenseControllerTest extends TestCase
         $transA->transaction_currency_symbol     = 'A';
         $transA->transaction_currency_dp         = 2;
         $transA->transaction_amount              = '100';
+        $transA->opposing_account_id             = $expense->id;
         $transB                                  = new Transaction;
         $transB->transaction_currency_id         = 2;
         $transB->transaction_category_name       = null;
@@ -217,6 +218,7 @@ class ExpenseControllerTest extends TestCase
         $transB->transaction_currency_symbol     = 'A';
         $transB->transaction_currency_dp         = 2;
         $transB->transaction_amount              = '100';
+        $transB->opposing_account_id             = $expense->id;
         $collection                              = new Collection([$transA, $transB]);
 
         // mock collector for topExpense (complex)

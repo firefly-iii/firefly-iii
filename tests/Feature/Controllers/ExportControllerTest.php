@@ -102,8 +102,9 @@ class ExportControllerTest extends TestCase
         $repository   = $this->mock(ExportJobRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $job = ExportJob::first();
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('create')->andReturn(new ExportJob);
+        $repository->shouldReceive('create')->andReturn($job);
         $repository->shouldReceive('cleanup');
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
 

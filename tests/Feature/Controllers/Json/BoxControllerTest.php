@@ -100,7 +100,7 @@ class BoxControllerTest extends TestCase
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
+        $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
         $this->be($this->user());
         $response = $this->get(route('json.box.net-worth'));
@@ -114,7 +114,7 @@ class BoxControllerTest extends TestCase
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
+        $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
 
         $start = new Carbon;

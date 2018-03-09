@@ -27,6 +27,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
+use Google2FA;
 use Illuminate\Support\Collection;
 use Preferences;
 use Tests\TestCase;
@@ -40,6 +41,71 @@ use Tests\TestCase;
  */
 class ProfileControllerTest extends TestCase
 {
+    /**
+     * @covers \FireflyIII\Http\Controllers\ProfileController::code
+     * @covers \FireflyIII\Http\Controllers\ProfileController::getDomain
+     */
+    public function testCode()
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        Google2FA::shouldReceive('generateSecretKey')->andReturn('secret');
+        Google2FA::shouldReceive('getQRCodeInline')->andReturn('long-data-url');
+
+        $this->be($this->user());
+        $response = $this->get(route('profile.code'));
+        $response->assertStatus(200);
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\ProfileController::deleteCode
+     */
+    public function testDeleteCode()
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $this->be($this->user());
+        $response = $this->get(route('profile.delete-code'));
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+        $response->assertSessionHas('info');
+        $response->assertRedirect(route('profile.index'));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\ProfileController::postCode
+     */
+    public function testPostCode()
+    {
+        $secret = '0123456789abcde';
+        $key    = '123456';
+
+        $this->withoutMiddleware();
+        $this->session(['two-factor-secret' => $secret]);
+
+        Preferences::shouldReceive('set')->withArgs(['twoFactorAuthEnabled', 1])->once();
+        Preferences::shouldReceive('set')->withArgs(['twoFactorAuthSecret', $secret])->once();
+        Preferences::shouldReceive('mark')->once();
+
+        Google2FA::shouldReceive('verifyKey')->withArgs([$secret, $key])->andReturn(true);
+
+        $data = [
+            'code' => $key,
+        ];
+
+        $this->be($this->user());
+        $response = $this->post(route('profile.code.store'), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+    }
+
+
 
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::changeEmail()
