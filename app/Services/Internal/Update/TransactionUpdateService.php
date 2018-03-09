@@ -107,11 +107,11 @@ class TransactionUpdateService
         // set foreign currency
         $foreign = $this->findCurrency($data['foreign_currency_id'], $data['foreign_currency_code']);
         // set foreign amount:
-        if (!is_null($data['foreign_amount'])) {
+        if (!is_null($data['foreign_amount']) && !is_null($foreign)) {
             $this->setForeignCurrency($transaction, $foreign);
             $this->setForeignAmount($transaction, $foreignAmount);
         }
-        if (is_null($data['foreign_amount'])) {
+        if (is_null($data['foreign_amount']) || is_null($foreign)) {
             $this->setForeignCurrency($transaction, null);
             $this->setForeignAmount($transaction, null);
         }

@@ -28,6 +28,7 @@ use FireflyIII\Models\Transaction as TransactionModel;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use Lang;
+use Log;
 use Twig_Extension;
 
 /**
@@ -223,6 +224,7 @@ class Transaction extends Twig_Extension
     }
 
     /**
+     * TODO improve code
      * @param TransactionModel $transaction
      *
      * @return string
@@ -249,14 +251,19 @@ class Transaction extends Twig_Extension
             // if the amount is negative, find the opposing account and use that one:
             $journalId = $transaction->journal_id;
             /** @var TransactionModel $other */
-            $other         = TransactionModel::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
-                                             ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where(
-                    'identifier',
-                    $transaction->identifier
-                )
-                                             ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                             ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                                             ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
+            $other = TransactionModel
+                ::where('transaction_journal_id', $journalId)
+                ->where('transactions.id', '!=', $transaction->id)
+                ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))
+                ->where('identifier', $transaction->identifier)
+                ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
+            if (is_null($other)) {
+                Log::error(sprintf('Cannot find other transaction for journal #%d', $journalId));
+
+                return '';
+            }
             $name          = app('steam')->tryDecrypt($other->name);
             $transactionId = $other->account_id;
             $type          = $other->type;

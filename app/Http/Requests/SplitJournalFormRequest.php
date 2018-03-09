@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Steam;
-
 /**
  * Class SplitJournalFormRequest.
  */
@@ -77,13 +75,14 @@ class SplitJournalFormRequest extends Request
                     break;
             }
             $foreignAmount          = $transaction['foreign_amount'] ?? null;
+            $foreignCurrencyId      = intval($transaction['foreign_currency_id'] ?? 0);
             $set                    = [
                 'source_id'             => $sourceId,
                 'source_name'           => $sourceName,
                 'destination_id'        => $destinationId,
                 'destination_name'      => $destinationName,
                 'foreign_amount'        => $foreignAmount,
-                'foreign_currency_id'   => null,
+                'foreign_currency_id'   => $foreignCurrencyId,
                 'foreign_currency_code' => null,
                 'reconciled'            => false,
                 'identifier'            => $index,

@@ -258,6 +258,8 @@ trait TransactionServiceTrait
     protected function setForeignCurrency(Transaction $transaction, ?TransactionCurrency $currency): void
     {
         if (is_null($currency)) {
+            $transaction->foreign_currency_id = null;
+            $transaction->save();
             return;
         }
         $transaction->foreign_currency_id = $currency->id;
