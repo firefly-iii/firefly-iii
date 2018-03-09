@@ -77,7 +77,7 @@ function selectsDifferentSource() {
     var sourceId = $('select[name="source_account_id"]').val();
     var sourceCurrency = accountInfo[sourceId].preferredCurrency;
     $('input[name="source_account_currency"]').val(sourceCurrency);
-    console.log('Set source account currency to ' + sourceCurrency);
+    console.log('selectsDifferenctSource(): Set source account currency to ' + sourceCurrency);
 
     // change input thing:
     $('.currency-option[data-id="' + sourceCurrency + '"]').click();
@@ -101,7 +101,7 @@ function selectsDifferentDestination() {
     var destinationId = $('select[name="destination_account_id"]').val();
     var destinationCurrency = accountInfo[destinationId].preferredCurrency;
     $('input[name="destination_account_currency"]').val(destinationCurrency);
-    console.log('Set destinationId account currency to ' + destinationCurrency);
+    console.log('selectsDifferentDestination(): Set destinationId account currency to ' + destinationCurrency);
 
     // change input thing:
     $('.currency-option[data-id="' + destinationCurrency + '"]').click();
