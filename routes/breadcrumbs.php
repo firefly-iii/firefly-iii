@@ -602,10 +602,10 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'preferences.code',
+    'profile.code',
     function (BreadCrumbsGenerator $breadcrumbs) {
         $breadcrumbs->parent('home');
-        $breadcrumbs->push(trans('breadcrumbs.preferences'), route('preferences.index'));
+        $breadcrumbs->push(trans('breadcrumbs.profile'), route('profile.index'));
     }
 );
 

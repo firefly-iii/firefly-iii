@@ -566,10 +566,8 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'preferences', 'as' => 'preferences.'], function () {
     Route::get('', ['uses' => 'PreferencesController@index', 'as' => 'index']);
-    Route::get('/code', ['uses' => 'PreferencesController@code', 'as' => 'code']);
-    Route::get('/delete-code', ['uses' => 'PreferencesController@deleteCode', 'as' => 'delete-code']);
     Route::post('', ['uses' => 'PreferencesController@postIndex', 'as' => 'update']);
-    Route::post('/code', ['uses' => 'PreferencesController@postCode', 'as' => 'code.store']);
+
 
 }
 );
@@ -589,6 +587,13 @@ Route::group(
     Route::post('change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'change-password.post']);
     Route::post('change-email', ['uses' => 'ProfileController@postChangeEmail', 'as' => 'change-email.post']);
     Route::post('regenerate', ['uses' => 'ProfileController@regenerate', 'as' => 'regenerate']);
+
+    // new 2FA routes
+    Route::post('enable2FA', ['uses' => 'ProfileController@enable2FA', 'as' => 'enable2FA']);
+    Route::get('2fa/code', ['uses' => 'ProfileController@code', 'as' => 'code']);
+    Route::post('2fa/code', ['uses' => 'ProfileController@postCode', 'as' => 'code.store']);
+    Route::get('/delete-code', ['uses' => 'ProfileController@deleteCode', 'as' => 'delete-code']);
+
 }
 );
 

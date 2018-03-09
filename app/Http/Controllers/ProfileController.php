@@ -31,9 +31,11 @@ use FireflyIII\Http\Middleware\IsSandStormUser;
 use FireflyIII\Http\Requests\DeleteAccountFormRequest;
 use FireflyIII\Http\Requests\EmailFormRequest;
 use FireflyIII\Http\Requests\ProfileFormRequest;
+use FireflyIII\Http\Requests\TokenFormRequest;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
+use Google2FA;
 use Hash;
 use Illuminate\Contracts\Auth\Guard;
 use Log;
@@ -93,6 +95,50 @@ class ProfileController extends Controller
     }
 
     /**
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function deleteCode()
+    {
+        Preferences::delete('twoFactorAuthEnabled');
+        Preferences::delete('twoFactorAuthSecret');
+        Session::flash('success', strval(trans('firefly.pref_two_factor_auth_disabled')));
+        Session::flash('info', strval(trans('firefly.pref_two_factor_auth_remove_it')));
+
+        return redirect(route('profile.index'));
+    }
+
+    /**
+     * View that generates a 2FA code for the user.
+     * @return View
+     */
+    public function code()
+    {
+        $domain = $this->getDomain();
+        $secret = Google2FA::generateSecretKey();
+        Session::flash('two-factor-secret', $secret);
+        $image = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret, 200);
+
+        return view('profile.code', compact('image'));
+    }
+
+    /**
+     * @param TokenFormRequest $request
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
+     */
+    public function postCode(TokenFormRequest $request)
+    {
+        Preferences::set('twoFactorAuthEnabled', 1);
+        Preferences::set('twoFactorAuthSecret', Session::get('two-factor-secret'));
+
+        Session::flash('success', strval(trans('firefly.saved_preferences')));
+        Preferences::mark();
+
+        return redirect(route('profile.index'));
+    }
+
+    /**
      * @param UserRepositoryInterface $repository
      * @param string                  $token
      *
@@ -140,12 +186,36 @@ class ProfileController extends Controller
     }
 
     /**
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function enable2FA(UserRepositoryInterface $repository)
+    {
+        if ($repository->hasRole(auth()->user(), 'demo')) {
+            return redirect(route('profile.index'));
+        }
+        $hasTwoFactorAuthSecret = (null !== Preferences::get('twoFactorAuthSecret'));
+
+        // if we don't have a valid secret yet, redirect to the code page to get one.
+        if (!$hasTwoFactorAuthSecret) {
+            return redirect(route('profile.code'));
+        }
+
+        // If FF3 already has a secret, just set the two factor auth enabled to 1,
+        // and let the user continue with the existing secret.
+
+        Preferences::set('twoFactorAuthEnabled', 1);
+
+        return redirect(route('profile.index'));
+    }
+
+    /**
      * @return View
      */
     public function index()
     {
-        $subTitle = auth()->user()->email;
-        $userId   = auth()->user()->id;
+        $subTitle   = auth()->user()->email;
+        $userId     = auth()->user()->id;
+        $enabled2FA = intval(Preferences::get('twoFactorAuthEnabled', 0)->data) === 1;
 
         // get access token or create one.
         $accessToken = Preferences::get('access_token', null);
@@ -154,7 +224,7 @@ class ProfileController extends Controller
             $accessToken = Preferences::set('access_token', $token);
         }
 
-        return view('profile.index', compact('subTitle', 'userId', 'accessToken'));
+        return view('profile.index', compact('subTitle', 'userId', 'accessToken', 'enabled2FA'));
     }
 
     /**
@@ -331,5 +401,16 @@ class ProfileController extends Controller
         }
 
         return true;
+    }
+
+    /**
+     * @return string
+     */
+    private function getDomain(): string
+    {
+        $url   = url()->to('/');
+        $parts = parse_url($url);
+
+        return $parts['host'];
     }
 }
