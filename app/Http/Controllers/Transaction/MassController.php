@@ -103,7 +103,7 @@ class MassController extends Controller
 
         /** @var TransactionJournal $journal */
         foreach ($set as $journal) {
-            $this->repository->delete($journal);
+            $this->repository->destroy($journal);
             ++$count;
         }
 
