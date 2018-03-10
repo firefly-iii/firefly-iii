@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use Illuminate\Validation\Validator;
+
 /**
  * Class SplitJournalFormRequest.
  */
@@ -125,6 +127,41 @@ class SplitJournalFormRequest extends Request
             'transactions.*.category'                 => 'between:1,255|nullable',
             'transactions.*.piggy_bank_id'            => 'between:1,255|nullable',
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  Validator $validator
+     *
+     * @return void
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(
+            function (Validator $validator) {
+                $this->sameAccounts($validator);
+            }
+        );
+    }
+
+    /**
+     *
+     */
+    protected function sameAccounts(Validator $validator): void
+    {
+        $data         = $this->getAll();
+        $transactions = $data['transactions'] ?? [];
+        /** @var array $array */
+        foreach ($transactions as $array) {
+            if ($array['destination_id'] !== null && $array['source_id'] !== null) {
+                if ($array['destination_id'] === $array['source_id']) {
+                    $validator->errors()->add('journal_source_account_id', trans('validation.source_equals_destination'));
+                    $validator->errors()->add('journal_destination_account_id', trans('validation.source_equals_destination'));
+                }
+            }
+        }
+
     }
 
 }
