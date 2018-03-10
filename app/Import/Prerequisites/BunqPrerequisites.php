@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Prerequisites;
 
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Services\Bunq\Id\DeviceServerId;
 use FireflyIII\Services\Bunq\Object\DeviceServer;
@@ -53,6 +54,8 @@ class BunqPrerequisites implements PrerequisitesInterface
      */
     public function getView(): string
     {
+        Log::debug('Now in BunqPrerequisites::getView()');
+
         return 'import.bunq.prerequisites';
     }
 
@@ -63,7 +66,14 @@ class BunqPrerequisites implements PrerequisitesInterface
      */
     public function getViewParameters(): array
     {
-        return [];
+        Log::debug('Now in BunqPrerequisites::getViewParameters()');
+        $apiKey = Preferences::getForUser($this->user, 'bunq_api_key', null);
+        $string = '';
+        if (!is_null($apiKey)) {
+            $string = $apiKey->data;
+        }
+
+        return ['key' => $string];
     }
 
     /**
@@ -75,9 +85,17 @@ class BunqPrerequisites implements PrerequisitesInterface
      */
     public function hasPrerequisites(): bool
     {
-        $apiKey = Preferences::getForUser($this->user, 'bunq_api_key', false);
+        Log::debug('Now in BunqPrerequisites::hasPrerequisites()');
+        $apiKey   = Preferences::getForUser($this->user, 'bunq_api_key', false);
+        $deviceId = Preferences::getForUser($this->user, 'bunq_device_server_id', null);
+        $result   = (false === $apiKey->data || null === $apiKey->data) || is_null($deviceId);
 
-        return false === $apiKey->data || null === $apiKey->data;
+        Log::debug(sprintf('Is device ID NULL? %s', var_export(null === $deviceId, true)));
+        Log::debug(sprintf('Is apiKey->data false? %s', var_export(false === $apiKey->data, true)));
+        Log::debug(sprintf('Is apiKey->data NULL? %s', var_export(null === $apiKey->data, true)));
+        Log::debug(sprintf('Result is: %s', var_export($result, true)));
+
+        return $result;
     }
 
     /**
@@ -87,6 +105,7 @@ class BunqPrerequisites implements PrerequisitesInterface
      */
     public function setUser(User $user): void
     {
+        Log::debug(sprintf('Now in setUser(#%d)', $user->id));
         $this->user = $user;
 
         return;
@@ -109,9 +128,11 @@ class BunqPrerequisites implements PrerequisitesInterface
         $serverId = null;
         $messages = new MessageBag;
         try {
+            Log::debug('Going to try and get the device registered.');
             $serverId = $this->registerDevice();
             Log::debug(sprintf('Found device server with id %d', $serverId->getId()));
         } catch (FireflyException $e) {
+            Log::error(sprintf('Could not register device because: %s: %s', $e->getMessage(), $e->getTraceAsString()));
             $messages->add('error', $e->getMessage());
         }
 
@@ -125,6 +146,16 @@ class BunqPrerequisites implements PrerequisitesInterface
      */
     private function createKeyPair(): void
     {
+        Log::debug('Now in createKeyPair()');
+        $private = Preferences::getForUser($this->user, 'bunq_private_key', null);
+        $public  = Preferences::getForUser($this->user, 'bunq_public_key', null);
+
+        if (!(null === $private && null === $public)) {
+            Log::info('Already have public and private key, return NULL.');
+
+            return;
+        }
+
         Log::debug('Generate new key pair for user.');
         $keyConfig = [
             'digest_alg'       => 'sha512',
@@ -143,7 +174,7 @@ class BunqPrerequisites implements PrerequisitesInterface
 
         Preferences::setForUser($this->user, 'bunq_private_key', $privKey);
         Preferences::setForUser($this->user, 'bunq_public_key', $pubKey['key']);
-        Log::debug('Created key pair');
+        Log::debug('Created and stored key pair');
 
         return;
     }
@@ -155,10 +186,10 @@ class BunqPrerequisites implements PrerequisitesInterface
      * @return DeviceServerId
      *
      * @throws FireflyException
-     * @throws \Exception
      */
     private function getExistingDevice(): DeviceServerId
     {
+        Log::debug('Now in getExistingDevice()');
         $installationToken = $this->getInstallationToken();
         $serverPublicKey   = $this->getServerPublicKey();
         $request           = new ListDeviceServerRequest;
@@ -181,22 +212,25 @@ class BunqPrerequisites implements PrerequisitesInterface
      * Get the installation token, either from the users preferences or from Bunq.
      *
      * @return InstallationToken
+     * @throws FireflyException
      */
     private function getInstallationToken(): InstallationToken
     {
-        Log::debug('Get installation token.');
+        Log::debug('Now in getInstallationToken().');
         $token = Preferences::getForUser($this->user, 'bunq_installation_token', null);
         if (null !== $token) {
+            Log::debug('Have installation token, return it.');
+
             return $token->data;
         }
-        Log::debug('Have no token, request one.');
+        Log::debug('Have no installation token, request one.');
 
         // verify bunq api code:
         $publicKey = $this->getPublicKey();
         $request   = new InstallationTokenRequest;
         $request->setPublicKey($publicKey);
         $request->call();
-        Log::debug('Sent request');
+        Log::debug('Sent request for installation token.');
 
         $installationToken = $request->getInstallationToken();
         $installationId    = $request->getInstallationId();
@@ -205,6 +239,8 @@ class BunqPrerequisites implements PrerequisitesInterface
         Preferences::setForUser($this->user, 'bunq_installation_token', $installationToken);
         Preferences::setForUser($this->user, 'bunq_installation_id', $installationId);
         Preferences::setForUser($this->user, 'bunq_server_public_key', $serverPublicKey);
+
+        Log::debug('Stored token, ID and pub key.');
 
         return $installationToken;
     }
@@ -236,10 +272,10 @@ class BunqPrerequisites implements PrerequisitesInterface
      */
     private function getPublicKey(): string
     {
-        Log::debug('get public key');
+        Log::debug('Now in getPublicKey()');
         $preference = Preferences::getForUser($this->user, 'bunq_public_key', null);
         if (null === $preference) {
-            Log::debug('public key is null');
+            Log::debug('public key is NULL.');
             // create key pair
             $this->createKeyPair();
         }
@@ -262,7 +298,7 @@ class BunqPrerequisites implements PrerequisitesInterface
         if (null === $preference) {
             try {
                 $response = Requests::get('https://api.ipify.org');
-            } catch (Requests_Exception $e) {
+            } catch (Requests_Exception|Exception $e) {
                 throw new FireflyException(sprintf('Could not retrieve external IP: %s', $e->getMessage()));
             }
             if (200 !== $response->status_code) {
@@ -295,8 +331,6 @@ class BunqPrerequisites implements PrerequisitesInterface
      * - Use the installation token each time we need a session.
      *
      * @throws FireflyException
-     * @throws FireflyException
-     * @throws \Exception
      */
     private function registerDevice(): DeviceServerId
     {
@@ -308,10 +342,12 @@ class BunqPrerequisites implements PrerequisitesInterface
 
             return $deviceServerId->data;
         }
-        Log::debug('Device server id is null, do register.');
+        Log::debug('Device server ID is null, we have to register.');
         $installationToken = $this->getInstallationToken();
         $serverPublicKey   = $this->getServerPublicKey();
         $apiKey            = Preferences::getForUser($this->user, 'bunq_api_key', '');
+
+        Log::debug('Going to create new DeviceServerRequest()');
         $request           = new DeviceServerRequest;
         $request->setPrivateKey($this->getPrivateKey());
         $request->setDescription('Firefly III v' . config('firefly.version') . ' for ' . $this->user->email);
@@ -326,12 +362,13 @@ class BunqPrerequisites implements PrerequisitesInterface
             $deviceServerId = $request->getDeviceServerId();
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
+            // we really have to quit at this point :(
+            throw new FireflyException($e->getMessage());
         }
         if (null === $deviceServerId) {
             // try get the current from a list:
             $deviceServerId = $this->getExistingDevice();
         }
-
         Preferences::setForUser($this->user, 'bunq_device_server_id', $deviceServerId);
         Log::debug(sprintf('Server ID: %s', serialize($deviceServerId)));
 

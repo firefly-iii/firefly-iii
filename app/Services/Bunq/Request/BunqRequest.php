@@ -50,13 +50,17 @@ abstract class BunqRequest
             'x-bunq-client-response-id' => 'X-Bunq-Client-Response-Id',
             'x-bunq-client-request-id'  => 'X-Bunq-Client-Request-Id',
         ];
+    /** @var string */
+    private $version = 'v1';
 
     /**
      * BunqRequest constructor.
      */
     public function __construct()
     {
-        $this->server = config('firefly.bunq.server');
+        $this->server  = strval(config('import.options.bunq.server'));
+        $this->version = strval(config('import.options.bunq.version'));
+        Log::debug(sprintf('Created new BunqRequest with server "%s" and version "%s"', $this->server, $this->version));
     }
 
     /**
@@ -122,9 +126,11 @@ abstract class BunqRequest
         if ('get' === strtolower($method) || 'delete' === strtolower($method)) {
             $data = '';
         }
+        $uri    = sprintf('/%s/%s', $this->version, $uri);
+        $toSign = sprintf("%s %s\n", strtoupper($method), $uri);
 
-        $uri           = str_replace(['https://api.bunq.com', 'https://sandbox.public.api.bunq.com'], '', $uri);
-        $toSign        = sprintf("%s %s\n", strtoupper($method), $uri);
+        Log::debug(sprintf('Message to sign (without data): %s', $toSign));
+
         $headersToSign = ['Cache-Control', 'User-Agent'];
         ksort($headers);
         foreach ($headers as $name => $value) {
@@ -134,6 +140,7 @@ abstract class BunqRequest
         }
         $toSign    .= "\n" . $data;
         $signature = '';
+
 
         openssl_sign($toSign, $signature, $this->privateKey, OPENSSL_ALGO_SHA256);
         $signature = base64_encode($signature);
@@ -207,7 +214,7 @@ abstract class BunqRequest
      *
      * @return array
      *
-     * @throws Exception
+     * @throws FireflyException
      */
     protected function sendSignedBunqDelete(string $uri, array $headers): array
     {
@@ -215,9 +222,12 @@ abstract class BunqRequest
             throw new FireflyException('No bunq server defined');
         }
 
-        $fullUri                            = $this->server . $uri;
+        $fullUri                            = $this->makeUri($uri);
         $signature                          = $this->generateSignature('delete', $uri, $headers, '');
         $headers['X-Bunq-Client-Signature'] = $signature;
+
+        Log::debug(sprintf('Going to send a signed bunq DELETE to %s', $fullUri));
+
         try {
             $response = Requests::delete($fullUri, $headers);
         } catch (Requests_Exception $e) {
@@ -250,7 +260,7 @@ abstract class BunqRequest
      *
      * @return array
      *
-     * @throws Exception
+     * @throws FireflyException
      */
     protected function sendSignedBunqGet(string $uri, array $data, array $headers): array
     {
@@ -259,9 +269,12 @@ abstract class BunqRequest
         }
 
         $body                               = json_encode($data);
-        $fullUri                            = $this->server . $uri;
+        $fullUri                            = $this->makeUri($uri);
         $signature                          = $this->generateSignature('get', $uri, $headers, $body);
         $headers['X-Bunq-Client-Signature'] = $signature;
+
+        Log::debug(sprintf('Going to send a signed bunq GET to %s', $fullUri));
+
         try {
             $response = Requests::get($fullUri, $headers);
         } catch (Requests_Exception $e) {
@@ -292,21 +305,23 @@ abstract class BunqRequest
      * @param array  $headers
      *
      * @return array
-     *
-     * @throws Exception
+     * @throws FireflyException
      */
     protected function sendSignedBunqPost(string $uri, array $data, array $headers): array
     {
         $body                               = json_encode($data);
-        $fullUri                            = $this->server . $uri;
+        $fullUri                            = $this->makeUri($uri);
         $signature                          = $this->generateSignature('post', $uri, $headers, $body);
         $headers['X-Bunq-Client-Signature'] = $signature;
+
+        Log::debug(sprintf('Going to send a signed bunq POST request to: %s', $fullUri));
+
         try {
             $response = Requests::post($fullUri, $headers, $body);
-        } catch (Requests_Exception $e) {
+        } catch (Requests_Exception|Exception $e) {
             return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
         }
-
+        Log::debug('Seems to have NO exceptions in Response');
         $body                        = $response->body;
         $array                       = json_decode($body, true);
         $responseHeaders             = $response->headers->getAll();
@@ -330,15 +345,17 @@ abstract class BunqRequest
      * @param array  $headers
      *
      * @return array
-     *
-     * @throws Exception
+     * @throws FireflyException
      */
     protected function sendUnsignedBunqDelete(string $uri, array $headers): array
     {
-        $fullUri = $this->server . $uri;
+        $fullUri = $this->makeUri($uri);
+
+        Log::debug(sprintf('Going to send a UNsigned bunq DELETE to %s', $fullUri));
+
         try {
             $response = Requests::delete($fullUri, $headers);
-        } catch (Requests_Exception $e) {
+        } catch (Requests_Exception|Exception $e) {
             return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
         }
         $body                        = $response->body;
@@ -361,16 +378,18 @@ abstract class BunqRequest
      * @param array  $headers
      *
      * @return array
-     *
-     * @throws Exception
+     * @throws FireflyException
      */
     protected function sendUnsignedBunqPost(string $uri, array $data, array $headers): array
     {
         $body    = json_encode($data);
-        $fullUri = $this->server . $uri;
+        $fullUri = $this->makeUri($uri);
+
+        Log::debug(sprintf('Going to send an UNsigned bunq POST to: %s', $fullUri));
+
         try {
             $response = Requests::post($fullUri, $headers, $body);
-        } catch (Requests_Exception $e) {
+        } catch (Requests_Exception|Exception $e) {
             return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
         }
         $body                        = $response->body;
@@ -394,10 +413,14 @@ abstract class BunqRequest
      */
     private function isErrorResponse(array $response): bool
     {
+
         $key = key($response);
         if ('Error' === $key) {
+            Log::error('Response IS an error response!');
+
             return true;
         }
+        Log::debug('Response is not an error response');
 
         return false;
     }
@@ -418,9 +441,21 @@ abstract class BunqRequest
     }
 
     /**
+     * Make full API URI
+     *
+     * @param string $uri
+     *
+     * @return string
+     */
+    private function makeUri(string $uri): string
+    {
+        return 'https://' . $this->server . '/' . $this->version . '/' . $uri;
+    }
+
+    /**
      * @param array $response
      *
-     * @throws Exception
+     * @throws FireflyException
      */
     private function throwResponseError(array $response)
     {
@@ -439,8 +474,7 @@ abstract class BunqRequest
      * @param int    $statusCode
      *
      * @return bool
-     *
-     * @throws Exception
+     * @throws FireflyException
      */
     private function verifyServerSignature(string $body, array $headers, int $statusCode): bool
     {

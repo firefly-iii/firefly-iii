@@ -103,9 +103,6 @@ return [
     'export_formats' => [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
     ],
-    'bunq'           => [
-        'server' => 'https://sandbox.public.api.bunq.com',
-    ],
     'spectre'        => [
         'server' => 'https://www.saltedge.com',
     ],

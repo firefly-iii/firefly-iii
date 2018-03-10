@@ -50,7 +50,7 @@ class DeviceSessionRequest extends BunqRequest
      */
     public function call(): void
     {
-        $uri                                     = '/v1/session-server';
+        $uri                                     = 'session-server';
         $data                                    = ['secret' => $this->secret];
         $headers                                 = $this->getDefaultHeaders();
         $headers['X-Bunq-Client-Authentication'] = $this->installationToken->getToken();

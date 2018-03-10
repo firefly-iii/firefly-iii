@@ -40,23 +40,24 @@ class InstallationTokenRequest extends BunqRequest
     private $publicKey = '';
 
     /**
-     * @throws \Exception
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function call(): void
     {
-        $uri      = '/v1/installation';
+        Log::debug('Now in InstallationTokenRequest::call()');
+        $uri      = 'installation';
         $data     = ['client_public_key' => $this->publicKey];
         $headers  = $this->getDefaultHeaders();
         $response = $this->sendUnsignedBunqPost($uri, $data, $headers);
-        Log::debug('Installation request response', $response);
+        //Log::debug('Installation request response', $response);
 
         $this->installationId    = $this->extractInstallationId($response);
         $this->serverPublicKey   = $this->extractServerPublicKey($response);
         $this->installationToken = $this->extractInstallationToken($response);
-
-        Log::debug(sprintf('Installation ID: %s', serialize($this->installationId)));
-        Log::debug(sprintf('Installation token: %s', serialize($this->installationToken)));
-        Log::debug(sprintf('server public key: %s', serialize($this->serverPublicKey)));
+        Log::debug('No errors! We have installation ID!');
+        Log::debug(sprintf('Installation ID: %s', $this->installationId->getId()));
+        Log::debug(sprintf('Installation token: %s', $this->installationToken->getToken()));
+        Log::debug('Server public key: (not included)');
 
         return;
     }

@@ -24,7 +24,7 @@ declare(strict_types=1);
 return [
     'enabled'       => [
         'file'    => true,
-        'bunq'    => false,
+        'bunq'    => true,
         'spectre' => true,
         'plaid'   => false,
     ],
@@ -52,9 +52,13 @@ return [
         'file' => [
             'import_formats'        => ['csv'], // mt940
             'default_import_format' => 'csv',
-            'processors' => [
+            'processors'            => [
                 'csv' => 'FireflyIII\Import\FileProcessor\CsvProcessor',
             ],
+        ],
+        'bunq' => [
+            'server'  => 'sandbox.public.api.bunq.com',
+            'version' => 'v1',
         ],
     ],
     'default_config' => [

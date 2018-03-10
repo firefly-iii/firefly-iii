@@ -43,11 +43,10 @@ class ListDeviceServerRequest extends BunqRequest
     }
 
     /**
-     * @throws \Exception
      */
     public function call(): void
     {
-        $uri                                     = '/v1/device-server';
+        $uri                                     = 'device-server';
         $data                                    = [];
         $headers                                 = $this->getDefaultHeaders();
         $headers['X-Bunq-Client-Authentication'] = $this->installationToken->getToken();

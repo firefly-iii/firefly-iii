@@ -128,11 +128,12 @@ class PrerequisitesController extends Controller
         Log::debug('Going to store entered prerequisites.');
         // store post data
         $result = $object->storePrerequisites($request);
+        Log::debug(sprintf('Result of storePrerequisites has message count: %d', $result->count()));
 
         if ($result->count() > 0) {
             $request->session()->flash('error', $result->first());
         }
 
-        return redirect(route('import.prerequisites', [$bank]));
+        return redirect(route('import.index'));
     }
 }
