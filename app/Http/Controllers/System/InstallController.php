@@ -29,7 +29,6 @@ use FireflyIII\Http\Controllers\Controller;
 use Laravel\Passport\Passport;
 use Log;
 use phpseclib\Crypt\RSA;
-use Symfony\Component\Console\Output\BufferedOutput;
 
 /**
  * Class InstallController
@@ -47,15 +46,16 @@ class InstallController extends Controller
     /**
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function migrate()
+    public function index()
     {
-        Log::debug('Am now calling migrate routine...');
-        $output = new BufferedOutput();
-        Artisan::call('migrate', ['--seed' => true, '--force' => true]);
-        $result = $output->fetch();
-        Log::debug($result);
-        Log::debug(Artisan::output());
+        return view('install.index');
+    }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function keys()
+    {
         // create keys manually because for some reason the passport namespace
         // does not exist
         $rsa  = new RSA();
@@ -67,13 +67,37 @@ class InstallController extends Controller
         ];
 
         if ((file_exists($publicKey) || file_exists($privateKey))) {
-            return redirect(route('index'));
+            return response()->json(['OK']);
         }
 
         file_put_contents($publicKey, array_get($keys, 'publickey'));
         file_put_contents($privateKey, array_get($keys, 'privatekey'));
 
-        return redirect(route('index'));
+        return response()->json(['OK']);
+    }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function migrate()
+    {
+        Log::debug('Am now calling migrate routine...');
+        Artisan::call('migrate', ['--seed' => true, '--force' => true]);
+        Log::debug(Artisan::output());
+
+        return response()->json(['OK']);
+    }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function upgrade()
+    {
+        Log::debug('Am now calling upgrade database routine...');
+        Artisan::call('firefly:upgrade-database');
+        Log::debug(Artisan::output());
+
+        return response()->json(['OK']);
     }
 
 }

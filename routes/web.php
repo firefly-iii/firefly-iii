@@ -26,8 +26,9 @@ Route::group(
     ['namespace' => 'FireflyIII\Http\Controllers\System',
      'as' => 'installer.', 'prefix' => 'install'], function () {
     Route::get('', ['uses' => 'InstallController@index', 'as' => 'index']);
-
-    Route::get('migrate', ['uses' => 'InstallController@migrate', 'as' => 'migrate']);
+    Route::post('migrate', ['uses' => 'InstallController@migrate', 'as' => 'migrate']);
+    Route::post('keys', ['uses' => 'InstallController@keys', 'as' => 'keys']);
+    Route::post('upgrade', ['uses' => 'InstallController@upgrade', 'as' => 'upgrade']);
 }
 );
 

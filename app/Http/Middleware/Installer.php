@@ -50,7 +50,7 @@ class Installer
                 // redirect to UpdateController
                 Log::warning('There are no Firefly III tables present. Redirect to migrate routine.');
 
-                return response()->redirectTo(route('installer.migrate'));
+                return response()->redirectTo(route('installer.index'));
             }
             throw new FireflyException(sprintf('Could not access the database: %s', $message));
         }
@@ -64,7 +64,7 @@ class Installer
             ));
 
             // redirect to migrate routine:
-            return response()->redirectTo(route('installer.migrate'));
+            return response()->redirectTo(route('installer.index'));
         }
         return $next($request);
     }
