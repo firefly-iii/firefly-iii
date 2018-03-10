@@ -191,7 +191,7 @@
                         {% if journal.hasMeta('interest_date') %}
                             <tr>
                                 <td>{{ trans('list.interest_date') }}</td>
-                                <td>{{ journal.getMeta('interest_date').formatLocalized(monthAndDayFormat) }}</td>
+                                <td>{{ getMetaDate(journal,'interest_date').formatLocalized(monthAndDayFormat) }}</td>
                             </tr>
 
                         {% endif %}
@@ -199,13 +199,13 @@
                         {% if journal.hasMeta('book_date') %}
                             <tr>
                                 <td>{{ trans('list.book_date') }}</td>
-                                <td>{{ journal.getMeta('book_date').formatLocalized(monthAndDayFormat) }}</td>
+                                <td>{{ getMetaDate(journal,'book_date').formatLocalized(monthAndDayFormat) }}</td>
                             </tr>
                         {% endif %}
                         {% if journal.hasMeta('process_date') %}
                             <tr>
                                 <td>{{ trans('list.process_date') }}</td>
-                                <td>{{ journal.getMeta('process_date').formatLocalized(monthAndDayFormat) }}</td>
+                                <td>{{ getMetaDate(journal,'process_date').formatLocalized(monthAndDayFormat) }}</td>
                             </tr>
 
                         {% endif %}
@@ -213,27 +213,28 @@
                         {% if journal.hasMeta('due_date') %}
                             <tr>
                                 <td>{{ trans('list.due_date') }}</td>
-                                <td>{{ journal.getMeta('due_date').formatLocalized(monthAndDayFormat) }}</td>
+                                <td>{{ getMetaDate(journal,'due_date').formatLocalized(monthAndDayFormat) }}</td>
                             </tr>
 
                         {% endif %}
                         {% if journal.hasMeta('payment_date') %}
                             <tr>
                                 <td>{{ trans('list.payment_date') }}</td>
-                                <td>{{ journal.getMeta('payment_date').formatLocalized(monthAndDayFormat) }}</td>
+                                <td>{{ getMetaDate(journal,'payment_date').formatLocalized(monthAndDayFormat) }}</td>
                             </tr>
 
                         {% endif %}
                         {% if journal.hasMeta('invoice_date') %}
                             <tr>
                                 <td>{{ trans('list.invoice_date') }}</td>
-                                <td>{{ journal.getMeta('invoice_date').formatLocalized(monthAndDayFormat) }}</td>
+                                <td>{{ getMetaDate(journal,'invoice_date').formatLocalized(monthAndDayFormat) }}</td>
                             </tr>
                         {% endif %}
-                        {% if journal.hasMeta('internal_reference') and journal.getMeta('internal_reference') != "" %}
+                        {% set intRef = getMetaField(journal, 'internal_reference') %}
+                        {% if intRef != "" %}
                             <tr>
                                 <td>{{ trans('list.internal_reference') }}</td>
-                                <td>{{ journal.getMeta('internal_reference') }}</td>
+                                <td>{{ intRef }}</td>
                             </tr>
                         {% endif %}
                         {% if journal.notes.count == 1 %}

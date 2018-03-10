@@ -94,6 +94,8 @@ class Journal extends Twig_Extension
             $this->getDestinationAccount(),
             $this->journalBudgets(),
             $this->journalCategories(),
+            new Twig_SimpleFunction('getMetaField', [TransactionJournalExtension::class, 'getMetaField']),
+            new Twig_SimpleFunction('getMetaDate', [TransactionJournalExtension::class, 'getMetaDate']),
         ];
 
         return $functions;

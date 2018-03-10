@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig\Extension;
 
+use Carbon\Carbon;
 use FireflyIII\Models\Transaction as TransactionModel;
 use FireflyIII\Models\TransactionJournal as JournalModel;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Twig_Extension;
 
 /**
@@ -32,6 +34,34 @@ use Twig_Extension;
  */
 class TransactionJournal extends Twig_Extension
 {
+    /**
+     * @param JournalModel $journal
+     * @param string       $field
+     *
+     * @return null|Carbon
+     */
+    public function getMetaDate(JournalModel $journal, string $field): ?Carbon
+    {
+        /** @var JournalRepositoryInterface $repository */
+        $repository = app(JournalRepositoryInterface::class);
+
+        return $repository->getMetaDate($journal, $field);
+    }
+
+    /**
+     * @param JournalModel $journal
+     * @param string       $field
+     *
+     * @return string
+     */
+    public function getMetaField(JournalModel $journal, string $field): string
+    {
+        /** @var JournalRepositoryInterface $repository */
+        $repository = app(JournalRepositoryInterface::class);
+
+        return $repository->getMetaField($journal, $field);
+    }
+
     /**
      * @param JournalModel $journal
      *
@@ -66,7 +96,8 @@ class TransactionJournal extends Twig_Extension
                 }
                 $totals[$foreignId]['amount'] = bcadd(
                     $transaction->foreign_amount,
-                    $totals[$foreignId]['amount']);
+                    $totals[$foreignId]['amount']
+                );
             }
         }
         $array = [];

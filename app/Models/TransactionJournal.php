@@ -39,6 +39,7 @@ use Watson\Validating\ValidatingTrait;
 
 /**
  * Class TransactionJournal.
+ *
  * @property User $user
  */
 class TransactionJournal extends Model
@@ -181,6 +182,7 @@ class TransactionJournal extends Model
      *
      * @param string $name
      *
+     * @deprecated
      * @return string
      */
     public function getMeta(string $name)

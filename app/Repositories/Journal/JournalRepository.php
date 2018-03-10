@@ -368,6 +368,35 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Return Carbon value of a meta field (or NULL).
+     *
+     * @param TransactionJournal $journal
+     * @param string             $field
+     *
+     * @return null|Carbon
+     */
+    public function getMetaDate(TransactionJournal $journal, string $field): ?Carbon
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty('journal-meta-updated');
+        $cache->addProperty($journal->id);
+        $cache->addProperty($field);
+
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        $entry = $journal->transactionJournalMeta()->where('name', $field)->first();
+        if (is_null($entry)) {
+            return null;
+        }
+        $value = new Carbon($entry->data);
+        $cache->store($value);
+
+        return $value;
+    }
+
+    /**
      * Return value of a meta field (or NULL) as a string.
      *
      * @param TransactionJournal $journal
@@ -377,12 +406,8 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getMetaField(TransactionJournal $journal, string $field): ?string
     {
-        $class        = new \stdClass;
-        $class->value = 'hi there';
-
-        $value = null;
         $cache = new CacheProperties;
-        $cache->addProperty('journal-meta');
+        $cache->addProperty('journal-meta-updated');
         $cache->addProperty($journal->id);
         $cache->addProperty($field);
 
@@ -390,19 +415,25 @@ class JournalRepository implements JournalRepositoryInterface
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        Log::debug(sprintf('Looking for journal #%d meta field "%s".', $journal->id, $field));
         $entry = $journal->transactionJournalMeta()->where('name', $field)->first();
         if (is_null($entry)) {
             return null;
         }
-        $value = $entry->data;
-        $cache->store($value);
 
+        $value = $entry->data;
+
+        // return when array:
         if (is_array($value)) {
-            return join(',', $value);
+            $return = join(',', $value);
+            $cache->store($return);
+
+            return $return;
         }
+
+        // return when something else:
         try {
             $return = strval($value);
+            $cache->store($return);
         } catch (Exception $e) {
             Log::error($e->getMessage());
 
