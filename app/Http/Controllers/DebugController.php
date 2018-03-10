@@ -76,6 +76,16 @@ class DebugController extends Controller
         $packages       = $this->collectPackages();
         $cacheDriver    = env('CACHE_DRIVER', 'unknown');
 
+        // set languages, see what happens:
+        $original       = setlocale(LC_ALL, 0);
+        $localeAttempts = [];
+        $parts          = explode(',', trans('config.locale'));
+        foreach ($parts as $code) {
+            $code                  = trim($code);
+            $localeAttempts[$code] = var_export(setlocale(LC_ALL, $code), true);
+        }
+        setlocale(LC_ALL, $original);
+
         // get latest log file:
         $logger     = Log::driver();
         $handlers   = $logger->getHandlers();
@@ -99,7 +109,7 @@ class DebugController extends Controller
             'debug',
             compact(
                 'phpVersion',
-                'extensions',
+                'extensions','localeAttempts',
                 'carbon',
                 'appEnv',
                 'appDebug',
