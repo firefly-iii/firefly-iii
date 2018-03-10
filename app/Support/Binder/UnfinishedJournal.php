@@ -37,7 +37,7 @@ class UnfinishedJournal implements BinderInterface
      *
      * @return TransactionJournal
      */
-    public static function routeBinder(string $value, Route $route):  TransactionJournal
+    public static function routeBinder(string $value, Route $route): TransactionJournal
     {
         if (auth()->check()) {
             $journal = auth()->user()->transactionJournals()->where('transaction_journals.id', $value)

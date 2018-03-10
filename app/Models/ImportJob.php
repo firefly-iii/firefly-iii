@@ -32,6 +32,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class ImportJob.
+ *
  * @property User $user
  */
 class ImportJob extends Model

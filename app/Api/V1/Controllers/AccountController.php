@@ -95,16 +95,16 @@ class AccountController extends Controller
     public function index(Request $request)
     {
         // create some objects:
-        $manager   = new Manager();
-        $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
 
         // read type from URI
         $type = $request->get('type') ?? 'all';
         $this->parameters->set('type', $type);
 
         // types to get, page size:
-        $types      = $this->mapTypes($this->parameters->get('type'));
-        $pageSize   = intval(Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data);
+        $types    = $this->mapTypes($this->parameters->get('type'));
+        $pageSize = intval(Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data);
 
         // get list of accounts. Count it and split it.
         $collection = $this->repository->getAccountsByType($types);

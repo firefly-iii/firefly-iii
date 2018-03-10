@@ -59,7 +59,7 @@ class ClearBudget implements ActionInterface
 
         // also remove categories from transactions:
         /** @var Transaction $transaction */
-        foreach($journal->transactions as $transaction) {
+        foreach ($journal->transactions as $transaction) {
             $transaction->budgets()->detach();
         }
 

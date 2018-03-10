@@ -225,6 +225,7 @@ class Transaction extends Twig_Extension
 
     /**
      * TODO improve code
+     *
      * @param TransactionModel $transaction
      *
      * @return string

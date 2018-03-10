@@ -56,8 +56,8 @@ class DeviceServerRequest extends BunqRequest
 
         Log::debug('Headers we send along: ', $headers);
 
-        $response                                = $this->sendSignedBunqPost($uri, $data, $headers);
-        $deviceServerId                          = new DeviceServerId;
+        $response       = $this->sendSignedBunqPost($uri, $data, $headers);
+        $deviceServerId = new DeviceServerId;
         $deviceServerId->setId(intval($response['Response'][0]['Id']['id']));
         $this->deviceServerId = $deviceServerId;
 

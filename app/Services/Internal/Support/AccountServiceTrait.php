@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
-use Exception;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Factory\TransactionFactory;
@@ -255,6 +254,7 @@ trait AccountServiceTrait
 
             return true;
         }
+
         return true; // @codeCoverageIgnore
     }
 

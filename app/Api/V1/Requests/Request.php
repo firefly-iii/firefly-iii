@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Http\Requests\Request as FireflyIIIRequest;
+
 /**
  * Class Request.
  */

@@ -23,14 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
-use Exception;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountMeta;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
-use Log;
 
 /**
  * Class AccountUpdateService
@@ -38,7 +32,6 @@ use Log;
 class AccountUpdateService
 {
     use AccountServiceTrait;
-
 
 
     /**

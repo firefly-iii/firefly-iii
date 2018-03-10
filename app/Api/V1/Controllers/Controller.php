@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class Controller.
+ *
  * @codeCoverageIgnore
  */
 class Controller extends BaseController
@@ -70,7 +71,7 @@ class Controller extends BaseController
         $return = '?';
         $params = [];
         foreach ($this->parameters as $key => $value) {
-            if($key === 'page') {
+            if ($key === 'page') {
                 continue;
             }
             if ($value instanceof Carbon) {

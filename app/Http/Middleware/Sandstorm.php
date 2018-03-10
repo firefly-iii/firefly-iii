@@ -95,9 +95,9 @@ class Sandstorm
                 /** @var User $user */
                 $user = $repository->store(
                     [
-                        'blocked' => false,
+                        'blocked'      => false,
                         'blocked_code' => null,
-                        'email'    => $email,
+                        'email'        => $email,
                     ]
                 );
                 Auth::guard($guard)->login($user);

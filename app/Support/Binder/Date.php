@@ -40,7 +40,7 @@ class Date implements BinderInterface
      *
      * @return Carbon
      */
-    public static function routeBinder(string $value, Route $route):  Carbon
+    public static function routeBinder(string $value, Route $route): Carbon
     {
         /** @var FiscalHelperInterface $fiscalHelper */
         $fiscalHelper = app(FiscalHelperInterface::class);

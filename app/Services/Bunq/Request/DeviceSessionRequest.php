@@ -28,7 +28,6 @@ use FireflyIII\Services\Bunq\Object\UserCompany;
 use FireflyIII\Services\Bunq\Object\UserPerson;
 use FireflyIII\Services\Bunq\Token\InstallationToken;
 use FireflyIII\Services\Bunq\Token\SessionToken;
-use Log;
 
 /**
  * Class DeviceSessionRequest.

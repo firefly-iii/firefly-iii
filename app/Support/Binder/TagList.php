@@ -40,7 +40,7 @@ class TagList implements BinderInterface
      *
      * @return Collection
      */
-    public static function routeBinder(string $value, Route $route):  Collection
+    public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
             $list     = [];

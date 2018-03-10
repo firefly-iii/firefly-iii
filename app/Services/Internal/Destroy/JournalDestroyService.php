@@ -56,7 +56,7 @@ class JournalDestroyService
             }
             $journal->delete();
         } catch (Exception $e) {
-            Log::error(sprintf('Could not delete bill: %s',$e->getMessage())); // @codeCoverageIgnore
+            Log::error(sprintf('Could not delete bill: %s', $e->getMessage())); // @codeCoverageIgnore
         }
 
         return;

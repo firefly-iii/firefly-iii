@@ -90,6 +90,7 @@ class PiggyBank extends Model
 
     /**
      * Grabs the PiggyBankRepetition that's currently relevant / active.
+     *
      * @deprecated
      * @returns PiggyBankRepetition
      */
@@ -153,6 +154,7 @@ class PiggyBank extends Model
 
     /**
      * @param Carbon $date
+     *
      * @deprecated
      * @return string
      */

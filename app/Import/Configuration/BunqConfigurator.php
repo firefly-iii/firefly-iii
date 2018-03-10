@@ -186,6 +186,7 @@ class BunqConfigurator implements ConfiguratorInterface
                 return false;
             case 'initial':
                 Log::debug('isJobConfigured returns true');
+
                 return true;
                 break;
             default:

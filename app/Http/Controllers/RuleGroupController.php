@@ -188,7 +188,8 @@ class RuleGroupController extends Controller
     public function selectTransactions(AccountRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
         // does the user have shared accounts?
-        $accounts        = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        // todo could be removed?
         $accountList     = ExpandedForm::makeSelectList($accounts);
         $checkedAccounts = array_keys($accountList);
         $first           = session('first')->format('Y-m-d');

@@ -170,8 +170,8 @@ class TransactionTransformer extends TransformerAbstract
         }
         /** @var Note $dbNote */
         $dbNote = $transaction->transactionJournal->notes()->first();
-        $notes = null;
-        if(!is_null($dbNote)) {
+        $notes  = null;
+        if (!is_null($dbNote)) {
             $notes = $dbNote->text;
         }
 

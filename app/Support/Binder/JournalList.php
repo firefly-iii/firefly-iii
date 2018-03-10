@@ -37,7 +37,7 @@ class JournalList implements BinderInterface
      *
      * @return mixed
      */
-    public static function routeBinder(string $value, Route $route):  Collection
+    public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
             $list     = [];

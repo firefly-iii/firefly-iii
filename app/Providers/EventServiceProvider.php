@@ -24,15 +24,10 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedVersionCheckStatus;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionJournalMeta;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Log;
 
 /**
  * Class EventServiceProvider.

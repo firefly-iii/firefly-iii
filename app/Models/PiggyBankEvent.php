@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class PiggyBankEvent.
+ *
  * @property $piggyBank
  */
 class PiggyBankEvent extends Model

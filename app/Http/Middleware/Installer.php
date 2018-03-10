@@ -26,13 +26,14 @@ class Installer
      */
     public function handle($request, Closure $next)
     {
-        if(env('APP_ENV') === 'testing') {
+        if (env('APP_ENV') === 'testing') {
             return $next($request);
         }
-        $url = $request->url();
+        $url    = $request->url();
         $strpos = stripos($url, '/install');
         if (!($strpos === false)) {
             Log::debug(sprintf('URL is %s, will NOT run installer middleware', $url));
+
             return $next($request);
         }
         Log::debug(sprintf('URL is %s, will run installer middleware', $url));
@@ -59,13 +60,16 @@ class Installer
         $configVersion = intval(config('firefly.db_version'));
         $dbVersion     = intval(FireflyConfig::getFresh('db_version', 1)->data);
         if ($configVersion > $dbVersion) {
-            Log::warning(sprintf(
-                'The current installed version (%d) is older than the required version (%d). Redirect to migrate routine.', $dbVersion, $configVersion
-            ));
+            Log::warning(
+                sprintf(
+                    'The current installed version (%d) is older than the required version (%d). Redirect to migrate routine.', $dbVersion, $configVersion
+                )
+            );
 
             // redirect to migrate routine:
             return response()->redirectTo(route('installer.index'));
         }
+
         return $next($request);
     }
 

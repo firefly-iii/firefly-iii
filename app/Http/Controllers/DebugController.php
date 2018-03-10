@@ -109,7 +109,7 @@ class DebugController extends Controller
             'debug',
             compact(
                 'phpVersion',
-                'extensions','localeAttempts',
+                'extensions', 'localeAttempts',
                 'carbon',
                 'appEnv',
                 'appDebug',

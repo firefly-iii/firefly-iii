@@ -32,7 +32,7 @@ use Illuminate\Http\Request;
  */
 class TrustProxies extends Middleware
 {
-    /** @var int  */
+    /** @var int */
     protected $headers = Request::HEADER_X_FORWARDED_ALL;
 
     /**

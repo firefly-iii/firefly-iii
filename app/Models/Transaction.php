@@ -91,7 +91,7 @@ class Transaction extends Model
      */
     protected $fillable
         = ['account_id', 'transaction_journal_id', 'description', 'amount', 'identifier', 'transaction_currency_id', 'foreign_currency_id',
-           'foreign_amount','reconciled'];
+           'foreign_amount', 'reconciled'];
     /**
      * @var array
      */

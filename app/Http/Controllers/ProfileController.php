@@ -95,20 +95,8 @@ class ProfileController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     */
-    public function deleteCode()
-    {
-        Preferences::delete('twoFactorAuthEnabled');
-        Preferences::delete('twoFactorAuthSecret');
-        Session::flash('success', strval(trans('firefly.pref_two_factor_auth_disabled')));
-        Session::flash('info', strval(trans('firefly.pref_two_factor_auth_remove_it')));
-
-        return redirect(route('profile.index'));
-    }
-
-    /**
      * View that generates a 2FA code for the user.
+     *
      * @return View
      */
     public function code()
@@ -119,23 +107,6 @@ class ProfileController extends Controller
         $image = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret, 200);
 
         return view('profile.code', compact('image'));
-    }
-
-    /**
-     * @param TokenFormRequest $request
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
-     */
-    public function postCode(TokenFormRequest $request)
-    {
-        Preferences::set('twoFactorAuthEnabled', 1);
-        Preferences::set('twoFactorAuthSecret', Session::get('two-factor-secret'));
-
-        Session::flash('success', strval(trans('firefly.saved_preferences')));
-        Preferences::mark();
-
-        return redirect(route('profile.index'));
     }
 
     /**
@@ -183,6 +154,19 @@ class ProfileController extends Controller
         $subTitleIcon = 'fa-trash';
 
         return view('profile.delete-account', compact('title', 'subTitle', 'subTitleIcon'));
+    }
+
+    /**
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function deleteCode()
+    {
+        Preferences::delete('twoFactorAuthEnabled');
+        Preferences::delete('twoFactorAuthSecret');
+        Session::flash('success', strval(trans('firefly.pref_two_factor_auth_disabled')));
+        Session::flash('info', strval(trans('firefly.pref_two_factor_auth_remove_it')));
+
+        return redirect(route('profile.index'));
     }
 
     /**
@@ -292,6 +276,23 @@ class ProfileController extends Controller
 
         $repository->changePassword(auth()->user(), $request->get('new_password'));
         Session::flash('success', strval(trans('firefly.password_changed')));
+
+        return redirect(route('profile.index'));
+    }
+
+    /**
+     * @param TokenFormRequest $request
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
+     */
+    public function postCode(TokenFormRequest $request)
+    {
+        Preferences::set('twoFactorAuthEnabled', 1);
+        Preferences::set('twoFactorAuthSecret', Session::get('two-factor-secret'));
+
+        Session::flash('success', strval(trans('firefly.saved_preferences')));
+        Preferences::mark();
 
         return redirect(route('profile.index'));
     }

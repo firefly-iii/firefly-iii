@@ -217,6 +217,7 @@ trait TransactionServiceTrait
     {
         if (is_null($budget)) {
             $transaction->budgets()->sync([]);
+
             return;
         }
         $transaction->budgets()->sync([$budget->id]);
@@ -233,6 +234,7 @@ trait TransactionServiceTrait
     {
         if (is_null($category)) {
             $transaction->categories()->sync([]);
+
             return;
         }
         $transaction->categories()->sync([$category->id]);
@@ -260,6 +262,7 @@ trait TransactionServiceTrait
         if (is_null($currency)) {
             $transaction->foreign_currency_id = null;
             $transaction->save();
+
             return;
         }
         $transaction->foreign_currency_id = $currency->id;
