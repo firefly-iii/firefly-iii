@@ -187,7 +187,7 @@ class BunqPrerequisites implements PrerequisitesInterface
      *
      * @throws FireflyException
      */
-    private function getExistingDevice(): DeviceServerId
+    private function getExistingDevice(): ?DeviceServerId
     {
         Log::debug('Now in getExistingDevice()');
         $installationToken = $this->getInstallationToken();
@@ -205,7 +205,8 @@ class BunqPrerequisites implements PrerequisitesInterface
                 return $device->getId();
             }
         }
-        throw new FireflyException('Cannot find existing Server Device that can be used by this instance of Firefly III.');
+
+        return null;
     }
 
     /**
@@ -342,13 +343,21 @@ class BunqPrerequisites implements PrerequisitesInterface
 
             return $deviceServerId->data;
         }
-        Log::debug('Device server ID is null, we have to register.');
+        Log::debug('Device server ID is null, we have to find an existing one or register a new one.');
         $installationToken = $this->getInstallationToken();
         $serverPublicKey   = $this->getServerPublicKey();
         $apiKey            = Preferences::getForUser($this->user, 'bunq_api_key', '');
 
-        Log::debug('Going to create new DeviceServerRequest()');
-        $request           = new DeviceServerRequest;
+        // try get the current from a list:
+        $deviceServerId = $this->getExistingDevice();
+        if (null !== $deviceServerId) {
+            Log::debug('Found device server ID in existing devices list.');
+
+            return $deviceServerId;
+        }
+
+        Log::debug('Going to create new DeviceServerRequest() because nothing found in existing list.');
+        $request = new DeviceServerRequest;
         $request->setPrivateKey($this->getPrivateKey());
         $request->setDescription('Firefly III v' . config('firefly.version') . ' for ' . $this->user->email);
         $request->setSecret($apiKey->data);
@@ -363,12 +372,12 @@ class BunqPrerequisites implements PrerequisitesInterface
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
             // we really have to quit at this point :(
-            throw new FireflyException($e->getMessage());
+            //throw new FireflyException($e->getMessage());
         }
-        if (null === $deviceServerId) {
-            // try get the current from a list:
-            $deviceServerId = $this->getExistingDevice();
+        if(is_null($deviceServerId)) {
+            throw new FireflyException('Was not able to register server with bunq. Please see the log files.');
         }
+
         Preferences::setForUser($this->user, 'bunq_device_server_id', $deviceServerId);
         Log::debug(sprintf('Server ID: %s', serialize($deviceServerId)));
 
