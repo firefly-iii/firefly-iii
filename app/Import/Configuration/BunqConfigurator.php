@@ -206,16 +206,8 @@ class BunqConfigurator implements ConfiguratorInterface
 
         // set default config:
         $defaultConfig = [
-            //            'has-token'       => false,
-            //            'token'           => '',
-            //            'token-expires'   => 0,
-            //            'token-url'       => '',
             'is-redirected' => false,
-            //            'customer'        => null,
-            //            'login'           => null,
             'stage'         => 'initial',
-            //            'accounts'        => '',
-            //            'accounts-mapped' => '',
             'auto-start'    => true,
             'apply-rules'   => true,
             'match-bills'   => false,

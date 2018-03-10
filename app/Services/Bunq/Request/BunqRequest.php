@@ -314,7 +314,7 @@ abstract class BunqRequest
         $signature                          = $this->generateSignature('post', $uri, $headers, $body);
         $headers['X-Bunq-Client-Signature'] = $signature;
 
-        Log::debug(sprintf('Going to send a signed bunq POST request to: %s', $fullUri));
+        Log::debug(sprintf('Going to send a signed bunq POST request to: %s', $fullUri), $headers);
 
         try {
             $response = Requests::post($fullUri, $headers, $body);

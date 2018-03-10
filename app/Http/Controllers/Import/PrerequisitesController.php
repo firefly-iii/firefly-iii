@@ -134,6 +134,6 @@ class PrerequisitesController extends Controller
             $request->session()->flash('error', $result->first());
         }
 
-        return redirect(route('import.index'));
+        return redirect(route('import.prerequisites', [$bank]));
     }
 }

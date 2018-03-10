@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Request;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Services\Bunq\Id\DeviceSessionId;
 use FireflyIII\Services\Bunq\Object\UserCompany;
 use FireflyIII\Services\Bunq\Object\UserPerson;
@@ -46,7 +47,7 @@ class DeviceSessionRequest extends BunqRequest
     private $userPerson;
 
     /**
-     * @throws \Exception
+     * @throws FireflyException
      */
     public function call(): void
     {
@@ -60,11 +61,6 @@ class DeviceSessionRequest extends BunqRequest
         $this->sessionToken    = $this->extractSessionToken($response);
         $this->userPerson      = $this->extractUserPerson($response);
         $this->userCompany     = $this->extractUserCompany($response);
-
-        Log::debug(sprintf('Session ID: %s', serialize($this->deviceSessionId)));
-        Log::debug(sprintf('Session token: %s', serialize($this->sessionToken)));
-        Log::debug(sprintf('Session user person: %s', serialize($this->userPerson)));
-        Log::debug(sprintf('Session user company: %s', serialize($this->userCompany)));
 
         return;
     }
@@ -83,6 +79,14 @@ class DeviceSessionRequest extends BunqRequest
     public function getSessionToken(): SessionToken
     {
         return $this->sessionToken;
+    }
+
+    /**
+     * @return UserCompany
+     */
+    public function getUserCompany(): UserCompany
+    {
+        return $this->userCompany;
     }
 
     /**

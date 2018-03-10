@@ -23,14 +23,48 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Routine;
 
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Services\Bunq\Id\DeviceServerId;
+use FireflyIII\Services\Bunq\Object\DeviceServer;
+use FireflyIII\Services\Bunq\Object\ServerPublicKey;
+use FireflyIII\Services\Bunq\Request\DeviceServerRequest;
+use FireflyIII\Services\Bunq\Request\DeviceSessionRequest;
+use FireflyIII\Services\Bunq\Request\InstallationTokenRequest;
+use FireflyIII\Services\Bunq\Request\ListDeviceServerRequest;
+use FireflyIII\Services\Bunq\Token\InstallationToken;
 use Illuminate\Support\Collection;
 use Log;
+use Preferences;
+use Requests;
 
 /**
  * Class BunqRoutine
+ *
+ * Steps before import:
+ * 1) register device complete.
+ *
+ * Stage: 'initial'.
+ *
+ * 1) Get an installation token (if not present)
+ * 2) Register device (if not found)
+ *
+ * Stage 'registered'
+ *
+ * 1) Get a session token. (new session)
+ * 2) store user person / user company
+ *
+ * Stage 'logged-in'
+ *
+ * Get list of bank accounts
+ *
+ * Stage 'has-accounts'
+ *
+ * Do customer statement export (in CSV?)
+ *
+ *
  */
 class BunqRoutine implements RoutineInterface
 {
@@ -93,10 +127,15 @@ class BunqRoutine implements RoutineInterface
 
         switch ($stage) {
             case 'initial':
-                // get customer and token:
+                // register device and get tokens.
                 $this->runStageInitial();
                 break;
-            case 'default':
+            case 'registered':
+                // get all bank accounts of user.
+                $this->runStageRegistered();
+                break;
+
+            default:
                 throw new FireflyException(sprintf('No action for stage %s!', $stage));
                 break;
             //            case 'has-token':
@@ -131,17 +170,56 @@ class BunqRoutine implements RoutineInterface
 
     /**
      *
+     * @throws FireflyException
      */
     protected function runStageInitial()
     {
+        Log::debug('In runStageInitial()');
         $this->setStatus('running');
 
-        // get session server
+        // register the device at Bunq:
+        $serverId = $this->registerDevice();
+        $this->addStep();
+        Log::debug(sprintf('Found device server with id %d', $serverId->getId()));
 
+        $config          = $this->getConfig();
+        $config['stage'] = 'registered';
+        $this->setConfig($config);
 
+        return;
+    }
 
+    /**
+     * Get a session token + userperson + usercompany. Store it in the job.
+     *
+     * @throws FireflyException
+     */
+    protected function runStageRegistered(): void
+    {
+        Log::debug('Now in runStageRegistered()');
+        $apiKey            = Preferences::getForUser($this->job->user, 'bunq_api_key')->data;
+        $serverPublicKey   = Preferences::getForUser($this->job->user, 'bunq_server_public_key')->data;
+        $installationToken = $this->getInstallationToken();
+        $request           = new DeviceSessionRequest;
+        $request->setInstallationToken($installationToken);
+        $request->setPrivateKey($this->getPrivateKey());
+        $request->setServerPublicKey($serverPublicKey);
+        $request->setSecret($apiKey);
+        $request->call();
 
-        die(' in run stage initial');
+        // todo store objects in job!
+        $deviceSession = $request->getDeviceSessionId();
+        $userPerson    = $request->getUserPerson();
+        $userCompany   = $request->getUserCompany();
+
+        $config                      = $this->getConfig();
+        $config['device_session_id'] = $deviceSession->toArray();
+        $config['user_person']       = $userPerson->toArray();
+        $config['user_company']      = $userCompany->toArray();
+        $config['stage']             = 'logged-in';
+        $this->setConfig($config);
+
+        return;
     }
 
     /**
@@ -163,11 +241,83 @@ class BunqRoutine implements RoutineInterface
     }
 
     /**
+     * This method creates a new public/private keypair for the user. This isn't really secure, since the key is generated on the fly with
+     * no regards for HSM's, smart cards or other things. It would require some low level programming to get this right. But the private key
+     * is stored encrypted in the database so it's something.
+     */
+    private function createKeyPair(): void
+    {
+        Log::debug('Now in createKeyPair()');
+        $private = Preferences::getForUser($this->job->user, 'bunq_private_key', null);
+        $public  = Preferences::getForUser($this->job->user, 'bunq_public_key', null);
+
+        if (!(null === $private && null === $public)) {
+            Log::info('Already have public and private key, return NULL.');
+
+            return;
+        }
+
+        Log::debug('Generate new key pair for user.');
+        $keyConfig = [
+            'digest_alg'       => 'sha512',
+            'private_key_bits' => 2048,
+            'private_key_type' => OPENSSL_KEYTYPE_RSA,
+        ];
+        // Create the private and public key
+        $res = openssl_pkey_new($keyConfig);
+
+        // Extract the private key from $res to $privKey
+        $privKey = '';
+        openssl_pkey_export($res, $privKey);
+
+        // Extract the public key from $res to $pubKey
+        $pubKey = openssl_pkey_get_details($res);
+
+        Preferences::setForUser($this->job->user, 'bunq_private_key', $privKey);
+        Preferences::setForUser($this->job->user, 'bunq_public_key', $pubKey['key']);
+        Log::debug('Created and stored key pair');
+
+        return;
+    }
+
+    /**
      * @return array
      */
     private function getConfig(): array
     {
         return $this->repository->getConfiguration($this->job);
+    }
+
+    /**
+     * Try to detect the current device ID (in case this instance has been registered already.
+     *
+     * @return DeviceServerId
+     *
+     * @throws FireflyException
+     */
+    private function getExistingDevice(): ?DeviceServerId
+    {
+        Log::debug('Now in getExistingDevice()');
+        $installationToken = $this->getInstallationToken();
+        $serverPublicKey   = $this->getServerPublicKey();
+        $request           = new ListDeviceServerRequest;
+        $remoteIp          = $this->getRemoteIp();
+        $request->setInstallationToken($installationToken);
+        $request->setServerPublicKey($serverPublicKey);
+        $request->setPrivateKey($this->getPrivateKey());
+        $request->call();
+        $devices = $request->getDevices();
+        /** @var DeviceServer $device */
+        foreach ($devices as $device) {
+            if ($device->getIp() === $remoteIp) {
+                Log::debug(sprintf('This instance is registered as device #%s', $device->getId()->getId()));
+
+                return $device->getId();
+            }
+        }
+        Log::info('This instance is not yet registered.');
+
+        return null;
     }
 
     /**
@@ -181,6 +331,127 @@ class BunqRoutine implements RoutineInterface
     }
 
     /**
+     * Get the installation token, either from the users preferences or from Bunq.
+     *
+     * @return InstallationToken
+     * @throws FireflyException
+     */
+    private function getInstallationToken(): InstallationToken
+    {
+        Log::debug('Now in getInstallationToken().');
+        $token = Preferences::getForUser($this->job->user, 'bunq_installation_token', null);
+        if (null !== $token) {
+            Log::debug('Have installation token, return it.');
+
+            return $token->data;
+        }
+        Log::debug('Have no installation token, request one.');
+
+        // verify bunq api code:
+        $publicKey = $this->getPublicKey();
+        $request   = new InstallationTokenRequest;
+        $request->setPublicKey($publicKey);
+        $request->call();
+        Log::debug('Sent request for installation token.');
+
+        $installationToken = $request->getInstallationToken();
+        $installationId    = $request->getInstallationId();
+        $serverPublicKey   = $request->getServerPublicKey();
+
+        Preferences::setForUser($this->job->user, 'bunq_installation_token', $installationToken);
+        Preferences::setForUser($this->job->user, 'bunq_installation_id', $installationId);
+        Preferences::setForUser($this->job->user, 'bunq_server_public_key', $serverPublicKey);
+
+        Log::debug('Stored token, ID and pub key.');
+
+        return $installationToken;
+    }
+
+    /**
+     * Get the private key from the users preferences.
+     *
+     * @return string
+     */
+    private function getPrivateKey(): string
+    {
+        Log::debug('In getPrivateKey()');
+        $preference = Preferences::getForUser($this->job->user, 'bunq_private_key', null);
+        if (null === $preference) {
+            Log::debug('private key is null');
+            // create key pair
+            $this->createKeyPair();
+        }
+        $preference = Preferences::getForUser($this->job->user, 'bunq_private_key', null);
+        Log::debug('Return private key for user');
+
+        return $preference->data;
+    }
+
+    /**
+     * Get a public key from the users preferences.
+     *
+     * @return string
+     */
+    private function getPublicKey(): string
+    {
+        Log::debug('Now in getPublicKey()');
+        $preference = Preferences::getForUser($this->job->user, 'bunq_public_key', null);
+        if (null === $preference) {
+            Log::debug('public key is NULL.');
+            // create key pair
+            $this->createKeyPair();
+        }
+        $preference = Preferences::getForUser($this->job->user, 'bunq_public_key', null);
+        Log::debug('Return public key for user');
+
+        return $preference->data;
+    }
+
+    /**
+     * Request users server remote IP. Let's assume this value will not change any time soon.
+     *
+     * @return string
+     *
+     * @throws FireflyException
+     */
+    private function getRemoteIp(): string
+    {
+        $preference = Preferences::getForUser($this->job->user, 'external_ip', null);
+        if (null === $preference) {
+            try {
+                $response = Requests::get('https://api.ipify.org');
+            } catch (Exception $e) {
+                throw new FireflyException(sprintf('Could not retrieve external IP: %s', $e->getMessage()));
+            }
+            if (200 !== $response->status_code) {
+                throw new FireflyException(sprintf('Could not retrieve external IP: %d %s', $response->status_code, $response->body));
+            }
+            $serverIp = $response->body;
+            Preferences::setForUser($this->job->user, 'external_ip', $serverIp);
+
+            return $serverIp;
+        }
+
+        return $preference->data;
+    }
+
+    /**
+     * Get the public key of the server, necessary to verify server signature.
+     *
+     * @return ServerPublicKey
+     * @throws FireflyException
+     */
+    private function getServerPublicKey(): ServerPublicKey
+    {
+        $pref = Preferences::getForUser($this->job->user, 'bunq_server_public_key', null)->data;
+        if (is_null($pref)) {
+            throw new FireflyException('Cannot determine bunq server public key, but should have it at this point.');
+        }
+
+        return $pref;
+    }
+
+    /**
      * Shorthand method.
      *
      * @return string
@@ -188,6 +459,69 @@ class BunqRoutine implements RoutineInterface
     private function getStatus(): string
     {
         return $this->repository->getStatus($this->job);
+    }
+
+    /**
+     * To install Firefly III as a new device:
+     * - Send an installation token request.
+     * - Use this token to send a device server request
+     * - Store the installation token
+     * - Use the installation token each time we need a session.
+     *
+     * @throws FireflyException
+     */
+    private function registerDevice(): DeviceServerId
+    {
+        Log::debug('Now in registerDevice()');
+        $deviceServerId = Preferences::getForUser($this->job->user, 'bunq_device_server_id', null);
+        $serverIp       = $this->getRemoteIp();
+        if (null !== $deviceServerId) {
+            Log::debug('Already have device server ID.');
+
+            return $deviceServerId->data;
+        }
+
+        Log::debug('Device server ID is null, we have to find an existing one or register a new one.');
+        $installationToken = $this->getInstallationToken();
+        $serverPublicKey   = $this->getServerPublicKey();
+        $apiKey            = Preferences::getForUser($this->job->user, 'bunq_api_key', '');
+        $this->addStep();
+
+        // try get the current from a list:
+        $deviceServerId = $this->getExistingDevice();
+        $this->addStep();
+        if (null !== $deviceServerId) {
+            Log::debug('Found device server ID in existing devices list.');
+
+            return $deviceServerId;
+        }
+
+        Log::debug('Going to create new DeviceServerRequest() because nothing found in existing list.');
+        $request = new DeviceServerRequest;
+        $request->setPrivateKey($this->getPrivateKey());
+        $request->setDescription('Firefly III v' . config('firefly.version') . ' for ' . $this->job->user->email);
+        $request->setSecret($apiKey->data);
+        $request->setPermittedIps([$serverIp]);
+        $request->setInstallationToken($installationToken);
+        $request->setServerPublicKey($serverPublicKey);
+        $deviceServerId = null;
+        // try to register device:
+        try {
+            $request->call();
+            $deviceServerId = $request->getDeviceServerId();
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            // we really have to quit at this point :(
+            throw new FireflyException($e->getMessage());
+        }
+        if (is_null($deviceServerId)) {
+            throw new FireflyException('Was not able to register server with bunq. Please see the log files.');
+        }
+
+        Preferences::setForUser($this->job->user, 'bunq_device_server_id', $deviceServerId);
+        Log::debug(sprintf('Server ID: %s', serialize($deviceServerId)));
+
+        return $deviceServerId;
     }
 
     /**

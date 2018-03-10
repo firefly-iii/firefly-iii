@@ -31,6 +31,7 @@ use Log;
 
 /**
  * Class Preference.
+ * @property mixed $data
  */
 class Preference extends Model
 {
