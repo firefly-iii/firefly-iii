@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -376,6 +377,9 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getMetaField(TransactionJournal $journal, string $field): ?string
     {
+        $class        = new \stdClass;
+        $class->value = 'hi there';
+
         $value = null;
         $cache = new CacheProperties;
         $cache->addProperty('journal-meta');
@@ -394,7 +398,18 @@ class JournalRepository implements JournalRepositoryInterface
         $value = $entry->data;
         $cache->store($value);
 
-        return $value;
+        if (is_array($value)) {
+            return join(',', $value);
+        }
+        try {
+            $return = strval($value);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+
+            return '';
+        }
+
+        return $return;
     }
 
     /**

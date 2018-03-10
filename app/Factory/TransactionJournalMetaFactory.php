@@ -56,6 +56,16 @@ class TransactionJournalMetaFactory
         if ($data['data'] instanceof Carbon) {
             $value = $data['data']->toW3cString();
         }
+        if (strlen($value) === 0) {
+            // don't store blank strings.
+            try {
+                $entry->delete();
+            } catch (Exception $e) { // @codeCoverageIgnore
+                Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage())); // @codeCoverageIgnore
+            }
+
+            return null;
+        }
 
 
         if (null === $entry) {
