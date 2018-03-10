@@ -38,7 +38,6 @@ use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Response;
 use Route as RouteFacade;
 use View;
 
@@ -93,7 +92,7 @@ class HomeController extends Controller
         $request->session()->put('end', $end);
         Log::debug(sprintf('Set end to %s', $end->format('Y-m-d H:i:s')));
 
-        return Response::json(['ok' => 'ok']);
+        return response()->json(['ok' => 'ok']);
     }
 
 

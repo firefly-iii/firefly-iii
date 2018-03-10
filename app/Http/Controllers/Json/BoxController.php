@@ -35,7 +35,6 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use Response;
 
 /**
  * Class BoxController.
@@ -58,7 +57,7 @@ class BoxController extends Controller
         $cache->addProperty($today);
         $cache->addProperty('box-available');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         // get available amount
         $currency  = app('amount')->getDefaultCurrency();
@@ -86,7 +85,7 @@ class BoxController extends Controller
 
         $cache->store($return);
 
-        return Response::json($return);
+        return response()->json($return);
     }
 
     /**
@@ -104,7 +103,7 @@ class BoxController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('box-balance');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         // prep some arrays:
         $incomes  = [];
@@ -160,7 +159,7 @@ class BoxController extends Controller
 
         $cache->store($response);
 
-        return Response::json($response);
+        return response()->json($response);
     }
 
     /**
@@ -178,7 +177,7 @@ class BoxController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('box-bills');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         /*
@@ -195,7 +194,7 @@ class BoxController extends Controller
         ];
         $cache->store($return);
 
-        return Response::json($return);
+        return response()->json($return);
     }
 
     /**
@@ -224,7 +223,7 @@ class BoxController extends Controller
         $cache->addProperty($date);
         $cache->addProperty('box-net-worth');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $netWorth = [];
         $accounts = $repository->getActiveAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
@@ -256,6 +255,6 @@ class BoxController extends Controller
 
         $cache->store($return);
 
-        return Response::json($return);
+        return response()->json($return);
     }
 }

@@ -38,7 +38,6 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Response;
 
 /** checked
  * Class AccountController.
@@ -74,7 +73,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-accounts');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $start->subDay();
 
@@ -97,7 +96,7 @@ class AccountController extends Controller
         $data = $this->generator->singleSet(strval(trans('firefly.spent')), $chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -115,7 +114,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-budget');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->withBudgetInformation()->setTypes([TransactionType::WITHDRAWAL]);
@@ -140,7 +139,7 @@ class AccountController extends Controller
         $data = $this->generator->pieChart($chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -172,7 +171,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-category');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         $collector = app(JournalCollectorInterface::class);
@@ -197,7 +196,7 @@ class AccountController extends Controller
         $data = $this->generator->pieChart($chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -236,7 +235,7 @@ class AccountController extends Controller
         }
         $accounts = $repository->getAccountsById($frontPage->data);
 
-        return Response::json($this->accountBalanceChart($accounts, $start, $end));
+        return response()->json($this->accountBalanceChart($accounts, $start, $end));
     }
 
     /**
@@ -254,7 +253,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.income-category');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         // grab all journals:
@@ -279,7 +278,7 @@ class AccountController extends Controller
         $data = $this->generator->pieChart($chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -310,7 +309,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         // depending on diff, do something with range of chart.
         $step   = '1D';
@@ -356,7 +355,7 @@ class AccountController extends Controller
         $data = $this->generator->singleSet($account->name, $chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -370,7 +369,7 @@ class AccountController extends Controller
      */
     public function report(Collection $accounts, Carbon $start, Carbon $end)
     {
-        return Response::json($this->accountBalanceChart($accounts, $start, $end));
+        return response()->json($this->accountBalanceChart($accounts, $start, $end));
     }
 
     /**
@@ -390,7 +389,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.revenue-accounts');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $accounts = $repository->getAccountsByType([AccountType::REVENUE]);
 
@@ -413,7 +412,7 @@ class AccountController extends Controller
         $data = $this->generator->singleSet(strval(trans('firefly.earned')), $chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**

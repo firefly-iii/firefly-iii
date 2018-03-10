@@ -26,7 +26,6 @@ use Closure;
 use FireflyIII\Exceptions\IsDemoUserException;
 use FireflyIII\User;
 use Illuminate\Http\Request;
-use Session;
 
 /**
  * Class IsDemoUser.

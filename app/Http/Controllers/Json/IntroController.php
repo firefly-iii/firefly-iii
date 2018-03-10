@@ -24,7 +24,6 @@ namespace FireflyIII\Http\Controllers\Json;
 
 use FireflyIII\Support\Facades\Preferences;
 use Log;
-use Response;
 
 /**
  * Class IntroController.
@@ -47,7 +46,7 @@ class IntroController
         if (0 === count($specificSteps)) {
             Log::debug(sprintf('No specific steps for route "%s" and page "%s"', $route, $specificPage));
 
-            return Response::json($steps);
+            return response()->json($steps);
         }
         if ($this->hasOutroStep($route)) {
             // @codeCoverageIgnoreStart
@@ -64,7 +63,7 @@ class IntroController
             $steps = array_merge($steps, $specificSteps);
         }
 
-        return Response::json($steps);
+        return response()->json($steps);
     }
 
     /**
@@ -103,7 +102,7 @@ class IntroController
         Log::debug(sprintf('Going to mark the following route as NOT done: %s with special "%s" (%s)', $route, $specialPage, $key));
         Preferences::set($key, false);
 
-        return Response::json(['message' => trans('firefly.intro_boxes_after_refresh')]);
+        return response()->json(['message' => trans('firefly.intro_boxes_after_refresh')]);
     }
 
     /**
@@ -121,7 +120,7 @@ class IntroController
         Log::debug(sprintf('Going to mark the following route as done: %s with special "%s" (%s)', $route, $specialPage, $key));
         Preferences::set($key, true);
 
-        return Response::json(['result' => sprintf('Reported demo watched for route "%s".', $route)]);
+        return response()->json(['result' => sprintf('Reported demo watched for route "%s".', $route)]);
     }
 
     /**

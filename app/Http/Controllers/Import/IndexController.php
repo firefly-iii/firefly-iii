@@ -30,7 +30,6 @@ use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Http\Response as LaravelResponse;
 use Log;
-use Response;
 use View;
 
 
@@ -155,7 +154,7 @@ class IndexController extends Controller
         $result = $routine->run();
 
         if ($result) {
-            return Response::json(['run' => 'ok']);
+            return response()->json(['run' => 'ok']);
         }
 
         throw new FireflyException('Job did not complete successfully. Please review the log files.');

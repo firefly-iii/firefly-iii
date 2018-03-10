@@ -31,7 +31,6 @@ use FireflyIII\Services\Github\Object\Release;
 use FireflyIII\Services\Github\Request\UpdateRequest;
 use Illuminate\Http\Request;
 use Log;
-use Response;
 use Session;
 
 /**
@@ -137,6 +136,6 @@ class UpdateController extends Controller
             $string = strval(trans('firefly.update_newer_version_alert', ['your_version' => $current, 'new_version' => $first->getTitle()]));
         }
 
-        return Response::json(['result' => $string]);
+        return response()->json(['result' => $string]);
     }
 }

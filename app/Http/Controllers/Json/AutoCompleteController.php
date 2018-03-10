@@ -29,7 +29,6 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use Response;
 
 /**
  * Class AutoCompleteController.
@@ -52,7 +51,7 @@ class AutoCompleteController extends Controller
         );
         sort($return);
 
-        return Response::json($return);
+        return response()->json($return);
     }
 
     /**
@@ -66,7 +65,7 @@ class AutoCompleteController extends Controller
         $return = array_unique($collector->getJournals()->pluck('description')->toArray());
         sort($return);
 
-        return Response::json($return);
+        return response()->json($return);
     }
 
     /**
@@ -92,7 +91,7 @@ class AutoCompleteController extends Controller
 
         sort($return);
 
-        return Response::json($return);
+        return response()->json($return);
     }
 
     /**
@@ -125,7 +124,7 @@ class AutoCompleteController extends Controller
 
         $cache->store($return);
 
-        return Response::json($return);
+        return response()->json($return);
     }
 
     /**
@@ -148,7 +147,7 @@ class AutoCompleteController extends Controller
         $return   = array_unique($filtered->pluck('name')->toArray());
         sort($return);
 
-        return Response::json($return);
+        return response()->json($return);
     }
 
     /**
@@ -166,6 +165,6 @@ class AutoCompleteController extends Controller
         $return = array_unique($collector->getJournals()->pluck('description')->toArray());
         sort($return);
 
-        return Response::json($return);
+        return response()->json($return);
     }
 }

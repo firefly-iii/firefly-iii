@@ -37,7 +37,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Response;
 
 /**
  * Separate controller because many helper functions are shared.
@@ -88,7 +87,7 @@ class BudgetReportController extends Controller
         $chartData = $helper->generate('expense', 'account');
         $data      = $this->generator->pieChart($chartData);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -112,7 +111,7 @@ class BudgetReportController extends Controller
         $chartData = $helper->generate('expense', 'budget');
         $data      = $this->generator->pieChart($chartData);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -132,7 +131,7 @@ class BudgetReportController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $format       = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
         $function     = app('navigation')->preferredEndOfPeriod($start, $end);
@@ -195,7 +194,7 @@ class BudgetReportController extends Controller
         $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**

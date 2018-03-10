@@ -30,7 +30,6 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Log;
 use Preferences;
-use Response;
 use Session;
 use Steam;
 use View;
@@ -252,7 +251,7 @@ class PiggyBankController extends Controller
             }
         }
 
-        return Response::json(['result' => 'ok']);
+        return response()->json(['result' => 'ok']);
     }
 
     /**

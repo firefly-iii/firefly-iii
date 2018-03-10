@@ -39,7 +39,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Response;
 use View;
 
 /**
@@ -82,9 +81,9 @@ class BudgetController extends Controller
      */
     public function amount(Request $request, BudgetRepositoryInterface $repository, Budget $budget)
     {
-        $amount = strval($request->get('amount'));
-        $start  = Carbon::createFromFormat('Y-m-d', $request->get('start'));
-        $end    = Carbon::createFromFormat('Y-m-d', $request->get('end'));
+        $amount      = strval($request->get('amount'));
+        $start       = Carbon::createFromFormat('Y-m-d', $request->get('start'));
+        $end         = Carbon::createFromFormat('Y-m-d', $request->get('end'));
         $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
         if (0 === bccomp($amount, '0')) {
             $budgetLimit = null;
@@ -97,7 +96,7 @@ class BudgetController extends Controller
 
         Preferences::mark();
 
-        return Response::json(['left' => $left, 'name' => $budget->name, 'limit' => $budgetLimit ? $budgetLimit->id : 0, 'amount' => $amount]);
+        return response()->json(['left' => $left, 'name' => $budget->name, 'limit' => $budgetLimit ? $budgetLimit->id : 0, 'amount' => $amount]);
     }
 
     /**

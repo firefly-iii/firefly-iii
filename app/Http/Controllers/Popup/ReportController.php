@@ -34,7 +34,6 @@ use FireflyIII\Support\Binder\AccountList;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use InvalidArgumentException;
-use Response;
 use View;
 
 /**
@@ -116,7 +115,7 @@ class ReportController extends Controller
                 break;
         }
 
-        return Response::json(['html' => $html]);
+        return response()->json(['html' => $html]);
     }
 
     /**

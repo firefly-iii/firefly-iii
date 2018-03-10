@@ -24,7 +24,6 @@ namespace FireflyIII\Http\Controllers\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\ReconciliationStoreRequest;
@@ -37,12 +36,10 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Services\Internal\Update\TransactionUpdateService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Response;
 use Session;
 
 /**
@@ -163,7 +160,7 @@ class ReconcileController extends Controller
             )->render(),
         ];
 
-        return Response::json($return);
+        return response()->json($return);
     }
 
     /**
@@ -375,7 +372,7 @@ class ReconcileController extends Controller
         $transactions = $collector->getJournals();
         $html         = view('accounts.reconcile.transactions', compact('account', 'transactions', 'start', 'end', 'selectionStart', 'selectionEnd'))->render();
 
-        return Response::json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
+        return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
     }
 
     /**

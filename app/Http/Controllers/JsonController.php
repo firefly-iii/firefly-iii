@@ -27,7 +27,6 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\Request;
-use Response;
 
 /**
  * Class JsonController.
@@ -59,7 +58,7 @@ class JsonController extends Controller
         }
         $view = view('rules.partials.action', compact('actions', 'count'))->render();
 
-        return Response::json(['html' => $view]);
+        return response()->json(['html' => $view]);
     }
 
     /**
@@ -72,7 +71,7 @@ class JsonController extends Controller
         $return = array_unique($repository->getBudgets()->pluck('name')->toArray());
         sort($return);
 
-        return Response::json($return);
+        return response()->json($return);
     }
 
     /**
@@ -87,7 +86,7 @@ class JsonController extends Controller
         $return = array_unique($repository->getCategories()->pluck('name')->toArray());
         sort($return);
 
-        return Response::json($return);
+        return response()->json($return);
     }
 
     /**
@@ -102,7 +101,7 @@ class JsonController extends Controller
         $return = array_unique($tagRepository->get()->pluck('tag')->toArray());
         sort($return);
 
-        return Response::json($return);
+        return response()->json($return);
     }
 
     /**
@@ -115,7 +114,7 @@ class JsonController extends Controller
         $return = array_unique($repository->getTransactionTypes()->pluck('type')->toArray());
         sort($return);
 
-        return Response::json($return);
+        return response()->json($return);
     }
 
     /**
@@ -139,6 +138,6 @@ class JsonController extends Controller
 
         $view = view('rules.partials.trigger', compact('triggers', 'count'))->render();
 
-        return Response::json(['html' => $view]);
+        return response()->json(['html' => $view]);
     }
 }

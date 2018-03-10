@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Carbon\Carbon;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\BillFormRequest;

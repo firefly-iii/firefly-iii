@@ -29,7 +29,6 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Currency\ExchangeRateInterface;
 use Illuminate\Http\Request;
 use Log;
-use Response;
 
 /**
  * Class ExchangeController.
@@ -67,6 +66,6 @@ class ExchangeController extends Controller
             $return['amount'] = round($return['amount'], $toCurrency->decimal_places);
         }
 
-        return Response::json($return);
+        return response()->json($return);
     }
 }

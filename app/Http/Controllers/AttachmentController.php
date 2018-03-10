@@ -29,7 +29,6 @@ use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as LaravelResponse;
 use Preferences;
-use Response;
 use View;
 
 /**
@@ -182,7 +181,7 @@ class AttachmentController extends Controller
         if ($this->repository->exists($attachment)) {
             $content = $this->repository->getContent($attachment);
 
-            return Response::make(
+            return response()->make(
                 $content, 200, [
                             'Content-Type'        => $attachment->mime,
                             'Content-Disposition' => 'inline; filename="' . $attachment->filename . '"',

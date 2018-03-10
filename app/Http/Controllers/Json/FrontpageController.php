@@ -25,7 +25,6 @@ namespace FireflyIII\Http\Controllers\Json;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
-use Response;
 
 /**
  * Class FrontpageController.
@@ -66,6 +65,6 @@ class FrontpageController extends Controller
             $html = view('json.piggy-banks', compact('info'))->render();
         }
 
-        return Response::json(['html' => $html]);
+        return response()->json(['html' => $html]);
     }
 }

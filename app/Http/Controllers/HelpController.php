@@ -25,7 +25,6 @@ namespace FireflyIII\Http\Controllers;
 use FireflyIII\Helpers\Help\HelpInterface;
 use Log;
 use Preferences;
-use Response;
 
 /**
  * Class HelpController.
@@ -61,7 +60,7 @@ class HelpController extends Controller
         $language = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
         $html     = $this->getHelpText($route, $language);
 
-        return Response::json(['html' => $html]);
+        return response()->json(['html' => $html]);
     }
 
     /**

@@ -37,7 +37,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Response;
 use View;
 
 /**
@@ -144,7 +143,7 @@ class TransactionController extends Controller
             $repository->reconcile($transaction);
         }
 
-        return Response::json(['ok' => 'reconciled']);
+        return response()->json(['ok' => 'reconciled']);
     }
 
     /**
@@ -170,7 +169,7 @@ class TransactionController extends Controller
         }
         Preferences::mark();
 
-        return Response::json([true]);
+        return response()->json([true]);
     }
 
     /**

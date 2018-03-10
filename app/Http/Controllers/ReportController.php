@@ -36,7 +36,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Response;
 use Session;
 use View;
 
@@ -305,7 +304,7 @@ class ReportController extends Controller
                 break;
         }
 
-        return Response::json(['html' => $result]);
+        return response()->json(['html' => $result]);
     }
 
     /**
