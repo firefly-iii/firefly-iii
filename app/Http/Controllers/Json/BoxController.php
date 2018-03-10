@@ -22,11 +22,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
+use Amount;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -88,13 +90,15 @@ class BoxController extends Controller
     }
 
     /**
+     * @param CurrencyRepositoryInterface $repository
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function balance()
+    public function balance(CurrencyRepositoryInterface $repository)
     {
+        // Cache result, return cache if present.
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
-
         $cache = new CacheProperties;
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -102,29 +106,56 @@ class BoxController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
+        // prep some arrays:
+        $incomes  = [];
+        $expenses = [];
+        $sums     = [];
 
-        // try a collector for income:
+        // collect income of user:
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)
                   ->setTypes([TransactionType::DEPOSIT])
                   ->withOpposingAccount();
-        $income   = strval($collector->getJournals()->sum('transaction_amount'));
-        $currency = app('amount')->getDefaultCurrency();
+        $set = $collector->getJournals();
+        /** @var Transaction $transaction */
+        foreach ($set as $transaction) {
+            $currencyId           = intval($transaction->transaction_currency_id);
+            $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
+            $incomes[$currencyId] = bcadd($incomes[$currencyId], $transaction->transaction_amount);
+            $sums[$currencyId]    = $sums[$currencyId] ?? '0';
+            $sums[$currencyId]    = bcadd($sums[$currencyId], $transaction->transaction_amount);
+        }
 
-        // expense:
-        // try a collector for expenses:
+        // collect expenses
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)
                   ->setTypes([TransactionType::WITHDRAWAL])
                   ->withOpposingAccount();
-        $expense = strval($collector->getJournals()->sum('transaction_amount'));
+        $set = $collector->getJournals();
+        /** @var Transaction $transaction */
+        foreach ($set as $transaction) {
+            $currencyId            = intval($transaction->transaction_currency_id);
+            $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
+            $expenses[$currencyId] = bcadd($expenses[$currencyId], $transaction->transaction_amount);
+            $sums[$currencyId]     = $sums[$currencyId] ?? '0';
+            $sums[$currencyId]     = bcadd($sums[$currencyId], $transaction->transaction_amount);
+        }
+
+        // format amounts:
+        foreach ($sums as $currencyId => $amount) {
+            $currency              = $repository->findNull($currencyId);
+            $sums[$currencyId]     = Amount::formatAnything($currency, $sums[$currencyId], false);
+            $incomes[$currencyId]  = Amount::formatAnything($currency, $incomes[$currencyId] ?? '0', false);
+            $expenses[$currencyId] = Amount::formatAnything($currency, $expenses[$currencyId] ?? '0', false);
+        }
 
         $response = [
-            'income'   => app('amount')->formatAnything($currency, $income, false),
-            'expense'  => app('amount')->formatAnything($currency, $expense, false),
-            'combined' => app('amount')->formatAnything($currency, bcadd($income, $expense), false),
+            'incomes'  => $incomes,
+            'expenses' => $expenses,
+            'sums'     => $sums,
+            'size'     => count($sums),
         ];
 
         $cache->store($response);

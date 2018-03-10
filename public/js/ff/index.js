@@ -99,12 +99,34 @@ function getBillsBox() {
  *
  */
 function getBalanceBox() {
-    // box-balance-total
-    // box-balance-out
-    // box-balance-in
+    // box-balance-sums
+    // box-balance-list
     $.getJSON('json/box/balance').done(function (data) {
-        $('#box-balance-total').html(data.combined);
-        $('#box-balance-in').html(data.income);
-        $('#box-balance-out').html(data.expense);
+        if (data.size === 1) {
+            // show balance in "sums", show single entry in list.
+            for (x in data.sums) {
+                $('#box-balance-sums').html(data.sums[x]);
+                $('#box-balance-list').html(data.incomes[x] + ' / ' + data.expenses[x]);
+            }
+            return;
+        }
+        // do not use "sums", only use list.
+        $('#box-balance-progress').remove();
+        var expense, string, sum, income, current;
+        var count = 0;
+        for (x in data.sums) {
+            if (count > 1) {
+                return;
+            }
+            current = $('#box-balance-list').html();
+            sum = data.sums[x];
+            expense = data.expenses[x];
+            income = data.incomes[x];
+            string = income + ' / ' + expense + ': ' + sum;
+
+            $('#box-balance-list').html(current + '<span title="' + string + '">' + string + '</span>' + '<br>');
+            count++;
+        }
+        return;
     });
 }
