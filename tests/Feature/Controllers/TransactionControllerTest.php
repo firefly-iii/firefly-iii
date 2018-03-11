@@ -274,6 +274,12 @@ class TransactionControllerTest extends TestCase
         $linkRepos->shouldReceive('get')->andReturn(new Collection);
         $linkRepos->shouldReceive('getLinks')->andReturn(new Collection);
 
+
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('getPiggyBankEvents')->andReturn(new Collection);
+        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('getMetaField')->andReturn('');
+
         $this->be($this->user());
         $response = $this->get(route('transactions.show', [1]));
         $response->assertStatus(200);

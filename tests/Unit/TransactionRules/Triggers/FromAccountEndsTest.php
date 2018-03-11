@@ -54,8 +54,12 @@ class FromAccountEndsTest extends TestCase
      */
     public function testTriggeredLonger()
     {
-        $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-        $transaction = $journal->transactions()->where('amount', '<', 0)->first();
+        $count = 0;
+        while ($count === 0) {
+            $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+            $count       = $journal->transactions()->where('amount', '<', 0)->count();
+            $transaction = $journal->transactions()->where('amount', '<', 0)->first();
+        }
         $account     = $transaction->account;
 
         $trigger = FromAccountEnds::makeFromStrings('bla-bla-bla' . $account->name, false);

@@ -247,7 +247,7 @@ class SplitControllerTest extends TestCase
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
         // mock for new account list and for account array
         $accountRepository->shouldReceive('getAccountsByType')
-                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->twice();
+                          ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->twice();
 
         $this->be($this->user());
         $response = $this->get(route('transactions.split.edit', [$deposit->id]));
@@ -287,11 +287,11 @@ class SplitControllerTest extends TestCase
             'tags'                           => '',
             'transactions'                   => [
                 [
-                    'description'             => 'Split #1',
-                    'source_account_name'     => 'Job',
+                    'transaction_description' => 'Split #1',
+                    'source_name'             => 'Job',
                     'transaction_currency_id' => 1,
                     'amount'                  => 1591,
-                    'category'                => '',
+                    'category_name'           => '',
                 ],
             ],
         ];
@@ -337,11 +337,11 @@ class SplitControllerTest extends TestCase
             'tags'                           => '',
             'transactions'                   => [
                 [
-                    'description'             => 'Split #1',
-                    'source_account_name'     => 'Job',
+                    'transaction_description' => 'Split #1',
+                    'source_name'             => 'Job',
                     'transaction_currency_id' => 1,
                     'amount'                  => 1591,
-                    'category'                => '',
+                    'category_name'           => '',
                 ],
             ],
         ];
@@ -385,12 +385,12 @@ class SplitControllerTest extends TestCase
             'tags'                      => '',
             'transactions'              => [
                 [
-                    'description'             => 'Split #1',
+                    'transaction_description' => 'Split #1',
                     'source_account_id'       => '1',
-                    'destination_account_id'  => '2',
+                    'destination_id'          => '2',
                     'transaction_currency_id' => 1,
                     'amount'                  => 1591,
-                    'category'                => '',
+                    'category_name'           => '',
                 ],
             ],
         ];
@@ -441,12 +441,12 @@ class SplitControllerTest extends TestCase
             'tags'                      => '',
             'transactions'              => [
                 [
-                    'description'              => 'Split #1',
-                    'source_account_id'        => '1',
-                    'destination_account_name' => 'some expense',
-                    'transaction_currency_id'  => 1,
-                    'amount'                   => 1591,
-                    'category'                 => '',
+                    'transaction_description' => 'Split #1',
+                    'source_id'               => '1',
+                    'destination_name'        => 'some expense',
+                    'transaction_currency_id' => 1,
+                    'amount'                  => 1591,
+                    'category_name'           => '',
                 ],
             ],
         ];

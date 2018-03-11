@@ -52,7 +52,7 @@ class AccountUpdateServiceTest extends TestCase
         $opposing = $this->user()->accounts()->first();
         $journal  = TransactionJournal::create(
             ['user_id' => $this->user()->id, 'transaction_type_id' => 4, 'transaction_currency_id' => 1, 'description' => 'IB',
-             'date'    => '2018-01-01', 'completed' => true,
+             'date'    => '2018-01-01', 'completed' => true, 'tag_count' => 0,
             ]
         );
         // transactions:
@@ -180,7 +180,7 @@ class AccountUpdateServiceTest extends TestCase
         $opposing = $this->user()->accounts()->first();
         $journal  = TransactionJournal::create(
             ['user_id' => $this->user()->id, 'transaction_type_id' => 4, 'transaction_currency_id' => 1, 'description' => 'IB',
-             'date'    => '2018-01-01', 'completed' => true,
+             'date'    => '2018-01-01', 'completed' => true, 'tag_count' => 0,
             ]
         );
         // transactions:
@@ -235,7 +235,7 @@ class AccountUpdateServiceTest extends TestCase
         $opposing = $this->user()->accounts()->first();
         $journal  = TransactionJournal::create(
             ['user_id' => $this->user()->id, 'transaction_type_id' => 4, 'transaction_currency_id' => 1, 'description' => 'IB',
-             'date'    => '2018-01-01', 'completed' => true,
+             'date'    => '2018-01-01', 'completed' => true, 'tag_count' => 0,
             ]
         );
         // transactions:

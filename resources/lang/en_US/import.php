@@ -187,4 +187,3 @@ return [
     // various other strings:
     'imported_from_account'                => 'Imported from ":account"',
 ];
-
