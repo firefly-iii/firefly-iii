@@ -30,7 +30,6 @@ use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
-
 /**
  * Class AboutController
  */
@@ -44,7 +43,6 @@ class AboutController extends Controller
     public function __construct()
     {
         parent::__construct();
-
     }
 
     /**
@@ -64,7 +62,6 @@ class AboutController extends Controller
             'php_version' => $phpVersion,
             'os'          => $phpOs,
             'driver'      => $currentDriver,
-
         ];
 
         return response()->json(['data' => $data], 200)->header('Content-Type', 'application/vnd.api+json');
@@ -84,5 +81,4 @@ class AboutController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
-
 }

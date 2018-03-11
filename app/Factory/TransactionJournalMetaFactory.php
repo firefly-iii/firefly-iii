@@ -58,10 +58,12 @@ class TransactionJournalMetaFactory
         }
         if (strlen($value) === 0) {
             // don't store blank strings.
-            try {
-                $entry->delete();
-            } catch (Exception $e) { // @codeCoverageIgnore
-                Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage())); // @codeCoverageIgnore
+            if (!is_null($entry)) {
+                try {
+                    $entry->delete();
+                } catch (Exception $e) { // @codeCoverageIgnore
+                    Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage())); // @codeCoverageIgnore
+                }
             }
 
             return null;

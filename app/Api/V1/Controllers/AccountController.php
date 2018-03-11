@@ -43,7 +43,6 @@ use Preferences;
  */
 class AccountController extends Controller
 {
-
     /** @var CurrencyRepositoryInterface */
     private $currencyRepository;
     /** @var AccountRepositoryInterface */
@@ -59,7 +58,7 @@ class AccountController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var AccountRepositoryInterface repository */
+                // @var AccountRepositoryInterface repository
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUser(auth()->user());
 
@@ -74,7 +73,7 @@ class AccountController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \FireflyIII\Models\Account $account
+     * @param \FireflyIII\Models\Account $account
      *
      * @return \Illuminate\Http\Response
      */
@@ -153,7 +152,7 @@ class AccountController extends Controller
     {
         $data = $request->getAll();
         // if currency ID is 0, find the currency by the code:
-        if ($data['currency_id'] === 0) {
+        if (0 === $data['currency_id']) {
             $currency            = $this->currencyRepository->findByCodeNull($data['currency_code']);
             $data['currency_id'] = is_null($currency) ? 0 : $currency->id;
         }
@@ -165,7 +164,6 @@ class AccountController extends Controller
         $resource = new Item($account, new AccountTransformer($this->parameters), 'accounts');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-
     }
 
     /**
@@ -180,7 +178,7 @@ class AccountController extends Controller
     {
         $data = $request->getAll();
         // if currency ID is 0, find the currency by the code:
-        if ($data['currency_id'] === 0) {
+        if (0 === $data['currency_id']) {
             $currency            = $this->currencyRepository->findByCodeNull($data['currency_code']);
             $data['currency_id'] = is_null($currency) ? 0 : $currency->id;
         }
