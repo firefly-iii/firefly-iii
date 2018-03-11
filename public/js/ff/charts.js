@@ -312,8 +312,8 @@ function drawAChart(URI, container, chartType, options, colorData) {
                             fontSize: 12,
                             fontColor: "#333",
                             position: "right",
-                            xAdjust: 0,
-                            yAdjust: -120,
+                            xAdjust: -20,
+                            yAdjust: -125,
                             enabled: true,
                             content: todayText
                         }

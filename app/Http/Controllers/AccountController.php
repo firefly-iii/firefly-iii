@@ -304,6 +304,7 @@ class AccountController extends Controller
             throw new FireflyException('End is after start!'); // @codeCoverageIgnore
         }
 
+        $today = new Carbon;
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $page         = intval($request->get('page'));
         $pageSize     = intval(Preferences::get('listPageSize', 50)->data);
@@ -327,7 +328,7 @@ class AccountController extends Controller
 
         return view(
             'accounts.show',
-            compact('account', 'currency', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end', 'chartUri')
+            compact('account', 'currency','today', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end', 'chartUri')
         );
     }
 

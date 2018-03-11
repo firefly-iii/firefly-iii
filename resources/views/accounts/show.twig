@@ -149,8 +149,15 @@
             var expenseBudgetUri = '{{ route('chart.account.expense-budget', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
         {% endif %}
 
+        var drawVerticalLine = '';
+        {# render vertical line with text "today"  #}
+        {% if start.lte(today) and end.gte(today) %}
+        drawVerticalLine = '{{ today.formatLocalized(monthAndDayFormat) }}';
+        {% endif %}
+
     </script>
     <script type="text/javascript" src="js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/lib/chartjs-plugin-annotation.min.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="js/ff/charts.defaults.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="js/ff/charts.js?v={{ FF_VERSION }}"></script>
 
