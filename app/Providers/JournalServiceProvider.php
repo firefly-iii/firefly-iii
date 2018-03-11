@@ -26,8 +26,6 @@ use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Repositories\Journal\JournalRepository;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalTasker;
-use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -50,7 +48,6 @@ class JournalServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerRepository();
-        $this->registerTasker();
         $this->registerCollector();
     }
 
@@ -88,26 +85,6 @@ class JournalServiceProvider extends ServiceProvider
                 }
 
                 return $repository;
-            }
-        );
-    }
-
-    /**
-     * Register the tasker.
-     */
-    private function registerTasker()
-    {
-        $this->app->bind(
-            JournalTaskerInterface::class,
-            function (Application $app) {
-                /** @var JournalTaskerInterface $tasker */
-                $tasker = app(JournalTasker::class);
-
-                if ($app->auth->check()) {
-                    $tasker->setUser(auth()->user());
-                }
-
-                return $tasker;
             }
         );
     }

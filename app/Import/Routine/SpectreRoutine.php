@@ -117,8 +117,10 @@ class SpectreRoutine implements RoutineInterface
      * have-account-mapping: start downloading transactions?
      *
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
+     * @return bool
+     * @throws FireflyException
+     * @throws SpectreException
+     * @throws \Illuminate\Container\EntryNotFoundException
      */
     public function run(): bool
     {
@@ -166,6 +168,7 @@ class SpectreRoutine implements RoutineInterface
      * @return Customer
      * @throws \FireflyIII\Exceptions\FireflyException
      * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
+     * @throws \Illuminate\Container\EntryNotFoundException
      */
     protected function createCustomer(): Customer
     {
@@ -201,7 +204,8 @@ class SpectreRoutine implements RoutineInterface
     /**
      * @return Customer
      * @throws FireflyException
-     * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
+     * @throws SpectreException
+     * @throws \Illuminate\Container\EntryNotFoundException
      */
     protected function getCustomer(): Customer
     {
@@ -230,6 +234,7 @@ class SpectreRoutine implements RoutineInterface
      * @return Token
      * @throws \FireflyIII\Exceptions\FireflyException
      * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
+     * @throws \Illuminate\Container\EntryNotFoundException
      */
     protected function getToken(Customer $customer, string $returnUri): Token
     {
@@ -246,6 +251,7 @@ class SpectreRoutine implements RoutineInterface
     /**
      * @throws FireflyException
      * @throws SpectreException
+     * @throws \Illuminate\Container\EntryNotFoundException
      */
     protected function runStageInitial(): void
     {
@@ -280,6 +286,7 @@ class SpectreRoutine implements RoutineInterface
     /**
      * @throws FireflyException
      * @throws SpectreException
+     * @throws \Illuminate\Container\EntryNotFoundException
      */
     protected function runStageLoggedIn(): void
     {
@@ -521,6 +528,7 @@ class SpectreRoutine implements RoutineInterface
     /**
      * @throws FireflyException
      * @throws SpectreException
+     * @throws \Illuminate\Container\EntryNotFoundException
      */
     private function runStageHaveMapping()
     {

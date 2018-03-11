@@ -171,7 +171,9 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param TransactionRequest $request
+     * @param TransactionRequest         $request
+     *
+     * @param JournalRepositoryInterface $repository
      *
      * @return \Illuminate\Http\JsonResponse
      */

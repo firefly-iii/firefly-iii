@@ -127,6 +127,7 @@ trait AccountServiceTrait
      * @param array   $data
      *
      * @return TransactionJournal|null
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function storeIBJournal(Account $account, array $data): ?TransactionJournal
     {

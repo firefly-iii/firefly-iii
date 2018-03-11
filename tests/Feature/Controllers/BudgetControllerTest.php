@@ -309,6 +309,8 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\BudgetController::infoIncome
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testInfoIncomeExpanded(string $range)
     {

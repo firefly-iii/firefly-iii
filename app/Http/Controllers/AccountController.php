@@ -128,9 +128,8 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Request                    $request
-     * @param AccountRepositoryInterface $repository
-     * @param Account                    $account
+     * @param Request $request
+     * @param Account $account
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -152,15 +151,16 @@ class AccountController extends Controller
     /**
      * Edit an account.
      *
-     * @param Request $request
-     * @param Account $account
+     * @param Request                    $request
+     * @param Account                    $account
+     *
+     * @param AccountRepositoryInterface $repository
+     *
+     * @return View
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // long and complex but not that excessively so.
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
-     * @return View
-     *
-     * @throws FireflyException
      */
     public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
     {
@@ -277,16 +277,16 @@ class AccountController extends Controller
     /**
      * Show an account.
      *
-     * @param Request $request
-     * @param Account $account
-     * @param string  $moment
-     *
+     * @param Request     $request
+     * @param Account     $account
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      *
+     * @throws FireflyException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // long and complex but not that excessively so.
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
-     * @throws FireflyException
      */
     public function show(Request $request, Account $account, Carbon $start = null, Carbon $end = null)
     {
@@ -365,9 +365,8 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountFormRequest         $request
-     * @param AccountRepositoryInterface $repository
-     * @param Account                    $account
+     * @param AccountFormRequest $request
+     * @param Account            $account
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -410,8 +409,9 @@ class AccountController extends Controller
      * and for each period, the amount of money spent and earned. This is a complex operation which is cached for
      * performance reasons.
      *
-     * @param Account $account the account involved
+     * @param Account     $account the account involved
      *
+     * @param Carbon|null $date
      * @return Collection
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)

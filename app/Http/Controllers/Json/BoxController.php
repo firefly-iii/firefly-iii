@@ -198,7 +198,9 @@ class BoxController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
+     * @param AccountRepositoryInterface  $repository
+     *
+     * @param CurrencyRepositoryInterface $currencyRepos
      *
      * @return \Illuminate\Http\JsonResponse
      */

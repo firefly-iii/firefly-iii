@@ -306,7 +306,6 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $end
      *
      * @return Collection
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function getPayDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {

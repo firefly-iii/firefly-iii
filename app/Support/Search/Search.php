@@ -261,7 +261,6 @@ class Search implements SearchInterface
      *
      * @return bool
      *
-     * @throws FireflyException
      */
     private function matchModifiers(Transaction $transaction): bool
     {

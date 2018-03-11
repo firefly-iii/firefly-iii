@@ -170,6 +170,8 @@ class ProfileController extends Controller
     }
 
     /**
+     * @param UserRepositoryInterface $repository
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function enable2FA(UserRepositoryInterface $repository)

@@ -299,6 +299,8 @@ class AccountController extends Controller
      * @param Account $account
      * @param Carbon  $start
      *
+     * @param Carbon  $end
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function period(Account $account, Carbon $start, Carbon $end)

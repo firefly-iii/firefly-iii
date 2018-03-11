@@ -78,9 +78,8 @@ class CsvProcessor implements FileProcessorInterface
      *
      * @return bool
      *
-     * @throws \League\Csv\Exception
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      * @throws FireflyException
+     * @throws \League\Csv\Exception
      */
     public function run(): bool
     {

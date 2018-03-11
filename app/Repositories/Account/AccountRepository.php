@@ -228,8 +228,6 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array $data
      *
      * @return Account
-     * @throws FireflyException
-     * @throws Exception
      */
     public function store(array $data): Account
     {
@@ -245,8 +243,6 @@ class AccountRepository implements AccountRepositoryInterface
      * @param Account $account
      * @param array   $data
      *
-     * @throws FireflyException
-     * @throws Exception
      * @return Account
      */
     public function update(Account $account, array $data): Account
@@ -263,8 +259,6 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array              $data
      *
      * @return TransactionJournal
-     * @throws FireflyException
-     * @throws Exception
      */
     public function updateReconciliation(TransactionJournal $journal, array $data): TransactionJournal
     {

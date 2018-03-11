@@ -59,7 +59,9 @@ class PiggyBankController extends Controller
     /**
      * Add money to piggy bank.
      *
-     * @param PiggyBank $piggyBank
+     * @param PiggyBank                    $piggyBank
+     *
+     * @param PiggyBankRepositoryInterface $repository
      *
      * @return View
      */
@@ -78,8 +80,9 @@ class PiggyBankController extends Controller
     /**
      * Add money to piggy bank (for mobile devices).
      *
-     * @param PiggyBank $piggyBank
+     * @param PiggyBank                    $piggyBank
      *
+     * @param PiggyBankRepositoryInterface $repository
      * @return View
      */
     public function addMobile(PiggyBank $piggyBank, PiggyBankRepositoryInterface $repository)
@@ -180,6 +183,7 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * @param Request                      $request
      * @param PiggyBankRepositoryInterface $piggyRepository
      *
      * @return View

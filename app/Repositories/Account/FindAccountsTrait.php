@@ -216,8 +216,6 @@ trait FindAccountsTrait
     /**
      * @return Account
      *
-     * @throws FireflyException
-     * @throws \Exception
      */
     public function getCashAccount(): Account
     {

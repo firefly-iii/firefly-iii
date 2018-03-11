@@ -167,6 +167,7 @@ class BudgetController extends Controller
     }
 
     /**
+     * @param Request     $request
      * @param string|null $moment
      *
      * @return View
@@ -545,8 +546,9 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Request $request
+     * @param Carbon  $start
+     * @param Carbon  $end
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */

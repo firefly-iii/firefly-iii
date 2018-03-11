@@ -52,7 +52,6 @@ class Roles implements ConfigurationInterface
      * @return array
      *
      * @throws \League\Csv\Exception
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function getData(): array
     {

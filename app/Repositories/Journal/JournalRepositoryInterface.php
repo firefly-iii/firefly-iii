@@ -37,6 +37,7 @@ use Illuminate\Support\MessageBag;
  */
 interface JournalRepositoryInterface
 {
+
     /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
@@ -200,6 +201,13 @@ interface JournalRepositoryInterface
      * @return string
      */
     public function getNoteText(TransactionJournal $journal): string;
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getPiggyBankEvents(TransactionJournal $journal): Collection;
 
     /**
      * Return all tags as strings in an array.

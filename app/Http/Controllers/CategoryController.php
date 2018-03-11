@@ -424,6 +424,8 @@ class CategoryController extends Controller
     /**
      * @param Category $category
      *
+     * @param Carbon   $date
+     *
      * @return Collection
      */
     private function getPeriodOverview(Category $category, Carbon $date): Collection

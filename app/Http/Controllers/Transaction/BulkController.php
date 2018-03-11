@@ -66,6 +66,7 @@ class BulkController extends Controller
     }
 
     /**
+     * @param Request    $request
      * @param Collection $journals
      *
      * @return View

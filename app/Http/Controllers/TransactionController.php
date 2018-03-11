@@ -30,7 +30,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Transformers\TransactionTransformer;
@@ -71,7 +70,6 @@ class TransactionController extends Controller
      *
      * @return View
      *
-     * @throws FireflyException
      */
     public function index(Request $request, JournalRepositoryInterface $repository, string $what, string $moment = '')
     {
@@ -176,13 +174,13 @@ class TransactionController extends Controller
 
     /**
      * @param TransactionJournal          $journal
-     * @param JournalTaskerInterface      $tasker
+     * @param JournalRepositoryInterface  $repository
      * @param LinkTypeRepositoryInterface $linkTypeRepository
      *
-     * @throws FireflyException
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
+     * @throws FireflyException
      */
-    public function show(TransactionJournal $journal, JournalTaskerInterface $tasker, LinkTypeRepositoryInterface $linkTypeRepository)
+    public function show(TransactionJournal $journal, JournalRepositoryInterface $repository, LinkTypeRepositoryInterface $linkTypeRepository)
     {
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
@@ -208,7 +206,7 @@ class TransactionController extends Controller
             $transactions[] = $transformer->transform($transaction);
         }
 
-        $events   = $tasker->getPiggyBankEvents($journal);
+        $events   = $repository->getPiggyBankEvents($journal);
         $what     = strtolower($transactionType);
         $subTitle = trans('firefly.' . $what) . ' "' . $journal->description . '"';
 

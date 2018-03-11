@@ -146,7 +146,7 @@ class SplitJournalFormRequest extends Request
     }
 
     /**
-     *
+     * @param Validator $validator
      */
     protected function sameAccounts(Validator $validator): void
     {

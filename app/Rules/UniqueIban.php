@@ -38,7 +38,7 @@ class UniqueIban implements Rule
     /**
      * Create a new rule instance.
      *
-     * @return void
+     * @param Account|null $account
      */
     public function __construct(?Account $account)
     {

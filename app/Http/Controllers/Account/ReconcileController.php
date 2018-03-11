@@ -244,12 +244,12 @@ class ReconcileController extends Controller
 
     /**
      * @param ReconciliationStoreRequest $request
+     * @param JournalRepositoryInterface $repository
      * @param Account                    $account
      * @param Carbon                     $start
      * @param Carbon                     $end
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws FireflyException
      */
     public function submit(ReconciliationStoreRequest $request, JournalRepositoryInterface $repository, Account $account, Carbon $start, Carbon $end)
     {

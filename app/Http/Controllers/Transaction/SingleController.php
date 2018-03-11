@@ -238,7 +238,9 @@ class SingleController extends Controller
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param TransactionJournal         $journal
+     *
+     * @param JournalRepositoryInterface $repository
      *
      * @return mixed
      */

@@ -46,6 +46,7 @@ class ExpandedForm
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Throwable
      */
     public function amount(string $name, $value = null, array $options = []): string
     {
@@ -53,12 +54,13 @@ class ExpandedForm
     }
 
     /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Throwable
      */
     public function amountSmall(string $name, $value = null, array $options = []): string
     {
@@ -118,13 +120,13 @@ class ExpandedForm
     }
 
     /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
-     *
+     * @throws \Throwable
      */
     public function balance(string $name, $value = null, array $options = []): string
     {
@@ -653,6 +655,7 @@ class ExpandedForm
      * @return string
      *
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Throwable
      */
     private function currencyField(string $name, string $view, $value = null, array $options = []): string
     {

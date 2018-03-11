@@ -258,7 +258,6 @@ abstract class SpectreRequest
      * @param Requests_Response $response
      *
      * @throws FireflyException
-     * @throws SpectreException
      */
     private function detectError(Requests_Response $response): void
     {

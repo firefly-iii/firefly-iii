@@ -28,6 +28,7 @@ use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -471,6 +472,24 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getPiggyBankEvents(TransactionJournal $journal): Collection
+    {
+        /** @var Collection $set */
+        $events = $journal->piggyBankEvents()->get();
+        $events->each(
+            function (PiggyBankEvent $event) {
+                $event->piggyBank = $event->piggyBank()->withTrashed()->first();
+            }
+        );
+
+        return $events;
+    }
+
+    /**
      * Return all tags as strings in an array.
      *
      * @param TransactionJournal $journal
@@ -623,7 +642,6 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return TransactionJournal
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function update(TransactionJournal $journal, array $data): TransactionJournal
     {
