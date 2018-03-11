@@ -58,49 +58,6 @@ Chart.defaults.global.animation.duration = 0;
 Chart.defaults.global.responsive = true;
 Chart.defaults.global.maintainAspectRatio = false;
 
-
-/**
- * Chart line thing
- */
-const verticalLinePlugin = {
-    getLinePosition: function (chart, pointIndex) {
-        const meta = chart.getDatasetMeta(0); // first dataset is used to discover X coordinate of a point
-        const data = meta.data;
-        return data[pointIndex]._model.x;
-    },
-    renderVerticalLine: function (chartInstance, pointIndex) {
-        const lineLeftOffset = this.getLinePosition(chartInstance, pointIndex);
-        const scale = chartInstance.scales['y-axis-0'];
-        const context = chartInstance.chart.ctx;
-
-        // render vertical line
-        context.beginPath();
-        context.strokeStyle = fillColors[3];
-        context.moveTo(lineLeftOffset, scale.top);
-        context.lineTo(lineLeftOffset, scale.bottom);
-        context.stroke();
-
-        // write label
-        context.fillStyle = "#444444";
-        context.textAlign = 'left';
-        if(pointIndex > 23) {
-            todayText = todayText + ' ';
-            context.textAlign = 'right';
-        }
-        context.fillText(todayText, lineLeftOffset, scale.top * 3); // (scale.bottom - scale.top) / 2 + scale.top
-    },
-
-    afterDatasetsDraw: function (chart, easing) {
-        if (chart.config.lineAtIndex) {
-            chart.config.lineAtIndex.forEach(function(pointIndex) {
-                this.renderVerticalLine(chart, pointIndex);
-            }, this);
-        }
-    }
-};
-
-Chart.plugins.register(verticalLinePlugin);
-
 /**
  *
  * @param data
@@ -132,16 +89,7 @@ function lineChart(URI, container) {
     var options = $.extend(true, {}, defaultChartOptions);
     var chartType = 'line';
 
-    drawAChart(URI, container, chartType, options, colorData, -1);
-}
-
-function lineChartWithDay(URI, container, today) {
-    "use strict";
-    var colorData = true;
-    var options = $.extend(true, {}, defaultChartOptions);
-    var chartType = 'line';
-
-    drawAChart(URI, container, chartType, options, colorData, today);
+    drawAChart(URI, container, chartType, options, colorData);
 }
 
 /**
@@ -302,7 +250,7 @@ function pieChart(URI, container) {
  * @param colorData
  * @param today
  */
-function drawAChart(URI, container, chartType, options, colorData, today) {
+function drawAChart(URI, container, chartType, options, colorData) {
     var containerObj = $('#' + container);
     if (containerObj.length === 0) {
         return;
@@ -343,10 +291,34 @@ function drawAChart(URI, container, chartType, options, colorData, today) {
                 type: chartType,
                 data: data,
                 options: options,
-                lineAtIndex: []
+                lineAtIndex: [],
+                annotation: {},
             };
-            if (today >= 0) {
-                chartOpts.lineAtIndex.push(today - 1);
+            if (drawVerticalLine !== '') {
+                // draw line using annotation plugin.
+                console.log('Will draw line');
+                chartOpts.options.annotation = {
+                    annotations: [{
+                        type: 'line',
+                        id: 'a-line-1',
+                        mode: 'vertical',
+                        scaleID: 'x-axis-0',
+                        value: drawVerticalLine,
+                        borderColor: 'red',
+                        borderWidth: 1,
+                        label: {
+                            backgroundColor: 'rgba(0,0,0,0)',
+                            fontFamily: "sans-serif",
+                            fontSize: 12,
+                            fontColor: "#333",
+                            position: "right",
+                            xAdjust: 0,
+                            yAdjust: -120,
+                            enabled: true,
+                            content: todayText
+                        }
+                    }]
+                };
             }
             allCharts[container] = new Chart(ctx, chartOpts);
         }

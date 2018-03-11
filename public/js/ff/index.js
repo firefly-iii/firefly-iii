@@ -29,11 +29,7 @@ $(function () {
 
 function drawChart() {
     "use strict";
-    if (today >= 0) {
-        lineChartWithDay(accountFrontpageUri, 'accounts-chart', today);
-    } else {
-        lineChart(accountFrontpageUri, 'accounts-chart');
-    }
+    lineChart(accountFrontpageUri, 'accounts-chart');
 
     if (billCount > 0) {
         pieChart('chart/bill/frontpage', 'bills-chart');
