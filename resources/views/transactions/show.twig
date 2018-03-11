@@ -91,8 +91,17 @@
 
                                 {% if transactions|length > 2 %}
                                     ({% for transaction in transactions %}
-                                    {{ transaction|transactionArrayAmount }}
-                                    {% if loop.index != loop.length %}, {% endif %}
+                                    {% if transaction.type == 'Deposit' and transaction.amount > 0 %}
+                                        {{ transaction|transactionArrayAmount }}{% if loop.index != loop.length %}, {% endif %}
+                                    {% endif %}
+                                    {% if transaction.type == 'Withdrawal' and transaction.amount < 0 %}
+                                        {{ transaction|transactionArrayAmount }}{% if loop.index != loop.length %}, {% endif %}
+                                    {% endif %}
+
+                                    {% if transaction.type == 'Transfer' and transaction.amount > 0 %}
+                                        {{ transaction|transactionArrayAmount }}{% if loop.index != loop.length %}, {% endif %}
+                                    {% endif %}
+
                                 {% endfor %})
                                 {% endif %}
                             </td>
@@ -391,8 +400,7 @@
                                     {% if
                                         ((transaction.type == 'Withdrawal') and transaction.identifier == x and transaction.amount < 0)
                                         or
-                                        ((transaction.type == 'Deposit' or transaction.type == 'Transfer') and transaction.identifier == x and transaction.amount > 0)
-                                    %}
+                                        ((transaction.type == 'Deposit' or transaction.type == 'Transfer') and transaction.identifier == x and transaction.amount > 0) %}
                                         <td class="hidden-md hidden-sm hidden-xs">
                                             {% if transaction.description == "" %}
                                                 {{ journal.description }}
@@ -420,12 +428,14 @@
                                         </td>
                                         <td class="hidden-md hidden-xs">
                                             {% if transaction.budget_id %}
-                                                <a href="{{ route('budgets.show', transaction.budget_id) }}" title="{{ transaction.budget_name }}">{{ transaction.budget_name }}</a>
+                                                <a href="{{ route('budgets.show', transaction.budget_id) }}"
+                                                   title="{{ transaction.budget_name }}">{{ transaction.budget_name }}</a>
                                             {% endif %}
                                         </td>
                                         <td class="hidden-md hidden-xs">
                                             {% if transaction.category_id %}
-                                                <a href="{{ route('categories.show', transaction.category_id) }}" title="{{ transaction.category_name }}">{{ transaction.category_name }}</a>
+                                                <a href="{{ route('categories.show', transaction.category_id) }}"
+                                                   title="{{ transaction.category_name }}">{{ transaction.category_name }}</a>
                                             {% endif %}
                                         </td>
                                     {% endif %}
