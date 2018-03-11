@@ -58,8 +58,12 @@ class TransactionJournal extends Twig_Extension
     {
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
+        $result     = $repository->getMetaField($journal, $field);
+        if (is_null($result)) {
+            return '';
+        }
 
-        return $repository->getMetaField($journal, $field);
+        return $result;
     }
 
     /**
