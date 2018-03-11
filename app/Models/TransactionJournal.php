@@ -141,7 +141,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
-     *
+     * @deprecated
      * @param string $name
      *
      * @return bool
@@ -155,6 +155,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @return HasMany
      */
     public function destinationJournalLinks(): HasMany
@@ -299,22 +300,6 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
-     * Save the model to the database.
-     *
-     * @param array $options
-     *
-     * @return bool
-     */
-    public function save(array $options = []): bool
-    {
-        $count           = $this->tags()->count();
-        $this->tag_count = $count;
-
-        return parent::save($options);
-    }
-
-    /**
-     * @codeCoverageIgnore
      *
      * @param EloquentBuilder $query
      * @param Carbon          $date
@@ -337,18 +322,6 @@ class TransactionJournal extends Model
     public function scopeBefore(EloquentBuilder $query, Carbon $date)
     {
         return $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 00:00:00'));
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param EloquentBuilder $query
-     */
-    public function scopeSortCorrectly(EloquentBuilder $query)
-    {
-        $query->orderBy('transaction_journals.date', 'DESC');
-        $query->orderBy('transaction_journals.order', 'ASC');
-        $query->orderBy('transaction_journals.id', 'DESC');
     }
 
     /**
@@ -380,6 +353,8 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @deprecated
+     *
      * @param string $name
      * @param        $value
      *

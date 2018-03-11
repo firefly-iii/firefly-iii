@@ -118,7 +118,7 @@ trait TransactionJournalTrait
     }
 
     /**
-     *
+     * @deprecated
      * @param string $name
      *
      * @return string
@@ -126,6 +126,7 @@ trait TransactionJournalTrait
     abstract public function getMeta(string $name);
 
     /**
+     * 
      * @return bool
      */
     abstract public function isDeposit(): bool;

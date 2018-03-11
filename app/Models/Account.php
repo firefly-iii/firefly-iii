@@ -227,8 +227,7 @@ class Account extends Model
      */
     public function getOpeningBalance(): TransactionJournal
     {
-        $journal = TransactionJournal::sortCorrectly()
-                                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+        $journal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                                      ->where('transactions.account_id', $this->id)
                                      ->transactionTypes([TransactionType::OPENING_BALANCE])
                                      ->first(['transaction_journals.*']);
