@@ -29,6 +29,7 @@ Route::group(
     Route::post('migrate', ['uses' => 'InstallController@migrate', 'as' => 'migrate']);
     Route::post('keys', ['uses' => 'InstallController@keys', 'as' => 'keys']);
     Route::post('upgrade', ['uses' => 'InstallController@upgrade', 'as' => 'upgrade']);
+    Route::post('verify', ['uses' => 'InstallController@verify', 'as' => 'verify']);
 }
 );
 

@@ -53,7 +53,7 @@ function startPassport() {
 function startUpgrade() {
     $('#status-box').html('<i class="fa fa-spin fa-spinner"></i> Upgrading database...');
     $.post(upgradeUri, {_token: token}).done(function () {
-        completeDone();
+        startVerify();
     }).fail(function () {
         $('#status-box').html('<i class="fa fa-warning"></i> Upgrade failed! See log files :(');
     });
@@ -62,8 +62,20 @@ function startUpgrade() {
 /**
  *
  */
+function startVerify() {
+    $('#status-box').html('<i class="fa fa-spin fa-spinner"></i> Verify database integrity...');
+    $.post(verifyUri, {_token: token}).done(function () {
+        completeDone();
+    }).fail(function () {
+        $('#status-box').html('<i class="fa fa-warning"></i> Verification failed! See log files :(');
+    });
+}
+
+/**
+ *
+ */
 function completeDone() {
-    $('#status-box').html('<i class="fa fa-thumbs-up"></i> Installation complete! Wait to be redirected...');
+    $('#status-box').html('<i class="fa fa-thumbs-up"></i> Installation + upgrade complete! Wait to be redirected...');
     setTimeout(function () {
         window.location = homeUri;
     }, 3000);
