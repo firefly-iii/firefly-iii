@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-
-
-/**
+/*
  * 2018_01_01_000002_create_oauth_access_tokens_table.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
@@ -23,9 +21,9 @@ declare(strict_types=1);
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateOauthAccessTokensTable
@@ -33,13 +31,20 @@ use Illuminate\Database\Migrations\Migration;
 class CreateOauthAccessTokensTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     */
+    public function down()
+    {
+        Schema::drop('oauth_access_tokens');
+    }
+
+    /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
-        Schema::create('oauth_access_tokens', function (Blueprint $table) {
+        Schema::create(
+            'oauth_access_tokens', function (Blueprint $table) {
             $table->string('id', 100)->primary();
             $table->integer('user_id')->index()->nullable();
             $table->integer('client_id');
@@ -48,16 +53,7 @@ class CreateOauthAccessTokensTable extends Migration
             $table->boolean('revoked');
             $table->timestamps();
             $table->dateTime('expires_at')->nullable();
-        });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('oauth_access_tokens');
+        }
+        );
     }
 }

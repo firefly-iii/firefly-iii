@@ -49,6 +49,5 @@ class PermissionSeeder extends Seeder
                 Log::warning(sprintf('Could not create role "%s". It might exist already.', $role['display_name']));
             }
         }
-
     }
 }

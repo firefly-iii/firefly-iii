@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-
-
-/**
+/*
  * 2018_01_01_000005_create_oauth_personal_access_clients_table.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
@@ -23,9 +21,9 @@ declare(strict_types=1);
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateOauthPersonalAccessClientsTable
@@ -33,26 +31,24 @@ use Illuminate\Database\Migrations\Migration;
 class CreateOauthPersonalAccessClientsTable extends Migration
 {
     /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('oauth_personal_access_clients', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('client_id')->index();
-            $table->timestamps();
-        });
-    }
-
-    /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {
         Schema::drop('oauth_personal_access_clients');
+    }
+
+    /**
+     * Run the migrations.
+     */
+    public function up()
+    {
+        Schema::create(
+            'oauth_personal_access_clients', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('client_id')->index();
+            $table->timestamps();
+        }
+        );
     }
 }

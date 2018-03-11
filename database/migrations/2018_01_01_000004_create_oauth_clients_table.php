@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-
-
-/**
+/*
  * 2018_01_01_000004_create_oauth_clients_table.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
@@ -23,9 +21,9 @@ declare(strict_types=1);
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateOauthClientsTable
@@ -33,13 +31,20 @@ use Illuminate\Database\Migrations\Migration;
 class CreateOauthClientsTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     */
+    public function down()
+    {
+        Schema::drop('oauth_clients');
+    }
+
+    /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
-        Schema::create('oauth_clients', function (Blueprint $table) {
+        Schema::create(
+            'oauth_clients', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->index()->nullable();
             $table->string('name');
@@ -49,16 +54,7 @@ class CreateOauthClientsTable extends Migration
             $table->boolean('password_client');
             $table->boolean('revoked');
             $table->timestamps();
-        });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('oauth_clients');
+        }
+        );
     }
 }

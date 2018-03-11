@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-
-
-/**
+/*
  * 2018_01_01_000001_create_oauth_auth_codes_table.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
@@ -23,9 +21,9 @@ declare(strict_types=1);
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateOauthAuthCodesTable
@@ -33,29 +31,27 @@ use Illuminate\Database\Migrations\Migration;
 class CreateOauthAuthCodesTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     */
+    public function down()
+    {
+        Schema::drop('oauth_auth_codes');
+    }
+
+    /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
-        Schema::create('oauth_auth_codes', function (Blueprint $table) {
+        Schema::create(
+            'oauth_auth_codes', function (Blueprint $table) {
             $table->string('id', 100)->primary();
             $table->integer('user_id');
             $table->integer('client_id');
             $table->text('scopes')->nullable();
             $table->boolean('revoked');
             $table->dateTime('expires_at')->nullable();
-        });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('oauth_auth_codes');
+        }
+        );
     }
 }
