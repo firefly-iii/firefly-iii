@@ -34,6 +34,7 @@ interface JournalTaskerInterface
     /**
      * @param TransactionJournal $journal
      *
+     * @deprecated
      * @return Collection
      */
     public function getPiggyBankEvents(TransactionJournal $journal): Collection;
@@ -41,6 +42,8 @@ interface JournalTaskerInterface
     /**
      * Get an overview of the transactions of a journal, tailored to the view
      * that shows a transaction (transaction/show/xx).
+     *
+     * @deprecated
      *
      * @param TransactionJournal $journal
      *

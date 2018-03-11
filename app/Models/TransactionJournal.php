@@ -219,7 +219,7 @@ class TransactionJournal extends Model
      * @codeCoverageIgnore
      *
      * @param string $name
-     *
+     * @deprecated
      * @return bool
      */
     public function hasMeta(string $name): bool

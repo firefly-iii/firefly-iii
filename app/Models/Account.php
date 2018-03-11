@@ -190,7 +190,7 @@ class Account extends Model
      * @codeCoverageIgnore
      *
      * @param string $fieldName
-     *
+     * @deprecated
      * @return string
      */
     public function getMeta(string $fieldName): string
@@ -274,7 +274,7 @@ class Account extends Model
 
     /**
      * @codeCoverageIgnore
-     *
+     * @deprecated
      * @param EloquentBuilder $query
      * @param string          $name
      * @param string          $value
