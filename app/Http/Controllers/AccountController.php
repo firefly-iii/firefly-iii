@@ -293,12 +293,11 @@ class AccountController extends Controller
         if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
             return $this->redirectToOriginalAccount($account);
         }
-        $range = Preferences::get('viewRange', '1M')->data;
         if (null === $start) {
             $start = session('start');
         }
         if (null === $end) {
-            $end = app('navigation')->endOfPeriod($start, $range);
+            $end = session('end');
         }
         if ($end < $start) {
             throw new FireflyException('End is after start!'); // @codeCoverageIgnore
