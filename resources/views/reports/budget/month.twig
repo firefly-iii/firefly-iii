@@ -21,12 +21,15 @@
                         </tr>
                         </thead>
                         <tbody>
+                        {% set sum = 0 %}
                         {% for account in accounts %}
+
                             <tr>
                                 <td data-value="{{ account.name }}">
                                     <a href="{{ route('accounts.show', account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
                                 </td>
                                 {% if accountSummary[account.id] %}
+                                    {% set sum = sum + accountSummary[account.id] %}
                                     <td data-value="{{ accountSummary[account.id] }}"
                                         style="text-align: right;">{{ accountSummary[account.id]|formatAmount }}</td>
                                 {% else %}
@@ -38,7 +41,7 @@
                         <tfoot>
                         <tr>
                             <td>{{ 'sum'|_ }}</td>
-                            <td style="text-align: right;">{{ accountSummary.sum|formatAmount }}</td>
+                            <td style="text-align: right;">{{ sum|formatAmount }}</td>
                         </tr>
                         </tfoot>
                     </table>
