@@ -31,7 +31,7 @@ RUN docker-php-ext-install -j$(nproc) curl gd intl json readline tidy zip bcmath
 RUN echo "de_DE.UTF-8 UTF-8\nen_US.UTF-8 UTF-8\nfr_FR.UTF-8 UTF-8\nid_ID.UTF-8 UTF-8\nnl_NL.UTF-8 UTF-8\npl_PL.UTF-8 UTF-8" > /etc/locale.gen && locale-gen
 
 # copy Apache config to correct spot.
-COPY ./docker/apache2.conf /etc/apache2/apache2.conf
+COPY ./.deploy/docker/apache2.conf /etc/apache2/apache2.conf
 
 # Enable apache mod rewrite..
 RUN a2enmod rewrite
@@ -46,7 +46,7 @@ VOLUME $FIREFLY_PATH/storage/export $FIREFLY_PATH/storage/upload
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Enable default site (Firefly III)
-COPY ./docker/apache-firefly.conf /etc/apache2/sites-available/000-default.conf
+COPY ./.deploy/docker/apache-firefly.conf /etc/apache2/sites-available/000-default.conf
 
 # Make sure we own Firefly III directory
 RUN chown -R www-data:www-data /var/www && chmod -R 775 $FIREFLY_PATH/storage
@@ -58,4 +58,4 @@ RUN composer install --prefer-dist --no-dev --no-scripts --no-suggest
 EXPOSE 80
 
 # Run entrypoint thing
-ENTRYPOINT ["docker/entrypoint.sh"]
+ENTRYPOINT [".deploy/docker/entrypoint.sh"]
