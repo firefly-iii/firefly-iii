@@ -28,7 +28,6 @@ use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -271,13 +270,9 @@ class TransactionControllerTest extends TestCase
     public function testShow()
     {
         // mock stuff
-        $tasker    = $this->mock(JournalTaskerInterface::class);
         $linkRepos = $this->mock(LinkTypeRepositoryInterface::class);
         $linkRepos->shouldReceive('get')->andReturn(new Collection);
         $linkRepos->shouldReceive('getLinks')->andReturn(new Collection);
-
-        $tasker->shouldReceive('getPiggyBankEvents')->andReturn(new Collection);
-        $tasker->shouldReceive('getTransactionsOverview')->andReturn([]);
 
         $this->be($this->user());
         $response = $this->get(route('transactions.show', [1]));
@@ -291,7 +286,6 @@ class TransactionControllerTest extends TestCase
      */
     public function testShowOpeningBalance()
     {
-        $tasker    = $this->mock(JournalTaskerInterface::class);
         $linkRepos = $this->mock(LinkTypeRepositoryInterface::class);
         $linkRepos->shouldReceive('get')->andReturn(new Collection);
         $linkRepos->shouldReceive('getLinks')->andReturn(new Collection);

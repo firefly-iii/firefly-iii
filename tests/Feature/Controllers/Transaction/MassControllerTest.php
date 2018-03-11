@@ -71,7 +71,7 @@ class MassControllerTest extends TestCase
         $repository = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('find')->andReturnValues([$deposits[0], $deposits[1]])->times(2);
-        $repository->shouldReceive('delete')->times(2);
+        $repository->shouldReceive('destroy')->times(2);
 
         $this->session(['transactions.mass-delete.uri' => 'http://localhost']);
 

@@ -38,7 +38,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Database\Query\JoinClause;
@@ -813,19 +812,18 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $tasker        = $this->mock(JournalTaskerInterface::class);
         $linkRepos     = $this->mock(LinkTypeRepositoryInterface::class);
 
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getTransactionType')->andReturn('Withdrawal');
+        $journalRepos->shouldReceive('getPiggyBankEvents')->andReturn(new Collection);
+        $journalRepos->shouldReceive('getMetaField')->andReturn('');
 
         $linkRepos->shouldReceive('get')->andReturn(new Collection);
         $linkRepos->shouldReceive('getLinks')->andReturn(new Collection);
         $attRepos->shouldReceive('saveAttachmentsForModel');
         $attRepos->shouldReceive('getErrors')->andReturn(new MessageBag);
         $attRepos->shouldReceive('getMessages')->andReturn(new MessageBag);
-        $tasker->shouldReceive('getPiggyBankEvents')->andReturn(new Collection);
-        $tasker->shouldReceive('getTransactionsOverview')->andReturn([]);
 
         // mock
         try {

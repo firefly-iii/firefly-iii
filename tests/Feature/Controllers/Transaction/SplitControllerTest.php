@@ -31,7 +31,6 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
@@ -59,7 +58,6 @@ class SplitControllerTest extends TestCase
         $accountRepos       = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
-        $tasker             = $this->mock(JournalTaskerInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
 
 
@@ -88,7 +86,6 @@ class SplitControllerTest extends TestCase
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-        $tasker->shouldReceive('getTransactionsOverview')->andReturn($array);
 
         $this->be($this->user());
         $response = $this->get(route('transactions.split.edit', [$deposit->id]));
@@ -111,7 +108,6 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $tasker             = $this->mock(JournalTaskerInterface::class);
         $deposit            = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
         $destination        = $deposit->transactions()->where('amount', '>', 0)->first();
         $account            = $destination->account;
@@ -120,7 +116,6 @@ class SplitControllerTest extends TestCase
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-        $tasker->shouldReceive('getTransactionsOverview')->andReturn($transactions->toArray());
 
         // mock for new account list and for account array
         $accountRepos->shouldReceive('getAccountsByType')
@@ -209,7 +204,6 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $tasker             = $this->mock(JournalTaskerInterface::class);
 
         $opening = TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first();
         $journalRepos->shouldReceive('first')->once()->andReturn($opening);
@@ -232,7 +226,6 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $tasker             = $this->mock(JournalTaskerInterface::class);
 
         $transactions = factory(Transaction::class, 1)->make();
         $deposit      = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
@@ -252,7 +245,6 @@ class SplitControllerTest extends TestCase
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-        $tasker->shouldReceive('getTransactionsOverview')->andReturn($transactions->toArray());
         // mock for new account list and for account array
         $accountRepository->shouldReceive('getAccountsByType')
                      ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->twice();
@@ -275,7 +267,6 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $tasker             = $this->mock(JournalTaskerInterface::class);
         $ruleRepos          = $this->mock(RuleGroupRepositoryInterface::class);
         $billRepos          = $this->mock(BillRepositoryInterface::class);
 
@@ -332,7 +323,6 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $tasker             = $this->mock(JournalTaskerInterface::class);
 
         $this->session(['transactions.edit-split.uri' => 'http://localhost']);
         $opening = TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first();
@@ -375,7 +365,6 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $tasker             = $this->mock(JournalTaskerInterface::class);
         $ruleRepos          = $this->mock(RuleGroupRepositoryInterface::class);
         $billRepos          = $this->mock(BillRepositoryInterface::class);
 
@@ -432,7 +421,6 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $tasker             = $this->mock(JournalTaskerInterface::class);
         $ruleRepos          = $this->mock(RuleGroupRepositoryInterface::class);
         $billRepos          = $this->mock(BillRepositoryInterface::class);
 
