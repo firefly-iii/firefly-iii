@@ -65,10 +65,10 @@ class SplitJournalFormRequest extends Request
             switch ($data['type']) {
                 case 'withdrawal':
                     $sourceId        = $this->integer('journal_source_account_id');
-                    $destinationName = $transaction['destination_account_name'];
+                    $destinationName = $transaction['destination_name'];
                     break;
                 case 'deposit':
-                    $sourceName    = $transaction['source_account_name'];
+                    $sourceName    = $transaction['source_name'];
                     $destinationId = $this->integer('journal_destination_account_id');
                     break;
                 case 'transfer':
@@ -90,12 +90,12 @@ class SplitJournalFormRequest extends Request
                 'identifier'            => $index,
                 'currency_id'           => $this->integer('journal_currency_id'),
                 'currency_code'         => null,
-                'description'           => $transaction['description'],
+                'description'           => $transaction['transaction_description'],
                 'amount'                => $transaction['amount'],
                 'budget_id'             => intval($transaction['budget_id'] ?? 0),
                 'budget_name'           => null,
                 'category_id'           => null,
-                'category_name'         => $transaction['category'],
+                'category_name'         => $transaction['category_name'],
             ];
             $data['transactions'][] = $set;
         }
@@ -109,23 +109,23 @@ class SplitJournalFormRequest extends Request
     public function rules(): array
     {
         return [
-            'what'                                    => 'required|in:withdrawal,deposit,transfer',
-            'journal_description'                     => 'required|between:1,255',
-            'id'                                      => 'numeric|belongsToUser:transaction_journals,id',
-            'journal_source_account_id'               => 'numeric|belongsToUser:accounts,id',
-            'journal_source_account_name.*'           => 'between:1,255',
-            'journal_currency_id'                     => 'required|exists:transaction_currencies,id',
-            'date'                                    => 'required|date',
-            'interest_date'                           => 'date|nullable',
-            'book_date'                               => 'date|nullable',
-            'process_date'                            => 'date|nullable',
-            'transactions.*.description'              => 'required|between:1,255',
-            'transactions.*.destination_account_id'   => 'numeric|belongsToUser:accounts,id',
-            'transactions.*.destination_account_name' => 'between:1,255|nullable',
-            'transactions.*.amount'                   => 'required|numeric',
-            'transactions.*.budget_id'                => 'belongsToUser:budgets,id',
-            'transactions.*.category'                 => 'between:1,255|nullable',
-            'transactions.*.piggy_bank_id'            => 'between:1,255|nullable',
+            'what'                                   => 'required|in:withdrawal,deposit,transfer',
+            'journal_description'                    => 'required|between:1,255',
+            'id'                                     => 'numeric|belongsToUser:transaction_journals,id',
+            'journal_source_account_id'              => 'numeric|belongsToUser:accounts,id',
+            'journal_source_account_name.*'          => 'between:1,255',
+            'journal_currency_id'                    => 'required|exists:transaction_currencies,id',
+            'date'                                   => 'required|date',
+            'interest_date'                          => 'date|nullable',
+            'book_date'                              => 'date|nullable',
+            'process_date'                           => 'date|nullable',
+            'transactions.*.transaction_description' => 'required|between:1,255',
+            'transactions.*.destination_account_id'  => 'numeric|belongsToUser:accounts,id',
+            'transactions.*.destination_name'        => 'between:1,255|nullable',
+            'transactions.*.amount'                  => 'required|numeric',
+            'transactions.*.budget_id'               => 'belongsToUser:budgets,id',
+            'transactions.*.category_name'                => 'between:1,255|nullable',
+            'transactions.*.piggy_bank_id'           => 'between:1,255|nullable',
         ];
     }
 

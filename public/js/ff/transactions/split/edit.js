@@ -114,11 +114,12 @@ function cloneDivRow() {
     source.find('.count').text('#' + count);
 
     source.find('input[name$="][amount]"]').val("").on('input', calculateSum);
+    source.find('input[name$="][foreign_amount]"]').val("").on('input', calculateSum);
     if (destAccounts.length > 0) {
         source.find('input[name$="destination_account_name]"]').typeahead({source: destAccounts, autoSelect: false});
     }
 
-    if (destAccounts.length > 0) {
+    if (srcAccounts.length > 0) {
         source.find('input[name$="source_account_name]"]').typeahead({source: srcAccounts, autoSelect: false});
     }
     if (categories.length > 0) {

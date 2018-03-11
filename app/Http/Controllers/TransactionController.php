@@ -195,8 +195,6 @@ class TransactionController extends Controller
         $links     = $linkTypeRepository->getLinks($journal);
 
         // get transactions using the collector:
-        // needs a lot of extra data to match the journal collector. Or just expand that one.
-        // collect transactions using the journal collector
         $collector = app(JournalCollectorInterface::class);
         $collector->setUser(auth()->user());
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();

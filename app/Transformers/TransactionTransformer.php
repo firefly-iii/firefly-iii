@@ -180,6 +180,7 @@ class TransactionTransformer extends TransformerAbstract
             'updated_at'              => $transaction->updated_at->toAtomString(),
             'created_at'              => $transaction->created_at->toAtomString(),
             'description'             => $transaction->description,
+            'transaction_description' => $transaction->transaction_description,
             'date'                    => $transaction->date->format('Y-m-d'),
             'type'                    => $transaction->transaction_type_type,
             'identifier'              => $transaction->identifier,

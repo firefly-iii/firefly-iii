@@ -40,18 +40,6 @@ interface JournalTaskerInterface
     public function getPiggyBankEvents(TransactionJournal $journal): Collection;
 
     /**
-     * Get an overview of the transactions of a journal, tailored to the view
-     * that shows a transaction (transaction/show/xx).
-     *
-     * @deprecated
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return array
-     */
-    public function getTransactionsOverview(TransactionJournal $journal): array;
-
-    /**
      * @param User $user
      */
     public function setUser(User $user);
