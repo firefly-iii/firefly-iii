@@ -33,10 +33,12 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use View;
 
 /**
@@ -177,6 +179,7 @@ class TransactionController extends Controller
      * @param JournalTaskerInterface      $tasker
      * @param LinkTypeRepositoryInterface $linkTypeRepository
      *
+     * @throws FireflyException
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
     public function show(TransactionJournal $journal, JournalTaskerInterface $tasker, LinkTypeRepositoryInterface $linkTypeRepository)
@@ -184,15 +187,32 @@ class TransactionController extends Controller
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }
-        if (TransactionType::RECONCILIATION === $journal->transactionType->type) {
+        $transactionType = $journal->transactionType->type;
+        if (TransactionType::RECONCILIATION === $transactionType) {
             return redirect(route('accounts.reconcile.show', [$journal->id])); // @codeCoverageIgnore
         }
-        $linkTypes    = $linkTypeRepository->get();
-        $links        = $linkTypeRepository->getLinks($journal);
-        $events       = $tasker->getPiggyBankEvents($journal);
-        $transactions = $tasker->getTransactionsOverview($journal);
-        $what         = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        $subTitle     = trans('firefly.' . $what) . ' "' . $journal->description . '"';
+        $linkTypes = $linkTypeRepository->get();
+        $links     = $linkTypeRepository->getLinks($journal);
+
+        // get transactions using the collector:
+        // needs a lot of extra data to match the journal collector. Or just expand that one.
+        // collect transactions using the journal collector
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser(auth()->user());
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        // filter on specific journals.
+        $collector->setJournals(new Collection([$journal]));
+        $set          = $collector->getJournals();
+        $transactions = [];
+        $transformer  = new TransactionTransformer(new ParameterBag);
+        /** @var Transaction $transaction */
+        foreach ($set as $transaction) {
+            $transactions[] = $transformer->transform($transaction);
+        }
+
+        $events   = $tasker->getPiggyBankEvents($journal);
+        $what     = strtolower($transactionType);
+        $subTitle = trans('firefly.' . $what) . ' "' . $journal->description . '"';
 
         return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'linkTypes', 'links'));
     }

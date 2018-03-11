@@ -101,17 +101,15 @@ class Transaction extends Twig_Extension
     public function amountArray(array $transaction): string
     {
         // first display amount:
-        $amount                       = TransactionType::WITHDRAWAL === $transaction['journal_type'] ? $transaction['source_amount']
-            : $transaction['destination_amount'];
+        $amount                       = strval($transaction['amount']);
         $fakeCurrency                 = new TransactionCurrency;
-        $fakeCurrency->decimal_places = $transaction['transaction_currency_dp'];
-        $fakeCurrency->symbol         = $transaction['transaction_currency_symbol'];
+        $fakeCurrency->decimal_places = $transaction['currency_dp'];
+        $fakeCurrency->symbol         = $transaction['currency_symbol'];
         $string                       = app('amount')->formatAnything($fakeCurrency, $amount, true);
 
         // then display (if present) the foreign amount:
-        if (null !== $transaction['foreign_source_amount']) {
-            $amount                       = TransactionType::WITHDRAWAL === $transaction['journal_type'] ? $transaction['foreign_source_amount']
-                : $transaction['foreign_destination_amount'];
+        if (null !== $transaction['foreign_amount']) {
+            $amount                       = strval($transaction['foreign_amount']);
             $fakeCurrency                 = new TransactionCurrency;
             $fakeCurrency->decimal_places = $transaction['foreign_currency_dp'];
             $fakeCurrency->symbol         = $transaction['foreign_currency_symbol'];
