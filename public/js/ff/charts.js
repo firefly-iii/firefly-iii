@@ -294,31 +294,33 @@ function drawAChart(URI, container, chartType, options, colorData) {
                 lineAtIndex: [],
                 annotation: {},
             };
-            if (drawVerticalLine !== '') {
-                // draw line using annotation plugin.
-                console.log('Will draw line');
-                chartOpts.options.annotation = {
-                    annotations: [{
-                        type: 'line',
-                        id: 'a-line-1',
-                        mode: 'vertical',
-                        scaleID: 'x-axis-0',
-                        value: drawVerticalLine,
-                        borderColor: 'red',
-                        borderWidth: 1,
-                        label: {
-                            backgroundColor: 'rgba(0,0,0,0)',
-                            fontFamily: "sans-serif",
-                            fontSize: 12,
-                            fontColor: "#333",
-                            position: "right",
-                            xAdjust: -20,
-                            yAdjust: -125,
-                            enabled: true,
-                            content: todayText
-                        }
-                    }]
-                };
+            if (typeof drawVerticalLine !== 'undefined') {
+                if (drawVerticalLine !== '') {
+                    // draw line using annotation plugin.
+                    console.log('Will draw line');
+                    chartOpts.options.annotation = {
+                        annotations: [{
+                            type: 'line',
+                            id: 'a-line-1',
+                            mode: 'vertical',
+                            scaleID: 'x-axis-0',
+                            value: drawVerticalLine,
+                            borderColor: 'red',
+                            borderWidth: 1,
+                            label: {
+                                backgroundColor: 'rgba(0,0,0,0)',
+                                fontFamily: "sans-serif",
+                                fontSize: 12,
+                                fontColor: "#333",
+                                position: "right",
+                                xAdjust: -20,
+                                yAdjust: -125,
+                                enabled: true,
+                                content: todayText
+                            }
+                        }]
+                    };
+                }
             }
             allCharts[container] = new Chart(ctx, chartOpts);
         }
