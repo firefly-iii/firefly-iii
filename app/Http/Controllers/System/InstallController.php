@@ -100,4 +100,16 @@ class InstallController extends Controller
         return response()->json(['OK']);
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function verify()
+    {
+        Log::debug('Am now calling verify database routine...');
+        Artisan::call('firefly:verify');
+        Log::debug(Artisan::output());
+
+        return response()->json(['OK']);
+    }
+
 }
