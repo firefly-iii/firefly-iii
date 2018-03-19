@@ -283,6 +283,9 @@ class ImportJournal
             case 'opposing-id':
                 $this->opposing->setAccountId($array);
                 break;
+            case 'opposing-bic':
+                $this->opposing->setAccountBic($array);
+                break;
             case 'tags-comma':
             case 'tags-space':
                 $this->setTags($array);

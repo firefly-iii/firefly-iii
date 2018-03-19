@@ -266,6 +266,12 @@ return [
             'converter'       => 'AccountId',
             'mapper'          => 'OpposingAccounts',
         ],
+        'opposing-bic'       => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'field'           => 'opposing-account-bic',
+            'converter'       => 'AccountBic',
+        ],
         'opposing-name'     => [
             'mappable'        => true,
             'pre-process-map' => false,

@@ -38,6 +38,8 @@ class ImportAccount
     /** @var Account */
     private $account;
     /** @var array */
+    private $accountBic = [];
+    /** @var array */
     private $accountIban = [];
     /** @var array */
     private $accountId = [];
@@ -51,7 +53,7 @@ class ImportAccount
     private $expectedType = '';
     /**
      * This value is used to indicate the other account ID (the opposing transaction's account),
-     * if it is know. If so, this particular importaccount may never return an Account with this ID.
+     * if it is know. If so, this particular import account may never return an Account with this ID.
      * If it would, this would result in a transaction from-to the same account.
      *
      * @var int
@@ -103,6 +105,14 @@ class ImportAccount
     public function setExpectedType(string $expectedType)
     {
         $this->expectedType = $expectedType;
+    }
+
+    /**
+     * @param array $accountBic
+     */
+    public function setAccountBic(array $accountBic): void
+    {
+        $this->accountBic = $accountBic;
     }
 
     /**
@@ -388,6 +398,7 @@ class ImportAccount
             'active'          => true,
             'virtualBalance'  => '0',
             'account_type_id' => null,
+            'BIC'             => $this->accountBic['value'] ?? null,
         ];
 
         $this->account = $this->repository->store($data);
