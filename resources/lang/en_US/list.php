@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * list.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -102,4 +103,11 @@ return [
     'reconcile'               => 'Reconcile',
     'account_on_spectre'      => 'Account (Spectre)',
     'do_import'               => 'Import from this account',
+    'sepa-ct-id'              => 'SEPA End to End Identifier',
+    'sepa-ct-op'              => 'SEPA Opposing Account Identifier',
+    'sepa-db'                 => 'SEPA Mandate Identifier',
+    'sepa-country'            => 'SEPA Country',
+    'sepa-cc'                 => 'SEPA Clearing Code',
+    'sepa-ep'                 => 'SEPA External Purpose',
+    'sepa-ci'                 => 'SEPA Creditor Identifier',
 ];

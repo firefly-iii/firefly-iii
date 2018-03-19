@@ -174,6 +174,24 @@ return [
             'converter'       => 'Date',
             'field'           => 'date-process',
         ],
+        'date-due'      => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'converter'       => 'Date',
+            'field'           => 'date-due',
+        ],
+        'date-payment'      => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'converter'       => 'Date',
+            'field'           => 'date-payment',
+        ],
+        'date-invoice'      => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'converter'       => 'Date',
+            'field'           => 'date-invoice',
+        ],
         'budget-id'         => [
             'mappable'        => true,
             'pre-process-map' => false,
@@ -266,7 +284,7 @@ return [
             'converter'       => 'AccountId',
             'mapper'          => 'OpposingAccounts',
         ],
-        'opposing-bic'       => [
+        'opposing-bic'      => [
             'mappable'        => false,
             'pre-process-map' => false,
             'field'           => 'opposing-account-bic',
@@ -317,23 +335,62 @@ return [
             'converter'       => 'Amount',
             'field'           => 'amount_foreign',
         ],
+
+        // SEPA end to end ID
         'sepa-ct-id'        => [
             'mappable'        => false,
             'pre-process-map' => false,
             'converter'       => 'Description',
-            'field'           => 'description',
+            'field'           => 'sepa_ct_id',
         ],
+        // SEPA opposing account identifier
         'sepa-ct-op'        => [
             'mappable'        => false,
             'pre-process-map' => false,
             'converter'       => 'Description',
-            'field'           => 'description',
+            'field'           => 'sepa_ct_op',
         ],
+        // SEPA Direct Debit Mandate Identifier
         'sepa-db'           => [
             'mappable'        => false,
             'pre-process-map' => false,
             'converter'       => 'Description',
-            'field'           => 'description',
+            'field'           => 'sepa_db',
+        ],
+        // SEPA clearing code
+        'sepa-cc'           => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'converter'       => 'Description',
+            'field'           => 'sepa_cc',
+        ],
+        // SEPA country
+        'sepa-country'           => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'converter'       => 'Description',
+            'field'           => 'sepa_country',
+        ],
+        // SEPA external purpose
+        'sepa-ep'           => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'converter'       => 'Description',
+            'field'           => 'sepa_ep',
+        ],
+        // SEPA creditor identifier
+        'sepa-ci'           => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'converter'       => 'Description',
+            'field'           => 'sepa_ci',
+        ],
+        // Internal reference
+        'internal-reference'           => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'converter'       => 'Description',
+            'field'           => 'internal_reference',
         ],
     ],
 

@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * import.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -131,22 +132,30 @@ return [
     'column_date-book'                     => 'Transaction booking date',
     'column_date-process'                  => 'Transaction process date',
     'column_date-transaction'              => 'Date',
+    'column_date-due'                      => 'Transaction due date',
+    'column_date-payment'                  => 'Transaction payment date',
+    'column_date-invoice'                  => 'Transaction invoice date',
     'column_description'                   => 'Description',
     'column_opposing-iban'                 => 'Opposing account (IBAN)',
-    'column_opposing-bic'                 => 'Opposing account (BIC)',
+    'column_opposing-bic'                  => 'Opposing account (BIC)',
     'column_opposing-id'                   => 'Opposing account ID (matching FF3)',
     'column_external-id'                   => 'External ID',
     'column_opposing-name'                 => 'Opposing account (name)',
     'column_rabo-debit-credit'             => 'Rabobank specific debit/credit indicator',
     'column_ing-debit-credit'              => 'ING specific debit/credit indicator',
-    'column_sepa-ct-id'                    => 'SEPA Credit Transfer end-to-end ID',
-    'column_sepa-ct-op'                    => 'SEPA Credit Transfer opposing account',
-    'column_sepa-db'                       => 'SEPA Direct Debit',
+    'column_sepa-ct-id'                    => 'SEPA end-to-end Identifier',
+    'column_sepa-ct-op'                    => 'SEPA Opposing Account Identifier',
+    'column_sepa-db'                       => 'SEPA Mandate Identifier',
+    'column_sepa-cc'                       => 'SEPA Clearing Code',
+    'column_sepa-ci'                       => 'SEPA Creditor Identifier',
+    'column_sepa-ep'                       => 'SEPA External Purpose',
+    'column_sepa-country'                  => 'SEPA Country Code',
     'column_tags-comma'                    => 'Tags (comma separated)',
     'column_tags-space'                    => 'Tags (space separated)',
     'column_account-number'                => 'Asset account (account number)',
     'column_opposing-number'               => 'Opposing account (account number)',
     'column_note'                          => 'Note(s)',
+    'column_internal-reference'            => 'Internal reference',
 
     // prerequisites
     'prerequisites'                        => 'Prerequisites',

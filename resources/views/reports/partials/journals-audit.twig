@@ -129,7 +129,7 @@
             <td class="hide-internal_reference">
 
                 {% if transaction.transactionJournal.hasMeta('internal_reference') %}
-                    {{ getMetaField(transaction.transactionJournal,'internal_reference') }}
+                    {{ journalGetMetaField(transaction.transactionJournal,'internal_reference') }}
                 {% endif %}
 
             </td>
