@@ -54,4 +54,15 @@ class MonetaryAccountProfile extends BunqObject
 
         return;
     }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'profile_action_required' => $this->profileActionRequired,
+            'profile_amount_required' => $this->profileAmountRequired->toArray(),
+        ];
+    }
 }

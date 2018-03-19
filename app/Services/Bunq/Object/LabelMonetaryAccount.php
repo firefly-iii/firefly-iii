@@ -1,7 +1,7 @@
 <?php
 /**
- * NotificationFilter.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * LabelMonetaryAccount.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,30 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Object;
 
-/**
- * Class NotificationFilter.
- */
-class NotificationFilter extends BunqObject
-{
-    /**
-     * NotificationFilter constructor.
-     *
-     * @param array $data
-     */
-    public function __construct(array $data)
-    {
-        unset($data);
-    }
 
-    /**
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return [];
-    }
+/**
+ * Class LabelMonetaryAccount
+ */
+class LabelMonetaryAccount extends BunqObject
+{
+
 }

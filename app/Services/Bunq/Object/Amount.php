@@ -60,4 +60,15 @@ class Amount extends BunqObject
     {
         return $this->value;
     }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'currency' => $this->currency,
+            'value'    => $this->value,
+        ];
+    }
 }

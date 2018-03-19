@@ -1,7 +1,7 @@
 <?php
 /**
- * ListMonetaryAccountRequest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * ListPaymentRequest.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,60 +18,69 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Request;
 
 use FireflyIII\Services\Bunq\Object\MonetaryAccountBank;
+use FireflyIII\Services\Bunq\Object\Payment;
 use FireflyIII\Services\Bunq\Token\SessionToken;
 use Illuminate\Support\Collection;
 
+
 /**
- * Class ListMonetaryAccountRequest.
+ * Class ListPaymentRequest
  */
-class ListMonetaryAccountRequest extends BunqRequest
+class ListPaymentRequest extends BunqRequest
 {
+
+    /** @var MonetaryAccountBank */
+    private $account;
     /** @var Collection */
-    private $monetaryAccounts;
+    private $payments;
     /** @var SessionToken */
     private $sessionToken;
     /** @var int */
     private $userId = 0;
 
     /**
+     * TODO support pagination.
+     *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function call(): void
     {
-        $this->monetaryAccounts                  = new Collection;
-        $uri                                     = sprintf('user/%d/monetary-account', $this->userId);
+        $this->payments                          = new Collection;
+        $uri                                     = sprintf('user/%d/monetary-account/%d/payment', $this->userId, $this->account->getId());
         $data                                    = [];
         $headers                                 = $this->getDefaultHeaders();
         $headers['X-Bunq-Client-Authentication'] = $this->sessionToken->getToken();
         $response                                = $this->sendSignedBunqGet($uri, $data, $headers);
 
-        // create device server objects:
-        $raw = $this->getArrayFromResponse('MonetaryAccountBank', $response);
+        // create payment objects:
+        $raw = $this->getArrayFromResponse('Payment', $response);
         foreach ($raw as $entry) {
-            $account = new MonetaryAccountBank($entry);
-            $this->monetaryAccounts->push($account);
+            $account = new Payment($entry);
+            $this->payments->push($account);
         }
 
         return;
+
     }
 
     /**
-     * @return Collection
+     * @param MonetaryAccountBank $account
      */
-    public function getMonetaryAccounts(): Collection
+    public function setAccount(MonetaryAccountBank $account): void
     {
-        return $this->monetaryAccounts;
+        $this->account = $account;
     }
 
     /**
      * @param SessionToken $sessionToken
      */
-    public function setSessionToken(SessionToken $sessionToken)
+    public function setSessionToken(SessionToken $sessionToken): void
     {
         $this->sessionToken = $sessionToken;
     }
@@ -79,7 +88,7 @@ class ListMonetaryAccountRequest extends BunqRequest
     /**
      * @param int $userId
      */
-    public function setUserId(int $userId)
+    public function setUserId(int $userId): void
     {
         $this->userId = $userId;
     }

@@ -29,12 +29,18 @@ use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Services\Bunq\Id\DeviceServerId;
 use FireflyIII\Services\Bunq\Object\DeviceServer;
+use FireflyIII\Services\Bunq\Object\MonetaryAccountBank;
 use FireflyIII\Services\Bunq\Object\ServerPublicKey;
+use FireflyIII\Services\Bunq\Object\UserCompany;
+use FireflyIII\Services\Bunq\Object\UserPerson;
 use FireflyIII\Services\Bunq\Request\DeviceServerRequest;
 use FireflyIII\Services\Bunq\Request\DeviceSessionRequest;
 use FireflyIII\Services\Bunq\Request\InstallationTokenRequest;
 use FireflyIII\Services\Bunq\Request\ListDeviceServerRequest;
+use FireflyIII\Services\Bunq\Request\ListMonetaryAccountRequest;
+use FireflyIII\Services\Bunq\Request\ListPaymentRequest;
 use FireflyIII\Services\Bunq\Token\InstallationToken;
+use FireflyIII\Services\Bunq\Token\SessionToken;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
@@ -60,9 +66,11 @@ use Requests;
  *
  * Get list of bank accounts
  *
- * Stage 'has-accounts'
+ * Stage 'have-accounts'
  *
- * Do customer statement export (in CSV?)
+ * Map accounts to existing accounts
+ *
+ * Stage 'do-import'?
  *
  *
  */
@@ -122,19 +130,57 @@ class BunqRoutine implements RoutineInterface
     {
         Log::info(sprintf('Start with import job %s using Bunq.', $this->job->key));
         set_time_limit(0);
-        // check if job has token first!
-        $stage = $this->getConfig()['stage'] ?? 'unknown';
+        // this method continues with the job and is called by whenever a stage is
+        // finished
+        $this->continueJob();
 
+        return true;
+    }
+
+    /**
+     * @param ImportJob $job
+     */
+    public function setJob(ImportJob $job)
+    {
+        $this->job        = $job;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    protected function continueJob()
+    {
+        // if in "configuring"
+        if ($this->getStatus() === 'configuring') {
+            Log::debug('Job is in configuring stage, will do nothing.');
+
+            return;
+        }
+        $stage = $this->getConfig()['stage'] ?? 'unknown';
+        Log::debug(sprintf('Now in continueJob() for stage %s', $stage));
         switch ($stage) {
             case 'initial':
                 // register device and get tokens.
                 $this->runStageInitial();
+                $this->continueJob();
                 break;
             case 'registered':
                 // get all bank accounts of user.
                 $this->runStageRegistered();
+                $this->continueJob();
                 break;
+            case 'logged-in':
+                $this->runStageLoggedIn();
+                break;
+            case 'have-accounts':
+                // do nothing in this stage. Job should revert to config routine.
+                break;
+            case 'have-account-mapping':
+                $this->runStageHaveAccountMapping();
 
+                break;
             default:
                 throw new FireflyException(sprintf('No action for stage %s!', $stage));
                 break;
@@ -154,18 +200,6 @@ class BunqRoutine implements RoutineInterface
             //
             //        return true;
         }
-
-        return true;
-    }
-
-    /**
-     * @param ImportJob $job
-     */
-    public function setJob(ImportJob $job)
-    {
-        $this->job        = $job;
-        $this->repository = app(ImportJobRepositoryInterface::class);
-        $this->repository->setUser($job->user);
     }
 
     /**
@@ -206,18 +240,22 @@ class BunqRoutine implements RoutineInterface
         $request->setServerPublicKey($serverPublicKey);
         $request->setSecret($apiKey);
         $request->call();
+        $this->addStep();
 
         // todo store objects in job!
         $deviceSession = $request->getDeviceSessionId();
         $userPerson    = $request->getUserPerson();
         $userCompany   = $request->getUserCompany();
+        $sessionToken  = $request->getSessionToken();
 
         $config                      = $this->getConfig();
         $config['device_session_id'] = $deviceSession->toArray();
         $config['user_person']       = $userPerson->toArray();
         $config['user_company']      = $userCompany->toArray();
+        $config['session_token']     = $sessionToken->toArray();
         $config['stage']             = 'logged-in';
         $this->setConfig($config);
+        $this->addStep();
 
         return;
     }
@@ -522,6 +560,95 @@ class BunqRoutine implements RoutineInterface
         Log::debug(sprintf('Server ID: %s', serialize($deviceServerId)));
 
         return $deviceServerId;
+    }
+
+    /**
+     * Will download the transactions for each account that is selected to be imported from.
+     * Will of course also update the number of steps and what-not.
+     *
+     * @throws FireflyException
+     */
+    private function runStageHaveAccountMapping(): void
+    {
+        $config  = $this->getConfig();
+        $user    = new UserPerson($config['user_person']);
+        $mapping = $config['accounts-mapped'];
+        $token  = new SessionToken($config['session_token']);
+        $count   = 0;
+        if ($user->getId() === 0) {
+            $user = new UserCompany($config['user_company']);
+        }
+
+        foreach ($config['accounts'] as $accountData) {
+            $account  = new MonetaryAccountBank($accountData);
+            $importId = $account->getId();
+            if ($mapping[$importId] === 1) {
+                // grab all transactions
+                $request = new ListPaymentRequest();
+                $request->setPrivateKey($this->getPrivateKey());
+                $request->setServerPublicKey($this->getServerPublicKey());
+                $request->setSessionToken($token);
+                $request->setUserId($user->getId());
+                $request->setAccount($account);
+                $request->call();
+
+                exit;
+
+                // store in array
+                $all[$account->getId()] = [
+                    'account'      => $account,
+                    'import_id'    => $importId,
+                    'transactions' => $transactions,
+                ];
+                $count                  += count($transactions);
+            }
+            Log::debug(sprintf('Total number of transactions: %d', $count));
+            $this->addStep();
+            //$this->importTransactions($all);
+        }
+        exit;
+    }
+
+    /**
+     *
+     * @throws FireflyException
+     */
+    private function runStageLoggedIn(): void
+    {
+        // grab new session token:
+        $config = $this->getConfig();
+        $token  = new SessionToken($config['session_token']);
+        $user   = new UserPerson($config['user_person']);
+        if ($user->getId() === 0) {
+            $user = new UserCompany($config['user_company']);
+        }
+
+        // list accounts request
+        $request = new ListMonetaryAccountRequest();
+        $request->setServerPublicKey($this->getServerPublicKey());
+        $request->setPrivateKey($this->getPrivateKey());
+        $request->setUserId($user->getId());
+        $request->setSessionToken($token);
+        $request->call();
+        $accounts = $request->getMonetaryAccounts();
+        $arr      = [];
+        Log::debug(sprintf('Get monetary accounts, found %d accounts.', $accounts->count()));
+
+        /** @var MonetaryAccountBank $account */
+        foreach ($accounts as $account) {
+            $arr[] = $account->toArray();
+        }
+
+        $config             = $this->getConfig();
+        $config['accounts'] = $arr;
+        $config['stage']    = 'have-accounts';
+        $this->setConfig($config);
+
+        // once the accounts are stored, go to configuring stage:
+        // update job, set status to "configuring".
+        $this->setStatus('configuring');
+
+        return;
     }
 
     /**

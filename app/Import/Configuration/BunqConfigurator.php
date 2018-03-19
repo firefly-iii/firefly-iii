@@ -25,7 +25,8 @@ namespace FireflyIII\Import\Configuration;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\Configuration\Spectre\HaveAccounts;
+use FireflyIII\Support\Import\Configuration\Bunq\HasAccounts;
+use FireflyIII\Support\Import\Configuration\Bunq\HaveAccounts;
 use Log;
 
 /**
@@ -65,8 +66,6 @@ class BunqConfigurator implements ConfiguratorInterface
         $stage = $this->getConfig()['stage'] ?? 'initial';
         Log::debug(sprintf('in getNextData(), for stage "%s".', $stage));
 
-        throw new FireflyException('configureJob: Will try to handle stage ' . $stage);
-
         switch ($stage) {
             case 'have-accounts':
                 /** @var HaveAccounts $class */
@@ -102,20 +101,7 @@ class BunqConfigurator implements ConfiguratorInterface
 
         Log::debug(sprintf('in getNextData(), for stage "%s".', $stage));
 
-        throw new FireflyException('getNextData: Will try to handle stage ' . $stage);
-
         switch ($stage) {
-            case 'has-token':
-                // simply redirect to Spectre.
-                $config['is-redirected'] = true;
-                $config['stage']         = 'user-logged-in';
-                $status                  = 'configured';
-
-                // update config and status:
-                $this->repository->setConfiguration($this->job, $config);
-                $this->repository->setStatus($this->job, $status);
-
-                return $this->repository->getConfiguration($this->job);
             case 'have-accounts':
                 /** @var HaveAccounts $class */
                 $class = app(HaveAccounts::class);
@@ -139,17 +125,10 @@ class BunqConfigurator implements ConfiguratorInterface
         }
         $stage = $this->getConfig()['stage'] ?? 'initial';
 
-        throw new FireflyException('Will try to handle stage ' . $stage);
-
         Log::debug(sprintf('getNextView: in getNextView(), for stage "%s".', $stage));
         switch ($stage) {
-            case 'has-token':
-                // redirect to Spectre.
-                Log::info('User is being redirected to Spectre.');
-
-                return 'import.spectre.redirect';
             case 'have-accounts':
-                return 'import.spectre.accounts';
+                return 'import.bunq.accounts';
             default:
                 return '';
 
@@ -179,16 +158,10 @@ class BunqConfigurator implements ConfiguratorInterface
 
         Log::debug(sprintf('in isJobConfigured(), for stage "%s".', $stage));
         switch ($stage) {
-            case 'has-token':
             case 'have-accounts':
                 Log::debug('isJobConfigured returns false');
 
                 return false;
-            case 'initial':
-                Log::debug('isJobConfigured returns true');
-
-                return true;
-                break;
             default:
                 Log::debug('isJobConfigured returns true');
 
