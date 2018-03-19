@@ -21,8 +21,8 @@
 declare(strict_types=1);
 
 return [
-    'home'                => 'Home',
-    'edit_currency'       => 'Währung ":name" bearbeiten',
+    'home'                => 'Startseite',
+    'edit_currency'       => 'Währung „:name” bearbeiten',
     'delete_currency'     => 'Währung ":name" löschen',
     'newPiggyBank'        => 'Neues Sparschwein erstellen',
     'edit_piggyBank'      => 'Sparschwein ":name" bearbeiten',
@@ -47,7 +47,7 @@ return [
     'edit_journal'        => 'Transaktion ":description" bearbeiten',
     'edit_reconciliation' => '":description" bearbeiten',
     'delete_journal'      => 'Transaktion ":description" löschen',
-    'tags'                => 'Tags',
+    'tags'                => 'Schlagwörter',
     'createTag'           => 'Neuen Tag erstellen',
     'edit_tag'            => 'Tag ":tag" bearbeiten',
     'delete_tag'          => 'Tag ":tag" löschen',

@@ -23,7 +23,7 @@ declare(strict_types=1);
 return [
     // index
     'index_intro'                           => 'Wilkommen auf der Startseite von Firefly III. Bitte nehmen Sie sich die Zeit, um ein Gefühl dafür zu bekommen, wie Firefly III funktioniert.',
-    'index_accounts-chart'                  => 'Dieses Diagramm zeigt den aktuellen Saldo Ihrer Anlagenkonten. Sie können die anzuzeigenden Konten in Ihren Einstellungen auswählen.',
+    'index_accounts-chart'                  => 'Dieses Diagramm zeigt den aktuellen Saldo Ihrer Bestandskonten. Sie können die anzuzeigenden Konten in Ihren Einstellungen auswählen.',
     'index_box_out_holder'                  => 'Diese kleine und deren benachbarten Boxen geben Ihnen einen schnellen Überblick über Ihre finanzielle Situation.',
     'index_help'                            => 'Wenn Sie jemals Hilfe bei einer Seite oder einem Formular benötigen, drücken Sie diese Taste.',
     'index_outro'                           => 'Die meisten Seiten von Firefly III werden mit einer kleinen Tour wie dieser beginnen. Bitte kontaktieren Sie mich, wenn Sie Fragen oder Kommentare haben. Viel Spaß!',
@@ -31,13 +31,13 @@ return [
 
     // create account:
     'accounts_create_iban'                  => 'Geben Sie Ihren Konten eine gültige IBAN. Dies könnte einen Datenimport in Zukunft sehr einfach machen.',
-    'accounts_create_asset_opening_balance' => 'Anlagekonten können eine "Eröffnungsbilanz" haben, welche den Beginn der Historie dieses Kontos in Firefly III angibt.',
-    'accounts_create_asset_currency'        => 'Firefly III unterstützt mehrere Währungen. Anlagenkonten haben eine Hauptwährung, die Sie hier einstellen müssen.',
+    'accounts_create_asset_opening_balance' => 'Bestandskonten können eine "Eröffnungsbilanz" haben, welche den Beginn des Verlaufs dieses Kontos in Firefly III angibt.',
+    'accounts_create_asset_currency'        => 'Firefly III unterstützt mehrere Währungen. Bestandskonten ist eine Hauptwährung zugeordnet, die Sie hier festlegen müssen.',
     'accounts_create_asset_virtual'         => 'Es kann manchmal helfen, Ihrem Konto ein virtuelles Gleichgewicht zu geben: eine zusätzliche Menge, die dem tatsächlichen Kontostand immer hinzugefügt oder daraus entfernt wird.',
 
     // budgets index
     'budgets_index_intro'                   => 'Mit Budgets verwalten Sie Ihre Finanzen und bilden damit eine der Kernfunktionen von Firefly III.',
-    'budgets_index_set_budget'              => 'Stellen Sie Ihr Gesamtbudget für jeden Zeitraum ein, damit Firefly III Ihnen mitteilen kann, ob Sie das verfügbare Geld budgetiert haben.',
+    'budgets_index_set_budget'              => 'Stellen Sie Ihr Gesamthaushaltsplan für jeden Zeitraum so ein, dass Firefly III Ihnen mitteilen kann, ob Sie alle verfügbaren Gelder vorgesehen haben.',
     'budgets_index_see_expenses_bar'        => 'Dieser Balken wird sich langsam füllen, wenn Sie Geld ausgeben.',
     'budgets_index_navigate_periods'        => 'Navigieren Sie durch Zeiträume, um die Budgets im Voraus zu setzen.',
     'budgets_index_new_budget'              => 'Erstellen Sie neue Budgets, wie Sie es für richtig halten.',
@@ -47,7 +47,7 @@ return [
     // reports (index)
     'reports_index_intro'                   => 'Verwenden Sie diese Reports, um detaillierte Einblicke in Ihre Finanzen zu erhalten.',
     'reports_index_inputReportType'         => 'Wählen Sie einen Berichtstyp aus. Sehen Sie sich die Hilfeseiten an, um zu sehen, was jeder Bericht Ihnen zeigt.',
-    'reports_index_inputAccountsSelect'     => 'Sie können Anlagekonten ausschließen oder einbeziehen, wie Sie es für richtig halten.',
+    'reports_index_inputAccountsSelect'     => 'Sie können Bestandskonten ausschließen oder einbeziehen, wie Sie es für richtig halten.',
     'reports_index_inputDateRange'          => 'Der gewählte Datumsbereich liegt ganz bei Ihnen: von einem Tag bis 10 Jahre.',
     'reports_index_extra-options-box'       => 'Abhängig von dem ausgewählten Bericht können Sie hier zusätzliche Filter und Optionen auswählen. Sehen Sie sich dieses Feld an, wenn Sie Berichtstypen ändern.',
 
@@ -79,7 +79,7 @@ return [
     // piggy banks index:
     'piggy-banks_index_saved'                                 => 'Dieses Feld zeigt Ihnen, wie viel Sie in jedem Sparschwein gespart haben.',
     'piggy-banks_index_button'                                => 'Neben diesem Fortschrittsbalken befinden sich zwei Buttons (+ und -), um Geld von jedem Sparschwein hinzuzufügen oder zu entfernen.',
-    'piggy-banks_index_accountStatus'                         => 'In dieser Tabelle wird der Status der Anlagenkonten aufgeführt, die mit mindestens einem Sparschwein verbunden sind.',
+    'piggy-banks_index_accountStatus'                         => 'In dieser Tabelle wird der Status der Bestandskonten aufgeführt, die mit mindestens einem Sparschwein verbunden sind.',
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Worauf sparen Sie? Eine neue Couch, eine Kamera, Geld für Notfälle?',
@@ -101,10 +101,10 @@ return [
 
     // create bill
     'bills_create_name'                                       => 'Verwenden Sie einen aussagekräftigen Namen wie "Miete" oder "Krankenversicherung".',
-    'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
+    'bills_create_match'                                      => 'Um Transaktionen abzugleichen, verwenden Sie Begriffe aus diesen Transaktionen oder dem betreffenden Aufwandskonto. Alle Wörter müssen übereinstimmen.',
     'bills_create_amount_min_holder'                          => 'Wählen Sie einen Mindest- und Höchstbetrag für diese Rechnung aus.',
     'bills_create_repeat_freq_holder'                         => 'Die meisten Rechnungen wiederholen sich monatlich, aber Sie können hier eine andere Frequenz einstellen.',
-    'bills_create_skip_holder'                                => 'If a bill repeats every 2 weeks for example, the "skip"-field should be set to "1" to skip every other week.',
+    'bills_create_skip_holder'                                => 'Wenn eine Rechnung z.B. alle 2 Wochen wiederholt wird, sollte das Feld „überspringen” auf „1” gesetzt werden, um alle 2 Wochen zu überspringen.',
 
     // rules index
     'rules_index_intro'                                       => 'Mit Firefly III können Sie Regeln verwalten, die automatisch auf alle Transaktionen angewendet werden, die Sie erstellen oder bearbeiten.',
@@ -113,11 +113,11 @@ return [
     'rules_index_prio_buttons'                                => 'Sortieren Sie sie, wie Sie es für richtig halten.',
     'rules_index_test_buttons'                                => 'Sie können Ihre Regeln testen oder sie auf vorhandene Transaktionen anwenden.',
     'rules_index_rule-triggers'                               => 'Regeln haben "Auslöser" und "Aktionen", die Sie per Drag-and-Drop sortieren können.',
-    'rules_index_outro'                                       => 'Be sure to check out the help pages using the (?) icon in the top right!',
+    'rules_index_outro'                                       => 'Bitte beachten Sie die Hilfeseiten, indem Sie das Symbol (?) oben rechts verwenden!',
 
     // create rule:
     'rules_create_mandatory'                                  => 'Wählen Sie einen aussagekräftigen Titel und legen Sie fest, wann die Regel ausgelöst werden soll.',
-    'rules_create_ruletriggerholder'                          => 'Add as many triggers as you like, but remember that ALL triggers must match before any actions are fired.',
+    'rules_create_ruletriggerholder'                          => 'Fügen Sie so viele Auslöser hinzu, wie Sie möchten, aber denken Sie daran, dass ALLE Auslöser übereinstimmen müssen, bevor Aktionen ausgelöst werden.',
     'rules_create_test_rule_triggers'                         => 'Verwenden Sie diese Schaltfläche, um zu sehen, welche Transaktionen zu Ihrer Regel passen würden.',
     'rules_create_actions'                                    => 'Legen Sie so viele Aktionen fest, wie Sie möchten.',
 
