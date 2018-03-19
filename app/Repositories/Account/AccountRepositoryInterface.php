@@ -129,6 +129,16 @@ interface AccountRepositoryInterface
     public function getCashAccount(): Account;
 
     /**
+     * Return meta value for account. Null if not found.
+     *
+     * @param Account $account
+     * @param string  $field
+     *
+     * @return null|string
+     */
+    public function getMetaValue(Account $account, string $field): ?string;
+
+    /**
      * @param Account $account
      *
      * @return Note|null

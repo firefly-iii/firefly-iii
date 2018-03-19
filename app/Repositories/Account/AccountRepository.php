@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
-use Exception;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -96,6 +94,25 @@ class AccountRepository implements AccountRepositoryInterface
     public function getAccountType(string $type): ?AccountType
     {
         return AccountType::whereType($type)->first();
+    }
+
+    /**
+     * Return meta value for account. Null if not found.
+     *
+     * @param Account $account
+     * @param string  $field
+     *
+     * @return null|string
+     */
+    public function getMetaValue(Account $account, string $field): ?string
+    {
+        foreach ($account->accountMeta as $meta) {
+            if ($meta->name === $field) {
+                return strval($meta->data);
+            }
+        }
+
+        return null;
     }
 
     /**
