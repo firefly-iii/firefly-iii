@@ -67,6 +67,30 @@ class TransactionJournal extends Twig_Extension
     }
 
     /**
+     * Return if journal HAS field.
+     *
+     * @param JournalModel $journal
+     * @param string       $field
+     *
+     * @return bool
+     */
+    public function hasMetaField(JournalModel $journal, string $field): bool
+    {
+        // HIER BEN JE
+        /** @var JournalRepositoryInterface $repository */
+        $repository = app(JournalRepositoryInterface::class);
+        $result     = $repository->getMetaField($journal, $field);
+        if (is_null($result)) {
+            return false;
+        }
+        if (strlen(strval($result)) === 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @param JournalModel $journal
      *
      * @return string

@@ -281,6 +281,7 @@ class AccountController extends Controller
      * @param Account     $account
      * @param Carbon|null $start
      * @param Carbon|null $end
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      *
      * @throws FireflyException
@@ -303,11 +304,11 @@ class AccountController extends Controller
             throw new FireflyException('End is after start!'); // @codeCoverageIgnore
         }
 
-        $today = new Carbon;
+        $today        = new Carbon;
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $page         = intval($request->get('page'));
         $pageSize     = intval(Preferences::get('listPageSize', 50)->data);
-        $currencyId   = intval($account->getMeta('currency_id'));
+        $currencyId   = intval($this->repository->getMetaValue($account, 'currency_id'));
         $currency     = $this->currencyRepos->findNull($currencyId);
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
@@ -327,7 +328,7 @@ class AccountController extends Controller
 
         return view(
             'accounts.show',
-            compact('account', 'currency','today', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end', 'chartUri')
+            compact('account', 'currency', 'today', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end', 'chartUri')
         );
     }
 
@@ -411,6 +412,7 @@ class AccountController extends Controller
      * @param Account     $account the account involved
      *
      * @param Carbon|null $date
+     *
      * @return Collection
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)

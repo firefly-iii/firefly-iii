@@ -126,6 +126,23 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Get note text or null.
+     *
+     * @param Account $account
+     *
+     * @return null|string
+     */
+    public function getNoteText(Account $account): ?string
+    {
+        $note = $account->notes()->first();
+        if (is_null($note)) {
+            return null;
+        }
+
+        return $note->text;
+    }
+
+    /**
      * Returns the amount of the opening balance for this account.
      *
      * @param Account $account
@@ -285,5 +302,4 @@ class AccountRepository implements AccountRepositoryInterface
 
         return $journal;
     }
-
 }

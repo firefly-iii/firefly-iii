@@ -263,6 +263,26 @@ interface JournalRepositoryInterface
     public function reconcileById(int $transactionId): bool;
 
     /**
+     * Set meta field for journal that contains a date.
+     *
+     * @param TransactionJournal $journal
+     * @param string             $name
+     * @param Carbon             $date
+     *
+     * @return void
+     */
+    public function setMetaDate(TransactionJournal $journal, string $name, Carbon $date): void;
+
+    /**
+     * Set meta field for journal that contains string.
+     *
+     * @param TransactionJournal $journal
+     * @param string             $name
+     * @param string             $value
+     */
+    public function setMetaString(TransactionJournal $journal, string $name, string $value): void;
+
+    /**
      * @param TransactionJournal $journal
      * @param int                $order
      *

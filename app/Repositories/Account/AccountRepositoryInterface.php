@@ -146,6 +146,15 @@ interface AccountRepositoryInterface
     public function getNote(Account $account): ?Note;
 
     /**
+     * Get note text or null.
+     *
+     * @param Account $account
+     *
+     * @return null|string
+     */
+    public function getNoteText(Account $account): ?string;
+
+    /**
      * Returns the amount of the opening balance for this account.
      *
      * @param Account $account

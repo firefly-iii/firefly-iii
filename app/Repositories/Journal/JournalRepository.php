@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\Journal;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Factory\TransactionJournalFactory;
+use FireflyIII\Factory\TransactionJournalMetaFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Note;
@@ -384,7 +385,7 @@ class JournalRepository implements JournalRepositoryInterface
         $cache->addProperty($field);
 
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return new Carbon($cache->get()); // @codeCoverageIgnore
         }
 
         $entry = $journal->transactionJournalMeta()->where('name', $field)->first();
@@ -392,7 +393,7 @@ class JournalRepository implements JournalRepositoryInterface
             return null;
         }
         $value = new Carbon($entry->data);
-        $cache->store($value);
+        $cache->store($entry->data);
 
         return $value;
     }
@@ -595,6 +596,52 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         return false;
+    }
+
+    /**
+     * Set meta field for journal that contains a date.
+     *
+     * @param TransactionJournal $journal
+     * @param string             $name
+     * @param Carbon             $date
+     *
+     * @return void
+     */
+    public function setMetaDate(TransactionJournal $journal, string $name, Carbon $date): void
+    {
+        /** @var TransactionJournalMetaFactory $factory */
+        $factory = app(TransactionJournalMetaFactory::class);
+        $factory->updateOrCreate(
+            [
+                'data'    => $date,
+                'journal' => $journal,
+                'name'    => $name,
+            ]
+        );
+
+        return;
+    }
+
+    /**
+     * Set meta field for journal that contains string.
+     *
+     * @param TransactionJournal $journal
+     * @param string             $name
+     * @param string             $value
+     */
+    public function setMetaString(TransactionJournal $journal, string $name, string $value): void
+    {
+        /** @var TransactionJournalMetaFactory $factory */
+        $factory = app(TransactionJournalMetaFactory::class);
+        $factory->updateOrCreate(
+            [
+                'data'    => $value,
+                'journal' => $journal,
+                'name'    => $name,
+            ]
+        );
+
+        return;
     }
 
     /**
