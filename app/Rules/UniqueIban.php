@@ -23,9 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class UniqueIban
@@ -35,14 +37,19 @@ class UniqueIban implements Rule
     /** @var Account */
     private $account;
 
+    /** @var string */
+    private $expectedType;
+
     /**
      * Create a new rule instance.
      *
      * @param Account|null $account
+     * @param string|null  $expectedType
      */
-    public function __construct(?Account $account)
+    public function __construct(?Account $account, ?string $expectedType)
     {
-        $this->account = $account;
+        $this->account      = $account;
+        $this->expectedType = $expectedType;
     }
 
     /**
@@ -62,24 +69,68 @@ class UniqueIban implements Rule
      * @param  mixed  $value
      *
      * @return bool
+     * @throws FireflyException
      */
     public function passes($attribute, $value)
     {
         if (!auth()->check()) {
             return true; // @codeCoverageIgnore
         }
+        if (is_null($this->expectedType)) {
+            return true;
+        }
+        $maxCounts = [
+            AccountType::ASSET   => 0,
+            AccountType::EXPENSE => 0,
+            AccountType::REVENUE => 0,
+        ];
+        switch ($this->expectedType) {
+            case 'asset':
+            case AccountType::ASSET:
+                // iban should be unique amongst asset accounts
+                // should not be in use with expense or revenue accounts.
+                // ie: must be totally unique.
+                break;
+            case 'expense':
+            case AccountType::EXPENSE:
+                // should be unique amongst expense and asset accounts.
+                // may appear once in revenue accounts
+                $maxCounts[AccountType::REVENUE] = 1;
+                break;
+            case 'revenue':
+            case AccountType::REVENUE:
+                // should be unique amongst revenue and asset accounts.
+                // may appear once in expense accounts
+                $maxCounts[AccountType::EXPENSE] = 1;
+                break;
+            default:
 
-        $query = auth()->user()->accounts();
-        if (!is_null($this->account)) {
-            $query->where('accounts.id', '!=', $this->account->id);
+                throw new FireflyException(sprintf('UniqueIban cannot handle type "%s"', $this->expectedType));
         }
 
-        /** @var Collection $accounts */
-        $accounts = $query->get();
+        foreach ($maxCounts as $type => $max) {
+            $count = 0;
+            $query = auth()->user()
+                           ->accounts()
+                           ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                           ->where('account_types.type', $type);
+            if (!is_null($this->account)) {
+                $query->where('accounts.id', '!=', $this->account->id);
+            }
+            $result = $query->get(['accounts.*']);
+            foreach ($result as $account) {
+                if ($account->iban === $value) {
+                    $count++;
+                }
+            }
+            if ($count > $max) {
+                Log::debug(
+                    sprintf(
+                        'IBAN "%s" is in use with %d account(s) of type "%s", which is too much for expected type "%s"',
+                        $value, $count, $type, $this->expectedType
+                    )
+                );
 
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            if ($account->iban === $value) {
                 return false;
             }
         }

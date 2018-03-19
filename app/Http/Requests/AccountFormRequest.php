@@ -75,7 +75,7 @@ class AccountFormRequest extends Request
             'name'                              => 'required|min:1|uniqueAccountForUser',
             'openingBalance'                    => 'numeric|required_with:openingBalanceDate|nullable',
             'openingBalanceDate'                => 'date|required_with:openingBalance|nullable',
-            'iban'                              => ['iban', 'nullable', new UniqueIban(null)],
+            'iban'                              => ['iban', 'nullable', new UniqueIban(null, $this->string('what'))],
             'BIC'                               => 'bic|nullable',
             'virtualBalance'                    => 'numeric|nullable',
             'currency_id'                       => 'exists:transaction_currencies,id',
@@ -95,7 +95,7 @@ class AccountFormRequest extends Request
             // add rules:
             $rules['id']   = 'belongsToUser:accounts';
             $rules['name'] = 'required|min:1|uniqueAccountForUser:' . intval($this->get('id'));
-            $rules['iban'] = ['iban', 'nullable', new UniqueIban($account)];
+            $rules['iban'] = ['iban', 'nullable', new UniqueIban($account, $account->accountType->type)];
         }
 
         return $rules;
