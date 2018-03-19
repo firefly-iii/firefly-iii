@@ -58,19 +58,22 @@ class Roles implements ConfigurationInterface
         $content = $this->repository->uploadFileContents($this->job);
         $config  = $this->getConfig();
         $headers = [];
+        $offset  = 0;
 
         // create CSV reader.
         $reader = Reader::createFromString($content);
         $reader->setDelimiter($config['delimiter']);
 
+        // CSV headers. Ignore reader. Simply get the first row.
         if ($config['has-headers']) {
-            // get headers:
-            $reader->setHeaderOffset(0);
-            $headers = $reader->getHeader();
+            $offset  = 1;
+            $stmt    = (new Statement)->limit(1)->offset(0);
+            $records = $stmt->process($reader);
+            $headers = $records->fetchOne(0);
         }
 
         // example rows:
-        $stmt = (new Statement)->limit(intval(config('csv.example_rows', 5)))->offset(0);
+        $stmt = (new Statement)->limit(intval(config('csv.example_rows', 5)))->offset($offset);
         // set data:
         $roles = $this->getRoles();
         asort($roles);

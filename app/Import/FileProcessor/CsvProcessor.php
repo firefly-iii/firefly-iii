@@ -28,8 +28,8 @@ use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Support\Collection;
-use Iterator;
 use League\Csv\Reader;
+use League\Csv\Statement;
 use Log;
 
 /**
@@ -200,29 +200,35 @@ class CsvProcessor implements FileProcessorInterface
     }
 
     /**
-     * @return Iterator
+     * @return array
      *
      * @throws \League\Csv\Exception
      * @throws \League\Csv\Exception
      */
-    private function getImportArray(): Iterator
+    private function getImportArray(): array
     {
         $content    = $this->repository->uploadFileContents($this->job);
         $config     = $this->getConfig();
         $reader     = Reader::createFromString($content);
         $delimiter  = $config['delimiter'] ?? ',';
         $hasHeaders = isset($config['has-headers']) ? $config['has-headers'] : false;
+        $offset     = 0;
         if ('tab' === $delimiter) {
             $delimiter = "\t"; // @codeCoverageIgnore
         }
         $reader->setDelimiter($delimiter);
         if ($hasHeaders) {
-            $reader->setHeaderOffset(0); // @codeCoverageIgnore
+            $offset = 1;
         }
-        $results = $reader->getRecords();
+        $stmt    = (new Statement)->offset($offset);
+        $records = $stmt->process($reader);
+        $return  = [];
+        foreach ($records as $record) {
+            $return[] = $record;
+        }
         Log::debug('Created a CSV reader.');
 
-        return $results;
+        return $return;
     }
 
     /**
