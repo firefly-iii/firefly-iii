@@ -31,6 +31,7 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
@@ -61,9 +62,11 @@ class ImportStorage
     /** @var Collection */
     protected $bills;
     /** @var int */
-    protected $defaultCurrencyId = 1; // yes, hard coded
+    protected $defaultCurrencyId = 1;
     /** @var ImportJob */
-    protected $job;
+    protected $job; // yes, hard coded
+    /** @var JournalRepositoryInterface */
+    protected $journalRepository;
     /** @var ImportJobRepositoryInterface */
     protected $repository;
     /** @var Collection */
@@ -104,8 +107,10 @@ class ImportStorage
      */
     public function setJob(ImportJob $job)
     {
-        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository        = app(ImportJobRepositoryInterface::class);
+        $this->journalRepository = app(JournalRepositoryInterface::class);
         $this->repository->setUser($job->user);
+        $this->journalRepository->setUser($job->user);
 
         $config                  = $this->repository->getConfiguration($job);
         $currency                = app('amount')->getDefaultCurrencyByUser($job->user);
@@ -232,8 +237,12 @@ class ImportStorage
         $importJournal->bill->setAmount($amount);
 
         $this->storeBill($journal, $importJournal->bill->getBill());
-        $this->storeMeta($journal, $importJournal->metaDates);
+        $this->storeMetaDates($journal, $importJournal->metaDates);
         $this->storeTags($importJournal->tags, $journal);
+
+        foreach ($importJournal->metaFields as $field => $value) {
+            $this->journalRepository->setMetaString($journal, $field, $value);
+        }
 
         // set notes for journal:
         $dbNote = new Note();

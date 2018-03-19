@@ -312,9 +312,9 @@ class ImportAccount
         Log::debug('Finding a mapped account based on', $array);
 
         $search  = intval($array['mapped'] ?? 0);
-        $account = $this->repository->find($search);
+        $account = $this->repository->findNull($search);
 
-        if (null === $account->id) {
+        if (null === $account) {
             Log::error(sprintf('There is no account with id #%d. Invalid mapping will be ignored!', $search));
 
             return null;
@@ -382,7 +382,7 @@ class ImportAccount
 
         // 4: if search for an asset account, fall back to given "default account" (mandatory)
         if (AccountType::ASSET === $this->expectedType) {
-            $this->account = $this->repository->find($this->defaultAccountId);
+            $this->account = $this->repository->findNull($this->defaultAccountId);
             Log::debug(sprintf('Fall back to default account #%d "%s"', $this->account->id, $this->account->name));
 
             return true;

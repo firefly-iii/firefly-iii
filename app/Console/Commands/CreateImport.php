@@ -80,7 +80,7 @@ class CreateImport extends Command
     public function handle()
     {
         if (!$this->verifyAccessToken()) {
-            $this->error('Invalid access token.');
+            $this->errorLine('Invalid access token.');
 
             return;
         }
@@ -98,39 +98,34 @@ class CreateImport extends Command
 
         $configurationData = json_decode(file_get_contents($configuration), true);
         if (null === $configurationData) {
-            $this->error(sprintf('Firefly III cannot read the contents of configuration file "%s" (working directory: "%s").', $configuration, $cwd));
+            $this->errorLine(sprintf('Firefly III cannot read the contents of configuration file "%s" (working directory: "%s").', $configuration, $cwd));
 
             return;
         }
 
-        $this->line(sprintf('Going to create a job to import file: %s', $file));
-        $this->line(sprintf('Using configuration file: %s', $configuration));
-        $this->line(sprintf('Import into user: #%d (%s)', $user->id, $user->email));
-        $this->line(sprintf('Type of import: %s', $type));
+        $this->infoLine(sprintf('Going to create a job to import file: %s', $file));
+        $this->infoLine(sprintf('Using configuration file: %s', $configuration));
+        $this->infoLine(sprintf('Import into user: #%d (%s)', $user->id, $user->email));
+        $this->infoLine(sprintf('Type of import: %s', $type));
 
         /** @var ImportJobRepositoryInterface $jobRepository */
         $jobRepository = app(ImportJobRepositoryInterface::class);
         $jobRepository->setUser($user);
         $job = $jobRepository->create($type);
-        $this->line(sprintf('Created job "%s"', $job->key));
+        $this->infoLine(sprintf('Created job "%s"', $job->key));
 
         Artisan::call('firefly:encrypt-file', ['file' => $file, 'key' => $job->key]);
-        $this->line('Stored import data...');
+        $this->infoLine('Stored import data...');
 
         $jobRepository->setConfiguration($job, $configurationData);
         $jobRepository->updateStatus($job, 'configured');
-        $this->line('Stored configuration...');
+        $this->infoLine('Stored configuration...');
 
         if (true === $this->option('start')) {
-            $this->line('The import will start in a moment. This process is not visible...');
+            $this->infoLine('The import will start in a moment. This process is not visible...');
             Log::debug('Go for import!');
 
             // normally would refer to other firefly:start-import but that doesn't seem to work all to well...
-            $monolog   = Log::getMonolog();
-            $handler   = new CommandHandler($this);
-            $formatter = new LineFormatter(null, null, false, true);
-            $handler->setFormatter($formatter);
-            $monolog->pushHandler($handler);
 
             // start the actual routine:
             $type      = 'csv' === $job->file_type ? 'file' : $job->file_type;
@@ -147,9 +142,9 @@ class CreateImport extends Command
             // give feedback.
             /** @var MessageBag $error */
             foreach ($routine->getErrors() as $index => $error) {
-                $this->error(sprintf('Error importing line #%d: %s', $index, $error));
+                $this->errorLine(sprintf('Error importing line #%d: %s', $index, $error));
             }
-            $this->line(
+            $this->infoLine(
                 sprintf(
                     'The import has finished. %d transactions have been imported out of %d records.', $routine->getJournals()->count(), $routine->getLines()
                 )
@@ -179,29 +174,50 @@ class CreateImport extends Command
         $validTypes     = config('import.options.file.import_formats');
         $type           = strtolower($this->option('type'));
         if (null === $user) {
-            $this->error(sprintf('There is no user with ID %d.', $this->option('user')));
+            $this->errorLine(sprintf('There is no user with ID %d.', $this->option('user')));
 
             return false;
         }
 
         if (!in_array($type, $validTypes)) {
-            $this->error(sprintf('Cannot import file of type "%s"', $type));
+            $this->errorLine(sprintf('Cannot import file of type "%s"', $type));
 
             return false;
         }
 
         if (!file_exists($file)) {
-            $this->error(sprintf('Firefly III cannot find file "%s" (working directory: "%s").', $file, $cwd));
+            $this->errorLine(sprintf('Firefly III cannot find file "%s" (working directory: "%s").', $file, $cwd));
 
             return false;
         }
 
         if (!file_exists($configuration)) {
-            $this->error(sprintf('Firefly III cannot find configuration file "%s" (working directory: "%s").', $configuration, $cwd));
+            $this->errorLine(sprintf('Firefly III cannot find configuration file "%s" (working directory: "%s").', $configuration, $cwd));
 
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * @param string     $message
+     * @param array|null $data
+     */
+    private function errorLine(string $message, array $data = null): void
+    {
+        Log::error($message, $data?? []);
+        $this->error($message);
+
+    }
+
+    /**
+     * @param string $message
+     * @param array  $data
+     */
+    private function infoLine(string $message, array $data = null): void
+    {
+        Log::info($message, $data?? []);
+        $this->line($message);
     }
 }

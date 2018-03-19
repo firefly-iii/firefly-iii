@@ -39,6 +39,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\TransactionRules\Processor;
 use Illuminate\Database\Query\JoinClause;
@@ -58,6 +59,8 @@ trait ImportSupport
     protected $defaultCurrencyId = 1;
     /** @var ImportJob */
     protected $job;
+    /** @var JournalRepositoryInterface */
+    protected $journalRepository;
     /** @var Collection */
     protected $rules;
 
@@ -441,7 +444,7 @@ trait ImportSupport
             throw new FireflyException($errorText);
         }
         // save meta data:
-        $journal->setMeta('importHash', $parameters['hash']);
+        $this->journalRepository->setMetaString($journal, 'importHash', $parameters['hash']);
         Log::debug(sprintf('Created journal with ID #%d', $journal->id));
 
         // create transactions:
@@ -472,13 +475,13 @@ trait ImportSupport
      * @param TransactionJournal $journal
      * @param array              $dates
      */
-    private function storeMeta(TransactionJournal $journal, array $dates)
+    private function storeMetaDates(TransactionJournal $journal, array $dates)
     {
         // all other date fields as meta thing:
         foreach ($dates as $name => $value) {
             try {
                 $date = new Carbon($value);
-                $journal->setMeta($name, $date);
+                $this->journalRepository->setMetaDate($journal, $name, $date);
             } catch (Exception $e) {
                 // don't care, ignore:
                 Log::warning(sprintf('Could not parse "%s" into a valid Date object for field %s', $value, $name));

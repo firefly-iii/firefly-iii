@@ -54,6 +54,8 @@ class ImportJournal
     public $hash;
     /** @var array */
     public $metaDates = [];
+    /** @var array */
+    public $metaFields = [];
     /** @var string */
     public $notes = '';
     /** @var ImportAccount */
@@ -192,6 +194,18 @@ class ImportJournal
             case 'account-id':
                 $this->asset->setAccountId($array);
                 break;
+            case 'sepa-cc':
+            case 'sepa-ct-op':
+            case 'sepa-ct-id':
+            case 'sepa-db':
+            case 'sepa-country':
+            case 'sepa-ep':
+            case 'sepa-ci':
+                $value = trim(strval($array['value']));
+                if (strlen($value) > 0) {
+                    $this->metaFields[$array['role']] = $value;
+                }
+                break;
             case 'amount':
                 $this->amount = $array;
                 break;
@@ -252,18 +266,15 @@ class ImportJournal
             case 'description':
                 $this->description .= $array['value'];
                 break;
-            case 'sepa-ct-op':
-            case 'sepa-ct-id':
-            case 'sepa-db':
-                $this->notes .= ' ' . $array['value'];
-                $this->notes = trim($this->notes);
-                break;
             case 'note':
                 $this->notes .= ' ' . $array['value'];
                 $this->notes = trim($this->notes);
                 break;
             case 'external-id':
                 $this->externalId = $array['value'];
+                break;
+            case 'internal-reference':
+                $this->metaFields['internal_reference'] = $array['value'];
                 break;
             case '_ignore':
                 break;
@@ -298,6 +309,15 @@ class ImportJournal
                 break;
             case 'date-process':
                 $this->metaDates['process_date'] = $array['value'];
+                break;
+            case 'date-due':
+                $this->metaDates['due_date'] = $array['value'];
+                break;
+            case 'date-payment':
+                $this->metaDates['payment_date'] = $array['value'];
+                break;
+            case 'date-invoice':
+                $this->metaDates['invoice_date'] = $array['value'];
                 break;
         }
     }
