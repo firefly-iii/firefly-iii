@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * import.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     // status of import:
@@ -133,6 +133,7 @@ return [
     'column_date-transaction'              => 'Date',
     'column_description'                   => 'Description',
     'column_opposing-iban'                 => 'Opposing account (IBAN)',
+    'column_opposing-bic'                 => 'Opposing account (BIC)',
     'column_opposing-id'                   => 'Opposing account ID (matching FF3)',
     'column_external-id'                   => 'External ID',
     'column_opposing-name'                 => 'Opposing account (name)',
