@@ -314,9 +314,8 @@
                                             {% endif %}
                                         </a>
                                         ({{ att.size|filesize }})
-                                        {% if att.description %}
-                                            <br/>
-                                            <em>{{ att.description }}</em>
+                                        {% if att.notes.first %}
+                                            {{ att.notes.first.text|markdown}}
                                         {% endif %}
                                     </td>
                                 </tr>

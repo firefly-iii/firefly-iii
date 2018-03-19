@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
+use FireflyIII\Models\Note;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
@@ -154,6 +155,23 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     }
 
     /**
+     * Get attachment note text or empty string.
+     *
+     * @param Attachment $attachment
+     *
+     * @return string
+     */
+    public function getNoteText(Attachment $attachment): string
+    {
+        $note = $attachment->notes()->first();
+        if (!is_null($note)) {
+            return strval($note->text);
+        }
+
+        return '';
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user)
@@ -169,11 +187,37 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      */
     public function update(Attachment $attachment, array $data): Attachment
     {
-        $attachment->title       = $data['title'];
-        $attachment->description = $data['description'];
-        $attachment->notes       = $data['notes'];
+        $attachment->title = $data['title'];
         $attachment->save();
+        $this->updateNote($attachment, $data['notes']);
 
         return $attachment;
+    }
+
+    /**
+     * @param Attachment $attachment
+     * @param string     $note
+     *
+     * @return bool
+     */
+    public function updateNote(Attachment $attachment, string $note): bool
+    {
+        if (0 === strlen($note)) {
+            $dbNote = $attachment->notes()->first();
+            if (null !== $dbNote) {
+                $dbNote->delete();
+            }
+
+            return true;
+        }
+        $dbNote = $attachment->notes()->first();
+        if (null === $dbNote) {
+            $dbNote = new Note;
+            $dbNote->noteable()->associate($attachment);
+        }
+        $dbNote->text = trim($note);
+        $dbNote->save();
+
+        return true;
     }
 }

@@ -49,7 +49,7 @@ class Attachment extends Model
             'uploaded'   => 'boolean',
         ];
     /** @var array */
-    protected $fillable = ['attachable_id', 'attachable_type', 'user_id', 'md5', 'filename', 'mime', 'title', 'notes', 'description', 'size', 'uploaded'];
+    protected $fillable = ['attachable_id', 'attachable_type', 'user_id', 'md5', 'filename', 'mime', 'title', 'description', 'size', 'uploaded'];
 
     /**
      * @param string $value
@@ -142,7 +142,7 @@ class Attachment extends Model
      * @codeCoverageIgnore
      * @return null|string
      */
-    public function getNotesAttribute($value)
+    public function getTitleAttribute($value)
     {
         if (null === $value || 0 === strlen($value)) {
             return null;
@@ -152,18 +152,12 @@ class Attachment extends Model
     }
 
     /**
-     * @param $value
-     *
      * @codeCoverageIgnore
-     * @return null|string
+     * Get all of the notes.
      */
-    public function getTitleAttribute($value)
+    public function notes()
     {
-        if (null === $value || 0 === strlen($value)) {
-            return null;
-        }
-
-        return Crypt::decrypt($value);
+        return $this->morphMany(Note::class, 'noteable');
     }
 
     /**
@@ -194,16 +188,6 @@ class Attachment extends Model
     public function setMimeAttribute(string $value)
     {
         $this->attributes['mime'] = Crypt::encrypt($value);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param string $value
-     */
-    public function setNotesAttribute(string $value)
-    {
-        $this->attributes['notes'] = Crypt::encrypt($value);
     }
 
     /**

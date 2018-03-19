@@ -44,7 +44,6 @@ class AttachmentFormRequest extends Request
     {
         return [
             'title'       => $this->string('title'),
-            'description' => $this->string('description'),
             'notes'       => $this->string('notes'),
         ];
     }
@@ -57,7 +56,6 @@ class AttachmentFormRequest extends Request
         // fixed
         return [
             'title'       => 'between:1,255|nullable',
-            'description' => 'between:1,65536|nullable',
             'notes'       => 'between:1,65536|nullable',
         ];
     }

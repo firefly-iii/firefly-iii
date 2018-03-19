@@ -32,8 +32,7 @@
                     </div>
                     <div class="box-body">
                         {{ ExpandedForm.text('title', attachment.title) }}
-                        {{ ExpandedForm.textarea('description', attachment.description) }}
-                        {{ ExpandedForm.textarea('notes', attachment.notes) }}
+                        {{ ExpandedForm.textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
                     </div>
                 </div>
 

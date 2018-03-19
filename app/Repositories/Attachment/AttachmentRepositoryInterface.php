@@ -32,6 +32,7 @@ use Illuminate\Support\Collection;
  */
 interface AttachmentRepositoryInterface
 {
+
     /**
      * @param Attachment $attachment
      *
@@ -79,6 +80,15 @@ interface AttachmentRepositoryInterface
      * @return string
      */
     public function getContent(Attachment $attachment): string;
+
+    /**
+     * Get attachment note text or empty string.
+     *
+     * @param Attachment $attachment
+     *
+     * @return string
+     */
+    public function getNoteText(Attachment $attachment): string;
 
     /**
      * @param User $user
