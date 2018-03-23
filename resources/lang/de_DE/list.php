@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * list.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     'buttons'                 => 'Schaltflächen',
@@ -90,8 +91,8 @@ return [
     'rule_and_groups_count'   => 'Anzahl Regeln und Regelgruppen',
     'tags_count'              => 'Anzahl Tags',
     'tags'                    => 'Schlagwörter',
-    'inward'                  => 'Inward description',
-    'outward'                 => 'Outward description',
+    'inward'                  => 'Beschreibung der Eingänge',
+    'outward'                 => 'Beschreibung der Ausgänge',
     'number_of_transactions'  => 'Anzahl der Zahlungsvorgänge',
     'total_amount'            => 'Gesamtbetrag',
     'sum'                     => 'Summe',
@@ -102,4 +103,11 @@ return [
     'reconcile'               => 'Abgleichen',
     'account_on_spectre'      => 'Konto (Spectre)',
     'do_import'               => 'Von diesem Konto importieren',
+    'sepa-ct-id'              => 'SEPA End to End Identifier',
+    'sepa-ct-op'              => 'SEPA Opposing Account Identifier',
+    'sepa-db'                 => 'SEPA Mandate Identifier',
+    'sepa-country'            => 'SEPA Country',
+    'sepa-cc'                 => 'SEPA Clearing Code',
+    'sepa-ep'                 => 'SEPA External Purpose',
+    'sepa-ci'                 => 'SEPA Creditor Identifier',
 ];

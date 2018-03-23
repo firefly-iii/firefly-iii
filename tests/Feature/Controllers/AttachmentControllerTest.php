@@ -113,6 +113,7 @@ class AttachmentControllerTest extends TestCase
     {
         $attachRepository = $this->mock(AttachmentRepositoryInterface::class);
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
+        $attachRepository->shouldReceive('getNoteText')->andReturn('OK');
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $this->be($this->user());
         $response = $this->get(route('attachments.edit', [1]));

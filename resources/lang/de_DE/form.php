@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * form.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     // new user:
@@ -103,7 +103,7 @@ return [
     'tag'                        => 'Schlagwort',
     'under'                      => 'Unter',
     'symbol'                     => 'Zeichen',
-    'code'                       => 'Code',
+    'code'                       => 'Schlüssel',
     'iban'                       => 'IBAN',
     'accountNumber'              => 'Kontonummer',
     'creditCardNumber'           => 'Kreditkartennummer',
@@ -204,7 +204,7 @@ return [
     'payment_date'       => 'Zahlungsdatum',
     'invoice_date'       => 'Rechnungsdatum',
     'internal_reference' => 'Interner Verweis',
-    'inward'             => 'Inward description',
-    'outward'            => 'Outward description',
+    'inward'             => 'Beschreibung der Eingänge',
+    'outward'            => 'Beschreibung der Ausgänge',
     'rule_group_id'      => 'Regelgruppe',
 ];

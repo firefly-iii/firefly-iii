@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * import.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     // status of import:
@@ -131,21 +132,30 @@ return [
     'column_date-book'                     => 'Buchungsdatum der Überweisung',
     'column_date-process'                  => 'Verarbeitungsdatum der Überweisung',
     'column_date-transaction'              => 'Datum',
+    'column_date-due'                      => 'Transaction due date',
+    'column_date-payment'                  => 'Transaction payment date',
+    'column_date-invoice'                  => 'Transaction invoice date',
     'column_description'                   => 'Beschreibung',
     'column_opposing-iban'                 => 'Zielkonto (IBAN)',
+    'column_opposing-bic'                  => 'Opposing account (BIC)',
     'column_opposing-id'                   => 'Zielkonto (vgl. ID in FF3)',
     'column_external-id'                   => 'Externe ID',
     'column_opposing-name'                 => 'Zielkonto (Name)',
     'column_rabo-debit-credit'             => 'Rabobank-spezifisches Belastungs- und Kreditkennzeichen',
     'column_ing-debit-credit'              => 'ING-spezifisches Belastungs- und Kreditkennzeichen',
-    'column_sepa-ct-id'                    => 'SEPA Transaktions-ID',
-    'column_sepa-ct-op'                    => 'SEPA Transaktionspartner',
-    'column_sepa-db'                       => 'SEPA-Lastschrift',
+    'column_sepa-ct-id'                    => 'SEPA end-to-end Identifier',
+    'column_sepa-ct-op'                    => 'SEPA Opposing Account Identifier',
+    'column_sepa-db'                       => 'SEPA Mandate Identifier',
+    'column_sepa-cc'                       => 'SEPA Clearing Code',
+    'column_sepa-ci'                       => 'SEPA Creditor Identifier',
+    'column_sepa-ep'                       => 'SEPA External Purpose',
+    'column_sepa-country'                  => 'SEPA Country Code',
     'column_tags-comma'                    => 'Schlagwörter (durch Kommata getrennt)',
     'column_tags-space'                    => 'Schlagwörter (durch Leerzeichen getrennt)',
     'column_account-number'                => 'Bestandskonto (Kontonr.)',
     'column_opposing-number'               => 'Zielkonto (Kontonr.)',
     'column_note'                          => 'Notiz(en)',
+    'column_internal-reference'            => 'Internal reference',
 
     // prerequisites
     'prerequisites'                        => 'Voraussetzungen',
@@ -187,4 +197,3 @@ return [
     // various other strings:
     'imported_from_account'                => 'Von ":account" importiert',
 ];
-

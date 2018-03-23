@@ -50,6 +50,7 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('2016-01-01');
         // make new account:
         $account = Account::create(
             [
@@ -85,6 +86,7 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('2016-01-01');
         // make new account:
         $account      = Account::create(
             [
@@ -119,8 +121,10 @@ class AccountTransformerTest extends TestCase
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('2016-01-01');
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
+
         // make new account:
         $account = Account::create(
             [
@@ -198,6 +202,10 @@ class AccountTransformerTest extends TestCase
      */
     public function testIgnoreCCExpense()
     {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('2016-01-01');
+
         // make new account:
         $account = Account::create(
             [
@@ -279,6 +287,7 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn('45.67');
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn('2018-01-01');
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('2016-01-01');
         // make new account:
         $account = Account::create(
             [
@@ -301,6 +310,7 @@ class AccountTransformerTest extends TestCase
                 'description'             => 'Opening',
                 'date'                    => '2018-01-01',
                 'completed'               => 1,
+                'tag_count'               => 0,
             ]
         );
         $transaction = Transaction::create(
@@ -334,6 +344,7 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('2016-01-01');
         // make new account:
         $account = Account::create(
             [
@@ -377,6 +388,7 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('2016-01-01');
         // make new account:
         $account = Account::create(
             [
