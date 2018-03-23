@@ -31,6 +31,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Transformers\AccountTransformer;
+use Mockery;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
 
@@ -50,7 +51,9 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
-        $accountRepos->shouldReceive('getMetaValue')->andReturn('2016-01-01');
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
+        $accountRepos->shouldReceive('getNoteText')->andReturn('');
+
         // make new account:
         $account = Account::create(
             [
@@ -86,7 +89,8 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
-        $accountRepos->shouldReceive('getMetaValue')->andReturn('2016-01-01');
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
+        $accountRepos->shouldReceive('getNoteText')->andReturn('');
         // make new account:
         $account      = Account::create(
             [
@@ -119,12 +123,6 @@ class AccountTransformerTest extends TestCase
      */
     public function testCCDataAsset()
     {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getMetaValue')->andReturn('2016-01-01');
-        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
-        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
-
         // make new account:
         $account = Account::create(
             [
@@ -137,14 +135,6 @@ class AccountTransformerTest extends TestCase
                 'encrypted'       => 0,
             ]
         );
-        // add currency preference:
-        AccountMeta::create(
-            [
-                'account_id' => $account->id,
-                'name'       => 'currency_id',
-                'data'       => 1, // euro
-            ]
-        );
 
         // add a note:
         $note = Note::create(
@@ -155,6 +145,27 @@ class AccountTransformerTest extends TestCase
                 'text'          => 'I am a note #' . rand(1, 1000),
             ]
         );
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccMonthlyPaymentDate'])->andReturn('2018-02-01');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccType'])->andReturn('monthlyFull');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('123');
+        $accountRepos->shouldReceive('getNoteText')->andReturn($note->text);
+        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
+        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
+
+        // add currency preference:
+        AccountMeta::create(
+            [
+                'account_id' => $account->id,
+                'name'       => 'currency_id',
+                'data'       => 1, // euro
+            ]
+        );
+
 
         // add credit card meta data (will be ignored)
         AccountMeta::create(
@@ -202,9 +213,6 @@ class AccountTransformerTest extends TestCase
      */
     public function testIgnoreCCExpense()
     {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getMetaValue')->andReturn('2016-01-01');
 
         // make new account:
         $account = Account::create(
@@ -218,15 +226,6 @@ class AccountTransformerTest extends TestCase
                 'encrypted'       => 0,
             ]
         );
-        // add currency preference:
-        AccountMeta::create(
-            [
-                'account_id' => $account->id,
-                'name'       => 'currency_id',
-                'data'       => 1, // euro
-            ]
-        );
-
         // add a note:
         $note = Note::create(
             [
@@ -236,6 +235,22 @@ class AccountTransformerTest extends TestCase
                 'text'          => 'I am a note #' . rand(1, 1000),
             ]
         );
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
+        $accountRepos->shouldReceive('getNoteText')->andReturn($note->text);
+
+
+        // add currency preference:
+        AccountMeta::create(
+            [
+                'account_id' => $account->id,
+                'name'       => 'currency_id',
+                'data'       => 1, // euro
+            ]
+        );
+
 
         // add credit card meta data (will be ignored)
         AccountMeta::create(
@@ -287,7 +302,8 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn('45.67');
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn('2018-01-01');
-        $accountRepos->shouldReceive('getMetaValue')->andReturn('2016-01-01');
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
+        $accountRepos->shouldReceive('getNoteText')->andReturn('');
         // make new account:
         $account = Account::create(
             [
@@ -344,7 +360,8 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
-        $accountRepos->shouldReceive('getMetaValue')->andReturn('2016-01-01');
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
+        $accountRepos->shouldReceive('getNote')->andReturn('');
         // make new account:
         $account = Account::create(
             [
@@ -384,11 +401,6 @@ class AccountTransformerTest extends TestCase
      */
     public function testWithNotes()
     {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
-        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
-        $accountRepos->shouldReceive('getMetaValue')->andReturn('2016-01-01');
         // make new account:
         $account = Account::create(
             [
@@ -401,15 +413,6 @@ class AccountTransformerTest extends TestCase
                 'encrypted'       => 0,
             ]
         );
-        // add currency preference:
-        AccountMeta::create(
-            [
-                'account_id' => $account->id,
-                'name'       => 'currency_id',
-                'data'       => 1, // euro
-            ]
-        );
-
         // add a note:
         $note = Note::create(
             [
@@ -419,6 +422,23 @@ class AccountTransformerTest extends TestCase
                 'text'          => 'I am a note #' . rand(1, 1000),
             ]
         );
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
+        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
+        $accountRepos->shouldReceive('getNoteText')->andReturn($note->text);
+
+        // add currency preference:
+        AccountMeta::create(
+            [
+                'account_id' => $account->id,
+                'name'       => 'currency_id',
+                'data'       => 1, // euro
+            ]
+        );
+
 
         $transformer = new AccountTransformer(new ParameterBag);
         $result      = $transformer->transform($account);

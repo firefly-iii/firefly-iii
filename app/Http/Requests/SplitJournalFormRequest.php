@@ -65,10 +65,10 @@ class SplitJournalFormRequest extends Request
             switch ($data['type']) {
                 case 'withdrawal':
                     $sourceId        = $this->integer('journal_source_account_id');
-                    $destinationName = $transaction['destination_name'];
+                    $destinationName = $transaction['destination_name'] ?? '';
                     break;
                 case 'deposit':
-                    $sourceName    = $transaction['source_name'];
+                    $sourceName    = $transaction['source_name'] ?? '';
                     $destinationId = $this->integer('journal_destination_account_id');
                     break;
                 case 'transfer':

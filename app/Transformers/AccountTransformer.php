@@ -150,7 +150,7 @@ class AccountTransformer extends TransformerAbstract
         if (strlen($role) === 0 || $type !== AccountType::ASSET) {
             $role = null;
         }
-        $currencyId    = (int)$this->repository->getMetaValue($account, 'currency_id');
+        $currencyId    = intval($this->repository->getMetaValue($account, 'currency_id'));
         $currencyCode  = null;
         $decimalPlaces = 2;
         if ($currencyId > 0) {
@@ -197,7 +197,7 @@ class AccountTransformer extends TransformerAbstract
             'currency_code'        => $currencyCode,
             'current_balance'      => round(app('steam')->balance($account, $date), $decimalPlaces),
             'current_balance_date' => $date->format('Y-m-d'),
-            'notes'                => $this->repository->getNote($account),
+            'notes'                => $this->repository->getNoteText($account),
             'monthly_payment_date' => $monthlyPaymentDate,
             'credit_card_type'     => $creditCardType,
             'account_number'       => $this->repository->getMetaValue($account, 'accountNumber'),
