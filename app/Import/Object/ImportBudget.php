@@ -171,7 +171,7 @@ class ImportBudget
             Log::debug(sprintf('Find mapped budget based on field "%s" with value', $field), $array);
             // check if a pre-mapped object exists.
             $mapped = $this->getMappedObject($array);
-            if (null !== $mapped->id) {
+            if (null !== $mapped) {
                 Log::debug(sprintf('Found budget #%d!', $mapped->id));
 
                 return $mapped;

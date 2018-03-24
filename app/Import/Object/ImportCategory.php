@@ -192,7 +192,7 @@ class ImportCategory
      *
      * @return Category
      */
-    private function getMappedObject(array $array): Category
+    private function getMappedObject(array $array): ?Category
     {
         Log::debug('In getMappedObject() for Category');
         if (0 === count($array)) {

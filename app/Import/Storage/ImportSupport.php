@@ -386,7 +386,7 @@ trait ImportSupport
      */
     private function storeBill(TransactionJournal $journal, Bill $bill)
     {
-        if (null !== $bill->id) {
+        if (null !== $bill) {
             Log::debug(sprintf('Linked bill #%d to journal #%d', $bill->id, $journal->id));
             $journal->bill()->associate($bill);
             $journal->save();
@@ -399,7 +399,7 @@ trait ImportSupport
      */
     private function storeBudget(TransactionJournal $journal, Budget $budget)
     {
-        if (null !== $budget->id) {
+        if (null !== $budget) {
             Log::debug(sprintf('Linked budget #%d to journal #%d', $budget->id, $journal->id));
             $journal->budgets()->save($budget);
         }
@@ -411,7 +411,7 @@ trait ImportSupport
      */
     private function storeCategory(TransactionJournal $journal, Category $category)
     {
-        if (null !== $category->id) {
+        if (null !== $category) {
             Log::debug(sprintf('Linked category #%d to journal #%d', $category->id, $journal->id));
             $journal->categories()->save($category);
         }
