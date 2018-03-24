@@ -62,6 +62,7 @@ class CsvProcessor implements FileProcessorInterface
 
     /**
      * @return Collection
+     *
      * @throws FireflyException
      */
     public function getObjects(): Collection
@@ -192,6 +193,7 @@ class CsvProcessor implements FileProcessorInterface
      * Shorthand method to return configuration.
      *
      * @codeCoverageIgnore
+     *
      * @return array
      */
     private function getConfig(): array
@@ -237,6 +239,7 @@ class CsvProcessor implements FileProcessorInterface
      * @param int $jsonError
      *
      * @codeCoverageIgnore
+     *
      * @return string
      */
     private function getJsonError(int $jsonError): string

@@ -113,7 +113,6 @@ class FileRoutine implements RoutineInterface
         $this->addStep();
         Log::debug('Back in run()');
 
-
         Log::debug('Updated job...');
         Log::debug(sprintf('%d journals in $storage->journals', $storage->journals->count()));
         $this->journals = $storage->journals;

@@ -114,5 +114,4 @@ class BunqPrerequisites implements PrerequisitesInterface
 
         return new MessageBag;
     }
-
 }

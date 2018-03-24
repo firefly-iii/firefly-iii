@@ -52,7 +52,7 @@ class ImportAccountTest extends TestCase
         // mock calls:
         $repository->shouldReceive('setUser')->once()->withArgs([Mockery::any()]);
         $repository->shouldReceive('getAccountType')->twice()->withArgs([AccountType::ASSET])->andReturn($accountType);
-        $repository->shouldReceive('getAccountsByType')->twice()->withArgs([[AccountType::ASSET]])->andReturn(new Collection());
+        //$repository->shouldReceive('getAccountsByType')->twice()->withArgs([[AccountType::ASSET]])->andReturn(new Collection());
         $repository->shouldReceive('findNull')->once()->withArgs([1])->andReturn($account);
 
         // create import account.

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
+use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
@@ -41,6 +42,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     private $user;
 
     /**
+     * TODO move to delete service
+     *
      * @param Category $category
      *
      * @return bool
@@ -444,18 +447,17 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function store(array $data): Category
     {
-        $newCategory = Category::firstOrCreateEncrypted(
-            [
-                'user_id' => $this->user->id,
-                'name'    => $data['name'],
-            ]
-        );
-        $newCategory->save();
+        /** @var CategoryFactory $factory */
+        $factory = app(CategoryFactory::class);
+        $factory->setUser($this->user);
+        $category = $factory->findOrCreate(null, $data['name']);
 
-        return $newCategory;
+        return $category;
     }
 
     /**
+     * TODO move to update service
+     *
      * @param Category $category
      * @param array    $data
      *

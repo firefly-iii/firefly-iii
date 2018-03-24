@@ -52,23 +52,22 @@ class ImportCurrency
      */
     public function __construct()
     {
-        $this->currency   = new TransactionCurrency;
         $this->repository = app(CurrencyRepositoryInterface::class);
     }
 
     /**
      * @return TransactionCurrency
      */
-    public function getTransactionCurrency(): TransactionCurrency
+    public function getTransactionCurrency(): ?TransactionCurrency
     {
-        if (null !== $this->currency->id) {
+        if (null !== $this->currency) {
             return $this->currency;
         }
         Log::debug('In createCurrency()');
         // check if any of them is mapped:
         $mapped = $this->findMappedObject();
 
-        if (null !== $mapped->id) {
+        if (null !== $mapped) {
             Log::debug('Mapped existing currency.', ['new' => $mapped->toArray()]);
             $this->currency = $mapped;
 
@@ -76,7 +75,7 @@ class ImportCurrency
         }
 
         $searched = $this->findExistingObject();
-        if (null !== $searched->id) {
+        if (null !== $searched) {
             Log::debug('Found existing currency.', ['found' => $searched->toArray()]);
             $this->currency = $searched;
 
@@ -91,7 +90,7 @@ class ImportCurrency
         if (null === $data['code']) {
             Log::debug('Need at least a code to create currency, return nothing.');
 
-            return new TransactionCurrency();
+            return null;
         }
 
         Log::debug('Search for maps resulted in nothing, create new one based on', $data);
@@ -147,33 +146,34 @@ class ImportCurrency
     /**
      * @return TransactionCurrency
      */
-    private function findExistingObject(): TransactionCurrency
+    private function findExistingObject(): ?TransactionCurrency
     {
         $search = [
-            'id'     => 'find',
-            'code'   => 'findByCode',
-            'symbol' => 'findBySymbol',
-            'name'   => 'findByName',
+            'id'     => 'findNull',
+            'code'   => 'findByCodeNull',
+            'symbol' => 'findBySymbolNull',
+            'name'   => 'findByNameNull',
         ];
         foreach ($search as $field => $function) {
             $value = $this->$field['value'] ?? null;
             if (null !== $value) {
                 Log::debug(sprintf('Searching for %s using function %s and value %s', $field, $function, $value));
+                /** @var TransactionCurrency|null $currency */
                 $currency = $this->repository->$function($value);
 
-                if (null !== $currency->id) {
+                if (null !== $currency) {
                     return $currency;
                 }
             }
         }
 
-        return new TransactionCurrency();
+        return null;
     }
 
     /**
      * @return TransactionCurrency
      */
-    private function findMappedObject(): TransactionCurrency
+    private function findMappedObject(): ?TransactionCurrency
     {
         Log::debug('In findMappedObject()');
         $fields = ['id', 'code', 'name', 'symbol'];
@@ -182,7 +182,7 @@ class ImportCurrency
             Log::debug(sprintf('Find mapped currency based on field "%s" with value', $field), $array);
             // check if a pre-mapped object exists.
             $mapped = $this->getMappedObject($array);
-            if (null !== $mapped->id) {
+            if (null !== $mapped) {
                 Log::debug(sprintf('Found currency #%d!', $mapped->id));
 
                 return $mapped;
@@ -190,7 +190,7 @@ class ImportCurrency
         }
         Log::debug('Found no currency on mapped data or no map present.');
 
-        return new TransactionCurrency;
+        return null;
     }
 
     /**
@@ -198,30 +198,30 @@ class ImportCurrency
      *
      * @return TransactionCurrency
      */
-    private function getMappedObject(array $array): TransactionCurrency
+    private function getMappedObject(array $array): ?TransactionCurrency
     {
         Log::debug('In getMappedObject()');
         if (0 === count($array)) {
             Log::debug('Array is empty, nothing will come of this.');
 
-            return new TransactionCurrency;
+            return null;
         }
 
         if (array_key_exists('mapped', $array) && null === $array['mapped']) {
             Log::debug(sprintf('No map present for value "%s". Return NULL.', $array['value']));
 
-            return new TransactionCurrency;
+            return null;
         }
 
         Log::debug('Finding a mapped object based on', $array);
 
         $search   = intval($array['mapped']);
-        $currency = $this->repository->find($search);
+        $currency = $this->repository->findNull($search);
 
-        if (null === $currency->id) {
+        if (null === $currency) {
             Log::error(sprintf('There is no currency with id #%d. Invalid mapping will be ignored!', $search));
 
-            return new TransactionCurrency;
+            return null;
         }
 
         Log::debug(sprintf('Found currency! #%d ("%s"). Return it', $currency->id, $currency->name));

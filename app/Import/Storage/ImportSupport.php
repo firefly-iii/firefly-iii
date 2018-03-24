@@ -127,7 +127,7 @@ trait ImportSupport
         $transaction->transaction_journal_id  = intval($parameters['id']);
         $transaction->transaction_currency_id = intval($parameters['currency']);
         $transaction->amount                  = $parameters['amount'];
-        $transaction->foreign_currency_id     = intval($parameters['foreign_currency']) === 0 ? null : intval($parameters['foreign_currency']);
+        $transaction->foreign_currency_id     = 0 === intval($parameters['foreign_currency']) ? null : intval($parameters['foreign_currency']);
         $transaction->foreign_amount          = null === $transaction->foreign_currency_id ? null : $parameters['foreign_amount'];
         $transaction->save();
         if (null === $transaction->id) {
@@ -158,6 +158,7 @@ trait ImportSupport
      * @param ImportJournal $importJournal
      *
      * @return int
+     *
      * @throws FireflyException
      */
     private function getCurrencyId(ImportJournal $importJournal): int
@@ -171,7 +172,7 @@ trait ImportSupport
 
         // use given currency
         $currency = $importJournal->currency->getTransactionCurrency();
-        if (null !== $currency->id) {
+        if (null !== $currency) {
             return $currency->id;
         }
 
@@ -196,7 +197,7 @@ trait ImportSupport
     {
         // use given currency by import journal.
         $currency = $importJournal->currency->getTransactionCurrency();
-        if (null !== $currency->id && intval($currency->id) !== intval($currencyId)) {
+        if (null !== $currency && intval($currency->id) !== intval($currencyId)) {
             return $currency->id;
         }
 
@@ -220,6 +221,7 @@ trait ImportSupport
      * @see ImportSupport::getTransactionType
      *
      * @return Account
+     *
      * @throws FireflyException
      */
     private function getOpposingAccount(ImportAccount $account, int $forbiddenAccount, string $amount): Account

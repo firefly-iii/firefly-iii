@@ -71,8 +71,6 @@ use Requests;
  * Map accounts to existing accounts
  *
  * Stage 'do-import'?
- *
- *
  */
 class BunqRoutine implements RoutineInterface
 {
@@ -122,8 +120,8 @@ class BunqRoutine implements RoutineInterface
     }
 
     /**
-     *
      * @return bool
+     *
      * @throws FireflyException
      */
     public function run(): bool
@@ -153,7 +151,7 @@ class BunqRoutine implements RoutineInterface
     protected function continueJob()
     {
         // if in "configuring"
-        if ($this->getStatus() === 'configuring') {
+        if ('configuring' === $this->getStatus()) {
             Log::debug('Job is in configuring stage, will do nothing.');
 
             return;
@@ -203,7 +201,6 @@ class BunqRoutine implements RoutineInterface
     }
 
     /**
-     *
      * @throws FireflyException
      */
     protected function runStageInitial()
@@ -372,6 +369,7 @@ class BunqRoutine implements RoutineInterface
      * Get the installation token, either from the users preferences or from Bunq.
      *
      * @return InstallationToken
+     *
      * @throws FireflyException
      */
     private function getInstallationToken(): InstallationToken
@@ -477,6 +475,7 @@ class BunqRoutine implements RoutineInterface
      * Get the public key of the server, necessary to verify server signature.
      *
      * @return ServerPublicKey
+     *
      * @throws FireflyException
      */
     private function getServerPublicKey(): ServerPublicKey
@@ -573,16 +572,16 @@ class BunqRoutine implements RoutineInterface
         $config  = $this->getConfig();
         $user    = new UserPerson($config['user_person']);
         $mapping = $config['accounts-mapped'];
-        $token  = new SessionToken($config['session_token']);
+        $token   = new SessionToken($config['session_token']);
         $count   = 0;
-        if ($user->getId() === 0) {
+        if (0 === $user->getId()) {
             $user = new UserCompany($config['user_company']);
         }
 
         foreach ($config['accounts'] as $accountData) {
             $account  = new MonetaryAccountBank($accountData);
             $importId = $account->getId();
-            if ($mapping[$importId] === 1) {
+            if (1 === $mapping[$importId]) {
                 // grab all transactions
                 $request = new ListPaymentRequest();
                 $request->setPrivateKey($this->getPrivateKey());
@@ -610,7 +609,6 @@ class BunqRoutine implements RoutineInterface
     }
 
     /**
-     *
      * @throws FireflyException
      */
     private function runStageLoggedIn(): void
@@ -619,7 +617,7 @@ class BunqRoutine implements RoutineInterface
         $config = $this->getConfig();
         $token  = new SessionToken($config['session_token']);
         $user   = new UserPerson($config['user_person']);
-        if ($user->getId() === 0) {
+        if (0 === $user->getId()) {
             $user = new UserCompany($config['user_company']);
         }
 

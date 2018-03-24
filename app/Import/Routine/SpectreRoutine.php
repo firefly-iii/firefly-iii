@@ -118,6 +118,7 @@ class SpectreRoutine implements RoutineInterface
      *
      *
      * @return bool
+     *
      * @throws FireflyException
      * @throws SpectreException
      * @throws \Illuminate\Container\EntryNotFoundException
@@ -166,6 +167,7 @@ class SpectreRoutine implements RoutineInterface
 
     /**
      * @return Customer
+     *
      * @throws \FireflyIII\Exceptions\FireflyException
      * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
      * @throws \Illuminate\Container\EntryNotFoundException
@@ -187,22 +189,21 @@ class SpectreRoutine implements RoutineInterface
             $customers = $getCustomerRequest->getCustomers();
             /** @var Customer $current */
             foreach ($customers as $current) {
-                if ($current->getIdentifier() === 'default_ff3_customer') {
+                if ('default_ff3_customer' === $current->getIdentifier()) {
                     $customer = $current;
                     break;
                 }
             }
         }
 
-
         Preferences::setForUser($this->job->user, 'spectre_customer', $customer->toArray());
 
         return $customer;
-
     }
 
     /**
      * @return Customer
+     *
      * @throws FireflyException
      * @throws SpectreException
      * @throws \Illuminate\Container\EntryNotFoundException
@@ -232,6 +233,7 @@ class SpectreRoutine implements RoutineInterface
      * @param string   $returnUri
      *
      * @return Token
+     *
      * @throws \FireflyIII\Exceptions\FireflyException
      * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
      * @throws \Illuminate\Container\EntryNotFoundException
@@ -245,7 +247,6 @@ class SpectreRoutine implements RoutineInterface
         Log::debug('Call to get token is finished');
 
         return $request->getToken();
-
     }
 
     /**
@@ -460,11 +461,9 @@ class SpectreRoutine implements RoutineInterface
                 // date:
                 $importJournal->setValue(['role' => 'date-transaction', 'value' => $transaction->getMadeOn()->toIso8601String()]);
 
-
                 // amount
                 $importJournal->setValue(['role' => 'amount', 'value' => $transaction->getAmount()]);
                 $importJournal->setValue(['role' => 'currency-code', 'value' => $transaction->getCurrencyCode()]);
-
 
                 // various meta fields:
                 $importJournal->setValue(['role' => 'category-name', 'value' => $transaction->getCategory()]);
@@ -540,7 +539,7 @@ class SpectreRoutine implements RoutineInterface
         foreach ($accounts as $accountArray) {
             $account  = new Account($accountArray);
             $importId = intval($config['accounts-mapped'][$account->getid()] ?? 0);
-            $doImport = $importId !== 0 ? true : false;
+            $doImport = 0 !== $importId ? true : false;
             if (!$doImport) {
                 Log::debug(sprintf('Will NOT import from Spectre account #%d ("%s")', $account->getId(), $account->getName()));
                 continue;
@@ -559,7 +558,6 @@ class SpectreRoutine implements RoutineInterface
         }
         Log::debug(sprintf('Total number of transactions: %d', $count));
         $this->addStep();
-
 
         $this->importTransactions($all);
     }

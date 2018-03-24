@@ -89,6 +89,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * TODO use service
+     *
      * @param TransactionCurrency $currency
      *
      * @return bool
@@ -107,6 +109,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param int $currencyId
      *
+     * @deprecated
+     *
      * @return TransactionCurrency
      */
     public function find(int $currencyId): TransactionCurrency
@@ -121,6 +125,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     /**
      * Find by currency code.
+     *
+     * @deprecated
      *
      * @param string $currencyCode
      *
@@ -138,6 +144,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     /**
      * Find by currency code, return NULL if unfound.
+     * Used in Import Currency!
      *
      * @param string $currencyCode
      *
@@ -153,6 +160,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param string $currencyName
      *
+     * @deprecated
+     *
      * @return TransactionCurrency
      */
     public function findByName(string $currencyName): TransactionCurrency
@@ -166,7 +175,22 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * Find by currency name or return null.
+     * Used in Import Currency!
+     *
+     * @param string $currencyName
+     *
+     * @return TransactionCurrency
+     */
+    public function findByNameNull(string $currencyName): ?TransactionCurrency
+    {
+        return TransactionCurrency::whereName($currencyName)->first();
+    }
+
+    /**
      * Find by currency symbol.
+     *
+     * @deprecated
      *
      * @param string $currencySymbol
      *
@@ -183,7 +207,21 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * Find by currency symbol or return NULL
+     * Used in Import Currency!
+     *
+     * @param string $currencySymbol
+     *
+     * @return TransactionCurrency
+     */
+    public function findBySymbolNull(string $currencySymbol): ?TransactionCurrency
+    {
+        return TransactionCurrency::whereSymbol($currencySymbol)->first();
+    }
+
+    /**
      * Find by ID, return NULL if not found.
+     * Used in Import Currency!
      *
      * @param int $currencyId
      *
@@ -269,6 +307,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * TODO use factory
+     *
      * @param array $data
      *
      * @return TransactionCurrency
@@ -289,6 +329,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * TODO use factory
+     *
      * @param TransactionCurrency $currency
      * @param array               $data
      *

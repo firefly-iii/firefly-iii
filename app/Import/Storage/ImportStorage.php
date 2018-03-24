@@ -132,8 +132,6 @@ class ImportStorage
         }
         Log::debug(sprintf('Value of apply rules is %s', var_export($this->applyRules, true)));
         Log::debug(sprintf('Value of match bills is %s', var_export($this->matchBills, true)));
-
-
     }
 
     /**

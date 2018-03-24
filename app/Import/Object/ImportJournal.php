@@ -339,7 +339,7 @@ class ImportJournal
             throw new FireflyException('No amount information for this row.');
         }
         $class = $info['class'] ?? '';
-        if (strlen($class) === 0) {
+        if (0 === strlen($class)) {
             throw new FireflyException('No amount information (conversion class) for this row.');
         }
 

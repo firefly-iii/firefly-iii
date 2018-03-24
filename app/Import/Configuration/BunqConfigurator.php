@@ -25,7 +25,6 @@ namespace FireflyIII\Import\Configuration;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\Configuration\Bunq\HasAccounts;
 use FireflyIII\Support\Import\Configuration\Bunq\HaveAccounts;
 use Log;
 
@@ -56,6 +55,7 @@ class BunqConfigurator implements ConfiguratorInterface
      * @param array $data
      *
      * @return bool
+     *
      * @throws FireflyException
      */
     public function configureJob(array $data): bool
@@ -89,6 +89,7 @@ class BunqConfigurator implements ConfiguratorInterface
      * Return the data required for the next step in the job configuration.
      *
      * @return array
+     *
      * @throws FireflyException
      */
     public function getNextData(): array
@@ -116,6 +117,7 @@ class BunqConfigurator implements ConfiguratorInterface
 
     /**
      * @return string
+     *
      * @throws FireflyException
      */
     public function getNextView(): string
@@ -131,7 +133,6 @@ class BunqConfigurator implements ConfiguratorInterface
                 return 'import.bunq.accounts';
             default:
                 return '';
-
         }
     }
 
@@ -147,6 +148,7 @@ class BunqConfigurator implements ConfiguratorInterface
 
     /**
      * @return bool
+     *
      * @throws FireflyException
      */
     public function isJobConfigured(): bool
