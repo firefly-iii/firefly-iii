@@ -34,6 +34,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -45,6 +46,16 @@ use Tests\TestCase;
  */
 class SplitControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::__construct

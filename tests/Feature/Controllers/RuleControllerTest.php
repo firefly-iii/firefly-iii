@@ -37,7 +37,7 @@ use FireflyIII\TransactionRules\TransactionMatcher;
 use Illuminate\Support\Collection;
 use Queue;
 use Tests\TestCase;
-
+use Log;
 /**
  * Class RuleControllerTest
  *
@@ -47,6 +47,16 @@ use Tests\TestCase;
  */
 class RuleControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::create
      */
@@ -299,7 +309,7 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::store
+     * @covers       \FireflyIII\Http\Controllers\RuleController::store
      * @covers       \FireflyIII\Http\Requests\RuleFormRequest
      */
     public function testStore()
@@ -449,7 +459,7 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::update
+     * @covers       \FireflyIII\Http\Controllers\RuleController::update
      * @covers       \FireflyIII\Http\Requests\RuleFormRequest
      */
     public function testUpdate()

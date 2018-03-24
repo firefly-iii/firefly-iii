@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers\Import;
 
 use FireflyIII\Import\Routine\FileRoutine;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -35,6 +36,15 @@ use Tests\TestCase;
  */
 class IndexControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Import\IndexController::create
      */

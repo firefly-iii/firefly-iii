@@ -43,7 +43,7 @@ class LinkControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug('Now in Feature/Controllers/Admin/LinkControllerTest.');
+        Log::debug(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -139,7 +139,7 @@ class LinkControllerTest extends TestCase
      */
     public function testIndex()
     {
-        $linkTypes = LinkType::inRandomOrder()->take(3)->get();
+        $linkTypes  = LinkType::inRandomOrder()->take(3)->get();
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
         $repository->shouldReceive('get')->andReturn($linkTypes);
         $repository->shouldReceive('countJournals')->andReturn(3);
@@ -160,7 +160,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\LinkController::store
+     * @covers       \FireflyIII\Http\Controllers\Admin\LinkController::store
      * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
     public function testStore()
@@ -182,7 +182,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\LinkController::store
+     * @covers       \FireflyIII\Http\Controllers\Admin\LinkController::store
      * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
     public function testStoreRedirect()
@@ -203,7 +203,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\LinkController::update
+     * @covers       \FireflyIII\Http\Controllers\Admin\LinkController::update
      * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
     public function testUpdate()
@@ -227,7 +227,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\LinkController::update
+     * @covers       \FireflyIII\Http\Controllers\Admin\LinkController::update
      * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
     public function testUpdateNonEditable()
@@ -249,7 +249,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\LinkController::update
+     * @covers       \FireflyIII\Http\Controllers\Admin\LinkController::update
      * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
     public function testUpdateRedirect()

@@ -30,6 +30,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -41,6 +42,15 @@ use Tests\TestCase;
  */
 class CategoryControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::all
      * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::__construct

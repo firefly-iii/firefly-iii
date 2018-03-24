@@ -24,7 +24,7 @@ verbalflag=''
 testsuite=''
 configfile='phpunit.xml';
 
-while getopts 'vcratf:u:s:' flag; do
+while getopts 'vcrtf:u:s:a:' flag; do
   case "${flag}" in
     r)
         resetTestFlag='true'

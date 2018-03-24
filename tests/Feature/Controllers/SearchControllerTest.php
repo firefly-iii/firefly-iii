@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers;
 
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Support\Collection;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -35,6 +36,16 @@ use Tests\TestCase;
  */
 class SearchControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\SearchController::index
      * @covers \FireflyIII\Http\Controllers\SearchController::__construct

@@ -33,6 +33,7 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Log;
 use Navigation;
 use Tests\TestCase;
 
@@ -45,6 +46,15 @@ use Tests\TestCase;
  */
 class CategoryControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\CategoryController::create
      */
@@ -460,7 +470,7 @@ class CategoryControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $category = Category::first();
+        $category     = Category::first();
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);

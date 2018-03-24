@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -46,6 +47,15 @@ use Tests\TestCase;
  */
 class BudgetControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug('Now in Feature/Controllers/Chart/Test.');
+    }
+
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::budget
      * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::__construct

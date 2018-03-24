@@ -25,6 +25,7 @@ namespace Tests\Feature\Controllers;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -36,6 +37,16 @@ use Tests\TestCase;
  */
 class AttachmentControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController::delete
      */

@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers\Import;
 
 use FireflyIII\Import\Prerequisites\FilePrerequisites;
 use Illuminate\Support\MessageBag;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -35,6 +36,15 @@ use Tests\TestCase;
  */
 class PrerequisitesControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Import\PrerequisitesController::__construct
      * @covers \FireflyIII\Http\Controllers\Import\PrerequisitesController::index

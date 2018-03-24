@@ -36,6 +36,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 use Preferences;
 use Steam;
 use Tests\TestCase;
@@ -49,6 +50,14 @@ use Tests\TestCase;
  */
 class AccountControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseAccounts

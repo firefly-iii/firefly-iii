@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Report;
 
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -35,18 +36,28 @@ use Tests\TestCase;
 class OperationsControllerTest extends TestCase
 {
     /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
+    /**
      * @covers \FireflyIII\Http\Controllers\Report\OperationsController::expenses
      */
     public function testExpenses()
     {
         $return = [
             1 => [
-            'id'      => 1,
-            'name'    => 'Some name',
-            'sum'     => '5',
-            'average' => '5',
-            'count'   => 1,
-            ]
+                'id'      => 1,
+                'name'    => 'Some name',
+                'sum'     => '5',
+                'average' => '5',
+                'count'   => 1,
+            ],
         ];
         $tasker = $this->mock(AccountTaskerInterface::class);
         $tasker->shouldReceive('getExpenseReport')->andReturn($return);
@@ -81,7 +92,7 @@ class OperationsControllerTest extends TestCase
                 'sum'     => '5',
                 'average' => '5',
                 'count'   => 1,
-            ]
+            ],
         ];
 
         $tasker = $this->mock(AccountTaskerInterface::class);

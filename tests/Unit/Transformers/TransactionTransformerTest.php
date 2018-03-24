@@ -89,6 +89,7 @@ class TransactionTransformerTest extends TestCase
                 'description'             => 'Some journal',
                 'date'                    => '2018-01-01',
                 'completed'               => 1,
+                'tag_count'               => 0,
             ]
         );
         // basic transactions
@@ -172,6 +173,7 @@ class TransactionTransformerTest extends TestCase
                 'description'             => 'Some journal',
                 'date'                    => '2018-01-01',
                 'completed'               => 1,
+                'tag_count'               => 0,
             ]
         );
         // basic transactions
@@ -255,6 +257,7 @@ class TransactionTransformerTest extends TestCase
                 'description'             => 'Some journal',
                 'date'                    => '2018-01-01',
                 'completed'               => 1,
+                'tag_count'               => 0,
             ]
         );
         // basic transactions
@@ -347,6 +350,7 @@ class TransactionTransformerTest extends TestCase
                 'description'             => 'Some journal',
                 'date'                    => '2018-01-01',
                 'completed'               => 1,
+                'tag_count'               => 0,
             ]
         );
         // basic transactions
@@ -438,6 +442,7 @@ class TransactionTransformerTest extends TestCase
                 'description'             => 'Some journal',
                 'date'                    => '2018-01-01',
                 'completed'               => 1,
+                'tag_count'               => 0,
             ]
         );
 
@@ -535,6 +540,7 @@ class TransactionTransformerTest extends TestCase
                 'description'             => 'Some journal',
                 'date'                    => '2018-01-01',
                 'completed'               => 1,
+                'tag_count'               => 0,
             ]
         );
 
@@ -631,6 +637,7 @@ class TransactionTransformerTest extends TestCase
                 'description'             => 'Some journal',
                 'date'                    => '2018-01-01',
                 'completed'               => 1,
+                'tag_count'               => 0,
             ]
         );
         // basic transactions (negative opening balance).
@@ -715,6 +722,7 @@ class TransactionTransformerTest extends TestCase
                 'description'             => 'Some journal',
                 'date'                    => '2018-01-01',
                 'completed'               => 1,
+                'tag_count'               => 0,
             ]
         );
         // basic transactions (positive opening balance).
@@ -799,6 +807,7 @@ class TransactionTransformerTest extends TestCase
                 'description'             => 'Some journal',
                 'date'                    => '2018-01-01',
                 'completed'               => 1,
+                'tag_count'               => 0,
             ]
         );
         // basic transactions (negative reconciliation).
@@ -883,6 +892,7 @@ class TransactionTransformerTest extends TestCase
                 'description'             => 'Some journal',
                 'date'                    => '2018-01-01',
                 'completed'               => 1,
+                'tag_count'               => 0,
             ]
         );
         // basic transactions (positive reconciliation).
@@ -968,6 +978,7 @@ class TransactionTransformerTest extends TestCase
                 'description'             => 'Some journal',
                 'date'                    => '2018-01-01',
                 'completed'               => 1,
+                'tag_count'               => 0,
             ]
         );
 
@@ -1067,6 +1078,7 @@ class TransactionTransformerTest extends TestCase
                 'description'             => 'Some journal',
                 'date'                    => '2018-01-01',
                 'completed'               => 1,
+                'tag_count'               => 0,
             ]
         );
 
@@ -1165,6 +1177,7 @@ class TransactionTransformerTest extends TestCase
                 'description'             => 'Some journal',
                 'date'                    => '2018-01-01',
                 'completed'               => 1,
+                'tag_count'               => 0,
             ]
         );
         // basic transactions
@@ -1248,6 +1261,7 @@ class TransactionTransformerTest extends TestCase
                 'description'             => 'Some journal',
                 'date'                    => '2018-01-01',
                 'completed'               => 1,
+                'tag_count'               => 0,
             ]
         );
         // basic transactions
@@ -1331,6 +1345,7 @@ class TransactionTransformerTest extends TestCase
                 'description'             => 'Some journal',
                 'date'                    => '2018-01-01',
                 'completed'               => 1,
+                'tag_count'               => 0,
             ]
         );
         // basic transactions

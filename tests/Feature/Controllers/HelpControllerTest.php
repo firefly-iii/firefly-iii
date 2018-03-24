@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers;
 
 use FireflyIII\Helpers\Help\HelpInterface;
 use FireflyIII\Models\Preference;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -35,6 +36,15 @@ use Tests\TestCase;
  */
 class HelpControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\HelpController::show
      * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText

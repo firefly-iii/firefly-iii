@@ -48,7 +48,7 @@ class TransactionControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
-        Log::debug('Now in Api/TransactionControllerTest.');
+        Log::debug(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -1135,6 +1135,9 @@ class TransactionControllerTest extends TestCase
                     ],
                     'transactions.0.destination_id' => [
                         'All accounts in this field must be equal.',
+                    ],
+                    'transactions.1.destination_id' => [
+                        'The source account equals the destination account'
                     ],
                 ],
             ]

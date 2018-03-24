@@ -43,7 +43,7 @@ class BillControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
-        Log::debug('Now in Api/BillControllerTest.');
+        Log::debug(sprintf('Now in %s.', get_class($this)));
 
     }
 

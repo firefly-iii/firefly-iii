@@ -43,6 +43,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
+use Log;
 use Steam;
 use Tests\TestCase;
 
@@ -55,6 +56,16 @@ use Tests\TestCase;
  */
 class SingleControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::cloneTransaction
      */
@@ -287,7 +298,6 @@ class SingleControllerTest extends TestCase
                               ->where('transaction_journals.transaction_type_id', 2)
                               ->whereNull('transaction_journals.deleted_at')
                               ->where('transaction_journals.user_id', $this->user()->id)->first(['transactions.*']);
-
 
 
         $response = $this->get(route('transactions.edit', [$deposit->transaction_journal_id]));

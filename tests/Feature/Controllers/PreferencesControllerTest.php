@@ -27,9 +27,8 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-
 use Illuminate\Support\Collection;
-
+use Log;
 use Tests\TestCase;
 
 /**
@@ -41,6 +40,16 @@ use Tests\TestCase;
  */
 class PreferencesControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\PreferencesController::index
      * @covers \FireflyIII\Http\Controllers\PreferencesController::__construct

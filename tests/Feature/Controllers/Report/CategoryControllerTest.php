@@ -25,6 +25,7 @@ namespace Tests\Feature\Controllers\Report;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -36,6 +37,16 @@ use Tests\TestCase;
  */
 class CategoryControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\Report\CategoryController::expenses
      * @covers \FireflyIII\Http\Controllers\Report\CategoryController::filterReport

@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers\Chart;
 
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
+use Log;
 use Steam;
 use Tests\TestCase;
 
@@ -36,6 +37,15 @@ use Tests\TestCase;
  */
 class ReportControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\ReportController::netWorth
      * @covers \FireflyIII\Http\Controllers\Chart\ReportController::arraySum

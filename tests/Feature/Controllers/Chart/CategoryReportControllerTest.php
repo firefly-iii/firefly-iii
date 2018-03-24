@@ -31,6 +31,7 @@ use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -42,6 +43,15 @@ use Tests\TestCase;
  */
 class CategoryReportControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\CategoryReportController::accountExpense
      * @covers \FireflyIII\Http\Controllers\Chart\CategoryReportController::__construct

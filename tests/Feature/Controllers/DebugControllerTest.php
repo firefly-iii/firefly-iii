@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use Log;
 use Tests\TestCase;
 
 /**
@@ -33,6 +34,15 @@ use Tests\TestCase;
  */
 class DebugControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\DebugController::index
      * @covers \FireflyIII\Http\Controllers\DebugController::__construct
