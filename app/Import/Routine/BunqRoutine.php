@@ -23,13 +23,25 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Routine;
 
+use Carbon\Carbon;
+use DB;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\AccountFactory;
+use FireflyIII\Factory\TransactionJournalFactory;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\TransactionJournalMeta;
+use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Services\Bunq\Id\DeviceServerId;
 use FireflyIII\Services\Bunq\Object\DeviceServer;
+use FireflyIII\Services\Bunq\Object\LabelMonetaryAccount;
 use FireflyIII\Services\Bunq\Object\MonetaryAccountBank;
+use FireflyIII\Services\Bunq\Object\Payment;
 use FireflyIII\Services\Bunq\Object\ServerPublicKey;
 use FireflyIII\Services\Bunq\Object\UserCompany;
 use FireflyIII\Services\Bunq\Object\UserPerson;
@@ -80,9 +92,14 @@ class BunqRoutine implements RoutineInterface
     public $journals;
     /** @var int */
     public $lines = 0;
+    /** @var AccountFactory */
+    private $accountFactory;
+    /** @var AccountRepositoryInterface */
+    private $accountRepository;
     /** @var ImportJob */
     private $job;
-
+    /** @var TransactionJournalFactory */
+    private $journalFactory;
     /** @var ImportJobRepositoryInterface */
     private $repository;
 
@@ -140,9 +157,15 @@ class BunqRoutine implements RoutineInterface
      */
     public function setJob(ImportJob $job)
     {
-        $this->job        = $job;
-        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->job               = $job;
+        $this->repository        = app(ImportJobRepositoryInterface::class);
+        $this->accountRepository = app(AccountRepositoryInterface::class);
+        $this->accountFactory    = app(AccountFactory::class);
+        $this->journalFactory    = app(TransactionJournalFactory::class);
         $this->repository->setUser($job->user);
+        $this->accountRepository->setUser($job->user);
+        $this->accountFactory->setUser($job->user);
+        $this->journalFactory->setUser($job->user);
     }
 
     /**
@@ -176,27 +199,13 @@ class BunqRoutine implements RoutineInterface
                 // do nothing in this stage. Job should revert to config routine.
                 break;
             case 'have-account-mapping':
+                $this->setStatus('running');
                 $this->runStageHaveAccountMapping();
 
                 break;
             default:
                 throw new FireflyException(sprintf('No action for stage %s!', $stage));
                 break;
-            //            case 'has-token':
-
-            //                // import routine does nothing at this point:
-            //                break;
-            //            case 'user-logged-in':
-            //                $this->runStageLoggedIn();
-            //                break;
-            //            case 'have-account-mapping':
-            //                $this->runStageHaveMapping();
-            //                break;
-            //            default:
-            //                throw new FireflyException(sprintf('Cannot handle stage %s', $stage));
-            //        }
-            //
-            //        return true;
         }
     }
 
@@ -205,17 +214,18 @@ class BunqRoutine implements RoutineInterface
      */
     protected function runStageInitial()
     {
+        $this->addStep();
         Log::debug('In runStageInitial()');
         $this->setStatus('running');
 
         // register the device at Bunq:
         $serverId = $this->registerDevice();
-        $this->addStep();
         Log::debug(sprintf('Found device server with id %d', $serverId->getId()));
 
         $config          = $this->getConfig();
         $config['stage'] = 'registered';
         $this->setConfig($config);
+        $this->addStep();
 
         return;
     }
@@ -227,6 +237,7 @@ class BunqRoutine implements RoutineInterface
      */
     protected function runStageRegistered(): void
     {
+        $this->addStep();
         Log::debug('Now in runStageRegistered()');
         $apiKey            = Preferences::getForUser($this->job->user, 'bunq_api_key')->data;
         $serverPublicKey   = Preferences::getForUser($this->job->user, 'bunq_server_public_key')->data;
@@ -239,7 +250,8 @@ class BunqRoutine implements RoutineInterface
         $request->call();
         $this->addStep();
 
-        // todo store objects in job!
+        Log::debug('Requested new session.');
+
         $deviceSession = $request->getDeviceSessionId();
         $userPerson    = $request->getUserPerson();
         $userCompany   = $request->getUserCompany();
@@ -254,6 +266,8 @@ class BunqRoutine implements RoutineInterface
         $this->setConfig($config);
         $this->addStep();
 
+        Log::debug('Session stored in job.');
+
         return;
     }
 
@@ -262,7 +276,17 @@ class BunqRoutine implements RoutineInterface
      */
     private function addStep()
     {
-        $this->repository->addStepsDone($this->job, 1);
+        $this->addSteps(1);
+    }
+
+    /**
+     * Shorthand method.
+     *
+     * @param int $count
+     */
+    private function addSteps(int $count)
+    {
+        $this->repository->addStepsDone($this->job, $count);
     }
 
     /**
@@ -273,6 +297,71 @@ class BunqRoutine implements RoutineInterface
     private function addTotalSteps(int $steps)
     {
         $this->repository->addTotalSteps($this->job, $steps);
+    }
+
+    /**
+     * @param int $paymentId
+     *
+     * @return bool
+     */
+    private function alreadyImported(int $paymentId): bool
+    {
+        $count = TransactionJournalMeta::where('name', 'bunq_payment_id')
+                                       ->where('data', json_encode($paymentId))->count();
+
+        Log::debug(sprintf('Transaction #%d is %d time(s) in the database.', $paymentId, $count));
+
+        return $count > 0;
+    }
+
+    /**
+     * @param LabelMonetaryAccount $party
+     * @param string               $expectedType
+     *
+     * @return Account
+     */
+    private function convertToAccount(LabelMonetaryAccount $party, string $expectedType): Account
+    {
+        Log::debug('in convertToAccount()');
+        // find opposing party by IBAN first.
+        $result = $this->accountRepository->findByIbanNull($party->getIban(), [$expectedType]);
+        if (!is_null($result)) {
+            Log::debug(sprintf('Search for %s resulted in account %s (#%d)', $party->getIban(), $result->name, $result->id));
+
+            return $result;
+        }
+
+        // try to find asset account just in case:
+        if ($expectedType !== AccountType::ASSET) {
+            $result = $this->accountRepository->findByIbanNull($party->getIban(), [AccountType::ASSET]);
+            if (!is_null($result)) {
+                Log::debug(sprintf('Search for Asset "%s" resulted in account %s (#%d)', $party->getIban(), $result->name, $result->id));
+
+                return $result;
+            }
+        }
+        // create new account:
+        $data    = [
+            'user_id'         => $this->job->user_id,
+            'iban'            => $party->getIban(),
+            'name'            => $party->getLabelUser()->getDisplayName(),
+            'account_type_id' => null,
+            'accountType'     => $expectedType,
+            'virtualBalance'  => null,
+            'active'          => true,
+
+        ];
+        $account = $this->accountFactory->create($data);
+        Log::debug(
+            sprintf(
+                'Converted label monetary account %s to %s account %s (#%d)',
+                $party->getLabelUser()->getDisplayName(),
+                $expectedType,
+                $account->name, $account->id
+            )
+        );
+
+        return $account;
     }
 
     /**
@@ -499,6 +588,144 @@ class BunqRoutine implements RoutineInterface
     }
 
     /**
+     * Import the transactions that were found.
+     *
+     * @param array $payments
+     *
+     * @throws FireflyException
+     */
+    private function importPayments(array $payments): void
+    {
+        Log::debug('Going to run importPayments()');
+        $journals = new Collection;
+        $config   = $this->getConfig();
+        foreach ($payments as $accountId => $data) {
+            Log::debug(sprintf('Now running for bunq account #%d with %d payment(s).', $accountId, count($data['payments'])));
+            /** @var Payment $payment */
+            foreach ($data['payments'] as $index => $payment) {
+                Log::debug(sprintf('Now at payment #%d with ID #%d', $index, $payment->getId()));
+                // store or find counter party:
+                $counterParty = $payment->getCounterParty();
+                $amount       = $payment->getAmount();
+                $paymentId    = $payment->getId();
+                if ($this->alreadyImported($paymentId)) {
+                    Log::error(sprintf('Already imported bunq payment with id #%d', $paymentId));
+
+                    // add three steps to keep up
+                    $this->addSteps(3);
+                    continue;
+                }
+                Log::debug(sprintf('Amount is %s %s', $amount->getCurrency(), $amount->getValue()));
+                $expected = AccountType::EXPENSE;
+                if (bccomp($amount->getValue(), '0') === 1) {
+                    // amount + means that its a deposit.
+                    $expected = AccountType::REVENUE;
+                    Log::debug('Will make opposing account revenue.');
+                }
+                $opposing = $this->convertToAccount($counterParty, $expected);
+                $account  = $this->accountRepository->findNull($config['accounts-mapped'][$accountId]);
+                $type     = TransactionType::WITHDRAWAL;
+
+                $this->addStep();
+
+                Log::debug(sprintf('Will store withdrawal between "%s" (%d) and "%s" (%d)', $account->name, $account->id, $opposing->name, $opposing->id));
+
+                // start storing stuff:
+                $source      = $account;
+                $destination = $opposing;
+                if (bccomp($amount->getValue(), '0') === 1) {
+                    // its a deposit:
+                    $source      = $opposing;
+                    $destination = $account;
+                    $type        = TransactionType::DEPOSIT;
+                    Log::debug('Will make it a deposit.');
+                }
+                if ($account->accountType->type === AccountType::ASSET && $opposing->accountType->type === AccountType::ASSET) {
+                    $type = TransactionType::TRANSFER;
+                    Log::debug('Both are assets, will make transfer.');
+                }
+
+                $storeData = [
+                    'user'               => $this->job->user_id,
+                    'type'               => $type,
+                    'date'               => $payment->getCreated(),
+                    'description'        => $payment->getDescription(),
+                    'piggy_bank_id'      => null,
+                    'piggy_bank_name'    => null,
+                    'bill_id'            => null,
+                    'bill_name'          => null,
+                    'tags'               => [$payment->getType(), $payment->getSubType()],
+                    'internal_reference' => $payment->getId(),
+                    'notes'              => null,
+                    'bunq_payment_id'    => $payment->getId(),
+                    'transactions'       => [
+                        // single transaction:
+                        [
+                            'description'           => null,
+                            'amount'                => $amount->getValue(),
+                            'currency_id'           => null,
+                            'currency_code'         => $amount->getCurrency(),
+                            'foreign_amount'        => null,
+                            'foreign_currency_id'   => null,
+                            'foreign_currency_code' => null,
+                            'budget_id'             => null,
+                            'budget_name'           => null,
+                            'category_id'           => null,
+                            'category_name'         => null,
+                            'source_id'             => $source->id,
+                            'source_name'           => null,
+                            'destination_id'        => $destination->id,
+                            'destination_name'      => null,
+                            'reconciled'            => false,
+                            'identifier'            => 0,
+                        ],
+                    ],
+                ];
+                $journal   = $this->journalFactory->create($storeData);
+                Log::debug(sprintf('Stored journal with ID #%d', $journal->id));
+                $this->addStep();
+                $journals->push($journal);
+
+            }
+        }
+
+        // link to tag
+        /** @var TagRepositoryInterface $repository */
+        $repository = app(TagRepositoryInterface::class);
+        $repository->setUser($this->job->user);
+        $data            = [
+            'tag'         => trans('import.import_with_key', ['key' => $this->job->key]),
+            'date'        => new Carbon,
+            'description' => null,
+            'latitude'    => null,
+            'longitude'   => null,
+            'zoomLevel'   => null,
+            'tagMode'     => 'nothing',
+        ];
+        $tag             = $repository->store($data);
+        $extended        = $this->getExtendedStatus();
+        $extended['tag'] = $tag->id;
+        $this->setExtendedStatus($extended);
+
+        Log::debug(sprintf('Created tag #%d ("%s")', $tag->id, $tag->tag));
+        Log::debug('Looping journals...');
+        $tagId = $tag->id;
+
+        foreach ($journals as $journal) {
+            Log::debug(sprintf('Linking journal #%d to tag #%d...', $journal->id, $tagId));
+            DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journal->id, 'tag_id' => $tagId]);
+            $this->addStep();
+        }
+        Log::info(sprintf('Linked %d journals to tag #%d ("%s")', $journals->count(), $tag->id, $tag->tag));
+
+        // set status to "finished"?
+        // update job:
+        $this->setStatus('finished');
+
+        return;
+    }
+
+    /**
      * To install Firefly III as a new device:
      * - Send an installation token request.
      * - Use this token to send a device server request
@@ -576,13 +803,17 @@ class BunqRoutine implements RoutineInterface
         $count   = 0;
         if (0 === $user->getId()) {
             $user = new UserCompany($config['user_company']);
+            Log::debug(sprintf('Will try to get transactions for company #%d', $user->getId()));
         }
 
+        $this->addTotalSteps(count($config['accounts']) * 2);
+
         foreach ($config['accounts'] as $accountData) {
+            $this->addStep();
             $account  = new MonetaryAccountBank($accountData);
             $importId = $account->getId();
             if (1 === $mapping[$importId]) {
-                // grab all transactions
+                Log::debug(sprintf('Will grab payments for account %s', $account->getDescription()));
                 $request = new ListPaymentRequest();
                 $request->setPrivateKey($this->getPrivateKey());
                 $request->setServerPublicKey($this->getServerPublicKey());
@@ -590,22 +821,24 @@ class BunqRoutine implements RoutineInterface
                 $request->setUserId($user->getId());
                 $request->setAccount($account);
                 $request->call();
-
-                exit;
+                $payments = $request->getPayments();
 
                 // store in array
                 $all[$account->getId()] = [
-                    'account'      => $account,
-                    'import_id'    => $importId,
-                    'transactions' => $transactions,
+                    'account'   => $account,
+                    'import_id' => $importId,
+                    'payments'  => $payments,
                 ];
-                $count                  += count($transactions);
+                $count                  += count($payments);
             }
-            Log::debug(sprintf('Total number of transactions: %d', $count));
+            Log::debug(sprintf('Total number of payments: %d', $count));
             $this->addStep();
-            //$this->importTransactions($all);
+            // add steps for import:
+            $this->addTotalSteps($count * 3);
+            $this->importPayments($all);
         }
-        exit;
+
+        // update job to be complete, I think?
     }
 
     /**
@@ -613,6 +846,7 @@ class BunqRoutine implements RoutineInterface
      */
     private function runStageLoggedIn(): void
     {
+        $this->addStep();
         // grab new session token:
         $config = $this->getConfig();
         $token  = new SessionToken($config['session_token']);
@@ -631,6 +865,7 @@ class BunqRoutine implements RoutineInterface
         $accounts = $request->getMonetaryAccounts();
         $arr      = [];
         Log::debug(sprintf('Get monetary accounts, found %d accounts.', $accounts->count()));
+        $this->addStep();
 
         /** @var MonetaryAccountBank $account */
         foreach ($accounts as $account) {
@@ -645,6 +880,7 @@ class BunqRoutine implements RoutineInterface
         // once the accounts are stored, go to configuring stage:
         // update job, set status to "configuring".
         $this->setStatus('configuring');
+        $this->addStep();
 
         return;
     }

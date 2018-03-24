@@ -74,4 +74,12 @@ class UserLight extends BunqObject
         $this->legalName      = $data['legal_name'];
         // aliases
     }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        die(sprintf('Cannot convert %s to array.', get_class($this)));
+    }
 }

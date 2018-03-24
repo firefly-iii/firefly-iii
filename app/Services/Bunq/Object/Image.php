@@ -1,7 +1,7 @@
 <?php
 /**
- * ServerPublicKey.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Image.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,42 +18,37 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Object;
 
+
 /**
- * Class ServerPublicKey.
+ * Class Image
  */
-class ServerPublicKey extends BunqObject
+class Image extends BunqObject
 {
     /** @var string */
-    private $publicKey = '';
+    private $attachmentPublicUuid;
+    /** @var string */
+    private $contentType;
+    /** @var int */
+    private $height;
+    /** @var int */
+    private $width;
 
     /**
-     * ServerPublicKey constructor.
+     * Image constructor.
      *
-     * @param array $response
+     * @param array $data
      */
-    public function __construct(array $response)
+    public function __construct(array $data)
     {
-        $this->publicKey = $response['server_public_key'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getPublicKey(): string
-    {
-        return $this->publicKey;
-    }
-
-    /**
-     * @param string $publicKey
-     */
-    public function setPublicKey(string $publicKey)
-    {
-        $this->publicKey = $publicKey;
+        $this->attachmentPublicUuid = $data['attachment_public_uuid'] ?? null;
+        $this->height               = $data['height'] ?? null;
+        $this->width                = $data['width'] ?? null;
+        $this->contentType          = $data['content_type'] ?? null;
     }
 
     /**
@@ -63,4 +58,5 @@ class ServerPublicKey extends BunqObject
     {
         die(sprintf('Cannot convert %s to array.', get_class($this)));
     }
+
 }

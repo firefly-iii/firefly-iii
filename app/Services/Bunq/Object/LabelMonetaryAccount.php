@@ -29,5 +29,54 @@ namespace FireflyIII\Services\Bunq\Object;
  */
 class LabelMonetaryAccount extends BunqObject
 {
+    /** @var Avatar */
+    private $avatar;
+    /** @var string */
+    private $country;
+    /** @var string */
+    private $iban;
+    /** @var bool */
+    private $isLight;
+    /** @var LabelUser */
+    private $labelUser;
+
+    /**
+     * @return LabelUser
+     */
+    public function getLabelUser(): LabelUser
+    {
+        return $this->labelUser;
+    }
+
+
+    /**
+     * LabelMonetaryAccount constructor.
+     *
+     * @param array $data
+     */
+    public function __construct(array $data)
+    {
+        $this->iban      = $data['iban'];
+        $this->isLight   = $data['is_light'];
+        $this->avatar    = new Avatar($data['avatar']);
+        $this->labelUser = new LabelUser($data['label_user']);
+        $this->country   = $data['country'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getIban(): string
+    {
+        return $this->iban;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        die(sprintf('Cannot convert %s to array.', get_class($this)));
+    }
 
 }

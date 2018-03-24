@@ -48,13 +48,8 @@ class DeviceServerRequest extends BunqRequest
         Log::debug('Now in DeviceServerRequest::call()');
         $uri  = 'device-server';
         $data = ['description' => $this->description, 'secret' => $this->secret, 'permitted_ips' => $this->permittedIps];
-
-        Log::debug('Data we send along: ', $data);
-
         $headers                                 = $this->getDefaultHeaders();
         $headers['X-Bunq-Client-Authentication'] = $this->installationToken->getToken();
-
-        Log::debug('Headers we send along: ', $headers);
 
         $response       = $this->sendSignedBunqPost($uri, $data, $headers);
         $deviceServerId = new DeviceServerId;

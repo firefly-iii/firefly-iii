@@ -25,6 +25,12 @@ namespace FireflyIII\Services\Bunq\Object;
 /**
  * Class BunqObject.
  */
-class BunqObject
+abstract class BunqObject
 {
+    /**
+     * Convert this object to array.
+     *
+     * @return array
+     */
+    abstract public function toArray(): array;
 }

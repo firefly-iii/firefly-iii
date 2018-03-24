@@ -51,23 +51,35 @@ class ListPaymentRequest extends BunqRequest
      */
     public function call(): void
     {
+        $break                                   = false;
         $this->payments                          = new Collection;
         $uri                                     = sprintf('user/%d/monetary-account/%d/payment', $this->userId, $this->account->getId());
-        $data                                    = [];
         $headers                                 = $this->getDefaultHeaders();
         $headers['X-Bunq-Client-Authentication'] = $this->sessionToken->getToken();
-        $response                                = $this->sendSignedBunqGet($uri, $data, $headers);
+        while ($break === false) {
+            $response = $this->sendSignedBunqGet($uri, [], $headers);
+            $uri      = str_replace('/v1/', '', $response['Pagination']['future_url']);
+            $break    = true;
 
-        // create payment objects:
-        $raw = $this->getArrayFromResponse('Payment', $response);
-        foreach ($raw as $entry) {
-            $account = new Payment($entry);
-            $this->payments->push($account);
+            // create payment objects:
+            $raw = $this->getArrayFromResponse('Payment', $response);
+            foreach ($raw as $entry) {
+                $payment = new Payment($entry);
+                $this->payments->push($payment);
+            }
         }
 
         return;
-
     }
+
+    /**
+     * @return Collection
+     */
+    public function getPayments(): Collection
+    {
+        return $this->payments;
+    }
+
 
     /**
      * @param MonetaryAccountBank $account

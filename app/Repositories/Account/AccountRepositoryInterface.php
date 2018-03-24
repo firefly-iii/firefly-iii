@@ -66,6 +66,7 @@ interface AccountRepositoryInterface
      * @param string $number
      * @param array  $types
      *
+     * @deprecated
      * @return Account
      */
     public function findByAccountNumber(string $number, array $types): Account;
@@ -74,14 +75,24 @@ interface AccountRepositoryInterface
      * @param string $iban
      * @param array  $types
      *
+     * @deprecated
      * @return Account
      */
     public function findByIban(string $iban, array $types): Account;
 
     /**
+     * @param string $iban
+     * @param array  $types
+     *
+     * @return Account|null
+     */
+    public function findByIbanNull(string $iban, array $types): ?Account;
+
+    /**
      * @param string $name
      * @param array  $types
      *
+     * @deprecated
      * @return Account|null
      */
     public function findByName(string $name, array $types): ?Account;

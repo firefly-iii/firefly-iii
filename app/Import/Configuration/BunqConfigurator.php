@@ -193,7 +193,7 @@ class BunqConfigurator implements ConfiguratorInterface
 
         // set default extended status:
         $extendedStatus          = $this->repository->getExtendedStatus($job);
-        $extendedStatus['steps'] = 6;
+        $extendedStatus['steps'] = 8;
 
         // save to job:
         $job       = $this->repository->setConfiguration($job, $finalConfig);

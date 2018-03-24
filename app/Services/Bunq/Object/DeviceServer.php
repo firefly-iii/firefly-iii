@@ -75,4 +75,12 @@ class DeviceServer extends BunqObject
     {
         return $this->ip;
     }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        die(sprintf('Cannot convert %s to array.', get_class($this)));
+    }
 }

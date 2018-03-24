@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Object;
+
 use Carbon\Carbon;
 
 
@@ -30,28 +31,30 @@ use Carbon\Carbon;
  */
 class Payment extends BunqObject
 {
-    /** @var int */
-    private $id;
-    /** @var Carbon */
-    private $created;
-    /** @var Carbon */
-    private $updated;
-    /** @var int */
-    private $monetaryAccountId;
+    /** @var LabelMonetaryAccount */
+    private $alias;
     /** @var Amount */
     private $amount;
-    /** @var string */
-    private $description;
-    /** @var string */
-    private $type;
-    /** @var string */
-    private $merchantReference;
-    /** @var LabelMonetaryAccount */
-    private $counterParty;
     /** @var array */
     private $attachments = [];
+    /** @var LabelMonetaryAccount */
+    private $counterParty;
+    /** @var Carbon */
+    private $created;
+    /** @var string */
+    private $description;
+    /** @var int */
+    private $id;
+    /** @var string */
+    private $merchantReference;
+    /** @var int */
+    private $monetaryAccountId;
     /** @var string */
     private $subType;
+    /** @var string */
+    private $type;
+    /** @var Carbon */
+    private $updated;
 
     /**
      * Payment constructor.
@@ -60,11 +63,81 @@ class Payment extends BunqObject
      */
     public function __construct(array $data)
     {
-        $this->id = $data['id'];
-        $this->created = new Carbon();
+        $this->id                = $data['id'];
+        $this->created           = Carbon::createFromFormat('Y-m-d H:i:s.u', $data['created']);
+        $this->updated           = Carbon::createFromFormat('Y-m-d H:i:s.u', $data['updated']);
+        $this->monetaryAccountId = (int)$data['monetary_account_id'];
+        $this->amount            = new Amount($data['amount']);
+        $this->description       = $data['description'];
+        $this->type              = $data['type'];
+        $this->merchantReference = $data['merchant_reference'];
+        $this->alias             = new LabelMonetaryAccount($data['alias']);
+        $this->counterParty      = new LabelMonetaryAccount($data['counterparty_alias']);
+        $this->subType           = $data['sub_type'];
+    }
 
-        var_dump($data);
-        exit;
+    /**
+     * @return Amount
+     */
+    public function getAmount(): Amount
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @return LabelMonetaryAccount|null
+     */
+    public function getCounterParty(): ?LabelMonetaryAccount
+    {
+        return $this->counterParty;
+    }
+
+    /**
+     * @return Carbon
+     */
+    public function getCreated(): Carbon
+    {
+        return $this->created;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubType(): string
+    {
+        return $this->subType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        die(sprintf('Cannot convert %s to array.', get_class($this)));
     }
 
 }

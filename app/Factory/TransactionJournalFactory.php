@@ -93,7 +93,7 @@ class TransactionJournalFactory
 
         // store date meta fields (if present):
         $fields = ['sepa-cc', 'sepa-ct-op', 'sepa-ct-id', 'sepa-db', 'sepa-country', 'sepa-ep', 'sepa-ci', 'interest_date', 'book_date', 'process_date',
-                   'due_date', 'payment_date', 'invoice_date', 'internal_reference',];
+                   'due_date', 'payment_date', 'invoice_date', 'internal_reference','bunq_payment_id'];
 
         foreach ($fields as $field) {
             $this->storeMeta($journal, $data, $field);

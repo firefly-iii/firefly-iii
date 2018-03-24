@@ -162,9 +162,14 @@ class AccountFactory
         if ($accountTypeId > 0) {
             return AccountType::find($accountTypeId);
         }
-        $type = config('firefly.accountTypeByIdentifier.' . strval($accountType));
+        $type   = config('firefly.accountTypeByIdentifier.' . strval($accountType));
+        $result = AccountType::whereType($type)->first();
+        if (is_null($result) && !is_null($accountType)) {
+            // try as full name:
+            $result = AccountType::whereType($accountType)->first();
+        }
 
-        return AccountType::whereType($type)->first();
+        return $result;
 
     }
 

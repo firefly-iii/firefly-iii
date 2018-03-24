@@ -110,4 +110,5 @@ return [
     'sepa-cc'                 => 'SEPA Clearing Code',
     'sepa-ep'                 => 'SEPA External Purpose',
     'sepa-ci'                 => 'SEPA Creditor Identifier',
+    'account_at_bunq'         => 'Account with bunq',
 ];

@@ -56,7 +56,7 @@ class TransactionJournalMetaFactory
         if ($data['data'] instanceof Carbon) {
             $value = $data['data']->toW3cString();
         }
-        if (strlen($value) === 0) {
+        if (strlen(strval($value)) === 0) {
             // don't store blank strings.
             if (!is_null($entry)) {
                 try {

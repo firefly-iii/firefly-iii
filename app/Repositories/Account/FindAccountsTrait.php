@@ -41,6 +41,7 @@ trait FindAccountsTrait
     /**
      * @param $accountId
      *
+     * @deprecated
      * @return Account
      */
     public function find(int $accountId): Account
@@ -57,6 +58,7 @@ trait FindAccountsTrait
     /**
      * @param string $number
      * @param array  $types
+     *
      *
      * @deprecated
      * @return Account
@@ -110,9 +112,36 @@ trait FindAccountsTrait
     }
 
     /**
+     * @param string $iban
+     * @param array  $types
+     *
+     * @return Account|null
+     */
+    public function findByIbanNull(string $iban, array $types): ?Account
+    {
+        $query = $this->user->accounts()->where('iban', '!=', '')->whereNotNull('iban');
+
+        if (count($types) > 0) {
+            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $query->whereIn('account_types.type', $types);
+        }
+
+        $accounts = $query->get(['accounts.*']);
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->iban === $iban) {
+                return $account;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @param string $name
      * @param array  $types
      *
+     * @deprecated
      * @return Account|null
      */
     public function findByName(string $name, array $types): ?Account

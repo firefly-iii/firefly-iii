@@ -163,6 +163,9 @@ return [
     // bunq
     'bunq_prerequisites_title'             => 'Prerequisites for an import from bunq',
     'bunq_prerequisites_text'              => 'In order to import from bunq, you need to obtain an API key. You can do this through the app.',
+    'bunq_do_import'                       => 'Yes, import from this account',
+    'bunq_accounts_title'                  => 'Bunq accounts',
+    'bunq_accounts_text'                   => 'These are the accounts associated with your bunq account. Please select the accounts from which you want to import, and in which account the transactions must be imported.',
 
     // Spectre
     'spectre_title'                        => 'Import using Spectre',

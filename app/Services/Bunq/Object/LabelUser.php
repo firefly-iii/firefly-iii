@@ -1,7 +1,7 @@
 <?php
 /**
- * ServerPublicKey.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * LabelUser.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,42 +18,66 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Object;
 
+
 /**
- * Class ServerPublicKey.
+ * Class LabelUser
  */
-class ServerPublicKey extends BunqObject
+class LabelUser extends BunqObject
 {
+    /** @var Avatar */
+    private $avatar;
     /** @var string */
-    private $publicKey = '';
+    private $country;
+    /** @var string */
+    private $displayName;
+    /** @var string */
+    private $publicNickName;
+    /** @var string */
+    private $uuid;
 
     /**
-     * ServerPublicKey constructor.
-     *
-     * @param array $response
+     * @return Avatar
      */
-    public function __construct(array $response)
+    public function getAvatar(): Avatar
     {
-        $this->publicKey = $response['server_public_key'];
+        return $this->avatar;
     }
 
     /**
      * @return string
      */
-    public function getPublicKey(): string
+    public function getDisplayName(): string
     {
-        return $this->publicKey;
+        return $this->displayName;
     }
 
     /**
-     * @param string $publicKey
+     * @return string
      */
-    public function setPublicKey(string $publicKey)
+    public function getPublicNickName(): string
     {
-        $this->publicKey = $publicKey;
+        return $this->publicNickName;
+    }
+
+
+
+    /**
+     * LabelUser constructor.
+     *
+     * @param array $data
+     */
+    public function __construct(array $data)
+    {
+        $this->uuid           = $data['uuid'];
+        $this->displayName    = $data['display_name'];
+        $this->country        = $data['country'];
+        $this->publicNickName = $data['public_nick_name'];
+        $this->avatar         = new Avatar($data['avatar']);
     }
 
     /**

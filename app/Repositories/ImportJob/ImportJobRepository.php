@@ -311,18 +311,10 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      */
     public function setExtendedStatus(ImportJob $job, array $array): ImportJob
     {
-        // remove 'errors' because it gets larger and larger and larger...
-        $display = $array;
-        unset($display['errors']);
-        Log::debug(sprintf('Incoming extended status for job "%s" is (except errors): ', $job->key), $display);
         $currentStatus        = $job->extended_status;
         $newStatus            = array_merge($currentStatus, $array);
         $job->extended_status = $newStatus;
         $job->save();
-
-        // remove 'errors' because it gets larger and larger and larger...
-        unset($newStatus['errors']);
-        Log::debug(sprintf('Set extended status of job "%s" to (except errors): ', $job->key), $newStatus);
 
         return $job;
     }

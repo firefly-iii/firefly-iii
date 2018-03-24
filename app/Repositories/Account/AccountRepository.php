@@ -302,4 +302,5 @@ class AccountRepository implements AccountRepositoryInterface
 
         return $journal;
     }
+
 }
