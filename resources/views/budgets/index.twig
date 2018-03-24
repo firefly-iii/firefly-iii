@@ -183,6 +183,7 @@
                                            data-id="{{ budget.id }}" value="{{ repAmount }}" autocomplete="off"
                                            min="0" name="amount" type="number">
                                 </div>
+                                <span class="text-danger budget_warning" data-id="{{ budget.id }}" style="display:none;"></span>
                             </td>
                             <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}" data-spent="{{ budgetInformation[budget.id]['spent'] }}"
                                 data-value="{{ budgetInformation[budget.id]['spent'] }}">

@@ -40,6 +40,16 @@ interface BudgetRepositoryInterface
     public function cleanupBudgets(): bool;
 
     /**
+     * A method that returns the amount of money budgeted per day for this budget,
+     * on average.
+     *
+     * @param Budget $budget
+     *
+     * @return string
+     */
+    public function budgetedPerDay(Budget $budget): string;
+
+    /**
      * This method collects various info on budgets, used on the budget page and on the index.
      *
      * @param Collection $budgets

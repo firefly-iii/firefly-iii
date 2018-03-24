@@ -148,6 +148,14 @@ function updateBudgetedAmounts(e) {
         if (data.limit > 0) {
             link.attr('href', 'budgets/show/' + id + '/' + data.limit);
         }
+
+        // update the warning if relevant:
+        if (data.large_diff === true) {
+            $('span[class$="budget_warning"][data-id="' + id + '"]').html(data.warn_text).show();
+            console.log('Show warning for budget');
+        } else {
+            $('span[class$="budget_warning"][data-id="' + id + '"]').empty().hide();
+        }
     });
 }
 

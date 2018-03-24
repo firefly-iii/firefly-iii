@@ -49,6 +49,33 @@ class BudgetRepository implements BudgetRepositoryInterface
     private $user;
 
     /**
+     * A method that returns the amount of money budgeted per day for this budget,
+     * on average.
+     *
+     * @param Budget $budget
+     *
+     * @return string
+     */
+    public function budgetedPerDay(Budget $budget): string
+    {
+        $total = '0';
+        $count = 0;
+        foreach ($budget->budgetlimits as $limit) {
+            $diff   = strval($limit->start_date->diffInDays($limit->end_date));
+            $amount = strval($limit->amount);
+            $perDay = bcdiv($amount, $diff);
+            $total  = bcadd($total, $perDay);
+            $count++;
+        }
+        $avg = $total;
+        if ($count > 0) {
+            $avg = bcdiv($total, strval($count));
+        }
+
+        return $avg;
+    }
+
+    /**
      * @return bool
      *
      * @throws \Exception
