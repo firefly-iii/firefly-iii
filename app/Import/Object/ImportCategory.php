@@ -53,9 +53,9 @@ class ImportCategory
     }
 
     /**
-     * @return Category
+     * @return null|Category
      */
-    public function getCategory(): Category
+    public function getCategory(): ?Category
     {
         if (null === $this->category) {
             $this->store();

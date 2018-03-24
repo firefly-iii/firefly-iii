@@ -68,6 +68,7 @@ class TransactionJournalFactory
         );
 
         // store basic transactions:
+        /** @var TransactionFactory $factory */
         $factory = app(TransactionFactory::class);
         $factory->setUser($this->user);
 
@@ -91,13 +92,12 @@ class TransactionJournalFactory
         $this->storeNote($journal, strval($data['notes']));
 
         // store date meta fields (if present):
-        $this->storeMeta($journal, $data, 'interest_date');
-        $this->storeMeta($journal, $data, 'book_date');
-        $this->storeMeta($journal, $data, 'process_date');
-        $this->storeMeta($journal, $data, 'due_date');
-        $this->storeMeta($journal, $data, 'payment_date');
-        $this->storeMeta($journal, $data, 'invoice_date');
-        $this->storeMeta($journal, $data, 'internal_reference');
+        $fields = ['sepa-cc', 'sepa-ct-op', 'sepa-ct-id', 'sepa-db', 'sepa-country', 'sepa-ep', 'sepa-ci', 'interest_date', 'book_date', 'process_date',
+                   'due_date', 'payment_date', 'invoice_date', 'internal_reference',];
+
+        foreach ($fields as $field) {
+            $this->storeMeta($journal, $data, $field);
+        }
         Log::debug('End of TransactionJournalFactory::create()');
 
         return $journal;

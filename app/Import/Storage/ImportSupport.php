@@ -22,25 +22,19 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Storage;
 
-use Carbon\Carbon;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Object\ImportAccount;
 use FireflyIII\Import\Object\ImportJournal;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\Category;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Rule;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\TransactionRules\Processor;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
@@ -114,32 +108,6 @@ trait ImportSupport
     }
 
     /**
-     * @param array $parameters
-     *
-     * @return bool
-     *
-     * @throws FireflyException
-     */
-    private function createTransaction(array $parameters): bool
-    {
-        $transaction                          = new Transaction;
-        $transaction->account_id              = $parameters['account'];
-        $transaction->transaction_journal_id  = intval($parameters['id']);
-        $transaction->transaction_currency_id = intval($parameters['currency']);
-        $transaction->amount                  = $parameters['amount'];
-        $transaction->foreign_currency_id     = 0 === intval($parameters['foreign_currency']) ? null : intval($parameters['foreign_currency']);
-        $transaction->foreign_amount          = null === $transaction->foreign_currency_id ? null : $parameters['foreign_amount'];
-        $transaction->save();
-        if (null === $transaction->id) {
-            $errorText = join(', ', $transaction->getErrors()->all());
-            throw new FireflyException($errorText);
-        }
-        Log::debug(sprintf('Created transaction with ID #%d, account #%d, amount %s', $transaction->id, $parameters['account'], $parameters['amount']));
-
-        return true;
-    }
-
-    /**
      * @return Collection
      */
     private function getBills(): Collection
@@ -196,7 +164,7 @@ trait ImportSupport
     private function getForeignCurrencyId(ImportJournal $importJournal, int $currencyId): ?int
     {
         // use given currency by import journal.
-        $currency = $importJournal->currency->getTransactionCurrency();
+        $currency = $importJournal->foreignCurrency->getTransactionCurrency();
         if (null !== $currency && intval($currency->id) !== intval($currencyId)) {
             return $currency->id;
         }
@@ -378,140 +346,5 @@ trait ImportSupport
         }
 
         return false;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param Bill               $bill
-     */
-    private function storeBill(TransactionJournal $journal, Bill $bill)
-    {
-        if (null !== $bill) {
-            Log::debug(sprintf('Linked bill #%d to journal #%d', $bill->id, $journal->id));
-            $journal->bill()->associate($bill);
-            $journal->save();
-        }
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param Budget             $budget
-     */
-    private function storeBudget(TransactionJournal $journal, Budget $budget)
-    {
-        if (null !== $budget) {
-            Log::debug(sprintf('Linked budget #%d to journal #%d', $budget->id, $journal->id));
-            $journal->budgets()->save($budget);
-        }
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param Category           $category
-     */
-    private function storeCategory(TransactionJournal $journal, Category $category)
-    {
-        if (null !== $category) {
-            Log::debug(sprintf('Linked category #%d to journal #%d', $category->id, $journal->id));
-            $journal->categories()->save($category);
-        }
-    }
-
-    /**
-     * @param array $parameters
-     *
-     * @return TransactionJournal
-     *
-     * @throws FireflyException
-     */
-    private function storeJournal(array $parameters): TransactionJournal
-    {
-        // find transaction type:
-        $transactionType = TransactionType::whereType($parameters['type'])->first();
-
-        // create a journal:
-        $journal                          = new TransactionJournal;
-        $journal->user_id                 = $this->job->user_id;
-        $journal->transaction_type_id     = $transactionType->id;
-        $journal->transaction_currency_id = $parameters['currency'];
-        $journal->description             = $parameters['description'];
-        $journal->date                    = $parameters['date'];
-        $journal->order                   = 0;
-        $journal->tag_count               = 0;
-        $journal->completed               = false;
-
-        if (!$journal->save()) {
-            $errorText = join(', ', $journal->getErrors()->all());
-            // throw error
-            throw new FireflyException($errorText);
-        }
-        // save meta data:
-        $this->journalRepository->setMetaString($journal, 'importHash', $parameters['hash']);
-        Log::debug(sprintf('Created journal with ID #%d', $journal->id));
-
-        // create transactions:
-        $one      = [
-            'id'               => $journal->id,
-            'account'          => $parameters['asset']->id,
-            'currency'         => $parameters['currency'],
-            'amount'           => $parameters['amount'],
-            'foreign_currency' => $parameters['foreign_currency'],
-            'foreign_amount'   => null === $parameters['foreign_currency'] ? null : $parameters['amount'],
-        ];
-        $opposite = app('steam')->opposite($parameters['amount']);
-        $two      = [
-            'id'               => $journal->id,
-            'account'          => $parameters['opposing']->id,
-            'currency'         => $parameters['currency'],
-            'amount'           => $opposite,
-            'foreign_currency' => $parameters['foreign_currency'],
-            'foreign_amount'   => null === $parameters['foreign_currency'] ? null : $opposite,
-        ];
-        $this->createTransaction($one);
-        $this->createTransaction($two);
-
-        return $journal;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param array              $dates
-     */
-    private function storeMetaDates(TransactionJournal $journal, array $dates)
-    {
-        // all other date fields as meta thing:
-        foreach ($dates as $name => $value) {
-            try {
-                $date = new Carbon($value);
-                $this->journalRepository->setMetaDate($journal, $name, $date);
-            } catch (Exception $e) {
-                // don't care, ignore:
-                Log::warning(sprintf('Could not parse "%s" into a valid Date object for field %s', $value, $name));
-            }
-        }
-    }
-
-    /**
-     * @param array              $tags
-     * @param TransactionJournal $journal
-     */
-    private function storeTags(array $tags, TransactionJournal $journal): void
-    {
-        $repository = app(TagRepositoryInterface::class);
-        $repository->setUser($journal->user);
-
-        foreach ($tags as $tag) {
-            $dbTag = $repository->findByTag($tag);
-            if (null === $dbTag->id) {
-                $dbTag = $repository->store(
-                    ['tag'       => $tag, 'date' => null, 'description' => null, 'latitude' => null, 'longitude' => null,
-                     'zoomLevel' => null, 'tagMode' => 'nothing',]
-                );
-            }
-            $journal->tags()->save($dbTag);
-            Log::debug(sprintf('Linked tag %d ("%s") to journal #%d', $dbTag->id, $dbTag->tag, $journal->id));
-        }
-
-        return;
     }
 }

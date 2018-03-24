@@ -265,6 +265,7 @@ trait TransactionServiceTrait
 
             return;
         }
+
         $transaction->foreign_currency_id = $currency->id;
         $transaction->save();
 

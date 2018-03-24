@@ -24,6 +24,7 @@ namespace FireflyIII\Import\Object;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Import\Converter\Amount;
 use FireflyIII\Import\Converter\ConverterInterface;
 use FireflyIII\Import\MapperPreProcess\PreProcessorInterface;
 use FireflyIII\User;
@@ -36,6 +37,7 @@ use Steam;
  */
 class ImportJournal
 {
+
     /** @var ImportAccount */
     public $asset;
     /** @var ImportBill */
@@ -157,6 +159,80 @@ class ImportJournal
     }
 
     /**
+     * @return string|null
+     */
+    public function getForeignAmount(): ?string
+    {
+        Log::debug('Now in getForeignAmount()');
+        Log::debug(sprintf('foreign amount is %s', var_export($this->foreignAmount, true)));
+
+        // no foreign amount? return null
+        if (null === $this->foreignAmount) {
+            Log::debug('Return NULL for foreign amount');
+
+            return null;
+        }
+        // converter is default amount converter: no special stuff
+        $converter = app(Amount::class);
+        $amount    = $converter->convert($this->foreignAmount['value']);
+        Log::debug(sprintf('First attempt to convert foreign gives "%s"', $amount));
+        // modify
+        foreach ($this->modifiers as $modifier) {
+            $class = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $modifier['role'])));
+            /** @var ConverterInterface $converter */
+            $converter = app($class);
+            Log::debug(sprintf('Now launching converter %s', $class));
+            if ($converter->convert($modifier['value']) === -1) {
+                $this->convertedAmount = Steam::negative($amount);
+            }
+            Log::debug(sprintf('Foreign amount after conversion is  %s', $amount));
+        }
+
+        Log::debug(sprintf('After modifiers the result is: "%s"', $amount));
+
+
+        Log::debug(sprintf('converted foreign amount is: "%s"', $amount));
+        if (0 === bccomp($amount, '0')) {
+            return null;
+        }
+
+        return $amount;
+    }
+
+    /**
+     * Get date field or NULL
+     *
+     * @param string $field
+     *
+     * @return Carbon|null
+     */
+    public function getMetaDate(string $field): ?Carbon
+    {
+        if (isset($this->metaDates[$field])) {
+            return new Carbon($this->metaDates[$field]);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get string field or NULL
+     *
+     * @param string $field
+     *
+     * @return string|null
+     */
+    public function getMetaString(string $field): ?string
+    {
+        if (isset($this->metaFields[$field]) && strlen($this->metaFields[$field]) > 0) {
+            return strval($this->metaFields[$field]);
+        }
+
+        return null;
+    }
+
+
+    /**
      * @param string $hash
      */
     public function setHash(string $hash)
@@ -213,7 +289,7 @@ class ImportJournal
                 $this->foreignAmount = $array;
                 break;
             case 'foreign-currency-code':
-                $this->foreignCurrency->setId($array);
+                $this->foreignCurrency->setCode($array);
                 break;
             case 'amount_debit':
                 $this->amountDebit = $array;

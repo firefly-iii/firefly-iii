@@ -53,9 +53,9 @@ class ImportBudget
     }
 
     /**
-     * @return Budget
+     * @return Budget|null
      */
-    public function getBudget(): Budget
+    public function getBudget(): ?Budget
     {
         if (null === $this->budget) {
             $this->store();
