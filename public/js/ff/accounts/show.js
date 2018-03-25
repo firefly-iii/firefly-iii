@@ -33,8 +33,8 @@ var fixHelper = function (e, tr) {
 
 $(function () {
     "use strict";
+    lineChart(chartUri, 'overview-chart');
     if (!showAll) {
-        lineChart(chartUri, 'overview-chart');
         pieChart(incomeCategoryUri, 'account-cat-in');
         pieChart(expenseCategoryUri, 'account-cat-out');
         pieChart(expenseBudgetUri, 'account-budget-out');

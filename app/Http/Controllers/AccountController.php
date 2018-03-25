@@ -94,7 +94,7 @@ class AccountController extends Controller
         $subTitle           = trans('firefly.make_new_' . $what . '_account');
         $roles              = [];
         foreach (config('firefly.accountRoles') as $role) {
-            $roles[$role] = strval(trans('firefly.account_role_' . $role));
+            $roles[$role] = (string)trans('firefly.account_role_' . $role);
         }
 
         // pre fill some data
@@ -345,7 +345,9 @@ class AccountController extends Controller
         if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
             return $this->redirectToOriginalAccount($account);
         }
+        $end          = new Carbon;
         $today        = new Carbon;
+        $start        = $this->repository->oldestJournalDate($account);
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $page         = (int)$request->get('page');
         $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
@@ -360,11 +362,12 @@ class AccountController extends Controller
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath(route('accounts.show.all', [$account->id]));
-        $showAll = true;
+        $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+        $showAll  = true;
 
         return view(
             'accounts.show',
-            compact('account', 'showAll', 'currency', 'today', 'periods', 'subTitleIcon', 'transactions', 'subTitle')
+            compact('account', 'showAll', 'currency', 'today', 'chartUri', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end')
         );
     }
 

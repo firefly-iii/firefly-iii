@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    {% if not showAll %}
+
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="box">
@@ -29,6 +29,7 @@
                 </div>
             </div>
         </div>
+    {% if not showAll %}
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="box">
@@ -153,10 +154,11 @@
         var showAll = true;
         currencySymbol = "{{ currency.symbol }}";
         var accountID = {{ account.id }};
+        var chartUri = '{{ chartUri }}';
         {% if not showAll %}
         showAll = false;
         // uri's for charts:
-        var chartUri = '{{ chartUri }}';
+
         var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
         var expenseCategoryUri = '{{ route('chart.account.expense-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
         var expenseBudgetUri = '{{ route('chart.account.expense-budget', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
