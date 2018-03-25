@@ -112,6 +112,7 @@ Route::group(
     Route::get('create/{what}', ['uses' => 'AccountController@create', 'as' => 'create'])->where('what', 'revenue|asset|expense');
     Route::get('edit/{account}', ['uses' => 'AccountController@edit', 'as' => 'edit']);
     Route::get('delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'delete']);
+    Route::get('show/{account}/all', ['uses' => 'AccountController@showAll', 'as' => 'show.all']);
     Route::get('show/{account}/{start_date?}/{end_date?}', ['uses' => 'AccountController@show', 'as' => 'show']);
 
     // reconcile routes:

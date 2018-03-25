@@ -5,67 +5,69 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">
-                        {{ trans('firefly.chart_account_in_period', {name: account.name, start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat) }) }}
-                    </h3>
-                    <div class="box-tools pull-right">
-                        <div class="btn-group">
-                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('accounts.edit', account.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
-                                <li><a href="{{ route('accounts.delete', account.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
-                            </ul>
+    {% if not showAll %}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            {{ trans('firefly.chart_account_in_period', {name: account.name, start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat) }) }}
+                        </h3>
+                        <div class="box-tools pull-right">
+                            <div class="btn-group">
+                                <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ route('accounts.edit', account.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
+                                    <li><a href="{{ route('accounts.delete', account.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <canvas id="overview-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'expenses_by_category'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <div style="width:100%;margin:0 auto;">
+                            <canvas id="account-cat-out" style="width:100%;height:250px;" height="250"></canvas>
                         </div>
                     </div>
                 </div>
-                <div class="box-body">
-                    <canvas id="overview-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'expenses_by_budget'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <div style="width:100%;margin:0 auto;">
+                            <canvas id="account-budget-out" style="width:100%;height:250px;" height="250"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'expenses_by_category'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <div style="width:100%;margin:0 auto;">
-                        <canvas id="account-cat-out" style="width:100%;height:250px;" height="250"></canvas>
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'income_by_category'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <div style="width:100%;margin:0 auto;">
+                            <canvas id="account-cat-in" style="width:100%;height:250px;" height="250"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'expenses_by_budget'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <div style="width:100%;margin:0 auto;">
-                        <canvas id="account-budget-out" style="width:100%;height:250px;" height="250"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'income_by_category'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <div style="width:100%;margin:0 auto;">
-                        <canvas id="account-cat-in" style="width:100%;height:250px;" height="250"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% endif %}
     {% if account.notes.count == 1 %}
         <div class="row">
             <div class="box">
@@ -94,9 +96,15 @@
                     {% include 'list.journals' with {sorting:true, hideBills:true, hideBudgets: true, hideCategories: true, showReconcile: showReconcile} %}
                     <p>
                         <i class="fa fa-calendar"></i>
-                        <a href="{{ route('accounts.show', [account.id]) }}">
-                            {{ 'show_the_current_period_and_overview'|_ }}
-                        </a>
+                        {% if periods.count > 0 %}
+                            <a href="{{ route('accounts.show.all', [account.id]) }}">
+                                {{ 'show_all_no_filter'|_ }}
+                            </a>
+                        {% else %}
+                            <a href="{{ route('accounts.show', [account.id]) }}">
+                                {{ 'show_the_current_period_and_overview'|_ }}
+                            </a>
+                        {% endif %}
                     </p>
                 </div>
             </div>
@@ -139,20 +147,22 @@
 
 {% block scripts %}
     <script type="text/javascript">
+
+        var showAll = true;
         currencySymbol = "{{ currency.symbol }}";
         var accountID = {{ account.id }};
+        {% if not showAll %}
+        showAll = false;
         // uri's for charts:
         var chartUri = '{{ chartUri }}';
-        {% if start and end %}
-            var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
-            var expenseCategoryUri = '{{ route('chart.account.expense-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
-            var expenseBudgetUri = '{{ route('chart.account.expense-budget', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
-        {% endif %}
-
+        var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+        var expenseCategoryUri = '{{ route('chart.account.expense-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+        var expenseBudgetUri = '{{ route('chart.account.expense-budget', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
         var drawVerticalLine = '';
         {# render vertical line with text "today"  #}
         {% if start.lte(today) and end.gte(today) %}
         drawVerticalLine = '{{ today.formatLocalized(monthAndDayFormat) }}';
+        {% endif %}
         {% endif %}
 
     </script>

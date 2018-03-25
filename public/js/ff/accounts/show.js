@@ -18,7 +18,7 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: chartUri, incomeCategoryUri, expenseCategoryUri, expenseBudgetUri, token */
+/** global: chartUri, incomeCategoryUri, showAll, expenseCategoryUri, expenseBudgetUri, token */
 
 var fixHelper = function (e, tr) {
     "use strict";
@@ -33,11 +33,12 @@ var fixHelper = function (e, tr) {
 
 $(function () {
     "use strict";
-    lineChart(chartUri, 'overview-chart');
-    pieChart(incomeCategoryUri, 'account-cat-in');
-    pieChart(expenseCategoryUri, 'account-cat-out');
-    pieChart(expenseBudgetUri, 'account-budget-out');
-
+    if (!showAll) {
+        lineChart(chartUri, 'overview-chart');
+        pieChart(incomeCategoryUri, 'account-cat-in');
+        pieChart(expenseCategoryUri, 'account-cat-out');
+        pieChart(expenseBudgetUri, 'account-budget-out');
+    }
 
     // sortable!
     if (typeof $(".sortable-table tbody").sortable !== "undefined") {

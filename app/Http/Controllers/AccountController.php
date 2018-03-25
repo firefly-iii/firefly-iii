@@ -285,8 +285,6 @@ class AccountController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      *
      * @throws FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // long and complex but not that excessively so.
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      */
     public function show(Request $request, Account $account, Carbon $start = null, Carbon $end = null)
@@ -306,9 +304,9 @@ class AccountController extends Controller
 
         $today        = new Carbon;
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
-        $page         = intval($request->get('page'));
-        $pageSize     = intval(Preferences::get('listPageSize', 50)->data);
-        $currencyId   = intval($this->repository->getMetaValue($account, 'currency_id'));
+        $page         = (int)$request->get('page');
+        $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
+        $currencyId   = (int)$this->repository->getMetaValue($account, 'currency_id');
         $currency     = $this->currencyRepos->findNull($currencyId);
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
@@ -320,15 +318,53 @@ class AccountController extends Controller
         $periods   = $this->getPeriodOverview($account, $end);
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
-        if (null !== $start) {
-            $collector->setRange($start, $end);
-        }
+        $collector->setRange($start, $end);
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
+        $showAll = false;
 
         return view(
             'accounts.show',
-            compact('account', 'currency', 'today', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end', 'chartUri')
+            compact('account', 'showAll', 'currency', 'today', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end', 'chartUri')
+        );
+    }
+
+    /**
+     * Show an account.
+     *
+     * @param Request $request
+     * @param Account $account
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
+     *
+     * @throws FireflyException
+     *
+     */
+    public function showAll(Request $request, Account $account)
+    {
+        if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
+            return $this->redirectToOriginalAccount($account);
+        }
+        $today        = new Carbon;
+        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
+        $page         = (int)$request->get('page');
+        $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
+        $currencyId   = (int)$this->repository->getMetaValue($account, 'currency_id');
+        $currency     = $this->currencyRepos->findNull($currencyId);
+        if (0 === $currencyId) {
+            $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
+        }
+        $subTitle  = trans('firefly.all_journals_for_account', ['name' => $account->name]);
+        $periods   = new Collection;
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
+        $transactions = $collector->getPaginatedJournals();
+        $transactions->setPath(route('accounts.show.all', [$account->id]));
+        $showAll = true;
+
+        return view(
+            'accounts.show',
+            compact('account', 'showAll', 'currency', 'today', 'periods', 'subTitleIcon', 'transactions', 'subTitle')
         );
     }
 

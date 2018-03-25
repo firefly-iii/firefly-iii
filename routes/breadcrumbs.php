@@ -93,6 +93,16 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
+    'accounts.show.all',
+    function (BreadCrumbsGenerator $breadcrumbs, Account $account, Carbon $start = null, Carbon $end = null) {
+        $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
+
+        $breadcrumbs->parent('accounts.index', $what);
+        $breadcrumbs->push($account->name, route('accounts.show', [$account->id]));
+    }
+);
+
+Breadcrumbs::register(
     'accounts.reconcile',
     function (BreadCrumbsGenerator $breadcrumbs, Account $account) {
         $breadcrumbs->parent('accounts.show', $account);
@@ -966,7 +976,7 @@ Breadcrumbs::register(
         if ($journals->count() > 0) {
             $journalIds = $journals->pluck('id')->toArray();
             $what       = strtolower($journals->first()->transactionType->type);
-            $breadcrumbs->parent('transactions.index');
+            $breadcrumbs->parent('transactions.index', $what);
             $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.edit', $journalIds));
 
             return;
@@ -983,7 +993,7 @@ Breadcrumbs::register(
     function (BreadCrumbsGenerator $breadcrumbs, Collection $journals) {
         $journalIds = $journals->pluck('id')->toArray();
         $what       = strtolower($journals->first()->transactionType->type);
-        $breadcrumbs->parent('transactions.index');
+        $breadcrumbs->parent('transactions.index', $what);
         $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.delete', $journalIds));
     }
 );
@@ -995,7 +1005,7 @@ Breadcrumbs::register(
         if ($journals->count() > 0) {
             $journalIds = $journals->pluck('id')->toArray();
             $what       = strtolower($journals->first()->transactionType->type);
-            $breadcrumbs->parent('transactions.index');
+            $breadcrumbs->parent('transactions.index', $what);
             $breadcrumbs->push(trans('firefly.mass_bulk_journals'), route('transactions.bulk.edit', $journalIds));
 
             return;
