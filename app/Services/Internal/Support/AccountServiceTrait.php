@@ -211,8 +211,6 @@ trait AccountServiceTrait
     }
 
     /**
-     * TODO make sure this works (user ID, etc.)
-     *
      * @param User   $user
      * @param string $name
      *
@@ -234,6 +232,7 @@ trait AccountServiceTrait
      * @param array   $data
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function updateIB(Account $account, array $data): bool
     {

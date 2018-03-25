@@ -46,6 +46,7 @@ class ListPaymentRequest extends BunqRequest
 
     /**
      * TODO support pagination.
+     * TODO impose limits on import.
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */

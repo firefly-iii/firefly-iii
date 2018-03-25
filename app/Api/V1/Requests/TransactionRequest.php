@@ -224,7 +224,7 @@ class TransactionRequest extends Request
             return $first;
         }
 
-        $account = $repository->findByName($accountName, [AccountType::ASSET]);
+        $account = $repository->findByNameNull($accountName, [AccountType::ASSET]);
         if (is_null($account)) {
             $validator->errors()->add($nameField, trans('validation.belongs_user'));
 

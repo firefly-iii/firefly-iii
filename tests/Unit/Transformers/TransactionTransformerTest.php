@@ -40,8 +40,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
 
 /**
- * TODO test split transaction.
- *
  * Class TransactionTransformerTest
  */
 class TransactionTransformerTest extends TestCase

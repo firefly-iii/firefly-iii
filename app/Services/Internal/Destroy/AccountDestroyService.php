@@ -39,9 +39,9 @@ class AccountDestroyService
      * @param Account      $account
      * @param Account|null $moveTo
      *
-     * @return bool
+     * @return void
      */
-    public function destroy(Account $account, ?Account $moveTo): bool
+    public function destroy(Account $account, ?Account $moveTo): void
     {
         if (null !== $moveTo) {
             DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
@@ -66,7 +66,7 @@ class AccountDestroyService
             Log::error(sprintf('Could not delete account: %s', $e->getMessage())); // @codeCoverageIgnore
         }
 
-        return true;
+        return;
     }
 
 }

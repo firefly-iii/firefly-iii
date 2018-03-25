@@ -115,8 +115,6 @@ class MassController extends Controller
     }
 
     /**
-     * TODO this code is a mess.
-     *
      * @param Collection $journals
      *
      * @return View
@@ -207,8 +205,6 @@ class MassController extends Controller
     }
 
     /**
-     * TODO this cannot work with new update service.
-     *
      * @param MassEditJournalRequest     $request
      * @param JournalRepositoryInterface $repository
      *
@@ -236,7 +232,6 @@ class MassController extends Controller
                     $foreignAmount     = isset($request->get('foreign_amount')[$journal->id]) ? round($request->get('foreign_amount')[$journal->id], 12) : null;
                     $foreignCurrencyId = isset($request->get('foreign_currency_id')[$journal->id]) ?
                         intval($request->get('foreign_currency_id')[$journal->id]) : null;
-                    $notes             = $repository->getNoteText($journal);
                     // build data array
                     $data = [
                         'id'            => $journal->id,
@@ -245,7 +240,7 @@ class MassController extends Controller
                         'date'          => new Carbon($request->get('date')[$journal->id]),
                         'bill_id'       => null,
                         'bill_name'     => null,
-                        'notes'         => $notes,
+                        'notes'         => $repository->getNoteText($journal),
                         'transactions'  => [[
 
                                                 'category_id'           => null,
@@ -262,7 +257,7 @@ class MassController extends Controller
                                                 'currency_id'           => intval($currencyId),
                                                 'currency_code'         => null,
                                                 'description'           => null,
-                                                'foreign_amount'        => null,
+                                                'foreign_amount'        => $foreignAmount,
                                                 'foreign_currency_id'   => $foreignCurrencyId,
                                                 'foreign_currency_code' => null,
                                                 //'native_amount'            => $amount,

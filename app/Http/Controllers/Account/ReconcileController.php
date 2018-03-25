@@ -36,6 +36,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
@@ -49,6 +50,10 @@ use Session;
  */
 class ReconcileController extends Controller
 {
+    /** @var CurrencyUpdateService */
+    private $accountRepos;
+    /** @var AccountRepositoryInterface */
+    private $currencyRepos;
     /** @var JournalRepositoryInterface */
     private $repository;
 
@@ -64,7 +69,9 @@ class ReconcileController extends Controller
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
                 app('view')->share('title', trans('firefly.accounts'));
-                $this->repository = app(JournalRepositoryInterface::class);
+                $this->repository    = app(JournalRepositoryInterface::class);
+                $this->accountRepos  = app(AccountRepositoryInterface::class);
+                $this->currencyRepos = app(CurrencyRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -182,10 +189,8 @@ class ReconcileController extends Controller
 
             return redirect(route('accounts.index', [config('firefly.shortNamesByFullName.' . $account->accountType->type)]));
         }
-        /** @var CurrencyRepositoryInterface $currencyRepos */
-        $currencyRepos = app(CurrencyRepositoryInterface::class);
-        $currencyId    = intval($account->getMeta('currency_id'));
-        $currency      = $currencyRepos->findNull($currencyId);
+        $currencyId = intval($this->accountRepos->getMetaValue($account, 'currency_id'));
+        $currency   = $this->currencyRepos->findNull($currencyId);
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
@@ -265,9 +270,7 @@ class ReconcileController extends Controller
         // create reconciliation transaction (if necessary):
         if ('create' === $data['reconcile']) {
             // get "opposing" account.
-            /** @var AccountRepositoryInterface $accountRepos */
-            $accountRepos   = app(AccountRepositoryInterface::class);
-            $reconciliation = $accountRepos->getReconciliation($account);
+            $reconciliation = $this->accountRepos->getReconciliation($account);
 
 
             $difference  = $data['difference'];
@@ -297,7 +300,7 @@ class ReconcileController extends Controller
                 'tags'            => null,
                 'interest_date'   => null,
                 'transactions'    => [[
-                                          'currency_id'           => intval($account->getMeta('currency_id')),
+                                          'currency_id'           => intval($this->accountRepos->getMetaValue($account, 'currency_id')),
                                           'currency_code'         => null,
                                           'description'           => null,
                                           'amount'                => app('steam')->positive($difference),
@@ -347,10 +350,8 @@ class ReconcileController extends Controller
         $startDate = clone $start;
         $startDate->subDays(1);
 
-        /** @var CurrencyRepositoryInterface $currencyRepos */
-        $currencyRepos = app(CurrencyRepositoryInterface::class);
-        $currencyId    = intval($account->getMeta('currency_id'));
-        $currency      = $currencyRepos->findNull($currencyId);
+        $currencyId = intval($this->accountRepos->getMetaValue($account, 'currency_id'));
+        $currency   = $this->currencyRepos->findNull($currencyId);
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }

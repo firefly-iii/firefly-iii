@@ -88,7 +88,7 @@ interface AttachmentRepositoryInterface
      *
      * @return string
      */
-    public function getNoteText(Attachment $attachment): string;
+    public function getNoteText(Attachment $attachment): ?string;
 
     /**
      * @param User $user

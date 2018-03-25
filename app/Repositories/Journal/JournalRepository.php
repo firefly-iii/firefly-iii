@@ -456,17 +456,17 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * Return text of a note attached to journal, or ''.
+     * Return text of a note attached to journal, or NULL
      *
      * @param TransactionJournal $journal
      *
-     * @return string
+     * @return string|null
      */
-    public function getNoteText(TransactionJournal $journal): string
+    public function getNoteText(TransactionJournal $journal): ?string
     {
         $note = $this->getNote($journal);
         if (is_null($note)) {
-            return '';
+            return null;
         }
 
         return $note->text;

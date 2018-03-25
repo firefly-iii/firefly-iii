@@ -54,7 +54,7 @@ class JavascriptController extends Controller
         /** @var Account $account */
         foreach ($accounts as $account) {
             $accountId                    = $account->id;
-            $currency                     = intval($account->getMeta('currency_id'));
+            $currency                     = intval($repository->getMetaValue($account, 'currency_id'));
             $currency                     = 0 === $currency ? $default->id : $currency;
             $entry                        = ['preferredCurrency' => $currency, 'name' => $account->name];
             $data['accounts'][$accountId] = $entry;
@@ -98,7 +98,7 @@ class JavascriptController extends Controller
         $account    = $repository->findNull(intval($request->get('account')));
         $currencyId = 0;
         if (null !== $account) {
-            $currencyId = intval($account->getMeta('currency_id'));
+            $currencyId = intval($repository->getMetaValue($account, 'currency_id'));
         }
         /** @var TransactionCurrency $currency */
         $currency = $currencyRepository->findNull($currencyId);

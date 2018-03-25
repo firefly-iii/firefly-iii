@@ -92,7 +92,6 @@ interface AccountRepositoryInterface
      * @param string $name
      * @param array  $types
      *
-     * @deprecated
      * @return Account|null
      */
     public function findByName(string $name, array $types): ?Account;

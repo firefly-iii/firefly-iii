@@ -31,6 +31,26 @@ use FireflyIII\Models\TransactionCurrency;
 class TransactionCurrencyFactory
 {
     /**
+     * @param array $data
+     *
+     * @return TransactionCurrency
+     */
+    public function create(array $data): TransactionCurrency
+    {
+        /** @var TransactionCurrency $currency */
+        $currency = TransactionCurrency::create(
+            [
+                'name'           => $data['name'],
+                'code'           => $data['code'],
+                'symbol'         => $data['symbol'],
+                'decimal_places' => $data['decimal_places'],
+            ]
+        );
+
+        return $currency;
+    }
+
+    /**
      * @param int|null    $currencyId
      * @param null|string $currencyCode
      *

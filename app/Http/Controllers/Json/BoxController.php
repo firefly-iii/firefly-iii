@@ -236,7 +236,7 @@ class BoxController extends Controller
         foreach ($accounts as $account) {
             $accountCurrency = $currency;
             $balance         = $balances[$account->id] ?? '0';
-            $currencyId      = intval($account->getMeta('currency_id'));
+            $currencyId      = intval($repository->getMetaValue($account, 'currency_id'));
             if ($currencyId !== 0) {
                 $accountCurrency = $currencyRepos->findNull($currencyId);
             }

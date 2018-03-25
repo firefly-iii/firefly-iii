@@ -186,17 +186,17 @@ class AccountController extends Controller
         $openingBalanceAmount = strval($repository->getOpeningBalanceAmount($account));
         $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
         $default              = app('amount')->getDefaultCurrency();
-        $currency             = $this->currencyRepos->findNull(intval($account->getMeta('currency_id')));
+        $currency             = $this->currencyRepos->findNull(intval($repository->getMetaValue($account, 'currency_id')));
         if (is_null($currency)) {
             $currency = $default;
         }
 
         $preFilled = [
-            'accountNumber'        => $account->getMeta('accountNumber'),
-            'accountRole'          => $account->getMeta('accountRole'),
-            'ccType'               => $account->getMeta('ccType'),
-            'ccMonthlyPaymentDate' => $account->getMeta('ccMonthlyPaymentDate'),
-            'BIC'                  => $account->getMeta('BIC'),
+            'accountNumber'        => $repository->getMetaValue($account, 'accountNumber'),
+            'accountRole'          => $repository->getMetaValue($account, 'accountRole'),
+            'ccType'               => $repository->getMetaValue($account, 'ccType'),
+            'ccMonthlyPaymentDate' => $repository->getMetaValue($account, 'ccMonthlyPaymentDate'),
+            'BIC'                  => $repository->getMetaValue($account, 'BIC'),
             'openingBalanceDate'   => $openingBalanceDate,
             'openingBalance'       => $openingBalanceAmount,
             'virtualBalance'       => $account->virtual_balance,

@@ -174,6 +174,7 @@ final class Processor
      * @param Transaction $transaction
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function handleTransaction(Transaction $transaction): bool
     {
@@ -208,6 +209,7 @@ final class Processor
      * @param TransactionJournal $journal
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function handleTransactionJournal(TransactionJournal $journal): bool
     {

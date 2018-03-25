@@ -22,14 +22,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Jobs;
 
-use ErrorException;
+use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Message;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Log;
 use Mail;
-use Swift_TransportException;
 
 /**
  * Class MailError.
@@ -89,11 +88,8 @@ class MailError extends Job implements ShouldQueue
                         }
                     }
                 );
-            } catch (Swift_TransportException $e) {
-                // could also not mail! :o
-                Log::error('Swift Transport Exception' . $e->getMessage());
-            } catch (ErrorException $e) {
-                Log::error('ErrorException ' . $e->getMessage());
+            } catch (Exception $e) {
+                Log::error('Exception when mailing: ' . $e->getMessage());
             }
         }
     }

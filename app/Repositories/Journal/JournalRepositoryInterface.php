@@ -194,13 +194,13 @@ interface JournalRepositoryInterface
     public function getNote(TransactionJournal $journal): ?Note;
 
     /**
-     * Return text of a note attached to journal, or ''.
+     * Return text of a note attached to journal, or NULL
      *
      * @param TransactionJournal $journal
      *
-     * @return string
+     * @return string|null
      */
-    public function getNoteText(TransactionJournal $journal): string;
+    public function getNoteText(TransactionJournal $journal): ?string;
 
     /**
      * @param TransactionJournal $journal

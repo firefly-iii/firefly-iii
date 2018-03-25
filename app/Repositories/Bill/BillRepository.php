@@ -486,8 +486,6 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * TODO move to a service.
-     *
      * @param Bill               $bill
      * @param TransactionJournal $journal
      *
@@ -572,8 +570,6 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * TODO refactor
-     *
      * @param float $amount
      * @param float $min
      * @param float $max
@@ -590,8 +586,6 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * TODO refactor
-     *
      * @param array $matches
      * @param       $description
      *

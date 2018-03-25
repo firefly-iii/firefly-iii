@@ -135,6 +135,8 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
 
     /**
      * Execute the job.
+     *
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function handle()
     {

@@ -189,7 +189,6 @@ class RuleGroupController extends Controller
     {
         // does the user have shared accounts?
         $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        // todo could be removed?
         $accountList     = ExpandedForm::makeSelectList($accounts);
         $checkedAccounts = array_keys($accountList);
         $first           = session('first')->format('Y-m-d');

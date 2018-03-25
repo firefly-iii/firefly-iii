@@ -129,8 +129,8 @@ class ReportController extends Controller
     private function balanceAmount(array $attributes): string
     {
         $role    = intval($attributes['role']);
-        $budget  = $this->budgetRepository->find(intval($attributes['budgetId']));
-        $account = $this->accountRepository->find(intval($attributes['accountId']));
+        $budget  = $this->budgetRepository->findNull(intval($attributes['budgetId']));
+        $account = $this->accountRepository->findNull(intval($attributes['accountId']));
 
         switch (true) {
             case BalanceLine::ROLE_DEFAULTROLE === $role && null !== $budget->id:
@@ -166,7 +166,7 @@ class ReportController extends Controller
      */
     private function budgetSpentAmount(array $attributes): string
     {
-        $budget   = $this->budgetRepository->find(intval($attributes['budgetId']));
+        $budget   = $this->budgetRepository->findNull(intval($attributes['budgetId']));
         $journals = $this->popupHelper->byBudget($budget, $attributes);
         $view     = view('popup.report.budget-spent-amount', compact('journals', 'budget'))->render();
 
@@ -184,7 +184,7 @@ class ReportController extends Controller
      */
     private function categoryEntry(array $attributes): string
     {
-        $category = $this->categoryRepository->find(intval($attributes['categoryId']));
+        $category = $this->categoryRepository->findNull(intval($attributes['categoryId']));
         $journals = $this->popupHelper->byCategory($category, $attributes);
         $view     = view('popup.report.category-entry', compact('journals', 'category'))->render();
 
@@ -202,7 +202,7 @@ class ReportController extends Controller
      */
     private function expenseEntry(array $attributes): string
     {
-        $account  = $this->accountRepository->find(intval($attributes['accountId']));
+        $account  = $this->accountRepository->findNull(intval($attributes['accountId']));
         $journals = $this->popupHelper->byExpenses($account, $attributes);
         $view     = view('popup.report.expense-entry', compact('journals', 'account'))->render();
 
@@ -220,7 +220,7 @@ class ReportController extends Controller
      */
     private function incomeEntry(array $attributes): string
     {
-        $account  = $this->accountRepository->find(intval($attributes['accountId']));
+        $account  = $this->accountRepository->findNull(intval($attributes['accountId']));
         $journals = $this->popupHelper->byIncome($account, $attributes);
         $view     = view('popup.report.income-entry', compact('journals', 'account'))->render();
 

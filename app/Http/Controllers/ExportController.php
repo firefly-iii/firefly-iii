@@ -121,7 +121,6 @@ class ExportController extends Controller
 
         // does the user have shared accounts?
         $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        // todo could be removed?
         $accountList   = ExpandedForm::makeSelectList($accounts);
         $checked       = array_keys($accountList);
         $formats       = array_keys(config('firefly.export_formats'));

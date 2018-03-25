@@ -28,6 +28,8 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Services\Internal\Destroy\CategoryDestroyService;
+use FireflyIII\Services\Internal\Update\CategoryUpdateService;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
@@ -42,8 +44,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     private $user;
 
     /**
-     * TODO move to delete service
-     *
      * @param Category $category
      *
      * @return bool
@@ -52,7 +52,9 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function destroy(Category $category): bool
     {
-        $category->delete();
+        /** @var CategoryDestroyService $service */
+        $service = app(CategoryDestroyService::class);
+        $service->destroy($category);
 
         return true;
     }
@@ -456,8 +458,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * TODO move to update service
-     *
      * @param Category $category
      * @param array    $data
      *
@@ -465,11 +465,10 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function update(Category $category, array $data): Category
     {
-        // update the account:
-        $category->name = $data['name'];
-        $category->save();
+        /** @var CategoryUpdateService $service */
+        $service = app(CategoryUpdateService::class);
 
-        return $category;
+        return $service->update($category, $data);
     }
 
     /**

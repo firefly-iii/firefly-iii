@@ -43,6 +43,7 @@ class AccountFactory
      * @param array $data
      *
      * @return Account
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function create(array $data): Account
     {

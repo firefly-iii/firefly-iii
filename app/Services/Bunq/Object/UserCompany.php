@@ -162,6 +162,19 @@ class UserCompany extends BunqObject
             'name'                       => $this->name,
         ];
 
+        // TODO alias
+        // TODO avatar
+        // TODO daily_limit_without_confirmation_login
+        // TODO notification_filters
+        // TODO address_main
+        // TODO address_postal
+        // TODO director_alias
+        // TODO ubo
+        // TODO customer
+        // TODO customer_limit
+        // TODO billing_contract
+        // TODO pack_membership
+
         return $data;
     }
 }

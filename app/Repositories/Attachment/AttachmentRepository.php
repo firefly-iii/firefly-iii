@@ -161,14 +161,14 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      *
      * @return string
      */
-    public function getNoteText(Attachment $attachment): string
+    public function getNoteText(Attachment $attachment): ?string
     {
         $note = $attachment->notes()->first();
         if (!is_null($note)) {
             return strval($note->text);
         }
 
-        return '';
+        return null;
     }
 
     /**

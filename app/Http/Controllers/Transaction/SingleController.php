@@ -103,7 +103,6 @@ class SingleController extends Controller
         $categoryName = $this->repository->getJournalCategoryName($journal);
 
         $tags = join(',', $this->repository->getTags($journal));
-        // todo less direct database access. Use collector?
         /** @var Transaction $transaction */
         $transaction   = $journal->transactions()->first();
         $amount        = app('steam')->positive($transaction->amount);

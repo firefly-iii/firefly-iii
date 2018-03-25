@@ -66,6 +66,7 @@ class StoredJournalEventHandler
      * @param StoredTransactionJournal $storedJournalEvent
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function processRules(StoredTransactionJournal $storedJournalEvent): bool
     {
