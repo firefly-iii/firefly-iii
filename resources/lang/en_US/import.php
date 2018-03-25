@@ -98,6 +98,7 @@ return [
     // not csv, but normal warning
     'roles_warning'                        => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
     'foreign_amount_warning'               => 'If you mark a column as containing an amount in a foreign currency, you must also set the column that contains which currency it is.',
+
     // file, map data
     'file_map_title'                       => 'Import setup (4/4) - Connect import data to Firefly III data',
     'file_map_text'                        => 'In the following tables, the left value shows you information found in your uploaded file. It is your task to map this value, if possible, to a value already present in your database. Firefly will stick to this mapping. If there is no value to map to, or you do not wish to map the specific value, select nothing.',
@@ -162,7 +163,7 @@ return [
 
     // bunq
     'bunq_prerequisites_title'             => 'Prerequisites for an import from bunq',
-    'bunq_prerequisites_text'              => 'In order to import from bunq, you need to obtain an API key. You can do this through the app.',
+    'bunq_prerequisites_text'              => 'In order to import from bunq, you need to obtain an API key. You can do this through the app. Please note that the import function for bunq is in BETA. It has only been tested against the sandbox API.',
     'bunq_do_import'                       => 'Yes, import from this account',
     'bunq_accounts_title'                  => 'Bunq accounts',
     'bunq_accounts_text'                   => 'These are the accounts associated with your bunq account. Please select the accounts from which you want to import, and in which account the transactions must be imported.',

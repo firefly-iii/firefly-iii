@@ -57,7 +57,7 @@ return [
             ],
         ],
         'bunq' => [
-            'server'  => 'sandbox.public.api.bunq.com',
+            'server'  => 'api.bunq.com',
             'version' => 'v1',
         ],
     ],
