@@ -76,6 +76,10 @@ function getAvailableBox() {
     $.getJSON('json/box/available').done(function (data) {
         $('#box-left-to-spend').html(data.left);
         $('#box-left-per-day').html(data.perDay);
+        $('#box-left-to-spend-text').text(data.text);
+        if(data.overspent === true) {
+            $('#box-left-to-spend-box').removeClass('bg-green-gradient').addClass('bg-red-gradient');
+        }
     });
 }
 

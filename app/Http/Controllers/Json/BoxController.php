@@ -66,21 +66,25 @@ class BoxController extends Controller
         // get spent amount:
         $budgets           = $repository->getActiveBudgets();
         $budgetInformation = $repository->collectBudgetInformation($budgets, $start, $end);
-        $spent             = strval(array_sum(array_column($budgetInformation, 'spent')));
+        $spent             = (string)array_sum(array_column($budgetInformation, 'spent'));
         $left              = bcadd($available, $spent);
-        // left less than zero? then it's zero:
+        $days              = $today->diffInDays($end) + 1;
+        $perDay            = '0';
+        $text              = (string)trans('firefly.left_to_spend');
+        $overspent         = false;
         if (bccomp($left, '0') === -1) {
-            $left = '0';
+            $text      = (string)trans('firefly.overspent');
+            $overspent = true;
         }
-        $days   = $today->diffInDays($end) + 1;
-        $perDay = '0';
-        if (0 !== $days) {
-            $perDay = bcdiv($left, strval($days));
+        if (0 !== $days && bccomp($left, '0') > -1) {
+            $perDay = bcdiv($left, (string)$days);
         }
 
         $return = [
-            'perDay' => app('amount')->formatAnything($currency, $perDay, false),
-            'left'   => app('amount')->formatAnything($currency, $left, false),
+            'perDay'    => app('amount')->formatAnything($currency, $perDay, false),
+            'left'      => app('amount')->formatAnything($currency, $left, false),
+            'text'      => $text,
+            'overspent' => $overspent,
         ];
 
         $cache->store($return);
@@ -135,7 +139,7 @@ class BoxController extends Controller
         $set = $collector->getJournals();
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
-            $currencyId            = intval($transaction->transaction_currency_id);
+            $currencyId            = (int)$transaction->transaction_currency_id;
             $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
             $expenses[$currencyId] = bcadd($expenses[$currencyId], $transaction->transaction_amount);
             $sums[$currencyId]     = $sums[$currencyId] ?? '0';
@@ -236,7 +240,7 @@ class BoxController extends Controller
         foreach ($accounts as $account) {
             $accountCurrency = $currency;
             $balance         = $balances[$account->id] ?? '0';
-            $currencyId      = intval($repository->getMetaValue($account, 'currency_id'));
+            $currencyId      = (int)$repository->getMetaValue($account, 'currency_id');
             if ($currencyId !== 0) {
                 $accountCurrency = $currencyRepos->findNull($currencyId);
             }
