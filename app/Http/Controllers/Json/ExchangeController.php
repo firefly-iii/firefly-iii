@@ -48,15 +48,23 @@ class ExchangeController extends Controller
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app(CurrencyRepositoryInterface::class);
         $rate       = $repository->getExchangeRate($fromCurrency, $toCurrency, $date);
+
+
+
+
+
         if (null === $rate->id) {
             Log::debug(sprintf('No cached exchange rate in database for %s to %s on %s', $fromCurrency->code, $toCurrency->code, $date->format('Y-m-d')));
-            $preferred = env('EXCHANGE_RATE_SERVICE', config('firefly.preferred_exchange_service'));
-            $class     = config('firefly.currency_exchange_services.' . $preferred);
-            /** @var ExchangeRateInterface $object */
-            $object = app($class);
-            $object->setUser(auth()->user());
-            $rate = $object->getRate($fromCurrency, $toCurrency, $date);
+
+            // create service:
+            /** @var ExchangeRateInterface $service */
+            $service = app(ExchangeRateInterface::class);
+            $service->setUser(auth()->user());
+
+            // get rate:
+            $rate = $service->getRate($fromCurrency, $toCurrency, $date);
         }
+
         $return           = $rate->toArray();
         $return['amount'] = null;
         if (null !== $request->get('amount')) {

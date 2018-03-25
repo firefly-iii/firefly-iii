@@ -46,6 +46,8 @@ use FireflyIII\Repositories\TransactionType\TransactionTypeRepository;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepository;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Services\Currency\ExchangeRateInterface;
+use FireflyIII\Services\Currency\FixerIOv2;
 use FireflyIII\Services\Password\PwndVerifierV2;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\Amount;
@@ -174,6 +176,7 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(FiscalHelperInterface::class, FiscalHelper::class);
         $this->app->bind(BalanceReportHelperInterface::class, BalanceReportHelper::class);
         $this->app->bind(BudgetReportHelperInterface::class, BudgetReportHelper::class);
+        $this->app->bind(ExchangeRateInterface::class, FixerIOv2::class);
 
         // password verifier thing
         $this->app->bind(Verifier::class, PwndVerifierV2::class);
