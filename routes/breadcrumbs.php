@@ -877,31 +877,37 @@ Breadcrumbs::register(
 );
 
 // TRANSACTIONS
+
 Breadcrumbs::register(
     'transactions.index',
-    function (BreadCrumbsGenerator $breadcrumbs, string $what, string $moment = '', Carbon $start, Carbon $end) {
+    function (BreadCrumbsGenerator $breadcrumbs, string $what, Carbon $start = null, Carbon $end = null) {
         $breadcrumbs->parent('home');
         $breadcrumbs->push(trans('breadcrumbs.' . $what . '_list'), route('transactions.index', [$what]));
-        if ('all' === $moment) {
-            $breadcrumbs->push(trans('firefly.everything'), route('transactions.index', [$what, 'all']));
-        }
 
-        // when is specific period or when empty:
-        if ('all' !== $moment && '(nothing)' !== $moment) {
+        if (null !== $start && null !== $end) {
+            // add date range:
             $title = trans(
                 'firefly.between_dates_breadcrumb',
-                ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
-                 'end'   => $end->formatLocalized(strval(trans('config.month_and_day'))),]
+                ['start' => $start->formatLocalized((string)trans('config.month_and_day')),
+                 'end'   => $end->formatLocalized((string)trans('config.month_and_day')),]
             );
-            $breadcrumbs->push($title, route('transactions.index', [$what, $moment]));
+            $breadcrumbs->push($title, route('transactions.index', [$what, $start, $end]));
         }
+    }
+);
+
+Breadcrumbs::register(
+    'transactions.index.all',
+    function (BreadCrumbsGenerator $breadcrumbs, string $what, Carbon $start = null, Carbon $end = null) {
+        $breadcrumbs->parent('home');
+        $breadcrumbs->push(trans('breadcrumbs.' . $what . '_list'), route('transactions.index', [$what]));
     }
 );
 
 Breadcrumbs::register(
     'transactions.create',
     function (BreadCrumbsGenerator $breadcrumbs, string $what) {
-        $breadcrumbs->parent('transactions.index', $what, '(nothing)', new Carbon, new Carbon);
+        $breadcrumbs->parent('transactions.index', $what);
         $breadcrumbs->push(trans('breadcrumbs.create_' . e($what)), route('transactions.create', [$what]));
     }
 );
@@ -937,7 +943,7 @@ Breadcrumbs::register(
     'transactions.show',
     function (BreadCrumbsGenerator $breadcrumbs, TransactionJournal $journal) {
         $what = strtolower($journal->transactionType->type);
-        $breadcrumbs->parent('transactions.index', $what, '(nothing)', new Carbon, new Carbon);
+        $breadcrumbs->parent('transactions.index', $what);
         $breadcrumbs->push($journal->description, route('transactions.show', [$journal->id]));
     }
 );
@@ -960,7 +966,7 @@ Breadcrumbs::register(
         if ($journals->count() > 0) {
             $journalIds = $journals->pluck('id')->toArray();
             $what       = strtolower($journals->first()->transactionType->type);
-            $breadcrumbs->parent('transactions.index', $what, '(nothing)', new Carbon, new Carbon);
+            $breadcrumbs->parent('transactions.index');
             $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.edit', $journalIds));
 
             return;
@@ -977,7 +983,7 @@ Breadcrumbs::register(
     function (BreadCrumbsGenerator $breadcrumbs, Collection $journals) {
         $journalIds = $journals->pluck('id')->toArray();
         $what       = strtolower($journals->first()->transactionType->type);
-        $breadcrumbs->parent('transactions.index', $what, '(nothing)', new Carbon, new Carbon);
+        $breadcrumbs->parent('transactions.index');
         $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.delete', $journalIds));
     }
 );
@@ -989,7 +995,7 @@ Breadcrumbs::register(
         if ($journals->count() > 0) {
             $journalIds = $journals->pluck('id')->toArray();
             $what       = strtolower($journals->first()->transactionType->type);
-            $breadcrumbs->parent('transactions.index', $what, '(nothing)', new Carbon, new Carbon);
+            $breadcrumbs->parent('transactions.index');
             $breadcrumbs->push(trans('firefly.mass_bulk_journals'), route('transactions.bulk.edit', $journalIds));
 
             return;

@@ -25,11 +25,13 @@ namespace FireflyIII\Helpers\Collector;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Filter\CountAttachmentsFilter;
 use FireflyIII\Helpers\Filter\FilterInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\OpposingAccountFilter;
 use FireflyIII\Helpers\Filter\PositiveAmountFilter;
+use FireflyIII\Helpers\Filter\SplitIndicatorFilter;
 use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
@@ -760,6 +762,8 @@ class JournalCollector implements JournalCollectorInterface
             TransferFilter::class         => new TransferFilter,
             PositiveAmountFilter::class   => new PositiveAmountFilter,
             NegativeAmountFilter::class   => new NegativeAmountFilter,
+            SplitIndicatorFilter::class   => new SplitIndicatorFilter,
+            CountAttachmentsFilter::class => new CountAttachmentsFilter,
         ];
         Log::debug(sprintf('Will run %d filters on the set.', count($this->filters)));
         foreach ($this->filters as $enabled) {

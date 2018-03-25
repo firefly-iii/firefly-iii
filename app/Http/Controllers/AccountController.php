@@ -435,33 +435,34 @@ class AccountController extends Controller
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
+        /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
         $entries = new Collection;
         // loop dates
-        foreach ($dates as $date) {
+        foreach ($dates as $currentDate) {
 
             // try a collector for income:
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAccounts(new Collection([$account]))->setRange($date['start'], $date['end'])->setTypes([TransactionType::DEPOSIT])
+            $collector->setAccounts(new Collection([$account]))->setRange($currentDate['start'], $currentDate['end'])->setTypes([TransactionType::DEPOSIT])
                       ->withOpposingAccount();
-            $earned = strval($collector->getJournals()->sum('transaction_amount'));
+            $earned = (string)$collector->getJournals()->sum('transaction_amount');
 
             // try a collector for expenses:
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAccounts(new Collection([$account]))->setRange($date['start'], $date['end'])->setTypes([TransactionType::WITHDRAWAL])
+            $collector->setAccounts(new Collection([$account]))->setRange($currentDate['start'], $currentDate['end'])->setTypes([TransactionType::WITHDRAWAL])
                       ->withOpposingAccount();
-            $spent = strval($collector->getJournals()->sum('transaction_amount'));
+            $spent = (string)$collector->getJournals()->sum('transaction_amount');
 
-            $dateName = app('navigation')->periodShow($date['start'], $date['period']);
+            $dateName = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
             $entries->push(
                 [
                     'name'   => $dateName,
                     'spent'  => $spent,
                     'earned' => $earned,
-                    'start'  => $date['start']->format('Y-m-d'),
-                    'end'    => $date['end']->format('Y-m-d'),
+                    'start'  => $currentDate['start']->format('Y-m-d'),
+                    'end'    => $currentDate['end']->format('Y-m-d'),
                 ]
             );
         }

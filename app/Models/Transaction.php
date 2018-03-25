@@ -68,6 +68,8 @@ use Watson\Validating\ValidatingTrait;
  * @property int    $transaction_currency_dp
  * @property string $transaction_currency_code
  * @property string $description
+ * @property bool   $is_split
+ * @property int    $attachmentCount
  */
 class Transaction extends Model
 {

@@ -103,8 +103,8 @@ class EventServiceProvider extends ServiceProvider
             function (PiggyBank $piggyBank) {
                 $repetition = new PiggyBankRepetition;
                 $repetition->piggyBank()->associate($piggyBank);
-                $repetition->startdate     = null === $piggyBank->startdate ? null : $piggyBank->startdate;
-                $repetition->targetdate    = null === $piggyBank->targetdate ? null : $piggyBank->targetdate;
+                $repetition->startdate     = $piggyBank->startdate;
+                $repetition->targetdate    = $piggyBank->targetdate;
                 $repetition->currentamount = 0;
                 $repetition->save();
             }

@@ -120,44 +120,40 @@ class Transaction extends Twig_Extension
     }
 
     /**
+     *
      * @param TransactionModel $transaction
      *
      * @return string
      */
     public function budgets(TransactionModel $transaction): string
     {
+        $txt = '';
         // journal has a budget:
-        if (isset($transaction->transaction_journal_budget_id)) {
+        if (null !== $transaction->transaction_journal_budget_id) {
             $name = app('steam')->tryDecrypt($transaction->transaction_journal_budget_name);
             $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$transaction->transaction_journal_budget_id]), $name, $name);
-
-            return $txt;
         }
 
         // transaction has a budget
-        if (isset($transaction->transaction_budget_id)) {
+        if (null !== $transaction->transaction_budget_id && $txt === '') {
             $name = app('steam')->tryDecrypt($transaction->transaction_budget_name);
             $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$transaction->transaction_budget_id]), $name, $name);
-
-            return $txt;
         }
 
-        // see if the transaction has a budget:
-        $budgets = $transaction->budgets()->get();
-        if (0 === $budgets->count()) {
-            $budgets = $transaction->transactionJournal()->first()->budgets()->get();
-        }
-        if ($budgets->count() > 0) {
-            $str = [];
-            foreach ($budgets as $budget) {
-                $str[] = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$budget->id]), $budget->name, $budget->name);
+        if ($txt === '') {
+            // see if the transaction has a budget:
+            $budgets = $transaction->budgets()->get();
+            if (0 === $budgets->count()) {
+                $budgets = $transaction->transactionJournal()->first()->budgets()->get();
             }
-
-            $txt = join(', ', $str);
-
-            return $txt;
+            if ($budgets->count() > 0) {
+                $str = [];
+                foreach ($budgets as $budget) {
+                    $str[] = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$budget->id]), $budget->name, $budget->name);
+                }
+                $txt = implode(', ', $str);
+            }
         }
-        $txt = '';
 
         return $txt;
     }
@@ -169,39 +165,34 @@ class Transaction extends Twig_Extension
      */
     public function categories(TransactionModel $transaction): string
     {
+        $txt = '';
         // journal has a category:
-        if (isset($transaction->transaction_journal_category_id)) {
+        if (null !== $transaction->transaction_journal_category_id) {
             $name = app('steam')->tryDecrypt($transaction->transaction_journal_category_name);
             $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$transaction->transaction_journal_category_id]), $name, $name);
-
-            return $txt;
         }
 
         // transaction has a category:
-        if (isset($transaction->transaction_category_id)) {
+        if (null !== $transaction->transaction_category_id && $txt === '') {
             $name = app('steam')->tryDecrypt($transaction->transaction_category_name);
             $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$transaction->transaction_category_id]), $name, $name);
-
-            return $txt;
         }
 
-        // see if the transaction has a category:
-        $categories = $transaction->categories()->get();
-        if (0 === $categories->count()) {
-            $categories = $transaction->transactionJournal()->first()->categories()->get();
-        }
-        if ($categories->count() > 0) {
-            $str = [];
-            foreach ($categories as $category) {
-                $str[] = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$category->id]), $category->name, $category->name);
+        if ($txt === '') {
+            // see if the transaction has a category:
+            $categories = $transaction->categories()->get();
+            if (0 === $categories->count()) {
+                $categories = $transaction->transactionJournal()->first()->categories()->get();
             }
+            if ($categories->count() > 0) {
+                $str = [];
+                foreach ($categories as $category) {
+                    $str[] = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$category->id]), $category->name, $category->name);
+                }
 
-            $txt = join(', ', $str);
-
-            return $txt;
+                $txt = implode(', ', $str);
+            }
         }
-
-        $txt = '';
 
         return $txt;
     }
@@ -286,18 +277,25 @@ class Transaction extends Twig_Extension
      */
     public function hasAttachments(TransactionModel $transaction): string
     {
-        $journalId = intval($transaction->journal_id);
-        $count     = Attachment::whereNull('deleted_at')
-                               ->where('attachable_type', 'FireflyIII\Models\TransactionJournal')
-                               ->where('attachable_id', $journalId)
-                               ->count();
-        if ($count > 0) {
-            $res = sprintf('<i class="fa fa-paperclip" title="%s"></i>', Lang::choice('firefly.nr_of_attachments', $count, ['count' => $count]));
-
-            return $res;
-        }
-
         $res = '';
+        if (is_int($transaction->attachmentCount) && $transaction->attachmentCount > 0) {
+            $res = sprintf(
+                '<i class="fa fa-paperclip" title="%s"></i>', Lang::choice(
+                'firefly.nr_of_attachments',
+                $transaction->attachmentCount, ['count' => $transaction->attachmentCount]
+            )
+            );
+        }
+        if ($transaction->attachmentCount === null) {
+            $journalId = (int)$transaction->journal_id;
+            $count     = Attachment::whereNull('deleted_at')
+                                   ->where('attachable_type', 'FireflyIII\Models\TransactionJournal')
+                                   ->where('attachable_id', $journalId)
+                                   ->count();
+            if ($count > 0) {
+                $res = sprintf('<i class="fa fa-paperclip" title="%s"></i>', Lang::choice('firefly.nr_of_attachments', $count, ['count' => $count]));
+            }
+        }
 
         return $res;
     }
@@ -341,7 +339,7 @@ class Transaction extends Twig_Extension
     public function isReconciled(TransactionModel $transaction): string
     {
         $icon = '';
-        if (1 === intval($transaction->reconciled)) {
+        if (1 === (int)$transaction->reconciled) {
             $icon = '<i class="fa fa-check"></i>';
         }
 
@@ -349,21 +347,26 @@ class Transaction extends Twig_Extension
     }
 
     /**
+     * Returns an icon when the transaction is a split transaction.
+     *
      * @param TransactionModel $transaction
      *
      * @return string
      */
     public function isSplit(TransactionModel $transaction): string
     {
-        $journalId = intval($transaction->journal_id);
-        $count     = TransactionModel::where('transaction_journal_id', $journalId)->whereNull('deleted_at')->count();
-        if ($count > 2) {
-            $res = '<i class="fa fa-fw fa-share-alt" aria-hidden="true"></i>';
-
-            return $res;
+        $res = '';
+        if ($transaction->is_split === true) {
+            $res = '<i class="fa fa-fw fa-share-alt" aria-hidden="true"></i>!!!';
         }
 
-        $res = '';
+        if ($transaction->is_split === null) {
+            $journalId = (int)$transaction->journal_id;
+            $count     = TransactionModel::where('transaction_journal_id', $journalId)->whereNull('deleted_at')->count();
+            if ($count > 2) {
+                $res = '<i class="fa fa-fw fa-share-alt" aria-hidden="true"></i>';
+            }
+        }
 
         return $res;
     }

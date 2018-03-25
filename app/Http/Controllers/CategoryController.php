@@ -447,20 +447,20 @@ class CategoryController extends Controller
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-
+        /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
         $entries = new Collection;
 
-        foreach ($dates as $date) {
-            $spent    = $this->repository->spentInPeriod(new Collection([$category]), $accounts, $date['start'], $date['end']);
-            $earned   = $this->repository->earnedInPeriod(new Collection([$category]), $accounts, $date['start'], $date['end']);
-            $dateStr  = $date['end']->format('Y-m-d');
-            $dateName = app('navigation')->periodShow($date['end'], $date['period']);
+        foreach ($dates as $currentDate) {
+            $spent    = $this->repository->spentInPeriod(new Collection([$category]), $accounts, $currentDate['start'], $currentDate['end']);
+            $earned   = $this->repository->earnedInPeriod(new Collection([$category]), $accounts, $currentDate['start'], $currentDate['end']);
+            $dateStr  = $currentDate['end']->format('Y-m-d');
+            $dateName = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
 
             // amount transferred
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->setCategory($category)
+            $collector->setAllAssetAccounts()->setRange($currentDate['start'], $currentDate['end'])->setCategory($category)
                       ->withOpposingAccount()->setTypes([TransactionType::TRANSFER]);
             $collector->removeFilter(InternalTransferFilter::class);
             $transferred = Steam::positive($collector->getJournals()->sum('transaction_amount'));
@@ -473,7 +473,7 @@ class CategoryController extends Controller
                     'earned'      => $earned,
                     'sum'         => bcadd($earned, $spent),
                     'transferred' => $transferred,
-                    'date'        => clone $date['end'],
+                    'date'        => clone $currentDate['end'],
                 ]
             );
         }

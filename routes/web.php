@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 Route::group(
     ['namespace' => 'FireflyIII\Http\Controllers\System',
-     'as' => 'installer.', 'prefix' => 'install'], function () {
+     'as'        => 'installer.', 'prefix' => 'install'], function () {
     Route::get('', ['uses' => 'InstallController@index', 'as' => 'index']);
     Route::post('migrate', ['uses' => 'InstallController@migrate', 'as' => 'migrate']);
     Route::post('keys', ['uses' => 'InstallController@keys', 'as' => 'keys']);
@@ -780,7 +780,12 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'transactions', 'as' => 'transactions.'], function () {
-    Route::get('{what}/{moment?}', ['uses' => 'TransactionController@index', 'as' => 'index'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
+
+    Route::get('{what}/all', ['uses' => 'TransactionController@indexAll', 'as' => 'index.all'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
+    Route::get('{what}/{start_date?}/{end_date?}', ['uses' => 'TransactionController@index', 'as' => 'index'])->where(
+        ['what' => 'withdrawal|deposit|transfers|transfer']
+    );
+
     Route::get('show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'show']);
     Route::post('reorder', ['uses' => 'TransactionController@reorder', 'as' => 'reorder']);
     Route::post('reconcile', ['uses' => 'TransactionController@reconcile', 'as' => 'reconcile']);
