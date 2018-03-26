@@ -198,16 +198,15 @@ class ConvertController extends Controller
                 // three and five
                 if ('' === $data['destination_account_expense'] || null === $data['destination_account_expense']) {
                     // destination is a cash account.
-                    $destination = $accountRepository->getCashAccount();
-
-                    return $destination;
+                    return $accountRepository->getCashAccount();
                 }
                 $data        = [
-                    'name'           => $data['destination_account_expense'],
-                    'accountType'    => 'expense',
-                    'virtualBalance' => 0,
-                    'active'         => true,
-                    'iban'           => null,
+                    'name'            => $data['destination_account_expense'],
+                    'accountType'     => 'expense',
+                    'account_type_id' => null,
+                    'virtualBalance'  => 0,
+                    'active'          => true,
+                    'iban'            => null,
                 ];
                 $destination = $accountRepository->store($data);
                 break;
@@ -246,17 +245,16 @@ class ConvertController extends Controller
 
                 if ('' === $data['source_account_revenue'] || null === $data['source_account_revenue']) {
                     // destination is a cash account.
-                    $destination = $accountRepository->getCashAccount();
-
-                    return $destination;
+                    return $accountRepository->getCashAccount();
                 }
 
                 $data   = [
-                    'name'           => $data['source_account_revenue'],
-                    'accountType'    => 'revenue',
-                    'virtualBalance' => 0,
-                    'active'         => true,
-                    'iban'           => null,
+                    'name'            => $data['source_account_revenue'],
+                    'accountType'     => 'revenue',
+                    'virtualBalance'  => 0,
+                    'active'          => true,
+                    'account_type_id' => null,
+                    'iban'            => null,
                 ];
                 $source = $accountRepository->store($data);
                 break;
