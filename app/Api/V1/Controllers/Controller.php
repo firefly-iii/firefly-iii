@@ -30,6 +30,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -111,6 +112,7 @@ class Controller extends BaseController
                     $obj = new Carbon($date);
                 } catch (InvalidDateException $e) {
                     // don't care
+                    Log::error(sprintf('Invalid date exception in API controller: %s', $e->getMessage()));
                 }
             }
             $bag->set($field, $obj);

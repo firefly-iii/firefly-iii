@@ -53,7 +53,7 @@ class AboutController extends Controller
         $search        = ['~', '#'];
         $replace       = ['\~', '# '];
         $phpVersion    = str_replace($search, $replace, PHP_VERSION);
-        $phpOs         = str_replace($search, $replace, php_uname());
+        $phpOs         = str_replace($search, $replace, PHP_OS);
         $currentDriver = DB::getDriverName();
         $data
                        = [

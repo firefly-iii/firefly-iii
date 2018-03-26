@@ -76,6 +76,7 @@ class User extends Authenticatable
      * @param string $value
      *
      * @return User
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value): User
     {

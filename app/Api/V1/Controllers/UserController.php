@@ -70,6 +70,7 @@ class UserController extends Controller
      * @param  \FireflyIII\User $user
      *
      * @return \Illuminate\Http\Response
+     * @throws \Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException
      */
     public function delete(User $user)
     {

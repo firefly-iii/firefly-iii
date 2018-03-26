@@ -125,7 +125,7 @@ class SplitController extends Controller
 
         return view(
             'transactions.split.edit', compact(
-                                         'subTitleIcon', 'currencies', 'optionalFields', 'preFilled', 'subTitle', 'uploadSize', 'assetAccounts', 'budgets',
+                                         'subTitleIcon', 'currencies', 'optionalFields', 'preFilled', 'subTitle', 'uploadSize', 'budgets',
                                          'journal', 'accountArray',
                                          'previous'
                                      )
@@ -197,7 +197,7 @@ class SplitController extends Controller
             'destinationAccounts'            => $destinationAccounts,
             'what'                           => strtolower($this->repository->getTransactionType($journal)),
             'date'                           => $request->old('date', $this->repository->getJournalDate($journal, null)),
-            'tags'                           => join(',', $journal->tags->pluck('tag')->toArray()),
+            'tags'                           => implode(',', $journal->tags->pluck('tag')->toArray()),
 
             // all custom fields:
             'interest_date'                  => $request->old('interest_date', $this->repository->getMetaField($journal, 'interest_date')),

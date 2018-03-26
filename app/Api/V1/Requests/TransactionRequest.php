@@ -168,6 +168,7 @@ class TransactionRequest extends Request
      * @param  Validator $validator
      *
      * @return void
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function withValidator(Validator $validator): void
     {
@@ -438,10 +439,8 @@ class TransactionRequest extends Request
 
             }
             // add some errors in case of same account submitted:
-            if (!is_null($sourceAccount) && !is_null($destinationAccount)) {
-                if ($sourceAccount->id === $destinationAccount->id) {
-                    $validator->errors()->add($idField, trans('validation.source_equals_destination'));
-                }
+            if (!is_null($sourceAccount) && !is_null($destinationAccount) && $sourceAccount->id === $destinationAccount->id) {
+                $validator->errors()->add($idField, trans('validation.source_equals_destination'));
             }
         }
     }
@@ -506,8 +505,6 @@ class TransactionRequest extends Request
                 );
             // @codeCoverageIgnoreEnd
         }
-
-        return;
     }
 
 }

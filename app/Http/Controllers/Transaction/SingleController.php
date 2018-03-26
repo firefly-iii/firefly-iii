@@ -102,7 +102,7 @@ class SingleController extends Controller
         $budgetId     = $this->repository->getJournalBudgetId($journal);
         $categoryName = $this->repository->getJournalCategoryName($journal);
 
-        $tags = join(',', $this->repository->getTags($journal));
+        $tags = implode(',', $this->repository->getTags($journal));
         /** @var Transaction $transaction */
         $transaction   = $journal->transactions()->first();
         $amount        = app('steam')->positive($transaction->amount);
@@ -280,7 +280,7 @@ class SingleController extends Controller
             'process_date'             => $repository->getJournalDate($journal, 'process_date'),
             'category'                 => $repository->getJournalCategoryName($journal),
             'budget_id'                => $repository->getJournalBudgetId($journal),
-            'tags'                     => join(',', $repository->getTags($journal)),
+            'tags'                     => implode(',', $repository->getTags($journal)),
             'source_account_id'        => $sourceAccounts->first()->id,
             'source_account_name'      => $sourceAccounts->first()->edit_name,
             'destination_account_id'   => $destinationAccounts->first()->id,
@@ -441,10 +441,6 @@ class SingleController extends Controller
     {
         $count = $this->repository->countTransactions($journal);
 
-        if ($count > 2) {
-            return true; // @codeCoverageIgnore
-        }
-
-        return false;
+        return $count > 2;
     }
 }

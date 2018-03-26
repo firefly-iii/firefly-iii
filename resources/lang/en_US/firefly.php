@@ -1086,6 +1086,7 @@ return [
     'invalid_link_selection'                => 'Cannot link these transactions',
     'journals_linked'                       => 'Transactions are linked.',
     'journals_error_linked'                 => 'These transactions are already linked.',
+    'journals_link_to_self'                 => 'You cannot link a transaction to itself',
     'journal_links'                         => 'Transaction links',
     'this_withdrawal'                       => 'This withdrawal',
     'this_deposit'                          => 'This deposit',
