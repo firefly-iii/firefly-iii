@@ -64,13 +64,13 @@ return [
 
         'daily'     => [
             'driver' => 'daily',
-            'path'   => storage_path('logs/ff3-' . php_sapi_name() . '.log'),
+            'path'   => storage_path('logs/ff3-' . PHP_SAPI . '.log'),
             'level'  => env('APP_LOG_LEVEL', 'info'),
             'days'   => 7,
         ],
         'dailytest' => [
             'driver' => 'daily',
-            'path'   => storage_path('logs/test-ff3-' . php_sapi_name() . '.log'),
+            'path'   => storage_path('logs/test-ff3-' . PHP_SAPI . '.log'),
             'level'  => env('APP_LOG_LEVEL', 'info'),
             'days'   => 7,
         ],
