@@ -184,6 +184,7 @@ class RuleGroupController extends Controller
      * @param RuleGroup                  $ruleGroup
      *
      * @return View
+     * @throws \InvalidArgumentException
      */
     public function selectTransactions(AccountRepositoryInterface $repository, RuleGroup $ruleGroup)
     {

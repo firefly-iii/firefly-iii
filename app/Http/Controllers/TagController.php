@@ -333,8 +333,8 @@ class TagController extends Controller
                 'string' => $end->format('Y-m-d'),
                 'name'   => app('navigation')->periodShow($end, $range),
                 'date'   => clone $end,
-                'spent'  => $this->repository->spentInperiod($tag, $end, $currentEnd),
-                'earned' => $this->repository->earnedInperiod($tag, $end, $currentEnd),
+                'spent'  => $this->repository->spentInPeriod($tag, $end, $currentEnd),
+                'earned' => $this->repository->earnedInPeriod($tag, $end, $currentEnd),
             ];
             $collection->push($arr);
 

@@ -75,6 +75,7 @@ class BillController extends Controller
      * @param Request $request
      *
      * @return View
+     * @throws \RuntimeException
      */
     public function create(Request $request)
     {
@@ -113,6 +114,7 @@ class BillController extends Controller
      * @param Bill                    $bill
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function destroy(Request $request, BillRepositoryInterface $repository, Bill $bill)
     {
@@ -130,6 +132,7 @@ class BillController extends Controller
      * @param Bill    $bill
      *
      * @return View
+     * @throws \RuntimeException
      */
     public function edit(Request $request, Bill $bill)
     {
@@ -198,6 +201,7 @@ class BillController extends Controller
      * @param Bill                    $bill
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function rescan(Request $request, BillRepositoryInterface $repository, Bill $bill)
     {
@@ -264,6 +268,7 @@ class BillController extends Controller
      * @param BillRepositoryInterface $repository
      *
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \RuntimeException
      */
     public function store(BillFormRequest $request, BillRepositoryInterface $repository)
     {
@@ -299,6 +304,7 @@ class BillController extends Controller
      * @param Bill                    $bill
      *
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \RuntimeException
      */
     public function update(BillFormRequest $request, BillRepositoryInterface $repository, Bill $bill)
     {

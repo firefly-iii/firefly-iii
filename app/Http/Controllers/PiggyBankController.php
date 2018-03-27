@@ -251,7 +251,7 @@ class PiggyBankController extends Controller
 
         if (is_array($data)) {
             foreach ($data as $order => $id) {
-                $repository->setOrder(intval($id), ($order + 1));
+                $repository->setOrder(intval($id), $order + 1);
             }
         }
 

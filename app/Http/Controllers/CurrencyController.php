@@ -67,6 +67,7 @@ class CurrencyController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
+     * @throws \RuntimeException
      */
     public function create(Request $request)
     {
@@ -93,6 +94,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function defaultCurrency(Request $request, TransactionCurrency $currency)
     {
@@ -111,6 +113,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
+     * @throws \RuntimeException
      */
     public function delete(Request $request, TransactionCurrency $currency)
     {
@@ -140,6 +143,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function destroy(Request $request, TransactionCurrency $currency)
     {
@@ -168,6 +172,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
+     * @throws \RuntimeException
      */
     public function edit(Request $request, TransactionCurrency $currency)
     {
@@ -196,6 +201,7 @@ class CurrencyController extends Controller
      * @param Request $request
      *
      * @return View
+     * @throws \RuntimeException
      */
     public function index(Request $request)
     {
@@ -226,6 +232,7 @@ class CurrencyController extends Controller
      * @param CurrencyFormRequest $request
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function store(CurrencyFormRequest $request)
     {
@@ -257,6 +264,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function update(CurrencyFormRequest $request, TransactionCurrency $currency)
     {

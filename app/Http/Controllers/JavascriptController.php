@@ -92,6 +92,7 @@ class JavascriptController extends Controller
      * @param CurrencyRepositoryInterface $currencyRepository
      *
      * @return \Illuminate\Http\Response
+     * @throws \RuntimeException
      */
     public function variables(Request $request, AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository)
     {

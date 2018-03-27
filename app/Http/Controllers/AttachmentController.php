@@ -80,6 +80,7 @@ class AttachmentController extends Controller
      * @param Attachment $attachment
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function destroy(Request $request, Attachment $attachment)
     {
@@ -129,6 +130,7 @@ class AttachmentController extends Controller
      * @param Attachment $attachment
      *
      * @return View
+     * @throws \RuntimeException
      */
     public function edit(Request $request, Attachment $attachment)
     {
@@ -152,6 +154,7 @@ class AttachmentController extends Controller
      * @param Attachment            $attachment
      *
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \RuntimeException
      */
     public function update(AttachmentFormRequest $request, Attachment $attachment)
     {

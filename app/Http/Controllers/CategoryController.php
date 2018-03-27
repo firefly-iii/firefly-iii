@@ -77,6 +77,7 @@ class CategoryController extends Controller
      * @param Request $request
      *
      * @return View
+     * @throws \RuntimeException
      */
     public function create(Request $request)
     {
@@ -109,6 +110,7 @@ class CategoryController extends Controller
      * @param Category $category
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function destroy(Request $request, Category $category)
     {
@@ -126,6 +128,7 @@ class CategoryController extends Controller
      * @param Category $category
      *
      * @return View
+     * @throws \RuntimeException
      */
     public function edit(Request $request, Category $category)
     {
@@ -297,6 +300,7 @@ class CategoryController extends Controller
      * @param CategoryRepositoryInterface $repository
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function store(CategoryFormRequest $request, CategoryRepositoryInterface $repository)
     {
@@ -323,6 +327,7 @@ class CategoryController extends Controller
      * @param Category                    $category
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function update(CategoryFormRequest $request, CategoryRepositoryInterface $repository, Category $category)
     {

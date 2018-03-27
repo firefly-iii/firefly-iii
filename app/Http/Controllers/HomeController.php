@@ -62,6 +62,7 @@ class HomeController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \RuntimeException
      */
     public function dateRange(Request $request)
     {
@@ -116,6 +117,7 @@ class HomeController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function flush(Request $request)
     {
@@ -132,6 +134,7 @@ class HomeController extends Controller
             Artisan::call('twig:clean');
         } catch (Exception $e) {
             // dont care
+            Log::debug('Called twig:clean.');
         }
         Log::debug('Call view:clear...');
         Artisan::call('view:clear');
@@ -229,6 +232,7 @@ class HomeController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function testFlash(Request $request)
     {

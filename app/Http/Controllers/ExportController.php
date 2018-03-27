@@ -111,6 +111,7 @@ class ExportController extends Controller
      * @param ExportJobRepositoryInterface $jobs
      *
      * @return View
+     * @throws \InvalidArgumentException
      */
     public function index(AccountRepositoryInterface $repository, ExportJobRepositoryInterface $jobs)
     {

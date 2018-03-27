@@ -218,6 +218,7 @@ class ProfileController extends Controller
      * @param UserRepositoryInterface $repository
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function postChangeEmail(EmailFormRequest $request, UserRepositoryInterface $repository)
     {

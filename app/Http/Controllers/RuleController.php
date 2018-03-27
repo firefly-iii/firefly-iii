@@ -311,6 +311,7 @@ class RuleController extends Controller
      * @param Rule                       $rule
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \InvalidArgumentException
      */
     public function selectTransactions(AccountRepositoryInterface $repository, Rule $rule)
     {
@@ -677,7 +678,7 @@ class RuleController extends Controller
                 $triggers[]                        = [
                     'type'           => $triggerType,
                     'value'          => $data['rule-trigger-values'][$index],
-                    'stopProcessing' => 1 === intval($data['rule-trigger-stop'][$index]) ? true : false,
+                    'stopProcessing' => 1 === (int)$data['rule-trigger-stop'][$index],
                 ];
             }
         }

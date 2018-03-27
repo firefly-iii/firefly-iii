@@ -113,37 +113,6 @@ class TransactionController extends Controller
         $transactions->setPath($path);
 
         return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'transactions', 'periods', 'start', 'end'));
-
-
-        //
-
-
-        //        // prep for "all" view.
-        //        if ('all' === $moment) {
-        //            $subTitle = trans('firefly.all_' . $what);
-        //            $first    = $this->repository->first();
-        //            $start    = $first->date ?? new Carbon;
-        //            $end      = new Carbon;
-        //            $path     = route('transactions.index', [$what, 'all']);
-        //        }
-        //
-        //        // prep for "specific date" view.
-        //        if (strlen($moment) > 0 && 'all' !== $moment) {
-        //            $start = new Carbon($moment);
-        //            $end   = app('navigation')->endOfPeriod($start, $range);
-        //            $path  = route('transactions.index', [$what, $moment]);
-        //
-        //        }
-
-        //        // prep for current period
-        //        if (0 === strlen($moment)) {
-        //            $start    = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
-        //            $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
-        //            $subTitle = trans(
-        //                'firefly.title_' . $what . '_between',
-        //                ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
-        //            );
-        //        }
     }
 
     /**
@@ -265,13 +234,16 @@ class TransactionController extends Controller
     /**
      * @param string $what
      *
+     * @param Carbon $date
+     *
      * @return Collection
      */
     private function getPeriodOverview(string $what, Carbon $date): Collection
     {
         $range   = Preferences::get('viewRange', '1M')->data;
         $first   = $this->repository->first();
-        $start   = (new Carbon)->subYear();
+        $start   = new Carbon;
+        $start->subYear();
         $types   = config('firefly.transactionTypesByWhat.' . $what);
         $entries = new Collection;
         if (null !== $first) {
@@ -280,6 +252,7 @@ class TransactionController extends Controller
         if ($date < $start) {
             list($start, $date) = [$date, $start]; // @codeCoverageIgnore
         }
+
         /** @var array $dates */
         $dates = app('navigation')->blockPeriods($start, $date, $range);
 

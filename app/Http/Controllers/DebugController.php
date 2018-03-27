@@ -50,6 +50,7 @@ class DebugController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \InvalidArgumentException
      */
     public function index(Request $request)
     {
@@ -57,11 +58,11 @@ class DebugController extends Controller
         $replace = ['\~', '# '];
 
         $phpVersion     = str_replace($search, $replace, PHP_VERSION);
-        $phpOs          = str_replace($search, $replace, php_uname());
+        $phpOs          = str_replace($search, $replace, PHP_OS);
         $interface      = PHP_SAPI;
         $now            = Carbon::create()->format('Y-m-d H:i:s e');
-        $extensions     = join(', ', get_loaded_extensions());
-        $drivers        = join(', ', DB::availableDrivers());
+        $extensions     = implode(', ', get_loaded_extensions());
+        $drivers        = implode(', ', DB::availableDrivers());
         $currentDriver  = DB::getDriverName();
         $userAgent      = $request->header('user-agent');
         $isSandstorm    = var_export(env('IS_SANDSTORM', 'unknown'), true);
@@ -98,6 +99,7 @@ class DebugController extends Controller
                         $logContent = file_get_contents($logFile);
                     } catch (Exception $e) {
                         // don't care
+                        Log::debug(sprintf('Could not read log file. %s', $e->getMessage()));
                     }
                 }
             }
@@ -110,7 +112,6 @@ class DebugController extends Controller
             compact(
                 'phpVersion',
                 'extensions', 'localeAttempts',
-                'carbon',
                 'appEnv',
                 'appDebug',
                 'appLog',

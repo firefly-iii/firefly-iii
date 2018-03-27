@@ -84,6 +84,7 @@ class AccountController extends Controller
      * @param string  $what
      *
      * @return View
+     * @throws \RuntimeException
      */
     public function create(Request $request, string $what = 'asset')
     {
@@ -132,6 +133,7 @@ class AccountController extends Controller
      * @param Account $account
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function destroy(Request $request, Account $account)
     {
@@ -161,6 +163,7 @@ class AccountController extends Controller
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // long and complex but not that excessively so.
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
+     * @throws \RuntimeException
      */
     public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
     {
@@ -375,12 +378,13 @@ class AccountController extends Controller
      * @param AccountFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function store(AccountFormRequest $request)
     {
         $data    = $request->getAccountData();
         $account = $this->repository->store($data);
-        $request->session()->flash('success', strval(trans('firefly.stored_new_account', ['name' => $account->name])));
+        $request->session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));
         Preferences::mark();
 
         // update preferences if necessary:
@@ -408,6 +412,7 @@ class AccountController extends Controller
      * @param Account            $account
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function update(AccountFormRequest $request, Account $account)
     {
