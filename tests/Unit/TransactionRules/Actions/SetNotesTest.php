@@ -52,7 +52,7 @@ class SetNotesTest extends TestCase
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'These are new notes ' . rand(1, 1234);
+        $ruleAction->action_value = 'These are new notes ' . random_int(1, 1234);
         $action                   = new SetNotes($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);
@@ -75,7 +75,7 @@ class SetNotesTest extends TestCase
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'These are new notes ' . rand(1, 1234);
+        $ruleAction->action_value = 'These are new notes ' . random_int(1, 1234);
         $action                   = new SetNotes($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);

@@ -575,14 +575,14 @@ class BudgetControllerTest extends TestCase
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('find')->andReturn($budget);
+        $repository->shouldReceive('findNull')->andReturn($budget);
         $repository->shouldReceive('store')->andReturn($budget);
         $repository->shouldReceive('cleanupBudgets');
 
         $this->session(['budgets.create.uri' => 'http://localhost']);
 
         $data = [
-            'name' => 'New Budget ' . rand(1000, 9999),
+            'name' => 'New Budget ' . random_int(1000, 9999),
         ];
         $this->be($this->user());
         $response = $this->post(route('budgets.store'), $data);
@@ -600,14 +600,14 @@ class BudgetControllerTest extends TestCase
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('find')->andReturn($budget);
+        $repository->shouldReceive('findNull')->andReturn($budget);
         $repository->shouldReceive('update');
         $repository->shouldReceive('cleanupBudgets');
 
         $this->session(['budgets.edit.uri' => 'http://localhost']);
 
         $data = [
-            'name'   => 'Updated Budget ' . rand(1000, 9999),
+            'name'   => 'Updated Budget ' . random_int(1000, 9999),
             'active' => 1,
         ];
         $this->be($this->user());

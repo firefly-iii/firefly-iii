@@ -56,7 +56,7 @@ class FromAccountIsTest extends TestCase
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
 
-        $trigger = FromAccountIs::makeFromStrings('some name' . rand(1, 234), false);
+        $trigger = FromAccountIs::makeFromStrings('some name' . random_int(1, 234), false);
         $result  = $trigger->triggered($journal);
         $this->assertFalse($result);
     }

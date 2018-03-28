@@ -56,7 +56,7 @@ class PiggyBankTransformerTest extends TestCase
             [
                 'user_id'         => $this->user()->id,
                 'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . rand(1, 10000),
+                'name'            => 'Random name #' . random_int(1, 10000),
                 'virtual_balance' => 12.34,
                 'iban'            => 'NL85ABNA0466812694',
                 'active'          => 1,
@@ -66,7 +66,7 @@ class PiggyBankTransformerTest extends TestCase
         $piggy       = PiggyBank::create(
             [
                 'account_id'   => $account->id,
-                'name'         => 'Some random piggy #' . rand(1, 10000),
+                'name'         => 'Some random piggy #' . random_int(1, 10000),
                 'targetamount' => '1000',
                 'startdate'    => '2018-01-01',
                 'targetdate'   => '2018-01-31',
@@ -104,7 +104,7 @@ class PiggyBankTransformerTest extends TestCase
             [
                 'user_id'         => $this->user()->id,
                 'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . rand(1, 10000),
+                'name'            => 'Random name #' . random_int(1, 10000),
                 'virtual_balance' => 12.34,
                 'iban'            => 'NL85ABNA0466812694',
                 'active'          => 1,
@@ -123,7 +123,7 @@ class PiggyBankTransformerTest extends TestCase
         $piggy       = PiggyBank::create(
             [
                 'account_id'   => $account->id,
-                'name'         => 'Some random piggy #' . rand(1, 10000),
+                'name'         => 'Some random piggy #' . random_int(1, 10000),
                 'targetamount' => '1000',
                 'startdate'    => '2018-01-01',
                 'targetdate'   => '2018-01-31',
@@ -161,7 +161,7 @@ class PiggyBankTransformerTest extends TestCase
             [
                 'user_id'         => $this->user()->id,
                 'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . rand(1, 10000),
+                'name'            => 'Random name #' . random_int(1, 10000),
                 'virtual_balance' => 12.34,
                 'iban'            => 'NL85ABNA0466812694',
                 'active'          => 1,
@@ -180,7 +180,7 @@ class PiggyBankTransformerTest extends TestCase
         $piggy = PiggyBank::create(
             [
                 'account_id'   => $account->id,
-                'name'         => 'Some random piggy #' . rand(1, 10000),
+                'name'         => 'Some random piggy #' . random_int(1, 10000),
                 'targetamount' => '1000',
                 'startdate'    => '2018-01-01',
                 'targetdate'   => '2018-01-31',

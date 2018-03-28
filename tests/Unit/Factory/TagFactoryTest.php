@@ -51,7 +51,7 @@ class TagFactoryTest extends TestCase
      */
     public function testFindOrCreateNew()
     {
-        $tag = 'Some new tag#' . rand(1, 1000);
+        $tag = 'Some new tag#' . random_int(1, 1000);
         /** @var TagFactory $factory */
         $factory = app(TagFactory::class);
         $factory->setUser($this->user());

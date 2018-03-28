@@ -40,7 +40,7 @@ use Log;
 use Preferences;
 use Steam;
 use Tests\TestCase;
-
+use Mockery;
 /**
  * Class AccountControllerTest
  *
@@ -142,6 +142,12 @@ class AccountControllerTest extends TestCase
         $accountRepos->shouldReceive('getNote')->andReturn($note)->once();
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturnNull();
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturnNull();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'currency_id'])->andReturn('1');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'accountNumber'])->andReturn('123');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'accountRole'])->andReturn('defaultAsset');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'ccType'])->andReturn('');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'ccMonthlyPaymentDate'])->andReturn('');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'BIC'])->andReturn('BIC');
 
         $this->be($this->user());
         $account  = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
@@ -236,6 +242,7 @@ class AccountControllerTest extends TestCase
     {
         // mock
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $this->session(['start' => '2018-01-01', 'end' => '2017-12-01']);
 
@@ -342,7 +349,7 @@ class AccountControllerTest extends TestCase
         $this->session(['accounts.create.uri' => 'http://localhost']);
         $this->be($this->user());
         $data = [
-            'name' => 'new account ' . rand(1000, 9999),
+            'name' => 'new account ' . random_int(1000, 9999),
             'what' => 'asset',
         ];
 
@@ -368,7 +375,7 @@ class AccountControllerTest extends TestCase
         $this->session(['accounts.create.uri' => 'http://localhost']);
         $this->be($this->user());
         $data = [
-            'name'           => 'new account ' . rand(1000, 9999),
+            'name'           => 'new account ' . random_int(1000, 9999),
             'what'           => 'asset',
             'create_another' => 1,
         ];
@@ -395,7 +402,7 @@ class AccountControllerTest extends TestCase
         $this->session(['accounts.edit.uri' => 'http://localhost/javascript/account']);
         $this->be($this->user());
         $data = [
-            'name'   => 'updated account ' . rand(1000, 9999),
+            'name'   => 'updated account ' . random_int(1000, 9999),
             'active' => 1,
             'what'   => 'asset',
         ];
@@ -422,7 +429,7 @@ class AccountControllerTest extends TestCase
         $this->session(['accounts.edit.uri' => 'http://localhost']);
         $this->be($this->user());
         $data = [
-            'name'           => 'updated account ' . rand(1000, 9999),
+            'name'           => 'updated account ' . random_int(1000, 9999),
             'active'         => 1,
             'what'           => 'asset',
             'return_to_edit' => '1',

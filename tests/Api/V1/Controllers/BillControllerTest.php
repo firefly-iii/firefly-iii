@@ -140,8 +140,8 @@ class BillControllerTest extends TestCase
 
         // data to submit:
         $data = [
-            'name'        => 'New bill #' . rand(1, 1000),
-            'match'       => 'some,words,' . rand(1, 1000),
+            'name'        => 'New bill #' . random_int(1, 1000),
+            'match'       => 'some,words,' . random_int(1, 1000),
             'amount_min'  => '66.34',
             'amount_max'  => '45.67',
             'date'        => '2018-01-01',
@@ -184,8 +184,8 @@ class BillControllerTest extends TestCase
 
         // data to submit:
         $data = [
-            'name'        => 'New bill #' . rand(1, 1000),
-            'match'       => 'some,words,' . rand(1, 1000),
+            'name'        => 'New bill #' . random_int(1, 1000),
+            'match'       => 'some,words,' . random_int(1, 1000),
             'amount_min'  => '12.34',
             'amount_max'  => '45.67',
             'date'        => '2018-01-01',
@@ -222,8 +222,8 @@ class BillControllerTest extends TestCase
 
         // data to submit:
         $data = [
-            'name'        => 'New bill #' . rand(1, 1000),
-            'match'       => 'some,words,' . rand(1, 1000),
+            'name'        => 'New bill #' . random_int(1, 1000),
+            'match'       => 'some,words,' . random_int(1, 1000),
             'amount_min'  => '12.34',
             'amount_max'  => '45.67',
             'date'        => '2018-01-01',

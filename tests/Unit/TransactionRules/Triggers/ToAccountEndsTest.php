@@ -74,7 +74,7 @@ class ToAccountEndsTest extends TestCase
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
 
-        $trigger = ToAccountEnds::makeFromStrings(strval(rand(1, 234)), false);
+        $trigger = ToAccountEnds::makeFromStrings(strval(random_int(1, 234)), false);
         $result  = $trigger->triggered($journal);
         $this->assertFalse($result);
     }

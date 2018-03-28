@@ -50,8 +50,8 @@ class BillTransformerTest extends TestCase
         $bill        = Bill::create(
             [
                 'user_id'     => $this->user()->id,
-                'name'        => 'Some bill ' . rand(1, 10000),
-                'match'       => 'word,' . rand(1, 10000),
+                'name'        => 'Some bill ' . random_int(1, 10000),
+                'match'       => 'word,' . random_int(1, 10000),
                 'amount_min'  => 12.34,
                 'amount_max'  => 45.67,
                 'date'        => '2018-01-02',
@@ -78,8 +78,8 @@ class BillTransformerTest extends TestCase
         $bill     = Bill::create(
             [
                 'user_id'     => $this->user()->id,
-                'name'        => 'Some bill ' . rand(1, 10000),
-                'match'       => 'word,' . rand(1, 10000),
+                'name'        => 'Some bill ' . random_int(1, 10000),
+                'match'       => 'word,' . random_int(1, 10000),
                 'amount_min'  => 12.34,
                 'amount_max'  => 45.67,
                 'date'        => '2018-01-02',
@@ -88,7 +88,7 @@ class BillTransformerTest extends TestCase
                 'active'      => 1,
             ]
         );
-        $noteText = 'I are a note ' . rand(1, 10000);
+        $noteText = 'I are a note ' . random_int(1, 10000);
         Note::create(
             [
                 'noteable_id'   => $bill->id,
@@ -122,8 +122,8 @@ class BillTransformerTest extends TestCase
         $bill       = Bill::create(
             [
                 'user_id'     => $this->user()->id,
-                'name'        => 'Some bill ' . rand(1, 10000),
-                'match'       => 'word,' . rand(1, 10000),
+                'name'        => 'Some bill ' . random_int(1, 10000),
+                'match'       => 'word,' . random_int(1, 10000),
                 'amount_min'  => 12.34,
                 'amount_max'  => 45.67,
                 'date'        => '2018-01-02',

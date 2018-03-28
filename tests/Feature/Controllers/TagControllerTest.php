@@ -267,7 +267,7 @@ class TagControllerTest extends TestCase
 
         $this->session(['tags.create.uri' => 'http://localhost']);
         $data = [
-            'tag'                  => 'Hello new tag' . rand(999, 10000),
+            'tag'                  => 'Hello new tag' . random_int(999, 10000),
             'tagMode'              => 'nothing',
             'tag_position_has_tag' => 'true',
 
@@ -292,7 +292,7 @@ class TagControllerTest extends TestCase
         $this->session(['tags.edit.uri' => 'http://localhost']);
         $data = [
             'id'      => 1,
-            'tag'     => 'Hello updated tag' . rand(999, 10000),
+            'tag'     => 'Hello updated tag' . random_int(999, 10000),
             'tagMode' => 'nothing',
         ];
 

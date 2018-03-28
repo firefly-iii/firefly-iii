@@ -319,7 +319,7 @@ class AccountControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
         $generator = $this->mock(GeneratorInterface::class);
-        $generator->shouldReceive('multiSet')->andreturn([]);
+        $generator->shouldReceive('multiSet')->andReturn([]);
         Steam::shouldReceive('balanceInRange')->andReturn(['2012-01-01' => '0']);
 
         $this->be($this->user());

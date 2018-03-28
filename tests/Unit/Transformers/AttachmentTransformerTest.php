@@ -41,7 +41,7 @@ class AttachmentTransformerTest extends TestCase
      */
     public function testBasic()
     {
-        $md5        = md5('hello' . rand(1, 10000));
+        $md5        = md5('hello' . random_int(1, 10000));
         $attachment = Attachment::create(
             [
                 'user_id'         => $this->user()->id,

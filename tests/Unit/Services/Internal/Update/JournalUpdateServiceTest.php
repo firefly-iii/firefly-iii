@@ -65,7 +65,7 @@ class JournalUpdateServiceTest extends TestCase
         /** @var TransactionJournal $journal */
         $journal = $this->user()->transactionJournals()->where('transaction_type_id', 2)->first();
         $data    = [
-            'description'  => 'Updated journal #' . rand(1, 1000),
+            'description'  => 'Updated journal #' . random_int(1, 1000),
             'date'         => new Carbon('2018-01-01'),
             'bill_id'      => null,
             'bill_name'    => null,
@@ -107,7 +107,7 @@ class JournalUpdateServiceTest extends TestCase
         /** @var TransactionJournal $journal */
         $journal = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 2)->first();
         $data    = [
-            'description'  => 'Updated journal #' . rand(1, 1000),
+            'description'  => 'Updated journal #' . random_int(1, 1000),
             'date'         => new Carbon('2018-01-01'),
             'bill_id'      => null,
             'bill_name'    => null,
@@ -199,7 +199,7 @@ class JournalUpdateServiceTest extends TestCase
         /** @var TransactionJournal $journal */
         $journal = $this->user()->transactionJournals()->skip(4)->where('transaction_type_id', 1)->first();
         $data    = [
-            'description'  => 'Updated journal #' . rand(1, 1000),
+            'description'  => 'Updated journal #' . random_int(1, 1000),
             'date'         => new Carbon('2018-01-01'),
             'bill_id'      => null,
             'bill_name'    => null,

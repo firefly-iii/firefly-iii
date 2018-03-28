@@ -95,7 +95,7 @@ class TransactionControllerTest extends TestCase
 
 
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -141,7 +141,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
 
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -239,7 +239,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
 
         $data = [
-            'description'  => 'Split journal #' . rand(1, 1000),
+            'description'  => 'Split journal #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -297,7 +297,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
 
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -341,10 +341,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection);
-        $accountRepos->shouldReceive('findByName')->andReturn(null);
+        $accountRepos->shouldReceive('findByNameNull')->andReturn(null);
 
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -389,7 +389,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
 
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -433,7 +433,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
 
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [],
@@ -473,7 +473,7 @@ class TransactionControllerTest extends TestCase
 
 
         $data = [
-            'description'  => 'Split journal #' . rand(1, 1000),
+            'description'  => 'Split journal #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -523,7 +523,7 @@ class TransactionControllerTest extends TestCase
 
 
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -579,7 +579,7 @@ class TransactionControllerTest extends TestCase
         // submit with another account.
 
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'bill_id'      => $bill->id,
@@ -637,7 +637,7 @@ class TransactionControllerTest extends TestCase
 
         // submit with another account.
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'bill_name'    => $bill->name,
@@ -695,7 +695,7 @@ class TransactionControllerTest extends TestCase
 
         // submit with another account.
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -753,7 +753,7 @@ class TransactionControllerTest extends TestCase
 
         // submit with another account.
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -811,7 +811,7 @@ class TransactionControllerTest extends TestCase
 
         // submit with another account.
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -875,7 +875,7 @@ class TransactionControllerTest extends TestCase
 
         // submit with another account.
         $data = [
-            'description'   => 'Some transaction #' . rand(1, 1000),
+            'description'   => 'Some transaction #' . random_int(1, 1000),
             'date'          => '2018-01-01',
             'type'          => 'withdrawal',
             'piggy_bank_id' => $piggyBank->id,
@@ -941,7 +941,7 @@ class TransactionControllerTest extends TestCase
 
         // submit with another account.
         $data = [
-            'description'     => 'Some transaction #' . rand(1, 1000),
+            'description'     => 'Some transaction #' . random_int(1, 1000),
             'date'            => '2018-01-01',
             'type'            => 'withdrawal',
             'piggy_bank_name' => $piggyBank->name,
@@ -995,7 +995,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
 
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'deposit',
             'transactions' => [
@@ -1044,7 +1044,7 @@ class TransactionControllerTest extends TestCase
 
 
         $data = [
-            'description'  => 'Some deposit #' . rand(1, 1000),
+            'description'  => 'Some deposit #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'deposit',
             'transactions' => [
@@ -1100,7 +1100,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$second]));
 
         $data = [
-            'description'  => 'Some transfer #' . rand(1, 1000),
+            'description'  => 'Some transfer #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'transfer',
             'transactions' => [
@@ -1137,7 +1137,7 @@ class TransactionControllerTest extends TestCase
                         'All accounts in this field must be equal.',
                     ],
                     'transactions.1.destination_id' => [
-                        'The source account equals the destination account'
+                        'The source account equals the destination account',
                     ],
                 ],
             ]
@@ -1164,7 +1164,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$second]));
 
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -1465,7 +1465,7 @@ class TransactionControllerTest extends TestCase
 
         $bill = $this->user()->bills()->first();
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'bill_id'      => $bill->id,
@@ -1506,7 +1506,7 @@ class TransactionControllerTest extends TestCase
 
         $bill = $this->user()->bills()->first();
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'bill_name'    => $bill->name,
@@ -1545,7 +1545,7 @@ class TransactionControllerTest extends TestCase
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -1553,7 +1553,7 @@ class TransactionControllerTest extends TestCase
                     'amount'           => '10',
                     'currency_id'      => 1,
                     'source_id'        => $account->id,
-                    'destination_name' => 'New expense account #' . rand(1, 1000),
+                    'destination_name' => 'New expense account #' . random_int(1, 1000),
                 ],
 
 
@@ -1586,7 +1586,7 @@ class TransactionControllerTest extends TestCase
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -1625,7 +1625,7 @@ class TransactionControllerTest extends TestCase
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -1633,6 +1633,47 @@ class TransactionControllerTest extends TestCase
                     'amount'      => '10',
                     'currency_id' => 1,
                     'source_id'   => $account->id,
+                ],
+
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+    }
+
+    /**
+     * Submit the minimum amount of data required to create a withdrawal.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
+     */
+    public function testSuccessStoreBasicByName()
+    {
+        // default journal:
+        $journal      = $this->user()->transactionJournals()->where('transaction_type_id', 1)->first();
+        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $journalRepos->shouldReceive('setUser')->once();
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection);
+        $accountRepos->shouldReceive('findByNameNull')->andReturn($account);
+        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+
+        $data = [
+            'description'  => 'Some transaction #' . random_int(1, 1000),
+            'date'         => '2018-01-01',
+            'type'         => 'withdrawal',
+            'transactions' => [
+                [
+                    'amount'      => '10',
+                    'currency_id' => 1,
+                    'source_name' => $account->name,
                 ],
 
 
@@ -1664,7 +1705,7 @@ class TransactionControllerTest extends TestCase
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'deposit',
             'transactions' => [
@@ -1702,7 +1743,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -1742,7 +1783,7 @@ class TransactionControllerTest extends TestCase
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -1781,7 +1822,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -1820,7 +1861,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -1860,7 +1901,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -1899,7 +1940,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
         $data = [
-            'description'        => 'Some transaction #' . rand(1, 1000),
+            'description'        => 'Some transaction #' . random_int(1, 1000),
             'date'               => '2018-01-01',
             'type'               => 'withdrawal',
             // store date meta fields (if present):
@@ -1944,9 +1985,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
-        $name = 'Some new category #' . rand(1, 1000);
+        $name = 'Some new category #' . random_int(1, 1000);
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -1984,9 +2025,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$opposing]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-        $name = 'New opposing account #' . rand(1, 10000);
+        $name = 'New opposing account #' . random_int(1, 10000);
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -2025,7 +2066,7 @@ class TransactionControllerTest extends TestCase
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'notes'        => 'I am a note',
@@ -2064,7 +2105,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$opposing]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -2104,7 +2145,7 @@ class TransactionControllerTest extends TestCase
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -2144,7 +2185,7 @@ class TransactionControllerTest extends TestCase
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
         $piggy = $this->user()->piggyBanks()->first();
         $data  = [
-            'description'     => 'Some deposit #' . rand(1, 1000),
+            'description'     => 'Some deposit #' . random_int(1, 1000),
             'date'            => '2018-01-01',
             'type'            => 'deposit',
             'piggy_bank_name' => $piggy->name,
@@ -2185,7 +2226,7 @@ class TransactionControllerTest extends TestCase
 
         $piggy = $this->user()->piggyBanks()->first();
         $data  = [
-            'description'   => 'Some transfer #' . rand(1, 1000),
+            'description'   => 'Some transfer #' . random_int(1, 1000),
             'date'          => '2018-01-01',
             'type'          => 'transfer',
             'piggy_bank_id' => $piggy->id,
@@ -2225,7 +2266,7 @@ class TransactionControllerTest extends TestCase
 
         $piggy = $this->user()->piggyBanks()->first();
         $data  = [
-            'description'     => 'Some transfer #' . rand(1, 1000),
+            'description'     => 'Some transfer #' . random_int(1, 1000),
             'date'            => '2018-01-01',
             'type'            => 'transfer',
             'piggy_bank_name' => $piggy->name,
@@ -2261,7 +2302,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -2299,7 +2340,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'transactions' => [
@@ -2337,9 +2378,9 @@ class TransactionControllerTest extends TestCase
     public function testSuccessStoreTags()
     {
         $tags         = [
-            'TagOne' . rand(1, 1000),
-            'TagTwoBlarg' . rand(1, 1000),
-            'SomeThreeTag' . rand(1, 1000),
+            'TagOne' . random_int(1, 1000),
+            'TagTwoBlarg' . random_int(1, 1000),
+            'SomeThreeTag' . random_int(1, 1000),
         ];
         $journal      = $this->user()->transactionJournals()->first();
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
@@ -2351,7 +2392,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
         $data = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
             'tags'         => join(',', $tags),
@@ -2386,8 +2427,8 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->withArgs([[$account->id]])->andReturn(new Collection([$account]));
 
-        $data         = [
-            'description'  => 'Some deposit #' . rand(1, 1000),
+        $data = [
+            'description'  => 'Some deposit #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'transactions' => [
                 [
@@ -2428,8 +2469,8 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->withArgs([[$account->id]])->andReturn(new Collection([$account]));
 
-        $data       = [
-            'description'  => 'Some transaction #' . rand(1, 1000),
+        $data = [
+            'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'transactions' => [
                 [
@@ -2444,7 +2485,6 @@ class TransactionControllerTest extends TestCase
             $withdrawal = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 1)->first();
             $count      = $withdrawal->transactions()->count();
         } while ($count !== 2);
-
 
 
         $transaction = $withdrawal->transactions()->first();

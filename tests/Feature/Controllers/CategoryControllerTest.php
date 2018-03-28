@@ -450,13 +450,13 @@ class CategoryControllerTest extends TestCase
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('find')->andReturn(new Category);
+        $repository->shouldReceive('findNull')->andReturn(new Category);
         $repository->shouldReceive('store')->andReturn(new Category);
 
         $this->session(['categories.create.uri' => 'http://localhost']);
 
         $data = [
-            'name' => 'New Category ' . rand(1000, 9999),
+            'name' => 'New Category ' . random_int(1000, 9999),
         ];
         $this->be($this->user());
         $response = $this->post(route('categories.store'), $data);
@@ -476,12 +476,12 @@ class CategoryControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('update');
-        $repository->shouldReceive('find')->andReturn($category);
+        $repository->shouldReceive('findNull')->andReturn($category);
 
         $this->session(['categories.edit.uri' => 'http://localhost']);
 
         $data = [
-            'name'   => 'Updated Category ' . rand(1000, 9999),
+            'name'   => 'Updated Category ' . random_int(1000, 9999),
             'active' => 1,
         ];
         $this->be($this->user());

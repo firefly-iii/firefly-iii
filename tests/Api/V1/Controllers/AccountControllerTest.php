@@ -127,7 +127,7 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'            => 'Some new asset account #' . rand(1, 10000),
+            'name'            => 'Some new asset account #' . random_int(1, 10000),
             'currency_id'     => 1,
             'type'            => 'asset',
             'active'          => 1,
@@ -169,7 +169,7 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'         => 'Some new asset account #' . rand(1, 10000),
+            'name'         => 'Some new asset account #' . random_int(1, 10000),
             'type'         => 'asset',
             'active'       => 1,
             'account_role' => 'ccAsset',
@@ -211,7 +211,7 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'         => 'Some new asset account #' . rand(1, 10000),
+            'name'         => 'Some new asset account #' . random_int(1, 10000),
             'type'         => 'asset',
             'active'       => 1,
             'account_role' => 'defaultAsset',
@@ -336,7 +336,7 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'         => 'Some new asset account #' . rand(1, 10000),
+            'name'         => 'Some new asset account #' . random_int(1, 10000),
             'currency_id'  => 1,
             'type'         => 'asset',
             'active'       => 1,
@@ -384,7 +384,7 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'          => 'Some new asset account #' . rand(1, 10000),
+            'name'          => 'Some new asset account #' . random_int(1, 10000),
             'currency_code' => 'EUR',
             'type'          => 'asset',
             'active'        => 1,

@@ -115,8 +115,8 @@ class ReportControllerTest extends TestCase
         $account       = factory(Account::class)->make();
 
         $popupHelper->shouldReceive('balanceForNoBudget')->once()->andReturn(new Collection);
-        $budgetRepos->shouldReceive('find')->andReturn(new Budget)->once()->withArgs([0]);
-        $accountRepos->shouldReceive('find')->andReturn($account)->once()->withArgs([1]);
+        $budgetRepos->shouldReceive('findNull')->andReturn(new Budget)->once()->withArgs([0]);
+        $accountRepos->shouldReceive('findNull')->andReturn($account)->once()->withArgs([1]);
 
 
         $this->be($this->user());
@@ -151,8 +151,8 @@ class ReportControllerTest extends TestCase
         $budget        = factory(Budget::class)->make();
         $account       = factory(Account::class)->make();
 
-        $budgetRepos->shouldReceive('find')->andReturn($budget)->once()->withArgs([1]);
-        $accountRepos->shouldReceive('find')->andReturn($account)->once()->withArgs([1]);
+        $budgetRepos->shouldReceive('findNull')->andReturn($budget)->once()->withArgs([1]);
+        $accountRepos->shouldReceive('findNull')->andReturn($account)->once()->withArgs([1]);
         $popupHelper->shouldReceive('balanceForBudget')->once()->andReturn(new Collection);
 
         $this->be($this->user());
@@ -188,8 +188,8 @@ class ReportControllerTest extends TestCase
         $budget  = factory(Budget::class)->make();
         $account = factory(Account::class)->make();
 
-        $budgetRepos->shouldReceive('find')->andReturn($budget)->once()->withArgs([1]);
-        $accountRepos->shouldReceive('find')->andReturn($account)->once()->withArgs([1]);
+        $budgetRepos->shouldReceive('findNull')->andReturn($budget)->once()->withArgs([1]);
+        $accountRepos->shouldReceive('findNull')->andReturn($account)->once()->withArgs([1]);
         $popupHelper->shouldReceive('balanceDifference')->once()->andReturn(new Collection);
 
         $this->be($this->user());
@@ -224,8 +224,8 @@ class ReportControllerTest extends TestCase
         $budget        = factory(Budget::class)->make();
         $account       = factory(Account::class)->make();
 
-        $budgetRepos->shouldReceive('find')->andReturn($budget)->once()->withArgs([1]);
-        $accountRepos->shouldReceive('find')->andReturn($account)->once()->withArgs([1]);
+        $budgetRepos->shouldReceive('findNull')->andReturn($budget)->once()->withArgs([1]);
+        $accountRepos->shouldReceive('findNull')->andReturn($account)->once()->withArgs([1]);
 
         $this->be($this->user());
         $arguments = [
@@ -259,7 +259,7 @@ class ReportControllerTest extends TestCase
         $popupHelper   = $this->mock(PopupReportInterface::class);
         $budget        = factory(Budget::class)->make();
 
-        $budgetRepos->shouldReceive('find')->andReturn($budget)->once()->withArgs([1]);
+        $budgetRepos->shouldReceive('findNull')->andReturn($budget)->once()->withArgs([1]);
         $popupHelper->shouldReceive('byBudget')->andReturn(new Collection);
 
         $this->be($this->user());
@@ -289,11 +289,10 @@ class ReportControllerTest extends TestCase
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
-        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $popupHelper   = $this->mock(PopupReportInterface::class);
         $category      = factory(Category::class)->make();
 
-        $categoryRepos->shouldReceive('find')->andReturn($category)->once()->withArgs([1]);
+        $categoryRepos->shouldReceive('findNull')->andReturn($category)->once()->withArgs([1]);
         $popupHelper->shouldReceive('byCategory')->andReturn(new Collection);
 
         $this->be($this->user());
@@ -327,7 +326,7 @@ class ReportControllerTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $account       = factory(Account::class)->make();
 
-        $accountRepos->shouldReceive('find')->withArgs([1])->andReturn($account)->once();
+        $accountRepos->shouldReceive('findNull')->withArgs([1])->andReturn($account)->once();
         $popupHelper->shouldReceive('byExpenses')->andReturn(new Collection);
 
         $this->be($this->user());
@@ -361,7 +360,7 @@ class ReportControllerTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $account       = factory(Account::class)->make();
 
-        $accountRepos->shouldReceive('find')->withArgs([1])->andReturn($account)->once();
+        $accountRepos->shouldReceive('findNull')->withArgs([1])->andReturn($account)->once();
         $popupHelper->shouldReceive('byIncome')->andReturn(new Collection);
 
         $this->be($this->user());

@@ -30,6 +30,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Tests\TestCase;
+use Mockery;
 
 /**
  * Class JavascriptControllerTest
@@ -62,6 +63,7 @@ class JavascriptControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]))
                      ->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->once();
         $currencyRepos->shouldReceive('findByCodeNull')->withArgs(['EUR'])->andReturn(new TransactionCurrency);
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'currency_id'])->andReturn('1');
 
         $this->be($this->user());
         $response = $this->get(route('javascript.accounts'));
@@ -76,6 +78,8 @@ class JavascriptControllerTest extends TestCase
         $repository = $this->mock(CurrencyRepositoryInterface::class);
         $currency   = factory(TransactionCurrency::class)->make();
         $repository->shouldReceive('get')->andReturn(new Collection([$currency]));
+
+
 
         $this->be($this->user());
         $response = $this->get(route('javascript.currencies'));
@@ -96,6 +100,7 @@ class JavascriptControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos->shouldReceive('findNull')->andReturn(new Account);
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'currency_id'])->andReturn('1');
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('javascript.variables'));
@@ -116,6 +121,7 @@ class JavascriptControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos->shouldReceive('findNull')->andReturn(new Account);
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'currency_id'])->andReturn('1');
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
