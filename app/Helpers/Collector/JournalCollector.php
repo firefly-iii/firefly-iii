@@ -834,6 +834,7 @@ class JournalCollector implements JournalCollectorInterface
 
     /**
      *
+     * @throws \InvalidArgumentException
      */
     private function joinOpposingTables()
     {

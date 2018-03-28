@@ -155,6 +155,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      * @param Model        $model
      *
      * @return Attachment
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     protected function processFile(UploadedFile $file, Model $model): Attachment
     {
@@ -206,7 +207,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         Log::debug('Now in validMime()');
         $mime = e($file->getMimeType());
         $name = e($file->getClientOriginalName());
-        Log::debug(sprintf('Name is %, and mime is %s', $name, $mime));
+        Log::debug(sprintf('Name is %s, and mime is %s', $name, $mime));
         Log::debug('Valid mimes are', $this->allowedMimes);
 
         if (!in_array($mime, $this->allowedMimes)) {

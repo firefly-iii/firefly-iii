@@ -154,11 +154,9 @@ class SplitJournalFormRequest extends Request
         $transactions = $data['transactions'] ?? [];
         /** @var array $array */
         foreach ($transactions as $array) {
-            if ($array['destination_id'] !== null && $array['source_id'] !== null) {
-                if ($array['destination_id'] === $array['source_id']) {
-                    $validator->errors()->add('journal_source_account_id', trans('validation.source_equals_destination'));
-                    $validator->errors()->add('journal_destination_account_id', trans('validation.source_equals_destination'));
-                }
+            if ($array['destination_id'] !== null && $array['source_id'] !== null && $array['destination_id'] === $array['source_id']) {
+                $validator->errors()->add('journal_source_account_id', trans('validation.source_equals_destination'));
+                $validator->errors()->add('journal_destination_account_id', trans('validation.source_equals_destination'));
             }
         }
 

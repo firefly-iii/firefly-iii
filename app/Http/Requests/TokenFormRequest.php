@@ -43,10 +43,8 @@ class TokenFormRequest extends Request
     public function rules()
     {
         // fixed
-        $rules = [
+        return [
             'code' => 'required|2faCode',
         ];
-
-        return $rules;
     }
 }

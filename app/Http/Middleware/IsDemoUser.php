@@ -39,6 +39,7 @@ class IsDemoUser
      * @param  \Closure                 $next
      *
      * @return mixed
+     * @throws \RuntimeException
      */
     public function handle(Request $request, Closure $next)
     {

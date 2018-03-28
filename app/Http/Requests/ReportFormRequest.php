@@ -30,6 +30,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class CategoryFormRequest.
@@ -124,6 +125,7 @@ class ReportFormRequest extends Request
                 $date = new Carbon($parts[1]);
                 // @codeCoverageIgnoreStart
             } catch (Exception $e) {
+                Log::error(sprintf('"%s" is not a valid date range.', $range));
                 throw new FireflyException(sprintf('"%s" is not a valid date range.', $range));
                 // @codeCoverageIgnoreEnd
             }
@@ -170,6 +172,7 @@ class ReportFormRequest extends Request
                 $date = new Carbon($parts[0]);
                 // @codeCoverageIgnoreStart
             } catch (Exception $e) {
+                Log::error(sprintf('"%s" is not a valid date range.', $range));
                 throw new FireflyException(sprintf('"%s" is not a valid date range.', $range));
                 // @codeCoverageIgnoreEnd
             }

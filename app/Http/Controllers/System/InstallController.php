@@ -35,6 +35,7 @@ use phpseclib\Crypt\RSA;
  */
 class InstallController extends Controller
 {
+    /** @noinspection MagicMethodsValidityInspection */
     /**
      * InstallController constructor.
      */
@@ -66,7 +67,7 @@ class InstallController extends Controller
             Passport::keyPath('oauth-private.key'),
         ];
 
-        if ((file_exists($publicKey) || file_exists($privateKey))) {
+        if (file_exists($publicKey) || file_exists($privateKey)) {
             return response()->json(['OK']);
         }
 

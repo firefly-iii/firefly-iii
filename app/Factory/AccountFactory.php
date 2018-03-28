@@ -75,7 +75,7 @@ class AccountFactory
         }
 
         $newAccount = Account::create($databaseData);
-        $this->updateMetadata($newAccount, $data);
+        $this->updateMetaData($newAccount, $data);
 
         if ($this->validIBData($data) && $type->type === AccountType::ASSET) {
             $this->updateIB($newAccount, $data);
@@ -117,6 +117,8 @@ class AccountFactory
      * @param string $accountType
      *
      * @return Account
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function findOrCreate(string $accountName, string $accountType): Account
     {

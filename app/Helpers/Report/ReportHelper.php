@@ -119,6 +119,7 @@ class ReportHelper implements ReportHelperInterface
      * @param Carbon $date
      *
      * @return array
+     * @throws \InvalidArgumentException
      */
     public function listOfMonths(Carbon $date): array
     {

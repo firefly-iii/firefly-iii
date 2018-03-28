@@ -54,6 +54,8 @@ class EncryptFile extends Command
 
     /**
      * Execute the console command.
+     *
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function handle()
     {

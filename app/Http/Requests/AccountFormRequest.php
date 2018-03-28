@@ -68,9 +68,9 @@ class AccountFormRequest extends Request
      */
     public function rules()
     {
-        $accountRoles   = join(',', config('firefly.accountRoles'));
-        $types          = join(',', array_keys(config('firefly.subTitlesByIdentifier')));
-        $ccPaymentTypes = join(',', array_keys(config('firefly.ccTypes')));
+        $accountRoles   = implode(',', config('firefly.accountRoles'));
+        $types          = implode(',', array_keys(config('firefly.subTitlesByIdentifier')));
+        $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
         $rules          = [
             'name'                              => 'required|min:1|uniqueAccountForUser',
             'openingBalance'                    => 'numeric|required_with:openingBalanceDate|nullable',

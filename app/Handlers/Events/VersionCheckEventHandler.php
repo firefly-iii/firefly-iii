@@ -109,8 +109,6 @@ class VersionCheckEventHandler
             // flash info
             session()->flash('info', $string);
         }
-
-        return;
     }
 
 }

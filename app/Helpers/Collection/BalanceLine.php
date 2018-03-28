@@ -35,15 +35,15 @@ class BalanceLine
     /**
      *
      */
-    const ROLE_DEFAULTROLE = 1;
+    public const ROLE_DEFAULTROLE = 1;
     /**
      *
      */
-    const ROLE_TAGROLE = 2;
+    public const ROLE_TAGROLE = 2;
     /**
      *
      */
-    const ROLE_DIFFROLE = 3;
+    public const ROLE_DIFFROLE = 3;
 
     /** @var Collection */
     protected $balanceEntries;

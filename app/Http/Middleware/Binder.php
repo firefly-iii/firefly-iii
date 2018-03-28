@@ -63,6 +63,7 @@ class Binder
      *
      * @return mixed
      *
+     * @throws \LogicException
      */
     public function handle($request, Closure $next, ...$guards)
     {

@@ -57,11 +57,8 @@ class PopupReport implements PopupReportInterface
         return $journals->filter(
             function (Transaction $transaction) {
                 $tags = $transaction->transactionJournal->tags()->where('tagMode', 'balancingAct')->count();
-                if (0 === $tags) {
-                    return true;
-                }
 
-                return false;
+                return 0 === $tags;
             }
         );
     }

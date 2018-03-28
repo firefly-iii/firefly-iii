@@ -96,7 +96,7 @@ class ReconcileController extends Controller
         $preFilled    = [
             'date'     => $this->repository->getJournalDate($journal, null),
             'category' => $this->repository->getJournalCategoryName($journal),
-            'tags'     => join(',', $journal->tags->pluck('tag')->toArray()),
+            'tags'     => implode(',', $journal->tags->pluck('tag')->toArray()),
             'amount'   => $pTransaction->amount,
         ];
 
@@ -319,7 +319,7 @@ class ReconcileController extends Controller
                                           'category_name'         => null,
                                       ],
                 ],
-                'notes'           => join(', ', $data['transactions']),
+                'notes'           => implode(', ', $data['transactions']),
             ];
 
             $journal = $repository->store($journalData);

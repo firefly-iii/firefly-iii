@@ -244,6 +244,15 @@ class BoxController extends Controller
             if ($currencyId !== 0) {
                 $accountCurrency = $currencyRepos->findNull($currencyId);
             }
+
+            // if the account is a credit card, subtract the virtual balance from the balance,
+            // to better reflect that this is not money that is actually "yours".
+            $role           = (string)$repository->getMetaValue($account, 'accountRole');
+            $virtualBalance = (string)$account->virtual_balance;
+            if ($role === 'ccAsset' && $virtualBalance !== '' && (float)$virtualBalance > 0) {
+                $balance = bcsub($balance, $virtualBalance);
+            }
+
             if (!isset($netWorth[$accountCurrency->id])) {
                 $netWorth[$accountCurrency->id]['currency'] = $accountCurrency;
                 $netWorth[$accountCurrency->id]['sum']      = '0';

@@ -71,7 +71,7 @@ class IndexController extends Controller
      */
     public function create(string $bank)
     {
-        if (true === !(config(sprintf('import.enabled.%s', $bank)))) {
+        if (true === !config(sprintf('import.enabled.%s', $bank))) {
             throw new FireflyException(sprintf('Cannot import from "%s" at this time.', $bank)); // @codeCoverageIgnore
         }
 

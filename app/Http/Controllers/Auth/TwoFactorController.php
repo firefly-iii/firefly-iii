@@ -40,6 +40,7 @@ class TwoFactorController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      *
+     * @throws \RuntimeException
      * @throws FireflyException
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -91,6 +92,7 @@ class TwoFactorController extends Controller
      *
      * @return mixed
      * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
+     * @throws \RuntimeException
      */
     public function postIndex(TokenFormRequest $request, CookieJar $cookieJar)
     {

@@ -435,11 +435,15 @@ class TransactionRequest extends Request
                     $destinationAccount = $this->assetAccountExists($validator, $destinationId, $destinationName, $idField, $nameField);
                     break;
                 default:
-                    throw new FireflyException(sprintf('The validator cannot handle transaction type "%s" in validateAccountInformation().', $data['type']));
+                    // @codeCoverageIgnoreStart
+                    throw new FireflyException(
+                        sprintf('The validator cannot handle transaction type "%s" in validateAccountInformation().', $data['type'])
+                    );
+                // @codeCoverageIgnoreEnd
 
             }
             // add some errors in case of same account submitted:
-            if (!is_null($sourceAccount) && !is_null($destinationAccount) && $sourceAccount->id === $destinationAccount->id) {
+            if (null !== $sourceAccount && null !== $destinationAccount && $sourceAccount->id === $destinationAccount->id) {
                 $validator->errors()->add($idField, trans('validation.source_equals_destination'));
             }
         }
@@ -463,7 +467,7 @@ class TransactionRequest extends Request
             // the journal may exist in the request:
             /** @var Transaction $transaction */
             $transaction = $this->route()->parameter('transaction');
-            if (is_null($transaction)) {
+            if (null === $transaction) {
                 return;
             }
             $data['type'] = strtolower($transaction->transactionJournal->transactionType->type);
