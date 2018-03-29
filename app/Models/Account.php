@@ -116,6 +116,7 @@ class Account extends Model
      * @param string $value
      *
      * @return Account
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value): Account
     {
@@ -210,6 +211,7 @@ class Account extends Model
      * @param $value
      *
      * @return string
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
     public function getNameAttribute($value): ?string
     {
@@ -274,9 +276,12 @@ class Account extends Model
     /**
      * @codeCoverageIgnore
      * @deprecated
+     *
      * @param EloquentBuilder $query
      * @param string          $name
      * @param string          $value
+     *
+     * @throws \InvalidArgumentException
      */
     public function scopeHasMetaValue(EloquentBuilder $query, $name, $value)
     {
@@ -296,6 +301,7 @@ class Account extends Model
      * @param $value
      *
      * @codeCoverageIgnore
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setIbanAttribute($value)
     {
@@ -306,6 +312,7 @@ class Account extends Model
      * @codeCoverageIgnore
      *
      * @param $value
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setNameAttribute($value)
     {

@@ -60,6 +60,8 @@ class Payment extends BunqObject
      * Payment constructor.
      *
      * @param array $data
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $data)
     {

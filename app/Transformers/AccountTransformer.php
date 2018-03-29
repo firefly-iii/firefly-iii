@@ -41,6 +41,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class AccountTransformer extends TransformerAbstract
 {
+    /** @noinspection ClassOverridesFieldOfSuperClassInspection */
     /**
      * List of resources possible to include.
      *
@@ -180,7 +181,7 @@ class AccountTransformer extends TransformerAbstract
         if ($type === AccountType::ASSET) {
             /** @var AccountRepositoryInterface $repository */
             $repository = app(AccountRepositoryInterface::class);
-            $repository->setuser($account->user);
+            $repository->setUser($account->user);
             $amount             = $repository->getOpeningBalanceAmount($account);
             $openingBalance     = is_null($amount) ? null : round($amount, $decimalPlaces);
             $openingBalanceDate = $repository->getOpeningBalanceDate($account);

@@ -218,7 +218,7 @@ trait AccountServiceTrait
      */
     public function storeOpposingAccount(User $user, string $name): Account
     {
-        $name = $name . ' initial balance';
+        $name .= ' initial balance';
         Log::debug('Going to create an opening balance opposing account.');
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);

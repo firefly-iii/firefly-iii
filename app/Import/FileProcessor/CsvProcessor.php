@@ -281,9 +281,8 @@ class CsvProcessor implements FileProcessorInterface
         if (false === $json) {
             throw new FireflyException(sprintf('Error while encoding JSON for CSV row: %s', $this->getJsonError($jsonError)));  // @codeCoverageIgnore
         }
-        $hash = hash('sha256', $json);
 
-        return $hash;
+        return hash('sha256', $json);
     }
 
     /**
@@ -340,11 +339,8 @@ class CsvProcessor implements FileProcessorInterface
     {
         $hash  = $this->getRowHash($array);
         $count = $this->repository->countByHash($hash);
-        if ($count > 0) {
-            return true;
-        }
 
-        return false;
+        return $count > 0;
     }
 
     /**

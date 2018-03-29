@@ -252,6 +252,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Budget $budget
      *
      * @return Carbon
+     * @throws \InvalidArgumentException
      */
     public function firstUseDate(Budget $budget): Carbon
     {
@@ -362,7 +363,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function getBudgetLimits(Budget $budget, Carbon $start, Carbon $end): Collection
     {
-        $set = $budget->budgetLimits()
+        $set = $budget->budgetlimits()
                       ->where(
                           function (Builder $q5) use ($start, $end) {
                               $q5->where(

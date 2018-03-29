@@ -57,16 +57,6 @@ class AmountFormat extends Twig_Extension
     }
 
     /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName(): string
-    {
-        return 'FireflyIII\Support\Twig\AmountFormat';
-    }
-
-    /**
      * @return Twig_SimpleFilter
      */
     protected function formatAmount(): Twig_SimpleFilter

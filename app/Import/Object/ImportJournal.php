@@ -183,7 +183,7 @@ class ImportJournal
             $converter = app($class);
             Log::debug(sprintf('Now launching converter %s', $class));
             if ($converter->convert($modifier['value']) === -1) {
-                $this->convertedAmount = Steam::negative($amount);
+                $amount = Steam::negative($amount);
             }
             Log::debug(sprintf('Foreign amount after conversion is  %s', $amount));
         }
@@ -478,7 +478,5 @@ class ImportJournal
         $preProcessor = app(sprintf('\FireflyIII\Import\MapperPreProcess\%s', $preProcessorClass));
         $tags         = $preProcessor->run($array['value']);
         $this->tags   = array_merge($this->tags, $tags);
-
-        return;
     }
 }

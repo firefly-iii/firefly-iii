@@ -103,14 +103,4 @@ class Rule extends Twig_Extension
             $this->allActionTriggers(),
         ];
     }
-
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName(): string
-    {
-        return 'FireflyIII\Support\Twig\Rule';
-    }
 }

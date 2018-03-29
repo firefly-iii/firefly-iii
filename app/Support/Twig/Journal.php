@@ -103,16 +103,6 @@ class Journal extends Twig_Extension
     }
 
     /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName(): string
-    {
-        return 'FireflyIII\Support\Twig\Journals';
-    }
-
-    /**
      * @return Twig_SimpleFunction
      */
     public function getSourceAccount(): Twig_SimpleFunction

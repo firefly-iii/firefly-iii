@@ -178,7 +178,7 @@ abstract class BunqRequest
         $userAgent = sprintf('FireflyIII v%s', config('firefly.version'));
 
         return [
-            'X-Bunq-Client-Request-Id' => uniqid('FFIII'),
+            'X-Bunq-Client-Request-Id' => uniqid('FFIII', true),
             'Cache-Control'            => 'no-cache',
             'User-Agent'               => $userAgent,
             'X-Bunq-Language'          => 'en_US',

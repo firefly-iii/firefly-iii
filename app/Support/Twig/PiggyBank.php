@@ -55,13 +55,4 @@ class PiggyBank extends Twig_Extension
         return $functions;
     }
 
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName(): string
-    {
-        return 'FireflyIII\Support\Twig\PiggyBank';
-    }
 }

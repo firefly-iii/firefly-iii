@@ -68,14 +68,6 @@ class General extends Twig_Extension
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getName(): string
-    {
-        return 'FireflyIII\Support\Twig\General';
-    }
-
-    /**
      * Will return "active" when a part of the route matches the argument.
      * ie. "accounts" will match "accounts.index".
      *

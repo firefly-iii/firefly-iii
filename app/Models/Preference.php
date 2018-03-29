@@ -84,6 +84,8 @@ class Preference extends Model
      * @codeCoverageIgnore
      *
      * @param $value
+     *
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setDataAttribute($value)
     {

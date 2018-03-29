@@ -40,6 +40,8 @@ class ListLoginsRequest extends SpectreRequest
 
     /**
      *
+     * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function call(): void
     {

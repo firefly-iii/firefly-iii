@@ -33,43 +33,43 @@ class AccountType extends Model
     /**
      *
      */
-    const DEFAULT = 'Default account';
+    public const DEFAULT = 'Default account';
     /**
      *
      */
-    const CASH = 'Cash account';
+    public const CASH = 'Cash account';
     /**
      *
      */
-    const ASSET = 'Asset account';
+    public const ASSET = 'Asset account';
     /**
      *
      */
-    const EXPENSE = 'Expense account';
+    public const EXPENSE = 'Expense account';
     /**
      *
      */
-    const REVENUE = 'Revenue account';
+    public const REVENUE = 'Revenue account';
     /**
      *
      */
-    const INITIAL_BALANCE = 'Initial balance account';
+    public const INITIAL_BALANCE = 'Initial balance account';
     /**
      *
      */
-    const BENEFICIARY = 'Beneficiary account';
+    public const BENEFICIARY = 'Beneficiary account';
     /**
      *
      */
-    const IMPORT = 'Import account';
+    public const IMPORT = 'Import account';
     /**
      *
      */
-    const RECONCILIATION = 'Reconciliation account';
+    public const RECONCILIATION = 'Reconciliation account';
     /**
      *
      */
-    const LOAN = 'Loan';
+    public const LOAN = 'Loan';
     /**
      * The attributes that should be casted to native types.
      *

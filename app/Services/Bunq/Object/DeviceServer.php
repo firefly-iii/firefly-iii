@@ -47,6 +47,8 @@ class DeviceServer extends BunqObject
      * DeviceServer constructor.
      *
      * @param array $data
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $data)
     {

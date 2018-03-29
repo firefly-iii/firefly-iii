@@ -72,6 +72,7 @@ class Bill extends Model
      * @param string $value
      *
      * @return Bill
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value): Bill
     {
@@ -100,6 +101,7 @@ class Bill extends Model
      * @param $value
      *
      * @return string
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
     public function getMatchAttribute($value)
     {
@@ -116,6 +118,7 @@ class Bill extends Model
      * @param $value
      *
      * @return string
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
     public function getNameAttribute($value)
     {
@@ -159,6 +162,7 @@ class Bill extends Model
      * @param $value
      *
      * @codeCoverageIgnore
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setMatchAttribute($value)
     {
@@ -171,6 +175,7 @@ class Bill extends Model
      * @param $value
      *
      * @codeCoverageIgnore
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setNameAttribute($value)
     {

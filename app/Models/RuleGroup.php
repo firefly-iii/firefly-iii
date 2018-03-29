@@ -55,6 +55,7 @@ class RuleGroup extends Model
      * @param string $value
      *
      * @return RuleGroup
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value): RuleGroup
     {

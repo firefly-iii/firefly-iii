@@ -179,6 +179,7 @@ class ImportJob extends Model
     /**
      * @return string
      *
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function uploadFileContents(): string

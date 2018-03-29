@@ -154,8 +154,8 @@ class TransactionUpdateService
      */
     public function updateCategory(Transaction $transaction, string $category): Transaction
     {
-        $category = $this->findCategory(0, $category);
-        $this->setCategory($transaction, $category);
+        $found = $this->findCategory(0, $category);
+        $this->setCategory($transaction, $found);
 
         return $transaction;
     }

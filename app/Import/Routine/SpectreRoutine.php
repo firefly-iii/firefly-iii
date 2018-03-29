@@ -343,8 +343,6 @@ class SpectreRoutine implements RoutineInterface
         $this->setConfig($config);
         $this->setStatus('configuring');
         $this->addStep();
-
-        return;
     }
 
     /**
@@ -468,7 +466,7 @@ class SpectreRoutine implements RoutineInterface
                 // various meta fields:
                 $importJournal->setValue(['role' => 'category-name', 'value' => $transaction->getCategory()]);
                 $importJournal->setValue(['role' => 'note', 'value' => $notes]);
-                $importJournal->setValue(['role' => 'tags-comma', 'value' => join(',', $tags)]);
+                $importJournal->setValue(['role' => 'tags-comma', 'value' => implode(',', $tags)]);
                 $collection->push($importJournal);
             }
         }
@@ -521,7 +519,6 @@ class SpectreRoutine implements RoutineInterface
         $this->setStatus('finished');
         $this->addStep();
 
-        return;
     }
 
     /**
@@ -538,7 +535,7 @@ class SpectreRoutine implements RoutineInterface
         /** @var array $accountArray */
         foreach ($accounts as $accountArray) {
             $account  = new Account($accountArray);
-            $importId = intval($config['accounts-mapped'][$account->getid()] ?? 0);
+            $importId = intval($config['accounts-mapped'][$account->getId()] ?? 0);
             $doImport = 0 !== $importId ? true : false;
             if (!$doImport) {
                 Log::debug(sprintf('Will NOT import from Spectre account #%d ("%s")', $account->getId(), $account->getName()));
@@ -571,7 +568,6 @@ class SpectreRoutine implements RoutineInterface
     {
         $this->repository->setConfiguration($this->job, $config);
 
-        return;
     }
 
     /**
@@ -583,7 +579,6 @@ class SpectreRoutine implements RoutineInterface
     {
         $this->repository->setExtendedStatus($this->job, $extended);
 
-        return;
     }
 
     /**

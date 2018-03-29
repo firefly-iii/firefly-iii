@@ -48,6 +48,7 @@ class BudgetLimit extends Model
      * @param string $value
      *
      * @return mixed
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value): BudgetLimit
     {

@@ -116,6 +116,8 @@ class UserPerson extends BunqObject
      * UserPerson constructor.
      *
      * @param array $data
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $data)
     {

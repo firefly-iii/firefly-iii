@@ -108,6 +108,8 @@ class TransactionJournalLink extends Model
      * @codeCoverageIgnore
      *
      * @param $value
+     *
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setCommentAttribute($value): void
     {

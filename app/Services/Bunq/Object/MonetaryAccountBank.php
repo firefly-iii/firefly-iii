@@ -74,6 +74,8 @@ class MonetaryAccountBank extends BunqObject
      * MonetaryAccountBank constructor.
      *
      * @param array $data
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $data)
     {

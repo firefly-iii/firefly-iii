@@ -36,6 +36,7 @@ class UnfinishedJournal implements BinderInterface
      * @param    Route $route
      *
      * @return TransactionJournal
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value, Route $route): TransactionJournal
     {

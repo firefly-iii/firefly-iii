@@ -52,6 +52,7 @@ class Rule extends Model
      * @param string $value
      *
      * @return Rule
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value): Rule
     {

@@ -226,8 +226,6 @@ class BunqRoutine implements RoutineInterface
         $config['stage'] = 'registered';
         $this->setConfig($config);
         $this->addStep();
-
-        return;
     }
 
     /**
@@ -319,6 +317,8 @@ class BunqRoutine implements RoutineInterface
      * @param string               $expectedType
      *
      * @return Account
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     private function convertToAccount(LabelMonetaryAccount $party, string $expectedType): Account
     {

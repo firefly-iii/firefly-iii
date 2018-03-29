@@ -354,8 +354,7 @@ class ExpandedForm
         $value            = $this->fillFieldValue($name, $value);
         $options['step']  = 'any';
         $selectedCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
-        unset($options['currency']);
-        unset($options['placeholder']);
+        unset($options['currency'], $options['placeholder']);
 
         // make sure value is formatted nicely:
         if (null !== $value && '' !== $value) {
@@ -384,8 +383,7 @@ class ExpandedForm
         $value            = $this->fillFieldValue($name, $value);
         $options['step']  = 'any';
         $selectedCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
-        unset($options['currency']);
-        unset($options['placeholder']);
+        unset($options['currency'], $options['placeholder']);
 
         // make sure value is formatted nicely:
         if (null !== $value && '' !== $value) {
@@ -479,8 +477,7 @@ class ExpandedForm
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
         $selected = $this->fillFieldValue($name, $selected);
-        unset($options['autocomplete']);
-        unset($options['placeholder']);
+        unset($options['autocomplete'], $options['placeholder']);
         $html = view('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
 
         return $html;
@@ -666,8 +663,7 @@ class ExpandedForm
         $options['step'] = 'any';
         $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
         $currencies      = app('amount')->getAllCurrencies();
-        unset($options['currency']);
-        unset($options['placeholder']);
+        unset($options['currency'], $options['placeholder']);
 
         // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
         $preFilled      = session('preFilled');

@@ -235,6 +235,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * Returns the date of the very first transaction in this account.
+     * TODO refactor to nullable.
      *
      * @param Account $account
      *
@@ -242,12 +243,13 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function oldestJournalDate(Account $account): Carbon
     {
+        $result  = new Carbon;
         $journal = $this->oldestJournal($account);
-        if (null === $journal->id) {
-            return new Carbon;
+        if (null !== $journal->id) {
+            $result = $journal->date;
         }
 
-        return $journal->date;
+        return $result;
     }
 
     /**
@@ -262,6 +264,8 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array $data
      *
      * @return Account
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function store(array $data): Account
     {
@@ -278,6 +282,8 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array   $data
      *
      * @return Account
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function update(Account $account, array $data): Account
     {

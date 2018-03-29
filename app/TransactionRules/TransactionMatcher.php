@@ -184,6 +184,7 @@ class TransactionMatcher
      * @param Processor $processor
      *
      * @return Collection
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function runProcessor(Processor $processor): Collection
     {

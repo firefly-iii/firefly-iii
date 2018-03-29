@@ -62,6 +62,7 @@ trait ImportSupport
      * @param TransactionJournal $journal
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     protected function applyRules(TransactionJournal $journal): bool
     {
@@ -279,6 +280,7 @@ trait ImportSupport
      * is not already present.
      *
      * @return array
+     * @throws \InvalidArgumentException
      */
     private function getTransfers(): array
     {

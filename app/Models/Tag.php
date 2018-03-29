@@ -90,6 +90,7 @@ class Tag extends Model
      * @param string $value
      *
      * @return Tag
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value): Tag
     {
@@ -109,6 +110,7 @@ class Tag extends Model
      * @param $value
      *
      * @return string
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
     public function getDescriptionAttribute($value)
     {
@@ -125,6 +127,7 @@ class Tag extends Model
      * @param $value
      *
      * @return string
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
     public function getTagAttribute($value)
     {
@@ -139,6 +142,8 @@ class Tag extends Model
      * @codeCoverageIgnore
      *
      * @param $value
+     *
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setDescriptionAttribute($value)
     {
@@ -149,6 +154,7 @@ class Tag extends Model
      * @codeCoverageIgnore
      *
      * @param $value
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setTagAttribute($value)
     {

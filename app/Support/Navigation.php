@@ -65,7 +65,7 @@ class Navigation
             throw new FireflyException(sprintf('Cannot do addPeriod for $repeat_freq "%s"', $repeatFreq));
         }
         if (isset($modifierMap[$repeatFreq])) {
-            $add = $add * $modifierMap[$repeatFreq];
+            $add *= $modifierMap[$repeatFreq];
         }
         $function = $functionMap[$repeatFreq];
         $date->$function($add);
@@ -99,7 +99,7 @@ class Navigation
          */
         $perMonthEnd   = clone $end;
         $perMonthStart = clone $end;
-        $perMonthStart->startOfyear()->subYear();
+        $perMonthStart->startOfYear()->subYear();
         $perMonthStart = $start->lt($perMonthStart) ? $perMonthStart : $start;
 
         // loop first set:
@@ -537,7 +537,7 @@ class Navigation
             return $date;
         }
         if (isset($modifierMap[$repeatFreq])) {
-            $subtract = $subtract * $modifierMap[$repeatFreq];
+            $subtract *= $modifierMap[$repeatFreq];
             $date->subMonths($subtract);
             Log::debug(sprintf('%s is in modifier map with value %d, execute subMonths with argument %d', $repeatFreq, $modifierMap[$repeatFreq], $subtract));
             Log::debug(sprintf('subtractPeriod: resulting date is %s', $date->format('Y-m-d')));

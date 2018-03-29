@@ -242,6 +242,7 @@ class Steam
      * @param     $value
      *
      * @return string
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
     public function decrypt(int $isEncrypted, string $value)
     {

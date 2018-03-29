@@ -182,7 +182,7 @@ class ImportStorage
      */
     protected function storeImportJournal(int $index, ImportJournal $importJournal): bool
     {
-        Log::debug(sprintf('Going to store object #%d/%d with description "%s"', ($index + 1), $this->total, $importJournal->getDescription()));
+        Log::debug(sprintf('Going to store object #%d/%d with description "%s"', $index + 1, $this->total, $importJournal->getDescription()));
         $assetAccount      = $importJournal->asset->getAccount();
         $amount            = $importJournal->getAmount();
         $foreignAmount     = $importJournal->getForeignAmount();
@@ -370,7 +370,7 @@ class ImportStorage
             }
             if ($names === $transfer['names']) {
                 ++$hits;
-                Log::debug(sprintf('Involved accounts, "%s" equals "%s", hits = %d', join(',', $names), join(',', $transfer['names']), $hits));
+                Log::debug(sprintf('Involved accounts, "%s" equals "%s", hits = %d', implode(',', $names), implode(',', $transfer['names']), $hits));
             }
             if (0 === bccomp($amount, $transfer['amount'])) {
                 ++$hits;

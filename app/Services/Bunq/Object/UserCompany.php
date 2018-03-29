@@ -94,6 +94,8 @@ class UserCompany extends BunqObject
      * UserCompany constructor.
      *
      * @param array $data
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $data)
     {

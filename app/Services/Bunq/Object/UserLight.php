@@ -56,6 +56,8 @@ class UserLight extends BunqObject
      * UserLight constructor.
      *
      * @param array $data
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $data)
     {

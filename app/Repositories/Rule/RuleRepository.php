@@ -129,13 +129,13 @@ class RuleRepository implements RuleRepositoryInterface
         $order = $rule->order;
 
         // find the rule with order+1 and give it order-1
-        $other = $rule->ruleGroup->rules()->where('order', ($order + 1))->first();
+        $other = $rule->ruleGroup->rules()->where('order', $order + 1)->first();
         if ($other) {
-            $other->order = $other->order - 1;
+            --$other->order;
             $other->save();
         }
 
-        $rule->order = ($rule->order + 1);
+        ++$rule->order;
         $rule->save();
         $this->resetRulesInGroupOrder($rule->ruleGroup);
 
@@ -152,13 +152,13 @@ class RuleRepository implements RuleRepositoryInterface
         $order = $rule->order;
 
         // find the rule with order-1 and give it order+1
-        $other = $rule->ruleGroup->rules()->where('order', ($order - 1))->first();
+        $other = $rule->ruleGroup->rules()->where('order', $order - 1)->first();
         if ($other) {
-            $other->order = ($other->order + 1);
+            ++$other->order;
             $other->save();
         }
 
-        $rule->order = ($rule->order - 1);
+        --$rule->order;
         $rule->save();
         $this->resetRulesInGroupOrder($rule->ruleGroup);
 

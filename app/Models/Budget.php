@@ -87,6 +87,7 @@ class Budget extends Model
      * @param string $value
      *
      * @return Budget
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value): Budget
     {
@@ -115,6 +116,7 @@ class Budget extends Model
      * @param $value
      *
      * @return string
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
     public function getNameAttribute($value)
     {
@@ -129,6 +131,8 @@ class Budget extends Model
      * @codeCoverageIgnore
      *
      * @param $value
+     *
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setNameAttribute($value)
     {

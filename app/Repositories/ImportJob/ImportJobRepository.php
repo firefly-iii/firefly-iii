@@ -210,6 +210,8 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      * @param UploadedFile $file
      *
      * @return bool
+     * @throws \RuntimeException
+     * @throws \LogicException
      */
     public function processConfiguration(ImportJob $job, UploadedFile $file): bool
     {
@@ -247,6 +249,9 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      *
      * @return bool
      *
+     * @throws \RuntimeException
+     * @throws \LogicException
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function processFile(ImportJob $job, ?UploadedFile $file): bool

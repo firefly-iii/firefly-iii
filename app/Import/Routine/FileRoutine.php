@@ -266,8 +266,6 @@ class FileRoutine implements RoutineInterface
     private function setExtendedStatus(array $extended): void
     {
         $this->repository->setExtendedStatus($this->job, $extended);
-
-        return;
     }
 
     /**

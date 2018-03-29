@@ -455,8 +455,7 @@ return [
     'preferences_security'                    => 'Sicherheit',
     'preferences_layout'                      => 'Anordnung',
     'pref_home_show_deposits'                 => 'Einnahmen auf dem Startbildschirm anzeigen',
-    'pref_home_show_deposits_info'            => 'Der Startbildschirm zeigt schon Ihre Ausgabenkonten an. 
-Sollen zusätzlich Ihre Girokonten angezeigt werden?',
+    'pref_home_show_deposits_info'            => 'Der Startbildschirm zeigt schon Ihre Ausgabenkonten an. Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'pref_home_do_show_deposits'              => 'Ja, zeige sie an',
     'successful_count'                        => 'davon :count erfolgreich',
     'list_page_size_title'                    => 'Einträge pro Seite',

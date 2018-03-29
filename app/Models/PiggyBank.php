@@ -64,6 +64,7 @@ class PiggyBank extends Model
      * @param string $value
      *
      * @return PiggyBank
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value): PiggyBank
     {
@@ -116,6 +117,7 @@ class PiggyBank extends Model
      * @param $value
      *
      * @return string
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
     public function getNameAttribute($value)
     {
@@ -202,6 +204,8 @@ class PiggyBank extends Model
      * @codeCoverageIgnore
      *
      * @param $value
+     *
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setNameAttribute($value)
     {

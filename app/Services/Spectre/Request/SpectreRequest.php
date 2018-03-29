@@ -55,6 +55,8 @@ abstract class SpectreRequest
      *
      * @param User $user
      *
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Illuminate\Container\EntryNotFoundException
      */
     public function __construct(User $user)
@@ -180,7 +182,6 @@ abstract class SpectreRequest
      * @return array
      *
      * @throws FireflyException
-     * @throws SpectreException
      */
     protected function sendSignedSpectreGet(string $uri, array $data): array
     {
@@ -224,7 +225,6 @@ abstract class SpectreRequest
      * @return array
      *
      * @throws FireflyException
-     * @throws SpectreException
      */
     protected function sendSignedSpectrePost(string $uri, array $data): array
     {

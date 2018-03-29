@@ -95,6 +95,8 @@ class BunqToken
 
     /**
      * @param array $response
+     *
+     * @throws \InvalidArgumentException
      */
     protected function makeTokenFromResponse(array $response): void
     {

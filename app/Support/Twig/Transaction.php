@@ -52,14 +52,4 @@ class Transaction extends Twig_Extension
 
         return $filters;
     }
-
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName(): string
-    {
-        return 'transaction';
-    }
 }

@@ -137,6 +137,7 @@ class Transaction extends Model
      * @param string $value
      *
      * @return Transaction
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value): Transaction
     {
