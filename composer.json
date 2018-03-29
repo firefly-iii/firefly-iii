@@ -50,6 +50,7 @@
 		"ext-gd": "*",
 		"ext-intl": "*",
 		"ext-zip": "*",
+		"ext-xml": "*",
 		"bacon/bacon-qr-code": "1.*",
 		"davejamesmiller/laravel-breadcrumbs": "5.*",
 		"doctrine/dbal": "2.*",
