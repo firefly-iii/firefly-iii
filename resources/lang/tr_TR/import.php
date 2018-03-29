@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * import.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     // status of import:
@@ -97,6 +98,7 @@ return [
     // not csv, but normal warning
     'roles_warning'                        => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
     'foreign_amount_warning'               => 'If you mark a column as containing an amount in a foreign currency, you must also set the column that contains which currency it is.',
+
     // file, map data
     'file_map_title'                       => 'Ayarları aktar (4/4) - İçe aktarım verilerini Firefly III verilerine bağlayın',
     'file_map_text'                        => 'Takip eden tabloda, sol değer yüklediğiniz dosyada bulunan bilgileri gösterir. Bu değeri eşlemek sizin göreviniz, eğer mümkünse veritabanınızda bulunan bir değerle. Firefly bu eşlemeye bağlı kalacak. Eğer eşleştirilecek değer yoksa ya da belirli bir değer ile eşleştirmek istemiyorsanız hiçbir şey seçmeyin.',
@@ -131,28 +133,40 @@ return [
     'column_date-book'                     => 'İşlem rezervasyon tarihi',
     'column_date-process'                  => 'İşlem tarihi',
     'column_date-transaction'              => 'Tarih',
+    'column_date-due'                      => 'Transaction due date',
+    'column_date-payment'                  => 'Transaction payment date',
+    'column_date-invoice'                  => 'Transaction invoice date',
     'column_description'                   => 'Açıklama',
     'column_opposing-iban'                 => 'Karşı hesap (IBAN)',
+    'column_opposing-bic'                  => 'Opposing account (BIC)',
     'column_opposing-id'                   => 'Opposing account ID (matching FF3)',
     'column_external-id'                   => 'Harici Kimlik',
     'column_opposing-name'                 => 'Karşı hesap (isim)',
     'column_rabo-debit-credit'             => 'Rabobank\'a özel borç / kredi göstergesi',
     'column_ing-debit-credit'              => 'ING\'ye özel borç/kredi göstergesi',
-    'column_sepa-ct-id'                    => 'SEPA Kredi Transferinin uçtan uca kimliği',
-    'column_sepa-ct-op'                    => 'SEPA Kredi Transferinin karşı hesabı',
-    'column_sepa-db'                       => 'SEPA Direkt Borç',
+    'column_sepa-ct-id'                    => 'SEPA end-to-end Identifier',
+    'column_sepa-ct-op'                    => 'SEPA Opposing Account Identifier',
+    'column_sepa-db'                       => 'SEPA Mandate Identifier',
+    'column_sepa-cc'                       => 'SEPA Clearing Code',
+    'column_sepa-ci'                       => 'SEPA Creditor Identifier',
+    'column_sepa-ep'                       => 'SEPA External Purpose',
+    'column_sepa-country'                  => 'SEPA Country Code',
     'column_tags-comma'                    => 'Etiketler (virgülle ayrılmış)',
     'column_tags-space'                    => 'Etiketler (boşlukla ayrılmış)',
     'column_account-number'                => 'Varlık hesabı (hesap numarası)',
     'column_opposing-number'               => 'Karşı hesap (hesap numarası)',
     'column_note'                          => 'Not(lar)',
+    'column_internal-reference'            => 'Internal reference',
 
     // prerequisites
     'prerequisites'                        => 'Prerequisites',
 
     // bunq
     'bunq_prerequisites_title'             => 'Bunq\'dan içeri aktarım için şartlar',
-    'bunq_prerequisites_text'              => 'Bunq\'dan içe aktarabilmek için bir API anahtarı almalısınız. Bunu uygulamadan yapabilirsiniz.',
+    'bunq_prerequisites_text'              => 'In order to import from bunq, you need to obtain an API key. You can do this through the app. Please note that the import function for bunq is in BETA. It has only been tested against the sandbox API.',
+    'bunq_do_import'                       => 'Yes, import from this account',
+    'bunq_accounts_title'                  => 'Bunq accounts',
+    'bunq_accounts_text'                   => 'These are the accounts associated with your bunq account. Please select the accounts from which you want to import, and in which account the transactions must be imported.',
 
     // Spectre
     'spectre_title'                        => 'Spectre kullanarak içe aktar',
@@ -187,4 +201,3 @@ return [
     // various other strings:
     'imported_from_account'                => 'Imported from ":account"',
 ];
-

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * validation.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,10 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     'iban'                           => 'Dit is niet een geldige IBAN.',
+    'source_equals_destination'      => 'De bronrekening is gelijk aan de doelrekening',
     'unique_account_number_for_user' => 'Het lijkt erop dat dit rekeningnummer al in gebruik is.',
     'unique_iban_for_user'           => 'Het lijkt erop dat deze IBAN al in gebruik is.',
     'deleted_user'                   => 'Je kan je niet registreren met dit e-mailadres.',

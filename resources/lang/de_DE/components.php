@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 return [
     // profile
-    'personal_access_tokens' => 'Persönliche Zugangs-Tokens',
+    'personal_access_tokens' => 'Persönliche Zugangs-Authentifizierungsschlüssel',
 
     // bills:
     'not_expected_period'    => 'Unerwarteter Zeitraum',

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * passwords.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     'password' => 'Şifreniz en az altı karakter olmalıdır ve onayla eşleşmelidir.',

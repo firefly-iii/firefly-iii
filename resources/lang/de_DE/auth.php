@@ -33,5 +33,5 @@ return [
     */
 
     'failed'   => 'Falscher Benutzername und/oder falsches Passwort.',
-    'throttle' => 'Zu viele Login-Versuche. Bitte versuchen Sie es in :seconds Sekunde(n) erneut.',
+    'throttle' => 'Zu viele Anmeldeversuche. Bitte versuchen Sie es in :seconds Sekunden erneut.',
 ];

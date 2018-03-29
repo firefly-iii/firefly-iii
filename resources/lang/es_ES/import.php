@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * import.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     // status of import:
@@ -97,6 +98,7 @@ return [
     // not csv, but normal warning
     'roles_warning'                        => 'Por lo menos, marque una columna como la columna de importe. también es aconsejable seleccionar una columna para la descripción. la fecha y la cuenta contraria.',
     'foreign_amount_warning'               => 'Si usted marca una columna que contiene un importe en una moneda extranjera, usted también debe establecer la columna que contiene que moneda es.',
+
     // file, map data
     'file_map_title'                       => 'Configuración de importación (4/4) - Conecta datos de importación a los datos de Firefly III',
     'file_map_text'                        => 'En las siguientes tablas, el valor de la izquierda muestra información encontrada en el Csv cargado. Es su tarea mapear este valor, si es posible, a un valor ya presente en su base de datos. Firefly Iii respetara este mapeo. Si no hay un valor hacia el cual mapear o no se desea mapear un valor especifico, no seleccione ninguno.',
@@ -131,28 +133,40 @@ return [
     'column_date-book'                     => 'Fecha de registro de la transacción',
     'column_date-process'                  => 'Fecha del proceso de transacción',
     'column_date-transaction'              => 'Fecha',
+    'column_date-due'                      => 'Transaction due date',
+    'column_date-payment'                  => 'Transaction payment date',
+    'column_date-invoice'                  => 'Transaction invoice date',
     'column_description'                   => 'Descripción',
     'column_opposing-iban'                 => 'Cuenta opuesta (IBAN)',
+    'column_opposing-bic'                  => 'Opposing account (BIC)',
     'column_opposing-id'                   => 'ID de cuenta opuesta (coincide FF3)',
     'column_external-id'                   => 'Identificación externa',
     'column_opposing-name'                 => 'Cuenta opuesta (nombre)',
     'column_rabo-debit-credit'             => 'Indicador especifico débito/crédito de Rabobank',
     'column_ing-debit-credit'              => 'Indicador especifico débito/crédito de ING',
-    'column_sepa-ct-id'                    => 'ID transferencia de crédito extremo a extremo',
-    'column_sepa-ct-op'                    => 'Transferencia de crédito a cuenta opuesta SEPA',
-    'column_sepa-db'                       => 'SEPA débito directo',
+    'column_sepa-ct-id'                    => 'SEPA end-to-end Identifier',
+    'column_sepa-ct-op'                    => 'SEPA Opposing Account Identifier',
+    'column_sepa-db'                       => 'SEPA Mandate Identifier',
+    'column_sepa-cc'                       => 'SEPA Clearing Code',
+    'column_sepa-ci'                       => 'SEPA Creditor Identifier',
+    'column_sepa-ep'                       => 'SEPA External Purpose',
+    'column_sepa-country'                  => 'SEPA Country Code',
     'column_tags-comma'                    => 'Etiquetas ( separadas por comas)',
     'column_tags-space'                    => 'Etiquetas ( separadas por espacio)',
     'column_account-number'                => 'Cuenta de archivos ( numero de cuenta)',
     'column_opposing-number'               => 'Cuenta opuesta (numero de cuenta)',
     'column_note'                          => 'Nota (s)',
+    'column_internal-reference'            => 'Internal reference',
 
     // prerequisites
     'prerequisites'                        => 'Prerequisitos',
 
     // bunq
     'bunq_prerequisites_title'             => 'Pre requisitos para una importación de bunq',
-    'bunq_prerequisites_text'              => 'Para importar de bunq, usted necesita obtener una clave API. usted puede hacerlo a través de la aplicación.',
+    'bunq_prerequisites_text'              => 'In order to import from bunq, you need to obtain an API key. You can do this through the app. Please note that the import function for bunq is in BETA. It has only been tested against the sandbox API.',
+    'bunq_do_import'                       => 'Yes, import from this account',
+    'bunq_accounts_title'                  => 'Bunq accounts',
+    'bunq_accounts_text'                   => 'These are the accounts associated with your bunq account. Please select the accounts from which you want to import, and in which account the transactions must be imported.',
 
     // Spectre
     'spectre_title'                        => 'Importar usando Spectre',
@@ -187,4 +201,3 @@ return [
     // various other strings:
     'imported_from_account'                => 'Importado de ":account"',
 ];
-

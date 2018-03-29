@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * validation.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,24 +19,24 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     'iban'                           => 'Il ne s\'agit pas d\'un IBAN valide.',
+    'source_equals_destination'      => 'Le compte source est égal au compte de destination',
     'unique_account_number_for_user' => 'Il semble que ce numéro de compte est déjà utilisé.',
-    'unique_iban_for_user'           => 'It looks like this IBAN is already in use.',
+    'unique_iban_for_user'           => 'Il semble que cet IBAN soit déjà utilisé.',
     'deleted_user'                   => 'Compte tenu des contraintes de sécurité, vous ne pouvez pas vous inscrire en utilisant cette adresse e-mail.',
     'rule_trigger_value'             => 'Cette valeur n’est pas valide pour le déclencheur sélectionné.',
     'rule_action_value'              => 'Cette valeur n’est pas valide pour l’action sélectionnée.',
     'file_already_attached'          => 'Le fichier téléchargé ":name" est déjà attaché à cet objet.',
     'file_attached'                  => 'Envoi du fichier ":name" avec succès.',
-    'must_exist'                     => 'The ID in field :attribute does not exist in the database.',
-    'all_accounts_equal'             => 'All accounts in this field must be equal.',
-    'invalid_selection'              => 'Your selection is invalid',
-    'belongs_user'                   => 'This value is invalid for this field.',
-    'at_least_one_transaction'       => 'Need at least one transaction.',
-    'require_currency_info'          => 'The content of this field is invalid without currency information.',
-    'equal_description'              => 'Transaction description should not equal global description.',
+    'must_exist'                     => 'L\'ID dans le champ :attribute n\'existe pas dans la base de données.',
+    'all_accounts_equal'             => 'Tous les comptes dans ce champ doivent être égaux.',
+    'invalid_selection'              => 'Votre sélection est invalide',
+    'belongs_user'                   => 'Cette valeur n\'est pas valide pour ce champ.',
+    'at_least_one_transaction'       => 'Besoin d\'au moins une transaction.',
+    'require_currency_info'          => 'Le contenu de ce champ n\'est pas valide sans informations sur la devise.',
+    'equal_description'              => 'La description de la transaction ne doit pas être égale à la description globale.',
     'file_invalid_mime'              => 'Le fichier ":name" est du type ":mime" ce qui n\'est pas accepté pour un nouvel envoi.',
     'file_too_large'                 => 'Le fichier ":name" est trop grand.',
     'belongs_to_user'                => 'La valeur de :attribute est inconnue',
@@ -92,7 +93,7 @@ return [
     'required_without_all'           => 'Le champ :attribute est requis quand aucun de :values n\'est présent.',
     'same'                           => 'Les champs :attribute et :other doivent être identiques.',
     'size.numeric'                   => 'La valeur de :attribute doit être :size.',
-    'amount_min_over_max'            => 'The minimum amount cannot be larger than the maximum amount.',
+    'amount_min_over_max'            => 'Le montant minimum ne peut pas être supérieur au montant maximum.',
     'size.file'                      => 'La taille du fichier de :attribute doit être de :size kilo-octets.',
     'size.string'                    => 'Le texte de :attribute doit contenir :size caractères.',
     'size.array'                     => 'Le tableau :attribute doit contenir :size éléments.',
@@ -113,7 +114,7 @@ return [
         'description'             => 'description',
         'amount'                  => 'montant',
         'name'                    => 'nom',
-        'piggy_bank_id'           => 'piggy bank ID',
+        'piggy_bank_id'           => 'ID de tirelire',
         'targetamount'            => 'montant cible',
         'openingBalanceDate'      => 'date du solde initial',
         'openingBalance'          => 'solde initial',
@@ -122,7 +123,7 @@ return [
         'amount_max'              => 'montant maximum',
         'title'                   => 'titre',
         'tag'                     => 'tag',
-        'transaction_description' => 'transaction description',
+        'transaction_description' => 'description de la transaction',
         'rule-action-value.1'     => 'valeur d\'action de la règle #1',
         'rule-action-value.2'     => 'valeur d\'action de la règle #2',
         'rule-action-value.3'     => 'valeur d\'action de la règle #3',

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * import.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     // status of import:
@@ -97,6 +98,7 @@ return [
     // not csv, but normal warning
     'roles_warning'                        => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
     'foreign_amount_warning'               => 'If you mark a column as containing an amount in a foreign currency, you must also set the column that contains which currency it is.',
+
     // file, map data
     'file_map_title'                       => 'Pengaturan impor (4/4) - Sambungkan data impor ke data Firefly III',
     'file_map_text'                        => 'Pada tabel berikut, nilai kiri menunjukkan informasi yang Anda temukan di file yang Anda upload. Adalah tugas Anda untuk memetakan nilai ini, jika mungkin, ke nilai yang sudah ada di database Anda. Firefly akan menempel pada pemetaan ini. Jika tidak ada nilai untuk dipetakan, atau Anda tidak ingin memetakan nilai spesifiknya, pilih yang tidak ada.',
@@ -131,28 +133,40 @@ return [
     'column_date-book'                     => 'Tanggal pemesanan transaksi',
     'column_date-process'                  => 'Tanggal proses transaksi',
     'column_date-transaction'              => 'Tanggal',
+    'column_date-due'                      => 'Transaction due date',
+    'column_date-payment'                  => 'Transaction payment date',
+    'column_date-invoice'                  => 'Transaction invoice date',
     'column_description'                   => 'Deskripsi',
     'column_opposing-iban'                 => 'Akun lawan (IBAN)',
+    'column_opposing-bic'                  => 'Opposing account (BIC)',
     'column_opposing-id'                   => 'Opposing account ID (matching FF3)',
     'column_external-id'                   => 'ID eksternal',
     'column_opposing-name'                 => 'Akun lawan (nama)',
     'column_rabo-debit-credit'             => 'Indikator debit / kredit khusus Rabobank',
     'column_ing-debit-credit'              => 'Indikator debit / kredit ING yang spesifik',
-    'column_sepa-ct-id'                    => 'ID Transfer Kredit SEPA end-to-end',
-    'column_sepa-ct-op'                    => 'Akun lawan kredit SEPA yang berlawanan',
-    'column_sepa-db'                       => 'SEPA Direct Debit',
+    'column_sepa-ct-id'                    => 'SEPA end-to-end Identifier',
+    'column_sepa-ct-op'                    => 'SEPA Opposing Account Identifier',
+    'column_sepa-db'                       => 'SEPA Mandate Identifier',
+    'column_sepa-cc'                       => 'SEPA Clearing Code',
+    'column_sepa-ci'                       => 'SEPA Creditor Identifier',
+    'column_sepa-ep'                       => 'SEPA External Purpose',
+    'column_sepa-country'                  => 'SEPA Country Code',
     'column_tags-comma'                    => 'Tag (dipisahkan koma)',
     'column_tags-space'                    => 'Tag (spasi terpisah)',
     'column_account-number'                => 'Akun aset (nomor rekening)',
     'column_opposing-number'               => 'Akun lawan (nomor rekening)',
     'column_note'                          => 'Catatan (s)',
+    'column_internal-reference'            => 'Internal reference',
 
     // prerequisites
     'prerequisites'                        => 'Prerequisites',
 
     // bunq
     'bunq_prerequisites_title'             => 'Prasyarat untuk impor dari bunq',
-    'bunq_prerequisites_text'              => 'Untuk mengimpor dari bunq, Anda perlu mendapatkan kunci API. Anda bisa melakukan ini melalui aplikasi.',
+    'bunq_prerequisites_text'              => 'In order to import from bunq, you need to obtain an API key. You can do this through the app. Please note that the import function for bunq is in BETA. It has only been tested against the sandbox API.',
+    'bunq_do_import'                       => 'Yes, import from this account',
+    'bunq_accounts_title'                  => 'Bunq accounts',
+    'bunq_accounts_text'                   => 'These are the accounts associated with your bunq account. Please select the accounts from which you want to import, and in which account the transactions must be imported.',
 
     // Spectre
     'spectre_title'                        => 'Impor menggunakan momok',
@@ -187,4 +201,3 @@ return [
     // various other strings:
     'imported_from_account'                => 'Imported from ":account"',
 ];
-

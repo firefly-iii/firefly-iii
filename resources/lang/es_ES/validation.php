@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * validation.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,10 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     'iban'                           => 'Este no es un IBAN válido.',
+    'source_equals_destination'      => 'The source account equals the destination account',
     'unique_account_number_for_user' => 'Parece que este número de cuenta ya está en uso.',
     'unique_iban_for_user'           => 'It looks like this IBAN is already in use.',
     'deleted_user'                   => 'Debido a restricciones de seguridad, no se puede registrar utilizando esta dirección de correo electrónico.',
