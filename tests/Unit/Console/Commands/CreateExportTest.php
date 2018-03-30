@@ -81,8 +81,8 @@ class CreateExportTest extends TestCase
         $processor->shouldReceive('createZipFile')->once();
 
         $fakeNews = 'I am a zipfile';
+        Storage::fake('export');
         Storage::disk('export')->put(sprintf('%s.zip', $job->key), $fakeNews);
-
         $output = $this->artisan(
             'firefly:create-export',
             [

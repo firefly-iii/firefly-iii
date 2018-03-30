@@ -22,7 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
-use Crypt;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Services\Internal\File\EncryptService;
 use Illuminate\Console\Command;
 
 /**
@@ -45,32 +46,25 @@ class EncryptFile extends Command
     protected $signature = 'firefly:encrypt-file {file} {key}';
 
     /**
-     * Create a new command instance.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
-    public function handle()
+    public function handle(): int
     {
-        $file = e(strval($this->argument('file')));
-        if (!file_exists($file)) {
-            $this->error(sprintf('File "%s" does not seem to exist.', $file));
+        $code = 0;
+        $file = (string)$this->argument('file');
+        $key  = (string)$this->argument('key');
+        /** @var EncryptService $service */
+        $service = app(EncryptService::class);
 
-            return;
+        try {
+            $service->encrypt($file, $key);
+        } catch (FireflyException $e) {
+            $this->error($e->getMessage());
+            $code = 1;
         }
-        $content = file_get_contents($file);
-        $content = Crypt::encrypt($content);
-        $newName = e(strval($this->argument('key'))) . '.upload';
 
-        $path = storage_path('upload') . '/' . $newName;
-        file_put_contents($path, $content);
-        $this->line(sprintf('Encrypted "%s" and put it in "%s"', $file, $path));
+        return $code;
     }
 }
