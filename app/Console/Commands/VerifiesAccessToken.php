@@ -50,10 +50,10 @@ trait VerifiesAccessToken
     protected function verifyAccessToken(): bool
     {
         $userId = (int)$this->option('user');
-        $token  = (int)$this->option('token');
+        $token  = (string)$this->option('token');
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $user       = $repository->find($userId);
+        $user       = $repository->findNull($userId);
 
         if (null === $user) {
             Log::error(sprintf('verifyAccessToken(): no such user for input "%d"', $userId));

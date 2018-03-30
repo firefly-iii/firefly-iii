@@ -60,17 +60,6 @@ class CreateExport extends Command
                             {--with_uploads : Include user\'s uploads?}';
 
     /**
-     * Create a new command instance.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five its fine.
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     *
      * Execute the console command.
      *
      * @return mixed
@@ -80,7 +69,7 @@ class CreateExport extends Command
         if (!$this->verifyAccessToken()) {
             $this->error('Invalid access token.');
 
-            return;
+            return 1;
         }
         $this->line('Full export is running...');
         // make repositories
@@ -94,7 +83,7 @@ class CreateExport extends Command
         $journalRepository = app(JournalRepositoryInterface::class);
 
         // set user
-        $user = $userRepository->find(intval($this->option('user')));
+        $user = $userRepository->findNull((int)$this->option('user'));
         $jobRepository->setUser($user);
         $journalRepository->setUser($user);
         $accountRepository->setUser($user);
@@ -140,7 +129,5 @@ class CreateExport extends Command
 
         $this->line('The export has finished! You can find the ZIP file in this location:');
         $this->line(storage_path(sprintf('export/%s', $fileName)));
-
-        return;
     }
 }
