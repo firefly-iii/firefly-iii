@@ -90,7 +90,7 @@ class AmountFormat extends Twig_Extension
                 $currencyRepos   = app(CurrencyRepositoryInterface::class);
                 $currency        = app('amount')->getDefaultCurrency();
                 $currencyId      = (int)$accountRepos->getMetaValue($account, 'currency_id');
-                $accountCurrency = null
+                $accountCurrency = null;
                 if (0 !== $currencyId) {
                     $accountCurrency = $currencyRepos->findNull($currencyId);
                 }
