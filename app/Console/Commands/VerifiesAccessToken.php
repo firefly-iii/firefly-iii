@@ -49,8 +49,8 @@ trait VerifiesAccessToken
      */
     protected function verifyAccessToken(): bool
     {
-        $userId = intval($this->option('user'));
-        $token  = strval($this->option('token'));
+        $userId = (int)$this->option('user');
+        $token  = (int)$this->option('token');
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->find($userId);
@@ -68,7 +68,7 @@ trait VerifiesAccessToken
         }
         if (!($accessToken->data === $token)) {
             Log::error(sprintf('Invalid access token for user #%d.', $userId));
-            Log::error(sprintf('Token given is "%s", expected "%s".', $token, $accessToken->data));
+            Log::error(sprintf('Token given is "%s", expected something else.', $token));
 
             return false;
         }
