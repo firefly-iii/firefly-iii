@@ -223,6 +223,7 @@ class User extends Authenticatable
      *
      * @param string $name
      *
+     * @deprecated
      * @return bool
      */
     public function hasRole(string $name): bool

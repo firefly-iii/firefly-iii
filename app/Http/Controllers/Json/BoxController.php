@@ -238,11 +238,14 @@ class BoxController extends Controller
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $accountCurrency = $currency;
+            $accountCurrency = null;
             $balance         = $balances[$account->id] ?? '0';
             $currencyId      = (int)$repository->getMetaValue($account, 'currency_id');
             if ($currencyId !== 0) {
                 $accountCurrency = $currencyRepos->findNull($currencyId);
+            }
+            if (null === $accountCurrency) {
+                $accountCurrency = $currency;
             }
 
             // if the account is a credit card, subtract the virtual balance from the balance,

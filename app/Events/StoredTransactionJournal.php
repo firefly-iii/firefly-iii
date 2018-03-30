@@ -26,6 +26,7 @@ use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
 
 /**
+ * @codeCoverageIgnore
  * Class StoredTransactionJournal.
  */
 class StoredTransactionJournal extends Event

@@ -140,6 +140,41 @@ class AccountFactoryTest extends TestCase
     }
 
     /**
+     * Create an expense account. This overrules the virtual balance.
+     * Role should not be set.
+     *
+     * @covers \FireflyIII\Factory\AccountFactory
+     * @covers \FireflyIII\Factory\AccountMetaFactory
+     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     */
+    public function testCreateBasicExpenseFullType()
+    {
+
+        $data = [
+            'account_type_id' => null,
+            'accountType'     => 'Expense account',
+            'iban'            => null,
+            'name'            => 'Basic expense account #' . random_int(1, 1000),
+            'virtualBalance'  => '1243',
+            'active'          => true,
+            'accountRole'     => 'defaultAsset',
+        ];
+
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user());
+        $account = $factory->create($data);
+
+        // assert stuff about account:
+        $this->assertEquals($account->name, $data['name']);
+        $this->assertEquals(AccountType::EXPENSE, $account->accountType->type);
+        $this->assertEquals('', $account->iban);
+        $this->assertTrue($account->active);
+        $this->assertEquals('0', $account->virtual_balance);
+        $this->assertEquals('', $account->getMeta('accountRole'));
+    }
+
+    /**
      * Submit IB data for asset account.
      *
      * @covers \FireflyIII\Factory\AccountFactory

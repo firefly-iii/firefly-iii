@@ -36,6 +36,29 @@ class TransactionCurrencyFactoryTest extends TestCase
     /**
      * @covers \FireflyIII\Factory\TransactionCurrencyFactory
      */
+    public function testCreate()
+    {
+        /** @var TransactionCurrencyFactory $factory */
+        $factory = app(TransactionCurrencyFactory::class);
+        $result  = $factory->create(['name' => 'OK', 'code' => 'XXA', 'symbol' => 'Z', 'decimal_places' => 2]);
+        $this->assertNotNull($result);
+        $this->assertEquals('XXA', $result->code);
+    }
+
+    /**
+     * @covers \FireflyIII\Factory\TransactionCurrencyFactory
+     */
+    public function testCreateEmpty()
+    {
+        /** @var TransactionCurrencyFactory $factory */
+        $factory = app(TransactionCurrencyFactory::class);
+        $result  = $factory->create(['name' => null, 'code' => null, 'symbol' => null, 'decimal_places' => null]);
+        $this->assertNull($result);
+    }
+
+    /**
+     * @covers \FireflyIII\Factory\TransactionCurrencyFactory
+     */
     public function testFindByBadCode()
     {
         /** @var TransactionCurrencyFactory $factory */

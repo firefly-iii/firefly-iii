@@ -27,6 +27,9 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Class UpdatedTransactionJournal.
+ *
+ * @codeCoverageIgnore
+ *
  */
 class UpdatedTransactionJournal extends Event
 {

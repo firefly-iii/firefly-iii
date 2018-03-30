@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 use FireflyIII\Models\TransactionCurrency;
+use Illuminate\Database\QueryException;
+use Log;
 
 /**
  * Class TransactionCurrencyFactory
@@ -33,21 +35,26 @@ class TransactionCurrencyFactory
     /**
      * @param array $data
      *
-     * @return TransactionCurrency
+     * @return TransactionCurrency|null
      */
-    public function create(array $data): TransactionCurrency
+    public function create(array $data): ?TransactionCurrency
     {
-        /** @var TransactionCurrency $currency */
-        $currency = TransactionCurrency::create(
-            [
-                'name'           => $data['name'],
-                'code'           => $data['code'],
-                'symbol'         => $data['symbol'],
-                'decimal_places' => $data['decimal_places'],
-            ]
-        );
+        $result = null;
+        try {
+            /** @var TransactionCurrency $currency */
+            $result = TransactionCurrency::create(
+                [
+                    'name'           => $data['name'],
+                    'code'           => $data['code'],
+                    'symbol'         => $data['symbol'],
+                    'decimal_places' => $data['decimal_places'],
+                ]
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not create new currency: %s', $e->getMessage()));
+        }
 
-        return $currency;
+        return $result;
     }
 
     /**
