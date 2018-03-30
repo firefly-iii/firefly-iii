@@ -92,11 +92,13 @@ class FixerIOv2 implements ExchangeRateInterface
         }
         if (null !== $content) {
             $code = $toCurrency->code;
-            $rate = isset($content['rates'][$code]) ? $content['rates'][$code] : '0';
+            $rate = $content['rates'][$code] ?? 0;
         }
         Log::debug('Got the following rates from Fixer: ', $content['rates'] ?? []);
         $exchangeRate->rate = $rate;
-        $exchangeRate->save();
+        if ($rate !== 0) {
+            $exchangeRate->save();
+        }
 
         return $exchangeRate;
     }
