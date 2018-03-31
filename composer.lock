@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "57a8176c6d37174a753d37598901fb58",
+    "content-hash": "823070d72a990bfa26bdf63404e50651",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1085,16 +1085,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.6.13",
+            "version": "v5.6.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "90ccb77a543ff063533083f427d5e655546afbad"
+                "reference": "baa42cf6bdd942523fafece21ec16a1843c6db0f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/90ccb77a543ff063533083f427d5e655546afbad",
-                "reference": "90ccb77a543ff063533083f427d5e655546afbad",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/baa42cf6bdd942523fafece21ec16a1843c6db0f",
+                "reference": "baa42cf6bdd942523fafece21ec16a1843c6db0f",
                 "shasum": ""
             },
             "require": {
@@ -1219,7 +1219,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2018-03-26T13:45:20+00:00"
+            "time": "2018-03-30T13:29:58+00:00"
         },
         {
             "name": "laravel/passport",
@@ -1418,16 +1418,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "0.17.2",
+            "version": "0.17.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "ea1f655153cd618876634d86000b9b60c15bacd2"
+                "reference": "82d7ab62d7f68391cb9d323f3ccce50be24a5369"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/ea1f655153cd618876634d86000b9b60c15bacd2",
-                "reference": "ea1f655153cd618876634d86000b9b60c15bacd2",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/82d7ab62d7f68391cb9d323f3ccce50be24a5369",
+                "reference": "82d7ab62d7f68391cb9d323f3ccce50be24a5369",
                 "shasum": ""
             },
             "require": {
@@ -1483,7 +1483,7 @@
                 "markdown",
                 "parser"
             ],
-            "time": "2018-03-26T01:39:03+00:00"
+            "time": "2018-03-29T14:35:19+00:00"
         },
         {
             "name": "league/csv",
@@ -6271,7 +6271,8 @@
         "ext-curl": "*",
         "ext-gd": "*",
         "ext-intl": "*",
-        "ext-zip": "*"
+        "ext-zip": "*",
+        "ext-xml": "*"
     },
     "platform-dev": []
 }
