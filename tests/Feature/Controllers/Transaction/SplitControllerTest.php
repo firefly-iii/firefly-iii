@@ -25,6 +25,7 @@ namespace Tests\Feature\Controllers\Transaction;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -35,6 +36,7 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -70,6 +72,10 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
+
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
+
 
 
         $deposit              = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
@@ -123,6 +129,10 @@ class SplitControllerTest extends TestCase
         $destination        = $deposit->transactions()->where('amount', '>', 0)->first();
         $account            = $destination->account;
         $transactions       = factory(Transaction::class, 3)->make();
+
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
+
 
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
@@ -242,6 +252,10 @@ class SplitControllerTest extends TestCase
         $deposit      = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
         $destination  = $deposit->transactions()->where('amount', '>', 0)->first();
         $account      = $destination->account;
+
+        $accountRepository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
+
 
         $journalRepos->shouldReceive('first')->once()->andReturn($deposit);
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]));

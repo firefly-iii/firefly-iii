@@ -71,6 +71,8 @@ class CreateImportTest extends TestCase
         $routine->shouldReceive('getJournals')->once()->andReturn(new Collection());
         $routine->shouldReceive('getLines')->once()->andReturn(7);
 
+
+
         Storage::fake('upload');
 
         $output = $this->artisan(

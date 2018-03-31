@@ -37,10 +37,11 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Preferences;
 use Steam;
 use Tests\TestCase;
-use Mockery;
+
 /**
  * Class AccountControllerTest
  *
@@ -142,12 +143,12 @@ class AccountControllerTest extends TestCase
         $accountRepos->shouldReceive('getNote')->andReturn($note)->once();
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturnNull();
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturnNull();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'currency_id'])->andReturn('1');
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'accountNumber'])->andReturn('123');
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'accountRole'])->andReturn('defaultAsset');
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'ccType'])->andReturn('');
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'ccMonthlyPaymentDate'])->andReturn('');
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'BIC'])->andReturn('BIC');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('123');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccType'])->andReturn('');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccMonthlyPaymentDate'])->andReturn('');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
 
         $this->be($this->user());
         $account  = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
@@ -175,7 +176,9 @@ class AccountControllerTest extends TestCase
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $repository->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]));
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
         Steam::shouldReceive('balancesByAccounts')->andReturn([$account->id => '100']);
         Steam::shouldReceive('getLastActivities')->andReturn([]);
 
@@ -241,7 +244,7 @@ class AccountControllerTest extends TestCase
     public function testShowBrokenBadDates()
     {
         // mock
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $this->session(['start' => '2018-01-01', 'end' => '2017-12-01']);

@@ -382,6 +382,10 @@ class ProfileControllerTest extends TestCase
         $newToken = Preference::where('user_id', $this->user()->id)->where('name', 'access_token')->first();
         $this->assertNotEquals($newToken->data, $token);
 
+        // reset token for later test:
+        $newToken->data = 'token';
+        $newToken->save();
+
     }
 
     /**
