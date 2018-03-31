@@ -1086,7 +1086,7 @@ return [
     'invalid_link_selection'                => 'Невозможно связать эти транзакции',
     'journals_linked'                       => 'Транзакции были связаны.',
     'journals_error_linked'                 => 'Эти транзакции уже связаны.',
-    'journals_link_to_self'                 => 'You cannot link a transaction to itself',
+    'journals_link_to_self'                 => 'Вы не можете связать транзакцию с самой собой',
     'journal_links'                         => 'Связи транзакции',
     'this_withdrawal'                       => 'Этот расход',
     'this_deposit'                          => 'Этот доход',

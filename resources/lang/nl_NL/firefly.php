@@ -1086,7 +1086,7 @@ return [
     'invalid_link_selection'                => 'Deze transacties kunnen niet worden gekoppeld',
     'journals_linked'                       => 'De transacties zijn gekoppeld.',
     'journals_error_linked'                 => 'Deze transacties zijn al gekoppeld.',
-    'journals_link_to_self'                 => 'You cannot link a transaction to itself',
+    'journals_link_to_self'                 => 'Je kan een transactie niet aan zichzelf koppelen',
     'journal_links'                         => 'Transactiekoppelingen',
     'this_withdrawal'                       => 'Deze uitgave',
     'this_deposit'                          => 'Deze inkomsten',

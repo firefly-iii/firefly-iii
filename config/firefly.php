@@ -33,7 +33,7 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'     => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
-    'version'        => '4.7.1.4',
+    'version'        => '4.7.2',
     'api_version'    => '0.1',
     'db_version'     => 2,
     'maxUploadSize'  => 15242880,

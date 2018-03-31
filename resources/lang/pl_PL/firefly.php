@@ -1086,7 +1086,7 @@ return [
     'invalid_link_selection'                => 'Nie można powiązać tych transakcji',
     'journals_linked'                       => 'Transakcje zostały powiązane.',
     'journals_error_linked'                 => 'Wybrane transakcje są już powiązane.',
-    'journals_link_to_self'                 => 'You cannot link a transaction to itself',
+    'journals_link_to_self'                 => 'Nie możesz powiązać transakcji z samą sobą',
     'journal_links'                         => 'Powiązane transakcje',
     'this_withdrawal'                       => 'Ta wypłata',
     'this_deposit'                          => 'Ta wpłata',
