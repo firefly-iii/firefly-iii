@@ -32,6 +32,18 @@ class BunqId
     private $id = 0;
 
     /**
+     * BunqId constructor.
+     *
+     * @param null $data
+     */
+    public function __construct($data = null)
+    {
+        if (!is_null($data)) {
+            $this->id = $data['id'];
+        }
+    }
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -45,5 +57,15 @@ class BunqId
     public function setId(int $id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+        ];
     }
 }

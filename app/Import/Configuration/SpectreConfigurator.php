@@ -55,6 +55,7 @@ class SpectreConfigurator implements ConfiguratorInterface
      * @param array $data
      *
      * @return bool
+     *
      * @throws FireflyException
      */
     public function configureJob(array $data): bool
@@ -87,6 +88,7 @@ class SpectreConfigurator implements ConfiguratorInterface
      * Return the data required for the next step in the job configuration.
      *
      * @return array
+     *
      * @throws FireflyException
      */
     public function getNextData(): array
@@ -124,6 +126,7 @@ class SpectreConfigurator implements ConfiguratorInterface
 
     /**
      * @return string
+     *
      * @throws FireflyException
      */
     public function getNextView(): string
@@ -143,7 +146,6 @@ class SpectreConfigurator implements ConfiguratorInterface
                 return 'import.spectre.accounts';
             default:
                 return '';
-
         }
     }
 
@@ -159,6 +161,7 @@ class SpectreConfigurator implements ConfiguratorInterface
 
     /**
      * @return bool
+     *
      * @throws FireflyException
      */
     public function isJobConfigured(): bool

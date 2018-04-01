@@ -149,7 +149,11 @@ function updateNativeAmount(data) {
         countConversions++;
         return;
     }
-    $('#ffInput_native_amount').val(data.amount);
+    console.log('Returned amount is: ' + data.amount);
+
+    if (data.amount !== 0) {
+        $('#ffInput_native_amount').val(data.amount);
+    }
 }
 
 /**
@@ -225,5 +229,9 @@ function convertSourceToDestination() {
  * @param data
  */
 function updateDestinationAmount(data) {
-    $('#ffInput_destination_amount').val(data.amount);
+    console.log('Returned amount is: ' + data.amount);
+
+    if (data.amount !== 0) {
+        $('#ffInput_destination_amount').val(data.amount);
+    }
 }

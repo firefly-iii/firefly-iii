@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Request;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Services\Bunq\Id\DeviceSessionId;
 use FireflyIII\Services\Bunq\Object\UserCompany;
 use FireflyIII\Services\Bunq\Object\UserPerson;
 use FireflyIII\Services\Bunq\Token\InstallationToken;
 use FireflyIII\Services\Bunq\Token\SessionToken;
-use Log;
 
 /**
  * Class DeviceSessionRequest.
@@ -46,11 +46,11 @@ class DeviceSessionRequest extends BunqRequest
     private $userPerson;
 
     /**
-     * @throws \Exception
+     * @throws FireflyException
      */
     public function call(): void
     {
-        $uri                                     = '/v1/session-server';
+        $uri                                     = 'session-server';
         $data                                    = ['secret' => $this->secret];
         $headers                                 = $this->getDefaultHeaders();
         $headers['X-Bunq-Client-Authentication'] = $this->installationToken->getToken();
@@ -60,11 +60,6 @@ class DeviceSessionRequest extends BunqRequest
         $this->sessionToken    = $this->extractSessionToken($response);
         $this->userPerson      = $this->extractUserPerson($response);
         $this->userCompany     = $this->extractUserCompany($response);
-
-        Log::debug(sprintf('Session ID: %s', serialize($this->deviceSessionId)));
-        Log::debug(sprintf('Session token: %s', serialize($this->sessionToken)));
-        Log::debug(sprintf('Session user person: %s', serialize($this->userPerson)));
-        Log::debug(sprintf('Session user company: %s', serialize($this->userCompany)));
 
         return;
     }
@@ -83,6 +78,14 @@ class DeviceSessionRequest extends BunqRequest
     public function getSessionToken(): SessionToken
     {
         return $this->sessionToken;
+    }
+
+    /**
+     * @return UserCompany
+     */
+    public function getUserCompany(): UserCompany
+    {
+        return $this->userCompany;
     }
 
     /**

@@ -23,10 +23,13 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
+use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Services\Internal\Destroy\CategoryDestroyService;
+use FireflyIII\Services\Internal\Update\CategoryUpdateService;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
@@ -49,7 +52,9 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function destroy(Category $category): bool
     {
-        $category->delete();
+        /** @var CategoryDestroyService $service */
+        $service = app(CategoryDestroyService::class);
+        $service->destroy($category);
 
         return true;
     }
@@ -444,15 +449,12 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function store(array $data): Category
     {
-        $newCategory = Category::firstOrCreateEncrypted(
-            [
-                'user_id' => $this->user->id,
-                'name'    => $data['name'],
-            ]
-        );
-        $newCategory->save();
+        /** @var CategoryFactory $factory */
+        $factory = app(CategoryFactory::class);
+        $factory->setUser($this->user);
+        $category = $factory->findOrCreate(null, $data['name']);
 
-        return $newCategory;
+        return $category;
     }
 
     /**
@@ -463,11 +465,10 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function update(Category $category, array $data): Category
     {
-        // update the account:
-        $category->name = $data['name'];
-        $category->save();
+        /** @var CategoryUpdateService $service */
+        $service = app(CategoryUpdateService::class);
 
-        return $category;
+        return $service->update($category, $data);
     }
 
     /**

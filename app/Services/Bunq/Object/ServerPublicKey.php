@@ -55,4 +55,12 @@ class ServerPublicKey extends BunqObject
     {
         $this->publicKey = $publicKey;
     }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        die(sprintf('Cannot convert %s to array.', get_class($this)));
+    }
 }

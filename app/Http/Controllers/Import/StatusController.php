@@ -26,7 +26,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use Response;
+use Log;
 
 /**
  * Class StatusController
@@ -118,7 +118,8 @@ class StatusController extends Controller
             $result['running'] = true;
         }
         $result['percentage'] = $result['percentage'] > 100 ? 100 : $result['percentage'];
+        Log::debug(sprintf('JOB STATUS: %d/%d', $result['done'], $result['steps']));
 
-        return Response::json($result);
+        return response()->json($result);
     }
 }

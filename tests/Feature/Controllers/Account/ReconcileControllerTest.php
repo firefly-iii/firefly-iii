@@ -33,6 +33,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Tests\TestCase;
+use Mockery;
 
 /**
  * Class ConfigurationControllerTest
@@ -49,7 +50,7 @@ class ReconcileControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug('Now in Feature/Controllers::ReconcileControllerTest.');
+        Log::debug(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -92,7 +93,7 @@ class ReconcileControllerTest extends TestCase
     public function testOverview()
     {
         $transactions = $this->user()->transactions()->inRandomOrder()->take(3)->get();
-        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('first')->andReturn(new TransactionJournal);
         $repository->shouldReceive('getTransactionsById')->andReturn($transactions)->twice();
 
@@ -236,7 +237,7 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::submit()
+     * @covers       \FireflyIII\Http\Controllers\Account\ReconcileController::submit()
      * @covers       \FireflyIII\Http\Requests\ReconciliationStoreRequest
      */
     public function testSubmit()
@@ -248,6 +249,8 @@ class ReconcileControllerTest extends TestCase
         $journalRepos->shouldReceive('store')->andReturn(new TransactionJournal);
         $repository->shouldReceive('getReconciliation')->andReturn(new Account);
         $repository->shouldReceive('findNull')->andReturn(new Account);
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'currency_id'])->andReturn('1');
+
         $data = [
             'transactions' => [1, 2, 3],
             'reconcile'    => 'create',
@@ -288,7 +291,7 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::update
+     * @covers       \FireflyIII\Http\Controllers\Account\ReconcileController::update
      * @covers       \FireflyIII\Http\Requests\ReconciliationUpdateRequest
      */
     public function testUpdate()
@@ -311,7 +314,7 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::update
+     * @covers       \FireflyIII\Http\Controllers\Account\ReconcileController::update
      * @covers       \FireflyIII\Http\Requests\ReconciliationUpdateRequest
      */
     public function testUpdateNotReconcile()
@@ -328,7 +331,7 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::update
+     * @covers       \FireflyIII\Http\Controllers\Account\ReconcileController::update
      * @covers       \FireflyIII\Http\Requests\ReconciliationUpdateRequest
      */
     public function testUpdateZero()

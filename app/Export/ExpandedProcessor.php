@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * ExpandedProcessor.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 namespace FireflyIII\Export;
 
@@ -124,7 +124,7 @@ class ExpandedProcessor implements ProcessorInterface
                 $currencyId                           = $ibans[$accountId]['currency_id'] ?? 0;
                 $opposingCurrencyId                   = $ibans[$opposingId]['currency_id'] ?? 0;
                 $transaction->notes                   = $notes[$journalId] ?? '';
-                $transaction->tags                    = join(',', $tags[$journalId] ?? []);
+                $transaction->tags                    = implode(',', $tags[$journalId] ?? []);
                 $transaction->account_number          = $ibans[$accountId]['accountNumber'] ?? '';
                 $transaction->account_bic             = $ibans[$accountId]['BIC'] ?? '';
                 $transaction->account_currency_code   = $currencies[$currencyId] ?? '';
@@ -331,6 +331,7 @@ class ExpandedProcessor implements ProcessorInterface
      * @param array $array
      *
      * @return array
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
     private function getTags(array $array): array
     {

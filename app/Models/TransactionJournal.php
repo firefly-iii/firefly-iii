@@ -39,6 +39,7 @@ use Watson\Validating\ValidatingTrait;
 
 /**
  * Class TransactionJournal.
+ *
  * @property User $user
  */
 class TransactionJournal extends Model
@@ -87,6 +88,7 @@ class TransactionJournal extends Model
      * @param string $value
      *
      * @return TransactionJournal
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value): TransactionJournal
     {
@@ -140,7 +142,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
-     *
+     * @deprecated
      * @param string $name
      *
      * @return bool
@@ -154,6 +156,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @return HasMany
      */
     public function destinationJournalLinks(): HasMany
@@ -167,6 +170,7 @@ class TransactionJournal extends Model
      * @param $value
      *
      * @return string
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
     public function getDescriptionAttribute($value)
     {
@@ -181,6 +185,7 @@ class TransactionJournal extends Model
      *
      * @param string $name
      *
+     * @deprecated
      * @return string
      */
     public function getMeta(string $name)
@@ -217,7 +222,7 @@ class TransactionJournal extends Model
      * @codeCoverageIgnore
      *
      * @param string $name
-     *
+     * @deprecated
      * @return bool
      */
     public function hasMeta(string $name): bool
@@ -297,22 +302,6 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
-     * Save the model to the database.
-     *
-     * @param array $options
-     *
-     * @return bool
-     */
-    public function save(array $options = []): bool
-    {
-        $count           = $this->tags()->count();
-        $this->tag_count = $count;
-
-        return parent::save($options);
-    }
-
-    /**
-     * @codeCoverageIgnore
      *
      * @param EloquentBuilder $query
      * @param Carbon          $date
@@ -341,18 +330,6 @@ class TransactionJournal extends Model
      * @codeCoverageIgnore
      *
      * @param EloquentBuilder $query
-     */
-    public function scopeSortCorrectly(EloquentBuilder $query)
-    {
-        $query->orderBy('transaction_journals.date', 'DESC');
-        $query->orderBy('transaction_journals.order', 'ASC');
-        $query->orderBy('transaction_journals.id', 'DESC');
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param EloquentBuilder $query
      * @param array           $types
      */
     public function scopeTransactionTypes(EloquentBuilder $query, array $types)
@@ -369,6 +346,8 @@ class TransactionJournal extends Model
      * @codeCoverageIgnore
      *
      * @param $value
+     *
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setDescriptionAttribute($value)
     {
@@ -378,6 +357,8 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @deprecated
+     *
      * @param string $name
      * @param        $value
      *

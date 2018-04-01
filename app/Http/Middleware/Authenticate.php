@@ -74,8 +74,7 @@ class Authenticate
      *
      * @param  array $guards
      *
-     * @return void
-     *
+     * @return mixed
      * @throws \Illuminate\Auth\AuthenticationException
      */
     protected function authenticate(array $guards)

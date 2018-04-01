@@ -103,10 +103,16 @@ interface UserRepositoryInterface
 
     /**
      * @param int $userId
-     *
+     * @deprecated
      * @return User
      */
     public function find(int $userId): User;
+
+    /**
+     * @param int $userId
+     * @return User|null
+     */
+    public function findNull(int $userId): ?User;
 
     /**
      * @param string $email

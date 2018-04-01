@@ -63,6 +63,7 @@ class FilePrerequisites implements PrerequisitesInterface
      * True if prerequisites. False if not.
      *
      * @return bool
+     *
      * @throws FireflyException
      */
     public function hasPrerequisites(): bool

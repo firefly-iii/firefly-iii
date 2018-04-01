@@ -62,8 +62,8 @@ function initCurrencyIdValues() {
     var currencyId;
     if (journal.transaction_type.type === "Withdrawal") {
         // update source from page load info:
-        currencyId = $('input[name="amount_currency_id_amount"]').val();
-        console.log('Set source account currency to ' + currencyId);
+        currencyId = journalData.native_currency.id;
+        console.log('initCurrencyIdValues() withdrawal: Set source account currency to ' + currencyId);
         $('input[name="source_account_currency"]').val(currencyId);
         return;
     }
@@ -83,7 +83,7 @@ function initCurrencyIdValues() {
     var sourceCurrency = parseInt(accountInfo[sourceAccount].preferredCurrency);
     var destCurrency = parseInt(accountInfo[destAccount].preferredCurrency);
 
-    console.log('Set source account currency to ' + sourceCurrency);
+    console.log('initCurrencyIdValues(): Set source account currency to ' + sourceCurrency);
     $('input[name="source_account_currency"]').val(sourceCurrency);
 
     console.log('Set destination account currency to ' + destCurrency);

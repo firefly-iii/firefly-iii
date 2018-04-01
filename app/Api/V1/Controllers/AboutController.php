@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * AboutController.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,7 +20,6 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
@@ -29,7 +29,6 @@ use Illuminate\Http\Request;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
-
 
 /**
  * Class AboutController
@@ -44,7 +43,6 @@ class AboutController extends Controller
     public function __construct()
     {
         parent::__construct();
-
     }
 
     /**
@@ -55,7 +53,7 @@ class AboutController extends Controller
         $search        = ['~', '#'];
         $replace       = ['\~', '# '];
         $phpVersion    = str_replace($search, $replace, PHP_VERSION);
-        $phpOs         = str_replace($search, $replace, php_uname());
+        $phpOs         = str_replace($search, $replace, PHP_OS);
         $currentDriver = DB::getDriverName();
         $data
                        = [
@@ -64,7 +62,6 @@ class AboutController extends Controller
             'php_version' => $phpVersion,
             'os'          => $phpOs,
             'driver'      => $currentDriver,
-
         ];
 
         return response()->json(['data' => $data], 200)->header('Content-Type', 'application/vnd.api+json');
@@ -84,5 +81,4 @@ class AboutController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
-
 }

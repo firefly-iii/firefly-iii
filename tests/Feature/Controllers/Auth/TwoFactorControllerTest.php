@@ -43,7 +43,7 @@ class TwoFactorControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug('Now in Feature/Controllers/Auth/TwoFactorControllerTest.');
+        Log::debug(sprintf('Now in %s.', get_class($this)));
     }
 
     /**

@@ -32,9 +32,10 @@ return [
         'single_user_mode' => true,
         'is_demo_site'     => false,
     ],
-    'encryption'     => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
-    'version'        => '4.7.1.4',
+    'encryption'     => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
+    'version'        => '4.7.2',
     'api_version'    => '0.1',
+    'db_version'     => 2,
     'maxUploadSize'  => 15242880,
     'allowedMimes'   => [
         /* plain files */
@@ -101,9 +102,6 @@ return [
     'list_length'    => 10,
     'export_formats' => [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
-    ],
-    'bunq'           => [
-        'server' => 'https://sandbox.public.api.bunq.com',
     ],
     'spectre'        => [
         'server' => 'https://www.saltedge.com',
@@ -180,6 +178,7 @@ return [
         'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],
         'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'],
         'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'],
+        'it_IT' => ['name_locale' => 'Italiano', 'name_english' => 'Italian'],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],
         'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '],
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'],

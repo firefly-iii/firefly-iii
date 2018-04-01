@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * TransactionRequest.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,7 +20,6 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
@@ -168,6 +168,7 @@ class TransactionRequest extends Request
      * @param  Validator $validator
      *
      * @return void
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function withValidator(Validator $validator): void
     {
@@ -192,8 +193,10 @@ class TransactionRequest extends Request
      * @param null|string $accountName
      * @param string      $idField
      * @param string      $nameField
+     *
+     * @return null|Account
      */
-    protected function assetAccountExists(Validator $validator, ?int $accountId, ?string $accountName, string $idField, string $nameField): void
+    protected function assetAccountExists(Validator $validator, ?int $accountId, ?string $accountName, string $idField, string $nameField): ?Account
     {
 
         $accountId   = intval($accountId);
@@ -202,7 +205,7 @@ class TransactionRequest extends Request
         if ($accountId < 1 && strlen($accountName) === 0) {
             $validator->errors()->add($idField, trans('validation.filled', ['attribute' => $idField]));
 
-            return;
+            return null;
         }
         // ID belongs to user and is asset account:
         /** @var AccountRepositoryInterface $repository */
@@ -215,19 +218,21 @@ class TransactionRequest extends Request
             if ($first->accountType->type !== AccountType::ASSET) {
                 $validator->errors()->add($idField, trans('validation.belongs_user'));
 
-                return;
+                return null;
             }
 
             // we ignore the account name at this point.
-            return;
+            return $first;
         }
 
-        $account = $repository->findByName($accountName, [AccountType::ASSET]);
+        $account = $repository->findByNameNull($accountName, [AccountType::ASSET]);
         if (is_null($account)) {
             $validator->errors()->add($nameField, trans('validation.belongs_user'));
+
+            return null;
         }
 
-        return;
+        return $account;
     }
 
     /**
@@ -342,13 +347,16 @@ class TransactionRequest extends Request
      * @param int|null    $accountId
      * @param null|string $accountName
      * @param string      $idField
+     *
+     * @return null|Account
      */
-    protected function opposingAccountExists(Validator $validator, string $type, ?int $accountId, ?string $accountName, string $idField): void {
+    protected function opposingAccountExists(Validator $validator, string $type, ?int $accountId, ?string $accountName, string $idField): ?Account
+    {
         $accountId   = intval($accountId);
         $accountName = strval($accountName);
         // both empty? done!
         if ($accountId < 1 && strlen($accountName) === 0) {
-            return;
+            return null;
         }
         if ($accountId !== 0) {
             // ID belongs to user and is $type account:
@@ -362,16 +370,16 @@ class TransactionRequest extends Request
                 if ($first->accountType->type !== $type) {
                     $validator->errors()->add($idField, trans('validation.belongs_user'));
 
-                    return;
+                    return null;
                 }
 
                 // we ignore the account name at this point.
-                return;
+                return $first;
             }
         }
 
         // not having an opposing account by this name is NOT a problem.
-        return;
+        return null;
     }
 
     /**
@@ -395,40 +403,48 @@ class TransactionRequest extends Request
             $data['type'] = strtolower($transaction->transactionJournal->transactionType->type);
         }
         foreach ($transactions as $index => $transaction) {
-            $sourceId        = isset($transaction['source_id']) ? intval($transaction['source_id']) : null;
-            $sourceName      = $transaction['source_name'] ?? null;
-            $destinationId   = isset($transaction['destination_id']) ? intval($transaction['destination_id']) : null;
-            $destinationName = $transaction['destination_name'] ?? null;
-
+            $sourceId           = isset($transaction['source_id']) ? intval($transaction['source_id']) : null;
+            $sourceName         = $transaction['source_name'] ?? null;
+            $destinationId      = isset($transaction['destination_id']) ? intval($transaction['destination_id']) : null;
+            $destinationName    = $transaction['destination_name'] ?? null;
+            $sourceAccount      = null;
+            $destinationAccount = null;
             switch ($data['type']) {
                 case 'withdrawal':
-                    $idField   = 'transactions.' . $index . '.source_id';
-                    $nameField = 'transactions.' . $index . '.source_name';
-                    $this->assetAccountExists($validator, $sourceId, $sourceName, $idField, $nameField);
-
-                    $idField   = 'transactions.' . $index . '.destination_id';
-                    $this->opposingAccountExists($validator, AccountType::EXPENSE, $destinationId, $destinationName, $idField);
+                    $idField            = 'transactions.' . $index . '.source_id';
+                    $nameField          = 'transactions.' . $index . '.source_name';
+                    $sourceAccount      = $this->assetAccountExists($validator, $sourceId, $sourceName, $idField, $nameField);
+                    $idField            = 'transactions.' . $index . '.destination_id';
+                    $destinationAccount = $this->opposingAccountExists($validator, AccountType::EXPENSE, $destinationId, $destinationName, $idField);
                     break;
                 case 'deposit':
-                    $idField   = 'transactions.' . $index . '.source_id';
-                    $this->opposingAccountExists($validator, AccountType::REVENUE, $sourceId, $sourceName, $idField);
+                    $idField       = 'transactions.' . $index . '.source_id';
+                    $sourceAccount = $this->opposingAccountExists($validator, AccountType::REVENUE, $sourceId, $sourceName, $idField);
 
-                    $idField   = 'transactions.' . $index . '.destination_id';
-                    $nameField = 'transactions.' . $index . '.destination_name';
-                    $this->assetAccountExists($validator, $destinationId, $destinationName, $idField, $nameField);
+                    $idField            = 'transactions.' . $index . '.destination_id';
+                    $nameField          = 'transactions.' . $index . '.destination_name';
+                    $destinationAccount = $this->assetAccountExists($validator, $destinationId, $destinationName, $idField, $nameField);
                     break;
                 case 'transfer':
-                    $idField   = 'transactions.' . $index . '.source_id';
-                    $nameField = 'transactions.' . $index . '.source_name';
-                    $this->assetAccountExists($validator, $sourceId, $sourceName, $idField, $nameField);
+                    $idField       = 'transactions.' . $index . '.source_id';
+                    $nameField     = 'transactions.' . $index . '.source_name';
+                    $sourceAccount = $this->assetAccountExists($validator, $sourceId, $sourceName, $idField, $nameField);
 
-                    $idField   = 'transactions.' . $index . '.destination_id';
-                    $nameField = 'transactions.' . $index . '.destination_name';
-                    $this->assetAccountExists($validator, $destinationId, $destinationName, $idField, $nameField);
+                    $idField            = 'transactions.' . $index . '.destination_id';
+                    $nameField          = 'transactions.' . $index . '.destination_name';
+                    $destinationAccount = $this->assetAccountExists($validator, $destinationId, $destinationName, $idField, $nameField);
                     break;
                 default:
-                    throw new FireflyException(sprintf('The validator cannot handle transaction type "%s" in validateAccountInformation().', $data['type']));
+                    // @codeCoverageIgnoreStart
+                    throw new FireflyException(
+                        sprintf('The validator cannot handle transaction type "%s" in validateAccountInformation().', $data['type'])
+                    );
+                // @codeCoverageIgnoreEnd
 
+            }
+            // add some errors in case of same account submitted:
+            if (null !== $sourceAccount && null !== $destinationAccount && $sourceAccount->id === $destinationAccount->id) {
+                $validator->errors()->add($idField, trans('validation.source_equals_destination'));
             }
         }
     }
@@ -451,7 +467,7 @@ class TransactionRequest extends Request
             // the journal may exist in the request:
             /** @var Transaction $transaction */
             $transaction = $this->route()->parameter('transaction');
-            if (is_null($transaction)) {
+            if (null === $transaction) {
                 return;
             }
             $data['type'] = strtolower($transaction->transactionJournal->transactionType->type);
@@ -493,8 +509,6 @@ class TransactionRequest extends Request
                 );
             // @codeCoverageIgnoreEnd
         }
-
-        return;
     }
 
 }

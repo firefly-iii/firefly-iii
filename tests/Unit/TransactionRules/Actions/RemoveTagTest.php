@@ -57,7 +57,7 @@ class RemoveTagTest extends TestCase
         foreach ($journal->tags()->get() as $tag) {
             $this->assertNotEquals($firstTag->id, $tag->id);
         }
-        $this->assertEquals(($originalCount - 1), $journal->tags()->count());
+        $this->assertEquals($originalCount - 1, $journal->tags()->count());
     }
 
     /**
@@ -75,7 +75,7 @@ class RemoveTagTest extends TestCase
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = rand(1, 1234) . 'nosuchtag';
+        $ruleAction->action_value = random_int(1, 1234) . 'nosuchtag';
         $action                   = new RemoveTag($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);

@@ -49,10 +49,9 @@ class AuthenticateTest extends TestCase
     public function testMiddlewareAjax()
     {
         Log::debug('Now at testMiddlewareAjax');
-        //$this->withoutExceptionHandling();
         $server   = ['HTTP_X-Requested-With' => 'XMLHttpRequest'];
         $response = $this->get('/_test/authenticate', $server);
-        $this->assertEquals(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
     }
 
     /**
@@ -89,15 +88,14 @@ class AuthenticateTest extends TestCase
     public function testMiddlewareEmail()
     {
         Log::debug('Now at testMiddlewareEmail');
-        //$this->withoutExceptionHandling();
         $user               = $this->user();
         $user->blocked      = 1;
         $user->blocked_code = 'email_changed';
         $this->be($user);
         $response = $this->get('/_test/authenticate');
-        //$this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
         $response->assertSessionHas('logoutMessage', strval(trans('firefly.email_changed_logout')));
-        //$response->assertRedirect(route('login'));
+        $response->assertRedirect(route('login'));
     }
 
     /**

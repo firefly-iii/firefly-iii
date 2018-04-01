@@ -282,6 +282,7 @@ class MetaPieChart implements MetaPieChartInterface
             $collector->withCategoryInformation();
             $collector->withBudgetInformation();
         }
+
         // @codeCoverageIgnoreEnd
 
         return $collector->getJournals();

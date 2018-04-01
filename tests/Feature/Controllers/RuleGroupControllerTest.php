@@ -30,6 +30,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -41,6 +42,16 @@ use Tests\TestCase;
  */
 class RuleGroupControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::create
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::__construct

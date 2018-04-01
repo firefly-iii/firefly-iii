@@ -29,11 +29,7 @@ $(function () {
 
 function drawChart() {
     "use strict";
-    if (today >= 0) {
-        lineChartWithDay(accountFrontpageUri, 'accounts-chart', today);
-    } else {
-        lineChart(accountFrontpageUri, 'accounts-chart');
-    }
+    lineChart(accountFrontpageUri, 'accounts-chart');
 
     if (billCount > 0) {
         pieChart('chart/bill/frontpage', 'bills-chart');
@@ -80,6 +76,10 @@ function getAvailableBox() {
     $.getJSON('json/box/available').done(function (data) {
         $('#box-left-to-spend').html(data.left);
         $('#box-left-per-day').html(data.perDay);
+        $('#box-left-to-spend-text').text(data.text);
+        if(data.overspent === true) {
+            $('#box-left-to-spend-box').removeClass('bg-green-gradient').addClass('bg-red-gradient');
+        }
     });
 }
 
@@ -99,12 +99,34 @@ function getBillsBox() {
  *
  */
 function getBalanceBox() {
-    // box-balance-total
-    // box-balance-out
-    // box-balance-in
+    // box-balance-sums
+    // box-balance-list
     $.getJSON('json/box/balance').done(function (data) {
-        $('#box-balance-total').html(data.combined);
-        $('#box-balance-in').html(data.income);
-        $('#box-balance-out').html(data.expense);
+        if (data.size === 1) {
+            // show balance in "sums", show single entry in list.
+            for (x in data.sums) {
+                $('#box-balance-sums').html(data.sums[x]);
+                $('#box-balance-list').html(data.incomes[x] + ' / ' + data.expenses[x]);
+            }
+            return;
+        }
+        // do not use "sums", only use list.
+        $('#box-balance-progress').remove();
+        var expense, string, sum, income, current;
+        var count = 0;
+        for (x in data.sums) {
+            if (count > 1) {
+                return;
+            }
+            current = $('#box-balance-list').html();
+            sum = data.sums[x];
+            expense = data.expenses[x];
+            income = data.incomes[x];
+            string = income + ' / ' + expense + ': ' + sum;
+
+            $('#box-balance-list').html(current + '<span title="' + string + '">' + string + '</span>' + '<br>');
+            count++;
+        }
+        return;
     });
 }

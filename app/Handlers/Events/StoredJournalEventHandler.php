@@ -30,7 +30,6 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface as PRI;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface as RGRI;
 use FireflyIII\Support\Events\BillScanner;
 use FireflyIII\TransactionRules\Processor;
-use Log;
 
 /**
  * @codeCoverageIgnore
@@ -67,6 +66,7 @@ class StoredJournalEventHandler
      * @param StoredTransactionJournal $storedJournalEvent
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function processRules(StoredTransactionJournal $storedJournalEvent): bool
     {

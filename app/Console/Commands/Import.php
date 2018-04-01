@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Import.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,12 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Import\Logging\CommandHandler;
 use FireflyIII\Import\Routine\RoutineInterface;
 use FireflyIII\Models\ImportJob;
 use Illuminate\Console\Command;
@@ -68,21 +67,17 @@ class Import extends Command
         $jobKey = $this->argument('key');
         $job    = ImportJob::where('key', $jobKey)->first();
         if (null === $job) {
-            $this->error(sprintf('No job found with key "%s"', $jobKey));
+            $this->errorLine(sprintf('No job found with key "%s"', $jobKey));
 
             return;
         }
         if (!$this->isValid($job)) {
-            Log::error('Job is not valid for some reason. Exit.');
+            $this->errorLine('Job is not valid for some reason. Exit.');
 
             return;
         }
 
-        $this->line(sprintf('Going to import job with key "%s" of type "%s"', $job->key, $job->file_type));
-
-        $monolog = Log::getMonolog();
-        $handler = new CommandHandler($this);
-        $monolog->pushHandler($handler);
+        $this->infoLine(sprintf('Going to import job with key "%s" of type "%s"', $job->key, $job->file_type));
 
         // actually start job:
         $type      = 'csv' === $job->file_type ? 'file' : $job->file_type;
@@ -99,14 +94,35 @@ class Import extends Command
 
         /** @var MessageBag $error */
         foreach ($routine->getErrors() as $index => $error) {
-            $this->error(sprintf('Error importing line #%d: %s', $index, $error));
+            $this->errorLine(sprintf('Error importing line #%d: %s', $index, $error));
         }
 
-        $this->line(
+        $this->infoLine(
             sprintf('The import has finished. %d transactions have been imported out of %d records.', $routine->getJournals()->count(), $routine->getLines())
         );
 
         return;
+    }
+
+    /**
+     * @param string     $message
+     * @param array|null $data
+     */
+    private function errorLine(string $message, array $data = null): void
+    {
+        Log::error($message, $data ?? []);
+        $this->error($message);
+
+    }
+
+    /**
+     * @param string $message
+     * @param array  $data
+     */
+    private function infoLine(string $message, array $data = null): void
+    {
+        Log::info($message, $data ?? []);
+        $this->line($message);
     }
 
     /**
@@ -119,15 +135,14 @@ class Import extends Command
     private function isValid(ImportJob $job): bool
     {
         if (null === $job) {
-            Log::error('This job does not seem to exist.');
-            $this->error('This job does not seem to exist.');
+            $this->errorLine('This job does not seem to exist.');
 
             return false;
         }
 
         if ('configured' !== $job->status) {
             Log::error(sprintf('This job is not ready to be imported (status is %s).', $job->status));
-            $this->error('This job is not ready to be imported.');
+            $this->errorLine('This job is not ready to be imported.');
 
             return false;
         }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * config.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     'html_language'    => 'de',
@@ -31,10 +31,10 @@ return [
     'year'             => '%Y',
     'half_year'        => '%B %Y',
     'month_js'         => 'MMMM YYYY',
-    'month_and_day_js' => 'MMMM Do, YYYY',
-    'date_time_js'     => 'Do MMMM YYYY @ HH:mm:ss',
-    'specific_day_js'  => 'D MMMM YYYY',
-    'week_in_year_js'  => '[Week] w, YYYY',
+    'month_and_day_js' => 'Do MMMM YYYY',
+    'date_time_js'     => 'Do MMMM YYYY um HH:mm:ss',
+    'specific_day_js'  => 'D. MMMM YYYY',
+    'week_in_year_js'  => '[Week]. KW, YYYY',
     'year_js'          => 'YYYY',
-    'half_year_js'     => 'Q YYYY',
+    'half_year_js'     => 'Q. Quartal YYYY',
 ];

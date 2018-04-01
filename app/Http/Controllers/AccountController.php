@@ -84,6 +84,7 @@ class AccountController extends Controller
      * @param string  $what
      *
      * @return View
+     * @throws \RuntimeException
      */
     public function create(Request $request, string $what = 'asset')
     {
@@ -94,7 +95,7 @@ class AccountController extends Controller
         $subTitle           = trans('firefly.make_new_' . $what . '_account');
         $roles              = [];
         foreach (config('firefly.accountRoles') as $role) {
-            $roles[$role] = strval(trans('firefly.account_role_' . $role));
+            $roles[$role] = (string)trans('firefly.account_role_' . $role);
         }
 
         // pre fill some data
@@ -128,11 +129,11 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Request                    $request
-     * @param AccountRepositoryInterface $repository
-     * @param Account                    $account
+     * @param Request $request
+     * @param Account $account
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function destroy(Request $request, Account $account)
     {
@@ -152,15 +153,17 @@ class AccountController extends Controller
     /**
      * Edit an account.
      *
-     * @param Request $request
-     * @param Account $account
+     * @param Request                    $request
+     * @param Account                    $account
+     *
+     * @param AccountRepositoryInterface $repository
+     *
+     * @return View
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // long and complex but not that excessively so.
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
-     * @return View
-     *
-     * @throws FireflyException
+     * @throws \RuntimeException
      */
     public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
     {
@@ -185,14 +188,18 @@ class AccountController extends Controller
         // the opening balance is tricky:
         $openingBalanceAmount = strval($repository->getOpeningBalanceAmount($account));
         $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
-        $currency             = $this->currencyRepos->findNull(intval($account->getMeta('currency_id')));
+        $default              = app('amount')->getDefaultCurrency();
+        $currency             = $this->currencyRepos->findNull(intval($repository->getMetaValue($account, 'currency_id')));
+        if (is_null($currency)) {
+            $currency = $default;
+        }
 
         $preFilled = [
-            'accountNumber'        => $account->getMeta('accountNumber'),
-            'accountRole'          => $account->getMeta('accountRole'),
-            'ccType'               => $account->getMeta('ccType'),
-            'ccMonthlyPaymentDate' => $account->getMeta('ccMonthlyPaymentDate'),
-            'BIC'                  => $account->getMeta('BIC'),
+            'accountNumber'        => $repository->getMetaValue($account, 'accountNumber'),
+            'accountRole'          => $repository->getMetaValue($account, 'accountRole'),
+            'ccType'               => $repository->getMetaValue($account, 'ccType'),
+            'ccMonthlyPaymentDate' => $repository->getMetaValue($account, 'ccMonthlyPaymentDate'),
+            'BIC'                  => $repository->getMetaValue($account, 'BIC'),
             'openingBalanceDate'   => $openingBalanceDate,
             'openingBalance'       => $openingBalanceAmount,
             'virtualBalance'       => $account->virtual_balance,
@@ -273,37 +280,36 @@ class AccountController extends Controller
     /**
      * Show an account.
      *
-     * @param Request $request
-     * @param Account $account
-     * @param string  $moment
+     * @param Request     $request
+     * @param Account     $account
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // long and complex but not that excessively so.
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     *
      * @throws FireflyException
+     *
      */
     public function show(Request $request, Account $account, Carbon $start = null, Carbon $end = null)
     {
         if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
             return $this->redirectToOriginalAccount($account);
         }
-        $range = Preferences::get('viewRange', '1M')->data;
         if (null === $start) {
             $start = session('start');
         }
         if (null === $end) {
-            $end = app('navigation')->endOfPeriod($start, $range);
+            $end = session('end');
         }
         if ($end < $start) {
             throw new FireflyException('End is after start!'); // @codeCoverageIgnore
         }
 
+        $today        = new Carbon;
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
-        $page         = intval($request->get('page'));
-        $pageSize     = intval(Preferences::get('listPageSize', 50)->data);
-        $currencyId   = intval($account->getMeta('currency_id'));
+        $page         = (int)$request->get('page');
+        $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
+        $currencyId   = (int)$this->repository->getMetaValue($account, 'currency_id');
         $currency     = $this->currencyRepos->findNull($currencyId);
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
@@ -315,15 +321,56 @@ class AccountController extends Controller
         $periods   = $this->getPeriodOverview($account, $end);
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
-        if (null !== $start) {
-            $collector->setRange($start, $end);
-        }
+        $collector->setRange($start, $end);
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
+        $showAll = false;
 
         return view(
             'accounts.show',
-            compact('account', 'currency', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end', 'chartUri')
+            compact('account', 'showAll', 'currency', 'today', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end', 'chartUri')
+        );
+    }
+
+    /**
+     * Show an account.
+     *
+     * @param Request $request
+     * @param Account $account
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
+     *
+     * @throws FireflyException
+     *
+     */
+    public function showAll(Request $request, Account $account)
+    {
+        if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
+            return $this->redirectToOriginalAccount($account);
+        }
+        $end          = new Carbon;
+        $today        = new Carbon;
+        $start        = $this->repository->oldestJournalDate($account);
+        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
+        $page         = (int)$request->get('page');
+        $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
+        $currencyId   = (int)$this->repository->getMetaValue($account, 'currency_id');
+        $currency     = $this->currencyRepos->findNull($currencyId);
+        if (0 === $currencyId) {
+            $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
+        }
+        $subTitle  = trans('firefly.all_journals_for_account', ['name' => $account->name]);
+        $periods   = new Collection;
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
+        $transactions = $collector->getPaginatedJournals();
+        $transactions->setPath(route('accounts.show.all', [$account->id]));
+        $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+        $showAll  = true;
+
+        return view(
+            'accounts.show',
+            compact('account', 'showAll', 'currency', 'today', 'chartUri', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end')
         );
     }
 
@@ -331,12 +378,13 @@ class AccountController extends Controller
      * @param AccountFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function store(AccountFormRequest $request)
     {
         $data    = $request->getAccountData();
         $account = $this->repository->store($data);
-        $request->session()->flash('success', strval(trans('firefly.stored_new_account', ['name' => $account->name])));
+        $request->session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));
         Preferences::mark();
 
         // update preferences if necessary:
@@ -360,11 +408,11 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountFormRequest         $request
-     * @param AccountRepositoryInterface $repository
-     * @param Account                    $account
+     * @param AccountFormRequest $request
+     * @param Account            $account
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function update(AccountFormRequest $request, Account $account)
     {
@@ -405,7 +453,9 @@ class AccountController extends Controller
      * and for each period, the amount of money spent and earned. This is a complex operation which is cached for
      * performance reasons.
      *
-     * @param Account $account the account involved
+     * @param Account     $account the account involved
+     *
+     * @param Carbon|null $date
      *
      * @return Collection
      *
@@ -429,33 +479,34 @@ class AccountController extends Controller
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
+        /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
         $entries = new Collection;
         // loop dates
-        foreach ($dates as $date) {
+        foreach ($dates as $currentDate) {
 
             // try a collector for income:
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAccounts(new Collection([$account]))->setRange($date['start'], $date['end'])->setTypes([TransactionType::DEPOSIT])
+            $collector->setAccounts(new Collection([$account]))->setRange($currentDate['start'], $currentDate['end'])->setTypes([TransactionType::DEPOSIT])
                       ->withOpposingAccount();
-            $earned = strval($collector->getJournals()->sum('transaction_amount'));
+            $earned = (string)$collector->getJournals()->sum('transaction_amount');
 
             // try a collector for expenses:
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAccounts(new Collection([$account]))->setRange($date['start'], $date['end'])->setTypes([TransactionType::WITHDRAWAL])
+            $collector->setAccounts(new Collection([$account]))->setRange($currentDate['start'], $currentDate['end'])->setTypes([TransactionType::WITHDRAWAL])
                       ->withOpposingAccount();
-            $spent = strval($collector->getJournals()->sum('transaction_amount'));
+            $spent = (string)$collector->getJournals()->sum('transaction_amount');
 
-            $dateName = app('navigation')->periodShow($date['start'], $date['period']);
+            $dateName = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
             $entries->push(
                 [
                     'name'   => $dateName,
                     'spent'  => $spent,
                     'earned' => $earned,
-                    'start'  => $date['start']->format('Y-m-d'),
-                    'end'    => $date['end']->format('Y-m-d'),
+                    'start'  => $currentDate['start']->format('Y-m-d'),
+                    'end'    => $currentDate['end']->format('Y-m-d'),
                 ]
             );
         }

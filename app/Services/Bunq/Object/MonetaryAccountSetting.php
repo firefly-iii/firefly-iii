@@ -71,4 +71,16 @@ class MonetaryAccountSetting extends BunqObject
     {
         return $this->restrictionChat;
     }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'color'                 => $this->color,
+            'default_avatar_status' => $this->defaultAvatarStatus,
+            'restriction_chat'      => $this->restrictionChat,
+        ];
+    }
 }

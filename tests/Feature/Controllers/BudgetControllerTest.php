@@ -32,6 +32,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -43,6 +44,15 @@ use Tests\TestCase;
  */
 class BudgetControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
 
     /**
      * @covers \FireflyIII\Http\Controllers\BudgetController::amount
@@ -55,6 +65,8 @@ class BudgetControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
         $repository->shouldReceive('spentInPeriod')->andReturn('0');
+        $repository->shouldReceive('budgetedPerDay')->andReturn('10');
+
 
         $data = ['amount' => 200, 'start' => '2017-01-01', 'end' => '2017-01-31'];
         $this->be($this->user());
@@ -73,6 +85,7 @@ class BudgetControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
         $repository->shouldReceive('spentInPeriod')->andReturn('0');
+        $repository->shouldReceive('budgetedPerDay')->andReturn('10');
 
         $data = ['amount' => 0, 'start' => '2017-01-01', 'end' => '2017-01-31'];
         $this->be($this->user());
@@ -309,6 +322,8 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\BudgetController::infoIncome
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testInfoIncomeExpanded(string $range)
     {
@@ -560,14 +575,14 @@ class BudgetControllerTest extends TestCase
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('find')->andReturn($budget);
+        $repository->shouldReceive('findNull')->andReturn($budget);
         $repository->shouldReceive('store')->andReturn($budget);
         $repository->shouldReceive('cleanupBudgets');
 
         $this->session(['budgets.create.uri' => 'http://localhost']);
 
         $data = [
-            'name' => 'New Budget ' . rand(1000, 9999),
+            'name' => 'New Budget ' . random_int(1000, 9999),
         ];
         $this->be($this->user());
         $response = $this->post(route('budgets.store'), $data);
@@ -585,14 +600,14 @@ class BudgetControllerTest extends TestCase
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('find')->andReturn($budget);
+        $repository->shouldReceive('findNull')->andReturn($budget);
         $repository->shouldReceive('update');
         $repository->shouldReceive('cleanupBudgets');
 
         $this->session(['budgets.edit.uri' => 'http://localhost']);
 
         $data = [
-            'name'   => 'Updated Budget ' . rand(1000, 9999),
+            'name'   => 'Updated Budget ' . random_int(1000, 9999),
             'active' => 1,
         ];
         $this->be($this->user());

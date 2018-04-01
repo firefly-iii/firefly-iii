@@ -136,6 +136,7 @@ class BillRepository implements BillRepositoryInterface
      * @param Collection $accounts
      *
      * @return Collection
+     * @throws \InvalidArgumentException
      */
     public function getBillsForAccounts(Collection $accounts): Collection
     {
@@ -221,7 +222,6 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $end
      *
      * @return string
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function getBillsUnpaidInRange(Carbon $start, Carbon $end): string
     {
@@ -276,6 +276,7 @@ class BillRepository implements BillRepositoryInterface
      * @param int $size
      *
      * @return LengthAwarePaginator
+     * @throws \InvalidArgumentException
      */
     public function getPaginator(int $size): LengthAwarePaginator
     {
@@ -306,7 +307,6 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $end
      *
      * @return Collection
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function getPayDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
@@ -487,8 +487,6 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * TODO move to a service.
-     *
      * @param Bill               $bill
      * @param TransactionJournal $journal
      *
@@ -573,8 +571,6 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * TODO refactor
-     *
      * @param float $amount
      * @param float $min
      * @param float $max
@@ -591,8 +587,6 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * TODO refactor
-     *
      * @param array $matches
      * @param       $description
      *

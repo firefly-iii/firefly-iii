@@ -92,8 +92,8 @@ class MetaPieChartTest extends TestCase
         $keys = array_keys($chart);
         $this->assertEquals($keys[0], $accounts[1]->name);
         $this->assertEquals($keys[1], $accounts[2]->name);
-        $this->assertTrue(0 === bccomp('1000', $chart[$accounts[1]->name]));
-        $this->assertTrue(0 === bccomp('1000', $chart[$accounts[2]->name]));
+        $this->assertSame(0, bccomp('1000', $chart[$accounts[1]->name]));
+        $this->assertSame(0, bccomp('1000', $chart[$accounts[2]->name]));
 
         $this->assertTrue(true);
     }
@@ -149,9 +149,9 @@ class MetaPieChartTest extends TestCase
         $keys = array_keys($chart);
         $this->assertEquals($keys[0], $accounts[1]->name);
         $this->assertEquals($keys[1], $accounts[2]->name);
-        $this->assertTrue(0 === bccomp('1000', $chart[$accounts[1]->name]));
-        $this->assertTrue(0 === bccomp('1000', $chart[$accounts[2]->name]));
-        $this->assertTrue(0 === bccomp('-5000', $chart['Everything else']));
+        $this->assertSame(0, bccomp('1000', $chart[$accounts[1]->name]));
+        $this->assertSame(0, bccomp('1000', $chart[$accounts[2]->name]));
+        $this->assertSame(0, bccomp('-5000', $chart['Everything else']));
 
         $this->assertTrue(true);
     }
@@ -203,8 +203,8 @@ class MetaPieChartTest extends TestCase
         $keys = array_keys($chart);
         $this->assertEquals($keys[0], $accounts[1]->name);
         $this->assertEquals($keys[1], $accounts[2]->name);
-        $this->assertTrue(0 === bccomp('1000', $chart[$accounts[1]->name]));
-        $this->assertTrue(0 === bccomp('1000', $chart[$accounts[2]->name]));
+        $this->assertSame(0, bccomp('1000', $chart[$accounts[1]->name]));
+        $this->assertSame(0, bccomp('1000', $chart[$accounts[2]->name]));
 
         $this->assertTrue(true);
     }
@@ -259,9 +259,9 @@ class MetaPieChartTest extends TestCase
         $keys = array_keys($chart);
         $this->assertEquals($keys[0], $accounts[1]->name);
         $this->assertEquals($keys[1], $accounts[2]->name);
-        $this->assertTrue(0 === bccomp('1000', $chart[$accounts[1]->name]));
-        $this->assertTrue(0 === bccomp('1000', $chart[$accounts[2]->name]));
-        $this->assertTrue(0 === bccomp('1000', $chart['Everything else']));
+        $this->assertSame(0, bccomp('1000', $chart[$accounts[1]->name]));
+        $this->assertSame(0, bccomp('1000', $chart[$accounts[2]->name]));
+        $this->assertSame(0, bccomp('1000', $chart['Everything else']));
 
         $this->assertTrue(true);
     }

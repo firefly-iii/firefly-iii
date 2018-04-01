@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * FireflyException.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,13 +19,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 namespace FireflyIII\Exceptions;
+
+use Exception;
 
 /**
  * Class FireflyException.
  */
-class FireflyException extends \Exception
+class FireflyException extends Exception
 {
 }

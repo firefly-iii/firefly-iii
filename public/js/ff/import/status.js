@@ -51,6 +51,10 @@ $(function () {
  * Downloads some JSON and responds to its content to see what the status is of the current import.
  */
 function checkJobStatus() {
+    console.log('In checkJobStatus()');
+    if(jobFailed) {
+        return;
+    }
     $.getJSON(jobStatusUri).done(reportOnJobStatus).fail(reportFailedJob);
 }
 
@@ -58,6 +62,7 @@ function checkJobStatus() {
  * This method is called when the JSON query returns an error. If possible, this error is relayed to the user.
  */
 function reportFailedJob(jqxhr, textStatus, error) {
+    console.log('In reportFailedJob()');
     // hide all possible boxes:
     $('.statusbox').hide();
 
@@ -77,9 +82,10 @@ function reportFailedJob(jqxhr, textStatus, error) {
  * @param data
  */
 function reportOnJobStatus(data) {
-
+    console.log('In reportOnJobStatus()');
     switch (data.status) {
         case "configured":
+            console.log('Job reports configured.');
             // job is ready. Do not check again, just show the start-box. Hide the rest.
             if (!job.configuration['auto-start']) {
                 $('.statusbox').hide();
@@ -95,6 +101,7 @@ function reportOnJobStatus(data) {
             }
             break;
         case "running":
+            console.log('Job reports running.');
             // job is running! Show the running box:
             $('.statusbox').hide();
             $('.status_running').show();
@@ -117,6 +124,7 @@ function reportOnJobStatus(data) {
             }
             break;
         case "finished":
+            console.log('Job reports finished.');
             $('.statusbox').hide();
             $('.status_finished').show();
             // report on detected errors:
@@ -125,6 +133,7 @@ function reportOnJobStatus(data) {
             $('#import-status-more-info').html(data.finishedText);
             break;
         case "error":
+            console.log('Job reports ERROR.');
             // hide all possible boxes:
             $('.statusbox').hide();
 
@@ -137,6 +146,7 @@ function reportOnJobStatus(data) {
             $('.fatal_error').show();
             break;
         case "configuring":
+            console.log('Job reports configuring.');
             // redirect back to configure screen.
             window.location = jobConfigureUri;
             break;
@@ -151,6 +161,7 @@ function reportOnJobStatus(data) {
  * Shows a fatal error when the job seems to be stalled.
  */
 function showStalledBox() {
+    console.log('In showStalledBox().');
     $('.statusbox').hide();
     $('.fatal_error').show();
     $('.fatal_error_txt').text(langImportTimeOutError);
@@ -162,17 +173,21 @@ function showStalledBox() {
  * @param data
  */
 function jobIsStalled(data) {
+    console.log('In jobIsStalled().');
     if (data.done === numberOfSteps) {
         numberOfReports++;
+        console.log('Number of reports ' + numberOfReports);
     }
     if (data.done !== numberOfSteps) {
         numberOfReports = 0;
+        console.log('Number of reports ' + numberOfReports);
     }
     if (numberOfReports > 20) {
+        console.log('Number of reports > 20! ' + numberOfReports);
         return true;
     }
     numberOfSteps = data.done;
-
+    console.log('Number of steps ' + numberOfSteps);
     return false;
 }
 
@@ -181,7 +196,9 @@ function jobIsStalled(data) {
  * Only when job is in "configured" state.
  */
 function startJob() {
+    console.log('In startJob().');
     if (job.status === "configured") {
+        console.log('Job status = configured.');
         // disable the button, add loading thing.
         $('.start-job').prop('disabled', true).text('...');
         $.post(jobStartUri, {_token: token}).fail(reportOnSubmitError);
@@ -190,12 +207,14 @@ function startJob() {
         timeOutId = setTimeout(checkJobStatus, startInterval);
         return;
     }
+    console.log('Job.status = ' + job.status);
 }
 
 /**
  * When the start button fails (returns error code) this function reports. It assumes a time out.
  */
 function reportOnSubmitError(jqxhr, textStatus, error) {
+    console.log('In reportOnSubmitError().');
     // stop the refresh thing
     clearTimeout(timeOutId);
 
@@ -217,6 +236,7 @@ function reportOnSubmitError(jqxhr, textStatus, error) {
  * This method updates the percentage bar thing if the job is running!
  */
 function updateBar(data) {
+    console.log('In updateBar().');
     var bar = $('#import-status-bar');
     if (data.show_percentage) {
         bar.addClass('progress-bar-success').removeClass('progress-bar-info');
@@ -238,6 +258,7 @@ function updateBar(data) {
  */
 function updateStatusText(data) {
     "use strict";
+    console.log('In updateStatusText().');
     $('#import-status-txt').removeClass('text-danger').text(data.statusText);
 }
 
@@ -246,6 +267,7 @@ function updateStatusText(data) {
  * @param data
  */
 function reportOnErrors(data) {
+    console.log('In reportOnErrors().');
     if (knownErrors === data.errors.length) {
         return;
     }

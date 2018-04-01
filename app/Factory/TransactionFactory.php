@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * TransactionFactory.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,13 +20,13 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
 
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Support\TransactionServiceTrait;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -124,6 +125,11 @@ class TransactionFactory
         }
 
         // set budget:
+        if ($journal->transactionType->type === TransactionType::TRANSFER) {
+            $data['budget_id']   = null;
+            $data['budget_name'] = null;
+        }
+
         $budget = $this->findBudget($data['budget_id'], $data['budget_name']);
         $this->setBudget($source, $budget);
         $this->setBudget($dest, $budget);

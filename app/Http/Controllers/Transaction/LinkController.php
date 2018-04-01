@@ -110,6 +110,13 @@ class LinkController extends Controller
         }
         $other         = $this->journalRepository->find($linkInfo['transaction_journal_id']);
         $alreadyLinked = $this->repository->findLink($journal, $other);
+
+        if($other->id === $journal->id) {
+            Session::flash('error', trans('firefly.journals_link_to_self'));
+
+            return redirect(route('transactions.show', [$journal->id]));
+        }
+
         if ($alreadyLinked) {
             Session::flash('error', trans('firefly.journals_error_linked'));
 

@@ -34,6 +34,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -45,6 +46,15 @@ use Tests\TestCase;
  */
 class BudgetReportControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController::accountExpense
      * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController::__construct

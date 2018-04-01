@@ -29,7 +29,6 @@ use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as LaravelResponse;
 use Preferences;
-use Response;
 use View;
 
 /**
@@ -81,6 +80,7 @@ class AttachmentController extends Controller
      * @param Attachment $attachment
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function destroy(Request $request, Attachment $attachment)
     {
@@ -130,6 +130,7 @@ class AttachmentController extends Controller
      * @param Attachment $attachment
      *
      * @return View
+     * @throws \RuntimeException
      */
     public function edit(Request $request, Attachment $attachment)
     {
@@ -142,6 +143,9 @@ class AttachmentController extends Controller
         }
         $request->session()->forget('attachments.edit.fromUpdate');
 
+        $preFilled['notes'] = $this->repository->getNoteText($attachment);
+        $request->session()->flash('preFilled', $preFilled);
+
         return view('attachments.edit', compact('attachment', 'subTitleIcon', 'subTitle'));
     }
 
@@ -150,6 +154,7 @@ class AttachmentController extends Controller
      * @param Attachment            $attachment
      *
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \RuntimeException
      */
     public function update(AttachmentFormRequest $request, Attachment $attachment)
     {
@@ -182,7 +187,7 @@ class AttachmentController extends Controller
         if ($this->repository->exists($attachment)) {
             $content = $this->repository->getContent($attachment);
 
-            return Response::make(
+            return response()->make(
                 $content, 200, [
                             'Content-Type'        => $attachment->mime,
                             'Content-Disposition' => 'inline; filename="' . $attachment->filename . '"',

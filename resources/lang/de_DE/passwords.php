@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * passwords.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,12 +19,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     'password' => 'Passwörter müssen mindestens 6 Zeichen lang sein und übereinstimmen.',
     'user'     => 'Wir können keinen Benutzer mit dieser E-Mail Adresse finden.',
-    'token'    => 'Das Token zum Zurücksetzen des Passwortes ist ungültig.',
+    'token'    => 'Der Authentifizierungsschlüssel zum Zurücksetzen des Passwortes ist ungültig.',
     'sent'     => 'Wir haben Ihnen einen Link zum Zurücksetzen des Passworts zugesendet!',
     'reset'    => 'Ihr Passwort wurde zurückgesetzt!',
     'blocked'  => 'Netter Versuch.',

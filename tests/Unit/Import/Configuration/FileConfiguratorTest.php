@@ -679,7 +679,7 @@ class FileConfiguratorTest extends TestCase
         $job            = new ImportJob;
         $job->file_type = 'file';
         $job->status    = 'new';
-        $job->key       = 'x' . rand(1, 100000);
+        $job->key       = 'x' . random_int(1, 100000);
         $job->user()->associate($this->user());
         $job->configuration = $config;
 

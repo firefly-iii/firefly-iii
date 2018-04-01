@@ -117,8 +117,11 @@ class SpectreRoutine implements RoutineInterface
      * have-account-mapping: start downloading transactions?
      *
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
+     * @return bool
+     *
+     * @throws FireflyException
+     * @throws SpectreException
+     * @throws \Illuminate\Container\EntryNotFoundException
      */
     public function run(): bool
     {
@@ -164,8 +167,10 @@ class SpectreRoutine implements RoutineInterface
 
     /**
      * @return Customer
+     *
      * @throws \FireflyIII\Exceptions\FireflyException
      * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
+     * @throws \Illuminate\Container\EntryNotFoundException
      */
     protected function createCustomer(): Customer
     {
@@ -184,24 +189,24 @@ class SpectreRoutine implements RoutineInterface
             $customers = $getCustomerRequest->getCustomers();
             /** @var Customer $current */
             foreach ($customers as $current) {
-                if ($current->getIdentifier() === 'default_ff3_customer') {
+                if ('default_ff3_customer' === $current->getIdentifier()) {
                     $customer = $current;
                     break;
                 }
             }
         }
 
-
         Preferences::setForUser($this->job->user, 'spectre_customer', $customer->toArray());
 
         return $customer;
-
     }
 
     /**
      * @return Customer
+     *
      * @throws FireflyException
-     * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
+     * @throws SpectreException
+     * @throws \Illuminate\Container\EntryNotFoundException
      */
     protected function getCustomer(): Customer
     {
@@ -228,8 +233,10 @@ class SpectreRoutine implements RoutineInterface
      * @param string   $returnUri
      *
      * @return Token
+     *
      * @throws \FireflyIII\Exceptions\FireflyException
      * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
+     * @throws \Illuminate\Container\EntryNotFoundException
      */
     protected function getToken(Customer $customer, string $returnUri): Token
     {
@@ -240,12 +247,12 @@ class SpectreRoutine implements RoutineInterface
         Log::debug('Call to get token is finished');
 
         return $request->getToken();
-
     }
 
     /**
      * @throws FireflyException
      * @throws SpectreException
+     * @throws \Illuminate\Container\EntryNotFoundException
      */
     protected function runStageInitial(): void
     {
@@ -280,6 +287,7 @@ class SpectreRoutine implements RoutineInterface
     /**
      * @throws FireflyException
      * @throws SpectreException
+     * @throws \Illuminate\Container\EntryNotFoundException
      */
     protected function runStageLoggedIn(): void
     {
@@ -335,8 +343,6 @@ class SpectreRoutine implements RoutineInterface
         $this->setConfig($config);
         $this->setStatus('configuring');
         $this->addStep();
-
-        return;
     }
 
     /**
@@ -453,16 +459,14 @@ class SpectreRoutine implements RoutineInterface
                 // date:
                 $importJournal->setValue(['role' => 'date-transaction', 'value' => $transaction->getMadeOn()->toIso8601String()]);
 
-
                 // amount
                 $importJournal->setValue(['role' => 'amount', 'value' => $transaction->getAmount()]);
                 $importJournal->setValue(['role' => 'currency-code', 'value' => $transaction->getCurrencyCode()]);
 
-
                 // various meta fields:
                 $importJournal->setValue(['role' => 'category-name', 'value' => $transaction->getCategory()]);
                 $importJournal->setValue(['role' => 'note', 'value' => $notes]);
-                $importJournal->setValue(['role' => 'tags-comma', 'value' => join(',', $tags)]);
+                $importJournal->setValue(['role' => 'tags-comma', 'value' => implode(',', $tags)]);
                 $collection->push($importJournal);
             }
         }
@@ -515,12 +519,12 @@ class SpectreRoutine implements RoutineInterface
         $this->setStatus('finished');
         $this->addStep();
 
-        return;
     }
 
     /**
      * @throws FireflyException
      * @throws SpectreException
+     * @throws \Illuminate\Container\EntryNotFoundException
      */
     private function runStageHaveMapping()
     {
@@ -531,8 +535,8 @@ class SpectreRoutine implements RoutineInterface
         /** @var array $accountArray */
         foreach ($accounts as $accountArray) {
             $account  = new Account($accountArray);
-            $importId = intval($config['accounts-mapped'][$account->getid()] ?? 0);
-            $doImport = $importId !== 0 ? true : false;
+            $importId = intval($config['accounts-mapped'][$account->getId()] ?? 0);
+            $doImport = 0 !== $importId ? true : false;
             if (!$doImport) {
                 Log::debug(sprintf('Will NOT import from Spectre account #%d ("%s")', $account->getId(), $account->getName()));
                 continue;
@@ -552,7 +556,6 @@ class SpectreRoutine implements RoutineInterface
         Log::debug(sprintf('Total number of transactions: %d', $count));
         $this->addStep();
 
-
         $this->importTransactions($all);
     }
 
@@ -565,7 +568,6 @@ class SpectreRoutine implements RoutineInterface
     {
         $this->repository->setConfiguration($this->job, $config);
 
-        return;
     }
 
     /**
@@ -577,7 +579,6 @@ class SpectreRoutine implements RoutineInterface
     {
         $this->repository->setExtendedStatus($this->job, $extended);
 
-        return;
     }
 
     /**

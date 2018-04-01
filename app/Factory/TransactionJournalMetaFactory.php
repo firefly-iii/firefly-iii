@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * TransactionJournalMetaFactory.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,7 +20,6 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
@@ -43,7 +43,7 @@ class TransactionJournalMetaFactory
         $value = $data['data'];
         /** @var TransactionJournalMeta $entry */
         $entry = $data['journal']->transactionJournalMeta()->where('name', $data['name'])->first();
-        if (is_null($value) && !is_null($entry)) {
+        if (null === $value && null !== $entry) {
             try {
                 $entry->delete();
             } catch (Exception $e) { // @codeCoverageIgnore
@@ -56,7 +56,18 @@ class TransactionJournalMetaFactory
         if ($data['data'] instanceof Carbon) {
             $value = $data['data']->toW3cString();
         }
+        if ((string)$value === '') {
+            // don't store blank strings.
+            if (null !== $entry) {
+                try {
+                    $entry->delete();
+                } catch (Exception $e) { // @codeCoverageIgnore
+                    Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage())); // @codeCoverageIgnore
+                }
+            }
 
+            return null;
+        }
 
         if (null === $entry) {
             $entry = new TransactionJournalMeta();

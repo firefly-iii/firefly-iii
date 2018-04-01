@@ -37,7 +37,6 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Response;
 use Steam;
 
 /**
@@ -86,7 +85,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
 
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         // depending on diff, do something with range of chart.
@@ -122,7 +121,7 @@ class BudgetController extends Controller
 
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -153,7 +152,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
 
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         $entries          = [];
@@ -170,7 +169,7 @@ class BudgetController extends Controller
         $data = $this->generator->singleSet(strval(trans('firefly.left')), $entries);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -186,7 +185,7 @@ class BudgetController extends Controller
         $cache->addProperty($budgetLimit->id ?? 0);
         $cache->addProperty('chart.budget.expense-asset');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         /** @var JournalCollectorInterface $collector */
@@ -214,7 +213,7 @@ class BudgetController extends Controller
         $data = $this->generator->pieChart($chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -230,7 +229,7 @@ class BudgetController extends Controller
         $cache->addProperty($budgetLimit->id ?? 0);
         $cache->addProperty('chart.budget.expense-category');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         /** @var JournalCollectorInterface $collector */
@@ -260,7 +259,7 @@ class BudgetController extends Controller
         $data = $this->generator->pieChart($chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -276,7 +275,7 @@ class BudgetController extends Controller
         $cache->addProperty($budgetLimit->id ?? 0);
         $cache->addProperty('chart.budget.expense-expense');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         /** @var JournalCollectorInterface $collector */
@@ -305,7 +304,7 @@ class BudgetController extends Controller
         $data = $this->generator->pieChart($chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -326,7 +325,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.budget.frontpage');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $budgets   = $this->repository->getActiveBudgets();
         $chartData = [
@@ -359,7 +358,7 @@ class BudgetController extends Controller
         $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -382,7 +381,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
         $cache->addProperty('chart.budget.period');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $periods  = app('navigation')->listOfPeriods($start, $end);
         $entries  = $this->repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end); // get the expenses
@@ -404,7 +403,7 @@ class BudgetController extends Controller
         $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -423,7 +422,7 @@ class BudgetController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty('chart.budget.no-budget');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         // the expenses:
@@ -440,7 +439,7 @@ class BudgetController extends Controller
         $data = $this->generator->singleSet(strval(trans('firefly.spent')), $chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**

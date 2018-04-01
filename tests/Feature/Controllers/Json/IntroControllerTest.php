@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Json;
 
+use Log;
 use Tests\TestCase;
 
 /**
@@ -33,6 +34,15 @@ use Tests\TestCase;
  */
 class IntroControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Json\IntroController::getIntroSteps
      * @covers \FireflyIII\Http\Controllers\Json\IntroController::getBasicSteps

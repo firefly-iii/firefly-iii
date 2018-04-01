@@ -36,23 +36,23 @@ class TransactionType extends Model
     /**
      *
      */
-    const WITHDRAWAL = 'Withdrawal';
+    public const WITHDRAWAL = 'Withdrawal';
     /**
      *
      */
-    const DEPOSIT = 'Deposit';
+    public const DEPOSIT = 'Deposit';
     /**
      *
      */
-    const TRANSFER = 'Transfer';
+    public const TRANSFER = 'Transfer';
     /**
      *
      */
-    const OPENING_BALANCE = 'Opening balance';
+    public const OPENING_BALANCE = 'Opening balance';
     /**
      *
      */
-    const RECONCILIATION = 'Reconciliation';
+    public const RECONCILIATION = 'Reconciliation';
     /**
      * The attributes that should be casted to native types.
      *
@@ -71,6 +71,7 @@ class TransactionType extends Model
      * @param string $type
      *
      * @return Model|null|static
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $type): TransactionType
     {

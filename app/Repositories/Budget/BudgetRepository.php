@@ -49,6 +49,33 @@ class BudgetRepository implements BudgetRepositoryInterface
     private $user;
 
     /**
+     * A method that returns the amount of money budgeted per day for this budget,
+     * on average.
+     *
+     * @param Budget $budget
+     *
+     * @return string
+     */
+    public function budgetedPerDay(Budget $budget): string
+    {
+        $total = '0';
+        $count = 0;
+        foreach ($budget->budgetlimits as $limit) {
+            $diff   = strval($limit->start_date->diffInDays($limit->end_date));
+            $amount = strval($limit->amount);
+            $perDay = bcdiv($amount, $diff);
+            $total  = bcadd($total, $perDay);
+            $count++;
+        }
+        $avg = $total;
+        if ($count > 0) {
+            $avg = bcdiv($total, strval($count));
+        }
+
+        return $avg;
+    }
+
+    /**
      * @return bool
      *
      * @throws \Exception
@@ -225,6 +252,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Budget $budget
      *
      * @return Carbon
+     * @throws \InvalidArgumentException
      */
     public function firstUseDate(Budget $budget): Carbon
     {
@@ -317,8 +345,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         $amount          = '0';
         $availableBudget = $this->user->availableBudgets()
                                       ->where('transaction_currency_id', $currency->id)
-                                      ->where('start_date', $start->format('Y-m-d'))
-                                      ->where('end_date', $end->format('Y-m-d'))->first();
+                                      ->where('start_date', $start->format('Y-m-d 00:00:00'))
+                                      ->where('end_date', $end->format('Y-m-d 00:00:00'))->first();
         if (null !== $availableBudget) {
             $amount = strval($availableBudget->amount);
         }
@@ -335,7 +363,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function getBudgetLimits(Budget $budget, Carbon $start, Carbon $end): Collection
     {
-        $set = $budget->budgetLimits()
+        $set = $budget->budgetlimits()
                       ->where(
                           function (Builder $q5) use ($start, $end) {
                               $q5->where(
@@ -492,8 +520,8 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         $availableBudget = $this->user->availableBudgets()
                                       ->where('transaction_currency_id', $currency->id)
-                                      ->where('start_date', $start->format('Y-m-d'))
-                                      ->where('end_date', $end->format('Y-m-d'))->first();
+                                      ->where('start_date', $start->format('Y-m-d 00:00:00'))
+                                      ->where('end_date', $end->format('Y-m-d 00:00:00'))->first();
         if (null === $availableBudget) {
             $availableBudget = new AvailableBudget;
             $availableBudget->user()->associate($this->user);

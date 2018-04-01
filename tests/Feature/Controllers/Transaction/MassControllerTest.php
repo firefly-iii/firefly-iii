@@ -28,6 +28,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -39,6 +40,16 @@ use Tests\TestCase;
  */
 class MassControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\MassController::delete
      * @covers \FireflyIII\Http\Controllers\Transaction\MassController::__construct
@@ -71,7 +82,7 @@ class MassControllerTest extends TestCase
         $repository = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('find')->andReturnValues([$deposits[0], $deposits[1]])->times(2);
-        $repository->shouldReceive('delete')->times(2);
+        $repository->shouldReceive('destroy')->times(2);
 
         $this->session(['transactions.mass-delete.uri' => 'http://localhost']);
 
@@ -93,7 +104,7 @@ class MassControllerTest extends TestCase
 
         $transfers      = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(2)->get();
         $transfersArray = $transfers->pluck('id')->toArray();
-        $source = $this->user()->accounts()->first();
+        $source         = $this->user()->accounts()->first();
 
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         // mock data for edit page:

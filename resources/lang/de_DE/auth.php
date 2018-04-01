@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * auth.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     /*
@@ -33,5 +33,5 @@ return [
     */
 
     'failed'   => 'Falscher Benutzername und/oder falsches Passwort.',
-    'throttle' => 'Zu viele Login-Versuche. Bitte versuchen Sie es in :seconds Sekunde(n) erneut.',
+    'throttle' => 'Zu viele Anmeldeversuche. Bitte versuchen Sie es in :seconds Sekunden erneut.',
 ];

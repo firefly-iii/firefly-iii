@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers\Json;
 
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -35,6 +36,15 @@ use Tests\TestCase;
  */
 class FrontpageControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Json\FrontpageController::piggyBanks
      */

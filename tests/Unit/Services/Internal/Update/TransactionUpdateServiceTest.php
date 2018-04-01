@@ -27,6 +27,7 @@ namespace Tests\Unit\Services\Internal\Update;
 use FireflyIII\Factory\BudgetFactory;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Update\TransactionUpdateService;
 use Tests\TestCase;
 
@@ -119,8 +120,7 @@ class TransactionUpdateServiceTest extends TestCase
     {
         /** @var Transaction $source */
         $source = $this->user()->transactions()->where('amount', '>', 0)->inRandomOrder()->first();
-
-        $data = [
+        $data   = [
             'currency_id'           => 1,
             'currency_code'         => null,
             'description'           => 'Some new description',
@@ -136,6 +136,11 @@ class TransactionUpdateServiceTest extends TestCase
             'foreign_currency_id'   => null,
             'foreign_currency_code' => null,
         ];
+
+        // mock repository:
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('findNull')->andReturn($source->account);
 
         /** @var TransactionUpdateService $service */
         $service = app(TransactionUpdateService::class);
@@ -154,7 +159,6 @@ class TransactionUpdateServiceTest extends TestCase
     {
         /** @var Transaction $source */
         $source = $this->user()->transactions()->where('amount', '>', 0)->inRandomOrder()->first();
-
         $data = [
             'currency_id'           => 1,
             'currency_code'         => null,
@@ -172,10 +176,17 @@ class TransactionUpdateServiceTest extends TestCase
             'foreign_currency_code' => null,
         ];
 
+        // mock repository:
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('findNull')->andReturn($source->account);
+
         /** @var TransactionUpdateService $service */
         $service = app(TransactionUpdateService::class);
         $service->setUser($this->user());
         $result = $service->update($source, $data);
+
+
 
         $this->assertEquals($source->id, $result->id);
         $this->assertEquals($result->description, $data['description']);
@@ -191,7 +202,6 @@ class TransactionUpdateServiceTest extends TestCase
     {
         /** @var Transaction $source */
         $source = $this->user()->transactions()->where('amount', '<', 0)->inRandomOrder()->first();
-
         $data = [
             'currency_id'           => 1,
             'currency_code'         => null,
@@ -208,6 +218,11 @@ class TransactionUpdateServiceTest extends TestCase
             'foreign_currency_id'   => null,
             'foreign_currency_code' => null,
         ];
+
+        // mock repository:
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('findNull')->andReturn($source->account);
 
         /** @var TransactionUpdateService $service */
         $service = app(TransactionUpdateService::class);

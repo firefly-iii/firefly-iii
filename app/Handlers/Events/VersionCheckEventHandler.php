@@ -26,6 +26,7 @@ namespace FireflyIII\Handlers\Events;
 use FireflyConfig;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Github\Object\Release;
 use FireflyIII\Services\Github\Request\UpdateRequest;
 use FireflyIII\User;
@@ -43,22 +44,26 @@ class VersionCheckEventHandler
     public function checkForUpdates(RequestedVersionCheckStatus $event)
     {
         // in Sandstorm, cannot check for updates:
-        $sandstorm = 1 === intval(getenv('SANDSTORM'));
+        $sandstorm = 1 === (int)getenv('SANDSTORM');
         if ($sandstorm === true) {
-            return;
+            return; // @codeCoverageIgnore
         }
 
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
 
         /** @var User $user */
         $user = $event->user;
-        if (!$user->hasRole('owner')) {
+        if (!$repository->hasRole($user, 'owner')) {
             return;
         }
 
         $permission    = FireflyConfig::get('permission_update_check', -1);
         $lastCheckTime = FireflyConfig::get('last_update_check', time());
         $now           = time();
-        if ($now - $lastCheckTime->data < 604800) {
+        $diff          = $now - $lastCheckTime->data;
+        Log::debug(sprintf('Difference is %d seconds.', $diff));
+        if ($diff < 604800) {
             Log::debug(sprintf('Checked for updates less than a week ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data)));
 
             return;
@@ -70,7 +75,7 @@ class VersionCheckEventHandler
         // have actual permission?
         if ($permission->data === -1) {
             // never asked before.
-            session()->flash('info', strval(trans('firefly.check_for_updates_permission', ['link' => route('admin.update-check')])));
+            session()->flash('info', (string)trans('firefly.check_for_updates_permission', ['link' => route('admin.update-check')]));
 
             return;
         }
@@ -79,7 +84,7 @@ class VersionCheckEventHandler
         /** @var UpdateRequest $request */
         $request = app(UpdateRequest::class);
         $check   = -2;
-        $first   = new Release(['id' => '0', 'title' => '0', 'updated' => '2017-01-01', 'content' => '']);
+        $first   = new Release(['id' => '0', 'title' => '0.2', 'updated' => '2017-01-01', 'content' => '']);
         try {
             $request->call();
             $releases = $request->getReleases();
@@ -87,6 +92,7 @@ class VersionCheckEventHandler
             /** @var Release $first */
             $first = reset($releases);
             $check = version_compare($current, $first->getTitle());
+            Log::debug(sprintf('Comparing %s with %s, result is %s', $current, $first->getTitle(), $check));
             FireflyConfig::set('last_update_check', time());
         } catch (FireflyException $e) {
             Log::error(sprintf('Could not check for updates: %s', $e->getMessage()));
@@ -98,19 +104,19 @@ class VersionCheckEventHandler
         if ($check === -1) {
             // there is a new FF version!
             $monthAndDayFormat = (string)trans('config.month_and_day');
-            $string            = strval(
-                trans(
-                    'firefly.update_new_version_alert',
-                    ['your_version' => $current, 'new_version' => $first->getTitle(), 'date' => $first->getUpdated()->formatLocalized($monthAndDayFormat)]
-                )
+            $string            = (string)trans(
+                'firefly.update_new_version_alert',
+                [
+                    'your_version' => $current,
+                    'new_version'  => $first->getTitle(),
+                    'date'         => $first->getUpdated()->formatLocalized($monthAndDayFormat),
+                ]
             );
         }
         if ($check !== 0) {
             // flash info
             session()->flash('info', $string);
         }
-
-        return;
     }
 
 }

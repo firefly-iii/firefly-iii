@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * breadcrumbs.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,22 +19,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
-    'home'                => 'Home',
-    'edit_currency'       => 'Währung ":name" bearbeiten',
-    'delete_currency'     => 'Währung ":name" löschen',
+    'home'                => 'Startseite',
+    'edit_currency'       => 'Währung „:name” bearbeiten',
+    'delete_currency'     => 'Währung „:name” löschen',
     'newPiggyBank'        => 'Neues Sparschwein erstellen',
-    'edit_piggyBank'      => 'Sparschwein ":name" bearbeiten',
+    'edit_piggyBank'      => 'Sparschwein „:name” bearbeiten',
     'preferences'         => 'Einstellungen',
     'profile'             => 'Profil',
     'changePassword'      => 'Passwort ändern',
     'change_email'        => 'E-Mail Adresse ändern',
     'bills'               => 'Rechnungen',
     'newBill'             => 'Neue Rechnung',
-    'edit_bill'           => 'Rechnung ":name" bearbeiten',
-    'delete_bill'         => 'Rechnung ":name" löschen',
+    'edit_bill'           => 'Rechnung „:name” bearbeiten',
+    'delete_bill'         => 'Rechnung „:name” löschen',
     'reports'             => 'Berichte',
     'search_result'       => 'Suchergebnisse für ":query"',
     'withdrawal_list'     => 'Ausgaben',
@@ -47,9 +47,9 @@ return [
     'edit_journal'        => 'Transaktion ":description" bearbeiten',
     'edit_reconciliation' => '":description" bearbeiten',
     'delete_journal'      => 'Transaktion ":description" löschen',
-    'tags'                => 'Tags',
-    'createTag'           => 'Neuen Tag erstellen',
-    'edit_tag'            => 'Tag ":tag" bearbeiten',
-    'delete_tag'          => 'Tag ":tag" löschen',
+    'tags'                => 'Schlagwörter',
+    'createTag'           => 'Neues Schlagwort erstellen',
+    'edit_tag'            => 'Schlagwort „:tag” bearbeiten',
+    'delete_tag'          => 'Schlagwort „:tag” löschen',
     'delete_journal_link' => 'Transaktions-Verknüpfung löschen',
 ];

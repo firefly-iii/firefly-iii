@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * AccountRequest.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,7 +20,6 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
@@ -70,9 +70,9 @@ class AccountRequest extends Request
      */
     public function rules(): array
     {
-        $accountRoles   = join(',', config('firefly.accountRoles'));
-        $types          = join(',', array_keys(config('firefly.subTitlesByIdentifier')));
-        $ccPaymentTypes = join(',', array_keys(config('firefly.ccTypes')));
+        $accountRoles   = implode(',', config('firefly.accountRoles'));
+        $types          = implode(',', array_keys(config('firefly.subTitlesByIdentifier')));
+        $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
         $rules          = [
             'name'                    => 'required|min:1|uniqueAccountForUser',
             'opening_balance'         => 'numeric|required_with:opening_balance_date|nullable',

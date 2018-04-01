@@ -31,6 +31,8 @@ use Log;
 
 /**
  * Class Preference.
+ *
+ * @property mixed $data
  */
 class Preference extends Model
 {
@@ -82,6 +84,8 @@ class Preference extends Model
      * @codeCoverageIgnore
      *
      * @param $value
+     *
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setDataAttribute($value)
     {

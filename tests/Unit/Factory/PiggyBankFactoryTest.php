@@ -91,6 +91,6 @@ class PiggyBankFactoryTest extends TestCase
         /** @var PiggyBankFactory $factory */
         $factory = app(PiggyBankFactory::class);
         $factory->setUser($this->user());
-        $this->assertNull($factory->find(null, 'I dont exist.' . rand(1, 000)));
+        $this->assertNull($factory->find(null, 'I dont exist.' . random_int(1, 1000)));
     }
 }

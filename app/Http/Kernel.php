@@ -26,6 +26,7 @@ use FireflyIII\Http\Middleware\Authenticate;
 use FireflyIII\Http\Middleware\AuthenticateTwoFactor;
 use FireflyIII\Http\Middleware\Binder;
 use FireflyIII\Http\Middleware\EncryptCookies;
+use FireflyIII\Http\Middleware\Installer;
 use FireflyIII\Http\Middleware\IsAdmin;
 use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
@@ -66,6 +67,7 @@ class Kernel extends HttpKernel
             TrimStrings::class,
             ConvertEmptyStringsToNull::class,
             TrustProxies::class,
+            Installer::class,
         ];
 
     /**
@@ -90,6 +92,7 @@ class Kernel extends HttpKernel
 
             // MUST NOT be logged in. Does not care about 2FA or confirmation.
             'user-not-logged-in'    => [
+                Installer::class,
                 Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -103,6 +106,7 @@ class Kernel extends HttpKernel
             // MUST NOT have 2FA
             // don't care about confirmation:
             'user-logged-in-no-2fa' => [
+                Installer::class,
                 Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

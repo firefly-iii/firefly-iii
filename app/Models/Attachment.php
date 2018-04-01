@@ -49,12 +49,13 @@ class Attachment extends Model
             'uploaded'   => 'boolean',
         ];
     /** @var array */
-    protected $fillable = ['attachable_id', 'attachable_type', 'user_id', 'md5', 'filename', 'mime', 'title', 'notes', 'description', 'size', 'uploaded'];
+    protected $fillable = ['attachable_id', 'attachable_type', 'user_id', 'md5', 'filename', 'mime', 'title', 'description', 'size', 'uploaded'];
 
     /**
      * @param string $value
      *
      * @return Attachment
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value): Attachment
     {
@@ -96,6 +97,7 @@ class Attachment extends Model
      *
      * @codeCoverageIgnore
      * @return null|string
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
     public function getDescriptionAttribute($value)
     {
@@ -111,6 +113,7 @@ class Attachment extends Model
      *
      * @codeCoverageIgnore
      * @return null|string
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
     public function getFilenameAttribute($value)
     {
@@ -126,6 +129,7 @@ class Attachment extends Model
      *
      * @codeCoverageIgnore
      * @return null|string
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
     public function getMimeAttribute($value)
     {
@@ -141,21 +145,7 @@ class Attachment extends Model
      *
      * @codeCoverageIgnore
      * @return null|string
-     */
-    public function getNotesAttribute($value)
-    {
-        if (null === $value || 0 === strlen($value)) {
-            return null;
-        }
-
-        return Crypt::decrypt($value);
-    }
-
-    /**
-     * @param $value
-     *
-     * @codeCoverageIgnore
-     * @return null|string
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
     public function getTitleAttribute($value)
     {
@@ -168,8 +158,19 @@ class Attachment extends Model
 
     /**
      * @codeCoverageIgnore
+     * Get all of the notes.
+     */
+    public function notes()
+    {
+        return $this->morphMany(Note::class, 'noteable');
+    }
+
+    /**
+     * @codeCoverageIgnore
      *
      * @param string $value
+     *
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setDescriptionAttribute(string $value)
     {
@@ -180,6 +181,7 @@ class Attachment extends Model
      * @codeCoverageIgnore
      *
      * @param string $value
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setFilenameAttribute(string $value)
     {
@@ -190,6 +192,7 @@ class Attachment extends Model
      * @codeCoverageIgnore
      *
      * @param string $value
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setMimeAttribute(string $value)
     {
@@ -200,16 +203,7 @@ class Attachment extends Model
      * @codeCoverageIgnore
      *
      * @param string $value
-     */
-    public function setNotesAttribute(string $value)
-    {
-        $this->attributes['notes'] = Crypt::encrypt($value);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param string $value
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setTitleAttribute(string $value)
     {

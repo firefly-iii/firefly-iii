@@ -27,6 +27,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -38,6 +39,16 @@ use Tests\TestCase;
  */
 class NewUserControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\NewUserController::index
      * @covers \FireflyIII\Http\Controllers\NewUserController::__construct

@@ -1,0 +1,83 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <form class="form-horizontal" action="{{ route('import.configure.post',[job.key]) }}" method="post">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ trans('import.bunq_accounts_title') }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <p>
+                                    {{ trans('import.bunq_accounts_text')|raw }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>&nbsp;</th>
+                                        <th>{{ trans('list.account_at_bunq') }}</th>
+                                        <th>{{ trans('list.account') }}</th>
+                                        <th>{{ trans('list.do_import') }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for account in data.config.accounts %}
+                                        <tr>
+                                            <td style="background:{{ account.setting.color }};"></td>
+                                            <td>
+                                                <input type="hidden" name="bunq_account_id[]" value="{{ account.id }}" />
+                                                <strong>{{ account.description }}</strong><br />
+                                                {% for alias in account.aliases %}
+                                                    {% if alias.type == 'IBAN' %}
+                                                        {{ alias.name }}: {{ alias.value }}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                <select class="form-control" name="import[{{ account.id }}]">
+                                                    {% for id,name in account.options %}
+                                                        <option value="{{ id }}" label="{{ name }}">{{ name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" value="1" name="do_import[{{ account.id }}]" checked>
+                                                        {{ trans('import.bunq_do_import') }}
+                                                    </label>
+                                                </div>
+
+                                            </td>
+                                        </tr>
+
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <button type="submit" class="btn pull-right btn-success">
+                                {{ ('submit')|_ }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+        </form>
+    </div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}
+{% block styles %}
+{% endblock %}

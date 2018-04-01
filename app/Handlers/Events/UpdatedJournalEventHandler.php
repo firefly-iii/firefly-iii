@@ -51,11 +51,11 @@ class UpdatedJournalEventHandler
 
     /**
      * This method will check all the rules when a journal is updated.
-     * TODO move to factory.
      *
      * @param UpdatedTransactionJournal $updatedJournalEvent
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function processRules(UpdatedTransactionJournal $updatedJournalEvent): bool
     {
@@ -82,7 +82,6 @@ class UpdatedJournalEventHandler
 
     /**
      * This method calls a special bill scanner that will check if the updated journal is part of a bill.
-     * TODO move to factory.
      *
      * @param UpdatedTransactionJournal $updatedJournalEvent
      *

@@ -32,6 +32,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -43,6 +44,16 @@ use Tests\TestCase;
  */
 class BillControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\BillController::create
      */
@@ -224,7 +235,7 @@ class BillControllerTest extends TestCase
         $attachHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
 
         $data = [
-            'name'                          => 'New Bill ' . rand(1000, 9999),
+            'name'                          => 'New Bill ' . random_int(1000, 9999),
             'match'                         => 'some words',
             'amount_min'                    => '100',
             'amount_currency_id_amount_min' => 1,
@@ -259,7 +270,7 @@ class BillControllerTest extends TestCase
 
         $data = [
             'id'                            => 1,
-            'name'                          => 'Updated Bill ' . rand(1000, 9999),
+            'name'                          => 'Updated Bill ' . random_int(1000, 9999),
             'match'                         => 'some more words',
             'amount_min'                    => '100',
             'amount_currency_id_amount_min' => 1,

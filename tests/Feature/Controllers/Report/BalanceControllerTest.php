@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers\Report;
 
 use FireflyIII\Helpers\Collection\Balance;
 use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -35,6 +36,16 @@ use Tests\TestCase;
  */
 class BalanceControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\Report\BalanceController::general
      */

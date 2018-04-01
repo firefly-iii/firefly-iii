@@ -63,7 +63,7 @@ class Binder
      *
      * @return mixed
      *
-     * @throws \Illuminate\Auth\AuthenticationException
+     * @throws \LogicException
      */
     public function handle($request, Closure $next, ...$guards)
     {

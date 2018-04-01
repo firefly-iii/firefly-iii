@@ -25,6 +25,10 @@ namespace FireflyIII\Support;
 use Amount as Amt;
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use RuntimeException;
@@ -42,6 +46,7 @@ class ExpandedForm
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Throwable
      */
     public function amount(string $name, $value = null, array $options = []): string
     {
@@ -49,12 +54,13 @@ class ExpandedForm
     }
 
     /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Throwable
      */
     public function amountSmall(string $name, $value = null, array $options = []): string
     {
@@ -62,13 +68,65 @@ class ExpandedForm
     }
 
     /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
+     *
+     * @return string
+     * @throws \Throwable
+     */
+    public function assetAccountList(string $name, $value = null, array $options = []): string
+    {
+        // properties for cache
+        $cache = new CacheProperties;
+        $cache->addProperty('exp-form-asset-list');
+        $cache->addProperty($name);
+        $cache->addProperty($value);
+        $cache->addProperty($options);
+
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        // make repositories
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+
+        $assetAccounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $grouped         = [];
+        // group accounts:
+        /** @var Account $account */
+        foreach ($assetAccounts as $account) {
+            $balance    = app('steam')->balance($account, new Carbon);
+            $currencyId = intval($account->getMeta('currency_id'));
+            $currency   = $currencyRepos->findNull($currencyId);
+            $role       = $account->getMeta('accountRole');
+            if (0 === strlen($role)) {
+                $role = 'no_account_type'; // @codeCoverageIgnore
+            }
+            if (is_null($currency)) {
+                $currency = $defaultCurrency;
+            }
+
+            $key                         = strval(trans('firefly.opt_group_' . $role));
+            $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
+        }
+        $res = $this->select($name, $grouped, $value, $options);
+        $cache->store($res);
+
+        return $res;
+    }
+
+    /**
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
-     *
+     * @throws \Throwable
      */
     public function balance(string $name, $value = null, array $options = []): string
     {
@@ -296,8 +354,7 @@ class ExpandedForm
         $value            = $this->fillFieldValue($name, $value);
         $options['step']  = 'any';
         $selectedCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
-        unset($options['currency']);
-        unset($options['placeholder']);
+        unset($options['currency'], $options['placeholder']);
 
         // make sure value is formatted nicely:
         if (null !== $value && '' !== $value) {
@@ -326,8 +383,7 @@ class ExpandedForm
         $value            = $this->fillFieldValue($name, $value);
         $options['step']  = 'any';
         $selectedCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
-        unset($options['currency']);
-        unset($options['placeholder']);
+        unset($options['currency'], $options['placeholder']);
 
         // make sure value is formatted nicely:
         if (null !== $value && '' !== $value) {
@@ -421,8 +477,7 @@ class ExpandedForm
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
         $selected = $this->fillFieldValue($name, $selected);
-        unset($options['autocomplete']);
-        unset($options['placeholder']);
+        unset($options['autocomplete'], $options['placeholder']);
         $html = view('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
 
         return $html;
@@ -597,6 +652,7 @@ class ExpandedForm
      * @return string
      *
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Throwable
      */
     private function currencyField(string $name, string $view, $value = null, array $options = []): string
     {
@@ -607,8 +663,7 @@ class ExpandedForm
         $options['step'] = 'any';
         $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
         $currencies      = app('amount')->getAllCurrencies();
-        unset($options['currency']);
-        unset($options['placeholder']);
+        unset($options['currency'], $options['placeholder']);
 
         // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
         $preFilled      = session('preFilled');

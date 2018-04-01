@@ -31,6 +31,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -42,6 +43,15 @@ use Tests\TestCase;
  */
 class ExportControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\ExportController::download
      */
@@ -102,8 +112,9 @@ class ExportControllerTest extends TestCase
         $repository   = $this->mock(ExportJobRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $job          = ExportJob::first();
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('create')->andReturn(new ExportJob);
+        $repository->shouldReceive('create')->andReturn($job);
         $repository->shouldReceive('cleanup');
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
 

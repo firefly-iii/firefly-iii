@@ -28,10 +28,10 @@ use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -43,6 +43,15 @@ use Tests\TestCase;
  */
 class TransactionControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
 
     /**
      * @covers \FireflyIII\Http\Controllers\TransactionController::index
@@ -52,14 +61,19 @@ class TransactionControllerTest extends TestCase
      */
     public function testIndex()
     {
+        $date = new Carbon;
+        $this->session(['start' => $date, 'end' => clone $date]);
+
         // mock stuff
+        $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(JournalCollectorInterface::class);
-        $repository->shouldReceive('first')->times(2)->andReturn(new TransactionJournal);
+        $repository->shouldReceive('first')->times(2)->andReturn($transfer);
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('addFilter')->andReturnSelf();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
@@ -81,16 +95,21 @@ class TransactionControllerTest extends TestCase
      */
     public function testIndexAll()
     {
+        $date = new Carbon;
+        $this->session(['start' => $date, 'end' => clone $date]);
+
         // mock stuff
+        $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(JournalCollectorInterface::class);
-        $repository->shouldReceive('first')->twice()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('first')->twice()->andReturn($transfer);
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('addFilter')->andReturnSelf();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
@@ -99,7 +118,7 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('getJournals')->andReturn(new Collection);
 
         $this->be($this->user());
-        $response = $this->get(route('transactions.index', ['transfer', 'all']));
+        $response = $this->get(route('transactions.index.all', ['transfer']));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -124,12 +143,14 @@ class TransactionControllerTest extends TestCase
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(JournalCollectorInterface::class);
-        $repository->shouldReceive('first')->twice()->andReturn(new TransactionJournal);
+        $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
+        $repository->shouldReceive('first')->twice()->andReturn($transfer);
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('addFilter')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
@@ -164,11 +185,13 @@ class TransactionControllerTest extends TestCase
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(JournalCollectorInterface::class);
-        $repository->shouldReceive('first')->times(2)->andReturn(new TransactionJournal);
+        $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
+        $repository->shouldReceive('first')->twice()->andReturn($transfer);
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('addFilter')->andReturnSelf();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
@@ -204,11 +227,13 @@ class TransactionControllerTest extends TestCase
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(JournalCollectorInterface::class);
-        $repository->shouldReceive('first')->times(2)->andReturn(new TransactionJournal);
+        $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
+        $repository->shouldReceive('first')->twice()->andReturn($transfer);
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('addFilter')->andReturnSelf();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
@@ -271,13 +296,15 @@ class TransactionControllerTest extends TestCase
     public function testShow()
     {
         // mock stuff
-        $tasker    = $this->mock(JournalTaskerInterface::class);
         $linkRepos = $this->mock(LinkTypeRepositoryInterface::class);
         $linkRepos->shouldReceive('get')->andReturn(new Collection);
         $linkRepos->shouldReceive('getLinks')->andReturn(new Collection);
 
-        $tasker->shouldReceive('getPiggyBankEvents')->andReturn(new Collection);
-        $tasker->shouldReceive('getTransactionsOverview')->andReturn([]);
+
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('getPiggyBankEvents')->andReturn(new Collection);
+        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('getMetaField')->andReturn('');
 
         $this->be($this->user());
         $response = $this->get(route('transactions.show', [1]));
@@ -291,7 +318,6 @@ class TransactionControllerTest extends TestCase
      */
     public function testShowOpeningBalance()
     {
-        $tasker    = $this->mock(JournalTaskerInterface::class);
         $linkRepos = $this->mock(LinkTypeRepositoryInterface::class);
         $linkRepos->shouldReceive('get')->andReturn(new Collection);
         $linkRepos->shouldReceive('getLinks')->andReturn(new Collection);

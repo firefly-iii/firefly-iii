@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * AccountFactory.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,7 +20,6 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
@@ -43,6 +43,7 @@ class AccountFactory
      * @param array $data
      *
      * @return Account
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function create(array $data): Account
     {
@@ -74,7 +75,7 @@ class AccountFactory
         }
 
         $newAccount = Account::create($databaseData);
-        $this->updateMetadata($newAccount, $data);
+        $this->updateMetaData($newAccount, $data);
 
         if ($this->validIBData($data) && $type->type === AccountType::ASSET) {
             $this->updateIB($newAccount, $data);
@@ -116,6 +117,8 @@ class AccountFactory
      * @param string $accountType
      *
      * @return Account
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function findOrCreate(string $accountName, string $accountType): Account
     {
@@ -162,9 +165,14 @@ class AccountFactory
         if ($accountTypeId > 0) {
             return AccountType::find($accountTypeId);
         }
-        $type = config('firefly.accountTypeByIdentifier.' . strval($accountType));
+        $type   = config('firefly.accountTypeByIdentifier.' . strval($accountType));
+        $result = AccountType::whereType($type)->first();
+        if (is_null($result) && !is_null($accountType)) {
+            // try as full name:
+            $result = AccountType::whereType($accountType)->first();
+        }
 
-        return AccountType::whereType($type)->first();
+        return $result;
 
     }
 

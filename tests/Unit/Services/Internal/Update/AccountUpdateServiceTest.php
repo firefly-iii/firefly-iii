@@ -46,13 +46,13 @@ class AccountUpdateServiceTest extends TestCase
     {
         /** @var Account $account */
         $account  = Account::create(
-            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . rand(1, 1000),
+            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 1000),
              'virtual_balance' => '0', 'iban' => null, 'active' => true]
         );
         $opposing = $this->user()->accounts()->first();
         $journal  = TransactionJournal::create(
             ['user_id' => $this->user()->id, 'transaction_type_id' => 4, 'transaction_currency_id' => 1, 'description' => 'IB',
-             'date'    => '2018-01-01', 'completed' => true,
+             'date'    => '2018-01-01', 'completed' => true, 'tag_count' => 0,
             ]
         );
         // transactions:
@@ -67,7 +67,7 @@ class AccountUpdateServiceTest extends TestCase
 
 
         $data = [
-            'name'           => 'Some new name #' . rand(1, 1000),
+            'name'           => 'Some new name #' . random_int(1, 1000),
             'active'         => true,
             'virtualBalance' => '0',
             'iban'           => null,
@@ -96,7 +96,7 @@ class AccountUpdateServiceTest extends TestCase
         /** @var Account $account */
         $account = $this->user()->accounts()->first();
         $data    = [
-            'name'           => 'Some new name #' . rand(1, 1000),
+            'name'           => 'Some new name #' . random_int(1, 1000),
             'active'         => true,
             'virtualBalance' => '0',
             'iban'           => null,
@@ -119,7 +119,7 @@ class AccountUpdateServiceTest extends TestCase
         /** @var Account $account */
         $account = $this->user()->accounts()->first();
         $data    = [
-            'name'           => 'Some new name #' . rand(1, 1000),
+            'name'           => 'Some new name #' . random_int(1, 1000),
             'active'         => true,
             'virtualBalance' => '0',
             'iban'           => null,
@@ -149,7 +149,7 @@ class AccountUpdateServiceTest extends TestCase
         $note->save();
 
         $data = [
-            'name'           => 'Some new name #' . rand(1, 1000),
+            'name'           => 'Some new name #' . random_int(1, 1000),
             'active'         => true,
             'virtualBalance' => '0',
             'iban'           => null,
@@ -174,13 +174,13 @@ class AccountUpdateServiceTest extends TestCase
     {
         /** @var Account $account */
         $account  = Account::create(
-            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . rand(1, 1000),
+            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 1000),
              'virtual_balance' => '0', 'iban' => null, 'active' => true]
         );
         $opposing = $this->user()->accounts()->first();
         $journal  = TransactionJournal::create(
             ['user_id' => $this->user()->id, 'transaction_type_id' => 4, 'transaction_currency_id' => 1, 'description' => 'IB',
-             'date'    => '2018-01-01', 'completed' => true,
+             'date'    => '2018-01-01', 'completed' => true, 'tag_count' => 0,
             ]
         );
         // transactions:
@@ -195,7 +195,7 @@ class AccountUpdateServiceTest extends TestCase
 
 
         $data = [
-            'name'               => 'Some new name #' . rand(1, 1000),
+            'name'               => 'Some new name #' . random_int(1, 1000),
             'active'             => true,
             'virtualBalance'     => '0',
             'iban'               => null,
@@ -229,13 +229,13 @@ class AccountUpdateServiceTest extends TestCase
 
         /** @var Account $account */
         $account  = Account::create(
-            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . rand(1, 1000),
+            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 1000),
              'virtual_balance' => '0', 'iban' => null, 'active' => true]
         );
         $opposing = $this->user()->accounts()->first();
         $journal  = TransactionJournal::create(
             ['user_id' => $this->user()->id, 'transaction_type_id' => 4, 'transaction_currency_id' => 1, 'description' => 'IB',
-             'date'    => '2018-01-01', 'completed' => true,
+             'date'    => '2018-01-01', 'completed' => true, 'tag_count' => 0,
             ]
         );
         // transactions:
@@ -250,7 +250,7 @@ class AccountUpdateServiceTest extends TestCase
 
 
         $data = [
-            'name'               => 'Some new name #' . rand(1, 1000),
+            'name'               => 'Some new name #' . random_int(1, 1000),
             'active'             => true,
             'virtualBalance'     => '0',
             'iban'               => null,
@@ -281,11 +281,11 @@ class AccountUpdateServiceTest extends TestCase
     {
         /** @var Account $account */
         $account = Account::create(
-            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . rand(1, 1000),
+            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 1000),
              'virtual_balance' => '0', 'iban' => null, 'active' => true]
         );
         $data    = [
-            'name'               => 'Some new name #' . rand(1, 1000),
+            'name'               => 'Some new name #' . random_int(1, 1000),
             'active'             => true,
             'virtualBalance'     => '0',
             'iban'               => null,

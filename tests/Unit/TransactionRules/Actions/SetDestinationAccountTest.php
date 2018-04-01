@@ -103,7 +103,7 @@ class SetDestinationAccountTest extends TestCase
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Not existing asset account #' . rand(1, 1000);
+        $ruleAction->action_value = 'Not existing asset account #' . random_int(1, 1000);
         $action                   = new SetDestinationAccount($ruleAction);
         $result                   = $action->act($journal);
         $this->assertFalse($result);
@@ -134,7 +134,7 @@ class SetDestinationAccountTest extends TestCase
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Not existing expense account #' . rand(1, 1000);
+        $ruleAction->action_value = 'Not existing expense account #' . random_int(1, 1000);
         $action                   = new SetDestinationAccount($ruleAction);
         $result                   = $action->act($journal);
 
@@ -202,7 +202,7 @@ class SetDestinationAccountTest extends TestCase
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Some new asset ' . rand(1, 1000);
+        $ruleAction->action_value = 'Some new asset ' . random_int(1, 1000);
         $action                   = new SetDestinationAccount($ruleAction);
         $result                   = $action->act($journal);
         $this->assertFalse($result);

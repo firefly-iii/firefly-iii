@@ -23,10 +23,13 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Factory\TransactionJournalFactory;
+use FireflyIII\Factory\TransactionJournalMetaFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -367,6 +370,35 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Return Carbon value of a meta field (or NULL).
+     *
+     * @param TransactionJournal $journal
+     * @param string             $field
+     *
+     * @return null|Carbon
+     */
+    public function getMetaDate(TransactionJournal $journal, string $field): ?Carbon
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty('journal-meta-updated');
+        $cache->addProperty($journal->id);
+        $cache->addProperty($field);
+
+        if ($cache->has()) {
+            return new Carbon($cache->get()); // @codeCoverageIgnore
+        }
+
+        $entry = $journal->transactionJournalMeta()->where('name', $field)->first();
+        if (is_null($entry)) {
+            return null;
+        }
+        $value = new Carbon($entry->data);
+        $cache->store($entry->data);
+
+        return $value;
+    }
+
+    /**
      * Return value of a meta field (or NULL) as a string.
      *
      * @param TransactionJournal $journal
@@ -376,9 +408,8 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getMetaField(TransactionJournal $journal, string $field): ?string
     {
-        $value = null;
         $cache = new CacheProperties;
-        $cache->addProperty('journal-meta');
+        $cache->addProperty('journal-meta-updated');
         $cache->addProperty($journal->id);
         $cache->addProperty($field);
 
@@ -386,15 +417,32 @@ class JournalRepository implements JournalRepositoryInterface
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        Log::debug(sprintf('Looking for journal #%d meta field "%s".', $journal->id, $field));
         $entry = $journal->transactionJournalMeta()->where('name', $field)->first();
         if (is_null($entry)) {
             return null;
         }
-        $value = $entry->data;
-        $cache->store($value);
 
-        return $value;
+        $value = $entry->data;
+
+        // return when array:
+        if (is_array($value)) {
+            $return = join(',', $value);
+            $cache->store($return);
+
+            return $return;
+        }
+
+        // return when something else:
+        try {
+            $return = strval($value);
+            $cache->store($return);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+
+            return '';
+        }
+
+        return $return;
     }
 
     /**
@@ -408,20 +456,38 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * Return text of a note attached to journal, or ''.
+     * Return text of a note attached to journal, or NULL
      *
      * @param TransactionJournal $journal
      *
-     * @return string
+     * @return string|null
      */
-    public function getNoteText(TransactionJournal $journal): string
+    public function getNoteText(TransactionJournal $journal): ?string
     {
         $note = $this->getNote($journal);
         if (is_null($note)) {
-            return '';
+            return null;
         }
 
         return $note->text;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getPiggyBankEvents(TransactionJournal $journal): Collection
+    {
+        /** @var Collection $set */
+        $events = $journal->piggyBankEvents()->get();
+        $events->each(
+            function (PiggyBankEvent $event) {
+                $event->piggyBank = $event->piggyBank()->withTrashed()->first();
+            }
+        );
+
+        return $events;
     }
 
     /**
@@ -533,6 +599,52 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Set meta field for journal that contains a date.
+     *
+     * @param TransactionJournal $journal
+     * @param string             $name
+     * @param Carbon             $date
+     *
+     * @return void
+     */
+    public function setMetaDate(TransactionJournal $journal, string $name, Carbon $date): void
+    {
+        /** @var TransactionJournalMetaFactory $factory */
+        $factory = app(TransactionJournalMetaFactory::class);
+        $factory->updateOrCreate(
+            [
+                'data'    => $date,
+                'journal' => $journal,
+                'name'    => $name,
+            ]
+        );
+
+        return;
+    }
+
+    /**
+     * Set meta field for journal that contains string.
+     *
+     * @param TransactionJournal $journal
+     * @param string             $name
+     * @param string             $value
+     */
+    public function setMetaString(TransactionJournal $journal, string $name, string $value): void
+    {
+        /** @var TransactionJournalMetaFactory $factory */
+        $factory = app(TransactionJournalMetaFactory::class);
+        $factory->updateOrCreate(
+            [
+                'data'    => $value,
+                'journal' => $journal,
+                'name'    => $name,
+            ]
+        );
+
+        return;
+    }
+
+    /**
      * @param TransactionJournal $journal
      * @param int                $order
      *
@@ -577,7 +689,6 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return TransactionJournal
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function update(TransactionJournal $journal, array $data): TransactionJournal
     {

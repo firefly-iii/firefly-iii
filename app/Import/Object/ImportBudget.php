@@ -25,7 +25,6 @@ namespace FireflyIII\Import\Object;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\User;
-use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -49,17 +48,16 @@ class ImportBudget
      */
     public function __construct()
     {
-        $this->budget     = new Budget;
         $this->repository = app(BudgetRepositoryInterface::class);
         Log::debug('Created ImportBudget.');
     }
 
     /**
-     * @return Budget
+     * @return Budget|null
      */
-    public function getBudget(): Budget
+    public function getBudget(): ?Budget
     {
-        if (null === $this->budget->id) {
+        if (null === $this->budget) {
             $this->store();
         }
 
@@ -92,27 +90,31 @@ class ImportBudget
     }
 
     /**
-     * @return Budget
+     * @return Budget|null
      */
-    private function findExistingObject(): Budget
+    private function findById(): ?Budget
     {
-        Log::debug('In findExistingObject() for Budget');
-        // 1: find by ID, or name
-
         if (3 === count($this->id)) {
             Log::debug(sprintf('Finding budget with ID #%d', $this->id['value']));
             /** @var Budget $budget */
-            $budget = $this->repository->find(intval($this->id['value']));
-            if (null !== $budget->id) {
+            $budget = $this->repository->findNull(intval($this->id['value']));
+            if (null !== $budget) {
                 Log::debug(sprintf('Found unmapped budget by ID (#%d): %s', $budget->id, $budget->name));
 
                 return $budget;
             }
             Log::debug('Found nothing.');
         }
-        // 2: find by name
+
+        return null;
+    }
+
+    /**
+     * @return Budget|null
+     */
+    private function findByName(): ?Budget
+    {
         if (3 === count($this->name)) {
-            /** @var Collection $budgets */
             $budgets = $this->repository->getBudgets();
             $name    = $this->name['value'];
             Log::debug(sprintf('Finding budget with name %s', $name));
@@ -134,16 +136,33 @@ class ImportBudget
             Log::debug('Found nothing.');
         }
 
-        // 4: do not search by account number.
-        Log::debug('Found NO existing budgets.');
-
-        return new Budget;
+        return null;
     }
 
     /**
      * @return Budget
      */
-    private function findMappedObject(): Budget
+    private function findExistingObject(): ?Budget
+    {
+        Log::debug('In findExistingObject() for Budget');
+        $result = $this->findById();
+        if (!is_null($result)) {
+            return $result;
+        }
+        $result = $this->findByName();
+        if (!is_null($result)) {
+            return $result;
+        }
+
+        Log::debug('Found NO existing budgets.');
+
+        return null;
+    }
+
+    /**
+     * @return Budget
+     */
+    private function findMappedObject(): ?Budget
     {
         Log::debug('In findMappedObject() for Budget');
         $fields = ['id', 'name'];
@@ -152,7 +171,7 @@ class ImportBudget
             Log::debug(sprintf('Find mapped budget based on field "%s" with value', $field), $array);
             // check if a pre-mapped object exists.
             $mapped = $this->getMappedObject($array);
-            if (null !== $mapped->id) {
+            if (null !== $mapped) {
                 Log::debug(sprintf('Found budget #%d!', $mapped->id));
 
                 return $mapped;
@@ -160,7 +179,7 @@ class ImportBudget
         }
         Log::debug('Found no budget on mapped data or no map present.');
 
-        return new Budget;
+        return null;
     }
 
     /**
@@ -168,19 +187,19 @@ class ImportBudget
      *
      * @return Budget
      */
-    private function getMappedObject(array $array): Budget
+    private function getMappedObject(array $array): ?Budget
     {
         Log::debug('In getMappedObject() for Budget');
         if (0 === count($array)) {
             Log::debug('Array is empty, nothing will come of this.');
 
-            return new Budget;
+            return null;
         }
 
         if (array_key_exists('mapped', $array) && null === $array['mapped']) {
             Log::debug(sprintf('No map present for value "%s". Return NULL.', $array['value']));
 
-            return new Budget;
+            return null;
         }
 
         Log::debug('Finding a mapped budget based on', $array);
@@ -191,7 +210,7 @@ class ImportBudget
         if (null === $budget->id) {
             Log::error(sprintf('There is no budget with id #%d. Invalid mapping will be ignored!', $search));
 
-            return new Budget;
+            return null;
         }
 
         Log::debug(sprintf('Found budget! #%d ("%s"). Return it', $budget->id, $budget->name));
@@ -206,14 +225,14 @@ class ImportBudget
     {
         // 1: find mapped object:
         $mapped = $this->findMappedObject();
-        if (null !== $mapped->id) {
+        if (null !== $mapped) {
             $this->budget = $mapped;
 
             return true;
         }
         // 2: find existing by given values:
         $found = $this->findExistingObject();
-        if (null !== $found->id) {
+        if (null !== $found) {
             $this->budget = $found;
 
             return true;

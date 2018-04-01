@@ -22,11 +22,16 @@
     cursor: pointer;
 }
 
-.markdown blockquote p {
-    font-size:14px;
+.info-box-number {
+    line-height: 1.4;
 }
+
+.markdown blockquote p {
+    font-size: 14px;
+}
+
 .markdown h1 {
-    font-size:24px;
+    font-size: 24px;
 }
 
 .general-chart-error {

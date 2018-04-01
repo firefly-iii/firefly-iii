@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * User.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 namespace FireflyIII;
 
@@ -76,6 +76,7 @@ class User extends Authenticatable
      * @param string $value
      *
      * @return User
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value): User
     {
@@ -222,6 +223,7 @@ class User extends Authenticatable
      *
      * @param string $name
      *
+     * @deprecated
      * @return bool
      */
     public function hasRole(string $name): bool

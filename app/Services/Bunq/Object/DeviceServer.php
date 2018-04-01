@@ -47,6 +47,8 @@ class DeviceServer extends BunqObject
      * DeviceServer constructor.
      *
      * @param array $data
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $data)
     {
@@ -74,5 +76,13 @@ class DeviceServer extends BunqObject
     public function getIp(): string
     {
         return $this->ip;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        die(sprintf('Cannot convert %s to array.', get_class($this)));
     }
 }

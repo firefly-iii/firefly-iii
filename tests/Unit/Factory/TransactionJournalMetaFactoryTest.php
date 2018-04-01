@@ -40,8 +40,9 @@ class TransactionJournalMetaFactoryTest extends TestCase
     public function testUpdateOrCreateBasic()
     {
         /** @var TransactionJournal $journal */
-        $journal = $this->user()->transactionJournals()->where('transaction_type_id', 1)->first();
-        $set     = [
+        $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $journal->transactionJournalMeta()->delete();
+        $set = [
             'journal' => $journal,
             'name'    => 'hello',
             'data'    => 'bye!',
@@ -60,8 +61,9 @@ class TransactionJournalMetaFactoryTest extends TestCase
     public function testUpdateOrCreateDate()
     {
         /** @var TransactionJournal $journal */
-        $journal = $this->user()->transactionJournals()->where('transaction_type_id', 2)->first();
-        $set     = [
+        $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $journal->transactionJournalMeta()->delete();
+        $set = [
             'journal' => $journal,
             'name'    => 'hello',
             'data'    => new Carbon('2012-01-01'),
@@ -99,6 +101,62 @@ class TransactionJournalMetaFactoryTest extends TestCase
         $factory->updateOrCreate($set);
 
         $this->assertEquals(0, $journal->transactionJournalMeta()->count());
+    }
+
+    /**
+     * @covers \FireflyIII\Factory\TransactionJournalMetaFactory
+     */
+    public function testUpdateOrCreateEmpty()
+    {
+        /** @var TransactionJournal $journal */
+        $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $journal->transactionJournalMeta()->delete();
+        $set = [
+            'journal' => $journal,
+            'name'    => 'hello',
+            'data'    => '',
+        ];
+        /** @var TransactionJournalMetaFactory $factory */
+        $factory = app(TransactionJournalMetaFactory::class);
+        $result  = $factory->updateOrCreate($set);
+
+        $this->assertEquals(0, $journal->transactionJournalMeta()->count());
+        $this->assertNull($result);
+    }
+
+    /**
+     * @covers \FireflyIII\Factory\TransactionJournalMetaFactory
+     */
+    public function testUpdateOrCreateExistingEmpty()
+    {
+        /** @var TransactionJournal $journal */
+        $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $journal->transactionJournalMeta()->delete();
+        $set = [
+            'journal' => $journal,
+            'name'    => 'hello',
+            'data'    => 'SomeData',
+        ];
+        /** @var TransactionJournalMetaFactory $factory */
+        $factory = app(TransactionJournalMetaFactory::class);
+        $result  = $factory->updateOrCreate($set);
+
+        $this->assertEquals(1, $journal->transactionJournalMeta()->count());
+        $this->assertNotNull($result);
+
+        // overrule with empty entry:
+        $set = [
+            'journal' => $journal,
+            'name'    => 'hello',
+            'data'    => '',
+        ];
+        /** @var TransactionJournalMetaFactory $factory */
+        $factory = app(TransactionJournalMetaFactory::class);
+        $result  = $factory->updateOrCreate($set);
+
+        $this->assertEquals(0, $journal->transactionJournalMeta()->count());
+        $this->assertNull($result);
+
     }
 
 

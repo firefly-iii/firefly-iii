@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
+
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 

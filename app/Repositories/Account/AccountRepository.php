@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
-use Exception;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -60,7 +58,7 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * Moved here from account CRUD.
      *
-     * @param Account $account
+     * @param Account      $account
      * @param Account|null $moveTo
      *
      * @return bool
@@ -99,6 +97,25 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Return meta value for account. Null if not found.
+     *
+     * @param Account $account
+     * @param string  $field
+     *
+     * @return null|string
+     */
+    public function getMetaValue(Account $account, string $field): ?string
+    {
+        foreach ($account->accountMeta as $meta) {
+            if ($meta->name === $field) {
+                return strval($meta->data);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @param Account $account
      *
      * @return Note|null
@@ -106,6 +123,23 @@ class AccountRepository implements AccountRepositoryInterface
     public function getNote(Account $account): ?Note
     {
         return $account->notes()->first();
+    }
+
+    /**
+     * Get note text or null.
+     *
+     * @param Account $account
+     *
+     * @return null|string
+     */
+    public function getNoteText(Account $account): ?string
+    {
+        $note = $account->notes()->first();
+        if (is_null($note)) {
+            return null;
+        }
+
+        return $note->text;
     }
 
     /**
@@ -201,6 +235,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * Returns the date of the very first transaction in this account.
+     * TODO refactor to nullable.
      *
      * @param Account $account
      *
@@ -208,12 +243,13 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function oldestJournalDate(Account $account): Carbon
     {
+        $result  = new Carbon;
         $journal = $this->oldestJournal($account);
-        if (null === $journal->id) {
-            return new Carbon;
+        if (null !== $journal->id) {
+            $result = $journal->date;
         }
 
-        return $journal->date;
+        return $result;
     }
 
     /**
@@ -228,8 +264,8 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array $data
      *
      * @return Account
-     * @throws FireflyException
-     * @throws Exception
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function store(array $data): Account
     {
@@ -245,9 +281,9 @@ class AccountRepository implements AccountRepositoryInterface
      * @param Account $account
      * @param array   $data
      *
-     * @throws FireflyException
-     * @throws Exception
      * @return Account
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function update(Account $account, array $data): Account
     {
@@ -263,8 +299,6 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array              $data
      *
      * @return TransactionJournal
-     * @throws FireflyException
-     * @throws Exception
      */
     public function updateReconciliation(TransactionJournal $journal, array $data): TransactionJournal
     {

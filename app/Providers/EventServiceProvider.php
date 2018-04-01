@@ -24,15 +24,10 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedVersionCheckStatus;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionJournalMeta;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Log;
 
 /**
  * Class EventServiceProvider.
@@ -108,8 +103,8 @@ class EventServiceProvider extends ServiceProvider
             function (PiggyBank $piggyBank) {
                 $repetition = new PiggyBankRepetition;
                 $repetition->piggyBank()->associate($piggyBank);
-                $repetition->startdate     = null === $piggyBank->startdate ? null : $piggyBank->startdate;
-                $repetition->targetdate    = null === $piggyBank->targetdate ? null : $piggyBank->targetdate;
+                $repetition->startdate     = $piggyBank->startdate;
+                $repetition->targetdate    = $piggyBank->targetdate;
                 $repetition->currentamount = 0;
                 $repetition->save();
             }

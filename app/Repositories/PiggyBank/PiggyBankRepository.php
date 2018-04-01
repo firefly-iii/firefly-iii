@@ -129,7 +129,11 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     {
         /** @var PiggyBankEvent $event */
         $event = PiggyBankEvent::create(
-            ['piggy_bank_id' => $piggyBank->id, 'transaction_journal_id' => $journal->id, 'date' => $journal->date, 'amount' => $amount]
+            [
+                'piggy_bank_id'          => $piggyBank->id,
+                'transaction_journal_id' => $journal->id,
+                'date'                   => $journal->date->format('Y-m-d'),
+                'amount'                 => $amount]
         );
 
         return $event;

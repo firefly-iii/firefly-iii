@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 
-
 /**
  * BelongsUser.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -60,7 +59,7 @@ class BelongsUser implements Rule
 
     /**
      * Determine if the validation rule passes.
-     * TODO use repositories?
+     *
      * @param  string $attribute
      * @param  mixed  $value
      *

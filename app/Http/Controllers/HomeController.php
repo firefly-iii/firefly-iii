@@ -38,7 +38,6 @@ use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Response;
 use Route as RouteFacade;
 use View;
 
@@ -63,6 +62,7 @@ class HomeController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \RuntimeException
      */
     public function dateRange(Request $request)
     {
@@ -93,7 +93,7 @@ class HomeController extends Controller
         $request->session()->put('end', $end);
         Log::debug(sprintf('Set end to %s', $end->format('Y-m-d H:i:s')));
 
-        return Response::json(['ok' => 'ok']);
+        return response()->json(['ok' => 'ok']);
     }
 
 
@@ -117,6 +117,7 @@ class HomeController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function flush(Request $request)
     {
@@ -133,6 +134,7 @@ class HomeController extends Controller
             Artisan::call('twig:clean');
         } catch (Exception $e) {
             // dont care
+            Log::debug('Called twig:clean.');
         }
         Log::debug('Call view:clear...');
         Artisan::call('view:clear');
@@ -165,7 +167,6 @@ class HomeController extends Controller
         /** @var Carbon $end */
         $end      = session('end', Carbon::now()->endOfMonth());
         $accounts = $repository->getAccountsById($frontPage->data);
-        $showDeps = Preferences::get('showDepositsFrontpage', false)->data;
         $today    = new Carbon;
 
         // zero bills? Hide some elements from view.
@@ -185,7 +186,7 @@ class HomeController extends Controller
 
         return view(
             'index',
-            compact('count', 'subTitle', 'transactions', 'showDeps', 'billCount', 'start', 'end', 'today')
+            compact('count', 'subTitle', 'transactions', 'billCount', 'start', 'end', 'today')
         );
     }
 
@@ -231,6 +232,7 @@ class HomeController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function testFlash(Request $request)
     {

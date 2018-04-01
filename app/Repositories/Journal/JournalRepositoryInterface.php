@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
 
+use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
@@ -36,6 +37,7 @@ use Illuminate\Support\MessageBag;
  */
 interface JournalRepositoryInterface
 {
+
     /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
@@ -165,6 +167,16 @@ interface JournalRepositoryInterface
     public function getJournalTotal(TransactionJournal $journal): string;
 
     /**
+     * Return Carbon value of a meta field (or NULL).
+     *
+     * @param TransactionJournal $journal
+     * @param string             $field
+     *
+     * @return null|Carbon
+     */
+    public function getMetaDate(TransactionJournal $journal, string $field): ?Carbon;
+
+    /**
      * Return value of a meta field (or NULL).
      *
      * @param TransactionJournal $journal
@@ -182,13 +194,20 @@ interface JournalRepositoryInterface
     public function getNote(TransactionJournal $journal): ?Note;
 
     /**
-     * Return text of a note attached to journal, or ''.
+     * Return text of a note attached to journal, or NULL
      *
      * @param TransactionJournal $journal
      *
-     * @return string
+     * @return string|null
      */
-    public function getNoteText(TransactionJournal $journal): string;
+    public function getNoteText(TransactionJournal $journal): ?string;
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getPiggyBankEvents(TransactionJournal $journal): Collection;
 
     /**
      * Return all tags as strings in an array.
@@ -242,6 +261,26 @@ interface JournalRepositoryInterface
      * @return bool
      */
     public function reconcileById(int $transactionId): bool;
+
+    /**
+     * Set meta field for journal that contains a date.
+     *
+     * @param TransactionJournal $journal
+     * @param string             $name
+     * @param Carbon             $date
+     *
+     * @return void
+     */
+    public function setMetaDate(TransactionJournal $journal, string $name, Carbon $date): void;
+
+    /**
+     * Set meta field for journal that contains string.
+     *
+     * @param TransactionJournal $journal
+     * @param string             $name
+     * @param string             $value
+     */
+    public function setMetaString(TransactionJournal $journal, string $name, string $value): void;
 
     /**
      * @param TransactionJournal $journal

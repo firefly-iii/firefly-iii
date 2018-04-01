@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * import.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     // status of import:
@@ -97,6 +98,7 @@ return [
     // not csv, but normal warning
     'roles_warning'                        => 'Geef minstens de kolom aan waar het bedrag in staat. Als het even kan, ook een kolom voor de omschrijving, datum en de andere rekening.',
     'foreign_amount_warning'               => 'Als je een kolom markeert als "vreemde valuta" moet je ook aangeven in welke kolom de valuta staat.',
+
     // file, map data
     'file_map_title'                       => 'Importinstellingen (4/4) - Link importgegevens aan Firefly III-gegevens',
     'file_map_text'                        => 'In deze tabellen is de linkerwaarde een waarde uit je CSV bestand. Jij moet de link leggen, als mogelijk, met een waarde uit jouw database. Firefly houdt zich hier aan. Als er geen waarde is, selecteer dan ook niets.',
@@ -131,28 +133,40 @@ return [
     'column_date-book'                     => 'Datum (boeking)',
     'column_date-process'                  => 'Datum (verwerking)',
     'column_date-transaction'              => 'Datum',
+    'column_date-due'                      => 'Verstrijkingsdatum',
+    'column_date-payment'                  => 'Datum (betaling)',
+    'column_date-invoice'                  => 'Datum (factuur)',
     'column_description'                   => 'Omschrijving',
     'column_opposing-iban'                 => 'Tegenrekening (IBAN)',
+    'column_opposing-bic'                  => 'BIC van tegenrekeningbank',
     'column_opposing-id'                   => 'Tegenrekening (ID gelijk aan FF3)',
     'column_external-id'                   => 'Externe ID',
     'column_opposing-name'                 => 'Tegenrekeningnaam',
     'column_rabo-debit-credit'             => 'Rabobankspecifiek bij/af indicator',
     'column_ing-debit-credit'              => 'ING-specifieke bij/af indicator',
-    'column_sepa-ct-id'                    => 'SEPA end-to-end transactienummer',
-    'column_sepa-ct-op'                    => 'SEPA tegenrekeningnummer',
-    'column_sepa-db'                       => 'SEPA "direct debet"-nummer',
+    'column_sepa-ct-id'                    => 'SEPA end-to-end identificatie',
+    'column_sepa-ct-op'                    => 'SEPA identificatie tegenpartij',
+    'column_sepa-db'                       => 'SEPA mandaatidentificatie',
+    'column_sepa-cc'                       => 'SEPA vrijwaringscode',
+    'column_sepa-ci'                       => 'SEPA crediteuridentificatie',
+    'column_sepa-ep'                       => 'SEPA transactiedoeleinde',
+    'column_sepa-country'                  => 'SEPA landcode',
     'column_tags-comma'                    => 'Tags (kommagescheiden)',
     'column_tags-space'                    => 'Tags (spatiegescheiden)',
     'column_account-number'                => 'Betaalrekening (rekeningnummer)',
     'column_opposing-number'               => 'Tegenrekening (rekeningnummer)',
     'column_note'                          => 'Opmerking(en)',
+    'column_internal-reference'            => 'Interne referentie',
 
     // prerequisites
     'prerequisites'                        => 'Vereisten',
 
     // bunq
     'bunq_prerequisites_title'             => 'Voorwaarden voor een import van bunq',
-    'bunq_prerequisites_text'              => 'Om transacties bij bunq te importeren heb je een API sleutel nodig. Dit kan via de app.',
+    'bunq_prerequisites_text'              => 'Om te importeren vanaf bunq moet je een API key hebben. Deze kan je aanvragen in de app. Denk er aan dat deze functie in BETA is. De code is alleen getest op de sandbox API.',
+    'bunq_do_import'                       => 'Ja, importeer van deze rekening',
+    'bunq_accounts_title'                  => 'Bunq rekeningen',
+    'bunq_accounts_text'                   => 'Dit zijn de rekeningen uit je bunq-account. Selecteer de rekeningen waaruit je wilt importeren, en welke betaalrekeningen deze transacties op terecht moeten komen.',
 
     // Spectre
     'spectre_title'                        => 'Importeer via Spectre',
@@ -187,4 +201,3 @@ return [
     // various other strings:
     'imported_from_account'                => 'Geïmporteerd uit ":account"',
 ];
-

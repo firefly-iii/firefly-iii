@@ -70,7 +70,7 @@ class RuleFormRequest extends Request
         $validActions  = array_keys(config('firefly.rule-actions'));
 
         // some actions require text:
-        $contextActions = join(',', config('firefly.rule-actions-text'));
+        $contextActions = implode(',', config('firefly.rule-actions-text'));
 
         $titleRule = 'required|between:1,100|uniqueObjectForUser:rules,title';
         if (null !== $repository->find(intval($this->get('id')))->id) {
@@ -82,9 +82,9 @@ class RuleFormRequest extends Request
             'stop_processing'      => 'boolean',
             'rule_group_id'        => 'required|belongsToUser:rule_groups',
             'trigger'              => 'required|in:store-journal,update-journal',
-            'rule-trigger.*'       => 'required|in:' . join(',', $validTriggers),
+            'rule-trigger.*'       => 'required|in:' . implode(',', $validTriggers),
             'rule-trigger-value.*' => 'required|min:1|ruleTriggerValue',
-            'rule-action.*'        => 'required|in:' . join(',', $validActions),
+            'rule-action.*'        => 'required|in:' . implode(',', $validActions),
         ];
         // since Laravel does not support this stuff yet, here's a trick.
         for ($i = 0; $i < 10; ++$i) {

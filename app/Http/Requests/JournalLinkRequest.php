@@ -46,7 +46,7 @@ class JournalLinkRequest extends Request
         $return                           = [];
         $linkType                         = $this->get('link_type');
         $parts                            = explode('_', $linkType);
-        $return['link_type_id']           = intval($parts[0]);
+        $return['link_type_id']           = (int)$parts[0];
         $return['transaction_journal_id'] = $this->integer('link_journal_id');
         $return['notes']                  = strlen($this->string('notes')) > 0 ? $this->string('notes') : '';
         $return['direction']              = $parts[1];
@@ -70,7 +70,7 @@ class JournalLinkRequest extends Request
             $combinations[] = sprintf('%d_inward', $type->id);
             $combinations[] = sprintf('%d_outward', $type->id);
         }
-        $string = join(',', $combinations);
+        $string = implode(',', $combinations);
 
         // fixed
         return [

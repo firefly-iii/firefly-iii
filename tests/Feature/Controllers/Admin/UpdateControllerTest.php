@@ -47,7 +47,7 @@ class UpdateControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug('Now in Feature/Controllers/Admin/UpdateControllerTest.');
+        Log::debug(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -103,14 +103,15 @@ class UpdateControllerTest extends TestCase
         FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn(new Configuration);
 
         $version  = config('firefly.version');
+        $date = new Carbon;
+        $date->subDays(5);
         $releases = [
-            new Release(['id' => 'x', 'title' => $version . '.1', 'content' => '', 'updated' => new Carbon]),
+            new Release(['id' => 'x', 'title' => $version . '.1', 'content' => '', 'updated' => $date]),
         ];
         $updater  = $this->mock(UpdateRequest::class);
         $updater->shouldReceive('call')->andReturnNull();
         $updater->shouldReceive('getReleases')->andReturn($releases);
 
-        // expect a new release (because of .1)
         $this->be($this->user());
         $response = $this->post(route('admin.update-check.manual'));
         $response->assertStatus(200);
@@ -130,15 +131,16 @@ class UpdateControllerTest extends TestCase
         FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
         FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn(new Configuration);
 
+        $date = new Carbon;
+        $date->subDays(5);
         $version  = config('firefly.version');
         $releases = [
-            new Release(['id' => 'x', 'title' => $version, 'content' => '', 'updated' => new Carbon]),
+            new Release(['id' => 'x', 'title' => $version, 'content' => '', 'updated' => $date]),
         ];
         $updater  = $this->mock(UpdateRequest::class);
         $updater->shouldReceive('call')->andReturnNull();
         $updater->shouldReceive('getReleases')->andReturn($releases);
 
-        // expect a new release (because of .1)
         $this->be($this->user());
         $response = $this->post(route('admin.update-check.manual'));
         $response->assertStatus(200);
@@ -163,7 +165,6 @@ class UpdateControllerTest extends TestCase
         $updater->shouldReceive('call')->andThrow(FireflyException::class, 'Something broke.');
         $updater->shouldReceive('getReleases')->andReturn($releases);
 
-        // expect a new release (because of .1)
         $this->be($this->user());
         $response = $this->post(route('admin.update-check.manual'));
         $response->assertStatus(200);

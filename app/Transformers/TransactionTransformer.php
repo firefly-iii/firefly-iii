@@ -170,37 +170,40 @@ class TransactionTransformer extends TransformerAbstract
         }
         /** @var Note $dbNote */
         $dbNote = $transaction->transactionJournal->notes()->first();
-        $notes = null;
-        if(!is_null($dbNote)) {
+        $notes  = null;
+        if (!is_null($dbNote)) {
             $notes = $dbNote->text;
         }
 
         $data = [
-            'id'                    => (int)$transaction->id,
-            'updated_at'            => $transaction->updated_at->toAtomString(),
-            'created_at'            => $transaction->created_at->toAtomString(),
-            'description'           => $transaction->description,
-            'date'                  => $transaction->date->format('Y-m-d'),
-            'type'                  => $transaction->transaction_type_type,
-            'identifier'            => $transaction->identifier,
-            'journal_id'            => (int)$transaction->journal_id,
-            'reconciled'            => (bool)$transaction->reconciled,
-            'amount'                => round($transaction->transaction_amount, intval($transaction->transaction_currency_dp)),
-            'currency_id'           => $transaction->transaction_currency_id,
-            'currency_code'         => $transaction->transaction_currency_code,
-            'currency_dp'           => $transaction->transaction_currency_dp,
-            'foreign_amount'        => null,
-            'foreign_currency_id'   => $transaction->foreign_currency_id,
-            'foreign_currency_code' => $transaction->foreign_currency_code,
-            'foreign_currency_dp'   => $transaction->foreign_currency_dp,
-            'bill_id'               => $transaction->bill_id,
-            'bill_name'             => $transaction->bill_name,
-            'category_id'           => $categoryId,
-            'category_name'         => $categoryName,
-            'budget_id'             => $budgetId,
-            'budget_name'           => $budgetName,
-            'notes'                 => $notes,
-            'links'                 => [
+            'id'                      => (int)$transaction->id,
+            'updated_at'              => $transaction->updated_at->toAtomString(),
+            'created_at'              => $transaction->created_at->toAtomString(),
+            'description'             => $transaction->description,
+            'transaction_description' => $transaction->transaction_description,
+            'date'                    => $transaction->date->format('Y-m-d'),
+            'type'                    => $transaction->transaction_type_type,
+            'identifier'              => $transaction->identifier,
+            'journal_id'              => (int)$transaction->journal_id,
+            'reconciled'              => (bool)$transaction->reconciled,
+            'amount'                  => round($transaction->transaction_amount, intval($transaction->transaction_currency_dp)),
+            'currency_id'             => $transaction->transaction_currency_id,
+            'currency_code'           => $transaction->transaction_currency_code,
+            'currency_symbol'         => $transaction->transaction_currency_symbol,
+            'currency_dp'             => $transaction->transaction_currency_dp,
+            'foreign_amount'          => null,
+            'foreign_currency_id'     => $transaction->foreign_currency_id,
+            'foreign_currency_code'   => $transaction->foreign_currency_code,
+            'foreign_currency_symbol' => $transaction->foreign_currency_symbol,
+            'foreign_currency_dp'     => $transaction->foreign_currency_dp,
+            'bill_id'                 => $transaction->bill_id,
+            'bill_name'               => $transaction->bill_name,
+            'category_id'             => $categoryId,
+            'category_name'           => $categoryName,
+            'budget_id'               => $budgetId,
+            'budget_name'             => $budgetName,
+            'notes'                   => $notes,
+            'links'                   => [
                 [
                     'rel' => 'self',
                     'uri' => '/transactions/' . $transaction->id,

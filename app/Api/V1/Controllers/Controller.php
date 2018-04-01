@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Controller.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -18,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
@@ -30,10 +30,12 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class Controller.
+ *
  * @codeCoverageIgnore
  */
 class Controller extends BaseController
@@ -70,7 +72,7 @@ class Controller extends BaseController
         $return = '?';
         $params = [];
         foreach ($this->parameters as $key => $value) {
-            if($key === 'page') {
+            if ($key === 'page') {
                 continue;
             }
             if ($value instanceof Carbon) {
@@ -110,6 +112,7 @@ class Controller extends BaseController
                     $obj = new Carbon($date);
                 } catch (InvalidDateException $e) {
                     // don't care
+                    Log::error(sprintf('Invalid date exception in API controller: %s', $e->getMessage()));
                 }
             }
             $bag->set($field, $obj);

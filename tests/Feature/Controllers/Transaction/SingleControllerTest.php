@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
 
+use Amount;
 use DB;
 use Exception;
 use FireflyIII\Events\StoredTransactionJournal;
@@ -30,18 +31,19 @@ use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
+use Log;
 use Steam;
 use Tests\TestCase;
 
@@ -54,6 +56,16 @@ use Tests\TestCase;
  */
 class SingleControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::cloneTransaction
      */
@@ -89,7 +101,6 @@ class SingleControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::create
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::__construct
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      */
     public function testCreate()
     {
@@ -101,11 +112,10 @@ class SingleControllerTest extends TestCase
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $accounts = $this->user()->accounts()->where('account_type_id', 3)->get();
         Steam::shouldReceive('phpBytes')->andReturn(2048);
-        $accountRepos->shouldReceive('getActiveAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn($accounts);
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection)->once();
         $piggyRepos->shouldReceive('getPiggyBanksWithAmount')->andReturn(new Collection)->once();
+
 
         $this->be($this->user());
         $response = $this->get(route('transactions.create', ['withdrawal']));
@@ -117,7 +127,6 @@ class SingleControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::create
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::__construct
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      */
     public function testCreateDepositWithSource()
     {
@@ -129,9 +138,7 @@ class SingleControllerTest extends TestCase
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $accounts = $this->user()->accounts()->where('account_type_id', 3)->get();
         Steam::shouldReceive('phpBytes')->andReturn(2048);
-        $accountRepos->shouldReceive('getActiveAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn($accounts);
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection)->once();
         $piggyRepos->shouldReceive('getPiggyBanksWithAmount')->andReturn(new Collection)->once();
 
@@ -145,7 +152,6 @@ class SingleControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::create
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::__construct
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      */
     public function testCreateWithSource()
     {
@@ -157,9 +163,7 @@ class SingleControllerTest extends TestCase
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $accounts = $this->user()->accounts()->where('account_type_id', 3)->get();
         Steam::shouldReceive('phpBytes')->andReturn(2048);
-        $accountRepos->shouldReceive('getActiveAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn($accounts);
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection)->once();
         $piggyRepos->shouldReceive('getPiggyBanksWithAmount')->andReturn(new Collection)->once();
 
@@ -216,7 +220,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::isSplitJournal
      */
     public function testEdit()
@@ -228,14 +231,9 @@ class SingleControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-
         $account = $this->user()->accounts()->first();
-        $accountRepos->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(
-            new Collection([$account])
-        );
 
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
-
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('countTransactions')->andReturn(2)->once();
         $journalRepos->shouldReceive('getTransactionType')->andReturn('Withdrawal')->once();
@@ -249,6 +247,12 @@ class SingleControllerTest extends TestCase
         $journalRepos->shouldReceive('getJournalBudgetId')->once()->andReturn(0);
         $journalRepos->shouldReceive('getTags')->once()->andReturn([]);
 
+        // mock new account list:
+        $currency = TransactionCurrency::first();
+        $accountRepos->shouldReceive('getAccountsByType')
+                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->once();
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($currency)->times(6);
+
         $this->be($this->user());
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)->whereNull('deleted_at')->where('user_id', $this->user()->id)->first();
         $response   = $this->get(route('transactions.edit', [$withdrawal->id]));
@@ -259,7 +263,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
     public function testEditCashDeposit()
     {
@@ -271,7 +274,6 @@ class SingleControllerTest extends TestCase
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
 
-        $accountRepos->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
 
         $account = $this->user()->accounts()->first();
@@ -297,6 +299,7 @@ class SingleControllerTest extends TestCase
                               ->whereNull('transaction_journals.deleted_at')
                               ->where('transaction_journals.user_id', $this->user()->id)->first(['transactions.*']);
 
+
         $response = $this->get(route('transactions.edit', [$deposit->transaction_journal_id]));
         $response->assertStatus(200);
         // has bread crumb
@@ -306,7 +309,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
     public function testEditCashWithdrawal()
     {
@@ -319,7 +321,6 @@ class SingleControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
 
 
-        $accountRepos->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
 
         $account = $this->user()->accounts()->first();
@@ -354,7 +355,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
     public function testEditReconcile()
     {
@@ -381,7 +381,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
     public function testEditRedirect()
     {
@@ -431,7 +430,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
     public function testEditTransferWithForeignAmount()
     {
@@ -444,7 +442,6 @@ class SingleControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
 
 
-        $accountRepos->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
 
         $this->be($this->user());
@@ -480,7 +477,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::isSplitJournal
      */
     public function testEditWithForeign()
@@ -494,8 +490,6 @@ class SingleControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $account = $this->user()->accounts()->first();
-        $accountRepos->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
-
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
 
         $transaction                      = new Transaction;
@@ -525,7 +519,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
     public function testEditWithForeignAmount()
     {
@@ -537,8 +530,6 @@ class SingleControllerTest extends TestCase
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
 
-
-        $accountRepos->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
 
         $this->be($this->user());
@@ -575,7 +566,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testStoreError()
@@ -612,7 +602,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testStoreSuccess()
@@ -665,7 +654,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testStoreSuccessDeposit()
@@ -718,7 +706,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testStoreSuccessTransfer()
@@ -771,7 +758,6 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testStoreSuccessTransferForeign()
@@ -836,19 +822,18 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $tasker        = $this->mock(JournalTaskerInterface::class);
         $linkRepos     = $this->mock(LinkTypeRepositoryInterface::class);
 
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getTransactionType')->andReturn('Withdrawal');
+        $journalRepos->shouldReceive('getPiggyBankEvents')->andReturn(new Collection);
+        $journalRepos->shouldReceive('getMetaField')->andReturn('');
 
         $linkRepos->shouldReceive('get')->andReturn(new Collection);
         $linkRepos->shouldReceive('getLinks')->andReturn(new Collection);
         $attRepos->shouldReceive('saveAttachmentsForModel');
         $attRepos->shouldReceive('getErrors')->andReturn(new MessageBag);
         $attRepos->shouldReceive('getMessages')->andReturn(new MessageBag);
-        $tasker->shouldReceive('getPiggyBankEvents')->andReturn(new Collection);
-        $tasker->shouldReceive('getTransactionsOverview')->andReturn([]);
 
         // mock
         try {

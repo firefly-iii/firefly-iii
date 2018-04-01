@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * TransactionController.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,7 +20,6 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
@@ -37,7 +37,6 @@ use Illuminate\Support\Collection;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 use Log;
 use Preferences;
@@ -172,7 +171,9 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param TransactionRequest $request
+     * @param TransactionRequest         $request
+     *
+     * @param JournalRepositoryInterface $repository
      *
      * @return \Illuminate\Http\JsonResponse
      */

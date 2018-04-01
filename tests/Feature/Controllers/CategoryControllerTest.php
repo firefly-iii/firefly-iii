@@ -33,6 +33,7 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Log;
 use Navigation;
 use Tests\TestCase;
 
@@ -45,6 +46,15 @@ use Tests\TestCase;
  */
 class CategoryControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\CategoryController::create
      */
@@ -440,13 +450,13 @@ class CategoryControllerTest extends TestCase
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('find')->andReturn(new Category);
+        $repository->shouldReceive('findNull')->andReturn(new Category);
         $repository->shouldReceive('store')->andReturn(new Category);
 
         $this->session(['categories.create.uri' => 'http://localhost']);
 
         $data = [
-            'name' => 'New Category ' . rand(1000, 9999),
+            'name' => 'New Category ' . random_int(1000, 9999),
         ];
         $this->be($this->user());
         $response = $this->post(route('categories.store'), $data);
@@ -460,18 +470,18 @@ class CategoryControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $category = Category::first();
+        $category     = Category::first();
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('update');
-        $repository->shouldReceive('find')->andReturn($category);
+        $repository->shouldReceive('findNull')->andReturn($category);
 
         $this->session(['categories.edit.uri' => 'http://localhost']);
 
         $data = [
-            'name'   => 'Updated Category ' . rand(1000, 9999),
+            'name'   => 'Updated Category ' . random_int(1000, 9999),
             'active' => 1,
         ];
         $this->be($this->user());

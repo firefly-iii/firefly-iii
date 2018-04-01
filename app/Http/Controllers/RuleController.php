@@ -39,7 +39,6 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use Illuminate\Http\Request;
 use Preferences;
-use Response;
 use Session;
 use View;
 
@@ -287,7 +286,7 @@ class RuleController extends Controller
             $repository->reorderRuleActions($rule, $ids);
         }
 
-        return Response::json('true');
+        return response()->json('true');
     }
 
     /**
@@ -304,7 +303,7 @@ class RuleController extends Controller
             $repository->reorderRuleTriggers($rule, $ids);
         }
 
-        return Response::json('true');
+        return response()->json('true');
     }
 
     /**
@@ -312,6 +311,7 @@ class RuleController extends Controller
      * @param Rule                       $rule
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \InvalidArgumentException
      */
     public function selectTransactions(AccountRepositoryInterface $repository, Rule $rule)
     {
@@ -373,7 +373,7 @@ class RuleController extends Controller
         $triggers = $this->getValidTriggerList($request);
 
         if (0 === count($triggers)) {
-            return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
+            return response()->json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 
         $limit = intval(config('firefly.test-triggers.limit'));
@@ -398,7 +398,7 @@ class RuleController extends Controller
         // Return json response
         $view = view('list.journals-tiny', ['transactions' => $matchingTransactions])->render();
 
-        return Response::json(['html' => $view, 'warning' => $warning]);
+        return response()->json(['html' => $view, 'warning' => $warning]);
     }
 
     /**
@@ -421,7 +421,7 @@ class RuleController extends Controller
         $triggers = $rule->ruleTriggers;
 
         if (0 === count($triggers)) {
-            return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
+            return response()->json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 
         $limit = intval(config('firefly.test-triggers.limit'));
@@ -446,7 +446,7 @@ class RuleController extends Controller
         // Return json response
         $view = view('list.journals-tiny', ['transactions' => $matchingTransactions])->render();
 
-        return Response::json(['html' => $view, 'warning' => $warning]);
+        return response()->json(['html' => $view, 'warning' => $warning]);
     }
 
     /**
@@ -678,7 +678,7 @@ class RuleController extends Controller
                 $triggers[]                        = [
                     'type'           => $triggerType,
                     'value'          => $data['rule-trigger-values'][$index],
-                    'stopProcessing' => 1 === intval($data['rule-trigger-stop'][$index]) ? true : false,
+                    'stopProcessing' => 1 === (int)$data['rule-trigger-stop'][$index],
                 ];
             }
         }

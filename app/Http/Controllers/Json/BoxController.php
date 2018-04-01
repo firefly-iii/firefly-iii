@@ -22,18 +22,19 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
+use Amount;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use Response;
 
 /**
  * Class BoxController.
@@ -56,7 +57,7 @@ class BoxController extends Controller
         $cache->addProperty($today);
         $cache->addProperty('box-available');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         // get available amount
         $currency  = app('amount')->getDefaultCurrency();
@@ -65,71 +66,104 @@ class BoxController extends Controller
         // get spent amount:
         $budgets           = $repository->getActiveBudgets();
         $budgetInformation = $repository->collectBudgetInformation($budgets, $start, $end);
-        $spent             = strval(array_sum(array_column($budgetInformation, 'spent')));
+        $spent             = (string)array_sum(array_column($budgetInformation, 'spent'));
         $left              = bcadd($available, $spent);
-        // left less than zero? then it's zero:
+        $days              = $today->diffInDays($end) + 1;
+        $perDay            = '0';
+        $text              = (string)trans('firefly.left_to_spend');
+        $overspent         = false;
         if (bccomp($left, '0') === -1) {
-            $left = '0';
+            $text      = (string)trans('firefly.overspent');
+            $overspent = true;
         }
-        $days   = $today->diffInDays($end) + 1;
-        $perDay = '0';
-        if (0 !== $days) {
-            $perDay = bcdiv($left, strval($days));
+        if (0 !== $days && bccomp($left, '0') > -1) {
+            $perDay = bcdiv($left, (string)$days);
         }
 
         $return = [
-            'perDay' => app('amount')->formatAnything($currency, $perDay, false),
-            'left'   => app('amount')->formatAnything($currency, $left, false),
+            'perDay'    => app('amount')->formatAnything($currency, $perDay, false),
+            'left'      => app('amount')->formatAnything($currency, $left, false),
+            'text'      => $text,
+            'overspent' => $overspent,
         ];
 
         $cache->store($return);
 
-        return Response::json($return);
+        return response()->json($return);
     }
 
     /**
+     * @param CurrencyRepositoryInterface $repository
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function balance()
+    public function balance(CurrencyRepositoryInterface $repository)
     {
+        // Cache result, return cache if present.
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
-
         $cache = new CacheProperties;
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('box-balance');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
+        // prep some arrays:
+        $incomes  = [];
+        $expenses = [];
+        $sums     = [];
 
-        // try a collector for income:
+        // collect income of user:
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)
                   ->setTypes([TransactionType::DEPOSIT])
                   ->withOpposingAccount();
-        $income   = strval($collector->getJournals()->sum('transaction_amount'));
-        $currency = app('amount')->getDefaultCurrency();
+        $set = $collector->getJournals();
+        /** @var Transaction $transaction */
+        foreach ($set as $transaction) {
+            $currencyId           = intval($transaction->transaction_currency_id);
+            $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
+            $incomes[$currencyId] = bcadd($incomes[$currencyId], $transaction->transaction_amount);
+            $sums[$currencyId]    = $sums[$currencyId] ?? '0';
+            $sums[$currencyId]    = bcadd($sums[$currencyId], $transaction->transaction_amount);
+        }
 
-        // expense:
-        // try a collector for expenses:
+        // collect expenses
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)
                   ->setTypes([TransactionType::WITHDRAWAL])
                   ->withOpposingAccount();
-        $expense = strval($collector->getJournals()->sum('transaction_amount'));
+        $set = $collector->getJournals();
+        /** @var Transaction $transaction */
+        foreach ($set as $transaction) {
+            $currencyId            = (int)$transaction->transaction_currency_id;
+            $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
+            $expenses[$currencyId] = bcadd($expenses[$currencyId], $transaction->transaction_amount);
+            $sums[$currencyId]     = $sums[$currencyId] ?? '0';
+            $sums[$currencyId]     = bcadd($sums[$currencyId], $transaction->transaction_amount);
+        }
+
+        // format amounts:
+        foreach ($sums as $currencyId => $amount) {
+            $currency              = $repository->findNull($currencyId);
+            $sums[$currencyId]     = Amount::formatAnything($currency, $sums[$currencyId], false);
+            $incomes[$currencyId]  = Amount::formatAnything($currency, $incomes[$currencyId] ?? '0', false);
+            $expenses[$currencyId] = Amount::formatAnything($currency, $expenses[$currencyId] ?? '0', false);
+        }
 
         $response = [
-            'income'   => app('amount')->formatAnything($currency, $income, false),
-            'expense'  => app('amount')->formatAnything($currency, $expense, false),
-            'combined' => app('amount')->formatAnything($currency, bcadd($income, $expense), false),
+            'incomes'  => $incomes,
+            'expenses' => $expenses,
+            'sums'     => $sums,
+            'size'     => count($sums),
         ];
 
         $cache->store($response);
 
-        return Response::json($response);
+        return response()->json($response);
     }
 
     /**
@@ -147,7 +181,7 @@ class BoxController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('box-bills');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         /*
@@ -164,11 +198,13 @@ class BoxController extends Controller
         ];
         $cache->store($return);
 
-        return Response::json($return);
+        return response()->json($return);
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
+     * @param AccountRepositoryInterface  $repository
+     *
+     * @param CurrencyRepositoryInterface $currencyRepos
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -193,21 +229,33 @@ class BoxController extends Controller
         $cache->addProperty($date);
         $cache->addProperty('box-net-worth');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $netWorth = [];
-        $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts = $repository->getActiveAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $currency = app('amount')->getDefaultCurrency();
         $balances = app('steam')->balancesByAccounts($accounts, $date);
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $accountCurrency = $currency;
+            $accountCurrency = null;
             $balance         = $balances[$account->id] ?? '0';
-            $currencyId      = intval($account->getMeta('currency_id'));
+            $currencyId      = (int)$repository->getMetaValue($account, 'currency_id');
             if ($currencyId !== 0) {
                 $accountCurrency = $currencyRepos->findNull($currencyId);
             }
+            if (null === $accountCurrency) {
+                $accountCurrency = $currency;
+            }
+
+            // if the account is a credit card, subtract the virtual balance from the balance,
+            // to better reflect that this is not money that is actually "yours".
+            $role           = (string)$repository->getMetaValue($account, 'accountRole');
+            $virtualBalance = (string)$account->virtual_balance;
+            if ($role === 'ccAsset' && $virtualBalance !== '' && (float)$virtualBalance > 0) {
+                $balance = bcsub($balance, $virtualBalance);
+            }
+
             if (!isset($netWorth[$accountCurrency->id])) {
                 $netWorth[$accountCurrency->id]['currency'] = $accountCurrency;
                 $netWorth[$accountCurrency->id]['sum']      = '0';
@@ -225,6 +273,6 @@ class BoxController extends Controller
 
         $cache->store($return);
 
-        return Response::json($return);
+        return response()->json($return);
     }
 }

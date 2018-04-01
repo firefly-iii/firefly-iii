@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * BillController.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -18,12 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\BillRequest;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Transformers\BillTransformer;

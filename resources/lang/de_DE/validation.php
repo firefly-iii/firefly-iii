@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * validation.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,17 +19,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     'iban'                           => 'Dies ist keine gültige IBAN.',
+    'source_equals_destination'      => 'Das Quellkonto entspricht dem Zielkonto',
     'unique_account_number_for_user' => 'Diese Kontonummer scheint bereits verwendet zu sein.',
     'unique_iban_for_user'           => 'Dieser IBAN scheint bereits verwendet zu werden.',
     'deleted_user'                   => 'Aufgrund von Sicherheitsbeschränkungen ist eine Registrierung mit dieser E-Mail-Adresse nicht zugelassen.',
     'rule_trigger_value'             => 'Dieser Wert ist für den ausgewählten Auslöser ungültig.',
     'rule_action_value'              => 'Dieser Wert ist für die gewählte Aktion ungültig.',
-    'file_already_attached'          => 'Die hochgeladene Datei ":name" ist diesem Objekt bereits angehängt.',
-    'file_attached'                  => 'Datei ":name" erfolgreich hochgeladen.',
+    'file_already_attached'          => 'Die hochgeladene Datei „:name” ist diesem Objekt bereits angehängt.',
+    'file_attached'                  => 'Datei „:name” erfolgreich hochgeladen.',
     'must_exist'                     => 'Die ID in Feld :attribute existiert nicht in der Datenbank.',
     'all_accounts_equal'             => 'Alle Konten in diesem Feld müssen identisch sein.',
     'invalid_selection'              => 'Die Auswahl ist ungültig',
@@ -36,8 +37,8 @@ return [
     'at_least_one_transaction'       => 'Sie brauchen mindestens eine Transaktion.',
     'require_currency_info'          => 'Der Inhalt dieses Feldes ist ohne Währungsinformationen ungültig.',
     'equal_description'              => 'Die Transaktionsbeschreibung darf nicht der globalen Beschreibung entsprechen.',
-    'file_invalid_mime'              => 'Die Datei ":name" ist vom Typ ":mime", welcher nicht zum Upload zugelassen ist.',
-    'file_too_large'                 => 'Die Datei ":name" ist zu groß.',
+    'file_invalid_mime'              => 'Die Datei „:name” ist vom Typ „:mime”, welcher nicht zum Hochladen zugelassen ist.',
+    'file_too_large'                 => 'Die Datei „:name” ist zu groß.',
     'belongs_to_user'                => 'Der Wert von :attribute ist nicht bekannt',
     'accepted'                       => ':attribute muss akzeptiert werden.',
     'bic'                            => 'Dies ist kein gültiger BIC.',
@@ -121,23 +122,23 @@ return [
         'amount_min'              => 'Mindestbetrag',
         'amount_max'              => 'Höchstbetrag',
         'title'                   => 'Bezeichnung',
-        'tag'                     => 'Tag',
+        'tag'                     => 'Schlagwort',
         'transaction_description' => 'Transaktionsbeschreibung',
-        'rule-action-value.1'     => 'rule action value #1',
-        'rule-action-value.2'     => 'rule action value #2',
-        'rule-action-value.3'     => 'rule action value #3',
-        'rule-action-value.4'     => 'rule action value #4',
-        'rule-action-value.5'     => 'rule action value #5',
-        'rule-action.1'           => 'rule action #1',
-        'rule-action.2'           => 'rule action #2',
-        'rule-action.3'           => 'rule action #3',
-        'rule-action.4'           => 'rule action #4',
-        'rule-action.5'           => 'rule action #5',
-        'rule-trigger-value.1'    => 'rule trigger value #1',
-        'rule-trigger-value.2'    => 'rule trigger value #2',
-        'rule-trigger-value.3'    => 'rule trigger value #3',
-        'rule-trigger-value.4'    => 'rule trigger value #4',
-        'rule-trigger-value.5'    => 'rule trigger value #5',
+        'rule-action-value.1'     => 'Regelaktionswert #1',
+        'rule-action-value.2'     => 'Regelaktionswert #2',
+        'rule-action-value.3'     => 'Regelaktionswert #3',
+        'rule-action-value.4'     => 'Regelaktionswert #4',
+        'rule-action-value.5'     => 'Regelaktionswert #5',
+        'rule-action.1'           => 'Aktionsregel #1',
+        'rule-action.2'           => 'Aktionsregel #2',
+        'rule-action.3'           => 'Aktionsregel #3',
+        'rule-action.4'           => 'Aktionsregel #4',
+        'rule-action.5'           => 'Aktionsregel #5',
+        'rule-trigger-value.1'    => 'Regelauslösewert #1',
+        'rule-trigger-value.2'    => 'Regelauslösewert #2',
+        'rule-trigger-value.3'    => 'Regelauslösewert #3',
+        'rule-trigger-value.4'    => 'Regelauslösewert #4',
+        'rule-trigger-value.5'    => 'Regelauslösewert #5',
         'rule-trigger.1'          => 'Regel #1 auslösen',
         'rule-trigger.2'          => 'Regel #2 auslösen',
         'rule-trigger.3'          => 'Regel #3 auslösen',

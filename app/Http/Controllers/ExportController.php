@@ -34,7 +34,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface;
 use Illuminate\Http\Response as LaravelResponse;
 use Preferences;
-use Response;
 use View;
 
 /**
@@ -104,7 +103,7 @@ class ExportController extends Controller
      */
     public function getStatus(ExportJob $job)
     {
-        return Response::json(['status' => trans('firefly.' . $job->status)]);
+        return response()->json(['status' => trans('firefly.' . $job->status)]);
     }
 
     /**
@@ -112,6 +111,7 @@ class ExportController extends Controller
      * @param ExportJobRepositoryInterface $jobs
      *
      * @return View
+     * @throws \InvalidArgumentException
      */
     public function index(AccountRepositoryInterface $repository, ExportJobRepositoryInterface $jobs)
     {
@@ -121,7 +121,7 @@ class ExportController extends Controller
         $jobs->cleanup();
 
         // does the user have shared accounts?
-        $accounts      = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $accountList   = ExpandedForm::makeSelectList($accounts);
         $checked       = array_keys($accountList);
         $formats       = array_keys(config('firefly.export_formats'));
@@ -193,6 +193,6 @@ class ExportController extends Controller
         $jobs->changeStatus($job, 'export_status_created_zip_file');
         $jobs->changeStatus($job, 'export_status_finished');
 
-        return Response::json('ok');
+        return response()->json('ok');
     }
 }

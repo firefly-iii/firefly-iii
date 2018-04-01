@@ -61,7 +61,7 @@ class AppendNotes implements ActionInterface
         }
         $notes = $dbNote->text;
         Log::debug(sprintf('RuleAction AppendNotes appended "%s" to "%s".', $this->action->action_value, $notes));
-        $notes        = $notes . $this->action->action_value;
+        $notes        .= $this->action->action_value;
         $dbNote->text = $notes;
         $dbNote->save();
         $journal->save();

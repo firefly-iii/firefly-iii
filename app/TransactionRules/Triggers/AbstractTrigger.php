@@ -29,7 +29,7 @@ use FireflyIII\Models\TransactionJournal;
  * This class will be magical!
  *
  * Class AbstractTrigger
- * @method triggered
+ * @method bool triggered($object)
  */
 class AbstractTrigger
 {

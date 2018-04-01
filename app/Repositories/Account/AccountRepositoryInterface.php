@@ -47,7 +47,7 @@ interface AccountRepositoryInterface
     /**
      * Moved here from account CRUD.
      *
-     * @param Account $account
+     * @param Account      $account
      * @param Account|null $moveTo
      *
      * @return bool
@@ -66,6 +66,7 @@ interface AccountRepositoryInterface
      * @param string $number
      * @param array  $types
      *
+     * @deprecated
      * @return Account
      */
     public function findByAccountNumber(string $number, array $types): Account;
@@ -74,9 +75,18 @@ interface AccountRepositoryInterface
      * @param string $iban
      * @param array  $types
      *
+     * @deprecated
      * @return Account
      */
     public function findByIban(string $iban, array $types): Account;
+
+    /**
+     * @param string $iban
+     * @param array  $types
+     *
+     * @return Account|null
+     */
+    public function findByIbanNull(string $iban, array $types): ?Account;
 
     /**
      * @param string $name
@@ -129,11 +139,30 @@ interface AccountRepositoryInterface
     public function getCashAccount(): Account;
 
     /**
+     * Return meta value for account. Null if not found.
+     *
+     * @param Account $account
+     * @param string  $field
+     *
+     * @return null|string
+     */
+    public function getMetaValue(Account $account, string $field): ?string;
+
+    /**
      * @param Account $account
      *
      * @return Note|null
      */
     public function getNote(Account $account): ?Note;
+
+    /**
+     * Get note text or null.
+     *
+     * @param Account $account
+     *
+     * @return null|string
+     */
+    public function getNoteText(Account $account): ?string;
 
     /**
      * Returns the amount of the opening balance for this account.

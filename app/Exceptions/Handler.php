@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Handler.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 namespace FireflyIII\Exceptions;
 
@@ -70,13 +70,14 @@ class Handler extends ExceptionHandler
             return parent::render($request, $exception);
         }
         if ($exception instanceof NotFoundHttpException && $request->expectsJson()) {
+            // JSON error:
             return response()->json(['message' => 'Resource not found', 'exception' => 'NotFoundHttpException'], 404);
         }
 
         if ($exception instanceof AuthenticationException && $request->expectsJson()) {
+            // somehow Laravel handler does not catch this:
             return response()->json(['message' => 'Unauthenticated', 'exception' => 'AuthenticationException'], 401);
         }
-
 
         if ($request->expectsJson()) {
             $isDebug = config('app.debug', false);

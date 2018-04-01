@@ -36,6 +36,8 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Log;
+use Mockery;
 use Preferences;
 use Steam;
 use Tests\TestCase;
@@ -49,6 +51,16 @@ use Tests\TestCase;
  */
 class AccountControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\AccountController::create
      */
@@ -124,12 +136,19 @@ class AccountControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
         $repository->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(1));
         $repository->shouldReceive('get')->andReturn(new Collection);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('getNote')->andReturn($note)->once();
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturnNull();
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturnNull();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('123');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccType'])->andReturn('');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccMonthlyPaymentDate'])->andReturn('');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
 
         $this->be($this->user());
         $account  = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
@@ -157,7 +176,9 @@ class AccountControllerTest extends TestCase
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $repository->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]));
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
         Steam::shouldReceive('balancesByAccounts')->andReturn([$account->id => '100']);
         Steam::shouldReceive('getLastActivities')->andReturn([]);
 
@@ -194,6 +215,8 @@ class AccountControllerTest extends TestCase
 
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('oldestJournalDate')->andReturn(clone $date)->once();
+        $repository->shouldReceive('getMetaValue')->andReturn('');
+
 
         $transaction = factory(Transaction::class)->make();
         $collector   = $this->mock(JournalCollectorInterface::class);
@@ -221,7 +244,8 @@ class AccountControllerTest extends TestCase
     public function testShowBrokenBadDates()
     {
         // mock
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $this->session(['start' => '2018-01-01', 'end' => '2017-12-01']);
 
@@ -272,6 +296,7 @@ class AccountControllerTest extends TestCase
 
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('oldestJournalDate')->andReturn(new Carbon);
+        $repository->shouldReceive('getMetaValue')->andReturn('');
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
@@ -327,7 +352,7 @@ class AccountControllerTest extends TestCase
         $this->session(['accounts.create.uri' => 'http://localhost']);
         $this->be($this->user());
         $data = [
-            'name' => 'new account ' . rand(1000, 9999),
+            'name' => 'new account ' . random_int(1000, 9999),
             'what' => 'asset',
         ];
 
@@ -353,7 +378,7 @@ class AccountControllerTest extends TestCase
         $this->session(['accounts.create.uri' => 'http://localhost']);
         $this->be($this->user());
         $data = [
-            'name'           => 'new account ' . rand(1000, 9999),
+            'name'           => 'new account ' . random_int(1000, 9999),
             'what'           => 'asset',
             'create_another' => 1,
         ];
@@ -380,7 +405,7 @@ class AccountControllerTest extends TestCase
         $this->session(['accounts.edit.uri' => 'http://localhost/javascript/account']);
         $this->be($this->user());
         $data = [
-            'name'   => 'updated account ' . rand(1000, 9999),
+            'name'   => 'updated account ' . random_int(1000, 9999),
             'active' => 1,
             'what'   => 'asset',
         ];
@@ -407,7 +432,7 @@ class AccountControllerTest extends TestCase
         $this->session(['accounts.edit.uri' => 'http://localhost']);
         $this->be($this->user());
         $data = [
-            'name'           => 'updated account ' . rand(1000, 9999),
+            'name'           => 'updated account ' . random_int(1000, 9999),
             'active'         => 1,
             'what'           => 'asset',
             'return_to_edit' => '1',

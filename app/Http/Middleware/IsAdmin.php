@@ -48,12 +48,12 @@ class IsAdmin
                 return response('Unauthorized.', 401);
             }
 
-            return redirect()->guest('login');
+            return response()->redirectTo(route('login'));
         }
         /** @var User $user */
         $user = auth()->user();
         if (!$user->hasRole('owner')) {
-            return redirect(route('home'));
+            return response()->redirectTo(route('home'));
         }
 
         return $next($request);

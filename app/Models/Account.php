@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -117,6 +116,7 @@ class Account extends Model
      * @param string $value
      *
      * @return Account
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value): Account
     {
@@ -191,7 +191,7 @@ class Account extends Model
      * @codeCoverageIgnore
      *
      * @param string $fieldName
-     *
+     * @deprecated
      * @return string
      */
     public function getMeta(string $fieldName): string
@@ -211,6 +211,7 @@ class Account extends Model
      * @param $value
      *
      * @return string
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
     public function getNameAttribute($value): ?string
     {
@@ -228,8 +229,7 @@ class Account extends Model
      */
     public function getOpeningBalance(): TransactionJournal
     {
-        $journal = TransactionJournal::sortCorrectly()
-                                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+        $journal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                                      ->where('transactions.account_id', $this->id)
                                      ->transactionTypes([TransactionType::OPENING_BALANCE])
                                      ->first(['transaction_journals.*']);
@@ -275,10 +275,13 @@ class Account extends Model
 
     /**
      * @codeCoverageIgnore
+     * @deprecated
      *
      * @param EloquentBuilder $query
      * @param string          $name
      * @param string          $value
+     *
+     * @throws \InvalidArgumentException
      */
     public function scopeHasMetaValue(EloquentBuilder $query, $name, $value)
     {
@@ -298,6 +301,7 @@ class Account extends Model
      * @param $value
      *
      * @codeCoverageIgnore
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setIbanAttribute($value)
     {
@@ -308,6 +312,7 @@ class Account extends Model
      * @codeCoverageIgnore
      *
      * @param $value
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setNameAttribute($value)
     {

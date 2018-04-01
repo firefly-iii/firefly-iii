@@ -24,11 +24,9 @@ namespace FireflyIII\Support\Models;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
@@ -62,16 +60,6 @@ trait TransactionJournalTrait
 
         return false;
     }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    abstract public function budgets(): BelongsToMany;
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    abstract public function categories(): BelongsToMany;
 
     /**
      * @deprecated
@@ -116,78 +104,6 @@ trait TransactionJournalTrait
 
         return $list;
     }
-
-    /**
-     *
-     * @param string $name
-     *
-     * @return string
-     */
-    abstract public function getMeta(string $name);
-
-    /**
-     * @return bool
-     */
-    abstract public function isDeposit(): bool;
-
-    /**
-     * @return bool
-     */
-    abstract public function isOpeningBalance(): bool;
-
-    /**
-     * @return bool
-     */
-    abstract public function isTransfer(): bool;
-
-    /**
-     * @return bool
-     */
-    abstract public function isWithdrawal(): bool;
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    abstract public function piggyBankEvents(): HasMany;
-
-    /**
-     * @deprecated
-     * @return int
-     */
-    public function piggyBankId(): int
-    {
-        if ($this->piggyBankEvents()->count() > 0) {
-            return $this->piggyBankEvents()->orderBy('date', 'DESC')->first()->piggy_bank_id;
-        }
-
-        return 0;
-    }
-
-    /**
-     * @deprecated
-     * @return Transaction
-     */
-    public function positiveTransaction(): Transaction
-    {
-        return $this->transactions()->where('amount', '>', 0)->first();
-    }
-
-    /**
-     * Save the model to the database.
-     *
-     * @param array $options
-     *
-     * @return bool
-     */
-    abstract public function save(array $options = []): bool;
-
-    /**
-     * @param string $name
-     * @param        $value
-     *
-     * @return TransactionJournalMeta
-     */
-    abstract public function setMeta(string $name, $value): TransactionJournalMeta;
 
     /**
      * @deprecated

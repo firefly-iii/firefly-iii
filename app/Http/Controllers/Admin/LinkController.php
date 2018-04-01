@@ -76,6 +76,7 @@ class LinkController extends Controller
      * @param LinkType                    $linkType
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
+     * @throws \RuntimeException
      */
     public function delete(Request $request, LinkTypeRepositoryInterface $repository, LinkType $linkType)
     {
@@ -108,6 +109,7 @@ class LinkController extends Controller
      * @param LinkType                    $linkType
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function destroy(Request $request, LinkTypeRepositoryInterface $repository, LinkType $linkType)
     {
@@ -126,6 +128,7 @@ class LinkController extends Controller
      * @param LinkType $linkType
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @throws \RuntimeException
      */
     public function edit(Request $request, LinkType $linkType)
     {
@@ -184,6 +187,7 @@ class LinkController extends Controller
      * @param LinkTypeRepositoryInterface $repository
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function store(LinkTypeFormRequest $request, LinkTypeRepositoryInterface $repository)
     {
@@ -212,6 +216,7 @@ class LinkController extends Controller
      * @param LinkType                    $linkType
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function update(LinkTypeFormRequest $request, LinkTypeRepositoryInterface $repository, LinkType $linkType)
     {

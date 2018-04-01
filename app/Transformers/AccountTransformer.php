@@ -25,11 +25,9 @@ namespace FireflyIII\Transformers;
 
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -43,6 +41,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class AccountTransformer extends TransformerAbstract
 {
+    /** @noinspection ClassOverridesFieldOfSuperClassInspection */
     /**
      * List of resources possible to include.
      *
@@ -58,6 +57,9 @@ class AccountTransformer extends TransformerAbstract
     /** @var ParameterBag */
     protected $parameters;
 
+    /** @var AccountRepositoryInterface */
+    protected $repository;
+
     /**
      *
      * AccountTransformer constructor.
@@ -68,6 +70,7 @@ class AccountTransformer extends TransformerAbstract
      */
     public function __construct(ParameterBag $parameters)
     {
+        $this->repository = app(AccountRepositoryInterface::class);
         $this->parameters = $parameters;
     }
 
@@ -141,12 +144,14 @@ class AccountTransformer extends TransformerAbstract
      */
     public function transform(Account $account): array
     {
+        $this->repository->setUser($account->user);
+
         $type = $account->accountType->type;
-        $role = $account->getMeta('accountRole');
+        $role = $this->repository->getMetaValue($account, 'accountRole');
         if (strlen($role) === 0 || $type !== AccountType::ASSET) {
             $role = null;
         }
-        $currencyId    = (int)$account->getMeta('currency_id');
+        $currencyId    = intval($this->repository->getMetaValue($account, 'currency_id'));
         $currencyCode  = null;
         $decimalPlaces = 2;
         if ($currencyId > 0) {
@@ -167,8 +172,8 @@ class AccountTransformer extends TransformerAbstract
         $monthlyPaymentDate = null;
         $creditCardType     = null;
         if ($role === 'ccAsset' && $type === AccountType::ASSET) {
-            $creditCardType     = $this->getMeta($account, 'ccType');
-            $monthlyPaymentDate = $this->getMeta($account, 'ccMonthlyPaymentDate');
+            $creditCardType     = $this->repository->getMetaValue($account, 'ccType');
+            $monthlyPaymentDate = $this->repository->getMetaValue($account, 'ccMonthlyPaymentDate');
         }
 
         $openingBalance     = null;
@@ -176,7 +181,7 @@ class AccountTransformer extends TransformerAbstract
         if ($type === AccountType::ASSET) {
             /** @var AccountRepositoryInterface $repository */
             $repository = app(AccountRepositoryInterface::class);
-            $repository->setuser($account->user);
+            $repository->setUser($account->user);
             $amount             = $repository->getOpeningBalanceAmount($account);
             $openingBalance     = is_null($amount) ? null : round($amount, $decimalPlaces);
             $openingBalanceDate = $repository->getOpeningBalanceDate($account);
@@ -193,12 +198,12 @@ class AccountTransformer extends TransformerAbstract
             'currency_code'        => $currencyCode,
             'current_balance'      => round(app('steam')->balance($account, $date), $decimalPlaces),
             'current_balance_date' => $date->format('Y-m-d'),
-            'notes'                => null,
+            'notes'                => $this->repository->getNoteText($account),
             'monthly_payment_date' => $monthlyPaymentDate,
             'credit_card_type'     => $creditCardType,
-            'account_number'       => $this->getMeta($account, 'accountNumber'),
+            'account_number'       => $this->repository->getMetaValue($account, 'accountNumber'),
             'iban'                 => $account->iban,
-            'bic'                  => $this->getMeta($account, 'BIC'),
+            'bic'                  => $this->repository->getMetaValue($account, 'BIC'),
             'virtual_balance'      => round($account->virtual_balance, $decimalPlaces),
             'opening_balance'      => $openingBalance,
             'opening_balance_date' => $openingBalanceDate,
@@ -211,33 +216,6 @@ class AccountTransformer extends TransformerAbstract
             ],
         ];
 
-        /** @var Note $note */
-        $note = $account->notes()->first();
-        if (!is_null($note)) {
-            $data['notes'] = $note->text; // @codeCoverageIgnore
-        }
-
         return $data;
     }
-
-    /**
-     * Get meta data field for account.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Account $account
-     * @param string  $field
-     *
-     * @return null|string
-     */
-    private function getMeta(Account $account, string $field): ?string
-    {
-        $result = $account->getMeta($field);
-        if (strlen($result) === 0) {
-            return null;
-        }
-
-        return $result;
-    }
-
 }

@@ -113,7 +113,6 @@ class FileRoutine implements RoutineInterface
         $this->addStep();
         Log::debug('Back in run()');
 
-
         Log::debug('Updated job...');
         Log::debug(sprintf('%d journals in $storage->journals', $storage->journals->count()));
         $this->journals = $storage->journals;
@@ -267,8 +266,6 @@ class FileRoutine implements RoutineInterface
     private function setExtendedStatus(array $extended): void
     {
         $this->repository->setExtendedStatus($this->job, $extended);
-
-        return;
     }
 
     /**

@@ -24,21 +24,26 @@ namespace FireflyIII\Http\Controllers\Transaction;
 
 use ExpandedForm;
 use FireflyIII\Events\UpdatedTransactionJournal;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SplitJournalFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalTaskerInterface;
+use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Preferences;
 use Session;
 use Steam;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use View;
 
 /**
@@ -59,8 +64,6 @@ class SplitController extends Controller
     private $currencies;
     /** @var JournalRepositoryInterface */
     private $repository;
-    /** @var JournalTaskerInterface */
-    private $tasker;
 
     /**
      *
@@ -74,7 +77,6 @@ class SplitController extends Controller
             function ($request, $next) {
                 $this->accounts    = app(AccountRepositoryInterface::class);
                 $this->budgets     = app(BudgetRepositoryInterface::class);
-                $this->tasker      = app(JournalTaskerInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->currencies  = app(CurrencyRepositoryInterface::class);
                 $this->repository  = app(JournalRepositoryInterface::class);
@@ -91,6 +93,7 @@ class SplitController extends Controller
      * @param TransactionJournal $journal
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
+     * @throws FireflyException
      */
     public function edit(Request $request, TransactionJournal $journal)
     {
@@ -100,15 +103,13 @@ class SplitController extends Controller
 
         $uploadSize     = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
         $currencies     = $this->currencies->get();
-        $accountList    = $this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $assetAccounts  = ExpandedForm::makeSelectList($accountList);
         $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
         $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $preFilled      = $this->arrayFromJournal($request, $journal);
         $subTitle       = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
         $subTitleIcon   = 'fa-pencil';
-
-        $accountArray = [];
+        $accountList    = $this->accounts->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        $accountArray   = [];
         // account array to display currency info:
         /** @var Account $account */
         foreach ($accountList as $account) {
@@ -124,7 +125,7 @@ class SplitController extends Controller
 
         return view(
             'transactions.split.edit', compact(
-                                         'subTitleIcon', 'currencies', 'optionalFields', 'preFilled', 'subTitle', 'uploadSize', 'assetAccounts', 'budgets',
+                                         'subTitleIcon', 'currencies', 'optionalFields', 'preFilled', 'subTitle', 'uploadSize', 'budgets',
                                          'journal', 'accountArray',
                                          'previous'
                                      )
@@ -159,7 +160,7 @@ class SplitController extends Controller
         // @codeCoverageIgnoreEnd
 
         $type = strtolower($this->repository->getTransactionType($journal));
-        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => $data['description']])));
+        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => $journal->description])));
         Preferences::mark();
 
         // @codeCoverageIgnoreStart
@@ -180,6 +181,7 @@ class SplitController extends Controller
      * @param TransactionJournal              $journal
      *
      * @return array
+     * @throws FireflyException
      */
     private function arrayFromJournal(Request $request, TransactionJournal $journal): array
     {
@@ -195,7 +197,7 @@ class SplitController extends Controller
             'destinationAccounts'            => $destinationAccounts,
             'what'                           => strtolower($this->repository->getTransactionType($journal)),
             'date'                           => $request->old('date', $this->repository->getJournalDate($journal, null)),
-            'tags'                           => join(',', $journal->tags->pluck('tag')->toArray()),
+            'tags'                           => implode(',', $journal->tags->pluck('tag')->toArray()),
 
             // all custom fields:
             'interest_date'                  => $request->old('interest_date', $this->repository->getMetaField($journal, 'interest_date')),
@@ -221,43 +223,28 @@ class SplitController extends Controller
      * @param TransactionJournal $journal
      *
      * @return array
+     * @throws FireflyException
      */
     private function getTransactionDataFromJournal(TransactionJournal $journal): array
     {
-        $transactions = $this->tasker->getTransactionsOverview($journal);
-        $return       = [];
-        /** @var array $transaction */
-        foreach ($transactions as $index => $transaction) {
-            $set = [
-                'description'                 => $transaction['description'],
-                'source_account_id'           => $transaction['source_account_id'],
-                'source_account_name'         => $transaction['source_account_name'],
-                'destination_account_id'      => $transaction['destination_account_id'],
-                'destination_account_name'    => $transaction['destination_account_name'],
-                'amount'                      => round($transaction['destination_amount'], 12),
-                'budget_id'                   => isset($transaction['budget_id']) ? intval($transaction['budget_id']) : 0,
-                'category'                    => $transaction['category'],
-                'transaction_currency_id'     => $transaction['transaction_currency_id'],
-                'transaction_currency_code'   => $transaction['transaction_currency_code'],
-                'transaction_currency_symbol' => $transaction['transaction_currency_symbol'],
-                'foreign_amount'              => round($transaction['foreign_destination_amount'], 12),
-                'foreign_currency_id'         => $transaction['foreign_currency_id'],
-                'foreign_currency_code'       => $transaction['foreign_currency_code'],
-                'foreign_currency_symbol'     => $transaction['foreign_currency_symbol'],
-            ];
-            // set initial category and/or budget:
-            if ($set['budget_id'] === 0) {
-                $set['budget_id'] = $this->repository->getJournalBudgetId($journal);
-            }
-            if (strlen($set['category']) === 0) {
-                $set['category'] = $this->repository->getJournalCategoryName($journal);
-            }
+        // use collector to collect transactions.
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser(auth()->user());
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        // filter on specific journals.
+        $collector->setJournals(new Collection([$journal]));
+        $set          = $collector->getJournals();
+        $transactions = [];
+        $transformer  = new TransactionTransformer(new ParameterBag);
 
-
-            $return[] = $set;
+        /** @var Transaction $transaction */
+        foreach ($set as $transaction) {
+            if ($transaction->transaction_amount > 0) {
+                $transactions[] = $transformer->transform($transaction);
+            }
         }
 
-        return $return;
+        return $transactions;
     }
 
     /**
@@ -279,14 +266,14 @@ class SplitController extends Controller
                 continue;
             }
             // take some info from first transaction, that should at least exist.
-            $array[$index]                                = $row;
-            $array[$index]['transaction_currency_id']     = $array[0]['transaction_currency_id'];
-            $array[$index]['transaction_currency_code']   = $array[0]['transaction_currency_code'];
-            $array[$index]['transaction_currency_symbol'] = $array[0]['transaction_currency_symbol'];
-            $array[$index]['foreign_amount']              = round($array[0]['foreign_destination_amount'] ?? '0', 12);
-            $array[$index]['foreign_currency_id']         = $array[0]['foreign_currency_id'];
-            $array[$index]['foreign_currency_code']       = $array[0]['foreign_currency_code'];
-            $array[$index]['foreign_currency_symbol']     = $array[0]['foreign_currency_symbol'];
+            $array[$index]                            = $row;
+            $array[$index]['currency_id']             = $array[0]['transaction_currency_id'];
+            $array[$index]['currency_code']           = $array[0]['transaction_currency_code'];
+            $array[$index]['currency_symbol']         = $array[0]['transaction_currency_symbol'];
+            $array[$index]['foreign_amount']          = round($array[0]['foreign_destination_amount'] ?? '0', 12);
+            $array[$index]['foreign_currency_id']     = $array[0]['foreign_currency_id'];
+            $array[$index]['foreign_currency_code']   = $array[0]['foreign_currency_code'];
+            $array[$index]['foreign_currency_symbol'] = $array[0]['foreign_currency_symbol'];
         }
 
         return $array;

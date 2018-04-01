@@ -50,10 +50,7 @@ class PwndVerifier implements Verifier
             return true;
         }
         Log::debug(sprintf('Status code returned is %d', $result->status_code));
-        if (404 === $result->status_code) {
-            return true;
-        }
 
-        return false;
+        return 404 === $result->status_code;
     }
 }

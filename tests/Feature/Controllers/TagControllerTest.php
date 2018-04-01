@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -41,6 +42,16 @@ use Tests\TestCase;
  */
 class TagControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\TagController::create
      */
@@ -256,7 +267,7 @@ class TagControllerTest extends TestCase
 
         $this->session(['tags.create.uri' => 'http://localhost']);
         $data = [
-            'tag'                  => 'Hello new tag' . rand(999, 10000),
+            'tag'                  => 'Hello new tag' . random_int(999, 10000),
             'tagMode'              => 'nothing',
             'tag_position_has_tag' => 'true',
 
@@ -281,7 +292,7 @@ class TagControllerTest extends TestCase
         $this->session(['tags.edit.uri' => 'http://localhost']);
         $data = [
             'id'      => 1,
-            'tag'     => 'Hello updated tag' . rand(999, 10000),
+            'tag'     => 'Hello updated tag' . random_int(999, 10000),
             'tagMode' => 'nothing',
         ];
 

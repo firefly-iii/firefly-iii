@@ -7,13 +7,14 @@
 
             <div class="info-box-content">
                 <span class="info-box-text">{{ 'balance'|_ }}</span>
-                <span class="info-box-number" id="box-balance-total"></span>
+                <span class="info-box-number" id="box-balance-sums"></span>
 
-                <div class="progress">
+                <div class="progress" id="box-balance-progress">
                     <div class="progress-bar" style="width: 0%"></div>
                 </div>
                 <span class="progress-description">
-                    <span title="{{ 'expenses'|_ }}" id="box-balance-out"></span> / <span title="{{ 'income'|_ }}" id="box-balance-in"></span>
+                    <span id="box-balance-list" ></span>
+                    <!--<span title="{{ 'expenses'|_ }}" id="box-balance-out"></span> / <span title="{{ 'income'|_ }}" id="box-balance-in"></span>-->
                   </span>
             </div>
         </div>
@@ -41,10 +42,10 @@
 
     {#  available to spend total / per day #}
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box bg-green-gradient">
+        <div class="info-box bg-green-gradient" id="box-left-to-spend-box">
             <span class="info-box-icon"><i class="fa fa-money"></i></span>
             <div class="info-box-content">
-                <span class="info-box-text">{{ 'left_to_spend'|_ }}</span>
+                <span class="info-box-text" id="box-left-to-spend-text">{{ 'left_to_spend'|_ }}</span>
                 <span class="info-box-number" id="box-left-to-spend"></span>
 
                 <div class="progress">

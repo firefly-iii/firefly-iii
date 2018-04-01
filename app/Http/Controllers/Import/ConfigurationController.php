@@ -97,6 +97,7 @@ class ConfigurationController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
+     * @throws \RuntimeException
      * @throws FireflyException
      */
     public function post(Request $request, ImportJob $job)

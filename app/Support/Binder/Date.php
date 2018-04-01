@@ -39,8 +39,9 @@ class Date implements BinderInterface
      * @param Route  $route
      *
      * @return Carbon
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public static function routeBinder(string $value, Route $route):  Carbon
+    public static function routeBinder(string $value, Route $route): Carbon
     {
         /** @var FiscalHelperInterface $fiscalHelper */
         $fiscalHelper = app(FiscalHelperInterface::class);

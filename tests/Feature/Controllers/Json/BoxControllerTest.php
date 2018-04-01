@@ -30,6 +30,8 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -37,6 +39,15 @@ use Tests\TestCase;
  */
 class BoxControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Json\BoxController::available
      */
@@ -100,8 +111,11 @@ class BoxControllerTest extends TestCase
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
+        $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
+
         $this->be($this->user());
         $response = $this->get(route('json.box.net-worth'));
         $response->assertStatus(200);
@@ -114,8 +128,10 @@ class BoxControllerTest extends TestCase
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
+        $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
 
         $start = new Carbon;
         $start->addMonths(6)->startOfMonth();

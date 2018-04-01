@@ -27,14 +27,24 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
+use Log;
 use Tests\TestCase;
-
 
 /**
  * Class LinkControllerTest
  */
 class LinkControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::__construct
      * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::delete
@@ -72,7 +82,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::store
+     * @covers       \FireflyIII\Http\Controllers\Transaction\LinkController::store
      * @covers       \FireflyIII\Http\Requests\JournalLinkRequest
      */
     public function testStore()
@@ -98,7 +108,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::store
+     * @covers       \FireflyIII\Http\Controllers\Transaction\LinkController::store
      * @covers       \FireflyIII\Http\Requests\JournalLinkRequest
      */
     public function testStoreAlreadyLinked()
@@ -123,7 +133,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::store
+     * @covers       \FireflyIII\Http\Controllers\Transaction\LinkController::store
      * @covers       \FireflyIII\Http\Requests\JournalLinkRequest
      */
     public function testStoreInvalid()

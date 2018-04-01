@@ -27,6 +27,7 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -38,6 +39,15 @@ use Tests\TestCase;
  */
 class BillControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug('Now in Feature/Controllers/Chart/Test.');
+    }
+
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\BillController::frontpage
      * @covers       \FireflyIII\Http\Controllers\Chart\BillController::__construct

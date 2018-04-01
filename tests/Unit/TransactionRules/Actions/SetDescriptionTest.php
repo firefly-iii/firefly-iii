@@ -39,8 +39,8 @@ class SetDescriptionTest extends TestCase
     public function testAct()
     {
         // get journal, give fixed description
-        $description          = 'text' . rand(1, 1000);
-        $newDescription       = 'new description' . rand(1, 1234);
+        $description          = 'text' . random_int(1, 1000);
+        $newDescription       = 'new description' . random_int(1, 1234);
         $journal              = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->description = $description;
         $journal->save();

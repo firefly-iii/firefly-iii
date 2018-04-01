@@ -25,7 +25,6 @@ namespace FireflyIII\Import\Object;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\User;
-use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -49,17 +48,16 @@ class ImportCategory
      */
     public function __construct()
     {
-        $this->category   = new Category();
         $this->repository = app(CategoryRepositoryInterface::class);
         Log::debug('Created ImportCategory.');
     }
 
     /**
-     * @return Category
+     * @return null|Category
      */
-    public function getCategory(): Category
+    public function getCategory(): ?Category
     {
-        if (null === $this->category->id) {
+        if (null === $this->category) {
             $this->store();
         }
 
@@ -92,27 +90,35 @@ class ImportCategory
     }
 
     /**
-     * @return Category
+     * Find category by ID.
+     *
+     * @return Category|null
      */
-    private function findExistingObject(): Category
+    private function findById(): ?Category
     {
-        Log::debug('In findExistingObject() for Category');
-        // 1: find by ID, or name
-
         if (3 === count($this->id)) {
             Log::debug(sprintf('Finding category with ID #%d', $this->id['value']));
             /** @var Category $category */
-            $category = $this->repository->find(intval($this->id['value']));
-            if (null !== $category->id) {
+            $category = $this->repository->findNull(intval($this->id['value']));
+            if (null !== $category) {
                 Log::debug(sprintf('Found unmapped category by ID (#%d): %s', $category->id, $category->name));
 
                 return $category;
             }
             Log::debug('Found nothing.');
         }
-        // 2: find by name
+
+        return null;
+    }
+
+    /**
+     * Find category by name.
+     *
+     * @return Category|null
+     */
+    private function findByName(): ?Category
+    {
         if (3 === count($this->name)) {
-            /** @var Collection $categories */
             $categories = $this->repository->getCategories();
             $name       = $this->name['value'];
             Log::debug(sprintf('Finding category with name %s', $name));
@@ -134,16 +140,34 @@ class ImportCategory
             Log::debug('Found nothing.');
         }
 
-        // 4: do not search by account number.
-        Log::debug('Found NO existing categories.');
-
-        return new Category;
+        return null;
     }
 
     /**
      * @return Category
      */
-    private function findMappedObject(): Category
+    private function findExistingObject(): ?Category
+    {
+        Log::debug('In findExistingObject() for Category');
+        $result = $this->findById();
+        if (!is_null($result)) {
+            return $result;
+        }
+
+        $result = $this->findByName();
+        if (!is_null($result)) {
+            return $result;
+        }
+
+        Log::debug('Found NO existing categories.');
+
+        return null;
+    }
+
+    /**
+     * @return Category
+     */
+    private function findMappedObject(): ?Category
     {
         Log::debug('In findMappedObject() for Category');
         $fields = ['id', 'name'];
@@ -152,7 +176,7 @@ class ImportCategory
             Log::debug(sprintf('Find mapped category based on field "%s" with value', $field), $array);
             // check if a pre-mapped object exists.
             $mapped = $this->getMappedObject($array);
-            if (null !== $mapped->id) {
+            if (null !== $mapped) {
                 Log::debug(sprintf('Found category #%d!', $mapped->id));
 
                 return $mapped;
@@ -160,7 +184,7 @@ class ImportCategory
         }
         Log::debug('Found no category on mapped data or no map present.');
 
-        return new Category;
+        return null;
     }
 
     /**
@@ -168,30 +192,30 @@ class ImportCategory
      *
      * @return Category
      */
-    private function getMappedObject(array $array): Category
+    private function getMappedObject(array $array): ?Category
     {
         Log::debug('In getMappedObject() for Category');
         if (0 === count($array)) {
             Log::debug('Array is empty, nothing will come of this.');
 
-            return new Category;
+            return null;
         }
 
         if (array_key_exists('mapped', $array) && null === $array['mapped']) {
             Log::debug(sprintf('No map present for value "%s". Return NULL.', $array['value']));
 
-            return new Category;
+            return null;
         }
 
         Log::debug('Finding a mapped category based on', $array);
 
         $search   = intval($array['mapped']);
-        $category = $this->repository->find($search);
+        $category = $this->repository->findNull($search);
 
-        if (null === $category->id) {
+        if (null === $category) {
             Log::error(sprintf('There is no category with id #%d. Invalid mapping will be ignored!', $search));
 
-            return new Category;
+            return null;
         }
 
         Log::debug(sprintf('Found category! #%d ("%s"). Return it', $category->id, $category->name));
@@ -206,14 +230,14 @@ class ImportCategory
     {
         // 1: find mapped object:
         $mapped = $this->findMappedObject();
-        if (null !== $mapped->id) {
+        if (null !== $mapped) {
             $this->category = $mapped;
 
             return true;
         }
         // 2: find existing by given values:
         $found = $this->findExistingObject();
-        if (null !== $found->id) {
+        if (null !== $found) {
             $this->category = $found;
 
             return true;
@@ -226,11 +250,7 @@ class ImportCategory
 
         Log::debug('Found no category so must create one ourselves.');
 
-        $data = [
-            'name' => $name,
-        ];
-
-        $this->category = $this->repository->store($data);
+        $this->category = $this->repository->store(['name' => $name]);
         Log::debug(sprintf('Successfully stored new category #%d: %s', $this->category->id, $this->category->name));
 
         return true;

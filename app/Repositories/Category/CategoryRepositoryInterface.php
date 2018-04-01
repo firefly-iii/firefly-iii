@@ -53,19 +53,11 @@ interface CategoryRepositoryInterface
      * Find a category.
      *
      * @param int $categoryId
+     *
      * @deprecated
      * @return Category
      */
     public function find(int $categoryId): Category;
-
-    /**
-     * Find a category or return NULL
-     *
-     * @param int $categoryId
-     *
-     * @return Category|null
-     */
-    public function findNull(int $categoryId): ?Category;
 
     /**
      * Find a category.
@@ -75,6 +67,15 @@ interface CategoryRepositoryInterface
      * @return Category
      */
     public function findByName(string $name): ?Category;
+
+    /**
+     * Find a category or return NULL
+     *
+     * @param int $categoryId
+     *
+     * @return Category|null
+     */
+    public function findNull(int $categoryId): ?Category;
 
     /**
      * @param Category $category

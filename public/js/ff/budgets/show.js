@@ -30,9 +30,10 @@ $(function () {
     }
 
     // other three charts:
-    pieChart(expenseCategoryUri, 'budget-cat-out');
-    pieChart(expenseAssetUri, 'budget-asset-out');
-    pieChart(expenseExpenseUri, 'budget-expense-out');
-
+    if (budgetLimitID > 0) {
+        pieChart(expenseCategoryUri, 'budget-cat-out');
+        pieChart(expenseAssetUri, 'budget-asset-out');
+        pieChart(expenseExpenseUri, 'budget-expense-out');
+    }
 
 });

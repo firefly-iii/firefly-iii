@@ -22,11 +22,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -40,9 +38,6 @@ use View;
  */
 class ConvertController extends Controller
 {
-    /** @var AccountRepositoryInterface */
-    private $accounts;
-
     /** @var JournalRepositoryInterface */
     private $repository;
 
@@ -56,7 +51,6 @@ class ConvertController extends Controller
         // some useful repositories:
         $this->middleware(
             function ($request, $next) {
-                $this->accounts   = app(AccountRepositoryInterface::class);
                 $this->repository = app(JournalRepositoryInterface::class);
 
                 app('view')->share('title', trans('firefly.transactions'));
@@ -81,7 +75,6 @@ class ConvertController extends Controller
         }
         // @codeCoverageIgnoreEnd
         $positiveAmount = $this->repository->getJournalTotal($journal);
-        $assetAccounts  = ExpandedForm::makeSelectList($this->accounts->getActiveAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
         $sourceType     = $journal->transactionType;
         $subTitle       = trans('firefly.convert_to_' . $destinationType->type, ['description' => $journal->description]);
         $subTitleIcon   = 'fa-exchange';
@@ -110,7 +103,6 @@ class ConvertController extends Controller
                 'sourceType',
                 'destinationType',
                 'journal',
-                'assetAccounts',
                 'positiveAmount',
                 'sourceAccount',
                 'destinationAccount',
@@ -206,16 +198,15 @@ class ConvertController extends Controller
                 // three and five
                 if ('' === $data['destination_account_expense'] || null === $data['destination_account_expense']) {
                     // destination is a cash account.
-                    $destination = $accountRepository->getCashAccount();
-
-                    return $destination;
+                    return $accountRepository->getCashAccount();
                 }
                 $data        = [
-                    'name'           => $data['destination_account_expense'],
-                    'accountType'    => 'expense',
-                    'virtualBalance' => 0,
-                    'active'         => true,
-                    'iban'           => null,
+                    'name'            => $data['destination_account_expense'],
+                    'accountType'     => 'expense',
+                    'account_type_id' => null,
+                    'virtualBalance'  => 0,
+                    'active'          => true,
+                    'iban'            => null,
                 ];
                 $destination = $accountRepository->store($data);
                 break;
@@ -254,17 +245,16 @@ class ConvertController extends Controller
 
                 if ('' === $data['source_account_revenue'] || null === $data['source_account_revenue']) {
                     // destination is a cash account.
-                    $destination = $accountRepository->getCashAccount();
-
-                    return $destination;
+                    return $accountRepository->getCashAccount();
                 }
 
                 $data   = [
-                    'name'           => $data['source_account_revenue'],
-                    'accountType'    => 'revenue',
-                    'virtualBalance' => 0,
-                    'active'         => true,
-                    'iban'           => null,
+                    'name'            => $data['source_account_revenue'],
+                    'accountType'     => 'revenue',
+                    'virtualBalance'  => 0,
+                    'active'          => true,
+                    'account_type_id' => null,
+                    'iban'            => null,
                 ];
                 $source = $accountRepository->store($data);
                 break;

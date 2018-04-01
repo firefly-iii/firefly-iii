@@ -94,19 +94,12 @@ class Journal extends Twig_Extension
             $this->getDestinationAccount(),
             $this->journalBudgets(),
             $this->journalCategories(),
+            new Twig_SimpleFunction('journalGetMetaField', [TransactionJournalExtension::class, 'getMetaField']),
+            new Twig_SimpleFunction('journalHasMeta', [TransactionJournalExtension::class, 'hasMetaField']),
+            new Twig_SimpleFunction('journalGetMetaDate', [TransactionJournalExtension::class, 'getMetaDate']),
         ];
 
         return $functions;
-    }
-
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName(): string
-    {
-        return 'FireflyIII\Support\Twig\Journals';
     }
 
     /**

@@ -22,14 +22,18 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use Amount;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 use Steam;
 use Tests\TestCase;
 
@@ -42,6 +46,16 @@ use Tests\TestCase;
  */
 class PiggyBankControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::add
      */
@@ -80,36 +94,30 @@ class PiggyBankControllerTest extends TestCase
     public function testCreate()
     {
         // mock stuff
-        $account      = factory(Account::class)->make();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        // new account list thing.
+        $currency      = TransactionCurrency::first();
+        $account       = factory(Account::class)->make();
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $currencyRepos->shouldReceive('findNull')->andReturn($currency);
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('getAccountsByType')
-                     ->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection([$account]))->once();
+                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->once();
+
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
+        Amount::shouldReceive('balance')->andReturn('0');
+
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
 
         $this->be($this->user());
         $response = $this->get(route('piggy-banks.create'));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::create
-     */
-    public function testCreateEmpty()
-    {
-        // mock stuff
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('getAccountsByType')
-                     ->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection())->once();
-
-        $this->be($this->user());
-        $response = $this->get(route('piggy-banks.create'));
-        $response->assertStatus(302);
-        $response->assertRedirect(route('new-user.index'));
-        $response->assertSessionHas('error');
     }
 
     /**
@@ -154,11 +162,22 @@ class PiggyBankControllerTest extends TestCase
     {
         // mock stuff
         $account      = factory(Account::class)->make();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        // mock stuff for new account list thing.
+        $currency      = TransactionCurrency::first();
+        $account       = factory(Account::class)->make();
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $currencyRepos->shouldReceive('findNull')->andReturn($currency);
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('getAccountsByType')
-                     ->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection([$account]))->once();
+                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->once();
+
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
+        Amount::shouldReceive('balance')->andReturn('0');
+
 
         $this->be($this->user());
         $response = $this->get(route('piggy-banks.edit', [1]));
@@ -347,7 +366,7 @@ class PiggyBankControllerTest extends TestCase
 
         $this->session(['piggy-banks.create.uri' => 'http://localhost']);
         $data = [
-            'name'                            => 'Piggy ' . rand(999, 10000),
+            'name'                            => 'Piggy ' . random_int(999, 10000),
             'targetamount'                    => '100.123',
             'account_id'                      => 2,
             'amount_currency_id_targetamount' => 1,
@@ -374,7 +393,7 @@ class PiggyBankControllerTest extends TestCase
         $this->session(['piggy-banks.edit.uri' => 'http://localhost']);
         $data = [
             'id'                              => 3,
-            'name'                            => 'Updated Piggy ' . rand(999, 10000),
+            'name'                            => 'Updated Piggy ' . random_int(999, 10000),
             'targetamount'                    => '100.123',
             'account_id'                      => 2,
             'amount_currency_id_targetamount' => 1,

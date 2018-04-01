@@ -94,6 +94,8 @@ class UserCompany extends BunqObject
      * UserCompany constructor.
      *
      * @param array $data
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $data)
     {
@@ -114,6 +116,19 @@ class UserCompany extends BunqObject
         $this->sectorOfIndustry     = $data['sector_of_industry'] ?? '';
         $this->counterBankIban      = $data['counter_bank_iban'];
         $this->name                 = $data['name'];
+
+        // TODO alias
+        // TODO avatar
+        // TODO daily_limit_without_confirmation_login
+        // TODO notification_filters
+        // TODO address_main
+        // TODO address_postal
+        // TODO director_alias
+        // TODO ubo
+        // TODO customer
+        // TODO customer_limit
+        // TODO billing_contract
+        // TODO pack_membership
     }
 
     /**
@@ -122,5 +137,46 @@ class UserCompany extends BunqObject
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        $data = [
+            'id'                         => $this->id,
+            'created'                    => $this->created->format('Y-m-d H:i:s.u'),
+            'updated'                    => $this->updated->format('Y-m-d H:i:s.u'),
+            'status'                     => $this->status,
+            'sub_status'                 => $this->subStatus,
+            'public_uuid'                => $this->publicUuid,
+            'display_name'               => $this->displayName,
+            'public_nick_name'           => $this->publicNickName,
+            'language'                   => $this->language,
+            'region'                     => $this->region,
+            'session_timeout'            => $this->sessionTimeout,
+            'version_terms_of_service'   => $this->versionTos,
+            'chamber_of_commerce_number' => $this->cocNumber,
+            'type_of_business_entity'    => $this->typeOfBusinessEntity,
+            'sector_of_industry'         => $this->sectorOfIndustry,
+            'counter_bank_iban'          => $this->counterBankIban,
+            'name'                       => $this->name,
+        ];
+
+        // TODO alias
+        // TODO avatar
+        // TODO daily_limit_without_confirmation_login
+        // TODO notification_filters
+        // TODO address_main
+        // TODO address_postal
+        // TODO director_alias
+        // TODO ubo
+        // TODO customer
+        // TODO customer_limit
+        // TODO billing_contract
+        // TODO pack_membership
+
+        return $data;
     }
 }

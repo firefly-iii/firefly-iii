@@ -61,7 +61,6 @@ class FileConfigurator implements ConfiguratorInterface
     /** @var ImportJobRepositoryInterface */
     private $repository;
 
-
     // give job default config:
     /** @var string */
     private $warning = '';
@@ -145,6 +144,7 @@ class FileConfigurator implements ConfiguratorInterface
      * Return possible warning to user.
      *
      * @return string
+     *
      * @throws FireflyException
      */
     public function getWarningMessage(): string
@@ -158,6 +158,7 @@ class FileConfigurator implements ConfiguratorInterface
 
     /**
      * @return bool
+     *
      * @throws FireflyException
      */
     public function isJobConfigured(): bool
@@ -167,7 +168,7 @@ class FileConfigurator implements ConfiguratorInterface
         }
         $config = $this->getConfig();
         $stage  = $config['stage'] ?? 'initial';
-        if ($stage === 'ready') {
+        if ('ready' === $stage) {
             Log::debug('isJobConfigured returns true');
 
             return true;
@@ -252,6 +253,7 @@ class FileConfigurator implements ConfiguratorInterface
      * Shorthand method to return the extended status.
      *
      * @codeCoverageIgnore
+     *
      * @return array
      */
     private function getExtendedStatus(): array

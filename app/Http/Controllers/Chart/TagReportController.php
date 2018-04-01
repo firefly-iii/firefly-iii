@@ -36,7 +36,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Response;
 
 /**
  * Class TagReportController
@@ -77,7 +76,7 @@ class TagReportController extends Controller
         $chartData = $helper->generate('expense', 'account');
         $data      = $this->generator->pieChart($chartData);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -101,7 +100,7 @@ class TagReportController extends Controller
         $chartData = $helper->generate('income', 'account');
         $data      = $this->generator->pieChart($chartData);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -124,7 +123,7 @@ class TagReportController extends Controller
         $chartData = $helper->generate('expense', 'budget');
         $data      = $this->generator->pieChart($chartData);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -147,7 +146,7 @@ class TagReportController extends Controller
         $chartData = $helper->generate('expense', 'category');
         $data      = $this->generator->pieChart($chartData);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -167,7 +166,7 @@ class TagReportController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         $format       = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
@@ -252,7 +251,7 @@ class TagReportController extends Controller
         $data = $this->generator->multiSet($newSet);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -276,7 +275,7 @@ class TagReportController extends Controller
         $chartData = $helper->generate('expense', 'tag');
         $data      = $this->generator->pieChart($chartData);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -300,7 +299,7 @@ class TagReportController extends Controller
         $chartData = $helper->generate('income', 'tag');
         $data      = $this->generator->pieChart($chartData);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**

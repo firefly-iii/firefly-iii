@@ -45,6 +45,5 @@ class TransactionTypeSeeder extends Seeder
                 Log::warning(sprintf('Could not create transaction type "%s". It might exist already.', $type));
             }
         }
-
     }
 }

@@ -22,11 +22,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Http\Requests\TokenFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use Google2FA;
 use Illuminate\Http\Request;
 use Preferences;
 use Session;
@@ -55,35 +53,6 @@ class PreferencesController extends Controller
     }
 
     /**
-     * @return View
-     */
-    public function code()
-    {
-        $domain = $this->getDomain();
-        $secret = Google2FA::generateSecretKey();
-        Session::flash('two-factor-secret', $secret);
-        $image = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret, 200);
-
-        return view('preferences.code', compact('image'));
-    }
-
-    /**
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     *
-     * @throws \Exception
-     * @throws \Exception
-     */
-    public function deleteCode()
-    {
-        Preferences::delete('twoFactorAuthEnabled');
-        Preferences::delete('twoFactorAuthSecret');
-        Session::flash('success', strval(trans('firefly.pref_two_factor_auth_disabled')));
-        Session::flash('info', strval(trans('firefly.pref_two_factor_auth_remove_it')));
-
-        return redirect(route('preferences.index'));
-    }
-
-    /**
      * @param AccountRepositoryInterface $repository
      *
      * @return View
@@ -97,12 +66,9 @@ class PreferencesController extends Controller
         $language           = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
         $listPageSize       = Preferences::get('listPageSize', 50)->data;
         $customFiscalYear   = Preferences::get('customFiscalYear', 0)->data;
-        $showDeps           = Preferences::get('showDepositsFrontpage', false)->data;
         $fiscalYearStartStr = Preferences::get('fiscalYearStart', '01-01')->data;
         $fiscalYearStart    = date('Y') . '-' . $fiscalYearStartStr;
         $tjOptionalFields   = Preferences::get('transaction_journal_optional_fields', [])->data;
-        $is2faEnabled       = Preferences::get('twoFactorAuthEnabled', 0)->data; // twoFactorAuthEnabled
-        $has2faSecret       = null !== Preferences::get('twoFactorAuthSecret'); // hasTwoFactorAuthSecret
 
         return view(
             'preferences.index',
@@ -114,29 +80,9 @@ class PreferencesController extends Controller
                 'viewRange',
                 'customFiscalYear',
                 'listPageSize',
-                'fiscalYearStart',
-                'is2faEnabled',
-                'has2faSecret',
-                'showDeps'
+                'fiscalYearStart'
             )
         );
-    }
-
-    /**
-     * @param TokenFormRequest $request
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
-     */
-    public function postCode(/** @scrutinizer ignore-unused */ TokenFormRequest $request)
-    {
-        Preferences::set('twoFactorAuthEnabled', 1);
-        Preferences::set('twoFactorAuthSecret', Session::get('two-factor-secret'));
-
-        Session::flash('success', strval(trans('firefly.saved_preferences')));
-        Preferences::mark();
-
-        return redirect(route('preferences.index'));
     }
 
     /**
@@ -169,28 +115,11 @@ class PreferencesController extends Controller
         Preferences::set('customFiscalYear', $customFiscalYear);
         Preferences::set('fiscalYearStart', $fiscalYearStart);
 
-        // show deposits frontpage:
-        $showDepositsFrontpage = 1 === intval($request->get('showDepositsFrontpage'));
-        Preferences::set('showDepositsFrontpage', $showDepositsFrontpage);
-
         // save page size:
         Preferences::set('listPageSize', 50);
         $listPageSize = intval($request->get('listPageSize'));
         if ($listPageSize > 0 && $listPageSize < 1337) {
             Preferences::set('listPageSize', $listPageSize);
-        }
-
-        $twoFactorAuthEnabled   = false;
-        $hasTwoFactorAuthSecret = false;
-        if (!$repository->hasRole(auth()->user(), 'demo')) {
-            // two factor auth
-            $twoFactorAuthEnabled   = intval($request->get('twoFactorAuthEnabled'));
-            $hasTwoFactorAuthSecret = null !== Preferences::get('twoFactorAuthSecret');
-
-            // If we already have a secret, just set the two factor auth enabled to 1, and let the user continue with the existing secret.
-            if ($hasTwoFactorAuthSecret) {
-                Preferences::set('twoFactorAuthEnabled', $twoFactorAuthEnabled);
-            }
         }
 
         // language:
@@ -217,23 +146,6 @@ class PreferencesController extends Controller
         Session::flash('success', strval(trans('firefly.saved_preferences')));
         Preferences::mark();
 
-        // if we don't have a valid secret yet, redirect to the code page.
-        // AND USER HAS ACTUALLY ENABLED 2FA
-        if (!$hasTwoFactorAuthSecret && 1 === $twoFactorAuthEnabled) {
-            return redirect(route('preferences.code'));
-        }
-
         return redirect(route('preferences.index'));
-    }
-
-    /**
-     * @return string
-     */
-    private function getDomain(): string
-    {
-        $url   = url()->to('/');
-        $parts = parse_url($url);
-
-        return $parts['host'];
     }
 }

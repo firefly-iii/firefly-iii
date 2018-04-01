@@ -139,7 +139,7 @@ class Controller extends BaseController
      */
     protected function isOpeningBalance(TransactionJournal $journal): bool
     {
-        return TransactionType::OPENING_BALANCE === $journal->transactionTypeStr();
+        return TransactionType::OPENING_BALANCE === $journal->transactionType->type;
     }
 
     /**

@@ -24,6 +24,8 @@ namespace FireflyIII\Support\Twig;
 
 use FireflyIII\Models\Account as AccountModel;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
@@ -52,22 +54,8 @@ class AmountFormat extends Twig_Extension
         return [
             $this->formatAmountByAccount(),
             $this->formatAmountBySymbol(),
-            $this->formatDestinationAfter(),
-            $this->formatDestinationBefore(),
-            $this->formatSourceAfter(),
-            $this->formatSourceBefore(),
             $this->formatAmountByCurrency(),
         ];
-    }
-
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName(): string
-    {
-        return 'FireflyIII\Support\Twig\AmountFormat';
     }
 
     /**
@@ -96,14 +84,19 @@ class AmountFormat extends Twig_Extension
         return new Twig_SimpleFunction(
             'formatAmountByAccount',
             function (AccountModel $account, string $amount, bool $coloured = true): string {
-                $currencyId = intval($account->getMeta('currency_id'));
-
+                /** @var AccountRepositoryInterface $accountRepos */
+                $accountRepos = app(AccountRepositoryInterface::class);
+                /** @var CurrencyRepositoryInterface $currencyRepos */
+                $currencyRepos   = app(CurrencyRepositoryInterface::class);
+                $currency        = app('amount')->getDefaultCurrency();
+                $currencyId      = (int)$accountRepos->getMetaValue($account, 'currency_id');
+                $accountCurrency = null;
                 if (0 !== $currencyId) {
-                    $currency = TransactionCurrency::find($currencyId);
-
-                    return app('amount')->formatAnything($currency, $amount, $coloured);
+                    $accountCurrency = $currencyRepos->findNull($currencyId);
                 }
-                $currency = app('amount')->getDefaultCurrency();
+                if (null !== $accountCurrency) {
+                    $currency = $accountCurrency;
+                }
 
                 return app('amount')->formatAnything($currency, $amount, $coloured);
             },
@@ -158,102 +151,6 @@ class AmountFormat extends Twig_Extension
                 $currency = app('amount')->getDefaultCurrency();
 
                 return app('amount')->formatAnything($currency, $string, false);
-            },
-            ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    protected function formatDestinationAfter(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'formatDestinationAfter',
-            function (array $transaction): string {
-                // build fake currency for main amount.
-                $format                 = new TransactionCurrency;
-                $format->decimal_places = $transaction['transaction_currency_dp'];
-                $format->symbol         = $transaction['transaction_currency_symbol'];
-                $string                 = app('amount')->formatAnything($format, $transaction['destination_account_after'], true);
-
-                // also append foreign amount for clarity:
-                if (null !== $transaction['foreign_destination_amount']) {
-                    // build fake currency for foreign amount
-                    $format                 = new TransactionCurrency;
-                    $format->decimal_places = $transaction['foreign_currency_dp'];
-                    $format->symbol         = $transaction['foreign_currency_symbol'];
-                    $string                 .= ' (' . app('amount')->formatAnything($format, $transaction['foreign_destination_amount'], true) . ')';
-                }
-
-                return $string;
-            },
-            ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    protected function formatDestinationBefore(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'formatDestinationBefore',
-            function (array $transaction): string {
-                // build fake currency for main amount.
-                $format                 = new TransactionCurrency;
-                $format->decimal_places = $transaction['transaction_currency_dp'];
-                $format->symbol         = $transaction['transaction_currency_symbol'];
-
-                return app('amount')->formatAnything($format, $transaction['destination_account_before'], true);
-            },
-            ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    protected function formatSourceAfter(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'formatSourceAfter',
-            function (array $transaction): string {
-                // build fake currency for main amount.
-                $format                 = new TransactionCurrency;
-                $format->decimal_places = $transaction['transaction_currency_dp'];
-                $format->symbol         = $transaction['transaction_currency_symbol'];
-                $string                 = app('amount')->formatAnything($format, $transaction['source_account_after'], true);
-
-                // also append foreign amount for clarity:
-                if (null !== $transaction['foreign_source_amount']) {
-                    // build fake currency for foreign amount
-                    $format                 = new TransactionCurrency;
-                    $format->decimal_places = $transaction['foreign_currency_dp'];
-                    $format->symbol         = $transaction['foreign_currency_symbol'];
-                    $string                 .= ' (' . app('amount')->formatAnything($format, $transaction['foreign_source_amount'], true) . ')';
-                }
-
-                return $string;
-            },
-            ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    protected function formatSourceBefore(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'formatSourceBefore',
-            function (array $transaction): string {
-                // build fake currency for main amount.
-                $format                 = new TransactionCurrency;
-                $format->decimal_places = $transaction['transaction_currency_dp'];
-                $format->symbol         = $transaction['transaction_currency_symbol'];
-
-                return app('amount')->formatAnything($format, $transaction['source_account_before'], true);
             },
             ['is_safe' => ['html']]
         );

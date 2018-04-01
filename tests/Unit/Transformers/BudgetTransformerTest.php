@@ -45,7 +45,7 @@ class BudgetTransformerTest extends TestCase
         $budget      = Budget::create(
             [
                 'user_id' => $this->user()->id,
-                'name'    => 'Some budget ' . rand(1, 10000),
+                'name'    => 'Some budget ' . random_int(1, 10000),
                 'active'  => 1,
             ]
         );

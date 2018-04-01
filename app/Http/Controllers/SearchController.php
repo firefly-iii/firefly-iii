@@ -26,7 +26,6 @@ use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Response;
 use View;
 
 /**
@@ -100,6 +99,6 @@ class SearchController extends Controller
 
         $html = view('search.search', compact('transactions'))->render();
 
-        return Response::json(['count' => $transactions->count(), 'html' => $html]);
+        return response()->json(['count' => $transactions->count(), 'html' => $html]);
     }
 }

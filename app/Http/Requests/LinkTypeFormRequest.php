@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
-
 /**
  * Class BillFormRequest.
  */
@@ -44,8 +42,8 @@ class LinkTypeFormRequest extends Request
     public function rules()
     {
         // fixed
-        $nameRule   = 'required|min:1|unique:link_types,name';
-        $idRule     = '';
+        $nameRule = 'required|min:1|unique:link_types,name';
+        $idRule   = '';
 
         // get parameter link:
         $link = $this->route()->parameter('linkType');

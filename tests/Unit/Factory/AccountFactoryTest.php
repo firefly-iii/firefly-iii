@@ -48,7 +48,7 @@ class AccountFactoryTest extends TestCase
             'account_type_id' => null,
             'accountType'     => 'asset',
             'iban'            => null,
-            'name'            => 'Basic asset account #' . rand(1, 1000),
+            'name'            => 'Basic asset account #' . random_int(1, 1000),
             'virtualBalance'  => null,
             'active'          => true,
             'accountRole'     => 'defaultAsset',
@@ -82,7 +82,7 @@ class AccountFactoryTest extends TestCase
             'account_type_id'      => null,
             'accountType'          => 'asset',
             'iban'                 => null,
-            'name'                 => 'Basic CC account #' . rand(1, 1000),
+            'name'                 => 'Basic CC account #' . random_int(1, 1000),
             'virtualBalance'       => null,
             'active'               => true,
             'accountRole'          => 'ccAsset',
@@ -119,7 +119,42 @@ class AccountFactoryTest extends TestCase
             'account_type_id' => null,
             'accountType'     => 'expense',
             'iban'            => null,
-            'name'            => 'Basic expense account #' . rand(1, 1000),
+            'name'            => 'Basic expense account #' . random_int(1, 1000),
+            'virtualBalance'  => '1243',
+            'active'          => true,
+            'accountRole'     => 'defaultAsset',
+        ];
+
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user());
+        $account = $factory->create($data);
+
+        // assert stuff about account:
+        $this->assertEquals($account->name, $data['name']);
+        $this->assertEquals(AccountType::EXPENSE, $account->accountType->type);
+        $this->assertEquals('', $account->iban);
+        $this->assertTrue($account->active);
+        $this->assertEquals('0', $account->virtual_balance);
+        $this->assertEquals('', $account->getMeta('accountRole'));
+    }
+
+    /**
+     * Create an expense account. This overrules the virtual balance.
+     * Role should not be set.
+     *
+     * @covers \FireflyIII\Factory\AccountFactory
+     * @covers \FireflyIII\Factory\AccountMetaFactory
+     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     */
+    public function testCreateBasicExpenseFullType()
+    {
+
+        $data = [
+            'account_type_id' => null,
+            'accountType'     => 'Expense account',
+            'iban'            => null,
+            'name'            => 'Basic expense account #' . random_int(1, 1000),
             'virtualBalance'  => '1243',
             'active'          => true,
             'accountRole'     => 'defaultAsset',
@@ -153,7 +188,7 @@ class AccountFactoryTest extends TestCase
             'account_type_id'    => null,
             'accountType'        => 'asset',
             'iban'               => null,
-            'name'               => 'Basic asset account #' . rand(1, 1000),
+            'name'               => 'Basic asset account #' . random_int(1, 1000),
             'virtualBalance'     => null,
             'active'             => true,
             'accountRole'        => 'defaultAsset',
@@ -194,7 +229,7 @@ class AccountFactoryTest extends TestCase
             'account_type_id'    => null,
             'accountType'        => 'asset',
             'iban'               => null,
-            'name'               => 'Basic asset account #' . rand(1, 1000),
+            'name'               => 'Basic asset account #' . random_int(1, 1000),
             'virtualBalance'     => null,
             'active'             => true,
             'accountRole'        => 'defaultAsset',
@@ -234,7 +269,7 @@ class AccountFactoryTest extends TestCase
             'account_type_id' => null,
             'accountType'     => 'asset',
             'iban'            => 'NL18RABO0326747238',
-            'name'            => 'Basic asset account #' . rand(1, 1000),
+            'name'            => 'Basic asset account #' . random_int(1, 1000),
             'virtualBalance'  => null,
             'active'          => true,
             'accountRole'     => 'defaultAsset',
@@ -268,7 +303,7 @@ class AccountFactoryTest extends TestCase
             'account_type_id' => null,
             'accountType'     => 'asset',
             'iban'            => 'NL1XRABO032674X238',
-            'name'            => 'Basic asset account #' . rand(1, 1000),
+            'name'            => 'Basic asset account #' . random_int(1, 1000),
             'virtualBalance'  => null,
             'active'          => true,
             'accountRole'     => 'defaultAsset',
@@ -302,7 +337,7 @@ class AccountFactoryTest extends TestCase
             'account_type_id'    => null,
             'accountType'        => 'asset',
             'iban'               => null,
-            'name'               => 'Basic asset account #' . rand(1, 1000),
+            'name'               => 'Basic asset account #' . random_int(1, 1000),
             'virtualBalance'     => null,
             'active'             => true,
             'accountRole'        => 'defaultAsset',
@@ -343,7 +378,7 @@ class AccountFactoryTest extends TestCase
             'account_type_id' => null,
             'accountType'     => 'asset',
             'iban'            => null,
-            'name'            => 'Basic asset account #' . rand(1, 1000),
+            'name'            => 'Basic asset account #' . random_int(1, 1000),
             'virtualBalance'  => null,
             'active'          => true,
             'accountRole'     => 'defaultAsset',

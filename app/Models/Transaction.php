@@ -68,6 +68,8 @@ use Watson\Validating\ValidatingTrait;
  * @property int    $transaction_currency_dp
  * @property string $transaction_currency_code
  * @property string $description
+ * @property bool   $is_split
+ * @property int    $attachmentCount
  */
 class Transaction extends Model
 {
@@ -91,7 +93,7 @@ class Transaction extends Model
      */
     protected $fillable
         = ['account_id', 'transaction_journal_id', 'description', 'amount', 'identifier', 'transaction_currency_id', 'foreign_currency_id',
-           'foreign_amount','reconciled'];
+           'foreign_amount', 'reconciled'];
     /**
      * @var array
      */
@@ -135,6 +137,7 @@ class Transaction extends Model
      * @param string $value
      *
      * @return Transaction
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value): Transaction
     {

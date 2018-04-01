@@ -36,8 +36,9 @@ class JournalList implements BinderInterface
      * @param Route  $route
      *
      * @return mixed
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public static function routeBinder(string $value, Route $route):  Collection
+    public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
             $list     = [];

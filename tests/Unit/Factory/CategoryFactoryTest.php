@@ -67,7 +67,7 @@ class CategoryFactoryTest extends TestCase
     public function testFindOrCreateInvalidID()
     {
         $existing = $this->user()->categories()->max('id');
-        $existing = $existing + 4;
+        $existing += 4;
 
         /** @var CategoryFactory $factory */
         $factory = app(CategoryFactory::class);
@@ -80,7 +80,7 @@ class CategoryFactoryTest extends TestCase
      */
     public function testFindOrCreateNewName()
     {
-        $name = 'Some new category #' . rand(1, 1000);
+        $name = 'Some new category #' . random_int(1, 1000);
 
         /** @var CategoryFactory $factory */
         $factory = app(CategoryFactory::class);

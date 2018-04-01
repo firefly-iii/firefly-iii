@@ -40,6 +40,16 @@ interface BudgetRepositoryInterface
     public function cleanupBudgets(): bool;
 
     /**
+     * A method that returns the amount of money budgeted per day for this budget,
+     * on average.
+     *
+     * @param Budget $budget
+     *
+     * @return string
+     */
+    public function budgetedPerDay(Budget $budget): string;
+
+    /**
      * This method collects various info on budgets, used on the budget page and on the index.
      *
      * @param Collection $budgets
@@ -73,20 +83,12 @@ interface BudgetRepositoryInterface
      * Find a budget.
      *
      * @param int $budgetId
+     *
      * @deprecated
      *
      * @return Budget
      */
     public function find(int $budgetId): Budget;
-
-    /**
-     * Find a budget or return NULL
-     *
-     * @param int $budgetId
-     *
-     * @return Budget|null
-     */
-    public function findNull(int $budgetId): ?Budget;
 
     /**
      * Find a budget.
@@ -96,6 +98,15 @@ interface BudgetRepositoryInterface
      * @return Budget|null
      */
     public function findByName(string $name): ?Budget;
+
+    /**
+     * Find a budget or return NULL
+     *
+     * @param int $budgetId
+     *
+     * @return Budget|null
+     */
+    public function findNull(int $budgetId): ?Budget;
 
     /**
      * This method returns the oldest journal or transaction date known to this budget.

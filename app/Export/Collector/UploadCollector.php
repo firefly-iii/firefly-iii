@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * UploadCollector.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,13 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 namespace FireflyIII\Export\Collector;
 
 use Crypt;
+use Exception;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Log;
 use Storage;
 
@@ -99,7 +99,7 @@ class UploadCollector extends BasicCollector implements CollectorInterface
         $content = '';
         try {
             $content = Crypt::decrypt($this->uploadDisk->get(sprintf('%s.upload', $key)));
-        } catch (FileNotFoundException | DecryptException $e) {
+        } catch (Exception | DecryptException $e) {
             Log::error(sprintf('Could not decrypt old import file "%s". Skipped because: %s', $key, $e->getMessage()));
         }
 

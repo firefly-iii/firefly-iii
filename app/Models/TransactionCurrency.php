@@ -57,6 +57,7 @@ class TransactionCurrency extends Model
      * @param string $value
      *
      * @return TransactionCurrency
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value): TransactionCurrency
     {

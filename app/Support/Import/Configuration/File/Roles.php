@@ -52,26 +52,28 @@ class Roles implements ConfigurationInterface
      * @return array
      *
      * @throws \League\Csv\Exception
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function getData(): array
     {
         $content = $this->repository->uploadFileContents($this->job);
         $config  = $this->getConfig();
         $headers = [];
+        $offset  = 0;
 
         // create CSV reader.
         $reader = Reader::createFromString($content);
         $reader->setDelimiter($config['delimiter']);
 
+        // CSV headers. Ignore reader. Simply get the first row.
         if ($config['has-headers']) {
-            // get headers:
-            $reader->setHeaderOffset(0);
-            $headers = $reader->getHeader();
+            $offset  = 1;
+            $stmt    = (new Statement)->limit(1)->offset(0);
+            $records = $stmt->process($reader);
+            $headers = $records->fetchOne(0);
         }
 
         // example rows:
-        $stmt = (new Statement)->limit(intval(config('csv.example_rows', 5)))->offset(0);
+        $stmt = (new Statement)->limit(intval(config('csv.example_rows', 5)))->offset($offset);
         // set data:
         $roles = $this->getRoles();
         asort($roles);
@@ -182,6 +184,7 @@ class Roles implements ConfigurationInterface
      */
     private function ignoreUnmappableColumns(): bool
     {
+        Log::debug('Now in ignoreUnmappableColumns()');
         $config = $this->getConfig();
         $count  = $config['column-count'];
         for ($i = 0; $i < $count; ++$i) {
@@ -252,24 +255,38 @@ class Roles implements ConfigurationInterface
                 $hasForeignAmount = true;
             }
         }
-        if ($assigned > 0 && $hasAmount && ($hasForeignCode === false && $hasForeignAmount === false)) {
+        Log::debug(
+            sprintf(
+                'Assigned is %d, hasAmount %s, hasForeignCode %s, hasForeignAmount %s',
+                $assigned,
+                var_export($hasAmount, true),
+                var_export($hasForeignCode, true),
+                var_export($hasForeignAmount, true)
+            )
+        );
+        // all assigned and correct foreign info
+        if ($assigned > 0 && $hasAmount && ($hasForeignCode === $hasForeignAmount)) {
             $this->warning = '';
             $this->saveConfig($config);
+            Log::debug('isRolesComplete() returns true.');
 
             return true;
         }
         // warn if has foreign amount but no currency code:
         if ($hasForeignAmount && !$hasForeignCode) {
             $this->warning = strval(trans('import.foreign_amount_warning'));
+            Log::debug('isRolesComplete() returns FALSE because foreign amount present without foreign code.');
 
             return false;
         }
 
         if (0 === $assigned || !$hasAmount) {
             $this->warning = strval(trans('import.roles_warning'));
+            Log::debug('isRolesComplete() returns FALSE because no amount present.');
 
             return false;
         }
+        Log::debug('isRolesComplete() returns FALSE because no reason.');
 
         return false;
     }

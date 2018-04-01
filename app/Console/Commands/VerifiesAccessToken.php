@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * VerifiesAccessToken.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
@@ -49,11 +49,11 @@ trait VerifiesAccessToken
      */
     protected function verifyAccessToken(): bool
     {
-        $userId = intval($this->option('user'));
-        $token  = strval($this->option('token'));
+        $userId = (int)$this->option('user');
+        $token  = (string)$this->option('token');
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $user       = $repository->find($userId);
+        $user       = $repository->findNull($userId);
 
         if (null === $user) {
             Log::error(sprintf('verifyAccessToken(): no such user for input "%d"', $userId));
@@ -68,7 +68,7 @@ trait VerifiesAccessToken
         }
         if (!($accessToken->data === $token)) {
             Log::error(sprintf('Invalid access token for user #%d.', $userId));
-            Log::error(sprintf('Token given is "%s", expected "%s".', $token, $accessToken->data));
+            Log::error(sprintf('Token given is "%s", expected something else.', $token));
 
             return false;
         }

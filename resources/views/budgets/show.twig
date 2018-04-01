@@ -34,7 +34,7 @@
             </div>
         </div>
     </div>
-
+{% if budgetLimit %}
     <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
             <div class="box">
@@ -73,6 +73,7 @@
             </div>
         </div>
     </div>
+{% endif %}
 
     <div class="row">
         <div class="col-lg-offset-9 col-lg-3 col-md-offset-9 col-md-3 col-sm-12 col-xs-12">
@@ -168,7 +169,6 @@
         var expenseExpenseUri = '{{ route('chart.budget.expense-expense', [budget.id, budgetLimit.id]) }}';
         {% else %}
         var budgetChartUri = '{{ route('chart.budget.budget', [budget.id] ) }}';
-
         var expenseCategoryUri = '{{ route('chart.budget.expense-category', [budget.id]) }}';
         var expenseAssetUri = '{{ route('chart.budget.expense-asset', [budget.id]) }}';
         var expenseExpenseUri = '{{ route('chart.budget.expense-expense', [budget.id]) }}';

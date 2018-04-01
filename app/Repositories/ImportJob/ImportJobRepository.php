@@ -210,6 +210,8 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      * @param UploadedFile $file
      *
      * @return bool
+     * @throws \RuntimeException
+     * @throws \LogicException
      */
     public function processConfiguration(ImportJob $job, UploadedFile $file): bool
     {
@@ -247,6 +249,9 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      *
      * @return bool
      *
+     * @throws \RuntimeException
+     * @throws \LogicException
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function processFile(ImportJob $job, ?UploadedFile $file): bool
@@ -311,18 +316,10 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      */
     public function setExtendedStatus(ImportJob $job, array $array): ImportJob
     {
-        // remove 'errors' because it gets larger and larger and larger...
-        $display = $array;
-        unset($display['errors']);
-        Log::debug(sprintf('Incoming extended status for job "%s" is (except errors): ', $job->key), $display);
         $currentStatus        = $job->extended_status;
         $newStatus            = array_merge($currentStatus, $array);
         $job->extended_status = $newStatus;
         $job->save();
-
-        // remove 'errors' because it gets larger and larger and larger...
-        unset($newStatus['errors']);
-        Log::debug(sprintf('Set extended status of job "%s" to (except errors): ', $job->key), $newStatus);
 
         return $job;
     }

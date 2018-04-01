@@ -56,12 +56,14 @@ class AuthenticateTwoFactor
      * @param array   ...$guards
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|mixed
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Illuminate\Container\EntryNotFoundException
      */
     public function handle($request, Closure $next, ...$guards)
     {
         if ($this->auth->guest()) {
-            return redirect()->guest('login');
+            return response()->redirectTo(route('login'));
         }
 
         $is2faEnabled = app('preferences')->get('twoFactorAuthEnabled', false)->data;
@@ -71,7 +73,7 @@ class AuthenticateTwoFactor
         if ($is2faEnabled && $has2faSecret && !$is2faAuthed) {
             Log::debug('Does not seem to be 2 factor authed, redirect.');
 
-            return redirect(route('two-factor.index'));
+            return response()->redirectTo(route('two-factor.index'));
         }
 
         return $next($request);

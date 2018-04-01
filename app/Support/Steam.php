@@ -242,6 +242,7 @@ class Steam
      * @param     $value
      *
      * @return string
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
     public function decrypt(int $isEncrypted, string $value)
     {
@@ -290,10 +291,13 @@ class Steam
     /**
      * @param string $amount
      *
-     * @return string
+     * @return string|null
      */
-    public function opposite(string $amount): string
+    public function opposite(string $amount = null): ?string
     {
+        if (is_null($amount)) {
+            return null;
+        }
         $amount = bcmul($amount, '-1');
 
         return $amount;

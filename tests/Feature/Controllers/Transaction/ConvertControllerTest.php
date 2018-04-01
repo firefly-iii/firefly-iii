@@ -22,14 +22,18 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
 
+use Amount;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -42,6 +46,16 @@ use Tests\TestCase;
 class ConvertControllerTest extends TestCase
 {
     /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
+    /**
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::__construct
      */
@@ -49,13 +63,23 @@ class ConvertControllerTest extends TestCase
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->once()->andReturn(new Collection);
 
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection)->once();
+
+        // mock stuff for new account list thing.
+        $currency = TransactionCurrency::first();
+        $account  = factory(Account::class)->make();
+        $this->mock(CurrencyRepositoryInterface::class);
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('getAccountsByType')
+                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->once();
+
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($currency)->times(3);
+        Amount::shouldReceive('formatAnything')->andReturn('0')->once();
 
 
         $this->be($this->user());
@@ -72,13 +96,16 @@ class ConvertControllerTest extends TestCase
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->once()->andReturn(new Collection);
-
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection)->once();
+
+        // mock stuff for new account list thing.
+        $currency = TransactionCurrency::first();
+
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($currency)->twice();
+        Amount::shouldReceive('formatAnything')->andReturn('0')->once();
 
         $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
         $this->be($this->user());
@@ -94,9 +121,6 @@ class ConvertControllerTest extends TestCase
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->once()->andReturn(new Collection);
-
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
 
@@ -114,11 +138,15 @@ class ConvertControllerTest extends TestCase
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->once()->andReturn(new Collection);
-
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
+
+        // mock stuff for new account list thing.
+        $currency      = TransactionCurrency::first();
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $currencyRepos->shouldReceive('findNull')->andReturn($currency);
+
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($currency)->once();
 
         $this->be($this->user());
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)
@@ -139,13 +167,11 @@ class ConvertControllerTest extends TestCase
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->once()->andReturn(new Collection);
-
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection)->once();
+
 
         $transfer = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->first();
         $this->be($this->user());
@@ -161,13 +187,15 @@ class ConvertControllerTest extends TestCase
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->once()->andReturn(new Collection);
-
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection)->once();
+
+        // mock stuff for new account list thing.
+        $currency = TransactionCurrency::first();
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($currency)->times(2);
+        Amount::shouldReceive('formatAnything')->andReturn('0')->once();
 
         $transfer = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->first();
         $this->be($this->user());
@@ -183,13 +211,15 @@ class ConvertControllerTest extends TestCase
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->once()->andReturn(new Collection);
-
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection)->once();
+
+        // mock stuff for new account list thing.
+        $currency = TransactionCurrency::first();
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($currency)->times(2);
+        Amount::shouldReceive('formatAnything')->andReturn('0')->once();
 
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
         $this->be($this->user());
@@ -205,13 +235,22 @@ class ConvertControllerTest extends TestCase
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->once()->andReturn(new Collection);
-
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection)->once();
+
+        // mock stuff for new account list thing.
+        $currency = TransactionCurrency::first();
+        $account  = factory(Account::class)->make();
+        $this->mock(CurrencyRepositoryInterface::class);
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('getAccountsByType')
+                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->once();
+
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($currency)->times(3);
+        Amount::shouldReceive('formatAnything')->andReturn('0')->once();
 
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
         $this->be($this->user());

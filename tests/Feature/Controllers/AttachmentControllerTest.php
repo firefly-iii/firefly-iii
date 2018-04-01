@@ -25,6 +25,7 @@ namespace Tests\Feature\Controllers;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -36,6 +37,16 @@ use Tests\TestCase;
  */
 class AttachmentControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController::delete
      */
@@ -113,6 +124,7 @@ class AttachmentControllerTest extends TestCase
     {
         $attachRepository = $this->mock(AttachmentRepositoryInterface::class);
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
+        $attachRepository->shouldReceive('getNoteText')->andReturn('OK');
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $this->be($this->user());
         $response = $this->get(route('attachments.edit', [1]));
@@ -134,7 +146,7 @@ class AttachmentControllerTest extends TestCase
 
         $this->session(['attachments.edit.uri' => 'http://localhost']);
         $data = [
-            'title'       => 'Some updated title ' . rand(1000, 9999),
+            'title'       => 'Some updated title ' . random_int(1000, 9999),
             'notes'       => 'A',
             'description' => 'B',
         ];

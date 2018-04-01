@@ -86,6 +86,7 @@ class Category extends Model
      * @param string $value
      *
      * @return Category
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value): Category
     {
@@ -105,6 +106,7 @@ class Category extends Model
      * @param $value
      *
      * @return string
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
     public function getNameAttribute($value)
     {
@@ -119,6 +121,8 @@ class Category extends Model
      * @codeCoverageIgnore
      *
      * @param $value
+     *
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setNameAttribute($value)
     {

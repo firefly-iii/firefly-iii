@@ -50,6 +50,7 @@ class DebugController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \InvalidArgumentException
      */
     public function index(Request $request)
     {
@@ -57,11 +58,11 @@ class DebugController extends Controller
         $replace = ['\~', '# '];
 
         $phpVersion     = str_replace($search, $replace, PHP_VERSION);
-        $phpOs          = str_replace($search, $replace, php_uname());
+        $phpOs          = str_replace($search, $replace, PHP_OS);
         $interface      = PHP_SAPI;
         $now            = Carbon::create()->format('Y-m-d H:i:s e');
-        $extensions     = join(', ', get_loaded_extensions());
-        $drivers        = join(', ', DB::availableDrivers());
+        $extensions     = implode(', ', get_loaded_extensions());
+        $drivers        = implode(', ', DB::availableDrivers());
         $currentDriver  = DB::getDriverName();
         $userAgent      = $request->header('user-agent');
         $isSandstorm    = var_export(env('IS_SANDSTORM', 'unknown'), true);
@@ -76,9 +77,18 @@ class DebugController extends Controller
         $packages       = $this->collectPackages();
         $cacheDriver    = env('CACHE_DRIVER', 'unknown');
 
+        // set languages, see what happens:
+        $original       = setlocale(LC_ALL, 0);
+        $localeAttempts = [];
+        $parts          = explode(',', trans('config.locale'));
+        foreach ($parts as $code) {
+            $code                  = trim($code);
+            $localeAttempts[$code] = var_export(setlocale(LC_ALL, $code), true);
+        }
+        setlocale(LC_ALL, $original);
 
         // get latest log file:
-        $logger     = Log::getMonolog();
+        $logger     = Log::driver();
         $handlers   = $logger->getHandlers();
         $logContent = '';
         foreach ($handlers as $handler) {
@@ -89,6 +99,7 @@ class DebugController extends Controller
                         $logContent = file_get_contents($logFile);
                     } catch (Exception $e) {
                         // don't care
+                        Log::debug(sprintf('Could not read log file. %s', $e->getMessage()));
                     }
                 }
             }
@@ -100,8 +111,7 @@ class DebugController extends Controller
             'debug',
             compact(
                 'phpVersion',
-                'extensions',
-                'carbon',
+                'extensions', 'localeAttempts',
                 'appEnv',
                 'appDebug',
                 'appLog',

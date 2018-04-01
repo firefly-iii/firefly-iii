@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support;
 
 use Cache;
+use Exception;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -50,8 +51,6 @@ class Preferences
      * @param $name
      *
      * @return bool
-     *
-     * @throws \Exception
      */
     public function delete(string $name): bool
     {
@@ -59,7 +58,11 @@ class Preferences
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
-        Preference::where('user_id', auth()->user()->id)->where('name', $name)->delete();
+        try {
+            Preference::where('user_id', auth()->user()->id)->where('name', $name)->delete();
+        } catch (Exception $e) {
+            // don't care.
+        }
 
         return true;
     }

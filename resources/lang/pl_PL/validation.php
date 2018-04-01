@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * validation.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,10 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     'iban'                           => 'To nie jest prawidłowy IBAN.',
+    'source_equals_destination'      => 'Konto źródłowe jest równe kontu docelowemu',
     'unique_account_number_for_user' => 'Wygląda na to, że ten numer konta jest już w użyciu.',
     'unique_iban_for_user'           => 'Wygląda na to, że ten IBAN jest już w użyciu.',
     'deleted_user'                   => 'Ze względu na zabezpieczenia nie możesz się zarejestrować używając tego adresu e-mail.',

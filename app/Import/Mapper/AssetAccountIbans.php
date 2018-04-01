@@ -53,6 +53,7 @@ class AssetAccountIbans implements MapperInterface
                 $list[$accountId] = $account->name;
             }
         }
+        /** @noinspection AdditionOperationOnArraysInspection */
         $list = $topList + $list;
         asort($list);
         $list = [0 => trans('import.map_do_not_map')] + $list;

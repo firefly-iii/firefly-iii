@@ -41,7 +41,7 @@ class Translation extends Twig_Extension
         $filters[] = new Twig_SimpleFilter(
             '_',
             function ($name) {
-                return strval(trans(sprintf('firefly.%s', $name)));
+                return (string)trans(sprintf('firefly.%s', $name));
             },
             ['is_safe' => ['html']]
         );
@@ -59,13 +59,6 @@ class Translation extends Twig_Extension
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getName(): string
-    {
-        return 'FireflyIII\Support\Twig\Translation';
-    }
 
     /**
      * @return Twig_SimpleFunction

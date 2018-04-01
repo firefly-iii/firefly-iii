@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * import.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     // status of import:
@@ -97,6 +98,7 @@ return [
     // not csv, but normal warning
     'roles_warning'                        => 'Пожалуйста, отметьте хотя бы один столбец как столбец с суммой. Также целесообразно выбрать столбец для описания, даты и спонсорского счёта.',
     'foreign_amount_warning'               => 'Если вы пометите этот столбец, как содержащий сумму в иностранной валюте, вы также должны указать столбец, который указывает, какая именно это валюта.',
+
     // file, map data
     'file_map_title'                       => 'Настройки импорта (4/4) - Сопоставление данных импорта с данными Firefly III',
     'file_map_text'                        => 'В следующих таблицах значение слева отображает информацию, найденную в загруженном файле. Ваша задача - сопоставить это значение (если это возможно) со значением, уже имеющимся в вашей базе данных. Firefly будет придерживаться этого сопоставления. Если для сопоставления нет значения или вы не хотите отображать определённое значение, ничего не выбирайте.',
@@ -131,28 +133,40 @@ return [
     'column_date-book'                     => 'Дата записи транзакции',
     'column_date-process'                  => 'Дата обработки транзакции',
     'column_date-transaction'              => 'Дата',
+    'column_date-due'                      => 'Дата транзакции',
+    'column_date-payment'                  => 'Дата оплаты',
+    'column_date-invoice'                  => 'Дата выставления счёта',
     'column_description'                   => 'Описание',
     'column_opposing-iban'                 => 'Спонсорский счёт (IBAN)',
+    'column_opposing-bic'                  => 'Спонсорский счёт (BIC)',
     'column_opposing-id'                   => 'ID спонсорского счёта (соответствующий FF3)',
     'column_external-id'                   => 'Внешний ID',
     'column_opposing-name'                 => 'Спонсорский счёт (название)',
     'column_rabo-debit-credit'             => 'Индикатор дебита/кредита, специфичный для Rabobank',
     'column_ing-debit-credit'              => 'Индикатор дебита/кредита, специфичный для ING',
-    'column_sepa-ct-id'                    => 'Идентификационный номер SEPA Credit Transfer',
-    'column_sepa-ct-op'                    => 'Спонсорский счет SEPA Credit Transfer',
-    'column_sepa-db'                       => 'Прямой дебет SEPA',
+    'column_sepa-ct-id'                    => 'Идентификатор SEPA end-to-end',
+    'column_sepa-ct-op'                    => 'Идентификатор учетной записи SEPA',
+    'column_sepa-db'                       => 'Идентификатор SEPA Mandate',
+    'column_sepa-cc'                       => 'Код очистки SEPA',
+    'column_sepa-ci'                       => 'Идентификатор кредитора SEPA',
+    'column_sepa-ep'                       => 'Внешняя цель SEPA',
+    'column_sepa-country'                  => 'Код страны SEPA',
     'column_tags-comma'                    => 'Метки (разделены запятыми)',
     'column_tags-space'                    => 'Метки (разделены пробелами)',
     'column_account-number'                => 'Основной счёт (номер счёта)',
     'column_opposing-number'               => 'Спонсорский счёт (номер счёта)',
     'column_note'                          => 'Примечания',
+    'column_internal-reference'            => 'Внутренняя ссылка',
 
     // prerequisites
     'prerequisites'                        => 'Требования',
 
     // bunq
     'bunq_prerequisites_title'             => 'Требования для импорта из bunq',
-    'bunq_prerequisites_text'              => 'Чтобы импортировать из bunq, вам нужно получить ключ API. Вы можете сделать это через приложение.',
+    'bunq_prerequisites_text'              => 'Чтобы импортировать из bunq, вам нужно получить ключ API. Вы можете сделать это через приложение. Обратите внимание, что функция импорта для bunq находится в бета-тестирования. Было протестировано только API песочницы (sandbox).',
+    'bunq_do_import'                       => 'Да, импортировать с этого счёта',
+    'bunq_accounts_title'                  => 'Счета Bunq',
+    'bunq_accounts_text'                   => 'Эти счета связаны с вашей учётной записью bunq. Выберите счета, данные о о которых вы хотите импортировать, и счёт, на который будут импортированы транзакции.',
 
     // Spectre
     'spectre_title'                        => 'Импорт с использованием Spectre',
@@ -187,4 +201,3 @@ return [
     // various other strings:
     'imported_from_account'                => 'Импортировано со счёта ":account"',
 ];
-

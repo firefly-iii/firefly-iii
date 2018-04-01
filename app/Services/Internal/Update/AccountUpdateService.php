@@ -23,14 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
-use Exception;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountMeta;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
-use Log;
 
 /**
  * Class AccountUpdateService
@@ -40,7 +34,6 @@ class AccountUpdateService
     use AccountServiceTrait;
 
 
-
     /**
      * Update account data.
      *
@@ -48,6 +41,7 @@ class AccountUpdateService
      * @param array   $data
      *
      * @return Account
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function update(Account $account, array $data): Account
     {

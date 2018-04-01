@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * TransactionCurrencyFactory.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,17 +20,43 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
 use FireflyIII\Models\TransactionCurrency;
+use Illuminate\Database\QueryException;
+use Log;
 
 /**
  * Class TransactionCurrencyFactory
  */
 class TransactionCurrencyFactory
 {
+    /**
+     * @param array $data
+     *
+     * @return TransactionCurrency|null
+     */
+    public function create(array $data): ?TransactionCurrency
+    {
+        $result = null;
+        try {
+            /** @var TransactionCurrency $currency */
+            $result = TransactionCurrency::create(
+                [
+                    'name'           => $data['name'],
+                    'code'           => $data['code'],
+                    'symbol'         => $data['symbol'],
+                    'decimal_places' => $data['decimal_places'],
+                ]
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not create new currency: %s', $e->getMessage()));
+        }
+
+        return $result;
+    }
+
     /**
      * @param int|null    $currencyId
      * @param null|string $currencyCode

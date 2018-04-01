@@ -16,7 +16,17 @@
     </tr>
     </thead>
     <tbody>
+    {% set sum_min =0 %}
+    {% set sum_max =0 %}
+    {% set expected_total = 0 %}
+    {% set count = 0 %}
     {% for entry in bills %}
+        {% if entry.active %}
+            {% set count = count + 1 %}
+            {%  set sum_min = sum_min + entry.amount_min %}
+            {%  set sum_max = sum_min + entry.amount_max %}
+            {% set expected_total = expected_total + ((entry.amount_min + entry.amount_max) / 2) %}
+        {% endif %}
         <tr>
             <td class="hidden-sm hidden-xs">
                 <div class="btn-group btn-group-xs edit_tr_buttons"><a href="{{ route('bills.edit',entry.id) }}" class="btn btn-default btn-xs"><i
@@ -82,7 +92,7 @@
             {% if entry.paid_dates|length > 0 and entry.active %}
                 <td class="paid_in_period text-success" data-value="{{ entry.paid_dates[0] }}">
                     {% for date in entry.paid_dates %}
-                        {{ formatDate(date, monthAndDayFormat) }}<br />
+                        {{ formatDate(date, monthAndDayFormat) }}<br/>
                     {% endfor %}
                 </td>
                 <td class="expected_in_period hidden-sm hidden-xs" data-value="{{ entry.next_expected_match }}">
@@ -119,9 +129,57 @@
                 {% endif %}
             </td>
         </tr>
-
     {% endfor %}
     </tbody>
+    <tfoot>
+    <tr>
+        <td style="text-align:right;" colspan="3">{{ 'sum'|_ }} ({{ 'active_bills_only'|_ }})</td>
+        <td style="text-align:right;" colspan="1">
+            <span style="margin-right:5px;">
+                {{ sum_min|formatAmount }}
+            </span>
+        </td>
+        <td style="text-align:right;" colspan="1">
+            <span style="margin-right:5px;">
+                {{ sum_max|formatAmount }}
+            </span>
+        </td>
+        <td colspan="5">&nbsp;</td>
+    </tr>
+
+        {# calculate total#}
+    {% if count > 0 %}
+        {% set avg_min = (sum_min / count) %}
+        {% set avg_max = (sum_max / count) %}
+    {% else %}
+        {% set avg_min = 0 %}
+        {% set avg_max = 0 %}
+    {% endif %}
+
+    <tr>
+        <td style="text-align:right;" colspan="3">{{ 'average_per_bill'|_ }} ({{ 'active_bills_only'|_ }})</td>
+        <td style="text-align:right;" colspan="1">
+            <span style="margin-right:5px;">
+                {{ avg_min|formatAmount }}
+            </span>
+        </td>
+        <td style="text-align:right;" colspan="1">
+            <span style="margin-right:5px;">
+                {{ avg_max|formatAmount }}
+            </span>
+        </td>
+        <td colspan="6">&nbsp;</td>
+    </tr>
+    <tr>
+        <td style="text-align:right;" colspan="3">{{ 'expected_total'|_ }} ({{ 'active_bills_only'|_ }})</td>
+        <td style="text-align:right;" colspan="1">
+            <span style="margin-right:5px;">
+                {{ expected_total|formatAmount }}
+            </span>
+        </td>
+        <td colspan="6">&nbsp;</td>
+    </tr>
+    </tfoot>
 </table>
 <div style="padding-left:8px;">
     {{ paginator.render|raw }}

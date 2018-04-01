@@ -25,6 +25,7 @@ namespace FireflyIII\Services\Bunq\Request;
 use FireflyIII\Services\Bunq\Object\DeviceServer;
 use FireflyIII\Services\Bunq\Token\InstallationToken;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class ListDeviceServerRequest.
@@ -40,24 +41,30 @@ class ListDeviceServerRequest extends BunqRequest
     {
         parent::__construct();
         $this->devices = new Collection;
+        Log::debug('Constructed ListDeviceServerRequest');
     }
 
     /**
-     * @throws \Exception
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function call(): void
     {
-        $uri                                     = '/v1/device-server';
+        Log::debug('Now in ListDeviceServerRequest::call()');
+        $uri                                     = 'device-server';
         $data                                    = [];
         $headers                                 = $this->getDefaultHeaders();
         $headers['X-Bunq-Client-Authentication'] = $this->installationToken->getToken();
         $response                                = $this->sendSignedBunqGet($uri, $data, $headers);
-
+        Log::debug('Returned from sending device-server list request!');
         // create device server objects:
         $raw = $this->getArrayFromResponse('DeviceServer', $response);
+        Log::debug(sprintf('Count %d entries in response array.', count($raw)));
+        Log::debug('Full response', $response);
         /** @var array $entry */
         foreach ($raw as $entry) {
-            $this->devices->push(new DeviceServer($entry));
+            $server = new DeviceServer($entry);
+            Log::debug(sprintf('Created server "%s" with IP "%s"', $server->getId()->getId(), $server->getIp()));
+            $this->devices->push($server);
         }
 
         return;

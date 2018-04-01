@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, what, moment, start, end) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, what, start, end) }}
 {% endblock %}
 
 {% block content %}
@@ -10,7 +10,7 @@
     {% if periods.count > 0 %}
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('transactions.index',[what, 'all']) }}">{{ 'showEverything'|_ }}</a></p>
+                <p class="small text-center"><a href="{{ route('transactions.index.all',[what]) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
     {% endif %}
@@ -38,7 +38,7 @@
                     {% if periods.count > 0 %}
                         <p>
                             <i class="fa fa-calendar"></i>
-                            <a href="{{ route('transactions.index', [what, 'all']) }}">{{ 'show_all_no_filter'|_ }}</a>
+                            <a href="{{ route('transactions.index.all', [what]) }}">{{ 'show_all_no_filter'|_ }}</a>
                         </p>
                     {% else %}
                         <p>
@@ -56,10 +56,9 @@
                 {% for period in periods %}
 
                     {% if period.sum != 0 %}
-
-                        <div class="box {% if period.date == start %}box-solid box-primary{% endif %}">
+                        <div class="box">
                             <div class="box-header with-border">
-                                <h3 class="box-title"><a href="{{ route('transactions.index',[what, period.string]) }}">{{ period.name }}</a>
+                                <h3 class="box-title"><a href="{{ route('transactions.index',[what, period.start,period.end]) }}">{{ period.name }}</a>
                                 </h3>
                             </div>
                             <div class="box-body no-padding">
@@ -91,7 +90,6 @@
                                     {% endfor %}
                                     </tbody>
                                 </table>
-
                             </div>
                         </div>
                     {% endif %}
@@ -105,7 +103,7 @@
     {% if periods.count > 0 %}
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('transactions.index',[what, 'all']) }}">{{ 'showEverything'|_ }}</a></p>
+                <p class="small text-center"><a href="{{ route('transactions.index.all',[what]) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
     {% endif %}

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
-use Exception;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Factory\TransactionFactory;
@@ -128,6 +127,7 @@ trait AccountServiceTrait
      * @param array   $data
      *
      * @return TransactionJournal|null
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function storeIBJournal(Account $account, array $data): ?TransactionJournal
     {
@@ -211,8 +211,6 @@ trait AccountServiceTrait
     }
 
     /**
-     * TODO make sure this works (user ID, etc.)
-     *
      * @param User   $user
      * @param string $name
      *
@@ -220,7 +218,7 @@ trait AccountServiceTrait
      */
     public function storeOpposingAccount(User $user, string $name): Account
     {
-        $name = $name . ' initial balance';
+        $name .= ' initial balance';
         Log::debug('Going to create an opening balance opposing account.');
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
@@ -234,6 +232,7 @@ trait AccountServiceTrait
      * @param array   $data
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function updateIB(Account $account, array $data): bool
     {
@@ -255,6 +254,7 @@ trait AccountServiceTrait
 
             return true;
         }
+
         return true; // @codeCoverageIgnore
     }
 

@@ -87,12 +87,30 @@ interface CurrencyRepositoryInterface
 
     /**
      * Find by currency name.
-     *
+     * @deprecated
      * @param string $currencyName
      *
      * @return TransactionCurrency
      */
     public function findByName(string $currencyName): TransactionCurrency;
+
+    /**
+     * Find by currency name.
+     *
+     * @param string $currencyName
+     *
+     * @return TransactionCurrency
+     */
+    public function findByNameNull(string $currencyName): ?TransactionCurrency;
+
+    /**
+     * Find by currency symbol.
+     * @deprecated
+     * @param string $currencySymbol
+     *
+     * @return TransactionCurrency
+     */
+    public function findBySymbol(string $currencySymbol): TransactionCurrency;
 
     /**
      * Find by currency symbol.
@@ -101,7 +119,7 @@ interface CurrencyRepositoryInterface
      *
      * @return TransactionCurrency
      */
-    public function findBySymbol(string $currencySymbol): TransactionCurrency;
+    public function findBySymbolNull(string $currencySymbol): ?TransactionCurrency;
 
     /**
      * Find by ID, return NULL if not found.

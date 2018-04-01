@@ -46,7 +46,7 @@ class ListUserRequest extends BunqRequest
      */
     public function call(): void
     {
-        $uri                                     = '/v1/user';
+        $uri                                     = 'user';
         $data                                    = [];
         $headers                                 = $this->getDefaultHeaders();
         $headers['X-Bunq-Client-Authentication'] = $this->sessionToken->getToken();

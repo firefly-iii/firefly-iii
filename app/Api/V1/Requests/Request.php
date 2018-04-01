@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Request.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -18,11 +19,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Http\Requests\Request as FireflyIIIRequest;
+
 /**
  * Class Request.
  */

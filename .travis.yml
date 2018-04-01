@@ -12,18 +12,16 @@ install:
   - composer update --no-scripts
   - cp .env.testing .env
   - php artisan clear-compiled
-  - php artisan optimize
   - php artisan env
   - cp .env.testing .env
   - wget -q https://github.com/firefly-iii/test-data/raw/master/storage/database.sqlite -O storage/database/database.sqlite
   - mkdir -p build/logs
 
 script:
-  - phpunit -c phpunit.coverage.xml
+  - ./vendor/bin/phpunit -c phpunit.coverage.xml
 
 after_success:
   - travis_retry php vendor/bin/php-coveralls -x storage/build/clover-all.xml
-  - bash <(curl -s https://codecov.io/bash) -f storage/build/clover-all.xml
 
 # safelist
 branches:

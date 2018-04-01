@@ -81,7 +81,22 @@ class BunqToken
     }
 
     /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'id'      => $this->id,
+            'created' => $this->created->format('Y-m-d H:i:s.u'),
+            'updated' => $this->updated->format('Y-m-d H:i:s.u'),
+            'token'   => $this->token,
+        ];
+    }
+
+    /**
      * @param array $response
+     *
+     * @throws \InvalidArgumentException
      */
     protected function makeTokenFromResponse(array $response): void
     {

@@ -31,7 +31,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Response;
 
 /**
  * Class BillController.
@@ -66,7 +65,7 @@ class BillController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.bill.frontpage');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         $paid      = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
@@ -79,7 +78,7 @@ class BillController extends Controller
         $data = $this->generator->pieChart($chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -94,7 +93,7 @@ class BillController extends Controller
         $cache->addProperty('chart.bill.single');
         $cache->addProperty($bill->id);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         $results   = $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->getJournals();
@@ -120,6 +119,6 @@ class BillController extends Controller
         $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 }

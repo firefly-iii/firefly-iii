@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * intro.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     // index
@@ -31,13 +31,13 @@ return [
 
     // create account:
     'accounts_create_iban'                  => 'Donnez à vos comptes un IBAN valide. Cela pourrait rendre une importation de données très facile à l\'avenir.',
-    'accounts_create_asset_opening_balance' => 'Assets accounts may have an "opening balance", indicating the start of this account\'s history in Firefly III.',
+    'accounts_create_asset_opening_balance' => 'Les comptes d\'actifs peuvent avoir un «solde d\'ouverture», indiquant le début de l\'historique de ce compte dans Firefly III.',
     'accounts_create_asset_currency'        => 'Firefly III prend en charge plusieurs devises. Les comptes d\'actifs ont une devise principale, que vous devez définir ici.',
     'accounts_create_asset_virtual'         => 'Il peut parfois être utile de donner à votre compte un solde virtuel : un montant supplémentaire toujours ajouté ou soustrait du solde réel.',
 
     // budgets index
     'budgets_index_intro'                   => 'Les budgets sont utilisés pour gérer vos finances et forment l\'une des principales fonctions de Firefly III.',
-    'budgets_index_set_budget'              => 'Set your total budget for every period so Firefly III can tell you if you have budgeted all available money.',
+    'budgets_index_set_budget'              => 'Définissez votre budget total pour chaque période afin que Firefly III puisse vous dire si vous avez budgétisé tout l\'argent disponible.',
     'budgets_index_see_expenses_bar'        => 'Dépenser de l\'argent va lentement remplir cette barre.',
     'budgets_index_navigate_periods'        => 'Parcourez des périodes pour régler facilement les budgets à l\'avance.',
     'budgets_index_new_budget'              => 'Créez de nouveaux budgets comme bon vous semble.',

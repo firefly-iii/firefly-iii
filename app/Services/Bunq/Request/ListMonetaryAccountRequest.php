@@ -39,12 +39,12 @@ class ListMonetaryAccountRequest extends BunqRequest
     private $userId = 0;
 
     /**
-     * @throws \Exception
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function call(): void
     {
         $this->monetaryAccounts                  = new Collection;
-        $uri                                     = sprintf('/v1/user/%d/monetary-account', $this->userId);
+        $uri                                     = sprintf('user/%d/monetary-account', $this->userId);
         $data                                    = [];
         $headers                                 = $this->getDefaultHeaders();
         $headers['X-Bunq-Client-Authentication'] = $this->sessionToken->getToken();

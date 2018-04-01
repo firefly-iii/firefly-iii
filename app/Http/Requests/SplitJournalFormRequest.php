@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Steam;
+use Illuminate\Validation\Validator;
 
 /**
  * Class SplitJournalFormRequest.
@@ -44,7 +44,7 @@ class SplitJournalFormRequest extends Request
     public function getAll(): array
     {
         $data = [
-            'description'     => $this->string('description'),
+            'description'     => $this->string('journal_description'),
             'type'            => $this->string('what'),
             'date'            => $this->date('date'),
             'tags'            => explode(',', $this->string('tags')),
@@ -65,10 +65,10 @@ class SplitJournalFormRequest extends Request
             switch ($data['type']) {
                 case 'withdrawal':
                     $sourceId        = $this->integer('journal_source_account_id');
-                    $destinationName = $transaction['destination_account_name'];
+                    $destinationName = $transaction['destination_name'] ?? '';
                     break;
                 case 'deposit':
-                    $sourceName    = $transaction['source_account_name'];
+                    $sourceName    = $transaction['source_name'] ?? '';
                     $destinationId = $this->integer('journal_destination_account_id');
                     break;
                 case 'transfer':
@@ -77,24 +77,25 @@ class SplitJournalFormRequest extends Request
                     break;
             }
             $foreignAmount          = $transaction['foreign_amount'] ?? null;
+            $foreignCurrencyId      = intval($transaction['foreign_currency_id'] ?? 0);
             $set                    = [
                 'source_id'             => $sourceId,
                 'source_name'           => $sourceName,
                 'destination_id'        => $destinationId,
                 'destination_name'      => $destinationName,
                 'foreign_amount'        => $foreignAmount,
-                'foreign_currency_id'   => null,
+                'foreign_currency_id'   => $foreignCurrencyId,
                 'foreign_currency_code' => null,
                 'reconciled'            => false,
                 'identifier'            => $index,
                 'currency_id'           => $this->integer('journal_currency_id'),
                 'currency_code'         => null,
-                'description'           => $transaction['description'],
+                'description'           => $transaction['transaction_description'],
                 'amount'                => $transaction['amount'],
                 'budget_id'             => intval($transaction['budget_id'] ?? 0),
                 'budget_name'           => null,
                 'category_id'           => null,
-                'category_name'         => $transaction['category'],
+                'category_name'         => $transaction['category_name'],
             ];
             $data['transactions'][] = $set;
         }
@@ -108,24 +109,57 @@ class SplitJournalFormRequest extends Request
     public function rules(): array
     {
         return [
-            'what'                                    => 'required|in:withdrawal,deposit,transfer',
-            'journal_description'                     => 'required|between:1,255',
-            'id'                                      => 'numeric|belongsToUser:transaction_journals,id',
-            'journal_source_account_id'               => 'numeric|belongsToUser:accounts,id',
-            'journal_source_account_name.*'           => 'between:1,255',
-            'journal_currency_id'                     => 'required|exists:transaction_currencies,id',
-            'date'                                    => 'required|date',
-            'interest_date'                           => 'date|nullable',
-            'book_date'                               => 'date|nullable',
-            'process_date'                            => 'date|nullable',
-            'transactions.*.description'              => 'required|between:1,255',
-            'transactions.*.destination_account_id'   => 'numeric|belongsToUser:accounts,id',
-            'transactions.*.destination_account_name' => 'between:1,255|nullable',
-            'transactions.*.amount'                   => 'required|numeric',
-            'transactions.*.budget_id'                => 'belongsToUser:budgets,id',
-            'transactions.*.category'                 => 'between:1,255|nullable',
-            'transactions.*.piggy_bank_id'            => 'between:1,255|nullable',
+            'what'                                   => 'required|in:withdrawal,deposit,transfer',
+            'journal_description'                    => 'required|between:1,255',
+            'id'                                     => 'numeric|belongsToUser:transaction_journals,id',
+            'journal_source_account_id'              => 'numeric|belongsToUser:accounts,id',
+            'journal_source_account_name.*'          => 'between:1,255',
+            'journal_currency_id'                    => 'required|exists:transaction_currencies,id',
+            'date'                                   => 'required|date',
+            'interest_date'                          => 'date|nullable',
+            'book_date'                              => 'date|nullable',
+            'process_date'                           => 'date|nullable',
+            'transactions.*.transaction_description' => 'required|between:1,255',
+            'transactions.*.destination_account_id'  => 'numeric|belongsToUser:accounts,id',
+            'transactions.*.destination_name'        => 'between:1,255|nullable',
+            'transactions.*.amount'                  => 'required|numeric',
+            'transactions.*.budget_id'               => 'belongsToUser:budgets,id',
+            'transactions.*.category_name'                => 'between:1,255|nullable',
+            'transactions.*.piggy_bank_id'           => 'between:1,255|nullable',
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  Validator $validator
+     *
+     * @return void
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(
+            function (Validator $validator) {
+                $this->sameAccounts($validator);
+            }
+        );
+    }
+
+    /**
+     * @param Validator $validator
+     */
+    protected function sameAccounts(Validator $validator): void
+    {
+        $data         = $this->getAll();
+        $transactions = $data['transactions'] ?? [];
+        /** @var array $array */
+        foreach ($transactions as $array) {
+            if ($array['destination_id'] !== null && $array['source_id'] !== null && $array['destination_id'] === $array['source_id']) {
+                $validator->errors()->add('journal_source_account_id', trans('validation.source_equals_destination'));
+                $validator->errors()->add('journal_destination_account_id', trans('validation.source_equals_destination'));
+            }
+        }
+
     }
 
 }

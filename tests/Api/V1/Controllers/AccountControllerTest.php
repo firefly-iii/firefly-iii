@@ -29,6 +29,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Laravel\Passport\Passport;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -43,7 +44,7 @@ class AccountControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
-        Log::debug('Now in Api/AccountControllerTest.');
+        Log::debug(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -85,9 +86,14 @@ class AccountControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser');
         $repository->shouldReceive('getAccountsByType')->withAnyArgs()->andReturn($accounts)->once();
-        $currencyRepos->shouldReceive('setUser')->once();
+        $currencyRepos->shouldReceive('setUser');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
+        $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
 
         // test API
         $response = $this->get('/api/v1/accounts');
@@ -121,7 +127,7 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'            => 'Some new asset account #' . rand(1, 10000),
+            'name'            => 'Some new asset account #' . random_int(1, 10000),
             'currency_id'     => 1,
             'type'            => 'asset',
             'active'          => 1,
@@ -163,7 +169,7 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'         => 'Some new asset account #' . rand(1, 10000),
+            'name'         => 'Some new asset account #' . random_int(1, 10000),
             'type'         => 'asset',
             'active'       => 1,
             'account_role' => 'ccAsset',
@@ -205,7 +211,7 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'         => 'Some new asset account #' . rand(1, 10000),
+            'name'         => 'Some new asset account #' . random_int(1, 10000),
             'type'         => 'asset',
             'active'       => 1,
             'account_role' => 'defaultAsset',
@@ -244,6 +250,12 @@ class AccountControllerTest extends TestCase
         $currencyRepos->shouldReceive('setUser')->once();
         $repository->shouldReceive('getOpeningBalanceAmount')->andReturn('10')->once();
         $repository->shouldReceive('getOpeningBalanceDate')->andReturn('2018-01-01')->once();
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
+        $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
+
 
         // test API
         $response = $this->get('/api/v1/accounts/' . $account->id);
@@ -316,9 +328,15 @@ class AccountControllerTest extends TestCase
         $repository->shouldReceive('getOpeningBalanceDate')->andReturn('2018-01-01');
         $currencyRepos->shouldReceive('setUser')->once();
 
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
+        $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
+
         // data to submit
         $data = [
-            'name'         => 'Some new asset account #' . rand(1, 10000),
+            'name'         => 'Some new asset account #' . random_int(1, 10000),
             'currency_id'  => 1,
             'type'         => 'asset',
             'active'       => 1,
@@ -356,11 +374,17 @@ class AccountControllerTest extends TestCase
         $repository->shouldReceive('getOpeningBalanceDate')->andReturn('2018-01-01');
         $currencyRepos->shouldReceive('findByCodeNull')->andReturn(TransactionCurrency::find(1));
 
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
+        $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
+
         // functions to expect:
 
         // data to submit
         $data = [
-            'name'          => 'Some new asset account #' . rand(1, 10000),
+            'name'          => 'Some new asset account #' . random_int(1, 10000),
             'currency_code' => 'EUR',
             'type'          => 'asset',
             'active'        => 1,
@@ -393,6 +417,12 @@ class AccountControllerTest extends TestCase
         $currencyRepos->shouldReceive('setUser')->once();
         $repository->shouldReceive('getOpeningBalanceAmount')->andReturn('10');
         $repository->shouldReceive('getOpeningBalanceDate')->andReturn('2018-01-01');
+
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
+        $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
 
         $account = $this->user()->accounts()->first();
         // data to submit
@@ -431,6 +461,12 @@ class AccountControllerTest extends TestCase
         $repository->shouldReceive('getOpeningBalanceAmount')->andReturn('10');
         $repository->shouldReceive('getOpeningBalanceDate')->andReturn('2018-01-01');
         $currencyRepos->shouldReceive('findByCodeNull')->andReturn(TransactionCurrency::find(1));
+
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
+        $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
 
         $account = $this->user()->accounts()->first();
         // data to submit

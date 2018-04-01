@@ -29,7 +29,6 @@ use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Log;
-use Response;
 use Steam;
 
 /**
@@ -69,7 +68,7 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $current   = clone $start;
         $chartData = [];
@@ -84,7 +83,7 @@ class ReportController extends Controller
         $data = $this->generator->singleSet(strval(trans('firefly.net_worth')), $chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -105,7 +104,7 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         Log::debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
         $format    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
@@ -139,7 +138,7 @@ class ReportController extends Controller
         $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**
@@ -160,7 +159,7 @@ class ReportController extends Controller
         $cache->addProperty($end);
         $cache->addProperty($accounts);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         $source  = $this->getChartData($accounts, $start, $end);
@@ -209,7 +208,7 @@ class ReportController extends Controller
         $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 
     /**

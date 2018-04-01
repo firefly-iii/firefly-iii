@@ -66,7 +66,7 @@ class PrerequisitesController extends Controller
      */
     public function index(string $bank)
     {
-        if (true === !(config(sprintf('import.enabled.%s', $bank)))) {
+        if (true === !config(sprintf('import.enabled.%s', $bank))) {
             throw new FireflyException(sprintf('Cannot import from "%s" at this time.', $bank)); // @codeCoverageIgnore
         }
         $class = strval(config(sprintf('import.prerequisites.%s', $bank)));
@@ -103,13 +103,14 @@ class PrerequisitesController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
+     * @throws \RuntimeException
      * @throws FireflyException
      */
     public function post(Request $request, string $bank)
     {
         Log::debug(sprintf('Now in postPrerequisites for %s', $bank));
 
-        if (true === !(config(sprintf('import.enabled.%s', $bank)))) {
+        if (true === !config(sprintf('import.enabled.%s', $bank))) {
             throw new FireflyException(sprintf('Cannot import from "%s" at this time.', $bank)); // @codeCoverageIgnore
         }
 
@@ -128,6 +129,7 @@ class PrerequisitesController extends Controller
         Log::debug('Going to store entered prerequisites.');
         // store post data
         $result = $object->storePrerequisites($request);
+        Log::debug(sprintf('Result of storePrerequisites has message count: %d', $result->count()));
 
         if ($result->count() > 0) {
             $request->session()->flash('error', $result->first());

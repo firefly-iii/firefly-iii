@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * UserController.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,7 +20,6 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
@@ -70,6 +70,7 @@ class UserController extends Controller
      * @param  \FireflyIII\User $user
      *
      * @return \Illuminate\Http\Response
+     * @throws \Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException
      */
     public function delete(User $user)
     {

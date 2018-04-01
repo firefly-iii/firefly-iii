@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * UpgradeDatabase.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
@@ -26,6 +26,7 @@ use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
@@ -86,6 +87,7 @@ class UpgradeDatabase extends Command
         $this->updateOtherCurrencies();
         $this->line('Done updating currency information..');
         $this->migrateNotes();
+        $this->migrateAttachmentData();
         $this->info('Firefly III database is up to date.');
 
         return;
@@ -278,6 +280,38 @@ class UpgradeDatabase extends Command
         $account = AccountType::where('type', AccountType::RECONCILIATION)->first();
         if (is_null($account)) {
             AccountType::create(['type' => AccountType::RECONCILIATION]);
+        }
+    }
+
+    /**
+     * Move the description of each attachment (when not NULL) to the notes or to a new note object
+     * for all attachments.
+     */
+    private function migrateAttachmentData(): void
+    {
+        $attachments = Attachment::get();
+
+        /** @var Attachment $att */
+        foreach ($attachments as $att) {
+
+            // move description:
+            $description = strval($att->description);
+            if (strlen($description) > 0) {
+                // find or create note:
+                $note = $att->notes()->first();
+                if (is_null($note)) {
+                    $note = new Note;
+                    $note->noteable()->associate($att);
+                }
+                $note->text = $description;
+                $note->save();
+
+                // clear description:
+                $att->description = '';
+                $att->save();
+
+                Log::debug(sprintf('Migrated attachment #%s description to note #%d', $att->id, $note->id));
+            }
         }
     }
 

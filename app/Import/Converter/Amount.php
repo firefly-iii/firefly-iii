@@ -113,13 +113,12 @@ class Amount implements ConverterInterface
     {
         $str = preg_replace('/[^\-\(\)\.\,0-9 ]/', '', $value);
         $len = strlen($str);
-        if ($str{0} === '(' && $str{$len - 1} === ')') {
-            $str = '-' . substr($str, 1, ($len - 2));
+        if ('(' === $str[0] && ')' === $str[$len - 1]) {
+            $str = '-' . substr($str, 1, $len - 2);
         }
 
         Log::debug(sprintf('Stripped "%s" away to "%s"', $value, $str));
 
         return $str;
-
     }
 }

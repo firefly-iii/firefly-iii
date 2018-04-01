@@ -39,6 +39,7 @@ var accountingConfig = {{ accounting|json_encode|raw }};
 var token = '{{ csrf_token() }}';
 var sessionStart = '{{ session('start').format('Y-m-d') }}';
 var sessionEnd = '{{ session('end').format('Y-m-d') }}';
+var todayText = ' {{ trans('firefly.today')|escape('js') }}';
 
 // some formatting stuff:
 var month_and_day_js = "{{ trans('config.month_and_day_js') }}";

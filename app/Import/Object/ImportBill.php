@@ -25,7 +25,6 @@ namespace FireflyIII\Import\Object;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\User;
-use Illuminate\Support\Collection;
 use Log;
 use Steam;
 
@@ -52,7 +51,6 @@ class ImportBill
      */
     public function __construct()
     {
-        $this->bill       = new Bill;
         $this->repository = app(BillRepositoryInterface::class);
         Log::debug('Created ImportBill.');
     }
@@ -62,7 +60,7 @@ class ImportBill
      */
     public function getBill(): Bill
     {
-        if (null === $this->bill->id) {
+        if (null === $this->bill) {
             $this->store();
         }
 
@@ -103,13 +101,10 @@ class ImportBill
     }
 
     /**
-     * @return Bill
+     * @return Bill|null
      */
-    private function findExistingObject(): Bill
+    private function findById(): ?Bill
     {
-        Log::debug('In findExistingObject() for Bill');
-        // 1: find by ID, or name
-
         if (3 === count($this->id)) {
             Log::debug(sprintf('Finding bill with ID #%d', $this->id['value']));
             /** @var Bill $bill */
@@ -121,9 +116,16 @@ class ImportBill
             }
             Log::debug('Found nothing.');
         }
-        // 2: find by name
+
+        return null;
+    }
+
+    /**
+     * @return Bill|null
+     */
+    private function findByName(): ?Bill
+    {
         if (3 === count($this->name)) {
-            /** @var Collection $bills */
             $bills = $this->repository->getBills();
             $name  = $this->name['value'];
             Log::debug(sprintf('Finding bill with name %s', $name));
@@ -145,16 +147,33 @@ class ImportBill
             Log::debug('Found nothing.');
         }
 
-        // 4: do not search by account number.
-        Log::debug('Found NO existing bills.');
-
-        return new Bill;
+        return null;
     }
 
     /**
-     * @return Bill
+     * @return Bill|null
      */
-    private function findMappedObject(): Bill
+    private function findExistingObject(): ?Bill
+    {
+        Log::debug('In findExistingObject() for Bill');
+        $result = $this->findById();
+        if (!is_null($result)) {
+            return $result;
+        }
+        $result = $this->findByName();
+        if (!is_null($result)) {
+            return $result;
+        }
+
+        Log::debug('Found NO existing bills.');
+
+        return null;
+    }
+
+    /**
+     * @return Bill|null
+     */
+    private function findMappedObject(): ?Bill
     {
         Log::debug('In findMappedObject() for Bill');
         $fields = ['id', 'name'];
@@ -163,7 +182,7 @@ class ImportBill
             Log::debug(sprintf('Find mapped bill based on field "%s" with value', $field), $array);
             // check if a pre-mapped object exists.
             $mapped = $this->getMappedObject($array);
-            if (null !== $mapped->id) {
+            if (null !== $mapped) {
                 Log::debug(sprintf('Found bill #%d!', $mapped->id));
 
                 return $mapped;
@@ -171,7 +190,7 @@ class ImportBill
         }
         Log::debug('Found no bill on mapped data or no map present.');
 
-        return new Bill;
+        return null;
     }
 
     /**
@@ -179,19 +198,19 @@ class ImportBill
      *
      * @return Bill
      */
-    private function getMappedObject(array $array): Bill
+    private function getMappedObject(array $array): ?Bill
     {
         Log::debug('In getMappedObject() for Bill');
         if (0 === count($array)) {
             Log::debug('Array is empty, nothing will come of this.');
 
-            return new Bill;
+            return null;
         }
 
         if (array_key_exists('mapped', $array) && null === $array['mapped']) {
             Log::debug(sprintf('No map present for value "%s". Return NULL.', $array['value']));
 
-            return new Bill;
+            return null;
         }
 
         Log::debug('Finding a mapped bill based on', $array);
@@ -202,7 +221,7 @@ class ImportBill
         if (null === $bill) {
             Log::error(sprintf('There is no bill with id #%d. Invalid mapping will be ignored!', $search));
 
-            return new Bill;
+            return null;
         }
 
         Log::debug(sprintf('Found bill! #%d ("%s"). Return it', $bill->id, $bill->name));
@@ -217,14 +236,14 @@ class ImportBill
     {
         // 1: find mapped object:
         $mapped = $this->findMappedObject();
-        if (null !== $mapped->id) {
+        if (null !== $mapped) {
             $this->bill = $mapped;
 
             return true;
         }
         // 2: find existing by given values:
         $found = $this->findExistingObject();
-        if (null !== $found->id) {
+        if (null !== $found) {
             $this->bill = $found;
 
             return true;

@@ -28,7 +28,6 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use Response;
 
 /**
  * Class PiggyBankController.
@@ -63,7 +62,7 @@ class PiggyBankController extends Controller
         $cache->addProperty('chart.piggy-bank.history');
         $cache->addProperty($piggyBank->id);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         $set       = $repository->getEvents($piggyBank);
@@ -80,6 +79,6 @@ class PiggyBankController extends Controller
         $data = $this->generator->singleSet($piggyBank->name, $chartData);
         $cache->store($data);
 
-        return Response::json($data);
+        return response()->json($data);
     }
 }

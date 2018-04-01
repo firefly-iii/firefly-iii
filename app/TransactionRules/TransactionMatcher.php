@@ -26,7 +26,6 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -42,22 +41,10 @@ class TransactionMatcher
     private $range = 200;
     /** @var Rule The rule to apply */
     private $rule;
-    /** @var JournalTaskerInterface Tasker for some related tasks */
-    private $tasker;
     /** @var array Types that can be matched using this matcher */
     private $transactionTypes = [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
     /** @var array List of triggers to match */
     private $triggers = [];
-
-    /**
-     * TransactionMatcher constructor. Typehint the repository.
-     *
-     * @param JournalTaskerInterface $tasker
-     */
-    public function __construct(JournalTaskerInterface $tasker)
-    {
-        $this->tasker = $tasker;
-    }
 
     /**
      * This method will search the user's transaction journal (with an upper limit of $range) for
@@ -65,6 +52,7 @@ class TransactionMatcher
      * triggers onto each transaction journal until enough matches are found ($limit).
      *
      * @return Collection
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function findTransactionsByRule()
     {
@@ -89,6 +77,7 @@ class TransactionMatcher
      * triggers onto each transaction journal until enough matches are found ($limit).
      *
      * @return Collection
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function findTransactionsByTriggers(): Collection
     {
@@ -195,6 +184,7 @@ class TransactionMatcher
      * @param Processor $processor
      *
      * @return Collection
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function runProcessor(Processor $processor): Collection
     {

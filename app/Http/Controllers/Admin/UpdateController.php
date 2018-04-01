@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use FireflyConfig;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -31,7 +32,6 @@ use FireflyIII\Services\Github\Object\Release;
 use FireflyIII\Services\Github\Request\UpdateRequest;
 use Illuminate\Http\Request;
 use Log;
-use Response;
 use Session;
 
 /**
@@ -61,6 +61,8 @@ class UpdateController extends Controller
 
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Illuminate\Container\EntryNotFoundException
      */
     public function index()
@@ -121,12 +123,20 @@ class UpdateController extends Controller
 
         if ($check === -1) {
             // there is a new FF version!
-            $string = strval(
-                trans(
-                    'firefly.update_new_version_alert',
-                    ['your_version' => $current, 'new_version' => $first->getTitle(), 'date' => $first->getUpdated()->formatLocalized($this->monthAndDayFormat)]
-                )
-            );
+            // has it been released for more than three days?
+            $today = new Carbon;
+            if ($today->diffInDays($first->getUpdated(), true) > 3) {
+                $string = strval(
+                    trans(
+                        'firefly.update_new_version_alert',
+                        [
+                            'your_version' => $current,
+                            'new_version'  => $first->getTitle(),
+                            'date'         => $first->getUpdated()->formatLocalized($this->monthAndDayFormat),
+                        ]
+                    )
+                );
+            }
         }
         if ($check === 0) {
             // you are running the current version!
@@ -137,6 +147,6 @@ class UpdateController extends Controller
             $string = strval(trans('firefly.update_newer_version_alert', ['your_version' => $current, 'new_version' => $first->getTitle()]));
         }
 
-        return Response::json(['result' => $string]);
+        return response()->json(['result' => $string]);
     }
 }

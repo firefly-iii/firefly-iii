@@ -71,4 +71,16 @@ class Alias extends BunqObject
     {
         return $this->value;
     }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'type'  => $this->type,
+            'name'  => $this->name,
+            'value' => $this->value,
+        ];
+    }
 }

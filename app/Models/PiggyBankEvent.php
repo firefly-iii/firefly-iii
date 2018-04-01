@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class PiggyBankEvent.
+ *
  * @property $piggyBank
  */
 class PiggyBankEvent extends Model
@@ -39,7 +40,7 @@ class PiggyBankEvent extends Model
         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
-            'date'       => 'datetime',
+            'date'       => 'date',
         ];
     /** @var array */
     protected $dates = ['date'];

@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers\Json;
 
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -35,6 +36,15 @@ use Tests\TestCase;
  */
 class ExchangeControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Json\ExchangeController::getRate
      */

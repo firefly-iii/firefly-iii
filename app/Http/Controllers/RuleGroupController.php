@@ -184,11 +184,12 @@ class RuleGroupController extends Controller
      * @param RuleGroup                  $ruleGroup
      *
      * @return View
+     * @throws \InvalidArgumentException
      */
     public function selectTransactions(AccountRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
         // does the user have shared accounts?
-        $accounts        = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $accountList     = ExpandedForm::makeSelectList($accounts);
         $checkedAccounts = array_keys($accountList);
         $first           = session('first')->format('Y-m-d');

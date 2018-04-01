@@ -65,6 +65,5 @@ class LinkTypeSeeder extends Seeder
                 Log::warning(sprintf('Could not create link type "%s". It might exist already.', $type['name']));
             }
         }
-
     }
 }

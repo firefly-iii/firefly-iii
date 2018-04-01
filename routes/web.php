@@ -22,6 +22,17 @@
 declare(strict_types=1);
 
 
+Route::group(
+    ['namespace' => 'FireflyIII\Http\Controllers\System',
+     'as'        => 'installer.', 'prefix' => 'install'], function () {
+    Route::get('', ['uses' => 'InstallController@index', 'as' => 'index']);
+    Route::post('migrate', ['uses' => 'InstallController@migrate', 'as' => 'migrate']);
+    Route::post('keys', ['uses' => 'InstallController@keys', 'as' => 'keys']);
+    Route::post('upgrade', ['uses' => 'InstallController@upgrade', 'as' => 'upgrade']);
+    Route::post('verify', ['uses' => 'InstallController@verify', 'as' => 'verify']);
+}
+);
+
 /**
  * These routes only work when the user is NOT logged in.
  */
@@ -101,6 +112,7 @@ Route::group(
     Route::get('create/{what}', ['uses' => 'AccountController@create', 'as' => 'create'])->where('what', 'revenue|asset|expense');
     Route::get('edit/{account}', ['uses' => 'AccountController@edit', 'as' => 'edit']);
     Route::get('delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'delete']);
+    Route::get('show/{account}/all', ['uses' => 'AccountController@showAll', 'as' => 'show.all']);
     Route::get('show/{account}/{start_date?}/{end_date?}', ['uses' => 'AccountController@show', 'as' => 'show']);
 
     // reconcile routes:
@@ -557,10 +569,8 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'preferences', 'as' => 'preferences.'], function () {
     Route::get('', ['uses' => 'PreferencesController@index', 'as' => 'index']);
-    Route::get('/code', ['uses' => 'PreferencesController@code', 'as' => 'code']);
-    Route::get('/delete-code', ['uses' => 'PreferencesController@deleteCode', 'as' => 'delete-code']);
     Route::post('', ['uses' => 'PreferencesController@postIndex', 'as' => 'update']);
-    Route::post('/code', ['uses' => 'PreferencesController@postCode', 'as' => 'code.store']);
+
 
 }
 );
@@ -580,6 +590,13 @@ Route::group(
     Route::post('change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'change-password.post']);
     Route::post('change-email', ['uses' => 'ProfileController@postChangeEmail', 'as' => 'change-email.post']);
     Route::post('regenerate', ['uses' => 'ProfileController@regenerate', 'as' => 'regenerate']);
+
+    // new 2FA routes
+    Route::post('enable2FA', ['uses' => 'ProfileController@enable2FA', 'as' => 'enable2FA']);
+    Route::get('2fa/code', ['uses' => 'ProfileController@code', 'as' => 'code']);
+    Route::post('2fa/code', ['uses' => 'ProfileController@postCode', 'as' => 'code.store']);
+    Route::get('/delete-code', ['uses' => 'ProfileController@deleteCode', 'as' => 'delete-code']);
+
 }
 );
 
@@ -764,7 +781,12 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'transactions', 'as' => 'transactions.'], function () {
-    Route::get('{what}/{moment?}', ['uses' => 'TransactionController@index', 'as' => 'index'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
+
+    Route::get('{what}/all', ['uses' => 'TransactionController@indexAll', 'as' => 'index.all'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
+    Route::get('{what}/{start_date?}/{end_date?}', ['uses' => 'TransactionController@index', 'as' => 'index'])->where(
+        ['what' => 'withdrawal|deposit|transfers|transfer']
+    );
+
     Route::get('show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'show']);
     Route::post('reorder', ['uses' => 'TransactionController@reorder', 'as' => 'reorder']);
     Route::post('reconcile', ['uses' => 'TransactionController@reconcile', 'as' => 'reconcile']);

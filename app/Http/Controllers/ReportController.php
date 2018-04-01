@@ -36,7 +36,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Response;
 use Session;
 use View;
 
@@ -102,9 +101,8 @@ class ReportController extends Controller
         $generator = ReportGeneratorFactory::reportGenerator('Account', $start, $end);
         $generator->setAccounts($accounts);
         $generator->setExpense($expense);
-        $result = $generator->generate();
 
-        return $result;
+        return $generator->generate();
     }
 
     /**
@@ -139,9 +137,8 @@ class ReportController extends Controller
 
         $generator = ReportGeneratorFactory::reportGenerator('Audit', $start, $end);
         $generator->setAccounts($accounts);
-        $result = $generator->generate();
 
-        return $result;
+        return $generator->generate();
     }
 
     /**
@@ -305,7 +302,7 @@ class ReportController extends Controller
                 break;
         }
 
-        return Response::json(['html' => $result]);
+        return response()->json(['html' => $result]);
     }
 
     /**

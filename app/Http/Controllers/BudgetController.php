@@ -39,7 +39,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Response;
 use View;
 
 /**
@@ -79,13 +78,18 @@ class BudgetController extends Controller
      * @param Budget                    $budget
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \InvalidArgumentException
      */
     public function amount(Request $request, BudgetRepositoryInterface $repository, Budget $budget)
     {
-        $amount = strval($request->get('amount'));
-        $start  = Carbon::createFromFormat('Y-m-d', $request->get('start'));
-        $end    = Carbon::createFromFormat('Y-m-d', $request->get('end'));
+        $amount      = strval($request->get('amount'));
+        $start       = Carbon::createFromFormat('Y-m-d', $request->get('start'));
+        $end         = Carbon::createFromFormat('Y-m-d', $request->get('end'));
         $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
+        $largeDiff   = false;
+        $warnText    = '';
+        $average     = '0';
+        $current     = '0';
         if (0 === bccomp($amount, '0')) {
             $budgetLimit = null;
         }
@@ -95,15 +99,50 @@ class BudgetController extends Controller
         $currency = app('amount')->getDefaultCurrency();
         $left     = app('amount')->formatAnything($currency, bcadd($amount, $spent), true);
 
+
+        // over or under budgeting, compared to previous budgets?
+        $average = $this->repository->budgetedPerDay($budget);
+        // current average per day:
+        $diff    = $start->diffInDays($end);
+        $current = $amount;
+        if ($diff > 0) {
+            $current = bcdiv($amount, strval($diff));
+        }
+        if (bccomp(bcmul('1.1', $average), $current) === -1) {
+            $largeDiff = true;
+            $warnText  = strval(
+                trans(
+                    'firefly.over_budget_warn',
+                    [
+                        'amount'      => app('amount')->formatAnything($currency, $average, false),
+                        'over_amount' => app('amount')->formatAnything($currency, $current, false),
+                    ]
+                )
+            );
+        }
+
         Preferences::mark();
 
-        return Response::json(['left' => $left, 'name' => $budget->name, 'limit' => $budgetLimit ? $budgetLimit->id : 0, 'amount' => $amount]);
+        return response()->json(
+            [
+                'left'       => $left,
+                'name'       => $budget->name,
+                'limit'      => $budgetLimit ? $budgetLimit->id : 0,
+                'amount'     => $amount,
+                'current'    => $current,
+                'average'    => $average,
+                'large_diff' => $largeDiff,
+                'warn_text'  => $warnText,
+
+            ]
+        );
     }
 
     /**
      * @param Request $request
      *
      * @return View
+     * @throws \RuntimeException
      */
     public function create(Request $request)
     {
@@ -137,6 +176,7 @@ class BudgetController extends Controller
      * @param Budget  $budget
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \RuntimeException
      */
     public function destroy(Request $request, Budget $budget)
     {
@@ -153,6 +193,7 @@ class BudgetController extends Controller
      * @param Budget  $budget
      *
      * @return View
+     * @throws \RuntimeException
      */
     public function edit(Request $request, Budget $budget)
     {
@@ -168,6 +209,7 @@ class BudgetController extends Controller
     }
 
     /**
+     * @param Request     $request
      * @param string|null $moment
      *
      * @return View
@@ -184,12 +226,13 @@ class BudgetController extends Controller
         $pageSize = intval(Preferences::get('listPageSize', 50)->data);
 
         // make date if present:
-        if (null !== $moment || 0 !== strlen(strval($moment))) {
+        if (null !== $moment || '' !== (string)$moment) {
             try {
                 $start = new Carbon($moment);
                 $end   = app('navigation')->endOfPeriod($start, $range);
             } catch (Exception $e) {
                 // start and end are already defined.
+                Log::debug('start and end are already defined.');
             }
         }
         $next = clone $end;
@@ -292,7 +335,7 @@ class BudgetController extends Controller
             // @codeCoverageIgnoreStart
             $result = $cache->get();
 
-            return view('budgets.info', compact('result', 'begin', 'currentEnd'));
+            return view('budgets.info', compact('result'));
             // @codeCoverageIgnoreEnd
         }
         $result   = [
@@ -413,6 +456,7 @@ class BudgetController extends Controller
      * @param BudgetIncomeRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \InvalidArgumentException
      */
     public function postUpdateIncome(BudgetIncomeRequest $request)
     {
@@ -433,16 +477,18 @@ class BudgetController extends Controller
      * @param Budget  $budget
      *
      * @return View
+     * @throws \InvalidArgumentException
      */
     public function show(Request $request, Budget $budget)
     {
         /** @var Carbon $start */
         $start      = session('first', Carbon::create()->startOfYear());
         $end        = new Carbon;
-        $page       = intval($request->get('page'));
-        $pageSize   = intval(Preferences::get('listPageSize', 50)->data);
+        $page       = (int)$request->get('page');
+        $pageSize   = (int)Preferences::get('listPageSize', 50)->data;
         $limits     = $this->getLimits($budget, $start, $end);
         $repetition = null;
+
         // collector:
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -462,6 +508,7 @@ class BudgetController extends Controller
      *
      * @return View
      *
+     * @throws \InvalidArgumentException
      * @throws FireflyException
      */
     public function showByBudgetLimit(Request $request, Budget $budget, BudgetLimit $budgetLimit)
@@ -499,6 +546,7 @@ class BudgetController extends Controller
      * @param BudgetFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \RuntimeException
      */
     public function store(BudgetFormRequest $request)
     {
@@ -524,6 +572,7 @@ class BudgetController extends Controller
      * @param Budget            $budget
      *
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \RuntimeException
      */
     public function update(BudgetFormRequest $request, Budget $budget)
     {
@@ -546,8 +595,9 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Request $request
+     * @param Carbon  $start
+     * @param Carbon  $end
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */

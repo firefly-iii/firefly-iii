@@ -56,6 +56,8 @@ class UserLight extends BunqObject
      * UserLight constructor.
      *
      * @param array $data
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $data)
     {
@@ -73,5 +75,13 @@ class UserLight extends BunqObject
         $this->lastName       = $data['last_name'];
         $this->legalName      = $data['legal_name'];
         // aliases
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        die(sprintf('Cannot convert %s to array.', get_class($this)));
     }
 }

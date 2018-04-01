@@ -67,6 +67,7 @@ final class Processor
      * @param bool $includeActions
      *
      * @return Processor
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public static function make(Rule $rule, $includeActions = true)
     {
@@ -173,6 +174,7 @@ final class Processor
      * @param Transaction $transaction
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function handleTransaction(Transaction $transaction): bool
     {
@@ -207,6 +209,7 @@ final class Processor
      * @param TransactionJournal $journal
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function handleTransactionJournal(TransactionJournal $journal): bool
     {
@@ -229,6 +232,7 @@ final class Processor
      * Run the actions
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function actions()
     {

@@ -1,4 +1,7 @@
 --- 
+networks: 
+  firefly_iii_net: 
+    driver: bridge
 services: 
   firefly_iii_app: 
     environment: 
@@ -11,6 +14,8 @@ services:
     image: jc5x/firefly-iii
     links: 
       - firefly_iii_db
+    networks: 
+      - firefly_iii_net
     ports: 
       - "80:80"
     volumes: 
@@ -29,6 +34,8 @@ services:
       - MYSQL_PASSWORD=firefly_db_secret
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
     image: "mysql:latest"
+    networks: 
+      - firefly_iii_net
     volumes: 
       - "firefly_iii_db:/var/lib/mysql"
 version: "3.2"

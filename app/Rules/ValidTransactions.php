@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 
-
 /**
  * ValidTransactions.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -75,10 +74,12 @@ class ValidTransactions implements Rule
                                 ->where('accounts.user_id', $userId)->count();
             if ($count === 0) {
                 Log::debug(sprintf('Count for transaction #%d and user #%d is zero! Return FALSE', $transactionId, $userId));
+
                 return false;
             }
         }
         Log::debug('Return true!');
+
         return true;
     }
 }

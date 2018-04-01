@@ -24,10 +24,8 @@ namespace FireflyIII\Support\Twig;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\TransactionJournal;
 use League\CommonMark\CommonMarkConverter;
 use Route;
-use Steam;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
@@ -67,14 +65,6 @@ class General extends Twig_Extension
             $this->activeRoutePartialWhat(),
             $this->formatDate(),
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName(): string
-    {
-        return 'FireflyIII\Support\Twig\General';
     }
 
     /**

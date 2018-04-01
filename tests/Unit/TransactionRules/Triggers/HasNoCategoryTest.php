@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
 
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\HasNoCategory;
 use Tests\TestCase;
@@ -54,6 +55,14 @@ class HasNoCategoryTest extends TestCase
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->categories()->detach();
+
+        // also detach transactions:
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions as $transaction) {
+            $transaction->categories()->detach();
+            $this->assertEquals(0, $transaction->categories()->count());
+        }
+
         $this->assertEquals(0, $journal->categories()->count());
 
         $trigger = HasNoCategory::makeFromStrings('', false);

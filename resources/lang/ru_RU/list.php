@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * list.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -18,7 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 return [
     'buttons'                 => 'Кнопки',
@@ -102,4 +103,12 @@ return [
     'reconcile'               => 'Сверка',
     'account_on_spectre'      => 'Счёт (Spectre)',
     'do_import'               => 'Импортировать с этого счёта',
+    'sepa-ct-id'              => 'Идентификатор SEPA end-to-end',
+    'sepa-ct-op'              => 'Идентификатор учетной записи SEPA',
+    'sepa-db'                 => 'Идентификатор SEPA Mandate',
+    'sepa-country'            => 'Страна SEPA',
+    'sepa-cc'                 => 'Код очистки SEPA',
+    'sepa-ep'                 => 'Внешняя цель SEPA',
+    'sepa-ci'                 => 'Идентификатор кредитора SEPA',
+    'account_at_bunq'         => 'Счёт с bunq',
 ];

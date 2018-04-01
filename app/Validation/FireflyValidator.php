@@ -93,11 +93,8 @@ class FireflyValidator extends Validator
             return true;
         }
         $count = DB::table($parameters[0])->where('user_id', auth()->user()->id)->where($field, $value)->count();
-        if (1 === $count) {
-            return true;
-        }
 
-        return false;
+        return 1 === $count;
     }
 
     /**
@@ -234,11 +231,8 @@ class FireflyValidator extends Validator
             return true;
         }
         $count = DB::table($parameters[0])->where($field, $value)->count();
-        if (1 === $count) {
-            return true;
-        }
 
-        return false;
+        return 1 === $count;
     }
 
     /**
@@ -323,7 +317,7 @@ class FireflyValidator extends Validator
             /** @var TriggerInterface $class */
             $class = $classes[$name];
 
-            return !($class::willMatchEverything($value));
+            return !$class::willMatchEverything($value);
         }
 
         return false;
@@ -396,7 +390,7 @@ class FireflyValidator extends Validator
     public function validateUniqueAccountNumberForUser($attribute, $value, $parameters): bool
     {
         $accountId = $this->data['id'] ?? 0;
-        if($accountId === 0) {
+        if ($accountId === 0) {
             $accountId = $parameters[0] ?? 0;
         }
 

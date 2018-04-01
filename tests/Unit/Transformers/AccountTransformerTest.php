@@ -31,6 +31,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Transformers\AccountTransformer;
+use Mockery;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
 
@@ -50,12 +51,15 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
+        $accountRepos->shouldReceive('getNoteText')->andReturn('');
+
         // make new account:
         $account = Account::create(
             [
                 'user_id'         => $this->user()->id,
                 'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . rand(1, 10000),
+                'name'            => 'Random name #' . random_int(1, 10000),
                 'virtual_balance' => 12.34,
                 'iban'            => 'NL85ABNA0466812694',
                 'active'          => 1,
@@ -85,12 +89,14 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
+        $accountRepos->shouldReceive('getNoteText')->andReturn('');
         // make new account:
         $account      = Account::create(
             [
                 'user_id'         => $this->user()->id,
                 'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . rand(1, 10000),
+                'name'            => 'Random name #' . random_int(1, 10000),
                 'virtual_balance' => 12.34,
                 'iban'            => 'NL85ABNA0466812694',
                 'active'          => 1,
@@ -117,28 +123,16 @@ class AccountTransformerTest extends TestCase
      */
     public function testCCDataAsset()
     {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
-        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
         // make new account:
         $account = Account::create(
             [
                 'user_id'         => $this->user()->id,
                 'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . rand(1, 10000),
+                'name'            => 'Random name #' . random_int(1, 10000),
                 'virtual_balance' => 12.34,
                 'iban'            => 'NL85ABNA0466812694',
                 'active'          => 1,
                 'encrypted'       => 0,
-            ]
-        );
-        // add currency preference:
-        AccountMeta::create(
-            [
-                'account_id' => $account->id,
-                'name'       => 'currency_id',
-                'data'       => 1, // euro
             ]
         );
 
@@ -148,9 +142,31 @@ class AccountTransformerTest extends TestCase
                 'noteable_id'   => $account->id,
                 'noteable_type' => Account::class,
                 'title'         => null,
-                'text'          => 'I am a note #' . rand(1, 1000),
+                'text'          => 'I am a note #' . random_int(1, 1000),
             ]
         );
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccMonthlyPaymentDate'])->andReturn('2018-02-01');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccType'])->andReturn('monthlyFull');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('123');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('123');
+        $accountRepos->shouldReceive('getNoteText')->andReturn($note->text);
+        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
+        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
+
+        // add currency preference:
+        AccountMeta::create(
+            [
+                'account_id' => $account->id,
+                'name'       => 'currency_id',
+                'data'       => 1, // euro
+            ]
+        );
+
 
         // add credit card meta data (will be ignored)
         AccountMeta::create(
@@ -198,18 +214,35 @@ class AccountTransformerTest extends TestCase
      */
     public function testIgnoreCCExpense()
     {
+
         // make new account:
         $account = Account::create(
             [
                 'user_id'         => $this->user()->id,
                 'account_type_id' => 4, // expense account
-                'name'            => 'Random name #' . rand(1, 10000),
+                'name'            => 'Random name #' . random_int(1, 10000),
                 'virtual_balance' => 12.34,
                 'iban'            => 'NL85ABNA0466812694',
                 'active'          => 1,
                 'encrypted'       => 0,
             ]
         );
+        // add a note:
+        $note = Note::create(
+            [
+                'noteable_id'   => $account->id,
+                'noteable_type' => Account::class,
+                'title'         => null,
+                'text'          => 'I am a note #' . random_int(1, 1000),
+            ]
+        );
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
+        $accountRepos->shouldReceive('getNoteText')->andReturn($note->text);
+
+
         // add currency preference:
         AccountMeta::create(
             [
@@ -219,15 +252,6 @@ class AccountTransformerTest extends TestCase
             ]
         );
 
-        // add a note:
-        $note = Note::create(
-            [
-                'noteable_id'   => $account->id,
-                'noteable_type' => Account::class,
-                'title'         => null,
-                'text'          => 'I am a note #' . rand(1, 1000),
-            ]
-        );
 
         // add credit card meta data (will be ignored)
         AccountMeta::create(
@@ -279,12 +303,14 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn('45.67');
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn('2018-01-01');
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
+        $accountRepos->shouldReceive('getNoteText')->andReturn('');
         // make new account:
         $account = Account::create(
             [
                 'user_id'         => $this->user()->id,
                 'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . rand(1, 10000),
+                'name'            => 'Random name #' . random_int(1, 10000),
                 'virtual_balance' => 12.34,
                 'iban'            => 'NL85ABNA0466812694',
                 'active'          => 1,
@@ -301,6 +327,7 @@ class AccountTransformerTest extends TestCase
                 'description'             => 'Opening',
                 'date'                    => '2018-01-01',
                 'completed'               => 1,
+                'tag_count'               => 0,
             ]
         );
         $transaction = Transaction::create(
@@ -334,12 +361,15 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
+        $accountRepos->shouldReceive('getNote')->andReturn('');
+        $accountRepos->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('');
         // make new account:
         $account = Account::create(
             [
                 'user_id'         => $this->user()->id,
                 'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . rand(1, 10000),
+                'name'            => 'Random name #' . random_int(1, 10000),
                 'virtual_balance' => 12.34,
                 'iban'            => 'NL85ABNA0466812694',
                 'active'          => 1,
@@ -373,22 +403,35 @@ class AccountTransformerTest extends TestCase
      */
     public function testWithNotes()
     {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
-        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
         // make new account:
         $account = Account::create(
             [
                 'user_id'         => $this->user()->id,
                 'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . rand(1, 10000),
+                'name'            => 'Random name #' . random_int(1, 10000),
                 'virtual_balance' => 12.34,
                 'iban'            => 'NL85ABNA0466812694',
                 'active'          => 1,
                 'encrypted'       => 0,
             ]
         );
+        // add a note:
+        $note = Note::create(
+            [
+                'noteable_id'   => $account->id,
+                'noteable_type' => Account::class,
+                'title'         => null,
+                'text'          => 'I am a note #' . random_int(1, 1000),
+            ]
+        );
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
+        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
+        $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
+        $accountRepos->shouldReceive('getNoteText')->andReturn($note->text);
+
         // add currency preference:
         AccountMeta::create(
             [
@@ -398,15 +441,6 @@ class AccountTransformerTest extends TestCase
             ]
         );
 
-        // add a note:
-        $note = Note::create(
-            [
-                'noteable_id'   => $account->id,
-                'noteable_type' => Account::class,
-                'title'         => null,
-                'text'          => 'I am a note #' . rand(1, 1000),
-            ]
-        );
 
         $transformer = new AccountTransformer(new ParameterBag);
         $result      = $transformer->transform($account);

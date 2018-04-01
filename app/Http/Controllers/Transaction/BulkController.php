@@ -66,9 +66,11 @@ class BulkController extends Controller
     }
 
     /**
+     * @param Request    $request
      * @param Collection $journals
      *
      * @return View
+     * @throws \RuntimeException
      */
     public function edit(Request $request, Collection $journals)
     {
@@ -138,6 +140,7 @@ class BulkController extends Controller
      * @param JournalRepositoryInterface $repository
      *
      * @return mixed
+     * @throws \RuntimeException
      */
     public function update(BulkEditJournalRequest $request, JournalRepositoryInterface $repository)
     {
@@ -168,7 +171,7 @@ class BulkController extends Controller
                     }
                     if ($ignoreTags === false) {
                         Log::debug(sprintf('Set tags to %s', $request->string('budget_id')));
-                        $repository->updateTags($journal,['tags' =>  explode(',', $request->string('tags'))]);
+                        $repository->updateTags($journal, ['tags' => explode(',', $request->string('tags'))]);
                     }
                     // update tags if not told to ignore (and is withdrawal)
                 }

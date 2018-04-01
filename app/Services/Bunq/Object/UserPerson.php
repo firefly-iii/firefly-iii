@@ -116,12 +116,19 @@ class UserPerson extends BunqObject
      * UserPerson constructor.
      *
      * @param array $data
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $data)
     {
         if (0 === count($data)) {
+            $this->created     = new Carbon;
+            $this->updated     = new Carbon;
+            $this->dateOfBirth = new Carbon;
+
             return;
         }
+
         $this->id              = intval($data['id']);
         $this->created         = Carbon::createFromFormat('Y-m-d H:i:s.u', $data['created']);
         $this->updated         = Carbon::createFromFormat('Y-m-d H:i:s.u', $data['updated']);
@@ -148,14 +155,14 @@ class UserPerson extends BunqObject
         $this->documentType    = $data['document_type'];
         $this->documentCountry = $data['document_country_of_issuance'];
 
-        // create aliases
-        // create avatar
-        // create daily limit
-        // create notification filters
-        // create address main, postal
-        // document front, back attachment
-        // customer, customer_limit
-        // billing contracts
+        // TODO create aliases
+        // TODO create avatar
+        // TODO create daily limit
+        // TODO create notification filters
+        // TODO create address main, postal
+        // TODO  document front, back attachment
+        // TODO customer, customer_limit
+        // TODO billing contracts
     }
 
     /**
@@ -164,5 +171,41 @@ class UserPerson extends BunqObject
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        $data = [
+            'id'                           => $this->id,
+            'created'                      => $this->created->format('Y-m-d H:i:s.u'),
+            'updated'                      => $this->updated->format('Y-m-d H:i:s.u'),
+            'status'                       => $this->status,
+            'sub_status'                   => $this->subStatus,
+            'public_uuid'                  => $this->publicUuid,
+            'display_name'                 => $this->displayName,
+            'public_nick_name'             => $this->publicNickName,
+            'language'                     => $this->language,
+            'region'                       => $this->region,
+            'session_timeout'              => $this->sessionTimeout,
+            'first_name'                   => $this->firstName,
+            'middle_name'                  => $this->middleName,
+            'last_name'                    => $this->lastName,
+            'legal_name'                   => $this->legalName,
+            'tax_resident'                 => $this->taxResident,
+            'date_of_birth'                => $this->dateOfBirth->format('Y-m-d'),
+            'place_of_birth'               => $this->placeOfBirth,
+            'country_of_birth'             => $this->countryOfBirth,
+            'nationality'                  => $this->nationality,
+            'gender'                       => $this->gender,
+            'version_terms_of_service'     => $this->versionTos,
+            'document_number'              => $this->documentNumber,
+            'document_type'                => $this->documentType,
+            'document_country_of_issuance' => $this->documentCountry,
+        ];
+
+        return $data;
     }
 }

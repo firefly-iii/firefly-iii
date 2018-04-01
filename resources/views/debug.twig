@@ -29,6 +29,9 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 | Host | {{ phpOs }} |
 | Interface | {{ interface }} |
 | UserID | {{ Auth.user.id }} |
+{% for code,result in localeAttempts %}
+| Attempt at "{{ code }}" | {{ result }} |
+{% endfor %}
 | DB drivers | {{ drivers }} |
 | Current driver | {{ currentDriver }} |
 | Using Sandstorm? | {% if SANDSTORM == true %}yes{% else %}no{% endif %} |

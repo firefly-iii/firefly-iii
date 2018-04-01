@@ -25,16 +25,18 @@ namespace Tests\Feature\Controllers\Transaction;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
+use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -47,6 +49,16 @@ use Tests\TestCase;
 class SplitControllerTest extends TestCase
 {
     /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', get_class($this)));
+    }
+
+
+    /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::__construct
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::arrayFromJournal
@@ -56,11 +68,14 @@ class SplitControllerTest extends TestCase
     public function testEdit()
     {
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepository  = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos       = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
-        $tasker             = $this->mock(JournalTaskerInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
+
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
+
 
 
         $deposit              = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
@@ -82,12 +97,12 @@ class SplitControllerTest extends TestCase
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('0');
         $journalRepos->shouldReceive('getJournalCategoryName')->andReturn('Some');
 
+        // mock for new account list and for account array
+        $accountRepos->shouldReceive('getAccountsByType')
+                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->twice();
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
-        $accountRepository->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])
-                          ->andReturn(new Collection([$account]))->once();
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-        $tasker->shouldReceive('getTransactionsOverview')->andReturn($array);
 
         $this->be($this->user());
         $response = $this->get(route('transactions.split.edit', [$deposit->id]));
@@ -106,22 +121,27 @@ class SplitControllerTest extends TestCase
     public function testEditOldInput()
     {
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepository  = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos       = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $tasker             = $this->mock(JournalTaskerInterface::class);
         $deposit            = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
         $destination        = $deposit->transactions()->where('amount', '>', 0)->first();
         $account            = $destination->account;
         $transactions       = factory(Transaction::class, 3)->make();
 
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
+
+
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
-        $accountRepository->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])
-                          ->andReturn(new Collection([$account]))->once();
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-        $tasker->shouldReceive('getTransactionsOverview')->andReturn($transactions->toArray());
+
+        // mock for new account list and for account array
+        $accountRepos->shouldReceive('getAccountsByType')
+                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->twice();
+
 
         $journalRepos->shouldReceive('first')->once()->andReturn($deposit);
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]));
@@ -205,7 +225,6 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $tasker             = $this->mock(JournalTaskerInterface::class);
 
         $opening = TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first();
         $journalRepos->shouldReceive('first')->once()->andReturn($opening);
@@ -228,12 +247,15 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $tasker             = $this->mock(JournalTaskerInterface::class);
 
         $transactions = factory(Transaction::class, 1)->make();
         $deposit      = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
         $destination  = $deposit->transactions()->where('amount', '>', 0)->first();
         $account      = $destination->account;
+
+        $accountRepository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
+
 
         $journalRepos->shouldReceive('first')->once()->andReturn($deposit);
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]));
@@ -247,10 +269,10 @@ class SplitControllerTest extends TestCase
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1');
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
-        $accountRepository->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])
-                          ->andReturn(new Collection([$account]))->once();
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-        $tasker->shouldReceive('getTransactionsOverview')->andReturn($transactions->toArray());
+        // mock for new account list and for account array
+        $accountRepository->shouldReceive('getAccountsByType')
+                          ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->twice();
 
         $this->be($this->user());
         $response = $this->get(route('transactions.split.edit', [$deposit->id]));
@@ -270,7 +292,6 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $tasker             = $this->mock(JournalTaskerInterface::class);
         $ruleRepos          = $this->mock(RuleGroupRepositoryInterface::class);
         $billRepos          = $this->mock(BillRepositoryInterface::class);
 
@@ -291,11 +312,11 @@ class SplitControllerTest extends TestCase
             'tags'                           => '',
             'transactions'                   => [
                 [
-                    'description'             => 'Split #1',
-                    'source_account_name'     => 'Job',
+                    'transaction_description' => 'Split #1',
+                    'source_name'             => 'Job',
                     'transaction_currency_id' => 1,
                     'amount'                  => 1591,
-                    'category'                => '',
+                    'category_name'           => '',
                 ],
             ],
         ];
@@ -327,7 +348,6 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $tasker             = $this->mock(JournalTaskerInterface::class);
 
         $this->session(['transactions.edit-split.uri' => 'http://localhost']);
         $opening = TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first();
@@ -342,11 +362,11 @@ class SplitControllerTest extends TestCase
             'tags'                           => '',
             'transactions'                   => [
                 [
-                    'description'             => 'Split #1',
-                    'source_account_name'     => 'Job',
+                    'transaction_description' => 'Split #1',
+                    'source_name'             => 'Job',
                     'transaction_currency_id' => 1,
                     'amount'                  => 1591,
-                    'category'                => '',
+                    'category_name'           => '',
                 ],
             ],
         ];
@@ -370,7 +390,6 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $tasker             = $this->mock(JournalTaskerInterface::class);
         $ruleRepos          = $this->mock(RuleGroupRepositoryInterface::class);
         $billRepos          = $this->mock(BillRepositoryInterface::class);
 
@@ -380,7 +399,7 @@ class SplitControllerTest extends TestCase
 
         $this->session(['transactions.edit-split.uri' => 'http://localhost']);
         $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
-        $data       = [
+        $data     = [
             'id'                        => $transfer->id,
             'what'                      => 'transfer',
             'journal_description'       => 'Some updated withdrawal',
@@ -391,12 +410,12 @@ class SplitControllerTest extends TestCase
             'tags'                      => '',
             'transactions'              => [
                 [
-                    'description'             => 'Split #1',
+                    'transaction_description' => 'Split #1',
                     'source_account_id'       => '1',
-                    'destination_account_id'  => '2',
+                    'destination_id'          => '2',
                     'transaction_currency_id' => 1,
                     'amount'                  => 1591,
-                    'category'                => '',
+                    'category_name'           => '',
                 ],
             ],
         ];
@@ -427,7 +446,6 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $tasker             = $this->mock(JournalTaskerInterface::class);
         $ruleRepos          = $this->mock(RuleGroupRepositoryInterface::class);
         $billRepos          = $this->mock(BillRepositoryInterface::class);
 
@@ -448,12 +466,12 @@ class SplitControllerTest extends TestCase
             'tags'                      => '',
             'transactions'              => [
                 [
-                    'description'              => 'Split #1',
-                    'source_account_id'        => '1',
-                    'destination_account_name' => 'some expense',
-                    'transaction_currency_id'  => 1,
-                    'amount'                   => 1591,
-                    'category'                 => '',
+                    'transaction_description' => 'Split #1',
+                    'source_id'               => '1',
+                    'destination_name'        => 'some expense',
+                    'transaction_currency_id' => 1,
+                    'amount'                  => 1591,
+                    'category_name'           => '',
                 ],
             ],
         ];
