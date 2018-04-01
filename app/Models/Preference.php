@@ -59,6 +59,7 @@ class Preference extends Model
      */
     public function getDataAttribute($value)
     {
+        $result = null;
         try {
             $data = Crypt::decrypt($value);
         } catch (DecryptException $e) {
@@ -67,17 +68,17 @@ class Preference extends Model
                 sprintf('Could not decrypt preference #%d. If this error persists, please run "php artisan cache:clear" on the command line.', $this->id)
             );
         }
-        $unserialized = false;
+        $serialized = true;
         try {
-            $unserialized = unserialize($data);
+            unserialize($data);
         } catch (Exception $e) {
-            // don't care, assume is false.
+            $serialized = false;
         }
-        if (!(false === $unserialized)) {
-            return $unserialized;
+        if (!$serialized) {
+            $result = json_decode($data, true);
         }
 
-        return json_decode($data, true);
+        return $result;
     }
 
     /**
@@ -89,7 +90,7 @@ class Preference extends Model
      */
     public function setDataAttribute($value)
     {
-        $this->attributes['data'] = Crypt::encrypt(serialize($value));
+        $this->attributes['data'] = Crypt::encrypt(json_encode($value));
     }
 
     /**
