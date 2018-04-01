@@ -18,7 +18,7 @@ install:
   - mkdir -p build/logs
 
 script:
-  - phpunit -c phpunit.coverage.xml
+  - ./vendor/bin/phpunit -c phpunit.coverage.xml
 
 after_success:
   - travis_retry php vendor/bin/php-coveralls -x storage/build/clover-all.xml
