@@ -375,7 +375,7 @@ class TagRepository implements TagRepositoryInterface
 
         /** @var array $entry */
         foreach ($temporary as $entry) {
-            $scale          = $this->cloudScale([12, 20], floatval($entry['amount']), floatval($min), floatval($max));
+            $scale          = $this->cloudScale([12, 20], (float)$entry['amount'], (float)$min, (float)$max);
             $tagId          = $entry['tag']['id'];
             $return[$tagId] = [
                 'scale' => $scale,
@@ -424,14 +424,15 @@ class TagRepository implements TagRepositoryInterface
 
         $diff = $range[1] - $range[0];
         $step = 1;
-        if (0 != $diff) {
+        if (0.0 !== $diff) {
             $step = $amountDiff / $diff;
         }
-        if (0 == $step) {
+        if (0.0 === $step) {
             $step = 1;
         }
-        $extra = round($amount / $step);
 
-        return intval($range[0] + $extra);
+        $extra  = $step / $amount;
+        $result = (int)($range[0] + $extra);
+        return $result;
     }
 }

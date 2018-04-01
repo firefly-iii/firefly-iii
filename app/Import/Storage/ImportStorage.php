@@ -313,8 +313,6 @@ class ImportStorage
         }
         $this->addStep();
 
-        $this->journals->push($factoryJournal);
-
         Log::info(
             sprintf(
                 'Imported new journal #%d: "%s", amount %s %s.', $factoryJournal->id, $factoryJournal->description, $factoryJournal->transactionCurrency->code,
