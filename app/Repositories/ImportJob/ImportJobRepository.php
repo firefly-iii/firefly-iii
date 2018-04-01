@@ -256,14 +256,28 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      */
     public function processFile(ImportJob $job, ?UploadedFile $file): bool
     {
-        if (is_null($file)) {
+        if (null === $file) {
             return false;
         }
         /** @var UserRepositoryInterface $repository */
-        $repository       = app(UserRepositoryInterface::class);
-        $newName          = sprintf('%s.upload', $job->key);
-        $uploaded         = new SplFileObject($file->getRealPath());
-        $content          = trim($uploaded->fread($uploaded->getSize()));
+        $repository = app(UserRepositoryInterface::class);
+        $newName    = sprintf('%s.upload', $job->key);
+        $uploaded   = new SplFileObject($file->getRealPath());
+        $content    = trim($uploaded->fread($uploaded->getSize()));
+
+        // verify content:
+        $result = mb_detect_encoding($content, 'UTF-8', true);
+        if ($result === false) {
+            Log::error(sprintf('Cannot detect encoding for uploaded import file "%s".', $file->getClientOriginalName()));
+
+            return false;
+        }
+        if ($result !== 'ASCII' && $result !== 'UTF-8') {
+            Log::error(sprintf('Uploaded import file is %s instead of UTF8!', var_export($result, true)));
+
+            return false;
+        }
+
         $contentEncrypted = Crypt::encrypt($content);
         $disk             = Storage::disk('upload');
 
