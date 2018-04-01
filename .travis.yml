@@ -22,7 +22,6 @@ script:
 
 after_success:
   - travis_retry php vendor/bin/php-coveralls -x storage/build/clover-all.xml
-  - bash <(curl -s https://codecov.io/bash) -f storage/build/clover-all.xml
 
 # safelist
 branches:
