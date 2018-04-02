@@ -44,8 +44,8 @@ class BudgetFactory
      */
     public function find(?int $budgetId, ?string $budgetName): ?Budget
     {
-        $budgetId   = intval($budgetId);
-        $budgetName = strval($budgetName);
+        $budgetId   = (int)$budgetId;
+        $budgetName = (string)$budgetName;
 
         if (strlen($budgetName) === 0 && $budgetId === 0) {
             return null;
@@ -55,14 +55,14 @@ class BudgetFactory
         if ($budgetId > 0) {
             /** @var Budget $budget */
             $budget = $this->user->budgets()->find($budgetId);
-            if (!is_null($budget)) {
+            if (null !== $budget) {
                 return $budget;
             }
         }
 
         if (strlen($budgetName) > 0) {
             $budget = $this->findByName($budgetName);
-            if (!is_null($budget)) {
+            if (null !== $budget) {
                 return $budget;
             }
         }

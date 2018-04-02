@@ -43,7 +43,6 @@ class AccountFactory
      * @param array $data
      *
      * @return Account
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function create(array $data): Account
     {
@@ -64,8 +63,8 @@ class AccountFactory
             'user_id'         => $this->user->id,
             'account_type_id' => $type->id,
             'name'            => $data['name'],
-            'virtual_balance' => strlen(strval($data['virtualBalance'])) === 0 ? '0' : $data['virtualBalance'],
-            'active'          => true === $data['active'] ? true : false,
+            'virtual_balance' => $data['virtualBalance'] ?? '0',
+            'active'          => true === $data['active'],
             'iban'            => $data['iban'],
         ];
 
@@ -117,8 +116,6 @@ class AccountFactory
      * @param string $accountType
      *
      * @return Account
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function findOrCreate(string $accountName, string $accountType): Account
     {
@@ -161,13 +158,13 @@ class AccountFactory
      */
     protected function getAccountType(?int $accountTypeId, ?string $accountType): ?AccountType
     {
-        $accountTypeId = intval($accountTypeId);
+        $accountTypeId = (int)$accountTypeId;
         if ($accountTypeId > 0) {
             return AccountType::find($accountTypeId);
         }
-        $type   = config('firefly.accountTypeByIdentifier.' . strval($accountType));
+        $type   = config('firefly.accountTypeByIdentifier.' . (string)$accountType);
         $result = AccountType::whereType($type)->first();
-        if (is_null($result) && !is_null($accountType)) {
+        if (null === $result && null !== $accountType) {
             // try as full name:
             $result = AccountType::whereType($accountType)->first();
         }

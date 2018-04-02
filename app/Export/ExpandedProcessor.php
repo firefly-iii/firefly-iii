@@ -118,11 +118,11 @@ class ExpandedProcessor implements ProcessorInterface
         $currencies = $this->getAccountCurrencies($ibans);
         $transactions->each(
             function (Transaction $transaction) use ($notes, $tags, $ibans, $currencies) {
-                $journalId                            = intval($transaction->journal_id);
-                $accountId                            = intval($transaction->account_id);
-                $opposingId                           = intval($transaction->opposing_account_id);
-                $currencyId                           = $ibans[$accountId]['currency_id'] ?? 0;
-                $opposingCurrencyId                   = $ibans[$opposingId]['currency_id'] ?? 0;
+                $journalId                            = (int)$transaction->journal_id;
+                $accountId                            = (int)$transaction->account_id;
+                $opposingId                           = (int)$transaction->opposing_account_id;
+                $currencyId                           = (int)($ibans[$accountId]['currency_id'] ?? 0.0);
+                $opposingCurrencyId                   = (int)($ibans[$opposingId]['currency_id'] ?? 0.0);
                 $transaction->notes                   = $notes[$journalId] ?? '';
                 $transaction->tags                    = implode(',', $tags[$journalId] ?? []);
                 $transaction->account_number          = $ibans[$accountId]['accountNumber'] ?? '';
@@ -263,7 +263,7 @@ class ExpandedProcessor implements ProcessorInterface
         $ids        = [];
         $repository->setUser($this->job->user);
         foreach ($array as $value) {
-            $ids[] = $value['currency_id'] ?? 0;
+            $ids[] = (int)($value['currency_id'] ?? 0.0);
         }
         $ids    = array_unique($ids);
         $result = $repository->getByIds($ids);
@@ -293,7 +293,7 @@ class ExpandedProcessor implements ProcessorInterface
                              ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data']);
         /** @var AccountMeta $meta */
         foreach ($set as $meta) {
-            $id                       = intval($meta->account_id);
+            $id                       = (int)$meta->account_id;
             $return[$id][$meta->name] = $meta->data;
         }
 
@@ -316,8 +316,8 @@ class ExpandedProcessor implements ProcessorInterface
         $return = [];
         /** @var Note $note */
         foreach ($notes as $note) {
-            if (strlen(trim(strval($note->text))) > 0) {
-                $id          = intval($note->noteable_id);
+            if (strlen(trim((string)$note->text)) > 0) {
+                $id          = (int)$note->noteable_id;
                 $return[$id] = $note->text;
             }
         }
@@ -343,8 +343,8 @@ class ExpandedProcessor implements ProcessorInterface
                     ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag']);
         $result = [];
         foreach ($set as $entry) {
-            $id            = intval($entry->transaction_journal_id);
-            $result[$id]   = isset($result[$id]) ? $result[$id] : [];
+            $id            = (int)$entry->transaction_journal_id;
+            $result[$id]   = $result[$id] ?? [];
             $result[$id][] = Crypt::decrypt($entry->tag);
         }
 

@@ -41,12 +41,12 @@ class YearReportGenerator implements ReportGeneratorInterface
     /**
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function generate(): string
     {
         // and some id's, joined:
-        $accountIds = join(',', $this->accounts->pluck('id')->toArray());
+        $accountIds = implode(',', $this->accounts->pluck('id')->toArray());
         $reportType = 'default';
 
         // continue!

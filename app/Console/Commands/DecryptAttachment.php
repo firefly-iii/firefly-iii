@@ -48,14 +48,6 @@ class DecryptAttachment extends Command
     {directory:Where the file must be stored.}';
 
     /**
-     * Create a new command instance.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five its fine.
@@ -65,7 +57,7 @@ class DecryptAttachment extends Command
     {
         /** @var AttachmentRepositoryInterface $repository */
         $repository     = app(AttachmentRepositoryInterface::class);
-        $attachmentId   = intval($this->argument('id'));
+        $attachmentId   = (int)$this->argument('id');
         $attachment     = $repository->findWithoutUser($attachmentId);
         $attachmentName = trim($this->argument('name'));
         $storagePath    = realpath(trim($this->argument('directory')));

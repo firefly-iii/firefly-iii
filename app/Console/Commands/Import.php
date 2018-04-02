@@ -49,14 +49,6 @@ class Import extends Command
     protected $signature = 'firefly:start-import {key}';
 
     /**
-     * Create a new command instance.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Run the import routine.
      *
      * @throws FireflyException

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use Exception;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\UserChangedEmail;
@@ -36,7 +37,6 @@ use Illuminate\Auth\Events\Login;
 use Log;
 use Mail;
 use Preferences;
-use Swift_TransportException;
 
 /**
  * Class UserEventHandler.
@@ -95,7 +95,7 @@ class UserEventHandler
         }
         // user is the only user but does not have role "owner".
         $role = $repository->getRole('owner');
-        if (is_null($role)) {
+        if (null === $role) {
             // create role, does not exist. Very strange situation so let's raise a big fuss about it.
             $role = $repository->createRole('owner', 'Site Owner', 'User runs this instance of FF3');
             Log::error('Could not find role "owner". This is weird.');
@@ -124,7 +124,7 @@ class UserEventHandler
         try {
             Mail::to($newEmail)->send(new ConfirmEmailChangeMail($newEmail, $oldEmail, $uri, $ipAddress));
             // @codeCoverageIgnoreStart
-        } catch (Swift_TransportException $e) {
+        } catch (Exception $e) {
             Log::error($e->getMessage());
         }
 
@@ -148,7 +148,7 @@ class UserEventHandler
         try {
             Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $uri, $ipAddress));
             // @codeCoverageIgnoreStart
-        } catch (Swift_TransportException $e) {
+        } catch (Exception $e) {
             Log::error($e->getMessage());
         }
 
@@ -173,7 +173,7 @@ class UserEventHandler
         try {
             Mail::to($email)->send(new RequestedNewPasswordMail($url, $ipAddress));
             // @codeCoverageIgnoreStart
-        } catch (Swift_TransportException $e) {
+        } catch (Exception $e) {
             Log::error($e->getMessage());
         }
 
@@ -205,7 +205,7 @@ class UserEventHandler
         try {
             Mail::to($email)->send(new RegisteredUserMail($uri, $ipAddress));
             // @codeCoverageIgnoreStart
-        } catch (Swift_TransportException $e) {
+        } catch (Exception $e) {
             Log::error($e->getMessage());
         }
 

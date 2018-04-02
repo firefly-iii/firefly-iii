@@ -101,7 +101,7 @@ class Bill
     {
         $set = $this->bills->sortBy(
             function (BillLine $bill) {
-                $active = 0 === intval($bill->getBill()->active) ? 1 : 0;
+                $active = 0 === (int)$bill->getBill()->active ? 1 : 0;
                 $name   = $bill->getBill()->name;
 
                 return $active . $name;

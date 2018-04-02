@@ -190,7 +190,7 @@ class BillLine
      */
     public function isActive(): bool
     {
-        return 1 === intval($this->bill->active);
+        return 1 === (int)$this->bill->active;
     }
 
     /**

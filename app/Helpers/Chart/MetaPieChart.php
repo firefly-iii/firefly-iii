@@ -103,7 +103,7 @@ class MetaPieChart implements MetaPieChartInterface
         $transactions = $this->getTransactions($direction);
         $grouped      = $this->groupByFields($transactions, $this->grouping[$group]);
         $chartData    = $this->organizeByType($group, $grouped);
-        $key          = strval(trans('firefly.everything_else'));
+        $key          = (string)trans('firefly.everything_else');
 
         // also collect all other transactions
         if ($this->collectOtherObjects && 'expense' === $direction) {
@@ -113,7 +113,7 @@ class MetaPieChart implements MetaPieChartInterface
             $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)->setTypes([TransactionType::WITHDRAWAL]);
 
             $journals        = $collector->getJournals();
-            $sum             = strval($journals->sum('transaction_amount'));
+            $sum             = (string)$journals->sum('transaction_amount');
             $sum             = bcmul($sum, '-1');
             $sum             = bcsub($sum, $this->total);
             $chartData[$key] = $sum;
@@ -125,7 +125,7 @@ class MetaPieChart implements MetaPieChartInterface
             $collector->setUser($this->user);
             $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)->setTypes([TransactionType::DEPOSIT]);
             $journals        = $collector->getJournals();
-            $sum             = strval($journals->sum('transaction_amount'));
+            $sum             = (string)$journals->sum('transaction_amount');
             $sum             = bcsub($sum, $this->total);
             $chartData[$key] = $sum;
         }
@@ -308,7 +308,7 @@ class MetaPieChart implements MetaPieChartInterface
         foreach ($set as $transaction) {
             $values = [];
             foreach ($fields as $field) {
-                $values[] = intval($transaction->$field);
+                $values[] = (int)$transaction->$field;
             }
             $value           = max($values);
             $grouped[$value] = $grouped[$value] ?? '0';
@@ -332,7 +332,7 @@ class MetaPieChart implements MetaPieChartInterface
         $repository->setUser($this->user);
         foreach ($array as $objectId => $amount) {
             if (!isset($names[$objectId])) {
-                $object           = $repository->find(intval($objectId));
+                $object           = $repository->find((int)$objectId);
                 $names[$objectId] = $object->name ?? $object->tag;
             }
             $amount                       = Steam::positive($amount);

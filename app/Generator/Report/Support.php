@@ -35,9 +35,7 @@ class Support
      */
     public function getTopExpenses(): Collection
     {
-        $transactions = $this->getExpenses()->sortBy('transaction_amount');
-
-        return $transactions;
+        return $this->getExpenses()->sortBy('transaction_amount');
     }
 
     /**
@@ -45,9 +43,7 @@ class Support
      */
     public function getTopIncome(): Collection
     {
-        $transactions = $this->getIncome()->sortByDesc('transaction_amount');
-
-        return $transactions;
+        return $this->getIncome()->sortByDesc('transaction_amount');
     }
 
     /**
@@ -78,13 +74,13 @@ class Support
             }
             ++$result[$opposingId]['count'];
             $result[$opposingId]['sum']     = bcadd($result[$opposingId]['sum'], $transaction->transaction_amount);
-            $result[$opposingId]['average'] = bcdiv($result[$opposingId]['sum'], strval($result[$opposingId]['count']));
+            $result[$opposingId]['average'] = bcdiv($result[$opposingId]['sum'], (string)$result[$opposingId]['count']);
         }
 
         // sort result by average:
         $average = [];
         foreach ($result as $key => $row) {
-            $average[$key] = floatval($row['average']);
+            $average[$key] = (float)$row['average'];
         }
 
         array_multisort($average, $sortFlag, $result);

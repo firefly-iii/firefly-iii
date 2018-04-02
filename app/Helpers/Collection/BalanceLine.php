@@ -162,13 +162,13 @@ class BalanceLine
             return $this->getBudget()->name;
         }
         if (self::ROLE_DEFAULTROLE === $this->getRole()) {
-            return strval(trans('firefly.no_budget'));
+            return (string)trans('firefly.no_budget');
         }
         if (self::ROLE_TAGROLE === $this->getRole()) {
-            return strval(trans('firefly.coveredWithTags'));
+            return (string)trans('firefly.coveredWithTags');
         }
         if (self::ROLE_DIFFROLE === $this->getRole()) {
-            return strval(trans('firefly.leftUnbalanced'));
+            return (string)trans('firefly.leftUnbalanced');
         }
 
         return '';

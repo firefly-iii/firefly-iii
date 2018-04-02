@@ -237,7 +237,7 @@ class JournalCollector implements JournalCollectorInterface
         $countQuery->getQuery()->groups     = null;
         $countQuery->getQuery()->orders     = null;
         $countQuery->groupBy('accounts.user_id');
-        $this->count = intval($countQuery->count());
+        $this->count = (int)$countQuery->count();
 
         return $this->count;
     }
@@ -270,10 +270,10 @@ class JournalCollector implements JournalCollectorInterface
         $set->each(
             function (Transaction $transaction) {
                 $transaction->date        = new Carbon($transaction->date);
-                $transaction->description = Steam::decrypt(intval($transaction->encrypted), $transaction->description);
+                $transaction->description = Steam::decrypt((int)$transaction->encrypted, $transaction->description);
 
                 if (null !== $transaction->bill_name) {
-                    $transaction->bill_name = Steam::decrypt(intval($transaction->bill_name_encrypted), $transaction->bill_name);
+                    $transaction->bill_name = Steam::decrypt((int)$transaction->bill_name_encrypted, $transaction->bill_name);
                 }
                 $transaction->account_name          = app('steam')->tryDecrypt($transaction->account_name);
                 $transaction->opposing_account_name = app('steam')->tryDecrypt($transaction->opposing_account_name);
@@ -338,7 +338,7 @@ class JournalCollector implements JournalCollectorInterface
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->whereIn('transactions.account_id', $accountIds);
-            Log::debug(sprintf('setAccounts: %s', join(', ', $accountIds)));
+            Log::debug(sprintf('setAccounts: %s', implode(', ', $accountIds)));
             $this->accountIds = $accountIds;
         }
 
@@ -834,7 +834,6 @@ class JournalCollector implements JournalCollectorInterface
 
     /**
      *
-     * @throws \InvalidArgumentException
      */
     private function joinOpposingTables()
     {
