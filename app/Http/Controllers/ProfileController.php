@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Auth;
+use DB;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\ValidationException;
@@ -38,6 +39,7 @@ use FireflyIII\User;
 use Google2FA;
 use Hash;
 use Illuminate\Contracts\Auth\Guard;
+use Laravel\Passport\ClientRepository;
 use Log;
 use Preferences;
 use Session;
@@ -199,6 +201,13 @@ class ProfileController extends Controller
      */
     public function index()
     {
+        // check if client token thing exists (default one)
+        $count = DB::table('oauth_clients')->whereNull('user_id')->count();
+        if ($count === 0) {
+            /** @var ClientRepository $repository */
+            $repository = app(ClientRepository::class);
+            $repository->createPersonalAccessClient(null, config('app.name') . ' Personal Access Client', 'http://localhost');
+        }
         $subTitle   = auth()->user()->email;
         $userId     = auth()->user()->id;
         $enabled2FA = (int)Preferences::get('twoFactorAuthEnabled', 0)->data === 1;
