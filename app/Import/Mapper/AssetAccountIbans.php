@@ -45,7 +45,7 @@ class AssetAccountIbans implements MapperInterface
         /** @var Account $account */
         foreach ($set as $account) {
             $iban      = $account->iban ?? '';
-            $accountId = intval($account->id);
+            $accountId = (int)$account->id;
             if (strlen($iban) > 0) {
                 $topList[$accountId] = $account->iban . ' (' . $account->name . ')';
             }

@@ -52,7 +52,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return bool
      *
-     * @throws \Exception
+
      */
     public function destroy(Bill $bill): bool
     {
@@ -72,10 +72,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function find(int $billId): ?Bill
     {
-        /** @var Bill $res */
-        $res = $this->user->bills()->find($billId);
-
-        return $res;
+        return $this->user->bills()->find($billId);
     }
 
     /**
@@ -136,7 +133,6 @@ class BillRepository implements BillRepositoryInterface
      * @param Collection $accounts
      *
      * @return Collection
-     * @throws \InvalidArgumentException
      */
     public function getBillsForAccounts(Collection $accounts): Collection
     {
@@ -206,7 +202,7 @@ class BillRepository implements BillRepositoryInterface
             $set = $bill->transactionJournals()->after($start)->before($end)->get(['transaction_journals.*']);
             if ($set->count() > 0) {
                 $journalIds = $set->pluck('id')->toArray();
-                $amount     = strval(Transaction::whereIn('transaction_journal_id', $journalIds)->where('amount', '<', 0)->sum('amount'));
+                $amount     = (string)Transaction::whereIn('transaction_journal_id', $journalIds)->where('amount', '<', 0)->sum('amount');
                 $sum        = bcadd($sum, $amount);
                 Log::debug(sprintf('Total > 0, so add to sum %f, which becomes %f', $amount, $sum));
             }
@@ -238,7 +234,7 @@ class BillRepository implements BillRepositoryInterface
 
             if ($total > 0) {
                 $average = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
-                $multi   = bcmul($average, strval($total));
+                $multi   = bcmul($average, (string)$total);
                 $sum     = bcadd($sum, $multi);
                 Log::debug(sprintf('Total > 0, so add to sum %f, which becomes %f', $multi, $sum));
             }
@@ -259,7 +255,7 @@ class BillRepository implements BillRepositoryInterface
         $repos->setUser($this->user);
         $journals = $bill->transactionJournals()->get();
         $sum      = '0';
-        $count    = strval($journals->count());
+        $count    = (string)$journals->count();
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $sum = bcadd($sum, $repos->getJournalTotal($journal));
@@ -276,7 +272,6 @@ class BillRepository implements BillRepositoryInterface
      * @param int $size
      *
      * @return LengthAwarePaginator
-     * @throws \InvalidArgumentException
      */
     public function getPaginator(int $size): LengthAwarePaginator
     {
@@ -389,7 +384,7 @@ class BillRepository implements BillRepositoryInterface
                          ->where('date', '<=', $date->year . '-12-31 23:59:59')
                          ->get();
         $sum      = '0';
-        $count    = strval($journals->count());
+        $count    = (string)$journals->count();
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $sum = bcadd($sum, $repos->getJournalTotal($journal));
@@ -508,8 +503,8 @@ class BillRepository implements BillRepositoryInterface
         $sourceAccounts      = $repos->getJournalDestinationAccounts($journal);
         $matches             = explode(',', $bill->match);
         $description         = strtolower($journal->description) . ' ';
-        $description         .= strtolower(join(' ', $destinationAccounts->pluck('name')->toArray()));
-        $description         .= strtolower(join(' ', $sourceAccounts->pluck('name')->toArray()));
+        $description         .= strtolower(implode(' ', $destinationAccounts->pluck('name')->toArray()));
+        $description         .= strtolower(implode(' ', $sourceAccounts->pluck('name')->toArray()));
 
         $wordMatch   = $this->doWordMatch($matches, $description);
         $amountMatch = $this->doAmountMatch($repos->getJournalTotal($journal), $bill->amount_min, $bill->amount_max);
@@ -550,10 +545,8 @@ class BillRepository implements BillRepositoryInterface
         /** @var BillFactory $factory */
         $factory = app(BillFactory::class);
         $factory->setUser($this->user);
-        $bill = $factory->create($data);
 
-
-        return $bill;
+        return $factory->create($data);
     }
 
     /**
@@ -579,11 +572,7 @@ class BillRepository implements BillRepositoryInterface
      */
     protected function doAmountMatch($amount, $min, $max): bool
     {
-        if ($amount >= $min && $amount <= $max) {
-            return true;
-        }
-
-        return false;
+        return $amount >= $min && $amount <= $max;
     }
 
     /**

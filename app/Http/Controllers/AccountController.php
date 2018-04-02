@@ -84,7 +84,6 @@ class AccountController extends Controller
      * @param string  $what
      *
      * @return View
-     * @throws \RuntimeException
      */
     public function create(Request $request, string $what = 'asset')
     {
@@ -133,18 +132,17 @@ class AccountController extends Controller
      * @param Account $account
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function destroy(Request $request, Account $account)
     {
         $type     = $account->accountType->type;
         $typeName = config('firefly.shortNamesByFullName.' . $type);
         $name     = $account->name;
-        $moveTo   = $this->repository->findNull(intval($request->get('move_account_before_delete')));
+        $moveTo   = $this->repository->findNull((int)$request->get('move_account_before_delete'));
 
         $this->repository->destroy($account, $moveTo);
 
-        $request->session()->flash('success', strval(trans('firefly.' . $typeName . '_deleted', ['name' => $name])));
+        $request->session()->flash('success', (string)trans('firefly.' . $typeName . '_deleted', ['name' => $name]));
         Preferences::mark();
 
         return redirect($this->getPreviousUri('accounts.delete.uri'));
@@ -163,7 +161,7 @@ class AccountController extends Controller
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // long and complex but not that excessively so.
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
-     * @throws \RuntimeException
+
      */
     public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
     {
@@ -174,7 +172,7 @@ class AccountController extends Controller
         $currencySelectList = ExpandedForm::makeSelectList($allCurrencies);
         $roles              = [];
         foreach (config('firefly.accountRoles') as $role) {
-            $roles[$role] = strval(trans('firefly.account_role_' . $role));
+            $roles[$role] = (string)trans('firefly.account_role_' . $role);
         }
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -186,11 +184,11 @@ class AccountController extends Controller
         // pre fill some useful values.
 
         // the opening balance is tricky:
-        $openingBalanceAmount = strval($repository->getOpeningBalanceAmount($account));
+        $openingBalanceAmount = (string)$repository->getOpeningBalanceAmount($account);
         $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
         $default              = app('amount')->getDefaultCurrency();
-        $currency             = $this->currencyRepos->findNull(intval($repository->getMetaValue($account, 'currency_id')));
-        if (is_null($currency)) {
+        $currency             = $this->currencyRepos->findNull((int)$repository->getMetaValue($account, 'currency_id'));
+        if (null === $currency) {
             $currency = $default;
         }
 
@@ -246,8 +244,8 @@ class AccountController extends Controller
         $types        = config('firefly.accountTypesByIdentifier.' . $what);
         $collection   = $this->repository->getAccountsByType($types);
         $total        = $collection->count();
-        $page         = 0 === intval($request->get('page')) ? 1 : intval($request->get('page'));
-        $pageSize     = intval(Preferences::get('listPageSize', 50)->data);
+        $page         = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
         $accounts     = $collection->slice(($page - 1) * $pageSize, $pageSize);
         unset($collection);
         /** @var Carbon $start */
@@ -378,7 +376,6 @@ class AccountController extends Controller
      * @param AccountFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function store(AccountFormRequest $request)
     {
@@ -396,7 +393,7 @@ class AccountController extends Controller
             // @codeCoverageIgnoreEnd
         }
 
-        if (1 === intval($request->get('create_another'))) {
+        if (1 === (int)$request->get('create_another')) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('accounts.create.fromStore', true);
 
@@ -412,17 +409,16 @@ class AccountController extends Controller
      * @param Account            $account
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function update(AccountFormRequest $request, Account $account)
     {
         $data = $request->getAccountData();
         $this->repository->update($account, $data);
 
-        $request->session()->flash('success', strval(trans('firefly.updated_account', ['name' => $account->name])));
+        $request->session()->flash('success', (string)trans('firefly.updated_account', ['name' => $account->name]));
         Preferences::mark();
 
-        if (1 === intval($request->get('return_to_edit'))) {
+        if (1 === (int)$request->get('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('accounts.edit.fromUpdate', true);
 
@@ -467,7 +463,7 @@ class AccountController extends Controller
         $start = $this->repository->oldestJournalDate($account);
         $end   = $date ?? new Carbon;
         if ($end < $start) {
-            list($start, $end) = [$end, $start]; // @codeCoverageIgnore
+            [$start, $end] = [$end, $start]; // @codeCoverageIgnore
         }
 
         // properties for cache

@@ -62,7 +62,6 @@ class HomeController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
-     * @throws \RuntimeException
      */
     public function dateRange(Request $request)
     {
@@ -75,7 +74,7 @@ class HomeController extends Controller
 
         // check if the label is "everything" or "Custom range" which will betray
         // a possible problem with the budgets.
-        if ($label === strval(trans('firefly.everything')) || $label === strval(trans('firefly.customRange'))) {
+        if ($label === (string)trans('firefly.everything') || $label === (string)trans('firefly.customRange')) {
             $isCustomRange = true;
             Log::debug('Range is now marked as "custom".');
         }
@@ -83,7 +82,7 @@ class HomeController extends Controller
         $diff = $start->diffInDays($end);
 
         if ($diff > 50) {
-            $request->session()->flash('warning', strval(trans('firefly.warning_much_data', ['days' => $diff])));
+            $request->session()->flash('warning', (string)trans('firefly.warning_much_data', ['days' => $diff]));
         }
 
         $request->session()->put('is_custom_range', $isCustomRange);
@@ -117,7 +116,6 @@ class HomeController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function flush(Request $request)
     {
@@ -232,7 +230,6 @@ class HomeController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function testFlash(Request $request)
     {

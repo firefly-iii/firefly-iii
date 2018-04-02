@@ -37,7 +37,7 @@ class Request extends FormRequest
      */
     public function boolean(string $field): bool
     {
-        return 1 === intval($this->input($field));
+        return 1 === (int)$this->input($field);
     }
 
     /**
@@ -47,7 +47,7 @@ class Request extends FormRequest
      */
     public function integer(string $field): int
     {
-        return intval($this->get($field));
+        return (int)$this->get($field);
     }
 
     /**

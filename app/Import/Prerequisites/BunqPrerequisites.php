@@ -58,7 +58,7 @@ class BunqPrerequisites implements PrerequisitesInterface
         Log::debug('Now in BunqPrerequisites::getViewParameters()');
         $apiKey = Preferences::getForUser($this->user, 'bunq_api_key', null);
         $string = '';
-        if (!is_null($apiKey)) {
+        if (null !== $apiKey) {
             $string = $apiKey->data;
         }
 

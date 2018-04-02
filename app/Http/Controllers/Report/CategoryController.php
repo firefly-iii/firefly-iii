@@ -41,7 +41,7 @@ class CategoryController extends Controller
      *
      * @return mixed|string
      *
-     * @throws \Throwable
+
      */
     public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -74,7 +74,7 @@ class CategoryController extends Controller
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function income(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -109,7 +109,7 @@ class CategoryController extends Controller
      *
      * @internal param ReportHelperInterface $helper
      *
-     * @throws \Throwable
+
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -139,7 +139,7 @@ class CategoryController extends Controller
         // Obtain a list of columns
         $sum = [];
         foreach ($report as $categoryId => $row) {
-            $sum[$categoryId] = floatval($row['spent']);
+            $sum[$categoryId] = (float)$row['spent'];
         }
 
         array_multisort($sum, SORT_ASC, $report);

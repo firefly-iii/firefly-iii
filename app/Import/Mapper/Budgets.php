@@ -42,7 +42,7 @@ class Budgets implements MapperInterface
 
         /** @var Budget $budget */
         foreach ($result as $budget) {
-            $budgetId        = intval($budget->id);
+            $budgetId        = (int)$budget->id;
             $list[$budgetId] = $budget->name;
         }
         asort($list);

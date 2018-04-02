@@ -84,9 +84,9 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function canAddAmount(PiggyBank $piggyBank, string $amount): bool
     {
         $leftOnAccount = $piggyBank->leftOnAccount(new Carbon);
-        $savedSoFar    = strval($piggyBank->currentRelevantRep()->currentamount);
+        $savedSoFar    = (string)$piggyBank->currentRelevantRep()->currentamount;
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
-        $maxAmount     = strval(min(round($leftOnAccount, 12), round($leftToSave, 12)));
+        $maxAmount     = (string)min(round($leftOnAccount, 12), round($leftToSave, 12));
 
         return bccomp($amount, $maxAmount) <= 0;
     }
@@ -144,7 +144,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      *
      * @return bool
      *
-     * @throws \Exception
+
      */
     public function destroy(PiggyBank $piggyBank): bool
     {
@@ -203,7 +203,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             return '0';
         }
 
-        return strval($rep->currentamount);
+        return (string)$rep->currentamount;
     }
 
     /**
@@ -233,7 +233,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
         $amount  = $repos->getJournalTotal($journal);
         $sources = $repos->getJournalSourceAccounts($journal)->pluck('id')->toArray();
-        $room    = bcsub(strval($piggyBank->targetamount), strval($repetition->currentamount));
+        $room    = bcsub((string)$piggyBank->targetamount, (string)$repetition->currentamount);
         $compare = bcmul($repetition->currentamount, '-1');
 
         Log::debug(sprintf('Will add/remove %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
@@ -271,7 +271,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getMaxOrder(): int
     {
-        return intval($this->user->piggyBanks()->max('order'));
+        return (int)$this->user->piggyBanks()->max('order');
     }
 
     /**
@@ -279,10 +279,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getPiggyBanks(): Collection
     {
-        /** @var Collection $set */
-        $set = $this->user->piggyBanks()->orderBy('order', 'ASC')->get();
-
-        return $set;
+        return $this->user->piggyBanks()->orderBy('order', 'ASC')->get();
     }
 
     /**
@@ -408,7 +405,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function update(PiggyBank $piggyBank, array $data): PiggyBank
     {
         $piggyBank->name         = $data['name'];
-        $piggyBank->account_id   = intval($data['account_id']);
+        $piggyBank->account_id   = (int)$data['account_id'];
         $piggyBank->targetamount = round($data['targetamount'], 2);
         $piggyBank->targetdate   = $data['targetdate'];
         $piggyBank->startdate    = $data['startdate'];

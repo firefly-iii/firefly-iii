@@ -75,12 +75,12 @@ class ReportController extends Controller
         while ($current < $end) {
             $balances          = Steam::balancesByAccounts($accounts, $current);
             $sum               = $this->arraySum($balances);
-            $label             = $current->formatLocalized(strval(trans('config.month_and_day')));
+            $label             = $current->formatLocalized((string)trans('config.month_and_day'));
             $chartData[$label] = $sum;
             $current->addDays(7);
         }
 
-        $data = $this->generator->singleSet(strval(trans('firefly.net_worth')), $chartData);
+        $data = $this->generator->singleSet((string)trans('firefly.net_worth'), $chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -188,19 +188,19 @@ class ReportController extends Controller
 
         $chartData = [
             [
-                'label'   => strval(trans('firefly.income')),
+                'label'   => (string)trans('firefly.income'),
                 'type'    => 'bar',
                 'entries' => [
-                    strval(trans('firefly.sum_of_period'))     => $numbers['sum_earned'],
-                    strval(trans('firefly.average_in_period')) => $numbers['avg_earned'],
+                    (string)trans('firefly.sum_of_period')     => $numbers['sum_earned'],
+                    (string)trans('firefly.average_in_period') => $numbers['avg_earned'],
                 ],
             ],
             [
                 'label'   => trans('firefly.expenses'),
                 'type'    => 'bar',
                 'entries' => [
-                    strval(trans('firefly.sum_of_period'))     => $numbers['sum_spent'],
-                    strval(trans('firefly.average_in_period')) => $numbers['avg_spent'],
+                    (string)trans('firefly.sum_of_period')     => $numbers['sum_spent'],
+                    (string)trans('firefly.average_in_period') => $numbers['avg_spent'],
                 ],
             ],
         ];
@@ -255,25 +255,21 @@ class ReportController extends Controller
 
         while ($currentStart <= $end) {
             $currentEnd = app('navigation')->endOfPeriod($currentStart, '1M');
-            $earned     = strval(
-                array_sum(
-                    array_map(
-                        function ($item) {
-                            return $item['sum'];
-                        },
-                        $tasker->getIncomeReport($currentStart, $currentEnd, $accounts)
-                    )
+            $earned     = (string)array_sum(
+                array_map(
+                    function ($item) {
+                        return $item['sum'];
+                    },
+                    $tasker->getIncomeReport($currentStart, $currentEnd, $accounts)
                 )
             );
 
-            $spent = strval(
-                array_sum(
-                    array_map(
-                        function ($item) {
-                            return $item['sum'];
-                        },
-                        $tasker->getExpenseReport($currentStart, $currentEnd, $accounts)
-                    )
+            $spent = (string)array_sum(
+                array_map(
+                    function ($item) {
+                        return $item['sum'];
+                    },
+                    $tasker->getExpenseReport($currentStart, $currentEnd, $accounts)
                 )
             );
 

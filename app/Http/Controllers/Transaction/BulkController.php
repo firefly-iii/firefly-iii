@@ -70,7 +70,6 @@ class BulkController extends Controller
      * @param Collection $journals
      *
      * @return View
-     * @throws \RuntimeException
      */
     public function edit(Request $request, Collection $journals)
     {
@@ -140,22 +139,21 @@ class BulkController extends Controller
      * @param JournalRepositoryInterface $repository
      *
      * @return mixed
-     * @throws \RuntimeException
      */
     public function update(BulkEditJournalRequest $request, JournalRepositoryInterface $repository)
     {
         /** @var JournalUpdateService $service */
         $service        = app(JournalUpdateService::class);
         $journalIds     = $request->get('journals');
-        $ignoreCategory = intval($request->get('ignore_category')) === 1;
-        $ignoreBudget   = intval($request->get('ignore_budget')) === 1;
-        $ignoreTags     = intval($request->get('ignore_tags')) === 1;
+        $ignoreCategory = (int)$request->get('ignore_category') === 1;
+        $ignoreBudget   = (int)$request->get('ignore_budget') === 1;
+        $ignoreTags     = (int)$request->get('ignore_tags') === 1;
         $count          = 0;
 
         if (is_array($journalIds)) {
             foreach ($journalIds as $journalId) {
-                $journal = $repository->find(intval($journalId));
-                if (!is_null($journal)) {
+                $journal = $repository->find((int)$journalId);
+                if (null !== $journal) {
                     $count++;
                     Log::debug(sprintf('Found journal #%d', $journal->id));
                     // update category if not told to ignore

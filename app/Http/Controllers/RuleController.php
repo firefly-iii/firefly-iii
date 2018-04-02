@@ -72,8 +72,8 @@ class RuleController extends Controller
      *
      * @return View
      *
-     * @throws \Throwable
-     * @throws \Throwable
+
+
      */
     public function create(Request $request, RuleGroup $ruleGroup)
     {
@@ -167,10 +167,10 @@ class RuleController extends Controller
      *
      * @return View
      *
-     * @throws \Throwable
-     * @throws \Throwable
-     * @throws \Throwable
-     * @throws \Throwable
+
+
+
+
      */
     public function edit(Request $request, RuleRepositoryInterface $repository, Rule $rule)
     {
@@ -253,7 +253,7 @@ class RuleController extends Controller
         $this->dispatch($job);
 
         // Tell the user that the job is queued
-        Session::flash('success', strval(trans('firefly.applied_rule_selection', ['title' => $rule->title])));
+        Session::flash('success', (string)trans('firefly.applied_rule_selection', ['title' => $rule->title]));
 
         return redirect()->route('rules.index');
     }
@@ -311,7 +311,6 @@ class RuleController extends Controller
      * @param Rule                       $rule
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \InvalidArgumentException
      */
     public function selectTransactions(AccountRepositoryInterface $repository, Rule $rule)
     {
@@ -342,7 +341,7 @@ class RuleController extends Controller
         Session::flash('success', trans('firefly.stored_new_rule', ['title' => $rule->title]));
         Preferences::mark();
 
-        if (1 === intval($request->get('create_another'))) {
+        if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
             Session::put('rules.create.fromStore', true);
 
@@ -365,7 +364,7 @@ class RuleController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      *
-     * @throws \Throwable
+
      */
     public function testTriggers(TestRuleFormRequest $request)
     {
@@ -376,8 +375,8 @@ class RuleController extends Controller
             return response()->json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 
-        $limit = intval(config('firefly.test-triggers.limit'));
-        $range = intval(config('firefly.test-triggers.range'));
+        $limit = (int)config('firefly.test-triggers.limit');
+        $range = (int)config('firefly.test-triggers.range');
 
         /** @var TransactionMatcher $matcher */
         $matcher = app(TransactionMatcher::class);
@@ -414,7 +413,7 @@ class RuleController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      *
-     * @throws \Throwable
+
      */
     public function testTriggersByRule(Rule $rule)
     {
@@ -424,8 +423,8 @@ class RuleController extends Controller
             return response()->json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 
-        $limit = intval(config('firefly.test-triggers.limit'));
-        $range = intval(config('firefly.test-triggers.range'));
+        $limit = (int)config('firefly.test-triggers.limit');
+        $range = (int)config('firefly.test-triggers.range');
 
         /** @var TransactionMatcher $matcher */
         $matcher = app(TransactionMatcher::class);
@@ -477,7 +476,7 @@ class RuleController extends Controller
         Session::flash('success', trans('firefly.updated_rule', ['title' => $rule->title]));
         Preferences::mark();
 
-        if (1 === intval($request->get('return_to_edit'))) {
+        if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             Session::put('rules.edit.fromUpdate', true);
 
@@ -540,7 +539,7 @@ class RuleController extends Controller
      *
      * @return array
      *
-     * @throws \Throwable
+
      */
     private function getCurrentActions(Rule $rule)
     {
@@ -570,7 +569,7 @@ class RuleController extends Controller
      *
      * @return array
      *
-     * @throws \Throwable
+
      */
     private function getCurrentTriggers(Rule $rule)
     {
@@ -602,7 +601,7 @@ class RuleController extends Controller
      *
      * @return array
      *
-     * @throws \Throwable
+
      */
     private function getPreviousActions(Request $request)
     {
@@ -633,7 +632,7 @@ class RuleController extends Controller
      *
      * @return array
      *
-     * @throws \Throwable
+
      */
     private function getPreviousTriggers(Request $request)
     {
@@ -674,7 +673,7 @@ class RuleController extends Controller
         ];
         if (is_array($data['rule-triggers'])) {
             foreach ($data['rule-triggers'] as $index => $triggerType) {
-                $data['rule-trigger-stop'][$index] = $data['rule-trigger-stop'][$index] ?? 0;
+                $data['rule-trigger-stop'][$index] = (int)($data['rule-trigger-stop'][$index] ?? 0.0);
                 $triggers[]                        = [
                     'type'           => $triggerType,
                     'value'          => $data['rule-trigger-values'][$index],

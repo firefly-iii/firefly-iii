@@ -76,7 +76,7 @@ class ProfileController extends Controller
     {
         $title        = auth()->user()->email;
         $email        = auth()->user()->email;
-        $subTitle     = strval(trans('firefly.change_your_email'));
+        $subTitle     = (string)trans('firefly.change_your_email');
         $subTitleIcon = 'fa-envelope';
 
         return view('profile.change-email', compact('title', 'subTitle', 'subTitleIcon', 'email'));
@@ -88,7 +88,7 @@ class ProfileController extends Controller
     public function changePassword()
     {
         $title        = auth()->user()->email;
-        $subTitle     = strval(trans('firefly.change_your_password'));
+        $subTitle     = (string)trans('firefly.change_your_password');
         $subTitleIcon = 'fa-key';
 
         return view('profile.change-password', compact('title', 'subTitle', 'subTitleIcon'));
@@ -139,7 +139,7 @@ class ProfileController extends Controller
         $repository->unblockUser($user);
 
         // return to login.
-        Session::flash('success', strval(trans('firefly.login_with_new_email')));
+        Session::flash('success', (string)trans('firefly.login_with_new_email'));
 
         return redirect(route('login'));
     }
@@ -150,7 +150,7 @@ class ProfileController extends Controller
     public function deleteAccount()
     {
         $title        = auth()->user()->email;
-        $subTitle     = strval(trans('firefly.delete_account'));
+        $subTitle     = (string)trans('firefly.delete_account');
         $subTitleIcon = 'fa-trash';
 
         return view('profile.delete-account', compact('title', 'subTitle', 'subTitleIcon'));
@@ -163,8 +163,8 @@ class ProfileController extends Controller
     {
         Preferences::delete('twoFactorAuthEnabled');
         Preferences::delete('twoFactorAuthSecret');
-        Session::flash('success', strval(trans('firefly.pref_two_factor_auth_disabled')));
-        Session::flash('info', strval(trans('firefly.pref_two_factor_auth_remove_it')));
+        Session::flash('success', (string)trans('firefly.pref_two_factor_auth_disabled'));
+        Session::flash('info', (string)trans('firefly.pref_two_factor_auth_remove_it'));
 
         return redirect(route('profile.index'));
     }
@@ -201,7 +201,7 @@ class ProfileController extends Controller
     {
         $subTitle   = auth()->user()->email;
         $userId     = auth()->user()->id;
-        $enabled2FA = intval(Preferences::get('twoFactorAuthEnabled', 0)->data) === 1;
+        $enabled2FA = (int)Preferences::get('twoFactorAuthEnabled', 0)->data === 1;
 
         // get access token or create one.
         $accessToken = Preferences::get('access_token', null);
@@ -218,7 +218,6 @@ class ProfileController extends Controller
      * @param UserRepositoryInterface $repository
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function postChangeEmail(EmailFormRequest $request, UserRepositoryInterface $repository)
     {
@@ -227,7 +226,7 @@ class ProfileController extends Controller
         $newEmail = $request->string('email');
         $oldEmail = $user->email;
         if ($newEmail === $user->email) {
-            Session::flash('error', strval(trans('firefly.email_not_changed')));
+            Session::flash('error', (string)trans('firefly.email_not_changed'));
 
             return redirect(route('profile.change-email'))->withInput();
         }
@@ -237,7 +236,7 @@ class ProfileController extends Controller
             Auth::guard()->logout();
             $request->session()->invalidate();
 
-            Session::flash('success', strval(trans('firefly.email_changed')));
+            Session::flash('success', (string)trans('firefly.email_changed'));
 
             return redirect(route('index'));
         }
@@ -252,7 +251,7 @@ class ProfileController extends Controller
         // force user logout.
         Auth::guard()->logout();
         $request->session()->invalidate();
-        Session::flash('success', strval(trans('firefly.email_changed')));
+        Session::flash('success', (string)trans('firefly.email_changed'));
 
         return redirect(route('index'));
     }
@@ -278,7 +277,7 @@ class ProfileController extends Controller
         }
 
         $repository->changePassword(auth()->user(), $request->get('new_password'));
-        Session::flash('success', strval(trans('firefly.password_changed')));
+        Session::flash('success', (string)trans('firefly.password_changed'));
 
         return redirect(route('profile.index'));
     }
@@ -294,7 +293,7 @@ class ProfileController extends Controller
         Preferences::set('twoFactorAuthEnabled', 1);
         Preferences::set('twoFactorAuthSecret', Session::get('two-factor-secret'));
 
-        Session::flash('success', strval(trans('firefly.saved_preferences')));
+        Session::flash('success', (string)trans('firefly.saved_preferences'));
         Preferences::mark();
 
         return redirect(route('profile.index'));
@@ -309,7 +308,7 @@ class ProfileController extends Controller
     public function postDeleteAccount(UserRepositoryInterface $repository, DeleteAccountFormRequest $request)
     {
         if (!Hash::check($request->get('password'), auth()->user()->password)) {
-            Session::flash('error', strval(trans('firefly.invalid_password')));
+            Session::flash('error', (string)trans('firefly.invalid_password'));
 
             return redirect(route('profile.delete-account'));
         }
@@ -330,7 +329,7 @@ class ProfileController extends Controller
     {
         $token = auth()->user()->generateAccessToken();
         Preferences::set('access_token', $token);
-        Session::flash('success', strval(trans('firefly.token_regenerated')));
+        Session::flash('success', (string)trans('firefly.token_regenerated'));
 
         return redirect(route('profile.index'));
     }
@@ -380,7 +379,7 @@ class ProfileController extends Controller
         $repository->unblockUser($user);
 
         // return to login.
-        Session::flash('success', strval(trans('firefly.login_with_old_email')));
+        Session::flash('success', (string)trans('firefly.login_with_old_email'));
 
         return redirect(route('login'));
     }
@@ -397,11 +396,11 @@ class ProfileController extends Controller
     protected function validatePassword(User $user, string $current, string $new): bool
     {
         if (!Hash::check($current, $user->password)) {
-            throw new ValidationException(strval(trans('firefly.invalid_current_password')));
+            throw new ValidationException((string)trans('firefly.invalid_current_password'));
         }
 
         if ($current === $new) {
-            throw new ValidationException(strval(trans('firefly.should_change')));
+            throw new ValidationException((string)trans('firefly.should_change'));
         }
 
         return true;

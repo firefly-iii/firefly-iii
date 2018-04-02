@@ -70,12 +70,16 @@ class Preference extends Model
         }
         $serialized = true;
         try {
-            unserialize($data);
+            unserialize($data, ['allowed_classes' => false]);
         } catch (Exception $e) {
             $serialized = false;
+            Log::debug(sprintf('Could not unserialise preference #%d. This is good. %s', $this->id, $e->getMessage()));
         }
         if (!$serialized) {
             $result = json_decode($data, true);
+        }
+        if ($serialized) {
+            Log::error(sprintf('Preference #%d ("%s") was stored as serialised object. It will be deleted and recreated.', $this->id, $this->name));
         }
 
         return $result;

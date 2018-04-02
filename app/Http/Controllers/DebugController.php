@@ -50,7 +50,6 @@ class DebugController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \InvalidArgumentException
      */
     public function index(Request $request)
     {
@@ -69,7 +68,7 @@ class DebugController extends Controller
         $isDocker       = var_export(env('IS_DOCKER', 'unknown'), true);
         $trustedProxies = env('TRUSTED_PROXIES', '(none)');
         $displayErrors  = ini_get('display_errors');
-        $errorReporting = $this->errorReporting(intval(ini_get('error_reporting')));
+        $errorReporting = $this->errorReporting((int)ini_get('error_reporting'));
         $appEnv         = env('APP_ENV', '');
         $appDebug       = var_export(env('APP_DEBUG', false), true);
         $appLog         = env('APP_LOG', '');
@@ -156,7 +155,7 @@ class DebugController extends Controller
             return $array[$value];
         }
 
-        return strval($value); // @codeCoverageIgnore
+        return (string)$value; // @codeCoverageIgnore
     }
 
     /**

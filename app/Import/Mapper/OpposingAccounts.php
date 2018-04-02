@@ -49,7 +49,7 @@ class OpposingAccounts implements MapperInterface
 
         /** @var Account $account */
         foreach ($set as $account) {
-            $accountId = intval($account->id);
+            $accountId = (int)$account->id;
             $name      = $account->name;
             $iban      = $account->iban ?? '';
             if (strlen($iban) > 0) {

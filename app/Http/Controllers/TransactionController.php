@@ -94,7 +94,7 @@ class TransactionController extends Controller
         }
 
         if ($end < $start) {
-            list($start, $end) = [$end, $start];
+            [$start, $end] = [$end, $start];
         }
         $startStr = $start->formatLocalized($this->monthAndDayFormat);
         $endStr   = $end->formatLocalized($this->monthAndDayFormat);
@@ -240,9 +240,9 @@ class TransactionController extends Controller
      */
     private function getPeriodOverview(string $what, Carbon $date): Collection
     {
-        $range   = Preferences::get('viewRange', '1M')->data;
-        $first   = $this->repository->first();
-        $start   = new Carbon;
+        $range = Preferences::get('viewRange', '1M')->data;
+        $first = $this->repository->firstNull();
+        $start = new Carbon;
         $start->subYear();
         $types   = config('firefly.transactionTypesByWhat.' . $what);
         $entries = new Collection;
@@ -250,7 +250,7 @@ class TransactionController extends Controller
             $start = $first->date;
         }
         if ($date < $start) {
-            list($start, $date) = [$date, $start]; // @codeCoverageIgnore
+            [$start, $date] = [$date, $start]; // @codeCoverageIgnore
         }
 
         /** @var array $dates */

@@ -68,7 +68,7 @@ class ExpenseController extends Controller
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function budget(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
@@ -116,7 +116,7 @@ class ExpenseController extends Controller
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function category(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
@@ -174,7 +174,7 @@ class ExpenseController extends Controller
      *
      * @return array|mixed|string
      *
-     * @throws \Throwable
+
      */
     public function spent(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
@@ -219,7 +219,7 @@ class ExpenseController extends Controller
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function topExpense(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
@@ -246,7 +246,7 @@ class ExpenseController extends Controller
         $set    = $collector->getJournals();
         $sorted = $set->sortBy(
             function (Transaction $transaction) {
-                return floatval($transaction->transaction_amount);
+                return (float)$transaction->transaction_amount;
             }
         );
         $result = view('reports.partials.top-transactions', compact('sorted'))->render();
@@ -263,7 +263,7 @@ class ExpenseController extends Controller
      *
      * @return mixed|string
      *
-     * @throws \Throwable
+
      */
     public function topIncome(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
@@ -290,7 +290,7 @@ class ExpenseController extends Controller
         $set    = $collector->getJournals();
         $sorted = $set->sortByDesc(
             function (Transaction $transaction) {
-                return floatval($transaction->transaction_amount);
+                return (float)$transaction->transaction_amount;
             }
         );
         $result = view('reports.partials.top-transactions', compact('sorted'))->render();
@@ -313,7 +313,7 @@ class ExpenseController extends Controller
             $collection->push($expenseAccount);
 
             $revenue = $this->accountRepository->findByName($expenseAccount->name, [AccountType::REVENUE]);
-            if (!is_null($revenue)) {
+            if (null !== $revenue) {
                 $collection->push($revenue);
             }
             $combined[$expenseAccount->name] = $collection;
@@ -342,11 +342,11 @@ class ExpenseController extends Controller
         foreach ($set as $transaction) {
             $currencyId   = $transaction->transaction_currency_id;
             $categoryName = $transaction->transaction_category_name;
-            $categoryId   = intval($transaction->transaction_category_id);
+            $categoryId   = (int)$transaction->transaction_category_id;
             // if null, grab from journal:
             if (0 === $categoryId) {
                 $categoryName = $transaction->transaction_journal_category_name;
-                $categoryId   = intval($transaction->transaction_journal_category_id);
+                $categoryId   = (int)$transaction->transaction_journal_category_id;
             }
             if (0 !== $categoryId) {
                 $categoryName = app('steam')->tryDecrypt($categoryName);
@@ -445,11 +445,11 @@ class ExpenseController extends Controller
         foreach ($set as $transaction) {
             $currencyId = $transaction->transaction_currency_id;
             $budgetName = $transaction->transaction_budget_name;
-            $budgetId   = intval($transaction->transaction_budget_id);
+            $budgetId   = (int)$transaction->transaction_budget_id;
             // if null, grab from journal:
             if (0 === $budgetId) {
                 $budgetName = $transaction->transaction_journal_budget_name;
-                $budgetId   = intval($transaction->transaction_journal_budget_id);
+                $budgetId   = (int)$transaction->transaction_journal_budget_id;
             }
             if (0 !== $budgetId) {
                 $budgetName = app('steam')->tryDecrypt($budgetName);
@@ -506,11 +506,11 @@ class ExpenseController extends Controller
         foreach ($set as $transaction) {
             $currencyId   = $transaction->transaction_currency_id;
             $categoryName = $transaction->transaction_category_name;
-            $categoryId   = intval($transaction->transaction_category_id);
+            $categoryId   = (int)$transaction->transaction_category_id;
             // if null, grab from journal:
             if (0 === $categoryId) {
                 $categoryName = $transaction->transaction_journal_category_name;
-                $categoryId   = intval($transaction->transaction_journal_category_id);
+                $categoryId   = (int)$transaction->transaction_journal_category_id;
             }
             if (0 !== $categoryId) {
                 $categoryName = app('steam')->tryDecrypt($categoryName);
@@ -568,7 +568,7 @@ class ExpenseController extends Controller
         ];
         // loop to support multi currency
         foreach ($set as $transaction) {
-            $currencyId = intval($transaction->transaction_currency_id);
+            $currencyId = (int)$transaction->transaction_currency_id;
 
             // if not set, set to zero:
             if (!isset($sum['per_currency'][$currencyId])) {

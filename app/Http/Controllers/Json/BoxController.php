@@ -123,7 +123,7 @@ class BoxController extends Controller
         $set = $collector->getJournals();
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
-            $currencyId           = intval($transaction->transaction_currency_id);
+            $currencyId           = (int)$transaction->transaction_currency_id;
             $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
             $incomes[$currencyId] = bcadd($incomes[$currencyId], $transaction->transaction_amount);
             $sums[$currencyId]    = $sums[$currencyId] ?? '0';

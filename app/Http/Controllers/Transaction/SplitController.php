@@ -114,7 +114,7 @@ class SplitController extends Controller
         /** @var Account $account */
         foreach ($accountList as $account) {
             $accountArray[$account->id]                = $account;
-            $accountArray[$account->id]['currency_id'] = intval($account->getMeta('currency_id'));
+            $accountArray[$account->id]['currency_id'] = (int)$account->getMeta('currency_id');
         }
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -126,8 +126,7 @@ class SplitController extends Controller
         return view(
             'transactions.split.edit', compact(
                                          'subTitleIcon', 'currencies', 'optionalFields', 'preFilled', 'subTitle', 'uploadSize', 'budgets',
-                                         'journal', 'accountArray',
-                                         'previous'
+                                         'journal', 'accountArray'
                                      )
         );
     }
@@ -160,11 +159,11 @@ class SplitController extends Controller
         // @codeCoverageIgnoreEnd
 
         $type = strtolower($this->repository->getTransactionType($journal));
-        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => $journal->description])));
+        Session::flash('success', (string)trans('firefly.updated_' . $type, ['description' => $journal->description]));
         Preferences::mark();
 
         // @codeCoverageIgnoreStart
-        if (1 === intval($request->get('return_to_edit'))) {
+        if (1 === (int)$request->get('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             Session::put('transactions.edit-split.fromUpdate', true);
 

@@ -58,8 +58,8 @@ class BudgetFormRequest extends Request
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
         $nameRule   = 'required|between:1,100|uniqueObjectForUser:budgets,name';
-        if (null !== $repository->findNull(intval($this->get('id')))) {
-            $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name,' . intval($this->get('id'));
+        if (null !== $repository->findNull((int)$this->get('id'))) {
+            $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name,' . (int)$this->get('id');
         }
 
         return [

@@ -85,7 +85,7 @@ class NewUserController extends Controller
         $this->createSavingsAccount($request, $repository);
 
         // also store currency preference from input:
-        $currency = $currencyRepository->findNull(intval($request->input('amount_currency_id_bank_balance')));
+        $currency = $currencyRepository->findNull((int)$request->input('amount_currency_id_bank_balance'));
 
         if (null !== $currency) {
             // store currency preference:
@@ -107,7 +107,7 @@ class NewUserController extends Controller
         ];
         Preferences::set('transaction_journal_optional_fields', $visibleFields);
 
-        Session::flash('success', strval(trans('firefly.stored_new_accounts_new_user')));
+        Session::flash('success', (string)trans('firefly.stored_new_accounts_new_user'));
         Preferences::mark();
 
         return redirect(route('index'));
@@ -131,7 +131,7 @@ class NewUserController extends Controller
             'accountRole'        => 'defaultAsset',
             'openingBalance'     => $request->input('bank_balance'),
             'openingBalanceDate' => new Carbon,
-            'currency_id'        => intval($request->input('amount_currency_id_bank_balance')),
+            'currency_id'        => (int)$request->input('amount_currency_id_bank_balance'),
         ];
 
         $repository->store($assetAccount);
@@ -157,7 +157,7 @@ class NewUserController extends Controller
             'accountRole'        => 'savingAsset',
             'openingBalance'     => $request->input('savings_balance'),
             'openingBalanceDate' => new Carbon,
-            'currency_id'        => intval($request->input('amount_currency_id_bank_balance')),
+            'currency_id'        => (int)$request->input('amount_currency_id_bank_balance'),
         ];
         $repository->store($savingsAccount);
 

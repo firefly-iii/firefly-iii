@@ -81,7 +81,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     public function addTotalSteps(ImportJob $job, int $steps = 1): ImportJob
     {
         $extended          = $this->getExtendedStatus($job);
-        $total             = $extended['steps'] ?? 0;
+        $total             = (int)($extended['steps'] ?? 0);
         $total             += $steps;
         $extended['steps'] = $total;
 
@@ -104,7 +104,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
                                        ->where('name', 'importHash')
                                        ->count();
 
-        return intval($count);
+        return (int)$count;
     }
 
     /**
@@ -210,8 +210,6 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      * @param UploadedFile $file
      *
      * @return bool
-     * @throws \RuntimeException
-     * @throws \LogicException
      */
     public function processConfiguration(ImportJob $job, UploadedFile $file): bool
     {
@@ -249,8 +247,6 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      *
      * @return bool
      *
-     * @throws \RuntimeException
-     * @throws \LogicException
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */

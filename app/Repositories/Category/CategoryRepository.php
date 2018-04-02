@@ -48,7 +48,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return bool
      *
-     * @throws \Exception
+
      */
     public function destroy(Category $category): bool
     {
@@ -74,9 +74,8 @@ class CategoryRepository implements CategoryRepositoryInterface
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($accounts)->setCategories($categories);
         $set = $collector->getJournals();
-        $sum = strval($set->sum('transaction_amount'));
 
-        return $sum;
+        return strval($set->sum('transaction_amount'));
     }
 
     /**
@@ -237,7 +236,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             if (1 === bccomp($transaction->transaction_amount, '0')) {
                 continue;
             }
-            $categoryId                          = max(intval($transaction->transaction_journal_category_id), intval($transaction->transaction_category_id));
+            $categoryId                          = max((int)$transaction->transaction_journal_category_id, (int)$transaction->transaction_category_id);
             $date                                = $transaction->date->format($carbonFormat);
             $data[$categoryId]['entries'][$date] = bcadd($data[$categoryId]['entries'][$date] ?? '0', $transaction->transaction_amount);
         }
@@ -263,7 +262,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         $transactions = $collector->getJournals();
         $result       = [
             'entries' => [],
-            'name'    => strval(trans('firefly.no_category')),
+            'name'    => (string)trans('firefly.no_category'),
             'sum'     => '0',
         ];
 
@@ -320,7 +319,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             if (bccomp($transaction->transaction_amount, '0') === -1) {
                 continue;
             }
-            $categoryId                          = max(intval($transaction->transaction_journal_category_id), intval($transaction->transaction_category_id));
+            $categoryId                          = max((int)$transaction->transaction_journal_category_id, (int)$transaction->transaction_category_id);
             $date                                = $transaction->date->format($carbonFormat);
             $data[$categoryId]['entries'][$date] = bcadd($data[$categoryId]['entries'][$date] ?? '0', $transaction->transaction_amount);
         }
@@ -347,7 +346,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         $transactions = $collector->getJournals();
         $result       = [
             'entries' => [],
-            'name'    => strval(trans('firefly.no_category')),
+            'name'    => (string)trans('firefly.no_category'),
             'sum'     => '0',
         ];
         Log::debug('Looping transactions..');
@@ -400,9 +399,8 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         $set = $collector->getJournals();
-        $sum = strval($set->sum('transaction_amount'));
 
-        return $sum;
+        return strval($set->sum('transaction_amount'));
     }
 
     /**
@@ -437,9 +435,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             }
         );
 
-        $sum = strval($set->sum('transaction_amount'));
-
-        return $sum;
+        return strval($set->sum('transaction_amount'));
     }
 
     /**
@@ -452,9 +448,8 @@ class CategoryRepository implements CategoryRepositoryInterface
         /** @var CategoryFactory $factory */
         $factory = app(CategoryFactory::class);
         $factory->setUser($this->user);
-        $category = $factory->findOrCreate(null, $data['name']);
 
-        return $category;
+        return $factory->findOrCreate(null, $data['name']);
     }
 
     /**

@@ -36,6 +36,7 @@ use phpseclib\Crypt\RSA;
 class InstallController extends Controller
 {
     /** @noinspection MagicMethodsValidityInspection */
+    /** @noinspection PhpMissingParentConstructorInspection */
     /**
      * InstallController constructor.
      */
@@ -62,7 +63,7 @@ class InstallController extends Controller
         $rsa  = new RSA();
         $keys = $rsa->createKey(4096);
 
-        list($publicKey, $privateKey) = [
+        [$publicKey, $privateKey] = [
             Passport::keyPath('oauth-public.key'),
             Passport::keyPath('oauth-private.key'),
         ];

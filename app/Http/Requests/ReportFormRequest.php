@@ -58,7 +58,7 @@ class ReportFormRequest extends Request
         $collection = new Collection;
         if (is_array($set)) {
             foreach ($set as $accountId) {
-                $account = $repository->findNull(intval($accountId));
+                $account = $repository->findNull((int)$accountId);
                 if (null !== $account) {
                     $collection->push($account);
                 }
@@ -79,7 +79,7 @@ class ReportFormRequest extends Request
         $collection = new Collection;
         if (is_array($set)) {
             foreach ($set as $budgetId) {
-                $budget = $repository->findNull(intval($budgetId));
+                $budget = $repository->findNull((int)$budgetId);
                 if (null !== $budget) {
                     $collection->push($budget);
                 }
@@ -100,7 +100,7 @@ class ReportFormRequest extends Request
         $collection = new Collection;
         if (is_array($set)) {
             foreach ($set as $categoryId) {
-                $category = $repository->findNull(intval($categoryId));
+                $category = $repository->findNull((int)$categoryId);
                 if (null !== $category) {
                     $collection->push($category);
                 }
@@ -119,7 +119,7 @@ class ReportFormRequest extends Request
     {
         $date  = new Carbon;
         $range = $this->get('daterange');
-        $parts = explode(' - ', strval($range));
+        $parts = explode(' - ', (string)$range);
         if (2 === count($parts)) {
             try {
                 $date = new Carbon($parts[1]);
@@ -147,7 +147,7 @@ class ReportFormRequest extends Request
         $collection = new Collection;
         if (is_array($set)) {
             foreach ($set as $accountId) {
-                $account = $repository->findNull(intval($accountId));
+                $account = $repository->findNull((int)$accountId);
                 if (null !== $account) {
                     $collection->push($account);
                 }
@@ -166,7 +166,7 @@ class ReportFormRequest extends Request
     {
         $date  = new Carbon;
         $range = $this->get('daterange');
-        $parts = explode(' - ', strval($range));
+        $parts = explode(' - ', (string)$range);
         if (2 === count($parts)) {
             try {
                 $date = new Carbon($parts[0]);

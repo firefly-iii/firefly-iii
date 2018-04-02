@@ -45,7 +45,7 @@ class LinkController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', strval(trans('firefly.administration')));
+                app('view')->share('title', (string)trans('firefly.administration'));
                 app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
 
                 return $next($request);
@@ -76,12 +76,11 @@ class LinkController extends Controller
      * @param LinkType                    $linkType
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
-     * @throws \RuntimeException
      */
     public function delete(Request $request, LinkTypeRepositoryInterface $repository, LinkType $linkType)
     {
         if (!$linkType->editable) {
-            $request->session()->flash('error', strval(trans('firefly.cannot_edit_link_type', ['name' => $linkType->name])));
+            $request->session()->flash('error', (string)trans('firefly.cannot_edit_link_type', ['name' => $linkType->name]));
 
             return redirect(route('admin.links.index'));
         }
@@ -109,15 +108,14 @@ class LinkController extends Controller
      * @param LinkType                    $linkType
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function destroy(Request $request, LinkTypeRepositoryInterface $repository, LinkType $linkType)
     {
         $name   = $linkType->name;
-        $moveTo = $repository->find(intval($request->get('move_link_type_before_delete')));
+        $moveTo = $repository->find((int)$request->get('move_link_type_before_delete'));
         $repository->destroy($linkType, $moveTo);
 
-        $request->session()->flash('success', strval(trans('firefly.deleted_link_type', ['name' => $name])));
+        $request->session()->flash('success', (string)trans('firefly.deleted_link_type', ['name' => $name]));
         Preferences::mark();
 
         return redirect($this->getPreviousUri('link_types.delete.uri'));
@@ -128,12 +126,11 @@ class LinkController extends Controller
      * @param LinkType $linkType
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
-     * @throws \RuntimeException
      */
     public function edit(Request $request, LinkType $linkType)
     {
         if (!$linkType->editable) {
-            $request->session()->flash('error', strval(trans('firefly.cannot_edit_link_type', ['name' => $linkType->name])));
+            $request->session()->flash('error', (string)trans('firefly.cannot_edit_link_type', ['name' => $linkType->name]));
 
             return redirect(route('admin.links.index'));
         }
@@ -187,7 +184,6 @@ class LinkController extends Controller
      * @param LinkTypeRepositoryInterface $repository
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function store(LinkTypeFormRequest $request, LinkTypeRepositoryInterface $repository)
     {
@@ -197,9 +193,9 @@ class LinkController extends Controller
             'outward' => $request->string('outward'),
         ];
         $linkType = $repository->store($data);
-        $request->session()->flash('success', strval(trans('firefly.stored_new_link_type', ['name' => $linkType->name])));
+        $request->session()->flash('success', (string)trans('firefly.stored_new_link_type', ['name' => $linkType->name]));
 
-        if (1 === intval($request->get('create_another'))) {
+        if (1 === (int)$request->get('create_another')) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('link_types.create.fromStore', true);
 
@@ -216,12 +212,11 @@ class LinkController extends Controller
      * @param LinkType                    $linkType
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function update(LinkTypeFormRequest $request, LinkTypeRepositoryInterface $repository, LinkType $linkType)
     {
         if (!$linkType->editable) {
-            $request->session()->flash('error', strval(trans('firefly.cannot_edit_link_type', ['name' => $linkType->name])));
+            $request->session()->flash('error', (string)trans('firefly.cannot_edit_link_type', ['name' => $linkType->name]));
 
             return redirect(route('admin.links.index'));
         }
@@ -233,10 +228,10 @@ class LinkController extends Controller
         ];
         $repository->update($linkType, $data);
 
-        $request->session()->flash('success', strval(trans('firefly.updated_link_type', ['name' => $linkType->name])));
+        $request->session()->flash('success', (string)trans('firefly.updated_link_type', ['name' => $linkType->name]));
         Preferences::mark();
 
-        if (1 === intval($request->get('return_to_edit'))) {
+        if (1 === (int)$request->get('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('link_types.edit.fromUpdate', true);
 

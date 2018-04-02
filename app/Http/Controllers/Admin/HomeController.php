@@ -50,7 +50,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $title         = strval(trans('firefly.administration'));
+        $title         = (string)trans('firefly.administration');
         $mainTitleIcon = 'fa-hand-spock-o';
 
         return view('admin.index', compact('title', 'mainTitleIcon'));
@@ -66,7 +66,7 @@ class HomeController extends Controller
         $ipAddress = $request->ip();
         Log::debug(sprintf('Now in testMessage() controller. IP is %s', $ipAddress));
         event(new AdminRequestedTestMessage(auth()->user(), $ipAddress));
-        Session::flash('info', strval(trans('firefly.send_test_triggered')));
+        Session::flash('info', (string)trans('firefly.send_test_triggered'));
 
         return redirect(route('admin.index'));
     }

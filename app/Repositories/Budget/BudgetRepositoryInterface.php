@@ -35,11 +35,6 @@ use Illuminate\Support\Collection;
 interface BudgetRepositoryInterface
 {
     /**
-     * @return bool
-     */
-    public function cleanupBudgets(): bool;
-
-    /**
      * A method that returns the amount of money budgeted per day for this budget,
      * on average.
      *
@@ -48,6 +43,11 @@ interface BudgetRepositoryInterface
      * @return string
      */
     public function budgetedPerDay(Budget $budget): string;
+
+    /**
+     * @return bool
+     */
+    public function cleanupBudgets(): bool;
 
     /**
      * This method collects various info on budgets, used on the budget page and on the index.

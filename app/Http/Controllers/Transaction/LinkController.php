@@ -86,10 +86,10 @@ class LinkController extends Controller
     {
         $this->repository->destroyLink($link);
 
-        Session::flash('success', strval(trans('firefly.deleted_link')));
+        Session::flash('success', (string)trans('firefly.deleted_link'));
         Preferences::mark();
 
-        return redirect(strval(session('journal_links.delete.uri')));
+        return redirect((string)session('journal_links.delete.uri'));
     }
 
     /**
@@ -111,7 +111,7 @@ class LinkController extends Controller
         $other         = $this->journalRepository->find($linkInfo['transaction_journal_id']);
         $alreadyLinked = $this->repository->findLink($journal, $other);
 
-        if($other->id === $journal->id) {
+        if ($other->id === $journal->id) {
             Session::flash('error', trans('firefly.journals_link_to_self'));
 
             return redirect(route('transactions.show', [$journal->id]));

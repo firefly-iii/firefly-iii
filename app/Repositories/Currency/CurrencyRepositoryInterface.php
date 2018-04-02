@@ -87,7 +87,9 @@ interface CurrencyRepositoryInterface
 
     /**
      * Find by currency name.
+     *
      * @deprecated
+     *
      * @param string $currencyName
      *
      * @return TransactionCurrency
@@ -105,7 +107,9 @@ interface CurrencyRepositoryInterface
 
     /**
      * Find by currency symbol.
+     *
      * @deprecated
+     *
      * @param string $currencySymbol
      *
      * @return TransactionCurrency

@@ -84,7 +84,7 @@ class FileConfigurator implements ConfiguratorInterface
      */
     public function configureJob(array $data): bool
     {
-        if (is_null($this->job)) {
+        if (null === $this->job) {
             throw new FireflyException('Cannot call configureJob() without a job.');
         }
         /** @var ConfigurationInterface $object */
@@ -105,7 +105,7 @@ class FileConfigurator implements ConfiguratorInterface
      */
     public function getNextData(): array
     {
-        if (is_null($this->job)) {
+        if (null === $this->job) {
             throw new FireflyException('Cannot call getNextData() without a job.');
         }
         /** @var ConfigurationInterface $object */
@@ -122,7 +122,7 @@ class FileConfigurator implements ConfiguratorInterface
      */
     public function getNextView(): string
     {
-        if (is_null($this->job)) {
+        if (null === $this->job) {
             throw new FireflyException('Cannot call getNextView() without a job.');
         }
         $config = $this->getConfig();
@@ -149,7 +149,7 @@ class FileConfigurator implements ConfiguratorInterface
      */
     public function getWarningMessage(): string
     {
-        if (is_null($this->job)) {
+        if (null === $this->job) {
             throw new FireflyException('Cannot call getWarningMessage() without a job.');
         }
 
@@ -163,7 +163,7 @@ class FileConfigurator implements ConfiguratorInterface
      */
     public function isJobConfigured(): bool
     {
-        if (is_null($this->job)) {
+        if (null === $this->job) {
             throw new FireflyException('Cannot call isJobConfigured() without a job.');
         }
         $config = $this->getConfig();

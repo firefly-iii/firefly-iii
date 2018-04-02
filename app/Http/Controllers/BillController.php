@@ -75,7 +75,6 @@ class BillController extends Controller
      * @param Request $request
      *
      * @return View
-     * @throws \RuntimeException
      */
     public function create(Request $request)
     {
@@ -114,14 +113,13 @@ class BillController extends Controller
      * @param Bill                    $bill
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function destroy(Request $request, BillRepositoryInterface $repository, Bill $bill)
     {
         $name = $bill->name;
         $repository->destroy($bill);
 
-        $request->session()->flash('success', strval(trans('firefly.deleted_bill', ['name' => $name])));
+        $request->session()->flash('success', (string)trans('firefly.deleted_bill', ['name' => $name]));
         Preferences::mark();
 
         return redirect($this->getPreviousUri('bills.delete.uri'));
@@ -132,7 +130,6 @@ class BillController extends Controller
      * @param Bill    $bill
      *
      * @return View
-     * @throws \RuntimeException
      */
     public function edit(Request $request, Bill $bill)
     {
@@ -177,7 +174,7 @@ class BillController extends Controller
     {
         $start      = session('start');
         $end        = session('end');
-        $pageSize   = intval(Preferences::get('listPageSize', 50)->data);
+        $pageSize   = (int)Preferences::get('listPageSize', 50)->data;
         $paginator  = $repository->getPaginator($pageSize);
         $parameters = new ParameterBag();
         $parameters->set('start', $start);
@@ -201,12 +198,11 @@ class BillController extends Controller
      * @param Bill                    $bill
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function rescan(Request $request, BillRepositoryInterface $repository, Bill $bill)
     {
-        if (0 === intval($bill->active)) {
-            $request->session()->flash('warning', strval(trans('firefly.cannot_scan_inactive_bill')));
+        if (0 === (int)$bill->active) {
+            $request->session()->flash('warning', (string)trans('firefly.cannot_scan_inactive_bill'));
 
             return redirect(URL::previous());
         }
@@ -217,7 +213,7 @@ class BillController extends Controller
             $repository->scan($bill, $journal);
         }
 
-        $request->session()->flash('success', strval(trans('firefly.rescanned_bill')));
+        $request->session()->flash('success', (string)trans('firefly.rescanned_bill'));
         Preferences::mark();
 
         return redirect(URL::previous());
@@ -236,8 +232,8 @@ class BillController extends Controller
         $start          = session('start');
         $end            = session('end');
         $year           = $start->year;
-        $page           = intval($request->get('page'));
-        $pageSize       = intval(Preferences::get('listPageSize', 50)->data);
+        $page           = (int)$request->get('page');
+        $pageSize       = (int)Preferences::get('listPageSize', 50)->data;
         $yearAverage    = $repository->getYearAverage($bill, $start);
         $overallAverage = $repository->getOverallAverage($bill);
         $manager        = new Manager();
@@ -268,13 +264,12 @@ class BillController extends Controller
      * @param BillRepositoryInterface $repository
      *
      * @return \Illuminate\Http\RedirectResponse
-     * @throws \RuntimeException
      */
     public function store(BillFormRequest $request, BillRepositoryInterface $repository)
     {
         $billData = $request->getBillData();
         $bill     = $repository->store($billData);
-        $request->session()->flash('success', strval(trans('firefly.stored_new_bill', ['name' => $bill->name])));
+        $request->session()->flash('success', (string)trans('firefly.stored_new_bill', ['name' => $bill->name]));
         Preferences::mark();
 
         /** @var array $files */
@@ -286,7 +281,7 @@ class BillController extends Controller
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
-        if (1 === intval($request->get('create_another'))) {
+        if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('bills.create.fromStore', true);
 
@@ -304,14 +299,13 @@ class BillController extends Controller
      * @param Bill                    $bill
      *
      * @return \Illuminate\Http\RedirectResponse
-     * @throws \RuntimeException
      */
     public function update(BillFormRequest $request, BillRepositoryInterface $repository, Bill $bill)
     {
         $billData = $request->getBillData();
         $bill     = $repository->update($bill, $billData);
 
-        $request->session()->flash('success', strval(trans('firefly.updated_bill', ['name' => $bill->name])));
+        $request->session()->flash('success', (string)trans('firefly.updated_bill', ['name' => $bill->name]));
         Preferences::mark();
 
         /** @var array $files */
@@ -323,7 +317,7 @@ class BillController extends Controller
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
-        if (1 === intval($request->get('return_to_edit'))) {
+        if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('bills.edit.fromUpdate', true);
 

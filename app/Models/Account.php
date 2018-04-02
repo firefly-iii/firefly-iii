@@ -32,14 +32,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\JoinClause;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Watson\Validating\ValidatingTrait;
 
 /**
  * Class Account.
  */
 class Account extends Model
 {
-    use SoftDeletes, ValidatingTrait;
+    use SoftDeletes;
 
     /**
      * The attributes that should be casted to native types.
@@ -58,17 +57,6 @@ class Account extends Model
     protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
     /** @var array */
     protected $hidden = ['encrypted'];
-    /**
-     * @var array
-     */
-    protected $rules
-        = [
-            'user_id'         => 'required|exists:users,id',
-            'account_type_id' => 'required|exists:account_types,id',
-            'name'            => 'required|between:1,200',
-            'active'          => 'required|boolean',
-            'iban'            => 'between:1,50|iban',
-        ];
     /** @var bool */
     private $joinedAccountTypes;
 
@@ -76,6 +64,8 @@ class Account extends Model
      * @param array $fields
      *
      * @return Account
+     *
+     * @deprecated
      *
      * @throws FireflyException
      */
@@ -121,9 +111,9 @@ class Account extends Model
     public static function routeBinder(string $value): Account
     {
         if (auth()->check()) {
-            $accountId = intval($value);
+            $accountId = (int)$value;
             $account   = auth()->user()->accounts()->find($accountId);
-            if (!is_null($account)) {
+            if (null !== $account) {
                 return $account;
             }
         }
@@ -172,7 +162,7 @@ class Account extends Model
      */
     public function getIbanAttribute($value): string
     {
-        if (null === $value || 0 === strlen(strval($value))) {
+        if (null === $value || 0 === strlen((string)$value)) {
             return '';
         }
         try {
@@ -191,6 +181,7 @@ class Account extends Model
      * @codeCoverageIgnore
      *
      * @param string $fieldName
+     *
      * @deprecated
      * @return string
      */
@@ -198,7 +189,7 @@ class Account extends Model
     {
         foreach ($this->accountMeta as $meta) {
             if ($meta->name === $fieldName) {
-                return strval($meta->data);
+                return (string)$meta->data;
             }
         }
 
@@ -281,7 +272,6 @@ class Account extends Model
      * @param string          $name
      * @param string          $value
      *
-     * @throws \InvalidArgumentException
      */
     public function scopeHasMetaValue(EloquentBuilder $query, $name, $value)
     {
@@ -312,6 +302,7 @@ class Account extends Model
      * @codeCoverageIgnore
      *
      * @param $value
+     *
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setNameAttribute($value)
@@ -330,7 +321,7 @@ class Account extends Model
      */
     public function setVirtualBalanceAttribute($value)
     {
-        $this->attributes['virtual_balance'] = strval($value);
+        $this->attributes['virtual_balance'] = (string)$value;
     }
 
     /**

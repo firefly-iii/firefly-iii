@@ -22,8 +22,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
+use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Events\RegisteredUser;
+use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\RequestedVersionCheckStatus;
+use FireflyIII\Events\StoredTransactionJournal;
+use FireflyIII\Events\UpdatedTransactionJournal;
+use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
 use Illuminate\Auth\Events\Login;
@@ -43,39 +48,39 @@ class EventServiceProvider extends ServiceProvider
     protected $listen
         = [
             // is a User related event.
-            RegisteredUser::class                         => [
+            RegisteredUser::class              => [
                 'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationMail',
                 'FireflyIII\Handlers\Events\UserEventHandler@attachUserRole',
             ],
             // is a User related event.
-            Login::class                                  => [
+            Login::class                       => [
                 'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
 
             ],
-            RequestedVersionCheckStatus::class            => [
+            RequestedVersionCheckStatus::class => [
                 'FireflyIII\Handlers\Events\VersionCheckEventHandler@checkForUpdates',
             ],
 
             // is a User related event.
-            'FireflyIII\Events\RequestedNewPassword'      => [
+            RequestedNewPassword::class        => [
                 'FireflyIII\Handlers\Events\UserEventHandler@sendNewPassword',
             ],
             // is a User related event.
-            'FireflyIII\Events\UserChangedEmail'          => [
+            UserChangedEmail::class            => [
                 'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeConfirmMail',
                 'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeUndoMail',
             ],
             // admin related
-            'FireflyIII\Events\AdminRequestedTestMessage' => [
+            AdminRequestedTestMessage::class   => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendTestMessage',
             ],
             // is a Transaction Journal related event.
-            'FireflyIII\Events\StoredTransactionJournal'  => [
+            StoredTransactionJournal::class    => [
                 'FireflyIII\Handlers\Events\StoredJournalEventHandler@scanBills',
                 'FireflyIII\Handlers\Events\StoredJournalEventHandler@processRules',
             ],
             // is a Transaction Journal related event.
-            'FireflyIII\Events\UpdatedTransactionJournal' => [
+            UpdatedTransactionJournal::class   => [
                 'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@scanBills',
                 'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@processRules',
             ],

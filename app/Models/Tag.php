@@ -26,14 +26,13 @@ use Crypt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Watson\Validating\ValidatingTrait;
 
 /**
  * Class Tag.
  */
 class Tag extends Model
 {
-    use ValidatingTrait, SoftDeletes;
+    use SoftDeletes;
 
     /**
      * The attributes that should be casted to native types.
@@ -52,12 +51,11 @@ class Tag extends Model
     protected $dates = ['date'];
     /** @var array */
     protected $fillable = ['user_id', 'tag', 'date', 'description', 'longitude', 'latitude', 'zoomLevel', 'tagMode'];
-    /** @var array */
-    protected $rules = ['tag' => 'required|between:1,200'];
 
     /**
      * @param array $fields
      *
+     * @deprecated
      * @return Tag|null
      */
     public static function firstOrCreateEncrypted(array $fields)
@@ -95,9 +93,9 @@ class Tag extends Model
     public static function routeBinder(string $value): Tag
     {
         if (auth()->check()) {
-            $tagId = intval($value);
+            $tagId = (int)$value;
             $tag   = auth()->user()->tags()->find($tagId);
-            if (!is_null($tag)) {
+            if (null !== $tag) {
                 return $tag;
             }
         }
@@ -154,6 +152,7 @@ class Tag extends Model
      * @codeCoverageIgnore
      *
      * @param $value
+     *
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setTagAttribute($value)

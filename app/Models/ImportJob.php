@@ -139,7 +139,7 @@ class ImportJob extends Model
      */
     public function getExtendedStatusAttribute($value)
     {
-        if (0 === strlen(strval($value))) {
+        if (0 === strlen((string)$value)) {
             return [];
         }
 

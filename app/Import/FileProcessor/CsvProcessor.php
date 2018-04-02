@@ -46,9 +46,9 @@ class CsvProcessor implements FileProcessorInterface
     /** @var ImportJobRepositoryInterface */
     private $repository;
     /** @var array */
-    private $validConverters = [];
+    private $validConverters;
     /** @var array */
-    private $validSpecifics = [];
+    private $validSpecifics;
 
     /**
      * FileProcessorInterface constructor.
@@ -67,7 +67,7 @@ class CsvProcessor implements FileProcessorInterface
      */
     public function getObjects(): Collection
     {
-        if (is_null($this->job)) {
+        if (null === $this->job) {
             throw new FireflyException('Cannot call getObjects() without a job.');
         }
 
@@ -84,7 +84,7 @@ class CsvProcessor implements FileProcessorInterface
      */
     public function run(): bool
     {
-        if (is_null($this->job)) {
+        if (null === $this->job) {
             throw new FireflyException('Cannot call run() without a job.');
         }
         Log::debug('Now in CsvProcessor run(). Job is now running...');
@@ -128,7 +128,7 @@ class CsvProcessor implements FileProcessorInterface
      *
      * @param array $array
      */
-    public function setExtendedStatus(array $array)
+    public function setExtendedStatus(array $array): void
     {
         $this->repository->setExtendedStatus($this->job, $array);
     }
@@ -213,7 +213,7 @@ class CsvProcessor implements FileProcessorInterface
         $config     = $this->getConfig();
         $reader     = Reader::createFromString($content);
         $delimiter  = $config['delimiter'] ?? ',';
-        $hasHeaders = isset($config['has-headers']) ? $config['has-headers'] : false;
+        $hasHeaders = $config['has-headers'] ?? false;
         $offset     = 0;
         if ('tab' === $delimiter) {
             $delimiter = "\t"; // @codeCoverageIgnore
@@ -312,7 +312,7 @@ class CsvProcessor implements FileProcessorInterface
          * @var string $value
          */
         foreach ($row as $rowIndex => $value) {
-            $value = trim(strval($value));
+            $value = trim((string)$value);
             if (strlen($value) > 0) {
                 $annotated = $this->annotateValue($rowIndex, $value);
                 Log::debug('Annotated value', $annotated);
@@ -320,7 +320,7 @@ class CsvProcessor implements FileProcessorInterface
             }
         }
         // set some extra info:
-        $importAccount = intval($config['import-account'] ?? 0);
+        $importAccount = (int)($config['import-account'] ?? 0.0);
         $journal->asset->setDefaultAccountId($importAccount);
 
         return $journal;

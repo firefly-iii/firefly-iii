@@ -36,7 +36,7 @@ class FrontpageController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      *
-     * @throws \Throwable
+
      */
     public function piggyBanks(PiggyBankRepositoryInterface $repository)
     {

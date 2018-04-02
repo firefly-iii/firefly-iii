@@ -325,7 +325,7 @@ class BunqRoutine implements RoutineInterface
         Log::debug('in convertToAccount()');
         // find opposing party by IBAN first.
         $result = $this->accountRepository->findByIbanNull($party->getIban(), [$expectedType]);
-        if (!is_null($result)) {
+        if (null !== $result) {
             Log::debug(sprintf('Search for %s resulted in account %s (#%d)', $party->getIban(), $result->name, $result->id));
 
             return $result;
@@ -334,7 +334,7 @@ class BunqRoutine implements RoutineInterface
         // try to find asset account just in case:
         if ($expectedType !== AccountType::ASSET) {
             $result = $this->accountRepository->findByIbanNull($party->getIban(), [AccountType::ASSET]);
-            if (!is_null($result)) {
+            if (nul !== $result) {
                 Log::debug(sprintf('Search for Asset "%s" resulted in account %s (#%d)', $party->getIban(), $result->name, $result->id));
 
                 return $result;
@@ -400,8 +400,6 @@ class BunqRoutine implements RoutineInterface
         Preferences::setForUser($this->job->user, 'bunq_private_key', $privKey);
         Preferences::setForUser($this->job->user, 'bunq_public_key', $pubKey['key']);
         Log::debug('Created and stored key pair');
-
-        return;
     }
 
     /**
@@ -570,7 +568,7 @@ class BunqRoutine implements RoutineInterface
     private function getServerPublicKey(): ServerPublicKey
     {
         $pref = Preferences::getForUser($this->job->user, 'bunq_server_public_key', null)->data;
-        if (is_null($pref)) {
+        if (null === $pref) {
             throw new FireflyException('Cannot determine bunq server public key, but should have it at this point.');
         }
 
@@ -721,8 +719,6 @@ class BunqRoutine implements RoutineInterface
         // set status to "finished"?
         // update job:
         $this->setStatus('finished');
-
-        return;
     }
 
     /**
@@ -778,7 +774,7 @@ class BunqRoutine implements RoutineInterface
             // we really have to quit at this point :(
             throw new FireflyException($e->getMessage());
         }
-        if (is_null($deviceServerId)) {
+        if (null === $deviceServerId) {
             throw new FireflyException('Was not able to register server with bunq. Please see the log files.');
         }
 
@@ -881,8 +877,6 @@ class BunqRoutine implements RoutineInterface
         // update job, set status to "configuring".
         $this->setStatus('configuring');
         $this->addStep();
-
-        return;
     }
 
     /**
@@ -893,8 +887,6 @@ class BunqRoutine implements RoutineInterface
     private function setConfig(array $config): void
     {
         $this->repository->setConfiguration($this->job, $config);
-
-        return;
     }
 
     /**
@@ -905,8 +897,6 @@ class BunqRoutine implements RoutineInterface
     private function setExtendedStatus(array $extended): void
     {
         $this->repository->setExtendedStatus($this->job, $extended);
-
-        return;
     }
 
     /**

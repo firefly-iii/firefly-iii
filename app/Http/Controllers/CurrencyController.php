@@ -67,7 +67,6 @@ class CurrencyController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
-     * @throws \RuntimeException
      */
     public function create(Request $request)
     {
@@ -94,7 +93,6 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function defaultCurrency(Request $request, TransactionCurrency $currency)
     {
@@ -113,7 +111,6 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
-     * @throws \RuntimeException
      */
     public function delete(Request $request, TransactionCurrency $currency)
     {
@@ -143,7 +140,6 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function destroy(Request $request, TransactionCurrency $currency)
     {
@@ -172,7 +168,6 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
-     * @throws \RuntimeException
      */
     public function edit(Request $request, TransactionCurrency $currency)
     {
@@ -201,12 +196,11 @@ class CurrencyController extends Controller
      * @param Request $request
      *
      * @return View
-     * @throws \RuntimeException
      */
     public function index(Request $request)
     {
-        $page       = 0 === intval($request->get('page')) ? 1 : intval($request->get('page'));
-        $pageSize   = intval(Preferences::get('listPageSize', 50)->data);
+        $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $pageSize   = (int)Preferences::get('listPageSize', 50)->data;
         $collection = $this->repository->get();
         $total      = $collection->count();
         $collection = $collection->sortBy(
@@ -232,7 +226,6 @@ class CurrencyController extends Controller
      * @param CurrencyFormRequest $request
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function store(CurrencyFormRequest $request)
     {
@@ -248,7 +241,7 @@ class CurrencyController extends Controller
         $currency = $this->repository->store($data);
         $request->session()->flash('success', trans('firefly.created_currency', ['name' => $currency->name]));
 
-        if (1 === intval($request->get('create_another'))) {
+        if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('currencies.create.fromStore', true);
 
@@ -264,7 +257,6 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function update(CurrencyFormRequest $request, TransactionCurrency $currency)
     {
@@ -281,7 +273,7 @@ class CurrencyController extends Controller
         $request->session()->flash('success', trans('firefly.updated_currency', ['name' => $currency->name]));
         Preferences::mark();
 
-        if (1 === intval($request->get('return_to_edit'))) {
+        if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('currencies.edit.fromUpdate', true);
 

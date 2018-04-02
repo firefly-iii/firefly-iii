@@ -74,7 +74,7 @@ class TagFormRequest extends Request
         $repository = app(TagRepositoryInterface::class);
         $idRule     = '';
         $tagRule    = 'required|min:1|uniqueObjectForUser:tags,tag';
-        if (null !== $repository->find(intval($this->get('id')))->id) {
+        if (null !== $repository->find((int)$this->get('id'))->id) {
             $idRule  = 'belongsToUser:tags';
             $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag,' . $this->get('id');
         }

@@ -92,8 +92,8 @@ class MassController extends Controller
             /** @var int $journalId */
             foreach ($ids as $journalId) {
                 /** @var TransactionJournal $journal */
-                $journal = $this->repository->find(intval($journalId));
-                if (null !== $journal->id && intval($journalId) === $journal->id) {
+                $journal = $this->repository->find((int)$journalId);
+                if (null !== $journal->id && (int)$journalId === $journal->id) {
                     $set->push($journal);
                 }
             }
@@ -174,14 +174,14 @@ class MassController extends Controller
             function (TransactionJournal $journal) {
                 $transaction                    = $this->repository->getFirstPosTransaction($journal);
                 $currency                       = $transaction->transactionCurrency;
-                $journal->amount                = floatval($transaction->amount);
+                $journal->amount                = (float)$transaction->amount;
                 $sources                        = $this->repository->getJournalSourceAccounts($journal);
                 $destinations                   = $this->repository->getJournalDestinationAccounts($journal);
                 $journal->transaction_count     = $journal->transactions()->count();
                 $journal->currency_symbol       = $currency->symbol;
                 $journal->transaction_type_type = $journal->transactionType->type;
 
-                $journal->foreign_amount   = floatval($transaction->foreign_amount);
+                $journal->foreign_amount   = (float)$transaction->foreign_amount;
                 $journal->foreign_currency = $transaction->foreignCurrency;
 
                 if (null !== $sources->first()) {
@@ -216,8 +216,8 @@ class MassController extends Controller
         $count      = 0;
         if (is_array($journalIds)) {
             foreach ($journalIds as $journalId) {
-                $journal = $repository->find(intval($journalId));
-                if (!is_null($journal)) {
+                $journal = $repository->find((int)$journalId);
+                if (null !== $journal) {
                     // get optional fields:
                     $what              = strtolower($this->repository->getTransactionType($journal));
                     $sourceAccountId   = $request->get('source_account_id')[$journal->id] ?? null;
@@ -225,13 +225,13 @@ class MassController extends Controller
                     $sourceAccountName = $request->get('source_account_name')[$journal->id] ?? null;
                     $destAccountId     = $request->get('destination_account_id')[$journal->id] ?? null;
                     $destAccountName   = $request->get('destination_account_name')[$journal->id] ?? null;
-                    $budgetId          = $request->get('budget_id')[$journal->id] ?? 0;
+                    $budgetId          = (int)($request->get('budget_id')[$journal->id] ?? 0.0);
                     $category          = $request->get('category')[$journal->id];
                     $tags              = $journal->tags->pluck('tag')->toArray();
                     $amount            = round($request->get('amount')[$journal->id], 12);
                     $foreignAmount     = isset($request->get('foreign_amount')[$journal->id]) ? round($request->get('foreign_amount')[$journal->id], 12) : null;
                     $foreignCurrencyId = isset($request->get('foreign_currency_id')[$journal->id]) ?
-                        intval($request->get('foreign_currency_id')[$journal->id]) : null;
+                        (int)$request->get('foreign_currency_id')[$journal->id] : null;
                     // build data array
                     $data = [
                         'id'            => $journal->id,
@@ -245,16 +245,16 @@ class MassController extends Controller
 
                                                 'category_id'           => null,
                                                 'category_name'         => $category,
-                                                'budget_id'             => intval($budgetId),
+                                                'budget_id'             => (int)$budgetId,
                                                 'budget_name'           => null,
-                                                'source_id'             => intval($sourceAccountId),
+                                                'source_id'             => (int)$sourceAccountId,
                                                 'source_name'           => $sourceAccountName,
-                                                'destination_id'        => intval($destAccountId),
+                                                'destination_id'        => (int)$destAccountId,
                                                 'destination_name'      => $destAccountName,
                                                 'amount'                => $amount,
                                                 'identifier'            => 0,
                                                 'reconciled'            => false,
-                                                'currency_id'           => intval($currencyId),
+                                                'currency_id'           => (int)$currencyId,
                                                 'currency_code'         => null,
                                                 'description'           => null,
                                                 'foreign_amount'        => $foreignAmount,

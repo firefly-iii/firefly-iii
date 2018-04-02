@@ -41,7 +41,6 @@ class SelectTransactionsRequest extends Request
 
     /**
      * @return array
-     * @throws \InvalidArgumentException
      */
     public function rules()
     {

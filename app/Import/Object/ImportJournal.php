@@ -71,7 +71,7 @@ class ImportJournal
     /** @var array */
     private $amountDebit;
     /** @var string */
-    private $convertedAmount = null;
+    private $convertedAmount;
     /** @var string */
     private $date = '';
     /** @var string */
@@ -225,7 +225,7 @@ class ImportJournal
     public function getMetaString(string $field): ?string
     {
         if (isset($this->metaFields[$field]) && strlen($this->metaFields[$field]) > 0) {
-            return strval($this->metaFields[$field]);
+            return (string)$this->metaFields[$field];
         }
 
         return null;
@@ -277,7 +277,7 @@ class ImportJournal
             case 'sepa-country':
             case 'sepa-ep':
             case 'sepa-ci':
-                $value = trim(strval($array['value']));
+                $value = trim((string)$array['value']);
                 if (strlen($value) > 0) {
                     $this->metaFields[$array['role']] = $value;
                 }
@@ -448,17 +448,17 @@ class ImportJournal
     {
         $info           = [];
         $converterClass = '';
-        if (!is_null($this->amount)) {
+        if (null !== $this->amount) {
             Log::debug('Amount value is not NULL, assume this is the correct value.');
             $converterClass = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $this->amount['role'])));
             $info           = $this->amount;
         }
-        if (!is_null($this->amountDebit)) {
+        if (null !== $this->amountDebit) {
             Log::debug('Amount DEBIT value is not NULL, assume this is the correct value (overrules Amount).');
             $converterClass = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $this->amountDebit['role'])));
             $info           = $this->amountDebit;
         }
-        if (!is_null($this->amountCredit)) {
+        if (null !== $this->amountCredit) {
             Log::debug('Amount CREDIT value is not NULL, assume this is the correct value (overrules Amount and AmountDebit).');
             $converterClass = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $this->amountCredit['role'])));
             $info           = $this->amountCredit;

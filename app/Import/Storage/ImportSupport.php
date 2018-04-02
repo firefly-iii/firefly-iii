@@ -91,7 +91,7 @@ trait ImportSupport
      */
     protected function matchBills(TransactionJournal $journal): bool
     {
-        if (!is_null($journal->bill_id)) {
+        if (null !== $journal->bill_id) {
             Log::debug('Journal is already linked to a bill, will not scan.');
 
             return true;
@@ -134,7 +134,7 @@ trait ImportSupport
     {
         // start with currency pref of account, if any:
         $account    = $importJournal->asset->getAccount();
-        $currencyId = intval($account->getMeta('currency_id'));
+        $currencyId = (int)$account->getMeta('currency_id');
         if ($currencyId > 0) {
             return $currencyId;
         }
@@ -166,7 +166,7 @@ trait ImportSupport
     {
         // use given currency by import journal.
         $currency = $importJournal->foreignCurrency->getTransactionCurrency();
-        if (null !== $currency && intval($currency->id) !== intval($currencyId)) {
+        if (null !== $currency && (int)$currency->id !== (int)$currencyId) {
             return $currency->id;
         }
 
@@ -206,9 +206,7 @@ trait ImportSupport
         // amount is positive, it's a deposit, opposing is an revenue:
         $account->setExpectedType(AccountType::REVENUE);
 
-        $databaseAccount = $account->getAccount();
-
-        return $databaseAccount;
+        return $account->getAccount();
     }
 
     /**
@@ -280,7 +278,6 @@ trait ImportSupport
      * is not already present.
      *
      * @return array
-     * @throws \InvalidArgumentException
      */
     private function getTransfers(): array
     {

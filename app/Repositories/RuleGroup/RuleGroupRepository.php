@@ -50,8 +50,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      *
      * @return bool
      *
-     * @throws \Exception
-     * @throws \Exception
+
+
      */
     public function destroy(RuleGroup $ruleGroup, ?RuleGroup $moveTo): bool
     {
@@ -146,7 +146,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     {
         $entry = $this->user->ruleGroups()->max('order');
 
-        return intval($entry);
+        return (int)$entry;
     }
 
     /**

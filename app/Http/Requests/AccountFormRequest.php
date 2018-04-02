@@ -91,10 +91,10 @@ class AccountFormRequest extends Request
 
         /** @var Account $account */
         $account = $this->route()->parameter('account');
-        if (!is_null($account)) {
+        if (null !== $account) {
             // add rules:
             $rules['id']   = 'belongsToUser:accounts';
-            $rules['name'] = 'required|min:1|uniqueAccountForUser:' . intval($this->get('id'));
+            $rules['name'] = 'required|min:1|uniqueAccountForUser:' . (int)$this->get('id');
             $rules['iban'] = ['iban', 'nullable', new UniqueIban($account, $account->accountType->type)];
         }
 

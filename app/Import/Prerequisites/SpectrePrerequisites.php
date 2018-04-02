@@ -55,7 +55,7 @@ class SpectrePrerequisites implements PrerequisitesInterface
     public function getViewParameters(): array
     {
         $publicKey    = $this->getPublicKey();
-        $subTitle     = strval(trans('import.spectre_title'));
+        $subTitle     = (string)trans('import.spectre_title');
         $subTitleIcon = 'fa-archive';
 
         return compact('publicKey', 'subTitle', 'subTitleIcon');

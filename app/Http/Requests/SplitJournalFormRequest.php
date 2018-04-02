@@ -77,7 +77,7 @@ class SplitJournalFormRequest extends Request
                     break;
             }
             $foreignAmount          = $transaction['foreign_amount'] ?? null;
-            $foreignCurrencyId      = intval($transaction['foreign_currency_id'] ?? 0);
+            $foreignCurrencyId      = (int)($transaction['foreign_currency_id'] ?? 0.0);
             $set                    = [
                 'source_id'             => $sourceId,
                 'source_name'           => $sourceName,
@@ -92,7 +92,7 @@ class SplitJournalFormRequest extends Request
                 'currency_code'         => null,
                 'description'           => $transaction['transaction_description'],
                 'amount'                => $transaction['amount'],
-                'budget_id'             => intval($transaction['budget_id'] ?? 0),
+                'budget_id'             => (int)($transaction['budget_id'] ?? 0.0),
                 'budget_name'           => null,
                 'category_id'           => null,
                 'category_name'         => $transaction['category_name'],
@@ -124,7 +124,7 @@ class SplitJournalFormRequest extends Request
             'transactions.*.destination_name'        => 'between:1,255|nullable',
             'transactions.*.amount'                  => 'required|numeric',
             'transactions.*.budget_id'               => 'belongsToUser:budgets,id',
-            'transactions.*.category_name'                => 'between:1,255|nullable',
+            'transactions.*.category_name'           => 'between:1,255|nullable',
             'transactions.*.piggy_bank_id'           => 'between:1,255|nullable',
         ];
     }

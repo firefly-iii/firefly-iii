@@ -97,7 +97,7 @@ class PreferencesController extends Controller
         $frontPageAccounts = [];
         if (is_array($request->get('frontPageAccounts'))) {
             foreach ($request->get('frontPageAccounts') as $id) {
-                $frontPageAccounts[] = intval($id);
+                $frontPageAccounts[] = (int)$id;
             }
             Preferences::set('frontPageAccounts', $frontPageAccounts);
         }
@@ -110,21 +110,21 @@ class PreferencesController extends Controller
         Session::forget('range');
 
         // custom fiscal year
-        $customFiscalYear = 1 === intval($request->get('customFiscalYear'));
-        $fiscalYearStart  = date('m-d', strtotime(strval($request->get('fiscalYearStart'))));
+        $customFiscalYear = 1 === (int)$request->get('customFiscalYear');
+        $fiscalYearStart  = date('m-d', strtotime((string)$request->get('fiscalYearStart')));
         Preferences::set('customFiscalYear', $customFiscalYear);
         Preferences::set('fiscalYearStart', $fiscalYearStart);
 
         // save page size:
         Preferences::set('listPageSize', 50);
-        $listPageSize = intval($request->get('listPageSize'));
+        $listPageSize = (int)$request->get('listPageSize');
         if ($listPageSize > 0 && $listPageSize < 1337) {
             Preferences::set('listPageSize', $listPageSize);
         }
 
         // language:
         $lang = $request->get('language');
-        if (in_array($lang, array_keys(config('firefly.languages')))) {
+        if (array_key_exists($lang, config('firefly.languages'))) {
             Preferences::set('language', $lang);
         }
 
@@ -143,7 +143,7 @@ class PreferencesController extends Controller
         ];
         Preferences::set('transaction_journal_optional_fields', $optionalTj);
 
-        Session::flash('success', strval(trans('firefly.saved_preferences')));
+        Session::flash('success', (string)trans('firefly.saved_preferences'));
         Preferences::mark();
 
         return redirect(route('preferences.index'));

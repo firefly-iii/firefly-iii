@@ -191,7 +191,7 @@ class ConvertController extends Controller
                 break;
             case TransactionType::WITHDRAWAL . '-' . TransactionType::TRANSFER:
                 // two
-                $destination = $accountRepository->findNull(intval($data['destination_account_asset']));
+                $destination = $accountRepository->findNull((int)$data['destination_account_asset']);
                 break;
             case TransactionType::DEPOSIT . '-' . TransactionType::WITHDRAWAL:
             case TransactionType::TRANSFER . '-' . TransactionType::WITHDRAWAL:
@@ -266,7 +266,7 @@ class ConvertController extends Controller
                 $source = $destinationAccount;
                 break;
             case TransactionType::DEPOSIT . '-' . TransactionType::TRANSFER:
-                $source = $accountRepository->findNull(intval($data['source_account_asset']));
+                $source = $accountRepository->findNull((int)$data['source_account_asset']);
                 break;
         }
 

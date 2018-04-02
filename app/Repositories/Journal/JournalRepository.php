@@ -105,7 +105,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return bool
      *
-     * @throws \Exception
+
      */
     public function destroy(TransactionJournal $journal): bool
     {
@@ -167,6 +167,7 @@ class JournalRepository implements JournalRepositoryInterface
     /**
      * Get users first transaction journal.
      *
+     * @deprecated
      * @return TransactionJournal
      */
     public function first(): TransactionJournal
@@ -179,6 +180,23 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         return $entry;
+    }
+
+    /**
+     * Get users first transaction journal or NULL.
+     *
+     * @return TransactionJournal|null
+     */
+    public function firstNull(): ?TransactionJournal
+    {
+        /** @var TransactionJournal $entry */
+        $entry  = $this->user->transactionJournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
+        $result = null;
+        if (null !== $entry) {
+            $result = $entry;
+        }
+
+        return $result;
     }
 
     /**
@@ -207,10 +225,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getFirstPosTransaction(TransactionJournal $journal): Transaction
     {
-        /** @var Transaction $transaction */
-        $transaction = $journal->transactions()->where('amount', '>', 0)->first();
-
-        return $transaction;
+        return $journal->transactions()->where('amount', '>', 0)->first();
     }
 
     /**
@@ -266,7 +281,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getJournalDate(TransactionJournal $journal, ?string $field): string
     {
-        if (is_null($field)) {
+        if (null === $field) {
             return $journal->date->format('Y-m-d');
         }
         if (null !== $journal->$field && $journal->$field instanceof Carbon) {
@@ -363,7 +378,7 @@ class JournalRepository implements JournalRepositoryInterface
 
         // saves on queries:
         $amount = $journal->transactions()->where('amount', '>', 0)->get()->sum('amount');
-        $amount = strval($amount);
+        $amount = (string)$amount;
         $cache->store($amount);
 
         return $amount;
@@ -389,7 +404,7 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         $entry = $journal->transactionJournalMeta()->where('name', $field)->first();
-        if (is_null($entry)) {
+        if (null === $entry) {
             return null;
         }
         $value = new Carbon($entry->data);
@@ -418,7 +433,7 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         $entry = $journal->transactionJournalMeta()->where('name', $field)->first();
-        if (is_null($entry)) {
+        if (null === $entry) {
             return null;
         }
 
@@ -426,7 +441,7 @@ class JournalRepository implements JournalRepositoryInterface
 
         // return when array:
         if (is_array($value)) {
-            $return = join(',', $value);
+            $return = implode(',', $value);
             $cache->store($return);
 
             return $return;
@@ -434,7 +449,7 @@ class JournalRepository implements JournalRepositoryInterface
 
         // return when something else:
         try {
-            $return = strval($value);
+            $return = (string)$value;
             $cache->store($return);
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -465,7 +480,7 @@ class JournalRepository implements JournalRepositoryInterface
     public function getNoteText(TransactionJournal $journal): ?string
     {
         $note = $this->getNote($journal);
-        if (is_null($note)) {
+        if (null === $note) {
             return null;
         }
 
@@ -591,7 +606,7 @@ class JournalRepository implements JournalRepositoryInterface
     {
         /** @var Transaction $transaction */
         $transaction = $this->user->transactions()->find($transactionId);
-        if (!is_null($transaction)) {
+        if (null !== $transaction) {
             return $this->reconcile($transaction);
         }
 

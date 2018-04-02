@@ -24,13 +24,13 @@ namespace FireflyIII\Import\Routine;
 
 use Carbon\Carbon;
 use DB;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Object\ImportJournal;
 use FireflyIII\Import\Storage\ImportStorage;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use FireflyIII\Services\Spectre\Exception\DuplicatedCustomerException;
 use FireflyIII\Services\Spectre\Exception\SpectreException;
 use FireflyIII\Services\Spectre\Object\Account;
 use FireflyIII\Services\Spectre\Object\Customer;
@@ -179,11 +179,11 @@ class SpectreRoutine implements RoutineInterface
         try {
             $newCustomerRequest->call();
             $customer = $newCustomerRequest->getCustomer();
-        } catch (DuplicatedCustomerException $e) {
+        } catch (Exception $e) {
             // already exists, must fetch customer instead.
-            Log::warning('Customer exists already for user, fetch it.');
+            Log::warning(sprintf('Customer exists already for user, fetch it: %s', $e->getMessage()));
         }
-        if (is_null($customer)) {
+        if (null === $customer) {
             $getCustomerRequest = new ListCustomersRequest($this->job->user);
             $getCustomerRequest->call();
             $customers = $getCustomerRequest->getCustomers();
@@ -211,7 +211,7 @@ class SpectreRoutine implements RoutineInterface
     protected function getCustomer(): Customer
     {
         $config = $this->getConfig();
-        if (!is_null($config['customer'])) {
+        if (null !== $config['customer']) {
             $customer = new Customer($config['customer']);
 
             return $customer;
@@ -306,13 +306,13 @@ class SpectreRoutine implements RoutineInterface
         /** @var Login $login */
         foreach ($logins as $login) {
             $attempt     = $login->getLastAttempt();
-            $attemptTime = intval($attempt->getCreatedAt()->format('U'));
-            if ($attemptTime > $time && is_null($attempt->getFailErrorClass())) {
+            $attemptTime = (int)$attempt->getCreatedAt()->format('U');
+            if ($attemptTime > $time && null === $attempt->getFailErrorClass()) {
                 $time  = $attemptTime;
                 $final = $login;
             }
         }
-        if (is_null($final)) {
+        if (null === $final) {
             Log::error('Could not find a valid login for this user.');
             $this->repository->addError($this->job, 0, 'Spectre connection failed. Did you use invalid credentials, press Cancel or failed the 2FA challenge?');
             $this->repository->setStatus($this->job, 'error');
@@ -420,8 +420,8 @@ class SpectreRoutine implements RoutineInterface
                 }
                 $extra = $transaction->getExtra()->toArray();
                 $notes = '';
-                $notes .= strval(trans('import.imported_from_account', ['account' => $account->getName()])) . '  '
-                          . "\n"; // double space for newline in Markdown.
+                // double space for newline in Markdown.
+                $notes .= (string)trans('import.imported_from_account', ['account' => $account->getName()]) . '  ' . "\n";
 
                 foreach ($extra as $key => $value) {
                     switch ($key) {
@@ -535,8 +535,8 @@ class SpectreRoutine implements RoutineInterface
         /** @var array $accountArray */
         foreach ($accounts as $accountArray) {
             $account  = new Account($accountArray);
-            $importId = intval($config['accounts-mapped'][$account->getId()] ?? 0);
-            $doImport = 0 !== $importId ? true : false;
+            $importId = (int)($config['accounts-mapped'][$account->getId()] ?? 0.0);
+            $doImport = 0 !== $importId;
             if (!$doImport) {
                 Log::debug(sprintf('Will NOT import from Spectre account #%d ("%s")', $account->getId(), $account->getName()));
                 continue;

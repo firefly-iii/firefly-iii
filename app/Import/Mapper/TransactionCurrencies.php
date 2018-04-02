@@ -39,7 +39,7 @@ class TransactionCurrencies implements MapperInterface
         $currencies = $repository->get();
         $list       = [];
         foreach ($currencies as $currency) {
-            $currencyId        = intval($currency->id);
+            $currencyId        = (int)$currency->id;
             $list[$currencyId] = $currency->name . ' (' . $currency->code . ')';
         }
         asort($list);

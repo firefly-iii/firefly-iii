@@ -60,9 +60,9 @@ class Attachment extends Model
     public static function routeBinder(string $value): Attachment
     {
         if (auth()->check()) {
-            $attachmentId = intval($value);
+            $attachmentId = (int)$value;
             $attachment   = auth()->user()->attachments()->find($attachmentId);
-            if (!is_null($attachment)) {
+            if (null !== $attachment) {
                 return $attachment;
             }
         }
@@ -89,7 +89,7 @@ class Attachment extends Model
      */
     public function fileName(): string
     {
-        return sprintf('at-%s.data', strval($this->id));
+        return sprintf('at-%s.data', (string)$this->id);
     }
 
     /**
@@ -181,6 +181,7 @@ class Attachment extends Model
      * @codeCoverageIgnore
      *
      * @param string $value
+     *
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setFilenameAttribute(string $value)
@@ -192,6 +193,7 @@ class Attachment extends Model
      * @codeCoverageIgnore
      *
      * @param string $value
+     *
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setMimeAttribute(string $value)
@@ -203,6 +205,7 @@ class Attachment extends Model
      * @codeCoverageIgnore
      *
      * @param string $value
+     *
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
     public function setTitleAttribute(string $value)

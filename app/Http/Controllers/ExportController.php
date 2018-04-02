@@ -111,7 +111,6 @@ class ExportController extends Controller
      * @param ExportJobRepositoryInterface $jobs
      *
      * @return View
-     * @throws \InvalidArgumentException
      */
     public function index(AccountRepositoryInterface $repository, ExportJobRepositoryInterface $jobs)
     {
@@ -121,7 +120,7 @@ class ExportController extends Controller
         $jobs->cleanup();
 
         // does the user have shared accounts?
-        $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts      = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $accountList   = ExpandedForm::makeSelectList($accounts);
         $checked       = array_keys($accountList);
         $formats       = array_keys(config('firefly.export_formats'));

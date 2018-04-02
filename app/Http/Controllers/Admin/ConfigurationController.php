@@ -46,7 +46,7 @@ class ConfigurationController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', strval(trans('firefly.administration')));
+                app('view')->share('title', (string)trans('firefly.administration'));
                 app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
 
                 return $next($request);
@@ -61,7 +61,7 @@ class ConfigurationController extends Controller
      */
     public function index()
     {
-        $subTitle     = strval(trans('firefly.instance_configuration'));
+        $subTitle     = (string)trans('firefly.instance_configuration');
         $subTitleIcon = 'fa-wrench';
 
         // all available configuration and their default value in case
@@ -91,7 +91,7 @@ class ConfigurationController extends Controller
         FireflyConfig::set('is_demo_site', $data['is_demo_site']);
 
         // flash message
-        Session::flash('success', strval(trans('firefly.configuration_updated')));
+        Session::flash('success', (string)trans('firefly.configuration_updated'));
         Preferences::mark();
 
         return Redirect::route('admin.configuration.index');

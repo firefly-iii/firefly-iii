@@ -41,7 +41,7 @@ class BalanceController extends Controller
      *
      * @return mixed|string
      *
-     * @throws \Throwable
+
      */
     public function general(BalanceReportHelperInterface $helper, Collection $accounts, Carbon $start, Carbon $end)
     {

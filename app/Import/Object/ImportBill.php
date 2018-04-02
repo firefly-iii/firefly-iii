@@ -108,7 +108,7 @@ class ImportBill
         if (3 === count($this->id)) {
             Log::debug(sprintf('Finding bill with ID #%d', $this->id['value']));
             /** @var Bill $bill */
-            $bill = $this->repository->find(intval($this->id['value']));
+            $bill = $this->repository->find((int)$this->id['value']);
             if (null !== $bill) {
                 Log::debug(sprintf('Found unmapped bill by ID (#%d): %s', $bill->id, $bill->name));
 
@@ -157,11 +157,11 @@ class ImportBill
     {
         Log::debug('In findExistingObject() for Bill');
         $result = $this->findById();
-        if (!is_null($result)) {
+        if (null !== $result) {
             return $result;
         }
         $result = $this->findByName();
-        if (!is_null($result)) {
+        if (null !== $result) {
             return $result;
         }
 
@@ -215,7 +215,7 @@ class ImportBill
 
         Log::debug('Finding a mapped bill based on', $array);
 
-        $search = intval($array['mapped']);
+        $search = (int)$array['mapped'];
         $bill   = $this->repository->find($search);
 
         if (null === $bill) {

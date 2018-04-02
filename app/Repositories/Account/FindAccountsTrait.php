@@ -251,9 +251,8 @@ trait FindAccountsTrait
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
         $factory->setUser($this->user);
-        $account = $factory->findOrCreate('Cash account', $type->type);
 
-        return $account;
+        return $factory->findOrCreate('Cash account', $type->type);
     }
 
     /**
@@ -262,7 +261,6 @@ trait FindAccountsTrait
      * @return Account|null
      *
      * @throws FireflyException
-     * @throws \Exception
      */
     public function getReconciliation(Account $account): ?Account
     {
@@ -272,10 +270,10 @@ trait FindAccountsTrait
         $name     = $account->name . ' reconciliation';
         $type     = AccountType::where('type', AccountType::RECONCILIATION)->first();
         $accounts = $this->user->accounts()->where('account_type_id', $type->id)->get();
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            if ($account->name === $name) {
-                return $account;
+        /** @var Account $current */
+        foreach ($accounts as $current) {
+            if ($current->name === $name) {
+                return $current;
             }
         }
         /** @var AccountFactory $factory */

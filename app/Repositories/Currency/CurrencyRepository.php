@@ -73,12 +73,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
         // is the default currency for the system
         $defaultSystemCode = config('firefly.default_currency', 'EUR');
-        if ($currency->code === $defaultSystemCode) {
-            return false;
-        }
 
-        // can be deleted
-        return true;
+        return !($currency->code === $defaultSystemCode);
     }
 
     /**
@@ -232,10 +228,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function findNull(int $currencyId): ?TransactionCurrency
     {
-        /** @var TransactionCurrency $res */
-        $res = TransactionCurrency::find($currencyId);
-
-        return $res;
+        return TransactionCurrency::find($currencyId);
     }
 
     /**

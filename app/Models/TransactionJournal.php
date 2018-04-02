@@ -35,7 +35,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Log;
 use Preferences;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Watson\Validating\ValidatingTrait;
 
 /**
  * Class TransactionJournal.
@@ -44,7 +43,7 @@ use Watson\Validating\ValidatingTrait;
  */
 class TransactionJournal extends Model
 {
-    use SoftDeletes, ValidatingTrait, TransactionJournalTrait;
+    use SoftDeletes, TransactionJournalTrait;
 
     /**
      * The attributes that should be casted to native types.
@@ -73,16 +72,6 @@ class TransactionJournal extends Model
            'date', 'rent_date', 'encrypted', 'tag_count',];
     /** @var array */
     protected $hidden = ['encrypted'];
-    /** @var array */
-    protected $rules
-        = [
-            'user_id'             => 'required|exists:users,id',
-            'transaction_type_id' => 'required|exists:transaction_types,id',
-            'description'         => 'required|between:1,1024',
-            'completed'           => 'required|boolean',
-            'date'                => 'required|date',
-            'encrypted'           => 'required|boolean',
-        ];
 
     /**
      * @param string $value
@@ -93,10 +82,10 @@ class TransactionJournal extends Model
     public static function routeBinder(string $value): TransactionJournal
     {
         if (auth()->check()) {
-            $journalId = intval($value);
+            $journalId = (int)$value;
             $journal   = auth()->user()->transactionJournals()->where('transaction_journals.id', $journalId)
                                ->first(['transaction_journals.*']);
-            if (!is_null($journal)) {
+            if (null !== $journal) {
                 return $journal;
             }
         }
@@ -143,6 +132,7 @@ class TransactionJournal extends Model
     /**
      * @codeCoverageIgnore
      * @deprecated
+     *
      * @param string $name
      *
      * @return bool
@@ -222,6 +212,7 @@ class TransactionJournal extends Model
      * @codeCoverageIgnore
      *
      * @param string $name
+     *
      * @deprecated
      * @return bool
      */

@@ -65,7 +65,6 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
      *
-     * @throws \RuntimeException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function login(Request $request)
@@ -103,7 +102,6 @@ class LoginController extends Controller
      * @param CookieJar $cookieJar
      *
      * @return $this|\Illuminate\Http\RedirectResponse
-     * @throws \RuntimeException
      */
     public function logout(Request $request, CookieJar $cookieJar)
     {
@@ -121,7 +119,6 @@ class LoginController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \RuntimeException
      */
     public function showLoginForm(Request $request)
     {

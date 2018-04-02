@@ -58,7 +58,7 @@ class SearchController extends Controller
      */
     public function index(Request $request, SearchInterface $searcher)
     {
-        $fullQuery = strval($request->get('q'));
+        $fullQuery = (string)$request->get('q');
 
         // parse search terms:
         $searcher->parseQuery($fullQuery);
@@ -74,11 +74,11 @@ class SearchController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      *
-     * @throws \Throwable
+
      */
     public function search(Request $request, SearchInterface $searcher)
     {
-        $fullQuery    = strval($request->get('query'));
+        $fullQuery    = (string)$request->get('query');
         $transactions = new Collection;
         // cache
         $cache = new CacheProperties;
@@ -92,7 +92,7 @@ class SearchController extends Controller
         if (!$cache->has()) {
             // parse search terms:
             $searcher->parseQuery($fullQuery);
-            $searcher->setLimit(intval(env('SEARCH_RESULT_LIMIT', 50)));
+            $searcher->setLimit((int)env('SEARCH_RESULT_LIMIT', 50));
             $transactions = $searcher->searchTransactions();
             $cache->store($transactions);
         }

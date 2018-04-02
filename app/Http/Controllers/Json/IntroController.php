@@ -76,14 +76,17 @@ class IntroController
         $routeKey = str_replace('.', '_', $route);
         Log::debug(sprintf('Has outro step for route %s', $routeKey));
         $elements = config(sprintf('intro.%s', $routeKey));
-        if (!is_array($elements)) {
+        if (!\is_array($elements)) {
             return false;
         }
+
+        $hasStep = array_key_exists('outro', $elements);
+
         Log::debug('Elements is array', $elements);
         Log::debug('Keys is', array_keys($elements));
-        Log::debug(sprintf('Keys has "outro": %s', var_export(in_array('outro', array_keys($elements)), true)));
+        Log::debug(sprintf('Keys has "outro": %s', var_export($hasStep, true)));
 
-        return in_array('outro', array_keys($elements));
+        return $hasStep;
     }
 
     /**
