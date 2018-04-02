@@ -74,6 +74,7 @@ But actually, it features:
 * 2 factor authentication for extra security 🔒
 * Supports any currency you want, including [crypto currencies](http://firefly-iii.readthedocs.io/en/latest/concepts/currencies.html) such as ₿itcoin  and Ξthereum
 * Lots of help text in case you don’t get it
+* Translations into 10(!) languages, proudly powered by Crowdin
 
 Everything is organised:
 
