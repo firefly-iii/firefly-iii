@@ -1241,7 +1241,7 @@ class BinderTest extends TestCase
         }
         );
 
-        $names = join(',', $tags->pluck('tag')->toArray());
+        $names = implode(',', $tags->pluck('tag')->toArray());
 
 
         $this->be($this->user());

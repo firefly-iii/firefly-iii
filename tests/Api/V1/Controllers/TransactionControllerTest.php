@@ -2395,7 +2395,7 @@ class TransactionControllerTest extends TestCase
             'description'  => 'Some transaction #' . random_int(1, 1000),
             'date'         => '2018-01-01',
             'type'         => 'withdrawal',
-            'tags'         => join(',', $tags),
+            'tags'         => implode(',', $tags),
             'transactions' => [
                 [
                     'amount'      => '10',

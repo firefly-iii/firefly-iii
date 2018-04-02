@@ -14,7 +14,7 @@ class ConfigSeeder extends Seeder
     public function run()
     {
         $entry = Configuration::where('name', 'db_version')->first();
-        if (is_null($entry)) {
+        if (null === $entry) {
             Log::warning('No database version entry is present. Database is assumed to be OLD (version 1).');
             // FF old or no version present. Put at 1:
             Configuration::create(
@@ -24,8 +24,8 @@ class ConfigSeeder extends Seeder
                 ]
             );
         }
-        if (!is_null($entry)) {
-            $version     = intval(config('firefly.db_version'));
+        if (null !== $entry) {
+            $version     = (int)config('firefly.db_version');
             $entry->data = $version;
             $entry->save();
 

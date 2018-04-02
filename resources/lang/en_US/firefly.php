@@ -784,6 +784,7 @@ return [
     'opt_group_sharedAsset'                   => 'Shared asset accounts',
     'opt_group_ccAsset'                       => 'Credit cards',
     'notes'                                   => 'Notes',
+    'unknown_journal_error'                   => 'Could not store the transaction. Please check the log files.',
 
     // new user:
     'welcome'                                 => 'Welcome to Firefly III!',
@@ -1136,6 +1137,7 @@ return [
     'import_index_title'                    => 'Import data into Firefly III',
     'import_index_sub_title'                => 'Index',
     'import_general_index_intro'            => 'Welcome to Firefly III\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
+    'upload_error'                          => 'The file you have uploaded could not be processed. Possibly it is of an invalid file type or encoding. The log files will have more information.',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',

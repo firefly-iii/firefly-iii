@@ -162,7 +162,7 @@ class MassControllerTest extends TestCase
         // default transactions
         $collection = $this->user()->transactionJournals()->take(4)->get();
         $allIds     = $collection->pluck('id')->toArray();
-        $route      = route('transactions.mass.edit', join(',', $allIds));
+        $route      = route('transactions.mass.edit', implode(',', $allIds));
         $this->be($this->user());
         $response = $this->get($route);
         $response->assertStatus(200);
@@ -204,7 +204,7 @@ class MassControllerTest extends TestCase
         $allIds     = $collection->pluck('id')->toArray();
 
         $this->be($this->user());
-        $response = $this->get(route('transactions.mass.edit', join(',', $allIds)));
+        $response = $this->get(route('transactions.mass.edit', implode(',', $allIds)));
         $response->assertStatus(200);
         $response->assertSee('Edit a number of transactions');
         $response->assertSessionHas('error', 'You have selected no valid transactions to edit.');

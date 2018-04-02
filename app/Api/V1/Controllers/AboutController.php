@@ -36,16 +36,6 @@ use League\Fractal\Serializer\JsonApiSerializer;
 class AboutController extends Controller
 {
     /**
-     * AccountController constructor.
-     *
-     * @throws \FireflyIII\Exceptions\FireflyException
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * @return \Illuminate\Http\JsonResponse
      */
     public function about()

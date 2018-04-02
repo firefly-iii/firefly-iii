@@ -127,6 +127,5 @@ function getBalanceBox() {
             $('#box-balance-list').html(current + '<span title="' + string + '">' + string + '</span>' + '<br>');
             count++;
         }
-        return;
     });
 }

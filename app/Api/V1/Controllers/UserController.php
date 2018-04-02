@@ -92,7 +92,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         // user preferences
-        $pageSize = intval(Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data);
+        $pageSize = (int)Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // make manager
         $manager = new Manager();

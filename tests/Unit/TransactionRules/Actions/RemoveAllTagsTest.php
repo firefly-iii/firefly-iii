@@ -41,7 +41,7 @@ class RemoveAllTagsTest extends TestCase
     {
         // find journal with at least one tag
         $journalIds = DB::table('tag_transaction_journal')->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
-        $journalId  = intval($journalIds[0]);
+        $journalId  = (int)$journalIds[0];
         /** @var TransactionJournal $journal */
         $journal = TransactionJournal::find($journalId);
 

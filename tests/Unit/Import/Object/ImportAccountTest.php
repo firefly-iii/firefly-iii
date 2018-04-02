@@ -27,7 +27,7 @@ use FireflyIII\Import\Object\ImportAccount;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Support\Collection;
+
 use Mockery;
 use Tests\TestCase;
 

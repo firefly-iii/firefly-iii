@@ -83,8 +83,6 @@ function selectsDifferentSource() {
     $('.currency-option[data-id="' + sourceCurrency + '"]').click();
     $('[data-toggle="dropdown"]').parent().removeClass('open');
     $('select[name="source_account_id"]').focus();
-
-    return;
 }
 
 /**
@@ -107,8 +105,6 @@ function selectsDifferentDestination() {
     $('.currency-option[data-id="' + destinationCurrency + '"]').click();
     $('[data-toggle="dropdown"]').parent().removeClass('open');
     $('select[name="destination_account_id"]').focus();
-
-    return;
 }
 
 

@@ -42,7 +42,7 @@ class ClearNotesTest extends TestCase
         // give journal a note:
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $note    = $journal->notes()->first();
-        if (is_null($note)) {
+        if (null === $note) {
             $note = new Note;
             $note->noteable()->associate($journal);
         }

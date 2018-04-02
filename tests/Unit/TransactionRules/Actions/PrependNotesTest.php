@@ -44,7 +44,7 @@ class PrependNotesTest extends TestCase
         $note      = $journal->notes()->first();
         $start     = 'Default note text';
         $toPrepend = 'This is prepended';
-        if (is_null($note)) {
+        if (null === $note) {
             $note = new Note();
             $note->noteable()->associate($journal);
         }
@@ -71,7 +71,7 @@ class PrependNotesTest extends TestCase
         // give journal some notes.
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $note    = $journal->notes()->first();
-        if (!is_null($note)) {
+        if (null !== $note) {
             $note->forceDelete();
         }
         $toPrepend = 'This is appended';

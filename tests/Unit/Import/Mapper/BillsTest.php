@@ -58,7 +58,7 @@ class BillsTest extends TestCase
         $this->assertCount(3, $mapping);
         // assert this is what the result looks like:
         $result = [
-            0 => strval(trans('import.map_do_not_map')),
+            0 => (string)trans('import.map_do_not_map'),
             9 => 'Else [match]',
             5 => 'Something [hi,bye]',
         ];
