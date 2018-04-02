@@ -40,7 +40,9 @@ use Google2FA;
 use Hash;
 use Illuminate\Contracts\Auth\Guard;
 use Laravel\Passport\ClientRepository;
+use Laravel\Passport\Passport;
 use Log;
+use phpseclib\Crypt\RSA;
 use Preferences;
 use Session;
 use View;
@@ -202,7 +204,12 @@ class ProfileController extends Controller
     public function index()
     {
         // check if client token thing exists (default one)
-        $count = DB::table('oauth_clients')->whereNull('user_id')->count();
+        $count = DB::table('oauth_clients')
+                   ->where('personal_access_client', 1)
+                   ->whereNull('user_id')->count();
+
+        $this->createOAuthKeys();
+
         if ($count === 0) {
             /** @var ClientRepository $repository */
             $repository = app(ClientRepository::class);
@@ -413,6 +420,28 @@ class ProfileController extends Controller
         }
 
         return true;
+    }
+
+    /**
+     *
+     */
+    private function createOAuthKeys()
+    {
+        $rsa  = new RSA();
+        $keys = $rsa->createKey(4096);
+
+        [$publicKey, $privateKey] = [
+            Passport::keyPath('oauth-public.key'),
+            Passport::keyPath('oauth-private.key'),
+        ];
+
+        if (file_exists($publicKey) || file_exists($privateKey)) {
+            return;
+        }
+        Log::alert('NO OAuth keys were found. They have been created.');
+
+        file_put_contents($publicKey, array_get($keys, 'publickey'));
+        file_put_contents($privateKey, array_get($keys, 'privatekey'));
     }
 
     /**
