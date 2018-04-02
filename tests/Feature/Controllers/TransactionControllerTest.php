@@ -68,7 +68,8 @@ class TransactionControllerTest extends TestCase
         $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(JournalCollectorInterface::class);
-        $repository->shouldReceive('first')->times(2)->andReturn($transfer);
+        $repository->shouldReceive('first')->once()->andReturn($transfer);
+        $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
@@ -144,7 +145,8 @@ class TransactionControllerTest extends TestCase
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(JournalCollectorInterface::class);
         $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
-        $repository->shouldReceive('first')->twice()->andReturn($transfer);
+        $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
+        $repository->shouldReceive('first')->once()->andReturn($transfer);
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
@@ -186,7 +188,8 @@ class TransactionControllerTest extends TestCase
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(JournalCollectorInterface::class);
         $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
-        $repository->shouldReceive('first')->twice()->andReturn($transfer);
+        $repository->shouldReceive('first')->once()->andReturn($transfer);
+        $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
@@ -228,7 +231,8 @@ class TransactionControllerTest extends TestCase
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(JournalCollectorInterface::class);
         $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
-        $repository->shouldReceive('first')->twice()->andReturn($transfer);
+        $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
+        $repository->shouldReceive('first')->once()->andReturn($transfer);
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
