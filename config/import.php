@@ -1,4 +1,17 @@
 <?php
+declare(strict_types=1);
+
+use FireflyIII\Import\Configuration\BunqConfigurator;
+use FireflyIII\Import\Configuration\FileConfigurator;
+use FireflyIII\Import\Configuration\SpectreConfigurator;
+use FireflyIII\Import\FileProcessor\CsvProcessor;
+use FireflyIII\Import\Prerequisites\BunqPrerequisites;
+use FireflyIII\Import\Prerequisites\FilePrerequisites;
+use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
+use FireflyIII\Import\Routine\BunqRoutine;
+use FireflyIII\Import\Routine\FileRoutine;
+use FireflyIII\Import\Routine\SpectreRoutine;
+
 /**
  * import.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -19,7 +32,6 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
 
 return [
     'enabled'       => [
@@ -29,22 +41,22 @@ return [
         'plaid'   => false,
     ],
     'prerequisites' => [
-        'file'    => 'FireflyIII\Import\Prerequisites\FilePrerequisites',
-        'bunq'    => 'FireflyIII\Import\Prerequisites\BunqPrerequisites',
-        'spectre' => 'FireflyIII\Import\Prerequisites\SpectrePrerequisites',
+        'file'    => FilePrerequisites::class,
+        'bunq'    => BunqPrerequisites::class,
+        'spectre' => SpectrePrerequisites::class,
         'plaid'   => 'FireflyIII\Import\Prerequisites\PlaidPrerequisites',
 
     ],
     'configuration' => [
-        'file'    => 'FireflyIII\Import\Configuration\FileConfigurator',
-        'bunq'    => 'FireflyIII\Import\Configuration\BunqConfigurator',
-        'spectre' => 'FireflyIII\Import\Configuration\SpectreConfigurator',
+        'file'    => FileConfigurator::class,
+        'bunq'    => BunqConfigurator::class,
+        'spectre' => SpectreConfigurator::class,
         'plaid'   => 'FireflyIII\Import\Configuration\PlaidConfigurator',
     ],
     'routine'       => [
-        'file'    => 'FireflyIII\Import\Routine\FileRoutine',
-        'bunq'    => 'FireflyIII\Import\Routine\BunqRoutine',
-        'spectre' => 'FireflyIII\Import\Routine\SpectreRoutine',
+        'file'    => FileRoutine::class,
+        'bunq'    => BunqRoutine::class,
+        'spectre' => SpectreRoutine::class,
         'plaid'   => 'FireflyIII\Import\Routine\PlaidRoutine',
     ],
 
@@ -53,7 +65,7 @@ return [
             'import_formats'        => ['csv'], // mt940
             'default_import_format' => 'csv',
             'processors'            => [
-                'csv' => 'FireflyIII\Import\FileProcessor\CsvProcessor',
+                'csv' => CsvProcessor::class,
             ],
         ],
         'bunq' => [

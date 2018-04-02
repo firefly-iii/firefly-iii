@@ -37,7 +37,7 @@ return [
     ],
     // accounts: create
     'accounts_create'                => [
-        'iban'  => ['element' => '#ffInput_iban'],
+        'iban' => ['element' => '#ffInput_iban'],
     ],
     // extra text for asset account creation.
     'accounts_create_asset'          => [

@@ -1,4 +1,18 @@
 <?php
+declare(strict_types=1);
+
+use TwigBridge\Extension\Laravel\Auth;
+use TwigBridge\Extension\Laravel\Config;
+use TwigBridge\Extension\Laravel\Dump;
+use TwigBridge\Extension\Laravel\Input;
+use TwigBridge\Extension\Laravel\Session;
+use TwigBridge\Extension\Laravel\Str;
+use TwigBridge\Extension\Laravel\Translator;
+use TwigBridge\Extension\Laravel\Url;
+use TwigBridge\Extension\Loader\Facades;
+use TwigBridge\Extension\Loader\Filters;
+use TwigBridge\Extension\Loader\Functions;
+use TwigBridge\Twig\Template;
 
 /**
  * twigbridge.php
@@ -19,8 +33,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
-declare(strict_types=1);
 
 
 /**
@@ -59,7 +71,7 @@ return [
 
             // The base template class to use for generated templates.
             // default: TwigBridge\Twig\Template
-            'base_template_class' => 'TwigBridge\Twig\Template',
+            'base_template_class' => Template::class,
 
             // An absolute path where to store the compiled templates, or false to disable caching. If null
             // then the cache file path is used.
@@ -111,18 +123,18 @@ return [
         |
         */
         'enabled'   => [
-            'TwigBridge\Extension\Loader\Facades',
-            'TwigBridge\Extension\Loader\Filters',
-            'TwigBridge\Extension\Loader\Functions',
+            Facades::class,
+            Filters::class,
+            Functions::class,
 
-            'TwigBridge\Extension\Laravel\Auth',
-            'TwigBridge\Extension\Laravel\Config',
-            'TwigBridge\Extension\Laravel\Dump',
-            'TwigBridge\Extension\Laravel\Input',
-            'TwigBridge\Extension\Laravel\Session',
-            'TwigBridge\Extension\Laravel\Str',
-            'TwigBridge\Extension\Laravel\Translator',
-            'TwigBridge\Extension\Laravel\Url',
+            Auth::class,
+            Config::class,
+            Dump::class,
+            Input::class,
+            Session::class,
+            Str::class,
+            Translator::class,
+            Url::class,
             // 'TwigBridge\Extension\Laravel\Gate',
 
             // 'TwigBridge\Extension\Laravel\Form',
