@@ -85,7 +85,7 @@ class BillController extends Controller
      */
     public function index(Request $request)
     {
-        $pageSize  = intval(Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data);
+        $pageSize  = (int)Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data;
         $paginator = $this->repository->getPaginator($pageSize);
         /** @var Collection $bills */
         $bills = $paginator->getCollection();

@@ -90,9 +90,17 @@ interface JournalRepositoryInterface
     /**
      * Get users very first transaction journal.
      *
+     * @deprecated
      * @return TransactionJournal
      */
     public function first(): TransactionJournal;
+
+    /**
+     * Get users very first transaction journal.
+     *
+     * @return TransactionJournal|null
+     */
+    public function firstNull(): ?TransactionJournal;
 
     /**
      * @param TransactionJournal $journal

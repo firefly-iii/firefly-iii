@@ -159,12 +159,12 @@ class Map implements ConfigurationInterface
         $config = $this->getConfig();
 
         if (isset($data['mapping'])) {
-            foreach ($data['mapping'] as $index => $data) {
+            foreach ($data['mapping'] as $index => $array) {
                 $config['column-mapping-config'][$index] = [];
-                foreach ($data as $value => $mapId) {
-                    $mapId = intval($mapId);
+                foreach ($array as $value => $mapId) {
+                    $mapId = (int)$mapId;
                     if (0 !== $mapId) {
-                        $config['column-mapping-config'][$index][$value] = intval($mapId);
+                        $config['column-mapping-config'][$index][$value] = $mapId;
                     }
                 }
             }
@@ -186,10 +186,8 @@ class Map implements ConfigurationInterface
     {
         $mapperClass = config('csv.import_roles.' . $column . '.mapper');
         $mapperName  = sprintf('\\FireflyIII\\Import\Mapper\\%s', $mapperClass);
-        /** @var MapperInterface $mapper */
-        $mapper = app($mapperName);
 
-        return $mapper;
+        return app($mapperName);
     }
 
     /**

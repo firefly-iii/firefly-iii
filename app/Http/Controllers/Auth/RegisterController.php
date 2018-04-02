@@ -83,7 +83,7 @@ class RegisterController extends Controller
 
         $this->guard()->login($user);
 
-        Session::flash('success', strval(trans('firefly.registered')));
+        Session::flash('success', (string)trans('firefly.registered'));
 
         return $this->registered($request, $user)
             ?: redirect($this->redirectPath());

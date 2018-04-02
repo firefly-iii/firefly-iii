@@ -42,14 +42,14 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function generate(): string
     {
         /** @var ReportHelperInterface $helper */
         $helper     = app(ReportHelperInterface::class);
         $bills      = $helper->getBillReport($this->start, $this->end, $this->accounts);
-        $accountIds = join(',', $this->accounts->pluck('id')->toArray());
+        $accountIds = implode(',', $this->accounts->pluck('id')->toArray());
         $reportType = 'default';
 
         // continue!

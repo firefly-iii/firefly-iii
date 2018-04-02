@@ -91,7 +91,7 @@ class PiggyBankEventTransformer extends TransformerAbstract
     public function includeTransaction(PiggyBankEvent $event): Item
     {
         $journal  = $event->transactionJournal;
-        $pageSize = intval(app('preferences')->getForUser($journal->user, 'listPageSize', 50)->data);
+        $pageSize = (int)app('preferences')->getForUser($journal->user, 'listPageSize', 50)->data;
 
         // journals always use collector and limited using URL parameters.
         $collector = app(JournalCollectorInterface::class);
@@ -99,7 +99,7 @@ class PiggyBankEventTransformer extends TransformerAbstract
         $collector->withOpposingAccount()->withCategoryInformation()->withCategoryInformation();
         $collector->setAllAssetAccounts();
         $collector->setJournals(new Collection([$journal]));
-        if (!is_null($this->parameters->get('start')) && !is_null($this->parameters->get('end'))) {
+        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
@@ -118,7 +118,7 @@ class PiggyBankEventTransformer extends TransformerAbstract
     public function transform(PiggyBankEvent $event): array
     {
         $account       = $event->piggyBank->account;
-        $currencyId    = intval($account->getMeta('currency_id'));
+        $currencyId    = (int)$account->getMeta('currency_id');
         $decimalPlaces = 2;
         if ($currencyId > 0) {
             /** @var CurrencyRepositoryInterface $repository */

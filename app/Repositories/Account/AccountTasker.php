@@ -130,7 +130,7 @@ class AccountTasker implements AccountTaskerInterface
         // Obtain a list of columns
         $sum = [];
         foreach ($expenses as $accountId => $row) {
-            $sum[$accountId] = floatval($row['sum']);
+            $sum[$accountId] = (float)$row['sum'];
         }
 
         array_multisort($sum, SORT_ASC, $expenses);
@@ -172,7 +172,7 @@ class AccountTasker implements AccountTaskerInterface
         // Obtain a list of columns
         $sum = [];
         foreach ($income as $accountId => $row) {
-            $sum[$accountId] = floatval($row['sum']);
+            $sum[$accountId] = (float)$row['sum'];
         }
 
         array_multisort($sum, SORT_DESC, $income);
@@ -216,7 +216,7 @@ class AccountTasker implements AccountTaskerInterface
         $keys = array_keys($expenses);
         foreach ($keys as $key) {
             if ($expenses[$key]['count'] > 1) {
-                $expenses[$key]['average'] = bcdiv($expenses[$key]['sum'], strval($expenses[$key]['count']));
+                $expenses[$key]['average'] = bcdiv($expenses[$key]['sum'], (string)$expenses[$key]['count']);
             }
         }
 

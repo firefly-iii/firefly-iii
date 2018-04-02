@@ -90,7 +90,7 @@ class TransactionFactory
         $source = $this->create(
             [
                 'description'         => $description,
-                'amount'              => app('steam')->negative(strval($data['amount'])),
+                'amount'              => app('steam')->negative((string)$data['amount']),
                 'foreign_amount'      => null,
                 'currency'            => $currency,
                 'account'             => $sourceAccount,
@@ -103,7 +103,7 @@ class TransactionFactory
         $dest = $this->create(
             [
                 'description'         => $description,
-                'amount'              => app('steam')->positive(strval($data['amount'])),
+                'amount'              => app('steam')->positive((string)$data['amount']),
                 'foreign_amount'      => null,
                 'currency'            => $currency,
                 'account'             => $destinationAccount,
@@ -119,9 +119,9 @@ class TransactionFactory
         $this->setForeignCurrency($dest, $foreign);
 
         // set foreign amount:
-        if (!is_null($data['foreign_amount'])) {
-            $this->setForeignAmount($source, app('steam')->negative(strval($data['foreign_amount'])));
-            $this->setForeignAmount($dest, app('steam')->positive(strval($data['foreign_amount'])));
+        if (null !== $data['foreign_amount']) {
+            $this->setForeignAmount($source, app('steam')->negative((string)$data['foreign_amount']));
+            $this->setForeignAmount($dest, app('steam')->positive((string)$data['foreign_amount']));
         }
 
         // set budget:

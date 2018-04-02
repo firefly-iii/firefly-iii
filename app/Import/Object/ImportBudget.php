@@ -97,7 +97,7 @@ class ImportBudget
         if (3 === count($this->id)) {
             Log::debug(sprintf('Finding budget with ID #%d', $this->id['value']));
             /** @var Budget $budget */
-            $budget = $this->repository->findNull(intval($this->id['value']));
+            $budget = $this->repository->findNull((int)$this->id['value']);
             if (null !== $budget) {
                 Log::debug(sprintf('Found unmapped budget by ID (#%d): %s', $budget->id, $budget->name));
 
@@ -146,11 +146,11 @@ class ImportBudget
     {
         Log::debug('In findExistingObject() for Budget');
         $result = $this->findById();
-        if (!is_null($result)) {
+        if (null !== $result) {
             return $result;
         }
         $result = $this->findByName();
-        if (!is_null($result)) {
+        if (null !== $result) {
             return $result;
         }
 
@@ -204,7 +204,7 @@ class ImportBudget
 
         Log::debug('Finding a mapped budget based on', $array);
 
-        $search = intval($array['mapped']);
+        $search = (int)$array['mapped'];
         $budget = $this->repository->find($search);
 
         if (null === $budget->id) {

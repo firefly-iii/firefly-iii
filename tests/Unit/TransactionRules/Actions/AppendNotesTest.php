@@ -44,7 +44,7 @@ class AppendNotesTest extends TestCase
         $note     = $journal->notes()->first();
         $start    = 'Default note text';
         $toAppend = 'This is appended';
-        if (is_null($note)) {
+        if (null === $note) {
             $note = new Note();
             $note->noteable()->associate($journal);
         }
@@ -71,7 +71,7 @@ class AppendNotesTest extends TestCase
         // give journal some notes.
         $journal = TransactionJournal::find(4);
         $note    = $journal->notes()->first();
-        if (!is_null($note)) {
+        if (null !== $note) {
             $note->forceDelete();
         }
         $toAppend = 'This is appended';

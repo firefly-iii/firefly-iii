@@ -42,7 +42,6 @@ class ListUserRequest extends BunqRequest
     private $userPerson;
 
     /**
-     * @throws \Exception
      */
     public function call(): void
     {

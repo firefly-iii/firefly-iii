@@ -44,9 +44,9 @@ class UserCompany extends BunqObject
      */
     private $avatar;
     /** @var string */
-    private $cocNumber = '';
+    private $cocNumber;
     /** @var string */
-    private $counterBankIban = '';
+    private $counterBankIban;
     /** @var Carbon */
     private $created;
     /**
@@ -58,48 +58,47 @@ class UserCompany extends BunqObject
      */
     private $directorAlias;
     /** @var string */
-    private $displayName = '';
+    private $displayName;
     /** @var int */
-    private $id = 0;
+    private $id;
     /** @var string */
-    private $language = '';
+    private $language;
     /** @var string */
-    private $name = '';
+    private $name;
     /** @var array */
     private $notificationFilters = [];
     /** @var string */
-    private $publicNickName = '';
+    private $publicNickName;
     /** @var string */
-    private $publicUuid = '';
+    private $publicUuid;
     /** @var string */
-    private $region = '';
+    private $region;
     /** @var string */
-    private $sectorOfIndustry = '';
+    private $sectorOfIndustry;
     /** @var int */
-    private $sessionTimeout = 0;
+    private $sessionTimeout;
     /** @var string */
-    private $status = '';
+    private $status;
     /** @var string */
-    private $subStatus = '';
+    private $subStatus;
     /** @var string */
-    private $typeOfBusinessEntity = '';
+    private $typeOfBusinessEntity;
     /** @var array */
     private $ubos = [];
     /** @var Carbon */
     private $updated;
     /** @var int */
-    private $versionTos = 0;
+    private $versionTos;
 
     /**
      * UserCompany constructor.
      *
      * @param array $data
      *
-     * @throws \InvalidArgumentException
      */
     public function __construct(array $data)
     {
-        $this->id                   = intval($data['id']);
+        $this->id                   = (int)$data['id'];
         $this->created              = Carbon::createFromFormat('Y-m-d H:i:s.u', $data['created']);
         $this->updated              = Carbon::createFromFormat('Y-m-d H:i:s.u', $data['updated']);
         $this->status               = $data['status'];
@@ -109,8 +108,8 @@ class UserCompany extends BunqObject
         $this->publicNickName       = $data['public_nick_name'];
         $this->language             = $data['language'];
         $this->region               = $data['region'];
-        $this->sessionTimeout       = intval($data['session_timeout']);
-        $this->versionTos           = intval($data['version_terms_of_service']);
+        $this->sessionTimeout       = (int)$data['session_timeout'];
+        $this->versionTos           = (int)$data['version_terms_of_service'];
         $this->cocNumber            = $data['chamber_of_commerce_number'];
         $this->typeOfBusinessEntity = $data['type_of_business_entity'] ?? '';
         $this->sectorOfIndustry     = $data['sector_of_industry'] ?? '';

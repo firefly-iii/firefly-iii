@@ -50,9 +50,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function count(array $types): int
     {
-        $count = $this->user->accounts()->accountTypeIn($types)->count();
-
-        return $count;
+        return $this->user->accounts()->accountTypeIn($types)->count();
     }
 
     /**
@@ -63,7 +61,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return bool
      *
-     * @throws \Exception
+
      */
     public function destroy(Account $account, ?Account $moveTo): bool
     {
@@ -108,7 +106,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         foreach ($account->accountMeta as $meta) {
             if ($meta->name === $field) {
-                return strval($meta->data);
+                return (string)$meta->data;
             }
         }
 
@@ -135,7 +133,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function getNoteText(Account $account): ?string
     {
         $note = $account->notes()->first();
-        if (is_null($note)) {
+        if (null === $note) {
             return null;
         }
 
@@ -164,7 +162,7 @@ class AccountRepository implements AccountRepositoryInterface
             return null;
         }
 
-        return strval($transaction->amount);
+        return (string)$transaction->amount;
     }
 
     /**
@@ -227,7 +225,7 @@ class AccountRepository implements AccountRepositoryInterface
                          ->orderBy('transaction_journals.id', 'ASC')
                          ->first(['transaction_journals.id']);
         if (null !== $first) {
-            return TransactionJournal::find(intval($first->id));
+            return TransactionJournal::find((int)$first->id);
         }
 
         return new TransactionJournal();
@@ -272,9 +270,8 @@ class AccountRepository implements AccountRepositoryInterface
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
         $factory->setUser($this->user);
-        $account = $factory->create($data);
 
-        return $account;
+        return $factory->create($data);
     }
 
     /**

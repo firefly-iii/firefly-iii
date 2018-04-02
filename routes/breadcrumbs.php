@@ -81,11 +81,11 @@ Breadcrumbs::register(
 
         $breadcrumbs->parent('accounts.index', $what);
         $breadcrumbs->push($account->name, route('accounts.show', [$account->id]));
-        if (!is_null($start) && !is_null($end)) {
+        if (null !== $start && null !== $end) {
             $title = trans(
                 'firefly.between_dates_breadcrumb',
-                ['start' => $start ? $start->formatLocalized(strval(trans('config.month_and_day'))) : '',
-                 'end'   => $end ? $end->formatLocalized(strval(trans('config.month_and_day'))) : '',]
+                ['start' => $start ? $start->formatLocalized((string)trans('config.month_and_day')) : '',
+                 'end'   => $end ? $end->formatLocalized((string)trans('config.month_and_day')) : '',]
             );
             $breadcrumbs->push($title, route('accounts.show', $account));
         }
@@ -357,8 +357,8 @@ Breadcrumbs::register(
         if ('all' !== $moment && '(nothing)' !== $moment) {
             $title = trans(
                 'firefly.between_dates_breadcrumb',
-                ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
-                 'end'   => $end->formatLocalized(strval(trans('config.month_and_day'))),]
+                ['start' => $start->formatLocalized((string)trans('config.month_and_day')),
+                 'end'   => $end->formatLocalized((string)trans('config.month_and_day')),]
             );
             $breadcrumbs->push($title, route('budgets.no-budget', [$moment]));
         }
@@ -382,8 +382,8 @@ Breadcrumbs::register(
 
         $title = trans(
             'firefly.between_dates_breadcrumb',
-            ['start' => $budgetLimit->start_date->formatLocalized(strval(trans('config.month_and_day'))),
-             'end'   => $budgetLimit->end_date->formatLocalized(strval(trans('config.month_and_day'))),]
+            ['start' => $budgetLimit->start_date->formatLocalized((string)trans('config.month_and_day')),
+             'end'   => $budgetLimit->end_date->formatLocalized((string)trans('config.month_and_day')),]
         );
 
         $breadcrumbs->push(
@@ -438,8 +438,8 @@ Breadcrumbs::register(
         if ('all' !== $moment && '(nothing)' !== $moment) {
             $title = trans(
                 'firefly.between_dates_breadcrumb',
-                ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
-                 'end'   => $end->formatLocalized(strval(trans('config.month_and_day'))),]
+                ['start' => $start->formatLocalized((string)trans('config.month_and_day')),
+                 'end'   => $end->formatLocalized((string)trans('config.month_and_day')),]
             );
             $breadcrumbs->push($title, route('categories.show', [$category->id, $moment]));
         }
@@ -460,8 +460,8 @@ Breadcrumbs::register(
         if ('all' !== $moment && '(nothing)' !== $moment) {
             $title = trans(
                 'firefly.between_dates_breadcrumb',
-                ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
-                 'end'   => $end->formatLocalized(strval(trans('config.month_and_day'))),]
+                ['start' => $start->formatLocalized((string)trans('config.month_and_day')),
+                 'end'   => $end->formatLocalized((string)trans('config.month_and_day')),]
             );
             $breadcrumbs->push($title, route('categories.no-category', [$moment]));
         }
@@ -878,8 +878,8 @@ Breadcrumbs::register(
         if ('all' !== $moment && '(nothing)' !== $moment) {
             $title = trans(
                 'firefly.between_dates_breadcrumb',
-                ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
-                 'end'   => $end->formatLocalized(strval(trans('config.month_and_day'))),]
+                ['start' => $start->formatLocalized((string)trans('config.month_and_day')),
+                 'end'   => $end->formatLocalized((string)trans('config.month_and_day')),]
             );
             $breadcrumbs->push($title, route('tags.show', [$tag->id, $moment]));
         }

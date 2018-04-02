@@ -112,12 +112,12 @@ class BudgetController extends Controller
             }
             $spent             = $this->repository->spentInPeriod($budgetCollection, new Collection, $current, $currentEnd);
             $label             = app('navigation')->periodShow($current, $step);
-            $chartData[$label] = floatval(bcmul($spent, '-1'));
+            $chartData[$label] = (float)bcmul($spent, '-1');
             $current           = clone $currentEnd;
             $current->addDay();
         }
 
-        $data = $this->generator->singleSet(strval(trans('firefly.spent')), $chartData);
+        $data = $this->generator->singleSet((string)trans('firefly.spent'), $chartData);
 
         $cache->store($data);
 
@@ -161,12 +161,12 @@ class BudgetController extends Controller
         while ($start <= $end) {
             $spent            = $this->repository->spentInPeriod($budgetCollection, new Collection, $start, $start);
             $amount           = bcadd($amount, $spent);
-            $format           = $start->formatLocalized(strval(trans('config.month_and_day')));
+            $format           = $start->formatLocalized((string)trans('config.month_and_day'));
             $entries[$format] = $amount;
 
             $start->addDay();
         }
-        $data = $this->generator->singleSet(strval(trans('firefly.left')), $entries);
+        $data = $this->generator->singleSet((string)trans('firefly.left'), $entries);
         $cache->store($data);
 
         return response()->json($data);
@@ -200,7 +200,7 @@ class BudgetController extends Controller
         $chartData    = [];
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $assetId          = intval($transaction->account_id);
+            $assetId          = (int)$transaction->account_id;
             $result[$assetId] = $result[$assetId] ?? '0';
             $result[$assetId] = bcadd($transaction->transaction_amount, $result[$assetId]);
         }
@@ -244,8 +244,8 @@ class BudgetController extends Controller
         $chartData    = [];
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $jrnlCatId           = intval($transaction->transaction_journal_category_id);
-            $transCatId          = intval($transaction->transaction_category_id);
+            $jrnlCatId           = (int)$transaction->transaction_journal_category_id;
+            $transCatId          = (int)$transaction->transaction_category_id;
             $categoryId          = max($jrnlCatId, $transCatId);
             $result[$categoryId] = $result[$categoryId] ?? '0';
             $result[$categoryId] = bcadd($transaction->transaction_amount, $result[$categoryId]);
@@ -290,7 +290,7 @@ class BudgetController extends Controller
         $chartData    = [];
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $opposingId          = intval($transaction->opposing_account_id);
+            $opposingId          = (int)$transaction->opposing_account_id;
             $result[$opposingId] = $result[$opposingId] ?? '0';
             $result[$opposingId] = bcadd($transaction->transaction_amount, $result[$opposingId]);
         }
@@ -329,9 +329,9 @@ class BudgetController extends Controller
         }
         $budgets   = $this->repository->getActiveBudgets();
         $chartData = [
-            ['label' => strval(trans('firefly.spent_in_budget')), 'entries' => [], 'type' => 'bar'],
-            ['label' => strval(trans('firefly.left_to_spend')), 'entries' => [], 'type' => 'bar'],
-            ['label' => strval(trans('firefly.overspent')), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string)trans('firefly.spent_in_budget'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string)trans('firefly.left_to_spend'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string)trans('firefly.overspent'), 'entries' => [], 'type' => 'bar'],
         ];
 
         /** @var Budget $budget */
@@ -348,7 +348,7 @@ class BudgetController extends Controller
         }
         // for no budget:
         $spent = $this->spentInPeriodWithout($start, $end);
-        $name  = strval(trans('firefly.no_budget'));
+        $name  = (string)trans('firefly.no_budget');
         if (0 !== bccomp($spent, '0')) {
             $chartData[0]['entries'][$name] = bcmul($spent, '-1');
             $chartData[1]['entries'][$name] = '0';
@@ -389,14 +389,14 @@ class BudgetController extends Controller
 
         // join them into one set of data:
         $chartData = [
-            ['label' => strval(trans('firefly.spent')), 'type' => 'bar', 'entries' => []],
-            ['label' => strval(trans('firefly.budgeted')), 'type' => 'bar', 'entries' => []],
+            ['label' => (string)trans('firefly.spent'), 'type' => 'bar', 'entries' => []],
+            ['label' => (string)trans('firefly.budgeted'), 'type' => 'bar', 'entries' => []],
         ];
 
         foreach (array_keys($periods) as $period) {
             $label                           = $periods[$period];
-            $spent                           = isset($entries[$budget->id]['entries'][$period]) ? $entries[$budget->id]['entries'][$period] : '0';
-            $limit                           = isset($budgeted[$period]) ? $budgeted[$period] : 0;
+            $spent                           = $entries[$budget->id]['entries'][$period] ?? '0';
+            $limit                           = (int)($budgeted[$period] ?? 0);
             $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 12);
             $chartData[1]['entries'][$label] = $limit;
         }
@@ -433,10 +433,10 @@ class BudgetController extends Controller
         // join them:
         foreach (array_keys($periods) as $period) {
             $label             = $periods[$period];
-            $spent             = isset($entries['entries'][$period]) ? $entries['entries'][$period] : '0';
+            $spent             = $entries['entries'][$period] ?? '0';
             $chartData[$label] = bcmul($spent, '-1');
         }
-        $data = $this->generator->singleSet(strval(trans('firefly.spent')), $chartData);
+        $data = $this->generator->singleSet((string)trans('firefly.spent'), $chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -568,7 +568,7 @@ class BudgetController extends Controller
     private function spentInPeriodMulti(Budget $budget, Collection $limits): array
     {
         $return = [];
-        $format = strval(trans('config.month_and_day'));
+        $format = (string)trans('config.month_and_day');
         $name   = $budget->name;
         /** @var BudgetLimit $budgetLimit */
         foreach ($limits as $budgetLimit) {

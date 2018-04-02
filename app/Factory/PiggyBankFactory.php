@@ -43,8 +43,8 @@ class PiggyBankFactory
      */
     public function find(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
     {
-        $piggyBankId   = intval($piggyBankId);
-        $piggyBankName = strval($piggyBankName);
+        $piggyBankId   = (int)$piggyBankId;
+        $piggyBankName = (string)$piggyBankName;
         if (strlen($piggyBankName) === 0 && $piggyBankId === 0) {
             return null;
         }
@@ -52,7 +52,7 @@ class PiggyBankFactory
         if ($piggyBankId > 0) {
             /** @var PiggyBank $piggyBank */
             $piggyBank = $this->user->piggyBanks()->find($piggyBankId);
-            if (!is_null($piggyBank)) {
+            if (null !== $piggyBank) {
                 return $piggyBank;
             }
         }
@@ -61,7 +61,7 @@ class PiggyBankFactory
         if (strlen($piggyBankName) > 0) {
             /** @var PiggyBank $piggyBank */
             $piggyBank = $this->findByName($piggyBankName);
-            if (!is_null($piggyBank)) {
+            if (null !== $piggyBank) {
                 return $piggyBank;
             }
         }

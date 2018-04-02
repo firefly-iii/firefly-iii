@@ -45,7 +45,7 @@ class UnfinishedJournal implements BinderInterface
                              ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                              ->where('completed', 0)
                              ->where('user_id', auth()->user()->id)->first(['transaction_journals.*']);
-            if (!is_null($journal)) {
+            if (null !== $journal) {
                 return $journal;
             }
         }

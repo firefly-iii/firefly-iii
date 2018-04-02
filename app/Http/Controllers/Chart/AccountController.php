@@ -93,7 +93,7 @@ class AccountController extends Controller
         }
 
         arsort($chartData);
-        $data = $this->generator->singleSet(strval(trans('firefly.spent')), $chartData);
+        $data = $this->generator->singleSet((string)trans('firefly.spent'), $chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -124,8 +124,8 @@ class AccountController extends Controller
 
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $jrnlBudgetId      = intval($transaction->transaction_journal_budget_id);
-            $transBudgetId     = intval($transaction->transaction_budget_id);
+            $jrnlBudgetId      = (int)$transaction->transaction_journal_budget_id;
+            $transBudgetId     = (int)$transaction->transaction_budget_id;
             $budgetId          = max($jrnlBudgetId, $transBudgetId);
             $result[$budgetId] = $result[$budgetId] ?? '0';
             $result[$budgetId] = bcadd($transaction->transaction_amount, $result[$budgetId]);
@@ -181,8 +181,8 @@ class AccountController extends Controller
         $chartData    = [];
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $jrnlCatId           = intval($transaction->transaction_journal_category_id);
-            $transCatId          = intval($transaction->transaction_category_id);
+            $jrnlCatId           = (int)$transaction->transaction_journal_category_id;
+            $transCatId          = (int)$transaction->transaction_category_id;
             $categoryId          = max($jrnlCatId, $transCatId);
             $result[$categoryId] = $result[$categoryId] ?? '0';
             $result[$categoryId] = bcadd($transaction->transaction_amount, $result[$categoryId]);
@@ -264,8 +264,8 @@ class AccountController extends Controller
         $chartData    = [];
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $jrnlCatId           = intval($transaction->transaction_journal_category_id);
-            $transCatId          = intval($transaction->transaction_category_id);
+            $jrnlCatId           = (int)$transaction->transaction_journal_category_id;
+            $transCatId          = (int)$transaction->transaction_category_id;
             $categoryId          = max($jrnlCatId, $transCatId);
             $result[$categoryId] = $result[$categoryId] ?? '0';
             $result[$categoryId] = bcadd($transaction->transaction_amount, $result[$categoryId]);
@@ -336,7 +336,7 @@ class AccountController extends Controller
                     $theDate           = $current->format('Y-m-d');
                     $balance           = $range[$theDate] ?? $previous;
                     $label             = $current->formatLocalized($format);
-                    $chartData[$label] = floatval($balance);
+                    $chartData[$label] = (float)$balance;
                     $previous          = $balance;
                     $current->addDay();
                 }
@@ -346,7 +346,7 @@ class AccountController extends Controller
             case '1M':
             case '1Y':
                 while ($end >= $current) {
-                    $balance           = floatval(app('steam')->balance($account, $current));
+                    $balance           = (float)app('steam')->balance($account, $current);
                     $label             = app('navigation')->periodShow($current, $step);
                     $chartData[$label] = $balance;
                     $current           = app('navigation')->addPeriod($current, $step, 1);
@@ -411,7 +411,7 @@ class AccountController extends Controller
         }
 
         arsort($chartData);
-        $data = $this->generator->singleSet(strval(trans('firefly.earned')), $chartData);
+        $data = $this->generator->singleSet((string)trans('firefly.earned'), $chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -442,7 +442,7 @@ class AccountController extends Controller
 
         $chartData = [];
         foreach ($accounts as $account) {
-            $currency     = $repository->findNull(intval($account->getMeta('currency_id')));
+            $currency     = $repository->findNull((int)$account->getMeta('currency_id'));
             $currentSet   = [
                 'label'           => $account->name,
                 'currency_symbol' => $currency->symbol,
@@ -453,7 +453,7 @@ class AccountController extends Controller
             $previous     = array_values($range)[0];
             while ($currentStart <= $end) {
                 $format   = $currentStart->format('Y-m-d');
-                $label    = $currentStart->formatLocalized(strval(trans('config.month_and_day')));
+                $label    = $currentStart->formatLocalized((string)trans('config.month_and_day'));
                 $balance  = isset($range[$format]) ? round($range[$format], 12) : $previous;
                 $previous = $balance;
                 $currentStart->addDay();

@@ -34,7 +34,6 @@ class DeleteDeviceSessionRequest extends BunqRequest
     private $sessionToken;
 
     /**
-     * @throws \Exception
      */
     public function call(): void
     {

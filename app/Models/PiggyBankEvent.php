@@ -69,7 +69,7 @@ class PiggyBankEvent extends Model
      */
     public function setAmountAttribute($value)
     {
-        $this->attributes['amount'] = strval($value);
+        $this->attributes['amount'] = (string)$value;
     }
 
     /**

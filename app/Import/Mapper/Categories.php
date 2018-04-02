@@ -42,7 +42,7 @@ class Categories implements MapperInterface
 
         /** @var Category $category */
         foreach ($result as $category) {
-            $categoryId        = intval($category->id);
+            $categoryId        = (int)$category->id;
             $list[$categoryId] = $category->name;
         }
         asort($list);

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands;
 
 use DB;
+use Exception;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
@@ -65,17 +66,7 @@ class UpgradeDatabase extends Command
     protected $signature = 'firefly:upgrade-database';
 
     /**
-     * Create a new command instance.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
-     *
-     * @throws \Exception
      */
     public function handle()
     {
@@ -120,7 +111,7 @@ class UpgradeDatabase extends Command
         $journalIds = array_unique($result->pluck('id')->toArray());
 
         foreach ($journalIds as $journalId) {
-            $this->updateJournalidentifiers(intval($journalId));
+            $this->updateJournalidentifiers((int)$journalId);
         }
 
         return;
@@ -142,9 +133,9 @@ class UpgradeDatabase extends Command
                 // get users preference, fall back to system pref.
                 $defaultCurrencyCode = Preferences::getForUser($account->user, 'currencyPreference', config('firefly.default_currency', 'EUR'))->data;
                 $defaultCurrency     = TransactionCurrency::where('code', $defaultCurrencyCode)->first();
-                $accountCurrency     = intval($account->getMeta('currency_id'));
+                $accountCurrency     = (int)$account->getMeta('currency_id');
                 $openingBalance      = $account->getOpeningBalance();
-                $obCurrency          = intval($openingBalance->transaction_currency_id);
+                $obCurrency          = (int)$openingBalance->transaction_currency_id;
 
                 // both 0? set to default currency:
                 if (0 === $accountCurrency && 0 === $obCurrency) {
@@ -211,7 +202,7 @@ class UpgradeDatabase extends Command
                 }
                 /** @var Account $account */
                 $account      = $transaction->account;
-                $currency     = $repository->find(intval($account->getMeta('currency_id')));
+                $currency     = $repository->find((int)$account->getMeta('currency_id'));
                 $transactions = $journal->transactions()->get();
                 $transactions->each(
                     function (Transaction $transaction) use ($currency) {
@@ -221,8 +212,8 @@ class UpgradeDatabase extends Command
                         }
 
                         // when mismatch in transaction:
-                        if (!(intval($transaction->transaction_currency_id) === intval($currency->id))) {
-                            $transaction->foreign_currency_id     = intval($transaction->transaction_currency_id);
+                        if (!((int)$transaction->transaction_currency_id === (int)$currency->id)) {
+                            $transaction->foreign_currency_id     = (int)$transaction->transaction_currency_id;
                             $transaction->foreign_amount          = $transaction->amount;
                             $transaction->transaction_currency_id = $currency->id;
                             $transaction->save();
@@ -274,11 +265,11 @@ class UpgradeDatabase extends Command
     {
         // create transaction type "Reconciliation".
         $type = TransactionType::where('type', TransactionType::RECONCILIATION)->first();
-        if (is_null($type)) {
+        if (null === $type) {
             TransactionType::create(['type' => TransactionType::RECONCILIATION]);
         }
         $account = AccountType::where('type', AccountType::RECONCILIATION)->first();
-        if (is_null($account)) {
+        if (null === $account) {
             AccountType::create(['type' => AccountType::RECONCILIATION]);
         }
     }
@@ -295,11 +286,11 @@ class UpgradeDatabase extends Command
         foreach ($attachments as $att) {
 
             // move description:
-            $description = strval($att->description);
+            $description = (string)$att->description;
             if (strlen($description) > 0) {
                 // find or create note:
                 $note = $att->notes()->first();
-                if (is_null($note)) {
+                if (null === $note) {
                     $note = new Note;
                     $note->noteable()->associate($att);
                 }
@@ -317,8 +308,6 @@ class UpgradeDatabase extends Command
 
     /**
      * Move all the journal_meta notes to their note object counter parts.
-     *
-     * @throws \Exception
      */
     private function migrateNotes(): void
     {
@@ -335,7 +324,11 @@ class UpgradeDatabase extends Command
             $note->text = $meta->data;
             $note->save();
             Log::debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
-            $meta->delete();
+            try {
+                $meta->delete();
+            } catch (Exception $e) {
+                Log::error(sprintf('Could not delete old meta entry #%d: %s', $meta->id, $e->getMessage()));
+            }
         }
     }
 
@@ -348,10 +341,10 @@ class UpgradeDatabase extends Command
     {
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app(CurrencyRepositoryInterface::class);
-        $currency   = $repository->find(intval($transaction->account->getMeta('currency_id')));
+        $currency   = $repository->find((int)$transaction->account->getMeta('currency_id'));
         $journal    = $transaction->transactionJournal;
 
-        if (!(intval($currency->id) === intval($journal->transaction_currency_id))) {
+        if (!((int)$currency->id === (int)$journal->transaction_currency_id)) {
             $this->line(
                 sprintf(
                     'Transfer #%d ("%s") has been updated to use %s instead of %s.',
@@ -382,7 +375,7 @@ class UpgradeDatabase extends Command
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             // find opposing:
-            $amount = bcmul(strval($transaction->amount), '-1');
+            $amount = bcmul((string)$transaction->amount, '-1');
 
             try {
                 /** @var Transaction $opposing */
@@ -432,18 +425,18 @@ class UpgradeDatabase extends Command
     {
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app(CurrencyRepositoryInterface::class);
-        $currency   = $repository->find(intval($transaction->account->getMeta('currency_id')));
+        $currency   = $repository->find((int)$transaction->account->getMeta('currency_id'));
 
         // has no currency ID? Must have, so fill in using account preference:
         if (null === $transaction->transaction_currency_id) {
-            $transaction->transaction_currency_id = intval($currency->id);
+            $transaction->transaction_currency_id = (int)$currency->id;
             Log::debug(sprintf('Transaction #%d has no currency setting, now set to %s', $transaction->id, $currency->code));
             $transaction->save();
         }
 
         // does not match the source account (see above)? Can be fixed
         // when mismatch in transaction and NO foreign amount is set:
-        if (!(intval($transaction->transaction_currency_id) === intval($currency->id)) && null === $transaction->foreign_amount) {
+        if (!((int)$transaction->transaction_currency_id === (int)$currency->id) && null === $transaction->foreign_amount) {
             Log::debug(
                 sprintf(
                     'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
@@ -453,7 +446,7 @@ class UpgradeDatabase extends Command
                     $transaction->amount
                 )
             );
-            $transaction->transaction_currency_id = intval($currency->id);
+            $transaction->transaction_currency_id = (int)$currency->id;
             $transaction->save();
         }
 
@@ -462,7 +455,7 @@ class UpgradeDatabase extends Command
         $journal = $transaction->transactionJournal;
         /** @var Transaction $opposing */
         $opposing         = $journal->transactions()->where('amount', '>', 0)->where('identifier', $transaction->identifier)->first();
-        $opposingCurrency = $repository->find(intval($opposing->account->getMeta('currency_id')));
+        $opposingCurrency = $repository->find((int)$opposing->account->getMeta('currency_id'));
 
         if (null === $opposingCurrency->id) {
             Log::error(sprintf('Account #%d ("%s") must have currency preference but has none.', $opposing->account->id, $opposing->account->name));
@@ -471,7 +464,7 @@ class UpgradeDatabase extends Command
         }
 
         // if the destination account currency is the same, both foreign_amount and foreign_currency_id must be NULL for both transactions:
-        if (intval($opposingCurrency->id) === intval($currency->id)) {
+        if ((int)$opposingCurrency->id === (int)$currency->id) {
             // update both transactions to match:
             $transaction->foreign_amount       = null;
             $transaction->foreign_currency_id  = null;
@@ -485,7 +478,7 @@ class UpgradeDatabase extends Command
             return;
         }
         // if destination account currency is different, both transactions must have this currency as foreign currency id.
-        if (!(intval($opposingCurrency->id) === intval($currency->id))) {
+        if (!((int)$opposingCurrency->id === (int)$currency->id)) {
             $transaction->foreign_currency_id = $opposingCurrency->id;
             $opposing->foreign_currency_id    = $opposingCurrency->id;
             $transaction->save();
@@ -495,14 +488,14 @@ class UpgradeDatabase extends Command
 
         // if foreign amount of one is null and the other is not, use this to restore:
         if (null === $transaction->foreign_amount && null !== $opposing->foreign_amount) {
-            $transaction->foreign_amount = bcmul(strval($opposing->foreign_amount), '-1');
+            $transaction->foreign_amount = bcmul((string)$opposing->foreign_amount, '-1');
             $transaction->save();
             Log::debug(sprintf('Restored foreign amount of transaction (1) #%d to %s', $transaction->id, $transaction->foreign_amount));
         }
 
         // if foreign amount of one is null and the other is not, use this to restore (other way around)
         if (null === $opposing->foreign_amount && null !== $transaction->foreign_amount) {
-            $opposing->foreign_amount = bcmul(strval($transaction->foreign_amount), '-1');
+            $opposing->foreign_amount = bcmul((string)$transaction->foreign_amount, '-1');
             $opposing->save();
             Log::debug(sprintf('Restored foreign amount of transaction (2) #%d to %s', $opposing->id, $opposing->foreign_amount));
         }
@@ -512,14 +505,14 @@ class UpgradeDatabase extends Command
             $foreignAmount = $journal->getMeta('foreign_amount');
             if (null === $foreignAmount) {
                 Log::debug(sprintf('Journal #%d has missing foreign currency data, forced to do 1:1 conversion :(.', $transaction->transaction_journal_id));
-                $transaction->foreign_amount = bcmul(strval($transaction->amount), '-1');
-                $opposing->foreign_amount    = bcmul(strval($opposing->amount), '-1');
+                $transaction->foreign_amount = bcmul((string)$transaction->amount, '-1');
+                $opposing->foreign_amount    = bcmul((string)$opposing->amount, '-1');
                 $transaction->save();
                 $opposing->save();
 
                 return;
             }
-            $foreignPositive = app('steam')->positive(strval($foreignAmount));
+            $foreignPositive = app('steam')->positive((string)$foreignAmount);
             Log::debug(
                 sprintf(
                     'Journal #%d has missing foreign currency info, try to restore from meta-data ("%s").',

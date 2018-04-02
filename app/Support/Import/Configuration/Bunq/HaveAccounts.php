@@ -57,11 +57,11 @@ class HaveAccounts implements ConfigurationInterface
         /** @var Account $dbAccount */
         foreach ($collection as $dbAccount) {
             $id              = $dbAccount->id;
-            $currencyId      = intval($accountRepository->getMetaValue($dbAccount, 'currency_id'));
+            $currencyId      = (int)$accountRepository->getMetaValue($dbAccount, 'currency_id');
             $currency        = $currencyRepository->findNull($currencyId);
             $dbAccounts[$id] = [
                 'account'  => $dbAccount,
-                'currency' => is_null($currency) ? $defaultCurrency : $currency,
+                'currency' => null === $currency ? $defaultCurrency : $currency,
             ];
         }
 
@@ -78,11 +78,9 @@ class HaveAccounts implements ConfigurationInterface
         }
 
 
-        $data = [
+        return [
             'config' => $config,
         ];
-
-        return $data;
     }
 
     /**
@@ -119,9 +117,9 @@ class HaveAccounts implements ConfigurationInterface
         $accounts = $data['bunq_account_id'] ?? [];
         $mapping  = [];
         foreach ($accounts as $bunqId) {
-            $bunqId   = intval($bunqId);
-            $doImport = intval($data['do_import'][$bunqId] ?? 0) === 1;
-            $account  = intval($data['import'][$bunqId] ?? 0);
+            $bunqId   = (int)$bunqId;
+            $doImport = (int)($data['do_import'][$bunqId] ?? 0.0) === 1;
+            $account  = (int)($data['import'][$bunqId] ?? 0.0);
             if ($doImport) {
                 $mapping[$bunqId] = $account;
             }

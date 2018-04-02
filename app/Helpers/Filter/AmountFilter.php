@@ -35,7 +35,7 @@ use Log;
 class AmountFilter implements FilterInterface
 {
     /** @var int */
-    private $modifier = 0;
+    private $modifier;
 
     /**
      * AmountFilter constructor.

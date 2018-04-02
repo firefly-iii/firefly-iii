@@ -99,7 +99,7 @@ class VersionCheckEventHandler
         }
         $string = 'no result: ' . $check;
         if ($check === -2) {
-            $string = strval(trans('firefly.update_check_error'));
+            $string = (string)trans('firefly.update_check_error');
         }
         if ($check === -1) {
             // there is a new FF version!

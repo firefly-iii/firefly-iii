@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Storage;
 
-use ErrorException;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionJournalFactory;
@@ -160,7 +159,7 @@ class ImportStorage
                 try {
                     $this->storeImportJournal($index, $importJournal);
                     $this->addStep();
-                } catch (FireflyException | ErrorException | Exception $e) {
+                } catch (Exception $e) {
                     $this->errors->push($e->getMessage());
                     Log::error(sprintf('Cannot import row #%d because: %s', $index, $e->getMessage()));
                     Log::error($e->getTraceAsString());
@@ -239,7 +238,7 @@ class ImportStorage
                 'description'        => $importJournal->getDescription(),
                 'piggy_bank_id'      => null,
                 'piggy_bank_name'    => null,
-                'bill_id'            => is_null($bill) ? null : $bill->id,
+                'bill_id'            => null === $bill ? null : $bill->id,
                 'bill_name'          => null,
                 'tags'               => $importJournal->tags,
                 'interest_date'      => $importJournal->getMetaDate('interest_date'),
@@ -262,14 +261,14 @@ class ImportStorage
                     [
                         'description'           => null,
                         'amount'                => $amount,
-                        'currency_id'           => intval($currencyId),
+                        'currency_id'           => (int)$currencyId,
                         'currency_code'         => null,
                         'foreign_amount'        => $foreignAmount,
                         'foreign_currency_id'   => $foreignCurrencyId,
                         'foreign_currency_code' => null,
-                        'budget_id'             => is_null($budget) ? null : $budget->id,
+                        'budget_id'             => null === $budget ? null : $budget->id,
                         'budget_name'           => null,
-                        'category_id'           => is_null($category) ? null : $category->id,
+                        'category_id'           => null === $category ? null : $category->id,
                         'category_name'         => null,
                         'source_id'             => $source->id,
                         'source_name'           => null,

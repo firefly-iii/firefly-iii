@@ -99,7 +99,7 @@ class ImportCategory
         if (3 === count($this->id)) {
             Log::debug(sprintf('Finding category with ID #%d', $this->id['value']));
             /** @var Category $category */
-            $category = $this->repository->findNull(intval($this->id['value']));
+            $category = $this->repository->findNull((int)$this->id['value']);
             if (null !== $category) {
                 Log::debug(sprintf('Found unmapped category by ID (#%d): %s', $category->id, $category->name));
 
@@ -150,12 +150,12 @@ class ImportCategory
     {
         Log::debug('In findExistingObject() for Category');
         $result = $this->findById();
-        if (!is_null($result)) {
+        if (null !== $result) {
             return $result;
         }
 
         $result = $this->findByName();
-        if (!is_null($result)) {
+        if (null !== $result) {
             return $result;
         }
 
@@ -209,7 +209,7 @@ class ImportCategory
 
         Log::debug('Finding a mapped category based on', $array);
 
-        $search   = intval($array['mapped']);
+        $search   = (int)$array['mapped'];
         $category = $this->repository->findNull($search);
 
         if (null === $category) {

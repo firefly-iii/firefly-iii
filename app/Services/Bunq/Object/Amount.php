@@ -28,9 +28,9 @@ namespace FireflyIII\Services\Bunq\Object;
 class Amount extends BunqObject
 {
     /** @var string */
-    private $currency = '';
+    private $currency;
     /** @var string */
-    private $value = '';
+    private $value;
 
     /**
      * Amount constructor.

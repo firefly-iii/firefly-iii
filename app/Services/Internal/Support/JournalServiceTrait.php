@@ -72,7 +72,7 @@ trait JournalServiceTrait
         $factory->setUser($journal->user);
         $bill = $factory->find($data['bill_id'], $data['bill_name']);
 
-        if (!is_null($bill)) {
+        if (null !== $bill) {
             $journal->bill_id = $bill->id;
             $journal->save();
 
@@ -110,10 +110,10 @@ trait JournalServiceTrait
      */
     protected function storeNote(TransactionJournal $journal, ?string $notes): void
     {
-        $notes = strval($notes);
+        $notes = (string)$notes;
         if (strlen($notes) > 0) {
             $note = $journal->notes()->first();
-            if (is_null($note)) {
+            if (null === $note) {
                 $note = new Note;
                 $note->noteable()->associate($journal);
             }
@@ -123,7 +123,7 @@ trait JournalServiceTrait
             return;
         }
         $note = $journal->notes()->first();
-        if (!is_null($note)) {
+        if (null !== $note) {
             $note->delete();
         }
 

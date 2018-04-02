@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Currency;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Log;
 use Requests;
-use Requests_Exception;
 
 /**
  * Class FixerIOv2.
@@ -76,7 +76,7 @@ class FixerIOv2 implements ExchangeRateInterface
             $statusCode = $result->status_code;
             $body       = $result->body;
             Log::debug(sprintf('Result status code is %d', $statusCode));
-        } catch (Requests_Exception $e) {
+        } catch (Exception $e) {
             // don't care about error
             $body = sprintf('Requests_Exception: %s', $e->getMessage());
         }
@@ -92,11 +92,11 @@ class FixerIOv2 implements ExchangeRateInterface
         }
         if (null !== $content) {
             $code = $toCurrency->code;
-            $rate = $content['rates'][$code] ?? 0;
+            $rate = (float)($content['rates'][$code] ?? 0);
         }
         Log::debug('Got the following rates from Fixer: ', $content['rates'] ?? []);
         $exchangeRate->rate = $rate;
-        if ($rate !== 0) {
+        if ($rate !== 0.0) {
             $exchangeRate->save();
         }
 

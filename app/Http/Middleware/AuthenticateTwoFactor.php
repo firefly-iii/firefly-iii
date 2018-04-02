@@ -58,7 +58,6 @@ class AuthenticateTwoFactor
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|mixed
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Illuminate\Container\EntryNotFoundException
      */
     public function handle($request, Closure $next, ...$guards)
     {

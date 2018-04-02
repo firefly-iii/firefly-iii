@@ -40,8 +40,6 @@ class TransactionJournalFactory
     private $user;
 
     /**
-     * Create a new transaction journal and associated transactions.
-     *
      * @param array $data
      *
      * @return TransactionJournal
@@ -89,11 +87,11 @@ class TransactionJournalFactory
         $this->connectTags($journal, $data);
 
         // store note:
-        $this->storeNote($journal, strval($data['notes']));
+        $this->storeNote($journal, (string)$data['notes']);
 
         // store date meta fields (if present):
         $fields = ['sepa-cc', 'sepa-ct-op', 'sepa-ct-id', 'sepa-db', 'sepa-country', 'sepa-ep', 'sepa-ci', 'interest_date', 'book_date', 'process_date',
-                   'due_date', 'payment_date', 'invoice_date', 'internal_reference','bunq_payment_id'];
+                   'due_date', 'payment_date', 'invoice_date', 'internal_reference', 'bunq_payment_id'];
 
         foreach ($fields as $field) {
             $this->storeMeta($journal, $data, $field);
@@ -124,7 +122,7 @@ class TransactionJournalFactory
         $factory->setUser($this->user);
 
         $piggyBank = $factory->find($data['piggy_bank_id'], $data['piggy_bank_name']);
-        if (!is_null($piggyBank)) {
+        if (null !== $piggyBank) {
             /** @var PiggyBankEventFactory $factory */
             $factory = app(PiggyBankEventFactory::class);
             $factory->create($journal, $piggyBank);
@@ -144,7 +142,8 @@ class TransactionJournalFactory
     {
         $factory         = app(TransactionTypeFactory::class);
         $transactionType = $factory->find($type);
-        if (is_null($transactionType)) {
+        if (null === $transactionType) {
+            Log::error(sprintf('Could not find transaction type for "%s"', $type)); // @codeCoverageIgnore
             throw new FireflyException(sprintf('Could not find transaction type for "%s"', $type)); // @codeCoverageIgnore
         }
 

@@ -28,11 +28,11 @@ namespace FireflyIII\Services\Bunq\Object;
 class MonetaryAccountSetting extends BunqObject
 {
     /** @var string */
-    private $color = '';
+    private $color;
     /** @var string */
-    private $defaultAvatarStatus = '';
+    private $defaultAvatarStatus;
     /** @var string */
-    private $restrictionChat = '';
+    private $restrictionChat;
 
     /**
      * MonetaryAccountSetting constructor.

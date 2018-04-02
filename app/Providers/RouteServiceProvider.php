@@ -41,14 +41,6 @@ class RouteServiceProvider extends ServiceProvider
     protected $namespace = '';
 
     /**
-     * Define your route model bindings, pattern filters, etc.
-     */
-    public function boot()
-    {
-        parent::boot();
-    }
-
-    /**
      * Define the routes for the application.
      */
     public function map()

@@ -47,7 +47,7 @@ class UserController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', strval(trans('firefly.administration')));
+                app('view')->share('title', (string)trans('firefly.administration'));
                 app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
 
                 return $next($request);
@@ -78,7 +78,7 @@ class UserController extends Controller
     public function destroy(User $user, UserRepositoryInterface $repository)
     {
         $repository->destroy($user);
-        Session::flash('success', strval(trans('firefly.user_deleted')));
+        Session::flash('success', (string)trans('firefly.user_deleted'));
 
         return redirect(route('admin.users'));
     }
@@ -96,13 +96,13 @@ class UserController extends Controller
         }
         Session::forget('users.edit.fromUpdate');
 
-        $subTitle     = strval(trans('firefly.edit_user', ['email' => $user->email]));
+        $subTitle     = (string)trans('firefly.edit_user', ['email' => $user->email]);
         $subTitleIcon = 'fa-user-o';
         $codes        = [
-            ''              => strval(trans('firefly.no_block_code')),
-            'bounced'       => strval(trans('firefly.block_code_bounced')),
-            'expired'       => strval(trans('firefly.block_code_expired')),
-            'email_changed' => strval(trans('firefly.block_code_email_changed')),
+            ''              => (string)trans('firefly.no_block_code'),
+            'bounced'       => (string)trans('firefly.block_code_bounced'),
+            'expired'       => (string)trans('firefly.block_code_expired'),
+            'email_changed' => (string)trans('firefly.block_code_email_changed'),
         ];
 
         return view('admin.users.edit', compact('user', 'subTitle', 'subTitleIcon', 'codes'));
@@ -115,7 +115,7 @@ class UserController extends Controller
      */
     public function index(UserRepositoryInterface $repository)
     {
-        $subTitle     = strval(trans('firefly.user_administration'));
+        $subTitle     = (string)trans('firefly.user_administration');
         $subTitleIcon = 'fa-users';
         $users        = $repository->all();
 
@@ -143,9 +143,9 @@ class UserController extends Controller
      */
     public function show(UserRepositoryInterface $repository, User $user)
     {
-        $title         = strval(trans('firefly.administration'));
+        $title         = (string)trans('firefly.administration');
         $mainTitleIcon = 'fa-hand-spock-o';
-        $subTitle      = strval(trans('firefly.single_user_administration', ['email' => $user->email]));
+        $subTitle      = (string)trans('firefly.single_user_administration', ['email' => $user->email]);
         $subTitleIcon  = 'fa-user';
         $information   = $repository->getUserData($user);
 
@@ -182,10 +182,10 @@ class UserController extends Controller
         $repository->changeStatus($user, $data['blocked'], $data['blocked_code']);
         $repository->updateEmail($user, $data['email']);
 
-        Session::flash('success', strval(trans('firefly.updated_user', ['email' => $user->email])));
+        Session::flash('success', (string)trans('firefly.updated_user', ['email' => $user->email]));
         Preferences::mark();
 
-        if (1 === intval($request->get('return_to_edit'))) {
+        if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             Session::put('users.edit.fromUpdate', true);
 

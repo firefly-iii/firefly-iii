@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 
-
 /**
  * google2fa.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -54,17 +53,17 @@ return [
      * 2FA verified session var
      */
 
-    'session_var' => 'google2fa',
+    'session_var'          => 'google2fa',
 
     /*
      * One Time Password request input name
      */
-    'otp_input' => 'one_time_password',
+    'otp_input'            => 'one_time_password',
 
     /*
      * One Time Password Window
      */
-    'window' => 1,
+    'window'               => 1,
 
     /*
      * Forbid user to reuse One Time Passwords.
@@ -74,17 +73,17 @@ return [
     /*
      * User's table column for google2fa secret
      */
-    'otp_secret_column' => 'google2fa_secret',
+    'otp_secret_column'    => 'google2fa_secret',
 
     /*
      * One Time Password View
      */
-    'view' => 'google2fa.index',
+    'view'                 => 'google2fa.index',
 
     /*
      * One Time Password error message
      */
-    'error_messages' => [
+    'error_messages'       => [
         'wrong_otp' => "The 'One Time Password' typed was wrong.",
     ],
 

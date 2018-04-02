@@ -77,8 +77,8 @@ class UserRepository implements UserRepositoryInterface
         Preferences::setForUser($user, 'previous_email_' . date('Y-m-d-H-i-s'), $oldEmail);
 
         // set undo and confirm token:
-        Preferences::setForUser($user, 'email_change_undo_token', strval(bin2hex(random_bytes(16))));
-        Preferences::setForUser($user, 'email_change_confirm_token', strval(bin2hex(random_bytes(16))));
+        Preferences::setForUser($user, 'email_change_undo_token', (string)bin2hex(random_bytes(16)));
+        Preferences::setForUser($user, 'email_change_confirm_token', (string)bin2hex(random_bytes(16)));
         // update user
 
         $user->email        = $newEmail;
@@ -145,7 +145,7 @@ class UserRepository implements UserRepositoryInterface
      *
      * @return bool
      *
-     * @throws \Exception
+
      */
     public function destroy(User $user): bool
     {
@@ -231,7 +231,7 @@ class UserRepository implements UserRepositoryInterface
         }
 
         $return['is_admin']            = $user->hasRole('owner');
-        $return['blocked']             = 1 === intval($user->blocked);
+        $return['blocked']             = 1 === (int)$user->blocked;
         $return['blocked_code']        = $user->blocked_code;
         $return['accounts']            = $user->accounts()->count();
         $return['journals']            = $user->transactionJournals()->count();

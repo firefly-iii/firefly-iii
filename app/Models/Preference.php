@@ -59,6 +59,7 @@ class Preference extends Model
      */
     public function getDataAttribute($value)
     {
+        $result = null;
         try {
             $data = Crypt::decrypt($value);
         } catch (DecryptException $e) {
@@ -67,17 +68,21 @@ class Preference extends Model
                 sprintf('Could not decrypt preference #%d. If this error persists, please run "php artisan cache:clear" on the command line.', $this->id)
             );
         }
-        $unserialized = false;
+        $serialized = true;
         try {
-            $unserialized = unserialize($data);
+            unserialize($data, ['allowed_classes' => false]);
         } catch (Exception $e) {
-            // don't care, assume is false.
+            $serialized = false;
+            Log::debug(sprintf('Could not unserialise preference #%d. This is good. %s', $this->id, $e->getMessage()));
         }
-        if (!(false === $unserialized)) {
-            return $unserialized;
+        if (!$serialized) {
+            $result = json_decode($data, true);
+        }
+        if ($serialized) {
+            Log::error(sprintf('Preference #%d ("%s") was stored as serialised object. It will be deleted and recreated.', $this->id, $this->name));
         }
 
-        return json_decode($data, true);
+        return $result;
     }
 
     /**
@@ -89,7 +94,7 @@ class Preference extends Model
      */
     public function setDataAttribute($value)
     {
-        $this->attributes['data'] = Crypt::encrypt(serialize($value));
+        $this->attributes['data'] = Crypt::encrypt(json_encode($value));
     }
 
     /**

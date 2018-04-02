@@ -199,31 +199,29 @@ final class Entry
         $entry->transaction_id = $transaction->id;
         $entry->date           = $transaction->date->format('Ymd');
         $entry->description    = $transaction->description;
-        if (strlen(strval($transaction->transaction_description)) > 0) {
+        if (strlen((string)$transaction->transaction_description) > 0) {
             $entry->description = $transaction->transaction_description . '(' . $transaction->description . ')';
         }
         $entry->currency_code = $transaction->transactionCurrency->code;
-        $entry->amount        = strval(round($transaction->transaction_amount, $transaction->transactionCurrency->decimal_places));
+        $entry->amount        = (string)round($transaction->transaction_amount, $transaction->transactionCurrency->decimal_places);
 
         $entry->foreign_currency_code = null === $transaction->foreign_currency_id ? null : $transaction->foreignCurrency->code;
         $entry->foreign_amount        = null === $transaction->foreign_currency_id
             ? null
-            : strval(
-                round(
-                    $transaction->transaction_foreign_amount,
-                    $transaction->foreignCurrency->decimal_places
-                )
+            : (string)round(
+                $transaction->transaction_foreign_amount,
+                $transaction->foreignCurrency->decimal_places
             );
 
         $entry->transaction_type     = $transaction->transaction_type_type;
-        $entry->asset_account_id     = strval($transaction->account_id);
+        $entry->asset_account_id     = (string)$transaction->account_id;
         $entry->asset_account_name   = app('steam')->tryDecrypt($transaction->account_name);
         $entry->asset_account_iban   = $transaction->account_iban;
         $entry->asset_account_number = $transaction->account_number;
         $entry->asset_account_bic    = $transaction->account_bic;
         $entry->asset_currency_code  = $transaction->account_currency_code;
 
-        $entry->opposing_account_id     = strval($transaction->opposing_account_id);
+        $entry->opposing_account_id     = (string)$transaction->opposing_account_id;
         $entry->opposing_account_name   = app('steam')->tryDecrypt($transaction->opposing_account_name);
         $entry->opposing_account_iban   = $transaction->opposing_account_iban;
         $entry->opposing_account_number = $transaction->opposing_account_number;
@@ -231,7 +229,7 @@ final class Entry
         $entry->opposing_currency_code  = $transaction->opposing_currency_code;
 
         // budget
-        $entry->budget_id   = strval($transaction->transaction_budget_id);
+        $entry->budget_id   = (string)$transaction->transaction_budget_id;
         $entry->budget_name = app('steam')->tryDecrypt($transaction->transaction_budget_name);
         if (null === $transaction->transaction_budget_id) {
             $entry->budget_id   = $transaction->transaction_journal_budget_id;
@@ -239,7 +237,7 @@ final class Entry
         }
 
         // category
-        $entry->category_id   = strval($transaction->transaction_category_id);
+        $entry->category_id   = (string)$transaction->transaction_category_id;
         $entry->category_name = app('steam')->tryDecrypt($transaction->transaction_category_name);
         if (null === $transaction->transaction_category_id) {
             $entry->category_id   = $transaction->transaction_journal_category_id;
@@ -247,7 +245,7 @@ final class Entry
         }
 
         // budget
-        $entry->bill_id   = strval($transaction->bill_id);
+        $entry->bill_id   = (string)$transaction->bill_id;
         $entry->bill_name = app('steam')->tryDecrypt($transaction->bill_name);
 
         $entry->tags  = $transaction->tags;

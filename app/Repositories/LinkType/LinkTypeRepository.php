@@ -55,7 +55,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      *
      * @return bool
      *
-     * @throws \Exception
+
      */
     public function destroy(LinkType $linkType, LinkType $moveTo): bool
     {
@@ -72,7 +72,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      *
      * @return bool
      *
-     * @throws \Exception
+
      */
     public function destroyLink(TransactionJournalLink $link): bool
     {
@@ -135,7 +135,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
 
         $filtered = $merged->filter(
             function (TransactionJournalLink $link) {
-                return (!is_null($link->source) && !is_null($link->destination));
+                return (null !== $link->source && null !== $link->destination);
             }
         );
 
@@ -179,9 +179,9 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      */
     public function storeLink(array $information, TransactionJournal $left, TransactionJournal $right): TransactionJournalLink
     {
-        $linkType = $this->find(intval($information['link_type_id']) ?? 0);
-        if (is_null($linkType->id)) {
-            throw new FireflyException(sprintf('Link type #%d cannot be resolved to an actual link type', intval($information['link_type_id']) ?? 0));
+        $linkType = $this->find((int)($information['link_type_id'] ?? 0));
+        if (null === $linkType->id) {
+            throw new FireflyException(sprintf('Link type #%d cannot be resolved to an actual link type', $information['link_type_id'] ?? 0));
         }
         $link = new TransactionJournalLink;
         $link->linkType()->associate($linkType);

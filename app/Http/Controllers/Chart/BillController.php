@@ -71,8 +71,8 @@ class BillController extends Controller
         $paid      = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
         $unpaid    = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
         $chartData = [
-            strval(trans('firefly.unpaid')) => $unpaid,
-            strval(trans('firefly.paid'))   => $paid,
+            (string)trans('firefly.unpaid') => $unpaid,
+            (string)trans('firefly.paid')   => $paid,
         ];
 
         $data = $this->generator->pieChart($chartData);
@@ -110,7 +110,7 @@ class BillController extends Controller
 
         /** @var Transaction $entry */
         foreach ($results as $entry) {
-            $date                           = $entry->date->formatLocalized(strval(trans('config.month_and_day')));
+            $date                           = $entry->date->formatLocalized((string)trans('config.month_and_day'));
             $chartData[0]['entries'][$date] = $bill->amount_min; // minimum amount of bill
             $chartData[1]['entries'][$date] = $bill->amount_max; // maximum amount of bill
             $chartData[2]['entries'][$date] = bcmul($entry->transaction_amount, '-1'); // amount of journal

@@ -72,7 +72,7 @@ class TagReportController extends Controller
         $helper->setTags($tags);
         $helper->setStart($start);
         $helper->setEnd($end);
-        $helper->setCollectOtherObjects(1 === intval($others));
+        $helper->setCollectOtherObjects(1 === (int)$others);
         $chartData = $helper->generate('expense', 'account');
         $data      = $this->generator->pieChart($chartData);
 
@@ -96,7 +96,7 @@ class TagReportController extends Controller
         $helper->setTags($tags);
         $helper->setStart($start);
         $helper->setEnd($end);
-        $helper->setCollectOtherObjects(1 === intval($others));
+        $helper->setCollectOtherObjects(1 === (int)$others);
         $chartData = $helper->generate('income', 'account');
         $data      = $this->generator->pieChart($chartData);
 
@@ -177,27 +177,27 @@ class TagReportController extends Controller
         // prep chart data:
         foreach ($tags as $tag) {
             $chartData[$tag->id . '-in']  = [
-                'label'   => $tag->tag . ' (' . strtolower(strval(trans('firefly.income'))) . ')',
+                'label'   => $tag->tag . ' (' . strtolower((string)trans('firefly.income')) . ')',
                 'type'    => 'bar',
                 'yAxisID' => 'y-axis-0',
                 'entries' => [],
             ];
             $chartData[$tag->id . '-out'] = [
-                'label'   => $tag->tag . ' (' . strtolower(strval(trans('firefly.expenses'))) . ')',
+                'label'   => $tag->tag . ' (' . strtolower((string)trans('firefly.expenses')) . ')',
                 'type'    => 'bar',
                 'yAxisID' => 'y-axis-0',
                 'entries' => [],
             ];
             // total in, total out:
             $chartData[$tag->id . '-total-in']  = [
-                'label'   => $tag->tag . ' (' . strtolower(strval(trans('firefly.sum_of_income'))) . ')',
+                'label'   => $tag->tag . ' (' . strtolower((string)trans('firefly.sum_of_income')) . ')',
                 'type'    => 'line',
                 'fill'    => false,
                 'yAxisID' => 'y-axis-1',
                 'entries' => [],
             ];
             $chartData[$tag->id . '-total-out'] = [
-                'label'   => $tag->tag . ' (' . strtolower(strval(trans('firefly.sum_of_expenses'))) . ')',
+                'label'   => $tag->tag . ' (' . strtolower((string)trans('firefly.sum_of_expenses')) . ')',
                 'type'    => 'line',
                 'fill'    => false,
                 'yAxisID' => 'y-axis-1',
@@ -271,7 +271,7 @@ class TagReportController extends Controller
         $helper->setTags($tags);
         $helper->setStart($start);
         $helper->setEnd($end);
-        $helper->setCollectOtherObjects(1 === intval($others));
+        $helper->setCollectOtherObjects(1 === (int)$others);
         $chartData = $helper->generate('expense', 'tag');
         $data      = $this->generator->pieChart($chartData);
 
@@ -295,7 +295,7 @@ class TagReportController extends Controller
         $helper->setTags($tags);
         $helper->setStart($start);
         $helper->setEnd($end);
-        $helper->setCollectOtherObjects(1 === intval($others));
+        $helper->setCollectOtherObjects(1 === (int)$others);
         $chartData = $helper->generate('income', 'tag');
         $data      = $this->generator->pieChart($chartData);
 
@@ -321,9 +321,7 @@ class TagReportController extends Controller
         $collector->addFilter(OpposingAccountFilter::class);
         $collector->addFilter(PositiveAmountFilter::class);
 
-        $transactions = $collector->getJournals();
-
-        return $transactions;
+        return $collector->getJournals();
     }
 
     /**
@@ -344,9 +342,7 @@ class TagReportController extends Controller
         $collector->addFilter(OpposingAccountFilter::class);
         $collector->addFilter(NegativeAmountFilter::class);
 
-        $transactions = $collector->getJournals();
-
-        return $transactions;
+        return $collector->getJournals();
     }
 
     /**

@@ -50,7 +50,7 @@ final class AmountMore extends AbstractTrigger implements TriggerInterface
     public static function willMatchEverything($value = null)
     {
         if (null !== $value) {
-            $res = 0 === bccomp('0', strval($value));
+            $res = 0 === bccomp('0', (string)$value);
             if (true === $res) {
                 Log::error(sprintf('Cannot use %s with a value equal to 0.', self::class));
             }

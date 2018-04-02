@@ -46,7 +46,6 @@ class ExpandedForm
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \Throwable
      */
     public function amount(string $name, $value = null, array $options = []): string
     {
@@ -60,7 +59,6 @@ class ExpandedForm
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \Throwable
      */
     public function amountSmall(string $name, $value = null, array $options = []): string
     {
@@ -73,7 +71,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \Throwable
      */
     public function assetAccountList(string $name, $value = null, array $options = []): string
     {
@@ -100,17 +97,17 @@ class ExpandedForm
         /** @var Account $account */
         foreach ($assetAccounts as $account) {
             $balance    = app('steam')->balance($account, new Carbon);
-            $currencyId = intval($account->getMeta('currency_id'));
+            $currencyId = (int)$account->getMeta('currency_id');
             $currency   = $currencyRepos->findNull($currencyId);
             $role       = $account->getMeta('accountRole');
             if (0 === strlen($role)) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
-            if (is_null($currency)) {
+            if (null === $currency) {
                 $currency = $defaultCurrency;
             }
 
-            $key                         = strval(trans('firefly.opt_group_' . $role));
+            $key                         = (string)trans('firefly.opt_group_' . $role);
             $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
         }
         $res = $this->select($name, $grouped, $value, $options);
@@ -126,7 +123,6 @@ class ExpandedForm
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \Throwable
      */
     public function balance(string $name, $value = null, array $options = []): string
     {
@@ -141,7 +137,7 @@ class ExpandedForm
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function checkbox(string $name, $value = 1, $checked = null, $options = []): string
     {
@@ -165,7 +161,7 @@ class ExpandedForm
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function date(string $name, $value = null, array $options = []): string
     {
@@ -185,7 +181,7 @@ class ExpandedForm
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function file(string $name, array $options = []): string
     {
@@ -204,7 +200,7 @@ class ExpandedForm
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function integer(string $name, $value = null, array $options = []): string
     {
@@ -225,7 +221,7 @@ class ExpandedForm
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function location(string $name, $value = null, array $options = []): string
     {
@@ -251,7 +247,7 @@ class ExpandedForm
         $fields     = ['title', 'name', 'description'];
         /** @var Eloquent $entry */
         foreach ($set as $entry) {
-            $entryId = intval($entry->id);
+            $entryId = (int)$entry->id;
             $title   = null;
 
             foreach ($fields as $field) {
@@ -277,7 +273,7 @@ class ExpandedForm
         $fields        = ['title', 'name', 'description'];
         /** @var Eloquent $entry */
         foreach ($set as $entry) {
-            $entryId = intval($entry->id);
+            $entryId = (int)$entry->id;
             $title   = null;
 
             foreach ($fields as $field) {
@@ -299,7 +295,7 @@ class ExpandedForm
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function multiCheckbox(string $name, array $list = [], $selected = null, array $options = []): string
     {
@@ -322,7 +318,7 @@ class ExpandedForm
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function multiRadio(string $name, array $list = [], $selected = null, array $options = []): string
     {
@@ -344,7 +340,7 @@ class ExpandedForm
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function nonSelectableAmount(string $name, $value = null, array $options = []): string
     {
@@ -353,7 +349,7 @@ class ExpandedForm
         $classes          = $this->getHolderClasses($name);
         $value            = $this->fillFieldValue($name, $value);
         $options['step']  = 'any';
-        $selectedCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
+        $selectedCurrency = $options['currency'] ?? Amt::getDefaultCurrency();
         unset($options['currency'], $options['placeholder']);
 
         // make sure value is formatted nicely:
@@ -373,7 +369,7 @@ class ExpandedForm
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function nonSelectableBalance(string $name, $value = null, array $options = []): string
     {
@@ -382,7 +378,7 @@ class ExpandedForm
         $classes          = $this->getHolderClasses($name);
         $value            = $this->fillFieldValue($name, $value);
         $options['step']  = 'any';
-        $selectedCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
+        $selectedCurrency = $options['currency'] ?? Amt::getDefaultCurrency();
         unset($options['currency'], $options['placeholder']);
 
         // make sure value is formatted nicely:
@@ -403,7 +399,7 @@ class ExpandedForm
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function number(string $name, $value = null, array $options = []): string
     {
@@ -425,7 +421,7 @@ class ExpandedForm
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function optionsList(string $type, string $name): string
     {
@@ -437,7 +433,7 @@ class ExpandedForm
             // don't care
         }
 
-        $previousValue = null === $previousValue ? 'store' : $previousValue;
+        $previousValue = $previousValue ?? 'store';
         $html          = view('form.options', compact('type', 'name', 'previousValue'))->render();
 
         return $html;
@@ -449,14 +445,14 @@ class ExpandedForm
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function password(string $name, array $options = []): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
-        $html    = view('form.password', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        $html    = view('form.password', compact('classes', 'name', 'label', 'options'))->render();
 
         return $html;
     }
@@ -469,7 +465,7 @@ class ExpandedForm
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function select(string $name, array $list = [], $selected = null, array $options = []): string
     {
@@ -490,7 +486,7 @@ class ExpandedForm
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function staticText(string $name, $value, array $options = []): string
     {
@@ -509,7 +505,7 @@ class ExpandedForm
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function tags(string $name, $value = null, array $options = []): string
     {
@@ -530,7 +526,7 @@ class ExpandedForm
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function text(string $name, $value = null, array $options = []): string
     {
@@ -550,7 +546,7 @@ class ExpandedForm
      *
      * @return string
      *
-     * @throws \Throwable
+
      */
     public function textarea(string $name, $value = null, array $options = []): string
     {
@@ -640,7 +636,7 @@ class ExpandedForm
         }
         $name = str_replace('[]', '', $name);
 
-        return strval(trans('form.' . $name));
+        return (string)trans('form.' . $name);
     }
 
     /**
@@ -652,7 +648,6 @@ class ExpandedForm
      * @return string
      *
      * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \Throwable
      */
     private function currencyField(string $name, string $view, $value = null, array $options = []): string
     {
@@ -661,14 +656,14 @@ class ExpandedForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
-        $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
+        $defaultCurrency = $options['currency'] ?? Amt::getDefaultCurrency();
         $currencies      = app('amount')->getAllCurrencies();
         unset($options['currency'], $options['placeholder']);
 
         // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
         $preFilled      = session('preFilled');
         $key            = 'amount_currency_id_' . $name;
-        $sentCurrencyId = isset($preFilled[$key]) ? intval($preFilled[$key]) : $defaultCurrency->id;
+        $sentCurrencyId = isset($preFilled[$key]) ? (int)$preFilled[$key] : $defaultCurrency->id;
 
         // find this currency in set of currencies:
         foreach ($currencies as $currency) {

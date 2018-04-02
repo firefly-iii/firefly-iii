@@ -71,7 +71,7 @@ class PiggyBankController extends Controller
         $sum       = '0';
         /** @var PiggyBankEvent $entry */
         foreach ($set as $entry) {
-            $label             = $entry->date->formatLocalized(strval(trans('config.month_and_day')));
+            $label             = $entry->date->formatLocalized((string)trans('config.month_and_day'));
             $sum               = bcadd($sum, $entry->amount);
             $chartData[$label] = $sum;
         }

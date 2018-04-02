@@ -46,7 +46,7 @@ class UserPerson extends BunqObject
     /** @var array */
     private $billingContracts = [];
     /** @var string */
-    private $countryOfBirth = '';
+    private $countryOfBirth;
     /** @var Carbon */
     private $created;
     /**
@@ -64,60 +64,59 @@ class UserPerson extends BunqObject
     /** @var Carbon */
     private $dateOfBirth;
     /** @var string */
-    private $displayName = '';
+    private $displayName;
     /** @var string */
-    private $documentCountry = '';
+    private $documentCountry;
     /** @var string */
-    private $documentNumber = '';
+    private $documentNumber;
     /** @var string */
-    private $documentType = '';
+    private $documentType;
     /** @var string */
-    private $firstName = '';
+    private $firstName;
     /** @var string */
-    private $gender = '';
+    private $gender;
     /** @var int */
-    private $id = 0;
+    private $id;
     /** @var string */
-    private $language = '';
+    private $language;
     /** @var string */
-    private $lastName = '';
+    private $lastName;
     /** @var string */
-    private $legalName = '';
+    private $legalName;
     /** @var string */
-    private $middleName = '';
+    private $middleName;
     /** @var string */
-    private $nationality = '';
+    private $nationality;
     /** @var array */
     private $notificationFilters = [];
     /** @var string */
-    private $placeOfBirth = '';
+    private $placeOfBirth;
     /** @var string */
-    private $publicNickName = '';
+    private $publicNickName;
     /** @var string */
-    private $publicUuid = '';
+    private $publicUuid;
     /**
      * @var mixed
      */
     private $region;
     /** @var int */
-    private $sessionTimeout = 0;
+    private $sessionTimeout;
     /** @var string */
-    private $status = '';
+    private $status;
     /** @var string */
-    private $subStatus = '';
+    private $subStatus;
     /** @var string */
-    private $taxResident = '';
+    private $taxResident;
     /** @var Carbon */
     private $updated;
     /** @var int */
-    private $versionTos = 0;
+    private $versionTos;
 
     /**
      * UserPerson constructor.
      *
      * @param array $data
      *
-     * @throws \InvalidArgumentException
      */
     public function __construct(array $data)
     {
@@ -129,7 +128,7 @@ class UserPerson extends BunqObject
             return;
         }
 
-        $this->id              = intval($data['id']);
+        $this->id              = (int)$data['id'];
         $this->created         = Carbon::createFromFormat('Y-m-d H:i:s.u', $data['created']);
         $this->updated         = Carbon::createFromFormat('Y-m-d H:i:s.u', $data['updated']);
         $this->status          = $data['status'];
@@ -139,7 +138,7 @@ class UserPerson extends BunqObject
         $this->publicNickName  = $data['public_nick_name'];
         $this->language        = $data['language'];
         $this->region          = $data['region'];
-        $this->sessionTimeout  = intval($data['session_timeout']);
+        $this->sessionTimeout  = (int)$data['session_timeout'];
         $this->firstName       = $data['first_name'];
         $this->middleName      = $data['middle_name'];
         $this->lastName        = $data['last_name'];
@@ -150,7 +149,7 @@ class UserPerson extends BunqObject
         $this->countryOfBirth  = $data['country_of_birth'];
         $this->nationality     = $data['nationality'];
         $this->gender          = $data['gender'];
-        $this->versionTos      = intval($data['version_terms_of_service']);
+        $this->versionTos      = (int)$data['version_terms_of_service'];
         $this->documentNumber  = $data['document_number'];
         $this->documentType    = $data['document_type'];
         $this->documentCountry = $data['document_country_of_issuance'];

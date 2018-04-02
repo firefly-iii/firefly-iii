@@ -35,14 +35,6 @@ class CsvExporter extends BasicExporter implements ExporterInterface
     private $fileName;
 
     /**
-     * CsvExporter constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * @return string
      */
     public function getFileName(): string
@@ -53,7 +45,6 @@ class CsvExporter extends BasicExporter implements ExporterInterface
     /**
      * @return bool
      *
-     * @throws \TypeError
      */
     public function run(): bool
     {

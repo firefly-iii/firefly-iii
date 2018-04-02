@@ -65,7 +65,7 @@ class TagFactory
      */
     public function findOrCreate(string $tag): ?Tag
     {
-        if (is_null($this->tags)) {
+        if (null === $this->tags) {
             $this->tags = $this->user->tags()->get();
         }
 

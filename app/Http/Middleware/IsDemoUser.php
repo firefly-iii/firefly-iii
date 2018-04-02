@@ -39,18 +39,17 @@ class IsDemoUser
      * @param  \Closure                 $next
      *
      * @return mixed
-     * @throws \RuntimeException
      */
     public function handle(Request $request, Closure $next)
     {
         /** @var User $user */
         $user = $request->user();
-        if (is_null($user)) {
+        if (null === $user) {
             return $next($request);
         }
 
         if ($user->hasRole('demo')) {
-            $request->session()->flash('info', strval(trans('firefly.not_available_demo_user')));
+            $request->session()->flash('info', (string)trans('firefly.not_available_demo_user'));
             $current  = $request->url();
             $previous = $request->session()->previousUrl();
             if ($current !== $previous) {

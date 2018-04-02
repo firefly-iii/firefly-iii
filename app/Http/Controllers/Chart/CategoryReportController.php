@@ -75,7 +75,7 @@ class CategoryReportController extends Controller
     {
         /** @var MetaPieChartInterface $helper */
         $helper = app(MetaPieChartInterface::class);
-        $helper->setAccounts($accounts)->setCategories($categories)->setStart($start)->setEnd($end)->setCollectOtherObjects(1 === intval($others));
+        $helper->setAccounts($accounts)->setCategories($categories)->setStart($start)->setEnd($end)->setCollectOtherObjects(1 === (int)$others);
 
         $chartData = $helper->generate('expense', 'account');
         $data      = $this->generator->pieChart($chartData);
@@ -100,7 +100,7 @@ class CategoryReportController extends Controller
         $helper->setCategories($categories);
         $helper->setStart($start);
         $helper->setEnd($end);
-        $helper->setCollectOtherObjects(1 === intval($others));
+        $helper->setCollectOtherObjects(1 === (int)$others);
         $chartData = $helper->generate('income', 'account');
         $data      = $this->generator->pieChart($chartData);
 
@@ -124,7 +124,7 @@ class CategoryReportController extends Controller
         $helper->setCategories($categories);
         $helper->setStart($start);
         $helper->setEnd($end);
-        $helper->setCollectOtherObjects(1 === intval($others));
+        $helper->setCollectOtherObjects(1 === (int)$others);
         $chartData = $helper->generate('expense', 'category');
         $data      = $this->generator->pieChart($chartData);
 
@@ -148,7 +148,7 @@ class CategoryReportController extends Controller
         $helper->setCategories($categories);
         $helper->setStart($start);
         $helper->setEnd($end);
-        $helper->setCollectOtherObjects(1 === intval($others));
+        $helper->setCollectOtherObjects(1 === (int)$others);
         $chartData = $helper->generate('income', 'category');
         $data      = $this->generator->pieChart($chartData);
 
@@ -183,27 +183,27 @@ class CategoryReportController extends Controller
         // prep chart data:
         foreach ($categories as $category) {
             $chartData[$category->id . '-in']  = [
-                'label'   => $category->name . ' (' . strtolower(strval(trans('firefly.income'))) . ')',
+                'label'   => $category->name . ' (' . strtolower((string)trans('firefly.income')) . ')',
                 'type'    => 'bar',
                 'yAxisID' => 'y-axis-0',
                 'entries' => [],
             ];
             $chartData[$category->id . '-out'] = [
-                'label'   => $category->name . ' (' . strtolower(strval(trans('firefly.expenses'))) . ')',
+                'label'   => $category->name . ' (' . strtolower((string)trans('firefly.expenses')) . ')',
                 'type'    => 'bar',
                 'yAxisID' => 'y-axis-0',
                 'entries' => [],
             ];
             // total in, total out:
             $chartData[$category->id . '-total-in']  = [
-                'label'   => $category->name . ' (' . strtolower(strval(trans('firefly.sum_of_income'))) . ')',
+                'label'   => $category->name . ' (' . strtolower((string)trans('firefly.sum_of_income')) . ')',
                 'type'    => 'line',
                 'fill'    => false,
                 'yAxisID' => 'y-axis-1',
                 'entries' => [],
             ];
             $chartData[$category->id . '-total-out'] = [
-                'label'   => $category->name . ' (' . strtolower(strval(trans('firefly.sum_of_expenses'))) . ')',
+                'label'   => $category->name . ' (' . strtolower((string)trans('firefly.sum_of_expenses')) . ')',
                 'type'    => 'line',
                 'fill'    => false,
                 'yAxisID' => 'y-axis-1',
@@ -279,9 +279,7 @@ class CategoryReportController extends Controller
         $collector->addFilter(OpposingAccountFilter::class);
         $collector->addFilter(PositiveAmountFilter::class);
 
-        $transactions = $collector->getJournals();
-
-        return $transactions;
+        return $collector->getJournals();
     }
 
     /**
@@ -302,9 +300,7 @@ class CategoryReportController extends Controller
         $collector->addFilter(OpposingAccountFilter::class);
         $collector->addFilter(NegativeAmountFilter::class);
 
-        $transactions = $collector->getJournals();
-
-        return $transactions;
+        return $collector->getJournals();
     }
 
     /**
@@ -318,8 +314,8 @@ class CategoryReportController extends Controller
         $grouped = [];
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
-            $jrnlCatId            = intval($transaction->transaction_journal_category_id);
-            $transCatId           = intval($transaction->transaction_category_id);
+            $jrnlCatId            = (int)$transaction->transaction_journal_category_id;
+            $transCatId           = (int)$transaction->transaction_category_id;
             $categoryId           = max($jrnlCatId, $transCatId);
             $grouped[$categoryId] = $grouped[$categoryId] ?? '0';
             $grouped[$categoryId] = bcadd($transaction->transaction_amount, $grouped[$categoryId]);

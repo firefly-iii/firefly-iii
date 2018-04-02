@@ -77,7 +77,7 @@ class AuthenticateTest extends TestCase
         $this->be($user);
         $response = $this->get('/_test/authenticate');
         $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
-        $response->assertSessionHas('logoutMessage', strval(trans('firefly.block_account_logout')));
+        $response->assertSessionHas('logoutMessage', (string)trans('firefly.block_account_logout'));
         $response->assertRedirect(route('login'));
 
     }
@@ -94,7 +94,7 @@ class AuthenticateTest extends TestCase
         $this->be($user);
         $response = $this->get('/_test/authenticate');
         $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
-        $response->assertSessionHas('logoutMessage', strval(trans('firefly.email_changed_logout')));
+        $response->assertSessionHas('logoutMessage', (string)trans('firefly.email_changed_logout'));
         $response->assertRedirect(route('login'));
     }
 

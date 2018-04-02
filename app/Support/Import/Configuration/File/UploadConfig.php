@@ -114,16 +114,16 @@ class UploadConfig implements ConfigurationInterface
     {
         Log::debug('Now in Initial::storeConfiguration()');
         $config    = $this->getConfig();
-        $importId  = intval($data['csv_import_account'] ?? 0);
+        $importId  = (int)($data['csv_import_account'] ?? 0.0);
         $account   = $this->accountRepository->find($importId);
-        $delimiter = strval($data['csv_delimiter']);
+        $delimiter = (string)$data['csv_delimiter'];
 
         // set "headers":
-        $config['has-headers'] = intval($data['has_headers'] ?? 0) === 1;
-        $config['date-format'] = strval($data['date_format']);
+        $config['has-headers'] = (int)($data['has_headers'] ?? 0.0) === 1;
+        $config['date-format'] = (string)$data['date_format'];
         $config['delimiter']   = 'tab' === $delimiter ? "\t" : $delimiter;
-        $config['apply-rules'] = intval($data['apply_rules'] ?? 0) === 1;
-        $config['match-bills'] = intval($data['match_bills'] ?? 0) === 1;
+        $config['apply-rules'] = (int)($data['apply_rules'] ?? 0.0) === 1;
+        $config['match-bills'] = (int)($data['match_bills'] ?? 0.0) === 1;
 
         Log::debug('Entered import account.', ['id' => $importId]);
 

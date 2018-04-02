@@ -99,9 +99,7 @@ abstract class TestCase extends BaseTestCase
      */
     public function demoUser(): User
     {
-        $user = User::find(4);
-
-        return $user;
+        return User::find(4);
     }
 
     /**
@@ -109,9 +107,7 @@ abstract class TestCase extends BaseTestCase
      */
     public function emptyUser(): User
     {
-        $user = User::find(2);
-
-        return $user;
+        return User::find(2);
     }
 
     /**
@@ -119,9 +115,7 @@ abstract class TestCase extends BaseTestCase
      */
     public function user(): User
     {
-        $user = User::find(1);
-
-        return $user;
+        return User::find(1);
     }
 
     /**
@@ -145,10 +139,8 @@ abstract class TestCase extends BaseTestCase
      */
     protected function overload(string $class)
     {
-        $externalMock = Mockery::mock('overload:' . $class);
-
         //$this->app->instance($class, $externalMock);
-        return $externalMock;
+        return Mockery::mock('overload:' . $class);
     }
 
     /**

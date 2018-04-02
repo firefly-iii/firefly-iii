@@ -52,7 +52,7 @@ class Sandstorm
     public function handle(Request $request, Closure $next, $guard = null)
     {
         // is in Sandstorm environment?
-        $sandstorm = 1 === intval(getenv('SANDSTORM'));
+        $sandstorm = 1 === (int)getenv('SANDSTORM');
         View::share('SANDSTORM', $sandstorm);
         if (!$sandstorm) {
             return $next($request);
@@ -62,7 +62,7 @@ class Sandstorm
         if (Auth::guard($guard)->guest()) {
             /** @var UserRepositoryInterface $repository */
             $repository = app(UserRepositoryInterface::class);
-            $userId     = strval($request->header('X-Sandstorm-User-Id'));
+            $userId     = (string)$request->header('X-Sandstorm-User-Id');
             Log::debug(sprintf('Sandstorm user ID is "%s"', $userId));
             $count = $repository->count();
 
@@ -120,7 +120,7 @@ class Sandstorm
             }
         }
         // if in Sandstorm, user logged in, still must check if user is anon.
-        $userId = strval($request->header('X-Sandstorm-User-Id'));
+        $userId = (string)$request->header('X-Sandstorm-User-Id');
         if (strlen($userId) === 0) {
             View::share('SANDSTORM_ANON', true);
 

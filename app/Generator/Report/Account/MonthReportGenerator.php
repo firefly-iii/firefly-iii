@@ -43,12 +43,11 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * @return string
      *
-     * @throws \Throwable
      */
     public function generate(): string
     {
-        $accountIds      = join(',', $this->accounts->pluck('id')->toArray());
-        $expenseIds      = join(',', $this->expense->pluck('id')->toArray());
+        $accountIds      = implode(',', $this->accounts->pluck('id')->toArray());
+        $expenseIds      = implode(',', $this->expense->pluck('id')->toArray());
         $reportType      = 'account';
         $preferredPeriod = $this->preferredPeriod();
 

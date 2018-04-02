@@ -81,17 +81,17 @@ class CategoryController extends Controller
         $accounts  = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $chartData = [
             [
-                'label'   => strval(trans('firefly.spent')),
+                'label'   => (string)trans('firefly.spent'),
                 'entries' => [],
                 'type'    => 'bar',
             ],
             [
-                'label'   => strval(trans('firefly.earned')),
+                'label'   => (string)trans('firefly.earned'),
                 'entries' => [],
                 'type'    => 'bar',
             ],
             [
-                'label'   => strval(trans('firefly.sum')),
+                'label'   => (string)trans('firefly.sum'),
                 'entries' => [],
                 'type'    => 'line',
                 'fill'    => false,
@@ -145,12 +145,12 @@ class CategoryController extends Controller
             }
         }
 
-        $chartData[strval(trans('firefly.no_category'))] = bcmul($repository->spentInPeriodWithoutCategory(new Collection, $start, $end), '-1');
+        $chartData[(string)trans('firefly.no_category')] = bcmul($repository->spentInPeriodWithoutCategory(new Collection, $start, $end), '-1');
 
         // sort
         arsort($chartData);
 
-        $data = $this->generator->singleSet(strval(trans('firefly.spent')), $chartData);
+        $data = $this->generator->singleSet((string)trans('firefly.spent'), $chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -181,17 +181,17 @@ class CategoryController extends Controller
         $periods   = app('navigation')->listOfPeriods($start, $end);
         $chartData = [
             [
-                'label'   => strval(trans('firefly.spent')),
+                'label'   => (string)trans('firefly.spent'),
                 'entries' => [],
                 'type'    => 'bar',
             ],
             [
-                'label'   => strval(trans('firefly.earned')),
+                'label'   => (string)trans('firefly.earned'),
                 'entries' => [],
                 'type'    => 'bar',
             ],
             [
-                'label'   => strval(trans('firefly.sum')),
+                'label'   => (string)trans('firefly.sum'),
                 'entries' => [],
                 'type'    => 'line',
                 'fill'    => false,
@@ -237,17 +237,17 @@ class CategoryController extends Controller
         $periods   = app('navigation')->listOfPeriods($start, $end);
         $chartData = [
             [
-                'label'   => strval(trans('firefly.spent')),
+                'label'   => (string)trans('firefly.spent'),
                 'entries' => [],
                 'type'    => 'bar',
             ],
             [
-                'label'   => strval(trans('firefly.earned')),
+                'label'   => (string)trans('firefly.earned'),
                 'entries' => [],
                 'type'    => 'bar',
             ],
             [
-                'label'   => strval(trans('firefly.sum')),
+                'label'   => (string)trans('firefly.sum'),
                 'entries' => [],
                 'type'    => 'line',
                 'fill'    => false,
@@ -313,17 +313,17 @@ class CategoryController extends Controller
         // chart data
         $chartData = [
             [
-                'label'   => strval(trans('firefly.spent')),
+                'label'   => (string)trans('firefly.spent'),
                 'entries' => [],
                 'type'    => 'bar',
             ],
             [
-                'label'   => strval(trans('firefly.earned')),
+                'label'   => (string)trans('firefly.earned'),
                 'entries' => [],
                 'type'    => 'bar',
             ],
             [
-                'label'   => strval(trans('firefly.sum')),
+                'label'   => (string)trans('firefly.sum'),
                 'entries' => [],
                 'type'    => 'line',
                 'fill'    => false,

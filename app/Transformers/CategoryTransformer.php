@@ -75,7 +75,7 @@ class CategoryTransformer extends TransformerAbstract
      */
     public function includeTransactions(Category $category): FractalCollection
     {
-        $pageSize = intval(app('preferences')->getForUser($category->user, 'listPageSize', 50)->data);
+        $pageSize = (int)app('preferences')->getForUser($category->user, 'listPageSize', 50)->data;
 
         // journals always use collector and limited using URL parameters.
         $collector = app(JournalCollectorInterface::class);
@@ -83,7 +83,7 @@ class CategoryTransformer extends TransformerAbstract
         $collector->withOpposingAccount()->withCategoryInformation()->withCategoryInformation();
         $collector->setAllAssetAccounts();
         $collector->setCategories(new Collection([$category]));
-        if (!is_null($this->parameters->get('start')) && !is_null($this->parameters->get('end'))) {
+        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));

@@ -51,7 +51,7 @@ class TrustProxies extends Middleware
     {
         $trustedProxies = env('TRUSTED_PROXIES', null);
         if (false !== $trustedProxies && null !== $trustedProxies && strlen($trustedProxies) > 0) {
-            $this->proxies = strval($trustedProxies);
+            $this->proxies = (string)$trustedProxies;
         }
 
         parent::__construct($config);

@@ -40,7 +40,6 @@ class TwoFactorController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      *
-     * @throws \RuntimeException
      * @throws FireflyException
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -52,7 +51,7 @@ class TwoFactorController extends Controller
         // to make sure the validator in the next step gets the secret, we push it in session
         $secretPreference = Preferences::get('twoFactorAuthSecret', null);
         $secret           = null === $secretPreference ? null : $secretPreference->data;
-        $title            = strval(trans('firefly.two_factor_title'));
+        $title            = (string)trans('firefly.two_factor_title');
 
         // make sure the user has two factor configured:
         $has2FA = Preferences::get('twoFactorAuthEnabled', false)->data;
@@ -60,7 +59,7 @@ class TwoFactorController extends Controller
             return redirect(route('index'));
         }
 
-        if (0 === strlen(strval($secret))) {
+        if (0 === strlen((string)$secret)) {
             throw new FireflyException('Your two factor authentication secret is empty, which it cannot be at this point. Please check the log files.');
         }
         $request->session()->flash('two-factor-secret', $secret);
@@ -75,7 +74,7 @@ class TwoFactorController extends Controller
     {
         $user      = auth()->user();
         $siteOwner = env('SITE_OWNER', '');
-        $title     = strval(trans('firefly.two_factor_forgot_title'));
+        $title     = (string)trans('firefly.two_factor_forgot_title');
 
         Log::info(
             'To reset the two factor authentication for user #' . $user->id .
@@ -92,7 +91,6 @@ class TwoFactorController extends Controller
      *
      * @return mixed
      * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
-     * @throws \RuntimeException
      */
     public function postIndex(TokenFormRequest $request, CookieJar $cookieJar)
     {

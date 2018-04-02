@@ -113,7 +113,7 @@ class AutoCompleteController extends Controller
         $set    = $collector->getJournals()->pluck('description', 'journal_id')->toArray();
         $return = [];
         foreach ($set as $id => $description) {
-            $id = intval($id);
+            $id = (int)$id;
             if ($id !== $except->id) {
                 $return[] = [
                     'id'   => $id,

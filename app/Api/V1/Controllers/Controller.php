@@ -107,7 +107,7 @@ class Controller extends BaseController
         foreach ($dates as $field) {
             $date = request()->get($field);
             $obj  = null;
-            if (!is_null($date)) {
+            if (null !== $date) {
                 try {
                     $obj = new Carbon($date);
                 } catch (InvalidDateException $e) {

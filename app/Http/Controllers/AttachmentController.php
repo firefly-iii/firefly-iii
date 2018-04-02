@@ -80,7 +80,6 @@ class AttachmentController extends Controller
      * @param Attachment $attachment
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function destroy(Request $request, Attachment $attachment)
     {
@@ -88,7 +87,7 @@ class AttachmentController extends Controller
 
         $this->repository->destroy($attachment);
 
-        $request->session()->flash('success', strval(trans('firefly.attachment_deleted', ['name' => $name])));
+        $request->session()->flash('success', (string)trans('firefly.attachment_deleted', ['name' => $name]));
         Preferences::mark();
 
         return redirect($this->getPreviousUri('attachments.delete.uri'));
@@ -130,7 +129,6 @@ class AttachmentController extends Controller
      * @param Attachment $attachment
      *
      * @return View
-     * @throws \RuntimeException
      */
     public function edit(Request $request, Attachment $attachment)
     {
@@ -154,17 +152,16 @@ class AttachmentController extends Controller
      * @param Attachment            $attachment
      *
      * @return \Illuminate\Http\RedirectResponse
-     * @throws \RuntimeException
      */
     public function update(AttachmentFormRequest $request, Attachment $attachment)
     {
         $data = $request->getAttachmentData();
         $this->repository->update($attachment, $data);
 
-        $request->session()->flash('success', strval(trans('firefly.attachment_updated', ['name' => $attachment->filename])));
+        $request->session()->flash('success', (string)trans('firefly.attachment_updated', ['name' => $attachment->filename]));
         Preferences::mark();
 
-        if (1 === intval($request->get('return_to_edit'))) {
+        if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('attachments.edit.fromUpdate', true);
 

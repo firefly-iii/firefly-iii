@@ -42,7 +42,7 @@ class Tags implements MapperInterface
 
         /** @var Tag $tag */
         foreach ($result as $tag) {
-            $tagId        = intval($tag->id);
+            $tagId        = (int)$tag->id;
             $list[$tagId] = $tag->tag;
         }
         asort($list);

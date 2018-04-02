@@ -45,7 +45,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      *
      * @return bool
      *
-     * @throws \Exception
+
      */
     public function destroy(Attachment $attachment): bool
     {
@@ -165,8 +165,8 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     public function getNoteText(Attachment $attachment): ?string
     {
         $note = $attachment->notes()->first();
-        if (!is_null($note)) {
-            return strval($note->text);
+        if (null !== $note) {
+            return (string)$note->text;
         }
 
         return null;

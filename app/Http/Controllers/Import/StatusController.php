@@ -97,7 +97,7 @@ class StatusController extends Controller
         }
         if ('finished' === $job->status) {
             $result['finished'] = true;
-            $tagId              = intval($job->extended_status['tag']);
+            $tagId              = (int)$job->extended_status['tag'];
             if ($tagId !== 0) {
                 /** @var TagRepositoryInterface $repository */
                 $repository             = app(TagRepositoryInterface::class);

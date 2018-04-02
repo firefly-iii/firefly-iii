@@ -104,12 +104,12 @@ trait TransactionServiceTrait
      */
     public function findAccount(?string $expectedType, ?int $accountId, ?string $accountName): Account
     {
-        $accountId   = intval($accountId);
-        $accountName = strval($accountName);
+        $accountId   = (int)$accountId;
+        $accountName = (string)$accountName;
         $repository  = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
 
-        if (is_null($expectedType)) {
+        if (null === $expectedType) {
             return $repository->findNull($accountId);
         }
 
@@ -215,7 +215,7 @@ trait TransactionServiceTrait
      */
     protected function setBudget(Transaction $transaction, ?Budget $budget): void
     {
-        if (is_null($budget)) {
+        if (null === $budget) {
             $transaction->budgets()->sync([]);
 
             return;
@@ -232,7 +232,7 @@ trait TransactionServiceTrait
      */
     protected function setCategory(Transaction $transaction, ?Category $category): void
     {
-        if (is_null($category)) {
+        if (null === $category) {
             $transaction->categories()->sync([]);
 
             return;
@@ -259,7 +259,7 @@ trait TransactionServiceTrait
      */
     protected function setForeignCurrency(Transaction $transaction, ?TransactionCurrency $currency): void
     {
-        if (is_null($currency)) {
+        if (null === $currency) {
             $transaction->foreign_currency_id = null;
             $transaction->save();
 

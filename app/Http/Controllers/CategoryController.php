@@ -77,7 +77,6 @@ class CategoryController extends Controller
      * @param Request $request
      *
      * @return View
-     * @throws \RuntimeException
      */
     public function create(Request $request)
     {
@@ -110,14 +109,13 @@ class CategoryController extends Controller
      * @param Category $category
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function destroy(Request $request, Category $category)
     {
         $name = $category->name;
         $this->repository->destroy($category);
 
-        $request->session()->flash('success', strval(trans('firefly.deleted_category', ['name' => $name])));
+        $request->session()->flash('success', (string)trans('firefly.deleted_category', ['name' => $name]));
         Preferences::mark();
 
         return redirect($this->getPreviousUri('categories.delete.uri'));
@@ -128,7 +126,6 @@ class CategoryController extends Controller
      * @param Category $category
      *
      * @return View
-     * @throws \RuntimeException
      */
     public function edit(Request $request, Category $category)
     {
@@ -150,8 +147,8 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $page       = 0 === intval($request->get('page')) ? 1 : intval($request->get('page'));
-        $pageSize   = intval(Preferences::get('listPageSize', 50)->data);
+        $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $pageSize   = (int)Preferences::get('listPageSize', 50)->data;
         $collection = $this->repository->getCategories();
         $total      = $collection->count();
         $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
@@ -182,8 +179,8 @@ class CategoryController extends Controller
         $start    = null;
         $end      = null;
         $periods  = new Collection;
-        $page     = intval($request->get('page'));
-        $pageSize = intval(Preferences::get('listPageSize', 50)->data);
+        $page     = (int)$request->get('page');
+        $pageSize = (int)Preferences::get('listPageSize', 50)->data;
 
         // prep for "all" view.
         if ('all' === $moment) {
@@ -239,8 +236,8 @@ class CategoryController extends Controller
         // default values:
         $subTitle     = $category->name;
         $subTitleIcon = 'fa-bar-chart';
-        $page         = intval($request->get('page'));
-        $pageSize     = intval(Preferences::get('listPageSize', 50)->data);
+        $page         = (int)$request->get('page');
+        $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
         $range        = Preferences::get('viewRange', '1M')->data;
         $start        = null;
         $end          = null;
@@ -252,7 +249,7 @@ class CategoryController extends Controller
             $subTitle = trans('firefly.all_journals_for_category', ['name' => $category->name]);
             $first    = $repository->firstUseDate($category);
             /** @var Carbon $start */
-            $start = null === $first ? new Carbon : $first;
+            $start = $first ?? new Carbon;
             $end   = new Carbon;
             $path  = route('categories.show', [$category->id, 'all']);
         }
@@ -300,17 +297,16 @@ class CategoryController extends Controller
      * @param CategoryRepositoryInterface $repository
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function store(CategoryFormRequest $request, CategoryRepositoryInterface $repository)
     {
         $data     = $request->getCategoryData();
         $category = $repository->store($data);
 
-        $request->session()->flash('success', strval(trans('firefly.stored_category', ['name' => $category->name])));
+        $request->session()->flash('success', (string)trans('firefly.stored_category', ['name' => $category->name]));
         Preferences::mark();
 
-        if (1 === intval($request->get('create_another'))) {
+        if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('categories.create.fromStore', true);
 
@@ -327,17 +323,16 @@ class CategoryController extends Controller
      * @param Category                    $category
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \RuntimeException
      */
     public function update(CategoryFormRequest $request, CategoryRepositoryInterface $repository, Category $category)
     {
         $data = $request->getCategoryData();
         $repository->update($category, $data);
 
-        $request->session()->flash('success', strval(trans('firefly.updated_category', ['name' => $category->name])));
+        $request->session()->flash('success', (string)trans('firefly.updated_category', ['name' => $category->name]));
         Preferences::mark();
 
-        if (1 === intval($request->get('return_to_edit'))) {
+        if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('categories.edit.fromUpdate', true);
 

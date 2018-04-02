@@ -50,7 +50,7 @@ final class ToAccountStarts extends AbstractTrigger implements TriggerInterface
     public static function willMatchEverything($value = null)
     {
         if (null !== $value) {
-            $res = '' === strval($value);
+            $res = '' === (string)$value;
             if (true === $res) {
                 Log::error(sprintf('Cannot use %s with "" as a value.', self::class));
             }

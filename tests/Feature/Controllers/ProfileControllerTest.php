@@ -370,7 +370,7 @@ class ProfileControllerTest extends TestCase
     {
         $token        = '';
         $currentToken = Preference::where('user_id', $this->user()->id)->where('name', 'access_token')->first();
-        if (!is_null($currentToken)) {
+        if (null !== $currentToken) {
             $token = $currentToken->data;
         }
         $this->be($this->user());

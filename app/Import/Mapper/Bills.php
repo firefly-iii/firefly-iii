@@ -42,7 +42,7 @@ class Bills implements MapperInterface
 
         /** @var Bill $bill */
         foreach ($result as $bill) {
-            $billId        = intval($bill->id);
+            $billId        = (int)$bill->id;
             $list[$billId] = $bill->name . ' [' . $bill->match . ']';
         }
         asort($list);

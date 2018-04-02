@@ -52,11 +52,11 @@ class TransferFilter implements FilterInterface
             // make property string:
             $journalId      = $transaction->transaction_journal_id;
             $amount         = Steam::positive($transaction->transaction_amount);
-            $accountIds     = [intval($transaction->account_id), intval($transaction->opposing_account_id)];
-            $transactionIds = [$transaction->id, intval($transaction->opposing_id)];
+            $accountIds     = [(int)$transaction->account_id, (int)$transaction->opposing_account_id];
+            $transactionIds = [$transaction->id, (int)$transaction->opposing_id];
             sort($accountIds);
             sort($transactionIds);
-            $key = $journalId . '-' . join(',', $transactionIds) . '-' . join(',', $accountIds) . '-' . $amount;
+            $key = $journalId . '-' . implode(',', $transactionIds) . '-' . implode(',', $accountIds) . '-' . $amount;
             if (!isset($count[$key])) {
                 // not yet counted? add to new set and count it:
                 $new->push($transaction);

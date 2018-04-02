@@ -45,7 +45,7 @@ class TransactionUpdateService
     public function reconcile(int $transactionId): ?Transaction
     {
         $transaction = Transaction::find($transactionId);
-        if (!is_null($transaction)) {
+        if (null !== $transaction) {
             $transaction->reconciled = true;
             $transaction->save();
 
@@ -79,20 +79,20 @@ class TransactionUpdateService
         // update description:
         $transaction->description = $description;
         $foreignAmount            = null;
-        if (floatval($transaction->amount) < 0) {
+        if ((float)$transaction->amount < 0) {
             // this is the source transaction.
             $type          = $this->accountType($journal, 'source');
             $account       = $this->findAccount($type, $data['source_id'], $data['source_name']);
-            $amount        = app('steam')->negative(strval($data['amount']));
-            $foreignAmount = app('steam')->negative(strval($data['foreign_amount']));
+            $amount        = app('steam')->negative((string)$data['amount']);
+            $foreignAmount = app('steam')->negative((string)$data['foreign_amount']);
         }
 
-        if (floatval($transaction->amount) > 0) {
+        if ((float)$transaction->amount > 0) {
             // this is the destination transaction.
             $type          = $this->accountType($journal, 'destination');
             $account       = $this->findAccount($type, $data['destination_id'], $data['destination_name']);
-            $amount        = app('steam')->positive(strval($data['amount']));
-            $foreignAmount = app('steam')->positive(strval($data['foreign_amount']));
+            $amount        = app('steam')->positive((string)$data['amount']);
+            $foreignAmount = app('steam')->positive((string)$data['foreign_amount']);
         }
 
         // update the actual transaction:
@@ -107,11 +107,11 @@ class TransactionUpdateService
         // set foreign currency
         $foreign = $this->findCurrency($data['foreign_currency_id'], $data['foreign_currency_code']);
         // set foreign amount:
-        if (!is_null($data['foreign_amount']) && !is_null($foreign)) {
+        if (null !== $data['foreign_amount'] && null !== $foreign) {
             $this->setForeignCurrency($transaction, $foreign);
             $this->setForeignAmount($transaction, $foreignAmount);
         }
-        if (is_null($data['foreign_amount']) || is_null($foreign)) {
+        if (null === $data['foreign_amount'] || null === $foreign) {
             $this->setForeignCurrency($transaction, null);
             $this->setForeignAmount($transaction, null);
         }

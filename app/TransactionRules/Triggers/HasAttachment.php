@@ -48,12 +48,9 @@ class HasAttachment extends AbstractTrigger implements TriggerInterface
      */
     public static function willMatchEverything($value = null)
     {
-        $value = intval($value);
-        if ($value < 0) {
-            return true;
-        }
+        $value = (int)$value;
 
-        return false;
+        return $value < 0;
     }
 
     /**
@@ -65,7 +62,7 @@ class HasAttachment extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $minimum     = intval($this->triggerValue);
+        $minimum     = (int)$this->triggerValue;
         $attachments = $journal->attachments()->count();
         if ($attachments >= $minimum) {
             Log::debug(

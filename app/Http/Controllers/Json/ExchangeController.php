@@ -50,9 +50,6 @@ class ExchangeController extends Controller
         $rate       = $repository->getExchangeRate($fromCurrency, $toCurrency, $date);
 
 
-
-
-
         if (null === $rate->id) {
             Log::debug(sprintf('No cached exchange rate in database for %s to %s on %s', $fromCurrency->code, $toCurrency->code, $date->format('Y-m-d')));
 
@@ -69,7 +66,7 @@ class ExchangeController extends Controller
         $return['amount'] = null;
         if (null !== $request->get('amount')) {
             // assume amount is in "from" currency:
-            $return['amount'] = bcmul($request->get('amount'), strval($rate->rate), 12);
+            $return['amount'] = bcmul($request->get('amount'), (string)$rate->rate, 12);
             // round to toCurrency decimal places:
             $return['amount'] = round($return['amount'], $toCurrency->decimal_places);
         }

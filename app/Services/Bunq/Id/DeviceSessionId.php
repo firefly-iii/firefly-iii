@@ -27,13 +27,4 @@ namespace FireflyIII\Services\Bunq\Id;
  */
 class DeviceSessionId extends BunqId
 {
-    /**
-     * DeviceSessionId constructor.
-     *
-     * @param null $data
-     */
-    public function __construct($data = null)
-    {
-        parent::__construct($data);
-    }
 }

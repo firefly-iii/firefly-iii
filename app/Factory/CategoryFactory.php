@@ -44,16 +44,18 @@ class CategoryFactory
      */
     public function findByName(string $name): ?Category
     {
+        $result = null;
         /** @var Collection $collection */
         $collection = $this->user->categories()->get();
         /** @var Category $category */
         foreach ($collection as $category) {
             if ($category->name === $name) {
-                return $category;
+                $result = $category;
+                break;
             }
         }
 
-        return null;
+        return $result;
     }
 
     /**
@@ -64,8 +66,8 @@ class CategoryFactory
      */
     public function findOrCreate(?int $categoryId, ?string $categoryName): ?Category
     {
-        $categoryId   = intval($categoryId);
-        $categoryName = strval($categoryName);
+        $categoryId   = (int)$categoryId;
+        $categoryName = (string)$categoryName;
 
         Log::debug(sprintf('Going to find category with ID %d and name "%s"', $categoryId, $categoryName));
 
@@ -76,14 +78,14 @@ class CategoryFactory
         if ($categoryId > 0) {
             /** @var Category $category */
             $category = $this->user->categories()->find($categoryId);
-            if (!is_null($category)) {
+            if (null !== $category) {
                 return $category;
             }
         }
 
         if (strlen($categoryName) > 0) {
             $category = $this->findByName($categoryName);
-            if (!is_null($category)) {
+            if (null !== $category) {
                 return $category;
             }
 

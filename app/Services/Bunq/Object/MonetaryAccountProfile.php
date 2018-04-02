@@ -28,7 +28,7 @@ namespace FireflyIII\Services\Bunq\Object;
 class MonetaryAccountProfile extends BunqObject
 {
     /** @var string */
-    private $profileActionRequired = '';
+    private $profileActionRequired;
     /** @var Amount */
     private $profileAmountRequired;
     /**

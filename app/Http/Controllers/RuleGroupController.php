@@ -104,11 +104,11 @@ class RuleGroupController extends Controller
     public function destroy(Request $request, RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
         $title  = $ruleGroup->title;
-        $moveTo = auth()->user()->ruleGroups()->find(intval($request->get('move_rules_before_delete')));
+        $moveTo = auth()->user()->ruleGroups()->find((int)$request->get('move_rules_before_delete'));
 
         $repository->destroy($ruleGroup, $moveTo);
 
-        Session::flash('success', strval(trans('firefly.deleted_rule_group', ['title' => $title])));
+        Session::flash('success', (string)trans('firefly.deleted_rule_group', ['title' => $title]));
         Preferences::mark();
 
         return redirect($this->getPreviousUri('rule-groups.delete.uri'));
@@ -174,7 +174,7 @@ class RuleGroupController extends Controller
         $this->dispatch($job);
 
         // Tell the user that the job is queued
-        Session::flash('success', strval(trans('firefly.applied_rule_group_selection', ['title' => $ruleGroup->title])));
+        Session::flash('success', (string)trans('firefly.applied_rule_group_selection', ['title' => $ruleGroup->title]));
 
         return redirect()->route('rules.index');
     }
@@ -184,12 +184,11 @@ class RuleGroupController extends Controller
      * @param RuleGroup                  $ruleGroup
      *
      * @return View
-     * @throws \InvalidArgumentException
      */
     public function selectTransactions(AccountRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
         // does the user have shared accounts?
-        $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts        = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $accountList     = ExpandedForm::makeSelectList($accounts);
         $checkedAccounts = array_keys($accountList);
         $first           = session('first')->format('Y-m-d');
@@ -210,10 +209,10 @@ class RuleGroupController extends Controller
         $data      = $request->getRuleGroupData();
         $ruleGroup = $repository->store($data);
 
-        Session::flash('success', strval(trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title])));
+        Session::flash('success', (string)trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title]));
         Preferences::mark();
 
-        if (1 === intval($request->get('create_another'))) {
+        if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
             Session::put('rule-groups.create.fromStore', true);
 
@@ -249,15 +248,15 @@ class RuleGroupController extends Controller
         $data = [
             'title'       => $request->input('title'),
             'description' => $request->input('description'),
-            'active'      => 1 === intval($request->input('active')),
+            'active'      => 1 === (int)$request->input('active'),
         ];
 
         $repository->update($ruleGroup, $data);
 
-        Session::flash('success', strval(trans('firefly.updated_rule_group', ['title' => $ruleGroup->title])));
+        Session::flash('success', (string)trans('firefly.updated_rule_group', ['title' => $ruleGroup->title]));
         Preferences::mark();
 
-        if (1 === intval($request->get('return_to_edit'))) {
+        if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             Session::put('rule-groups.edit.fromUpdate', true);
 

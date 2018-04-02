@@ -84,10 +84,10 @@ class Authenticate
             if ($this->auth->check()) {
                 // do an extra check on user object.
                 $user = $this->auth->authenticate();
-                if (1 === intval($user->blocked)) {
-                    $message = strval(trans('firefly.block_account_logout'));
+                if (1 === (int)$user->blocked) {
+                    $message = (string)trans('firefly.block_account_logout');
                     if ('email_changed' === $user->blocked_code) {
-                        $message = strval(trans('firefly.email_changed_logout'));
+                        $message = (string)trans('firefly.email_changed_logout');
                     }
                     app('session')->flash('logoutMessage', $message);
                     $this->auth->logout();

@@ -65,12 +65,11 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
 
     /**
      * @return string
-     * @throws \Throwable
      */
     public function generate(): string
     {
-        $accountIds      = join(',', $this->accounts->pluck('id')->toArray());
-        $tagTags         = join(',', $this->tags->pluck('tag')->toArray());
+        $accountIds      = implode(',', $this->accounts->pluck('id')->toArray());
+        $tagTags         = implode(',', $this->tags->pluck('tag')->toArray());
         $reportType      = 'tag';
         $expenses        = $this->getExpenses();
         $income          = $this->getIncome();

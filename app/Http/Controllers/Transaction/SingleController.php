@@ -162,7 +162,7 @@ class SingleController extends Controller
         $subTitle       = trans('form.add_new_' . $what);
         $subTitleIcon   = 'fa-plus';
         $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
-        $source         = intval($request->get('source'));
+        $source         = (int)$request->get('source');
 
         if (($what === 'withdrawal' || $what === 'transfer') && $source > 0) {
             $preFilled['source_account_id'] = $source;
@@ -227,7 +227,7 @@ class SingleController extends Controller
         }
         // @codeCoverageIgnoreEnd
         $type = $transactionJournal->transactionTypeStr();
-        Session::flash('success', strval(trans('firefly.deleted_' . strtolower($type), ['description' => $transactionJournal->description])));
+        Session::flash('success', (string)trans('firefly.deleted_' . strtolower($type), ['description' => $transactionJournal->description]));
 
         $this->repository->destroy($transactionJournal);
 
@@ -272,7 +272,7 @@ class SingleController extends Controller
         $destinationAccounts = $repository->getJournalDestinationAccounts($journal);
         $optionalFields      = Preferences::get('transaction_journal_optional_fields', [])->data;
         $pTransaction        = $repository->getFirstPosTransaction($journal);
-        $foreignCurrency     = null !== $pTransaction->foreignCurrency ? $pTransaction->foreignCurrency : $pTransaction->transactionCurrency;
+        $foreignCurrency     = $pTransaction->foreignCurrency ?? $pTransaction->transactionCurrency;
         $preFilled           = [
             'date'                     => $repository->getJournalDate($journal, null), //  $journal->dateAsString()
             'interest_date'            => $repository->getJournalDate($journal, 'interest_date'),
@@ -334,16 +334,16 @@ class SingleController extends Controller
      */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
-        $doSplit       = 1 === intval($request->get('split_journal'));
-        $createAnother = 1 === intval($request->get('create_another'));
+        $doSplit       = 1 === (int)$request->get('split_journal');
+        $createAnother = 1 === (int)$request->get('create_another');
         $data          = $request->getJournalData();
         $journal       = $repository->store($data);
 
 
         if (null === $journal->id) {
             // error!
-            Log::error('Could not store transaction journal: ', $journal->getErrors()->toArray());
-            Session::flash('error', $journal->getErrors()->first());
+            Log::error('Could not store transaction journal.');
+            Session::flash('error', (string)trans('firefly.unknown_journal_error'));
 
             return redirect(route('transactions.create', [$request->input('what')]))->withInput();
         }
@@ -354,17 +354,17 @@ class SingleController extends Controller
 
         // store the journal only, flash the rest.
         Log::debug(sprintf('Count of error messages is %d', $this->attachments->getErrors()->count()));
-        if (count($this->attachments->getErrors()->get('attachments')) > 0) {
+        if (\count($this->attachments->getErrors()->get('attachments')) > 0) {
             Session::flash('error', $this->attachments->getErrors()->get('attachments'));
         }
         // flash messages
-        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+        if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
             Session::flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
         event(new StoredTransactionJournal($journal, $data['piggy_bank_id']));
 
-        Session::flash('success', strval(trans('firefly.stored_journal', ['description' => $journal->description])));
+        Session::flash('success', (string)trans('firefly.stored_journal', ['description' => $journal->description]));
         Preferences::mark();
 
         // @codeCoverageIgnoreStart
@@ -417,11 +417,11 @@ class SingleController extends Controller
         // update, get events by date and sort DESC
 
         $type = strtolower($this->repository->getTransactionType($journal));
-        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => $data['description']])));
+        Session::flash('success', (string)trans('firefly.updated_' . $type, ['description' => $data['description']]));
         Preferences::mark();
 
         // @codeCoverageIgnoreStart
-        if (1 === intval($request->get('return_to_edit'))) {
+        if (1 === (int)$request->get('return_to_edit')) {
             Session::put('transactions.edit.fromUpdate', true);
 
             return redirect(route('transactions.edit', [$journal->id]))->withInput(['return_to_edit' => 1]);

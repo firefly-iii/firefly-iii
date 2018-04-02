@@ -60,7 +60,7 @@ class BunqConfigurator implements ConfiguratorInterface
      */
     public function configureJob(array $data): bool
     {
-        if (is_null($this->job)) {
+        if (null === $this->job) {
             throw new FireflyException('Cannot call configureJob() without a job.');
         }
         $stage = $this->getConfig()['stage'] ?? 'initial';
@@ -94,7 +94,7 @@ class BunqConfigurator implements ConfiguratorInterface
      */
     public function getNextData(): array
     {
-        if (is_null($this->job)) {
+        if (null === $this->job) {
             throw new FireflyException('Cannot call configureJob() without a job.');
         }
         $config = $this->getConfig();
@@ -107,9 +107,8 @@ class BunqConfigurator implements ConfiguratorInterface
                 /** @var HaveAccounts $class */
                 $class = app(HaveAccounts::class);
                 $class->setJob($this->job);
-                $data = $class->getData();
 
-                return $data;
+                return $class->getData();
             default:
                 return [];
         }
@@ -122,7 +121,7 @@ class BunqConfigurator implements ConfiguratorInterface
      */
     public function getNextView(): string
     {
-        if (is_null($this->job)) {
+        if (null === $this->job) {
             throw new FireflyException('Cannot call configureJob() without a job.');
         }
         $stage = $this->getConfig()['stage'] ?? 'initial';
@@ -153,7 +152,7 @@ class BunqConfigurator implements ConfiguratorInterface
      */
     public function isJobConfigured(): bool
     {
-        if (is_null($this->job)) {
+        if (null === $this->job) {
             throw new FireflyException('Cannot call configureJob() without a job.');
         }
         $stage = $this->getConfig()['stage'] ?? 'initial';

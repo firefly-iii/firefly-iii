@@ -103,7 +103,7 @@ class AccountController extends Controller
 
         // types to get, page size:
         $types    = $this->mapTypes($this->parameters->get('type'));
-        $pageSize = intval(Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data);
+        $pageSize = (int)Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of accounts. Count it and split it.
         $collection = $this->repository->getAccountsByType($types);
@@ -154,7 +154,7 @@ class AccountController extends Controller
         // if currency ID is 0, find the currency by the code:
         if (0 === $data['currency_id']) {
             $currency            = $this->currencyRepository->findByCodeNull($data['currency_code']);
-            $data['currency_id'] = is_null($currency) ? 0 : $currency->id;
+            $data['currency_id'] = null === $currency ? 0 : $currency->id;
         }
         $account = $this->repository->store($data);
         $manager = new Manager();
@@ -180,7 +180,7 @@ class AccountController extends Controller
         // if currency ID is 0, find the currency by the code:
         if (0 === $data['currency_id']) {
             $currency            = $this->currencyRepository->findByCodeNull($data['currency_code']);
-            $data['currency_id'] = is_null($currency) ? 0 : $currency->id;
+            $data['currency_id'] = null === $currency ? 0 : $currency->id;
         }
         // set correct type:
         $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);

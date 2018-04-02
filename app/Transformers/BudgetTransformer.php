@@ -75,7 +75,7 @@ class BudgetTransformer extends TransformerAbstract
      */
     public function includeTransactions(Budget $budget): FractalCollection
     {
-        $pageSize = intval(app('preferences')->getForUser($budget->user, 'listPageSize', 50)->data);
+        $pageSize = (int)app('preferences')->getForUser($budget->user, 'listPageSize', 50)->data;
 
         // journals always use collector and limited using URL parameters.
         $collector = app(JournalCollectorInterface::class);
@@ -83,7 +83,7 @@ class BudgetTransformer extends TransformerAbstract
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setAllAssetAccounts();
         $collector->setBudgets(new Collection([$budget]));
-        if (!is_null($this->parameters->get('start')) && !is_null($this->parameters->get('end'))) {
+        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
@@ -118,7 +118,7 @@ class BudgetTransformer extends TransformerAbstract
             'id'         => (int)$budget->id,
             'updated_at' => $budget->updated_at->toAtomString(),
             'created_at' => $budget->created_at->toAtomString(),
-            'active'     => intval($budget->active) === 1,
+            'active'     => (int)$budget->active === 1,
             'name'       => $budget->name,
             'links'      => [
                 [

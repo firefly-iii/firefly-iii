@@ -128,7 +128,7 @@ class ChartJsGenerator implements GeneratorInterface
         $index = 0;
         foreach ($data as $key => $value) {
             // make larger than 0
-            $chartData['datasets'][0]['data'][]            = floatval(Steam::positive($value));
+            $chartData['datasets'][0]['data'][]            = (float)Steam::positive($value);
             $chartData['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
             $chartData['labels'][]                         = $key;
             ++$index;

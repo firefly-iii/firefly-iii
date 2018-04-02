@@ -45,7 +45,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * @return string
-     * @throws \Throwable
      */
     public function generate(): string
     {
@@ -61,7 +60,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
         $defaultShow = ['icon', 'description', 'balance_before', 'amount', 'balance_after', 'date', 'to'];
         $reportType  = 'audit';
-        $accountIds  = join(',', $this->accounts->pluck('id')->toArray());
+        $accountIds  = implode(',', $this->accounts->pluck('id')->toArray());
         $hideable    = ['buttons', 'icon', 'description', 'balance_before', 'amount', 'balance_after', 'date',
                         'interest_date', 'book_date', 'process_date',
                         // three new optional fields.
@@ -173,7 +172,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $journals         = $journals->reverse();
         $dayBeforeBalance = Steam::balance($account, $date);
         $startBalance     = $dayBeforeBalance;
-        $currency         = $currencyRepos->find(intval($account->getMeta('currency_id')));
+        $currency         = $currencyRepos->find((int)$account->getMeta('currency_id'));
 
         /** @var Transaction $transaction */
         foreach ($journals as $transaction) {
@@ -193,9 +192,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $return = [
             'journals'         => $journals->reverse(),
             'exists'           => $journals->count() > 0,
-            'end'              => $this->end->formatLocalized(strval(trans('config.month_and_day'))),
+            'end'              => $this->end->formatLocalized((string)trans('config.month_and_day')),
             'endBalance'       => Steam::balance($account, $this->end),
-            'dayBefore'        => $date->formatLocalized(strval(trans('config.month_and_day'))),
+            'dayBefore'        => $date->formatLocalized((string)trans('config.month_and_day')),
             'dayBeforeBalance' => $dayBeforeBalance,
         ];
 

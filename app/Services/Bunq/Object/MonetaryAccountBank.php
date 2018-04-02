@@ -38,15 +38,15 @@ class MonetaryAccountBank extends BunqObject
     /** @var Carbon */
     private $created;
     /** @var string */
-    private $currency = '';
+    private $currency;
     /** @var Amount */
     private $dailyLimit;
     /** @var Amount */
     private $dailySpent;
     /** @var string */
-    private $description = '';
+    private $description;
     /** @var int */
-    private $id = 0;
+    private $id;
     /** @var MonetaryAccountProfile */
     private $monetaryAccountProfile;
     /** @var array */
@@ -54,28 +54,27 @@ class MonetaryAccountBank extends BunqObject
     /** @var Amount */
     private $overdraftLimit;
     /** @var string */
-    private $publicUuid = '';
+    private $publicUuid;
     /** @var string */
-    private $reason = '';
+    private $reason;
     /** @var string */
-    private $reasonDescription = '';
+    private $reasonDescription;
     /** @var MonetaryAccountSetting */
     private $setting;
     /** @var string */
-    private $status = '';
+    private $status;
     /** @var string */
-    private $subStatus = '';
+    private $subStatus;
     /** @var Carbon */
     private $updated;
     /** @var int */
-    private $userId = 0;
+    private $userId;
 
     /**
      * MonetaryAccountBank constructor.
      *
      * @param array $data
      *
-     * @throws \InvalidArgumentException
      */
     public function __construct(array $data)
     {
@@ -106,8 +105,6 @@ class MonetaryAccountBank extends BunqObject
         foreach ($data['notification_filters'] as $filter) {
             $this->notificationFilters[] = new NotificationFilter($filter);
         }
-
-        return;
     }
 
     /**

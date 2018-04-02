@@ -97,7 +97,7 @@ class BulkControllerTest extends TestCase
         // default transactions
         $collection = $this->user()->transactionJournals()->take(4)->get();
         $allIds     = $collection->pluck('id')->toArray();
-        $route      = route('transactions.bulk.edit', join(',', $allIds));
+        $route      = route('transactions.bulk.edit', implode(',', $allIds));
         $this->be($this->user());
         $response = $this->get($route);
         $response->assertStatus(200);
@@ -133,7 +133,7 @@ class BulkControllerTest extends TestCase
         // default transactions
         $collection = $this->user()->transactionJournals()->take(4)->get();
         $allIds     = $collection->pluck('id')->toArray();
-        $route      = route('transactions.bulk.edit', join(',', $allIds));
+        $route      = route('transactions.bulk.edit', implode(',', $allIds));
         $this->be($this->user());
         $response = $this->get($route);
         $response->assertStatus(200);

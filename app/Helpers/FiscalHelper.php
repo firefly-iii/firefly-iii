@@ -73,8 +73,8 @@ class FiscalHelper implements FiscalHelperInterface
         $startDate = clone $date;
         if (true === $this->useCustomFiscalYear) {
             $prefStartStr = Preferences::get('fiscalYearStart', '01-01')->data;
-            list($mth, $day) = explode('-', $prefStartStr);
-            $startDate->month(intval($mth))->day(intval($day));
+            [$mth, $day] = explode('-', $prefStartStr);
+            $startDate->month((int)$mth)->day((int)$day);
 
             // if start date is after passed date, sub 1 year.
             if ($startDate > $date) {

@@ -27,7 +27,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Watson\Validating\ValidatingTrait;
 
 /**
  * Class Transaction.
@@ -98,17 +97,6 @@ class Transaction extends Model
      * @var array
      */
     protected $hidden = ['encrypted'];
-    /**
-     * @var array
-     */
-    protected $rules
-        = [
-            'account_id'              => 'required|exists:accounts,id',
-            'transaction_journal_id'  => 'required|exists:transaction_journals,id',
-            'transaction_currency_id' => 'required|exists:transaction_currencies,id',
-            'description'             => 'between:0,1024',
-            'amount'                  => 'required|numeric',
-        ];
 
     /**
      * @codeCoverageIgnore
@@ -142,10 +130,10 @@ class Transaction extends Model
     public static function routeBinder(string $value): Transaction
     {
         if (auth()->check()) {
-            $transactionId = intval($value);
+            $transactionId = (int)$value;
             $transaction   = auth()->user()->transactions()->where('transactions.id', $transactionId)
                                    ->first(['transactions.*']);
-            if (!is_null($transaction)) {
+            if (null !== $transaction) {
                 return $transaction;
             }
         }
@@ -153,7 +141,7 @@ class Transaction extends Model
         throw new NotFoundHttpException;
     }
 
-    use SoftDeletes, ValidatingTrait;
+    use SoftDeletes;
 
     /**
      * @codeCoverageIgnore
@@ -256,7 +244,7 @@ class Transaction extends Model
      */
     public function setAmountAttribute($value)
     {
-        $this->attributes['amount'] = strval($value);
+        $this->attributes['amount'] = (string)$value;
     }
 
     /**

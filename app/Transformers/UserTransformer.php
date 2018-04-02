@@ -184,7 +184,7 @@ class UserTransformer extends TransformerAbstract
     {
         /** @var Role $role */
         $role = $user->roles()->first();
-        if (!is_null($role)) {
+        if (null !== $role) {
             $role = $role->name;
         }
 
@@ -193,7 +193,7 @@ class UserTransformer extends TransformerAbstract
             'updated_at'   => $user->updated_at->toAtomString(),
             'created_at'   => $user->created_at->toAtomString(),
             'email'        => $user->email,
-            'blocked'      => intval($user->blocked) === 1,
+            'blocked'      => (int)$user->blocked === 1,
             'blocked_code' => $user->blocked_code,
             'role'         => $role,
             'links'        => [

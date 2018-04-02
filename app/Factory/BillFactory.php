@@ -47,7 +47,7 @@ class BillFactory
     {
         $matchArray = explode(',', $data['match']);
         $matchArray = array_unique($matchArray);
-        $match      = join(',', $matchArray);
+        $match      = implode(',', $matchArray);
 
         /** @var Bill $bill */
         $bill = Bill::create(
@@ -81,14 +81,14 @@ class BillFactory
      */
     public function find(?int $billId, ?string $billName): ?Bill
     {
-        $billId   = intval($billId);
-        $billName = strval($billName);
+        $billId   = (int)$billId;
+        $billName = (string)$billName;
 
         // first find by ID:
         if ($billId > 0) {
             /** @var Bill $bill */
             $bill = $this->user->bills()->find($billId);
-            if (!is_null($bill)) {
+            if (null !== $bill) {
                 return $bill;
             }
         }
@@ -96,7 +96,7 @@ class BillFactory
         // then find by name:
         if (strlen($billName) > 0) {
             $bill = $this->findByName($billName);
-            if (!is_null($bill)) {
+            if (null !== $bill) {
                 return $bill;
             }
         }

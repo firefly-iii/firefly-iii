@@ -129,5 +129,7 @@ class CreateExport extends Command
 
         $this->line('The export has finished! You can find the ZIP file in this location:');
         $this->line(storage_path(sprintf('export/%s', $fileName)));
+
+        return 0;
     }
 }

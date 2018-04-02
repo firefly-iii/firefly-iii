@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use Exception;
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Mail\AdminTestMail;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
 use Mail;
 use Session;
-use Swift_TransportException;
 
 /**
  * Class AdminEventHandler.
@@ -61,7 +61,7 @@ class AdminEventHandler
             Log::debug('Trying to send message...');
             Mail::to($email)->send(new AdminTestMail($email, $ipAddress));
             // @codeCoverageIgnoreStart
-        } catch (Swift_TransportException $e) {
+        } catch (Exception $e) {
             Log::debug('Send message failed! :(');
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());

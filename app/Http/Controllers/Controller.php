@@ -121,7 +121,7 @@ class Controller extends BaseController
      */
     protected function getPreviousUri(string $identifier): string
     {
-        $uri = strval(session($identifier));
+        $uri = (string)session($identifier);
         if (!(false === strpos($identifier, 'delete')) && !(false === strpos($uri, '/show/'))) {
             $uri = $this->redirectUri;
         }
@@ -159,7 +159,7 @@ class Controller extends BaseController
             }
         }
         // @codeCoverageIgnoreStart
-        Session::flash('error', strval(trans('firefly.cannot_redirect_to_account')));
+        Session::flash('error', (string)trans('firefly.cannot_redirect_to_account'));
 
         return redirect(route('index'));
         // @codeCoverageIgnoreEnd

@@ -35,7 +35,7 @@ use Log;
 class OpposingAccountFilter implements FilterInterface
 {
     /** @var array */
-    private $accounts = [];
+    private $accounts;
 
     /**
      * InternalTransferFilter constructor.

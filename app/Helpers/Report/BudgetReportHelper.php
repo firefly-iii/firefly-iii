@@ -91,7 +91,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                     'id'    => $budget->id,
                     'name'  => $budget->name,
 
-                    'budgeted'  => strval($budgetLimit->amount),
+                    'budgeted'  => (string)$budgetLimit->amount,
                     'spent'     => $data['expenses'],
                     'left'      => $data['left'],
                     'overspent' => $data['overspent'],

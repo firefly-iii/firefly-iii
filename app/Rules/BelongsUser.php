@@ -72,11 +72,11 @@ class BelongsUser implements Rule
         if (!auth()->check()) {
             return true; // @codeCoverageIgnore
         }
-        $attribute = strval($attribute);
+        $attribute = (string)$attribute;
         switch ($attribute) {
             case 'piggy_bank_id':
                 $count = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
-                                  ->where('piggy_banks.id', '=', intval($value))
+                                  ->where('piggy_banks.id', '=', (int)$value)
                                   ->where('accounts.user_id', '=', auth()->user()->id)->count();
 
                 return $count === 1;
@@ -87,7 +87,7 @@ class BelongsUser implements Rule
                 return $count === 1;
                 break;
             case 'bill_id':
-                $count = Bill::where('id', '=', intval($value))->where('user_id', '=', auth()->user()->id)->count();
+                $count = Bill::where('id', '=', (int)$value)->where('user_id', '=', auth()->user()->id)->count();
 
                 return $count === 1;
             case 'bill_name':
@@ -96,12 +96,12 @@ class BelongsUser implements Rule
                 return $count === 1;
                 break;
             case 'budget_id':
-                $count = Budget::where('id', '=', intval($value))->where('user_id', '=', auth()->user()->id)->count();
+                $count = Budget::where('id', '=', (int)$value)->where('user_id', '=', auth()->user()->id)->count();
 
                 return $count === 1;
                 break;
             case 'category_id':
-                $count = Category::where('id', '=', intval($value))->where('user_id', '=', auth()->user()->id)->count();
+                $count = Category::where('id', '=', (int)$value)->where('user_id', '=', auth()->user()->id)->count();
 
                 return $count === 1;
                 break;
@@ -112,7 +112,7 @@ class BelongsUser implements Rule
                 break;
             case 'source_id':
             case 'destination_id':
-                $count = Account::where('id', '=', intval($value))->where('user_id', '=', auth()->user()->id)->count();
+                $count = Account::where('id', '=', (int)$value)->where('user_id', '=', auth()->user()->id)->count();
 
                 return $count === 1;
                 break;
@@ -143,7 +143,7 @@ class BelongsUser implements Rule
         }
         $count = 0;
         foreach ($objects as $object) {
-            if (trim(strval($object->$field)) === trim($value)) {
+            if (trim((string)$object->$field) === trim($value)) {
                 $count++;
             }
         }

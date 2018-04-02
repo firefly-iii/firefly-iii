@@ -65,7 +65,7 @@ class IsSandstormUserTest extends TestCase
         $response = $this->get('/_test/is-sandstorm');
 
         $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
-        $response->assertSessionHas('warning', strval(trans('firefly.sandstorm_not_available')));
+        $response->assertSessionHas('warning', (string)trans('firefly.sandstorm_not_available'));
         $response->assertRedirect(route('index'));
         putenv('SANDSTORM=0');
     }

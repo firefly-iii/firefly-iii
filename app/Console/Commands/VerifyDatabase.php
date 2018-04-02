@@ -62,14 +62,6 @@ class VerifyDatabase extends Command
     protected $signature = 'firefly:verify';
 
     /**
-     * Create a new command instance.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      */
     public function handle()
@@ -158,7 +150,7 @@ class VerifyDatabase extends Command
                       ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')]);
         /** @var stdClass $entry */
         foreach ($journals as $entry) {
-            if (0 !== bccomp(strval($entry->the_sum), '0')) {
+            if (0 !== bccomp((string)$entry->the_sum, '0')) {
                 $errored[] = $entry->transaction_journal_id;
             }
         }
@@ -171,7 +163,7 @@ class VerifyDatabase extends Command
             // report about it
             /** @var TransactionJournal $journal */
             $journal = TransactionJournal::find($journalId);
-            if (is_null($journal)) {
+            if (null === $journal) {
                 continue;
             }
             if (TransactionType::OPENING_BALANCE === $journal->transactionType->type) {
@@ -297,7 +289,7 @@ class VerifyDatabase extends Command
                       );
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $date = null === $entry->transaction_deleted_at ? $entry->journal_deleted_at : $entry->transaction_deleted_at;
+            $date = $entry->transaction_deleted_at ?? $entry->journal_deleted_at;
             $this->error(
                 'Error: Account #' . $entry->account_id . ' should have been deleted, but has not.' .
                 ' Find it in the table called "accounts" and change the "deleted_at" field to: "' . $date . '"'
@@ -448,7 +440,7 @@ class VerifyDatabase extends Command
 
         /** @var User $user */
         foreach ($userRepository->all() as $user) {
-            $sum = strval($user->transactions()->sum('amount'));
+            $sum = (string)$user->transactions()->sum('amount');
             if (0 !== bccomp($sum, '0')) {
                 $this->error('Error: Transactions for user #' . $user->id . ' (' . $user->email . ') are off by ' . $sum . '!');
             } else {

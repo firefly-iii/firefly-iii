@@ -49,7 +49,7 @@ class ImportAccount
     /** @var int */
     private $defaultAccountId = 0;
     /** @var string */
-    private $expectedType = '';
+    private $expectedType;
     /**
      * This value is used to indicate the other account ID (the opposing transaction's account),
      * if it is know. If so, this particular import account may never return an Account with this ID.
@@ -299,19 +299,19 @@ class ImportAccount
         /** @var AccountType $accountType */
         $accountType = $this->repository->getAccountType($this->expectedType);
         $result      = $this->findById($accountType);
-        if (!is_null($result)) {
+        if (null !== $result) {
             return $result;
         }
 
         $result = $this->findByIBAN($accountType);
 
-        if (!is_null($result)) {
+        if (null !== $result) {
             return $result;
         }
 
         $result = $this->findByName($accountType);
 
-        if (!is_null($result)) {
+        if (null !== $result) {
             return $result;
         }
 
@@ -365,7 +365,7 @@ class ImportAccount
 
         Log::debug('Finding a mapped account based on', $array);
 
-        $search  = intval($array['mapped'] ?? 0);
+        $search  = (int)($array['mapped'] ?? 0.0);
         $account = $this->repository->findNull($search);
 
         if (null === $account) {
@@ -401,10 +401,10 @@ class ImportAccount
      */
     private function store(): bool
     {
-        if (is_null($this->user)) {
+        if (null === $this->user) {
             throw new FireflyException('ImportAccount cannot continue without user.');
         }
-        if ((is_null($this->defaultAccountId) || 0 === intval($this->defaultAccountId)) && AccountType::ASSET === $this->expectedType) {
+        if ((null === $this->defaultAccountId || 0 === (int)$this->defaultAccountId) && AccountType::ASSET === $this->expectedType) {
             throw new FireflyException('ImportAccount cannot continue without a default account to fall back on.');
         }
         // 1: find mapped object:

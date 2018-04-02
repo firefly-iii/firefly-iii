@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Help;
 
 use Cache;
+use Exception;
 use League\CommonMark\CommonMarkConverter;
 use Log;
 use Requests;
-use Requests_Exception;
 use Route;
 
 /**
@@ -68,7 +68,7 @@ class Help implements HelpInterface
         $content = '';
         try {
             $result = Requests::get($uri, [], $opt);
-        } catch (Requests_Exception $e) {
+        } catch (Exception $e) {
             Log::error($e);
 
             return '';

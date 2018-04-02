@@ -49,8 +49,8 @@
 		"ext-curl": "*",
 		"ext-gd": "*",
 		"ext-intl": "*",
-		"ext-zip": "*",
 		"ext-xml": "*",
+		"ext-zip": "*",
 		"bacon/bacon-qr-code": "1.*",
 		"davejamesmiller/laravel-breadcrumbs": "5.*",
 		"doctrine/dbal": "2.*",
@@ -61,12 +61,11 @@
 		"league/commonmark": "0.*",
 		"league/csv": "9.*",
 		"league/fractal": "^0.17.0",
-		"pragmarx/google2fa": "2.*",
-		"pragmarx/google2fa-laravel": "^0.1.4",
+		"pragmarx/google2fa": "3.*",
+		"pragmarx/google2fa-laravel": "0.*",
 		"rcrowe/twigbridge": "0.9.*",
 		"rmccue/requests": "1.*",
-		"twig/twig": "1.*",
-		"watson/validating": "3.*"
+		"twig/twig": "1.*"
 	},
 	"require-dev": {
 		"barryvdh/laravel-debugbar": "3.*",

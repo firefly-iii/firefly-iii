@@ -34,23 +34,15 @@ use Illuminate\Http\Request;
 class JsonController extends Controller
 {
     /**
-     * JsonController constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
      *
-     * @throws \Throwable
+
      */
     public function action(Request $request)
     {
-        $count   = intval($request->get('count')) > 0 ? intval($request->get('count')) : 1;
+        $count   = (int)$request->get('count') > 0 ? (int)$request->get('count') : 1;
         $keys    = array_keys(config('firefly.rule-actions'));
         $actions = [];
         foreach ($keys as $key) {
@@ -122,11 +114,11 @@ class JsonController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      *
-     * @throws \Throwable
+
      */
     public function trigger(Request $request)
     {
-        $count    = intval($request->get('count')) > 0 ? intval($request->get('count')) : 1;
+        $count    = (int)$request->get('count') > 0 ? (int)$request->get('count') : 1;
         $keys     = array_keys(config('firefly.rule-triggers'));
         $triggers = [];
         foreach ($keys as $key) {

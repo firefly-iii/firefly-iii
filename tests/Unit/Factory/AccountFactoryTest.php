@@ -212,7 +212,7 @@ class AccountFactoryTest extends TestCase
 
         // find opening balance:
         $this->assertEquals(1, $account->transactions()->count());
-        $this->assertEquals(100, floatval($account->transactions()->first()->amount));
+        $this->assertEquals(100, (float)$account->transactions()->first()->amount);
     }
 
     /**
@@ -361,7 +361,7 @@ class AccountFactoryTest extends TestCase
 
         // find opening balance:
         $this->assertEquals(1, $account->transactions()->count());
-        $this->assertEquals(-100, floatval($account->transactions()->first()->amount));
+        $this->assertEquals(-100, (float)$account->transactions()->first()->amount);
     }
 
     /**

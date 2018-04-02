@@ -69,7 +69,7 @@ class PrerequisitesController extends Controller
         if (true === !config(sprintf('import.enabled.%s', $bank))) {
             throw new FireflyException(sprintf('Cannot import from "%s" at this time.', $bank)); // @codeCoverageIgnore
         }
-        $class = strval(config(sprintf('import.prerequisites.%s', $bank)));
+        $class = (string)config(sprintf('import.prerequisites.%s', $bank));
         if (!class_exists($class)) {
             throw new FireflyException(sprintf('No class to handle "%s".', $bank)); // @codeCoverageIgnore
         }
@@ -80,7 +80,7 @@ class PrerequisitesController extends Controller
 
         if ($object->hasPrerequisites()) {
             $view       = $object->getView();
-            $parameters = ['title' => strval(trans('firefly.import_index_title')), 'mainTitleIcon' => 'fa-archive'];
+            $parameters = ['title' => (string)trans('firefly.import_index_title'), 'mainTitleIcon' => 'fa-archive'];
             $parameters = array_merge($object->getViewParameters(), $parameters);
 
             return view($view, $parameters);
@@ -103,7 +103,6 @@ class PrerequisitesController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
-     * @throws \RuntimeException
      * @throws FireflyException
      */
     public function post(Request $request, string $bank)
@@ -114,7 +113,7 @@ class PrerequisitesController extends Controller
             throw new FireflyException(sprintf('Cannot import from "%s" at this time.', $bank)); // @codeCoverageIgnore
         }
 
-        $class = strval(config(sprintf('import.prerequisites.%s', $bank)));
+        $class = (string)config(sprintf('import.prerequisites.%s', $bank));
         if (!class_exists($class)) {
             throw new FireflyException(sprintf('Cannot find class %s', $class)); // @codeCoverageIgnore
         }

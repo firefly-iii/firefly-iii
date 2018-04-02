@@ -108,8 +108,8 @@ class BillRequest extends Request
         $validator->after(
             function (Validator $validator) {
                 $data = $validator->getData();
-                $min  = floatval($data['amount_min'] ?? 0);
-                $max  = floatval($data['amount_max'] ?? 0);
+                $min  = (float)($data['amount_min'] ?? 0);
+                $max  = (float)($data['amount_max'] ?? 0);
                 if ($min > $max) {
                     $validator->errors()->add('amount_min', trans('validation.amount_min_over_max'));
                 }

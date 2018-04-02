@@ -47,7 +47,7 @@ class Amount implements ConverterInterface
         }
         Log::debug(sprintf('Start with amount "%s"', $value));
         $original        = $value;
-        $value           = strval($value);
+        $value           = (string)$value;
         $value           = $this->stripAmount($value);
         $len             = strlen($value);
         $decimalPosition = $len - 3;
@@ -69,7 +69,7 @@ class Amount implements ConverterInterface
         }
 
         // decimal character still null? Search from the left for '.',',' or ' '.
-        if (is_null($decimal)) {
+        if (null === $decimal) {
             Log::debug('Decimal is still NULL, probably number with >2 decimals. Search for a dot.');
             $res = strrpos($value, '.');
             if (!(false === $res)) {
@@ -99,9 +99,7 @@ class Amount implements ConverterInterface
             Log::debug(sprintf('No decimal character found. Converted amount from "%s" to "%s".', $original, $value));
         }
 
-        $number = strval(number_format(round(floatval($value), 12), 12, '.', ''));
-
-        return $number;
+        return strval(number_format(round(floatval($value), 12), 12, '.', ''));
     }
 
     /**

@@ -91,7 +91,7 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
-        $pageSize = intval(Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data);
+        $pageSize = (int)Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // read type from URI
         $type = $request->get('type') ?? 'default';
@@ -115,7 +115,7 @@ class TransactionController extends Controller
             $collector->removeFilter(InternalTransferFilter::class);
         }
 
-        if (!is_null($this->parameters->get('start')) && !is_null($this->parameters->get('end'))) {
+        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));

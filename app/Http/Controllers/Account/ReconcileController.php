@@ -123,7 +123,6 @@ class ReconcileController extends Controller
      * @return \Illuminate\Http\JsonResponse
      *
      * @throws FireflyException
-     * @throws \Throwable
      */
     public function overview(Request $request, Account $account, Carbon $start, Carbon $end)
     {
@@ -189,7 +188,7 @@ class ReconcileController extends Controller
 
             return redirect(route('accounts.index', [config('firefly.shortNamesByFullName.' . $account->accountType->type)]));
         }
-        $currencyId = intval($this->accountRepos->getMetaValue($account, 'currency_id'));
+        $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
         $currency   = $this->currencyRepos->findNull($currencyId);
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
@@ -263,7 +262,7 @@ class ReconcileController extends Controller
 
         /** @var Transaction $transaction */
         foreach ($data['transactions'] as $transactionId) {
-            $repository->reconcileById(intval($transactionId));
+            $repository->reconcileById((int)$transactionId);
         }
         Log::debug('Reconciled all transactions.');
 
@@ -300,7 +299,7 @@ class ReconcileController extends Controller
                 'tags'            => null,
                 'interest_date'   => null,
                 'transactions'    => [[
-                                          'currency_id'           => intval($this->accountRepos->getMetaValue($account, 'currency_id')),
+                                          'currency_id'           => (int)$this->accountRepos->getMetaValue($account, 'currency_id'),
                                           'currency_code'         => null,
                                           'description'           => null,
                                           'amount'                => app('steam')->positive($difference),
@@ -338,7 +337,6 @@ class ReconcileController extends Controller
      *
      * @return mixed
      *
-     * @throws \Throwable
      * @throws FireflyException
      */
     public function transactions(Account $account, Carbon $start, Carbon $end)
@@ -350,7 +348,7 @@ class ReconcileController extends Controller
         $startDate = clone $start;
         $startDate->subDays(1);
 
-        $currencyId = intval($this->accountRepos->getMetaValue($account, 'currency_id'));
+        $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
         $currency   = $this->currencyRepos->findNull($currencyId);
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
@@ -400,7 +398,7 @@ class ReconcileController extends Controller
         $destination = $this->repository->getJournalDestinationAccounts($journal)->first();
         if (bccomp($submitted['amount'], '0') === 1) {
             // amount is positive, switch accounts:
-            list($source, $destination) = [$destination, $source];
+            [$source, $destination] = [$destination, $source];
 
         }
         // expand data with journal data:
@@ -417,7 +415,7 @@ class ReconcileController extends Controller
             'interest_date'   => null,
             'book_date'       => null,
             'transactions'    => [[
-                                      'currency_id'           => intval($journal->transaction_currency_id),
+                                      'currency_id'           => (int)$journal->transaction_currency_id,
                                       'currency_code'         => null,
                                       'description'           => null,
                                       'amount'                => app('steam')->positive($submitted['amount']),
@@ -442,7 +440,7 @@ class ReconcileController extends Controller
         $this->repository->update($journal, $data);
 
         // @codeCoverageIgnoreStart
-        if (1 === intval($request->get('return_to_edit'))) {
+        if (1 === (int)$request->get('return_to_edit')) {
             Session::put('reconcile.edit.fromUpdate', true);
 
             return redirect(route('accounts.reconcile.edit', [$journal->id]))->withInput(['return_to_edit' => 1]);

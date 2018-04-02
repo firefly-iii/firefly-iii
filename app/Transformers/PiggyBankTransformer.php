@@ -117,7 +117,7 @@ class PiggyBankTransformer extends TransformerAbstract
     public function transform(PiggyBank $piggyBank): array
     {
         $account       = $piggyBank->account;
-        $currencyId    = intval($account->getMeta('currency_id'));
+        $currencyId    = (int)$account->getMeta('currency_id');
         $decimalPlaces = 2;
         if ($currencyId > 0) {
             /** @var CurrencyRepositoryInterface $repository */
@@ -133,8 +133,8 @@ class PiggyBankTransformer extends TransformerAbstract
         $piggyRepos->setUser($account->user);
         $currentAmount = round($piggyRepos->getCurrentAmount($piggyBank), $decimalPlaces);
 
-        $startDate    = is_null($piggyBank->startdate) ? null : $piggyBank->startdate->format('Y-m-d');
-        $targetDate   = is_null($piggyBank->targetdate) ? null : $piggyBank->targetdate->format('Y-m-d');
+        $startDate    = null === $piggyBank->startdate ? null : $piggyBank->startdate->format('Y-m-d');
+        $targetDate   = null === $piggyBank->targetdate ? null : $piggyBank->targetdate->format('Y-m-d');
         $targetAmount = round($piggyBank->targetamount, $decimalPlaces);
         $data         = [
             'id'             => (int)$piggyBank->id,
@@ -146,7 +146,7 @@ class PiggyBankTransformer extends TransformerAbstract
             'startdate'      => $startDate,
             'targetdate'     => $targetDate,
             'order'          => (int)$piggyBank->order,
-            'active'         => intval($piggyBank->active) === 1,
+            'active'         => (int)$piggyBank->active === 1,
             'notes'          => null,
             'links'          => [
                 [
@@ -157,7 +157,7 @@ class PiggyBankTransformer extends TransformerAbstract
         ];
         /** @var Note $note */
         $note = $piggyBank->notes()->first();
-        if (!is_null($note)) {
+        if (null !== $note) {
             $data['notes'] = $note->text;
         }
 

@@ -90,8 +90,8 @@ class ReportHelper implements ReportHelperInterface
                 $billLine->setBill($bill);
                 $billLine->setPayDate($payDate);
                 $billLine->setEndOfPayDate($endOfPayPeriod);
-                $billLine->setMin(strval($bill->amount_min));
-                $billLine->setMax(strval($bill->amount_max));
+                $billLine->setMin((string)$bill->amount_min);
+                $billLine->setMax((string)$bill->amount_max);
                 $billLine->setHit(false);
                 $entry = $journals->filter(
                     function (Transaction $transaction) use ($bill) {
@@ -119,7 +119,6 @@ class ReportHelper implements ReportHelperInterface
      * @param Carbon $date
      *
      * @return array
-     * @throws \InvalidArgumentException
      */
     public function listOfMonths(Carbon $date): array
     {

@@ -57,7 +57,7 @@ class CountAttachmentsFilter implements FilterInterface
         $set->each(
             function (Transaction $transaction) use ($counter) {
                 $id                           = (int)$transaction->journal_id;
-                $count                        = $counter[$id] ?? 0;
+                $count                        = (int)($counter[$id] ?? 0.0);
                 $transaction->attachmentCount = $count;
             }
         );

@@ -28,14 +28,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Watson\Validating\ValidatingTrait;
 
 /**
  * Class Bill.
  */
 class Bill extends Model
 {
-    use SoftDeletes, ValidatingTrait;
+    use SoftDeletes;
     /**
      * The attributes that should be casted to native types.
      *
@@ -63,10 +62,6 @@ class Bill extends Model
      * @var array
      */
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
-    /**
-     * @var array
-     */
-    protected $rules = ['name' => 'required|between:1,200'];
 
     /**
      * @param string $value
@@ -77,9 +72,9 @@ class Bill extends Model
     public static function routeBinder(string $value): Bill
     {
         if (auth()->check()) {
-            $billId = intval($value);
+            $billId = (int)$value;
             $bill   = auth()->user()->bills()->find($billId);
-            if (!is_null($bill)) {
+            if (null !== $bill) {
                 return $bill;
             }
         }
@@ -105,7 +100,7 @@ class Bill extends Model
      */
     public function getMatchAttribute($value)
     {
-        if (1 === intval($this->match_encrypted)) {
+        if (1 === (int)$this->match_encrypted) {
             return Crypt::decrypt($value);
         }
 
@@ -122,7 +117,7 @@ class Bill extends Model
      */
     public function getNameAttribute($value)
     {
-        if (1 === intval($this->name_encrypted)) {
+        if (1 === (int)$this->name_encrypted) {
             return Crypt::decrypt($value);
         }
 
@@ -145,7 +140,7 @@ class Bill extends Model
      */
     public function setAmountMaxAttribute($value)
     {
-        $this->attributes['amount_max'] = strval($value);
+        $this->attributes['amount_max'] = (string)$value;
     }
 
     /**
@@ -155,7 +150,7 @@ class Bill extends Model
      */
     public function setAmountMinAttribute($value)
     {
-        $this->attributes['amount_min'] = strval($value);
+        $this->attributes['amount_min'] = (string)$value;
     }
 
     /**

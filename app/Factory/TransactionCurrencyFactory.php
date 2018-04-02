@@ -65,24 +65,24 @@ class TransactionCurrencyFactory
      */
     public function find(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {
-        $currencyCode = strval($currencyCode);
-        $currencyId   = intval($currencyId);
+        $currencyCode = (string)$currencyCode;
+        $currencyId   = (int)$currencyId;
 
-        if (strlen($currencyCode) === 0 && intval($currencyId) === 0) {
+        if (strlen($currencyCode) === 0 && (int)$currencyId === 0) {
             return null;
         }
 
         // first by ID:
         if ($currencyId > 0) {
             $currency = TransactionCurrency::find($currencyId);
-            if (!is_null($currency)) {
+            if (null !== $currency) {
                 return $currency;
             }
         }
         // then by code:
         if (strlen($currencyCode) > 0) {
             $currency = TransactionCurrency::whereCode($currencyCode)->first();
-            if (!is_null($currency)) {
+            if (null !== $currency) {
                 return $currency;
             }
         }

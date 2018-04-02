@@ -75,9 +75,8 @@ class PopupReport implements PopupReportInterface
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])->setBudget($budget);
-        $journals = $collector->getJournals();
 
-        return $journals;
+        return $collector->getJournals();
     }
 
     /**
@@ -118,9 +117,8 @@ class PopupReport implements PopupReportInterface
         if (null !== $budget->id) {
             $collector->setBudget($budget);
         }
-        $journals = $collector->getJournals();
 
-        return $journals;
+        return $collector->getJournals();
     }
 
     /**
@@ -136,9 +134,8 @@ class PopupReport implements PopupReportInterface
         $collector->setAccounts($attributes['accounts'])->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
                   ->setRange($attributes['startDate'], $attributes['endDate'])->withOpposingAccount()
                   ->setCategory($category);
-        $journals = $collector->getJournals();
 
-        return $journals;
+        return $collector->getJournals();
     }
 
     /**

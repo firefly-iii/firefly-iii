@@ -34,11 +34,10 @@ class TagsSpace implements PreProcessorInterface
      */
     public function run(string $value): array
     {
-        $set    = explode(' ', $value);
-        $set    = array_map('trim', $set);
-        $set    = array_filter($set, 'strlen');
-        $return = array_values($set);
+        $set = explode(' ', $value);
+        $set = array_map('trim', $set);
+        $set = array_filter($set, 'strlen');
 
-        return $return;
+        return array_values($set);
     }
 }

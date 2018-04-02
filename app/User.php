@@ -76,14 +76,14 @@ class User extends Authenticatable
      * @param string $value
      *
      * @return User
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): User
     {
         if (auth()->check()) {
-            $userId = intval($value);
+            $userId = (int)$value;
             $user   = self::find($userId);
-            if (!is_null($user)) {
+            if (null !== $user) {
                 return $user;
             }
         }
@@ -212,7 +212,7 @@ class User extends Authenticatable
     {
         $bytes = random_bytes(16);
 
-        return strval(bin2hex($bytes));
+        return (string)bin2hex($bytes);
     }
 
     /**

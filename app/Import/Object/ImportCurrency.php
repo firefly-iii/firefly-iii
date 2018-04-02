@@ -114,7 +114,7 @@ class ImportCurrency
      */
     public function setId(array $id)
     {
-        $id['value'] = intval($id['value']);
+        $id['value'] = (int)$id['value'];
         $this->id    = $id;
     }
 
@@ -215,7 +215,7 @@ class ImportCurrency
 
         Log::debug('Finding a mapped object based on', $array);
 
-        $search   = intval($array['mapped']);
+        $search   = (int)$array['mapped'];
         $currency = $this->repository->findNull($search);
 
         if (null === $currency) {

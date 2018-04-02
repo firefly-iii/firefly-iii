@@ -38,7 +38,7 @@ class BunqId
      */
     public function __construct($data = null)
     {
-        if (!is_null($data)) {
+        if (null !== $data) {
             $this->id = $data['id'];
         }
     }

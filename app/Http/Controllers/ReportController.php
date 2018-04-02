@@ -175,9 +175,8 @@ class ReportController extends Controller
         $generator = ReportGeneratorFactory::reportGenerator('Budget', $start, $end);
         $generator->setAccounts($accounts);
         $generator->setBudgets($budgets);
-        $result = $generator->generate();
 
-        return $result;
+        return $generator->generate();
     }
 
     /**
@@ -214,9 +213,8 @@ class ReportController extends Controller
         $generator = ReportGeneratorFactory::reportGenerator('Category', $start, $end);
         $generator->setAccounts($accounts);
         $generator->setCategories($categories);
-        $result = $generator->generate();
 
-        return $result;
+        return $generator->generate();
     }
 
     /**
@@ -252,9 +250,8 @@ class ReportController extends Controller
 
         $generator = ReportGeneratorFactory::reportGenerator('Standard', $start, $end);
         $generator->setAccounts($accounts);
-        $result = $generator->generate();
 
-        return $result;
+        return $generator->generate();
     }
 
     /**
@@ -269,7 +266,7 @@ class ReportController extends Controller
         $months           = $this->helper->listOfMonths($start);
         $customFiscalYear = Preferences::get('customFiscalYear', 0)->data;
         $accounts         = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $accountList      = join(',', $accounts->pluck('id')->toArray());
+        $accountList      = implode(',', $accounts->pluck('id')->toArray());
         $this->repository->cleanupBudgets();
 
         return view('reports.index', compact('months', 'accounts', 'start', 'accountList', 'customFiscalYear'));
@@ -280,7 +277,7 @@ class ReportController extends Controller
      *
      * @return mixed
      *
-     * @throws \Throwable
+
      */
     public function options(string $reportType)
     {
@@ -319,11 +316,11 @@ class ReportController extends Controller
         $reportType = $request->get('report_type');
         $start      = $request->getStartDate()->format('Ymd');
         $end        = $request->getEndDate()->format('Ymd');
-        $accounts   = join(',', $request->getAccountList()->pluck('id')->toArray());
-        $categories = join(',', $request->getCategoryList()->pluck('id')->toArray());
-        $budgets    = join(',', $request->getBudgetList()->pluck('id')->toArray());
-        $tags       = join(',', $request->getTagList()->pluck('tag')->toArray());
-        $expense    = join(',', $request->getExpenseList()->pluck('id')->toArray());
+        $accounts   = implode(',', $request->getAccountList()->pluck('id')->toArray());
+        $categories = implode(',', $request->getCategoryList()->pluck('id')->toArray());
+        $budgets    = implode(',', $request->getBudgetList()->pluck('id')->toArray());
+        $tags       = implode(',', $request->getTagList()->pluck('tag')->toArray());
+        $expense    = implode(',', $request->getExpenseList()->pluck('id')->toArray());
         $uri        = route('reports.index');
 
         if (0 === $request->getAccountList()->count()) {
@@ -413,15 +410,14 @@ class ReportController extends Controller
         $generator = ReportGeneratorFactory::reportGenerator('Tag', $start, $end);
         $generator->setAccounts($accounts);
         $generator->setTags($tags);
-        $result = $generator->generate();
 
-        return $result;
+        return $generator->generate();
     }
 
     /**
      * @return string
      *
-     * @throws \Throwable
+
      */
     private function accountReportOptions(): string
     {
@@ -437,45 +433,41 @@ class ReportController extends Controller
             }
         }
 
-        $result = view('reports.options.account', compact('set'))->render();
-
-        return $result;
+        return view('reports.options.account', compact('set'))->render();
     }
 
     /**
      * @return string
      *
-     * @throws \Throwable
+
      */
     private function budgetReportOptions(): string
     {
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
         $budgets    = $repository->getBudgets();
-        $result     = view('reports.options.budget', compact('budgets'))->render();
 
-        return $result;
+        return view('reports.options.budget', compact('budgets'))->render();
     }
 
     /**
      * @return string
      *
-     * @throws \Throwable
+
      */
     private function categoryReportOptions(): string
     {
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
         $categories = $repository->getCategories();
-        $result     = view('reports.options.category', compact('categories'))->render();
 
-        return $result;
+        return view('reports.options.category', compact('categories'))->render();
     }
 
     /**
      * @return string
      *
-     * @throws \Throwable
+
      */
     private function noReportOptions(): string
     {
@@ -485,7 +477,7 @@ class ReportController extends Controller
     /**
      * @return string
      *
-     * @throws \Throwable
+
      */
     private function tagReportOptions(): string
     {
@@ -496,8 +488,7 @@ class ReportController extends Controller
                 return $tag->tag;
             }
         );
-        $result     = view('reports.options.tag', compact('tags'))->render();
 
-        return $result;
+        return view('reports.options.tag', compact('tags'))->render();
     }
 }

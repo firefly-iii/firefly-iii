@@ -63,12 +63,11 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
 
     /**
      * @return string
-     * @throws \Throwable
      */
     public function generate(): string
     {
-        $accountIds      = join(',', $this->accounts->pluck('id')->toArray());
-        $budgetIds       = join(',', $this->budgets->pluck('id')->toArray());
+        $accountIds      = implode(',', $this->accounts->pluck('id')->toArray());
+        $budgetIds       = implode(',', $this->budgets->pluck('id')->toArray());
         $expenses        = $this->getExpenses();
         $accountSummary  = $this->summarizeByAccount($expenses);
         $budgetSummary   = $this->summarizeByBudget($expenses);
@@ -200,8 +199,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         ];
         /** @var Transaction $transaction */
         foreach ($collection as $transaction) {
-            $jrnlBudId         = intval($transaction->transaction_journal_budget_id);
-            $transBudId        = intval($transaction->transaction_budget_id);
+            $jrnlBudId         = (int)$transaction->transaction_journal_budget_id;
+            $transBudId        = (int)$transaction->transaction_budget_id;
             $budgetId          = max($jrnlBudId, $transBudId);
             $result[$budgetId] = $result[$budgetId] ?? '0';
             $result[$budgetId] = bcadd($transaction->transaction_amount, $result[$budgetId]);
