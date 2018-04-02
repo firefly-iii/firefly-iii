@@ -74,7 +74,7 @@ class TagTransformer extends TransformerAbstract
      */
     public function includeTransactions(Tag $tag): FractalCollection
     {
-        $pageSize = intval(app('preferences')->getForUser($tag->user, 'listPageSize', 50)->data);
+        $pageSize = (int)app('preferences')->getForUser($tag->user, 'listPageSize', 50)->data;
 
         // journals always use collector and limited using URL parameters.
         $collector = app(JournalCollectorInterface::class);
@@ -82,7 +82,7 @@ class TagTransformer extends TransformerAbstract
         $collector->withOpposingAccount()->withCategoryInformation()->withCategoryInformation();
         $collector->setAllAssetAccounts();
         $collector->setTag($tag);
-        if (!is_null($this->parameters->get('start')) && !is_null($this->parameters->get('end'))) {
+        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
@@ -113,7 +113,7 @@ class TagTransformer extends TransformerAbstract
      */
     public function transform(Tag $tag): array
     {
-        $date = is_null($tag->date) ? null : $tag->date->format('Y-m-d');
+        $date = null === $tag->date ? null : $tag->date->format('Y-m-d');
         $data = [
             'id'          => (int)$tag->id,
             'updated_at'  => $tag->updated_at->toAtomString(),

@@ -45,7 +45,7 @@ class BillUpdateService
 
         $matchArray = explode(',', $data['match']);
         $matchArray = array_unique($matchArray);
-        $match      = join(',', $matchArray);
+        $match      = implode(',', $matchArray);
 
         $bill->name        = $data['name'];
         $bill->match       = $match;
@@ -60,7 +60,7 @@ class BillUpdateService
 
         // update note:
         if (isset($data['notes']) && null !== $data['notes']) {
-            $this->updateNote($bill, strval($data['notes']));
+            $this->updateNote($bill, (string)$data['notes']);
         }
 
         return $bill;

@@ -41,15 +41,6 @@ class LabelMonetaryAccount extends BunqObject
     private $labelUser;
 
     /**
-     * @return LabelUser
-     */
-    public function getLabelUser(): LabelUser
-    {
-        return $this->labelUser;
-    }
-
-
-    /**
      * LabelMonetaryAccount constructor.
      *
      * @param array $data
@@ -69,6 +60,14 @@ class LabelMonetaryAccount extends BunqObject
     public function getIban(): string
     {
         return $this->iban;
+    }
+
+    /**
+     * @return LabelUser
+     */
+    public function getLabelUser(): LabelUser
+    {
+        return $this->labelUser;
     }
 
     /**

@@ -101,7 +101,7 @@ class AccountTransformer extends TransformerAbstract
      */
     public function includeTransactions(Account $account): FractalCollection
     {
-        $pageSize = intval(app('preferences')->getForUser($account->user, 'listPageSize', 50)->data);
+        $pageSize = (int)app('preferences')->getForUser($account->user, 'listPageSize', 50)->data;
 
         // journals always use collector and limited using URL parameters.
         $collector = app(JournalCollectorInterface::class);
@@ -112,7 +112,7 @@ class AccountTransformer extends TransformerAbstract
         } else {
             $collector->setOpposingAccounts(new Collection([$account]));
         }
-        if (!is_null($this->parameters->get('start')) && !is_null($this->parameters->get('end'))) {
+        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
@@ -151,7 +151,7 @@ class AccountTransformer extends TransformerAbstract
         if (strlen($role) === 0 || $type !== AccountType::ASSET) {
             $role = null;
         }
-        $currencyId    = intval($this->repository->getMetaValue($account, 'currency_id'));
+        $currencyId    = (int)$this->repository->getMetaValue($account, 'currency_id');
         $currencyCode  = null;
         $decimalPlaces = 2;
         if ($currencyId > 0) {
@@ -161,7 +161,7 @@ class AccountTransformer extends TransformerAbstract
         }
 
         $date = new Carbon;
-        if (!is_null($this->parameters->get('date'))) {
+        if (null !== $this->parameters->get('date')) {
             $date = $this->parameters->get('date');
         }
 
@@ -183,7 +183,7 @@ class AccountTransformer extends TransformerAbstract
             $repository = app(AccountRepositoryInterface::class);
             $repository->setUser($account->user);
             $amount             = $repository->getOpeningBalanceAmount($account);
-            $openingBalance     = is_null($amount) ? null : round($amount, $decimalPlaces);
+            $openingBalance     = null === $amount ? null : round($amount, $decimalPlaces);
             $openingBalanceDate = $repository->getOpeningBalanceDate($account);
         }
 
@@ -192,7 +192,7 @@ class AccountTransformer extends TransformerAbstract
             'updated_at'           => $account->updated_at->toAtomString(),
             'created_at'           => $account->created_at->toAtomString(),
             'name'                 => $account->name,
-            'active'               => intval($account->active) === 1,
+            'active'               => (int)$account->active === 1,
             'type'                 => $type,
             'currency_id'          => $currencyId,
             'currency_code'        => $currencyCode,

@@ -41,6 +41,20 @@ class LabelUser extends BunqObject
     private $uuid;
 
     /**
+     * LabelUser constructor.
+     *
+     * @param array $data
+     */
+    public function __construct(array $data)
+    {
+        $this->uuid           = $data['uuid'];
+        $this->displayName    = $data['display_name'];
+        $this->country        = $data['country'];
+        $this->publicNickName = $data['public_nick_name'];
+        $this->avatar         = new Avatar($data['avatar']);
+    }
+
+    /**
      * @return Avatar
      */
     public function getAvatar(): Avatar
@@ -62,22 +76,6 @@ class LabelUser extends BunqObject
     public function getPublicNickName(): string
     {
         return $this->publicNickName;
-    }
-
-
-
-    /**
-     * LabelUser constructor.
-     *
-     * @param array $data
-     */
-    public function __construct(array $data)
-    {
-        $this->uuid           = $data['uuid'];
-        $this->displayName    = $data['display_name'];
-        $this->country        = $data['country'];
-        $this->publicNickName = $data['public_nick_name'];
-        $this->avatar         = new Avatar($data['avatar']);
     }
 
     /**

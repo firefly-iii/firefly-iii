@@ -51,32 +51,28 @@ class Steam
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        $currencyId = intval($account->getMeta('currency_id'));
+        $currencyId = (int)$account->getMeta('currency_id');
         // use system default currency:
         if (0 === $currencyId) {
             $currency   = app('amount')->getDefaultCurrencyByUser($account->user);
             $currencyId = $currency->id;
         }
         // first part: get all balances in own currency:
-        $nativeBalance = strval(
-            $account->transactions()
-                    ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                    ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                    ->where('transactions.transaction_currency_id', $currencyId)
-                    ->sum('transactions.amount')
-        );
+        $nativeBalance = (string)$account->transactions()
+                                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                         ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+                                         ->where('transactions.transaction_currency_id', $currencyId)
+                                         ->sum('transactions.amount');
 
         // get all balances in foreign currency:
-        $foreignBalance = strval(
-            $account->transactions()
-                    ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                    ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
-                    ->where('transactions.foreign_currency_id', $currencyId)
-                    ->where('transactions.transaction_currency_id', '!=', $currencyId)
-                    ->sum('transactions.foreign_amount')
-        );
+        $foreignBalance = (string)$account->transactions()
+                                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                          ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
+                                          ->where('transactions.foreign_currency_id', $currencyId)
+                                          ->where('transactions.transaction_currency_id', '!=', $currencyId)
+                                          ->sum('transactions.foreign_amount');
         $balance        = bcadd($nativeBalance, $foreignBalance);
-        $virtual        = null === $account->virtual_balance ? '0' : strval($account->virtual_balance);
+        $virtual        = null === $account->virtual_balance ? '0' : (string)$account->virtual_balance;
         $balance        = bcadd($balance, $virtual);
         $cache->store($balance);
 
@@ -99,25 +95,21 @@ class Steam
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        $currencyId = intval($account->getMeta('currency_id'));
+        $currencyId = (int)$account->getMeta('currency_id');
 
-        $nativeBalance = strval(
-            $account->transactions()
-                    ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                    ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
-                    ->where('transactions.transaction_currency_id', $currencyId)
-                    ->sum('transactions.amount')
-        );
+        $nativeBalance = (string)$account->transactions()
+                                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                         ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
+                                         ->where('transactions.transaction_currency_id', $currencyId)
+                                         ->sum('transactions.amount');
 
         // get all balances in foreign currency:
-        $foreignBalance = strval(
-            $account->transactions()
-                    ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                    ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
-                    ->where('transactions.foreign_currency_id', $currencyId)
-                    ->where('transactions.transaction_currency_id', '!=', $currencyId)
-                    ->sum('transactions.foreign_amount')
-        );
+        $foreignBalance = (string)$account->transactions()
+                                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                          ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
+                                          ->where('transactions.foreign_currency_id', $currencyId)
+                                          ->where('transactions.transaction_currency_id', '!=', $currencyId)
+                                          ->sum('transactions.foreign_amount');
         $balance        = bcadd($nativeBalance, $foreignBalance);
 
         $cache->store($balance);
@@ -155,7 +147,7 @@ class Steam
         $startBalance = $this->balance($account, $start);
 
         $balances[$formatted] = $startBalance;
-        $currencyId           = intval($account->getMeta('currency_id'));
+        $currencyId           = (int)$account->getMeta('currency_id');
         $start->addDay();
 
         // query!
@@ -182,14 +174,14 @@ class Steam
         /** @var Transaction $entry */
         foreach ($set as $entry) {
             // normal amount and foreign amount
-            $modified        = null === $entry->modified ? '0' : strval($entry->modified);
-            $foreignModified = null === $entry->modified_foreign ? '0' : strval($entry->modified_foreign);
+            $modified        = null === $entry->modified ? '0' : (string)$entry->modified;
+            $foreignModified = null === $entry->modified_foreign ? '0' : (string)$entry->modified_foreign;
             $amount          = '0';
-            if ($currencyId === intval($entry->transaction_currency_id) || 0 === $currencyId) {
+            if ($currencyId === (int)$entry->transaction_currency_id || 0 === $currencyId) {
                 // use normal amount:
                 $amount = $modified;
             }
-            if ($currencyId === intval($entry->foreign_currency_id)) {
+            if ($currencyId === (int)$entry->foreign_currency_id) {
                 // use foreign amount:
                 $amount = $foreignModified;
             }
@@ -268,7 +260,7 @@ class Steam
                      ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]);
 
         foreach ($set as $entry) {
-            $list[intval($entry->account_id)] = new Carbon($entry->max_date);
+            $list[(int)$entry->account_id] = new Carbon($entry->max_date);
         }
 
         return $list;
@@ -295,7 +287,7 @@ class Steam
      */
     public function opposite(string $amount = null): ?string
     {
-        if (is_null($amount)) {
+        if (null === $amount) {
             return null;
         }
         $amount = bcmul($amount, '-1');
@@ -316,24 +308,24 @@ class Steam
             // has a K in it, remove the K and multiply by 1024.
             $bytes = bcmul(rtrim($string, 'kK'), '1024');
 
-            return intval($bytes);
+            return (int)$bytes;
         }
 
         if (!(false === stripos($string, 'm'))) {
             // has a M in it, remove the M and multiply by 1048576.
             $bytes = bcmul(rtrim($string, 'mM'), '1048576');
 
-            return intval($bytes);
+            return (int)$bytes;
         }
 
         if (!(false === stripos($string, 'g'))) {
             // has a G in it, remove the G and multiply by (1024)^3.
             $bytes = bcmul(rtrim($string, 'gG'), '1073741824');
 
-            return intval($bytes);
+            return (int)$bytes;
         }
 
-        return intval($string);
+        return (int)$string;
     }
 
     /**

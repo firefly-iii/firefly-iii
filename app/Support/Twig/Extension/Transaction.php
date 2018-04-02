@@ -45,12 +45,12 @@ class Transaction extends Twig_Extension
      */
     public function amount(TransactionModel $transaction): string
     {
-        $amount   = bcmul(app('steam')->positive(strval($transaction->transaction_amount)), '-1');
+        $amount   = bcmul(app('steam')->positive((string)$transaction->transaction_amount), '-1');
         $format   = '%s';
         $coloured = true;
 
         // at this point amount is always negative.
-        if (TransactionType::RECONCILIATION === $transaction->transaction_type_type && 1 === bccomp(strval($transaction->transaction_amount), '0')) {
+        if (TransactionType::RECONCILIATION === $transaction->transaction_type_type && 1 === bccomp((string)$transaction->transaction_amount, '0')) {
             $amount = bcmul($amount, '-1');
         }
 
@@ -64,7 +64,7 @@ class Transaction extends Twig_Extension
             $format   = '<span class="text-info">%s</span>';
         }
         if (TransactionType::OPENING_BALANCE === $transaction->transaction_type_type) {
-            $amount = strval($transaction->transaction_amount);
+            $amount = (string)$transaction->transaction_amount;
         }
 
         $currency                 = new TransactionCurrency;
@@ -73,7 +73,7 @@ class Transaction extends Twig_Extension
         $str                      = sprintf($format, app('amount')->formatAnything($currency, $amount, $coloured));
 
         if (null !== $transaction->transaction_foreign_amount) {
-            $amount = bcmul(app('steam')->positive(strval($transaction->transaction_foreign_amount)), '-1');
+            $amount = bcmul(app('steam')->positive((string)$transaction->transaction_foreign_amount), '-1');
             if (TransactionType::DEPOSIT === $transaction->transaction_type_type) {
                 $amount = bcmul($amount, '-1');
             }
@@ -101,7 +101,7 @@ class Transaction extends Twig_Extension
     public function amountArray(array $transaction): string
     {
         // first display amount:
-        $amount                       = strval($transaction['amount']);
+        $amount                       = (string)$transaction['amount'];
         $fakeCurrency                 = new TransactionCurrency;
         $fakeCurrency->decimal_places = $transaction['currency_dp'];
         $fakeCurrency->symbol         = $transaction['currency_symbol'];
@@ -109,7 +109,7 @@ class Transaction extends Twig_Extension
 
         // then display (if present) the foreign amount:
         if (null !== $transaction['foreign_amount']) {
-            $amount                       = strval($transaction['foreign_amount']);
+            $amount                       = (string)$transaction['foreign_amount'];
             $fakeCurrency                 = new TransactionCurrency;
             $fakeCurrency->decimal_places = $transaction['foreign_currency_dp'];
             $fakeCurrency->symbol         = $transaction['foreign_currency_symbol'];
@@ -205,7 +205,7 @@ class Transaction extends Twig_Extension
     public function description(TransactionModel $transaction): string
     {
         $description = $transaction->description;
-        if (strlen(strval($transaction->transaction_description)) > 0) {
+        if (strlen((string)$transaction->transaction_description) > 0) {
             $description = $transaction->transaction_description . ' (' . $transaction->description . ')';
         }
 
@@ -226,13 +226,13 @@ class Transaction extends Twig_Extension
         }
 
         $name          = app('steam')->tryDecrypt($transaction->account_name);
-        $transactionId = intval($transaction->account_id);
+        $transactionId = (int)$transaction->account_id;
         $type          = $transaction->account_type;
 
         // name is present in object, use that one:
         if (bccomp($transaction->transaction_amount, '0') === -1 && null !== $transaction->opposing_account_id) {
             $name          = $transaction->opposing_account_name;
-            $transactionId = intval($transaction->opposing_account_id);
+            $transactionId = (int)$transaction->opposing_account_id;
             $type          = $transaction->opposing_account_type;
         }
 
@@ -249,7 +249,7 @@ class Transaction extends Twig_Extension
                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                 ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                 ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
-            if (is_null($other)) {
+            if (null === $other) {
                 Log::error(sprintf('Cannot find other transaction for journal #%d', $journalId));
 
                 return '';
@@ -384,13 +384,13 @@ class Transaction extends Twig_Extension
 
         // if the amount is negative, assume that the current account (the one in $transaction) is indeed the source account.
         $name          = app('steam')->tryDecrypt($transaction->account_name);
-        $transactionId = intval($transaction->account_id);
+        $transactionId = (int)$transaction->account_id;
         $type          = $transaction->account_type;
 
         // name is present in object, use that one:
         if (1 === bccomp($transaction->transaction_amount, '0') && null !== $transaction->opposing_account_id) {
             $name          = $transaction->opposing_account_name;
-            $transactionId = intval($transaction->opposing_account_id);
+            $transactionId = (int)$transaction->opposing_account_id;
             $type          = $transaction->opposing_account_type;
         }
         // Find the opposing account and use that one:

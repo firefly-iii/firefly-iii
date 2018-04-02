@@ -60,10 +60,10 @@ class UpdateRequest implements GithubRequest
         if (isset($releaseXml->entry)) {
             foreach ($releaseXml->entry as $entry) {
                 $array            = [
-                    'id'      => strval($entry->id),
-                    'updated' => strval($entry->updated),
-                    'title'   => strval($entry->title),
-                    'content' => strval($entry->content),
+                    'id'      => (string)$entry->id,
+                    'updated' => (string)$entry->updated,
+                    'title'   => (string)$entry->title,
+                    'content' => (string)$entry->content,
                 ];
                 $this->releases[] = new Release($array);
             }

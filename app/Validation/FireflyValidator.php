@@ -37,7 +37,6 @@ use FireflyIII\TransactionRules\Triggers\TriggerInterface;
 use FireflyIII\User;
 use Google2FA;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Validation\Validator;
 
 /**
@@ -45,18 +44,6 @@ use Illuminate\Validation\Validator;
  */
 class FireflyValidator extends Validator
 {
-    /**
-     * @param Translator $translator
-     * @param array      $data
-     * @param array      $rules
-     * @param array      $messages
-     * @param array      $customAttributes
-     */
-    public function __construct(Translator $translator, array $data, array $rules, array $messages = [], array $customAttributes = [])
-    {
-        parent::__construct($translator, $data, $rules, $messages, $customAttributes);
-    }
-
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
@@ -89,7 +76,7 @@ class FireflyValidator extends Validator
     {
         $field = $parameters[1] ?? 'id';
 
-        if (0 === intval($value)) {
+        if (0 === (int)$value) {
             return true;
         }
         $count = DB::table($parameters[0])->where('user_id', auth()->user()->id)->where($field, $value)->count();
@@ -196,7 +183,7 @@ class FireflyValidator extends Validator
         $iban     = str_replace($search, $replace, $iban);
         $checksum = bcmod($iban, '97');
 
-        return 1 === intval($checksum);
+        return 1 === (int)$checksum;
     }
 
     /**
@@ -209,9 +196,9 @@ class FireflyValidator extends Validator
      */
     public function validateMore($attribute, $value, $parameters): bool
     {
-        $compare = strval($parameters[0] ?? '0');
+        $compare = (string)$parameters[0] ?? '0';
 
-        return bccomp(strval($value), $compare) > 0;
+        return bccomp((string)$value, $compare) > 0;
     }
 
     /**
@@ -227,7 +214,7 @@ class FireflyValidator extends Validator
     {
         $field = $parameters[1] ?? 'id';
 
-        if (0 === intval($value)) {
+        if (0 === (int)$value) {
             return true;
         }
         $count = DB::table($parameters[0])->where($field, $value)->count();
@@ -333,7 +320,7 @@ class FireflyValidator extends Validator
     {
         $verify = false;
         if (isset($this->data['verify_password'])) {
-            $verify = 1 === intval($this->data['verify_password']);
+            $verify = 1 === (int)$this->data['verify_password'];
         }
         if ($verify) {
             /** @var Verifier $service */
@@ -389,9 +376,9 @@ class FireflyValidator extends Validator
      */
     public function validateUniqueAccountNumberForUser($attribute, $value, $parameters): bool
     {
-        $accountId = $this->data['id'] ?? 0;
+        $accountId = (int)($this->data['id'] ?? 0.0);
         if ($accountId === 0) {
-            $accountId = $parameters[0] ?? 0;
+            $accountId = (int)($parameters[0] ?? 0.0);
         }
 
         $query = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
@@ -399,9 +386,9 @@ class FireflyValidator extends Validator
                             ->where('accounts.user_id', auth()->user()->id)
                             ->where('account_meta.name', 'accountNumber');
 
-        if (intval($accountId) > 0) {
+        if ((int)$accountId > 0) {
             // exclude current account from check.
-            $query->where('account_meta.account_id', '!=', intval($accountId));
+            $query->where('account_meta.account_id', '!=', (int)$accountId);
         }
         $set = $query->get(['account_meta.*']);
 
@@ -435,15 +422,15 @@ class FireflyValidator extends Validator
         // exclude?
         $table   = $parameters[0];
         $field   = $parameters[1];
-        $exclude = $parameters[2] ?? 0;
+        $exclude = (int)($parameters[2] ?? 0.0);
 
         /*
          * If other data (in $this->getData()) contains
          * ID field, set that field to be the $exclude.
          */
         $data = $this->getData();
-        if (!isset($parameters[2]) && isset($data['id']) && intval($data['id']) > 0) {
-            $exclude = intval($data['id']);
+        if (!isset($parameters[2]) && isset($data['id']) && (int)$data['id'] > 0) {
+            $exclude = (int)$data['id'];
         }
 
 
@@ -586,7 +573,7 @@ class FireflyValidator extends Validator
     private function validateByAccountTypeId($value, $parameters): bool
     {
         $type   = AccountType::find($this->data['account_type_id'])->first();
-        $ignore = $parameters[0] ?? 0;
+        $ignore = (int)($parameters[0] ?? 0.0);
         $value  = $this->tryDecrypt($value);
 
         $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
@@ -611,7 +598,7 @@ class FireflyValidator extends Validator
     {
         $search      = Config::get('firefly.accountTypeByIdentifier.' . $type);
         $accountType = AccountType::whereType($search)->first();
-        $ignore      = $parameters[0] ?? 0;
+        $ignore      = (int)($parameters[0] ?? 0.0);
 
         $set = auth()->user()->accounts()->where('account_type_id', $accountType->id)->where('id', '!=', $ignore)->get();
         /** @var Account $entry */

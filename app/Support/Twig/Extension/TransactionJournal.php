@@ -59,7 +59,7 @@ class TransactionJournal extends Twig_Extension
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
         $result     = $repository->getMetaField($journal, $field);
-        if (is_null($result)) {
+        if (null === $result) {
             return '';
         }
 
@@ -80,10 +80,10 @@ class TransactionJournal extends Twig_Extension
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
         $result     = $repository->getMetaField($journal, $field);
-        if (is_null($result)) {
+        if (null === $result) {
             return false;
         }
-        if (strlen(strval($result)) === 0) {
+        if (strlen((string)$result) === 0) {
             return false;
         }
 
@@ -135,8 +135,7 @@ class TransactionJournal extends Twig_Extension
             }
             $array[] = app('amount')->formatAnything($total['currency'], $total['amount']);
         }
-        $txt = join(' / ', $array);
 
-        return $txt;
+        return join(' / ', $array);
     }
 }

@@ -113,7 +113,7 @@ class DeviceSessionRequest extends BunqRequest
     {
         $data            = $this->getKeyFromResponse('Id', $response);
         $deviceSessionId = new DeviceSessionId;
-        $deviceSessionId->setId(intval($data['id']));
+        $deviceSessionId->setId((int)$data['id']);
 
         return $deviceSessionId;
     }
@@ -125,10 +125,9 @@ class DeviceSessionRequest extends BunqRequest
      */
     private function extractSessionToken(array $response): SessionToken
     {
-        $data         = $this->getKeyFromResponse('Token', $response);
-        $sessionToken = new SessionToken($data);
+        $data = $this->getKeyFromResponse('Token', $response);
 
-        return $sessionToken;
+        return new SessionToken($data);
     }
 
     /**
@@ -138,10 +137,9 @@ class DeviceSessionRequest extends BunqRequest
      */
     private function extractUserCompany($response): UserCompany
     {
-        $data        = $this->getKeyFromResponse('UserCompany', $response);
-        $userCompany = new UserCompany($data);
+        $data = $this->getKeyFromResponse('UserCompany', $response);
 
-        return $userCompany;
+        return new UserCompany($data);
     }
 
     /**
@@ -151,9 +149,8 @@ class DeviceSessionRequest extends BunqRequest
      */
     private function extractUserPerson($response): UserPerson
     {
-        $data       = $this->getKeyFromResponse('UserPerson', $response);
-        $userPerson = new UserPerson($data);
+        $data = $this->getKeyFromResponse('UserPerson', $response);
 
-        return $userPerson;
+        return new UserPerson($data);
     }
 }

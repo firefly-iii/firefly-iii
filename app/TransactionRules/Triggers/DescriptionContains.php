@@ -49,7 +49,7 @@ final class DescriptionContains extends AbstractTrigger implements TriggerInterf
     public static function willMatchEverything($value = null)
     {
         if (null !== $value) {
-            $res = '' === strval($value);
+            $res = '' === (string)$value;
             if (true === $res) {
                 Log::error(sprintf('Cannot use %s with "" as a value.', self::class));
             }

@@ -58,11 +58,11 @@ class HaveAccounts implements ConfigurationInterface
         /** @var Account $dbAccount */
         foreach ($collection as $dbAccount) {
             $id              = $dbAccount->id;
-            $currencyId      = intval($dbAccount->getMeta('currency_id'));
+            $currencyId      = (int)$dbAccount->getMeta('currency_id');
             $currency        = $currencyRepository->find($currencyId);
             $dbAccounts[$id] = [
                 'account'  => $dbAccount,
-                'currency' => is_null($currency->id) ? $defaultCurrency : $currency,
+                'currency' => null === $currency->id ? $defaultCurrency : $currency,
             ];
         }
 
@@ -79,12 +79,9 @@ class HaveAccounts implements ConfigurationInterface
         }
 
 
-        $data = [
+        return [
             'config' => $config,
         ];
-
-
-        return $data;
     }
 
     /**
@@ -121,9 +118,9 @@ class HaveAccounts implements ConfigurationInterface
         $accounts = $data['spectre_account_id'] ?? [];
         $mapping  = [];
         foreach ($accounts as $spectreId) {
-            $spectreId = intval($spectreId);
-            $doImport  = intval($data['do_import'][$spectreId] ?? 0) === 1;
-            $account   = intval($data['import'][$spectreId] ?? 0);
+            $spectreId = (int)$spectreId;
+            $doImport  = (int)($data['do_import'][$spectreId] ?? 0.0) === 1;
+            $account   = (int)($data['import'][$spectreId] ?? 0.0);
             if ($doImport) {
                 $mapping[$spectreId] = $account;
             }

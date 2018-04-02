@@ -75,7 +75,7 @@ class TagRepository implements TagRepositoryInterface
      *
      * @return bool
      *
-     * @throws \Exception
+
      */
     public function destroy(Tag $tag): bool
     {
@@ -98,9 +98,8 @@ class TagRepository implements TagRepositoryInterface
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAllAssetAccounts()->setTag($tag);
         $set = $collector->getJournals();
-        $sum = strval($set->sum('transaction_amount'));
 
-        return $sum;
+        return strval($set->sum('transaction_amount'));
     }
 
     /**
@@ -222,9 +221,8 @@ class TagRepository implements TagRepositoryInterface
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAllAssetAccounts()->setTag($tag);
         $set = $collector->getJournals();
-        $sum = strval($set->sum('transaction_amount'));
 
-        return $sum;
+        return strval($set->sum('transaction_amount'));
     }
 
     /**
@@ -268,10 +266,10 @@ class TagRepository implements TagRepositoryInterface
         $journals = $collector->getJournals();
         $sum      = '0';
         foreach ($journals as $journal) {
-            $sum = bcadd($sum, app('steam')->positive(strval($journal->transaction_amount)));
+            $sum = bcadd($sum, app('steam')->positive((string)$journal->transaction_amount));
         }
 
-        return strval($sum);
+        return (string)$sum;
     }
 
     /**
@@ -301,7 +299,7 @@ class TagRepository implements TagRepositoryInterface
         ];
 
         foreach ($journals as $journal) {
-            $amount = app('steam')->positive(strval($journal->transaction_amount));
+            $amount = app('steam')->positive((string)$journal->transaction_amount);
             $type   = $journal->transaction_type_type;
             if (TransactionType::WITHDRAWAL === $type) {
                 $amount = bcmul($amount, '-1');
@@ -350,7 +348,7 @@ class TagRepository implements TagRepositoryInterface
         $tagsWithAmounts = [];
         /** @var Tag $tag */
         foreach ($set as $tag) {
-            $tagsWithAmounts[$tag->id] = strval($tag->amount_sum);
+            $tagsWithAmounts[$tag->id] = (string)$tag->amount_sum;
         }
 
         $tags      = $allTags->orderBy('tags.id', 'desc')->get(['tags.id', 'tags.tag']);
@@ -431,8 +429,8 @@ class TagRepository implements TagRepositoryInterface
             $step = 1;
         }
 
-        $extra  = $step / $amount;
-        $result = (int)($range[0] + $extra);
-        return $result;
+        $extra = $step / $amount;
+
+        return (int)($range[0] + $extra);
     }
 }

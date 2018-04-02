@@ -84,7 +84,7 @@ class Transaction extends SpectreObject
      */
     public function getAmount(): string
     {
-        return strval($this->amount);
+        return (string)$this->amount;
     }
 
     /**
@@ -124,7 +124,7 @@ class Transaction extends SpectreObject
      */
     public function getHash(): string
     {
-        $array  = [
+        $array = [
             'id'            => $this->id,
             'mode'          => $this->mode,
             'status'        => $this->status,
@@ -139,9 +139,8 @@ class Transaction extends SpectreObject
             'created_at'    => $this->createdAt->toIso8601String(),
             'updated_at'    => $this->updatedAt->toIso8601String(),
         ];
-        $hashed = hash('sha256', json_encode($array));
 
-        return $hashed;
+        return hash('sha256', json_encode($array));
     }
 
     /**

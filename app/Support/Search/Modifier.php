@@ -166,11 +166,11 @@ class Modifier
     {
         $journalBudget = '';
         if (null !== $transaction->transaction_journal_budget_name) {
-            $journalBudget = Steam::decrypt(intval($transaction->transaction_journal_budget_encrypted), $transaction->transaction_journal_budget_name);
+            $journalBudget = Steam::decrypt((int)$transaction->transaction_journal_budget_encrypted, $transaction->transaction_journal_budget_name);
         }
         $transactionBudget = '';
         if (null !== $transaction->transaction_budget_name) {
-            $journalBudget = Steam::decrypt(intval($transaction->transaction_budget_encrypted), $transaction->transaction_budget_name);
+            $journalBudget = Steam::decrypt((int)$transaction->transaction_budget_encrypted, $transaction->transaction_budget_name);
         }
 
         return self::stringCompare($journalBudget, $search) || self::stringCompare($transactionBudget, $search);
@@ -186,11 +186,11 @@ class Modifier
     {
         $journalCategory = '';
         if (null !== $transaction->transaction_journal_category_name) {
-            $journalCategory = Steam::decrypt(intval($transaction->transaction_journal_category_encrypted), $transaction->transaction_journal_category_name);
+            $journalCategory = Steam::decrypt((int)$transaction->transaction_journal_category_encrypted, $transaction->transaction_journal_category_name);
         }
         $transactionCategory = '';
         if (null !== $transaction->transaction_category_name) {
-            $journalCategory = Steam::decrypt(intval($transaction->transaction_category_encrypted), $transaction->transaction_category_name);
+            $journalCategory = Steam::decrypt((int)$transaction->transaction_category_encrypted, $transaction->transaction_category_name);
         }
 
         return self::stringCompare($journalCategory, $search) || self::stringCompare($transactionCategory, $search);

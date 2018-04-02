@@ -127,11 +127,10 @@ trait AccountServiceTrait
      * @param array   $data
      *
      * @return TransactionJournal|null
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function storeIBJournal(Account $account, array $data): ?TransactionJournal
     {
-        $amount = strval($data['openingBalance']);
+        $amount = (string)$data['openingBalance'];
         Log::debug(sprintf('Submitted amount is %s', $amount));
 
         if (0 === bccomp($amount, '0')) {
@@ -145,7 +144,7 @@ trait AccountServiceTrait
             'type'                    => TransactionType::OPENING_BALANCE,
             'user'                    => $account->user->id,
             'transaction_currency_id' => $currencyId,
-            'description'             => strval(trans('firefly.initial_balance_description', ['account' => $account->name])),
+            'description'             => (string)trans('firefly.initial_balance_description', ['account' => $account->name]),
             'completed'               => true,
             'date'                    => $data['openingBalanceDate'],
             'bill_id'                 => null,
@@ -232,7 +231,6 @@ trait AccountServiceTrait
      * @param array   $data
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function updateIB(Account $account, array $data): bool
     {
@@ -268,9 +266,9 @@ trait AccountServiceTrait
     public function updateIBJournal(Account $account, TransactionJournal $journal, array $data): bool
     {
         $date           = $data['openingBalanceDate'];
-        $amount         = strval($data['openingBalance']);
+        $amount         = (string)$data['openingBalance'];
         $negativeAmount = bcmul($amount, '-1');
-        $currencyId     = intval($data['currency_id']);
+        $currencyId     = (int)$data['currency_id'];
 
         Log::debug(sprintf('Submitted amount for opening balance to update is "%s"', $amount));
         if (0 === bccomp($amount, '0')) {
@@ -291,13 +289,13 @@ trait AccountServiceTrait
         // update transactions:
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
-            if (intval($account->id) === intval($transaction->account_id)) {
+            if ((int)$account->id === (int)$transaction->account_id) {
                 Log::debug(sprintf('Will (eq) change transaction #%d amount from "%s" to "%s"', $transaction->id, $transaction->amount, $amount));
                 $transaction->amount                  = $amount;
                 $transaction->transaction_currency_id = $currencyId;
                 $transaction->save();
             }
-            if (!(intval($account->id) === intval($transaction->account_id))) {
+            if (!((int)$account->id === (int)$transaction->account_id)) {
                 Log::debug(sprintf('Will (neq) change transaction #%d amount from "%s" to "%s"', $transaction->id, $transaction->amount, $negativeAmount));
                 $transaction->amount                  = $negativeAmount;
                 $transaction->transaction_currency_id = $currencyId;
@@ -383,9 +381,8 @@ trait AccountServiceTrait
      */
     public function validIBData(array $data): bool
     {
-        $data['openingBalance'] = strval($data['openingBalance'] ?? '');
-        if (isset($data['openingBalance']) && null !== $data['openingBalance'] && strlen($data['openingBalance']) > 0
-            && isset($data['openingBalanceDate'])) {
+        $data['openingBalance'] = (string)($data['openingBalance'] ?? '');
+        if (isset($data['openingBalance'], $data['openingBalanceDate']) && \strlen($data['openingBalance']) > 0) {
             Log::debug('Array has valid opening balance data.');
 
             return true;

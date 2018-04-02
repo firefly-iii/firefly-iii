@@ -36,7 +36,7 @@ class FireflyConfig
      *
      * @return bool
      *
-     * @throws \Exception
+
      */
     public function delete($name): bool
     {

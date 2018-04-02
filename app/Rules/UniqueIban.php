@@ -76,7 +76,7 @@ class UniqueIban implements Rule
         if (!auth()->check()) {
             return true; // @codeCoverageIgnore
         }
-        if (is_null($this->expectedType)) {
+        if (null === $this->expectedType) {
             return true;
         }
         $maxCounts = [
@@ -114,7 +114,7 @@ class UniqueIban implements Rule
                            ->accounts()
                            ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                            ->where('account_types.type', $type);
-            if (!is_null($this->account)) {
+            if (null !== $this->account) {
                 $query->where('accounts.id', '!=', $this->account->id);
             }
             $result = $query->get(['accounts.*']);

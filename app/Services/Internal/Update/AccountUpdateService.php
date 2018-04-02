@@ -41,7 +41,6 @@ class AccountUpdateService
      * @param array   $data
      *
      * @return Account
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function update(Account $account, array $data): Account
     {
@@ -68,7 +67,7 @@ class AccountUpdateService
 
         // update note:
         if (isset($data['notes']) && null !== $data['notes']) {
-            $this->updateNote($account, strval($data['notes']));
+            $this->updateNote($account, (string)$data['notes']);
         }
 
         return $account;

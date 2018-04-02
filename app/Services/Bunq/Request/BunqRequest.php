@@ -27,7 +27,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Services\Bunq\Object\ServerPublicKey;
 use Log;
 use Requests;
-use Requests_Exception;
 
 /**
  * Class BunqRequest.
@@ -41,7 +40,7 @@ abstract class BunqRequest
     /** @var string */
     private $privateKey = '';
     /** @var string */
-    private $server = '';
+    private $server;
     /**
      * @var array
      */
@@ -58,8 +57,8 @@ abstract class BunqRequest
      */
     public function __construct()
     {
-        $this->server  = strval(config('import.options.bunq.server'));
-        $this->version = strval(config('import.options.bunq.version'));
+        $this->server  = (string)config('import.options.bunq.server');
+        $this->version = (string)config('import.options.bunq.version');
         Log::debug(sprintf('Created new BunqRequest with server "%s" and version "%s"', $this->server, $this->version));
     }
 
@@ -230,14 +229,14 @@ abstract class BunqRequest
 
         try {
             $response = Requests::delete($fullUri, $headers);
-        } catch (Requests_Exception $e) {
+        } catch (Exception $e) {
             return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
         }
 
         $body                        = $response->body;
         $array                       = json_decode($body, true);
         $responseHeaders             = $response->headers->getAll();
-        $statusCode                  = intval($response->status_code);
+        $statusCode                  = (int)$response->status_code;
         $array['ResponseHeaders']    = $responseHeaders;
         $array['ResponseStatusCode'] = $statusCode;
 
@@ -277,14 +276,14 @@ abstract class BunqRequest
 
         try {
             $response = Requests::get($fullUri, $headers);
-        } catch (Requests_Exception $e) {
+        } catch (Exception $e) {
             return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
         }
 
         $body                        = $response->body;
         $array                       = json_decode($body, true);
         $responseHeaders             = $response->headers->getAll();
-        $statusCode                  = intval($response->status_code);
+        $statusCode                  = (int)$response->status_code;
         $array['ResponseHeaders']    = $responseHeaders;
         $array['ResponseStatusCode'] = $statusCode;
 
@@ -318,14 +317,14 @@ abstract class BunqRequest
 
         try {
             $response = Requests::post($fullUri, $headers, $body);
-        } catch (Requests_Exception|Exception $e) {
+        } catch (Exception $e) {
             return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
         }
         Log::debug('Seems to have NO exceptions in Response');
         $body                        = $response->body;
         $array                       = json_decode($body, true);
         $responseHeaders             = $response->headers->getAll();
-        $statusCode                  = intval($response->status_code);
+        $statusCode                  = (int)$response->status_code;
         $array['ResponseHeaders']    = $responseHeaders;
         $array['ResponseStatusCode'] = $statusCode;
 
@@ -355,7 +354,7 @@ abstract class BunqRequest
 
         try {
             $response = Requests::delete($fullUri, $headers);
-        } catch (Requests_Exception|Exception $e) {
+        } catch (Exception $e) {
             return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
         }
         $body                        = $response->body;
@@ -389,7 +388,7 @@ abstract class BunqRequest
 
         try {
             $response = Requests::post($fullUri, $headers, $body);
-        } catch (Requests_Exception|Exception $e) {
+        } catch (Exception $e) {
             return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
         }
         $body                        = $response->body;
@@ -465,7 +464,7 @@ abstract class BunqRequest
                 $message[] = $error['error_description'];
             }
         }
-        throw new FireflyException('Bunq ERROR ' . $response['ResponseStatusCode'] . ': ' . join(', ', $message));
+        throw new FireflyException('Bunq ERROR ' . $response['ResponseStatusCode'] . ': ' . implode(', ', $message));
     }
 
     /**

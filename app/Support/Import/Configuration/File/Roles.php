@@ -73,7 +73,7 @@ class Roles implements ConfigurationInterface
         }
 
         // example rows:
-        $stmt = (new Statement)->limit(intval(config('csv.example_rows', 5)))->offset($offset);
+        $stmt = (new Statement)->limit((int)config('csv.example_rows', 5))->offset($offset);
         // set data:
         $roles = $this->getRoles();
         asort($roles);
@@ -274,14 +274,14 @@ class Roles implements ConfigurationInterface
         }
         // warn if has foreign amount but no currency code:
         if ($hasForeignAmount && !$hasForeignCode) {
-            $this->warning = strval(trans('import.foreign_amount_warning'));
+            $this->warning = (string)trans('import.foreign_amount_warning');
             Log::debug('isRolesComplete() returns FALSE because foreign amount present without foreign code.');
 
             return false;
         }
 
         if (0 === $assigned || !$hasAmount) {
-            $this->warning = strval(trans('import.roles_warning'));
+            $this->warning = (string)trans('import.roles_warning');
             Log::debug('isRolesComplete() returns FALSE because no amount present.');
 
             return false;

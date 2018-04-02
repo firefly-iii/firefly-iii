@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Currency;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Log;
 use Requests;
-use Requests_Exception;
 
 /**
  * Class FixerIO.
@@ -53,7 +53,7 @@ class FixerIO implements ExchangeRateInterface
             $result     = Requests::get($uri);
             $statusCode = $result->status_code;
             $body       = $result->body;
-        } catch (Requests_Exception $e) {
+        } catch (Exception $e) {
             // don't care about error
             $body = sprintf('Requests_Exception: %s', $e->getMessage());
         }
@@ -69,7 +69,7 @@ class FixerIO implements ExchangeRateInterface
         }
         if (null !== $content) {
             $code = $toCurrency->code;
-            $rate = isset($content['rates'][$code]) ? $content['rates'][$code] : '1';
+            $rate = $content['rates'][$code] ?? '1';
         }
 
         // create new currency exchange rate object:

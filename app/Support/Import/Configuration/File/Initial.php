@@ -102,7 +102,7 @@ class Initial implements ConfigurationInterface
         Log::debug('Now in storeConfiguration for file Upload.');
         $config              = $this->getConfig();
         $type                = $data['import_file_type'] ?? 'csv'; // assume it's a CSV file.
-        $config['file-type'] = in_array($type, config('import.options.file.import_formats')) ? $type : 'csv';
+        $config['file-type'] = \in_array($type, config('import.options.file.import_formats'), true) ? $type : 'csv';
 
         // update config:
         $this->repository->setConfiguration($this->job, $config);
@@ -118,7 +118,7 @@ class Initial implements ConfigurationInterface
         }
 
         if (false === $uploaded) {
-            $this->warning = 'No valid upload.';
+            $this->warning = (string)trans('firefly.upload_error');
 
             return true;
         }

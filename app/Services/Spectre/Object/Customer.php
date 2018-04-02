@@ -41,7 +41,7 @@ class Customer extends SpectreObject
      */
     public function __construct(array $data)
     {
-        $this->id         = intval($data['id']);
+        $this->id         = (int)$data['id'];
         $this->identifier = $data['identifier'];
         $this->secret     = $data['secret'];
     }

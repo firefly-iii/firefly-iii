@@ -75,9 +75,7 @@ class Preferences
      */
     public function findByName(string $name): Collection
     {
-        $set = Preference::where('name', $name)->get();
-
-        return $set;
+        return Preference::where('name', $name)->get();
     }
 
     /**
@@ -168,7 +166,7 @@ class Preferences
         if (null !== $preference && null !== $preference->data) {
             $lastActivity = $preference->data;
         }
-        if (is_array($lastActivity)) {
+        if (\is_array($lastActivity)) {
             $lastActivity = implode(',', $lastActivity);
         }
 

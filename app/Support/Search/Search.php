@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Search;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Transaction;
@@ -45,7 +44,7 @@ class Search implements SearchInterface
     /** @var User */
     private $user;
     /** @var array */
-    private $validModifiers = [];
+    private $validModifiers;
     /** @var array */
     private $words = [];
 
@@ -63,7 +62,7 @@ class Search implements SearchInterface
      */
     public function getWordsAsString(): string
     {
-        $string = join(' ', $this->words);
+        $string = implode(' ', $this->words);
         if (0 === strlen($string)) {
             return is_string($this->originalQuery) ? $this->originalQuery : '';
         }
@@ -196,19 +195,19 @@ class Search implements SearchInterface
             switch ($modifier['type']) {
                 case 'amount_is':
                 case 'amount':
-                    $amount = app('steam')->positive(strval($modifier['value']));
+                    $amount = app('steam')->positive((string)$modifier['value']);
                     Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $amount));
                     $collector->amountIs($amount);
                     break;
                 case 'amount_max':
                 case 'amount_less':
-                    $amount = app('steam')->positive(strval($modifier['value']));
+                    $amount = app('steam')->positive((string)$modifier['value']);
                     Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $amount));
                     $collector->amountLess($amount);
                     break;
                 case 'amount_min':
                 case 'amount_more':
-                    $amount = app('steam')->positive(strval($modifier['value']));
+                    $amount = app('steam')->positive((string)$modifier['value']);
                     Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $amount));
                     $collector->amountMore($amount);
                     break;
@@ -246,9 +245,9 @@ class Search implements SearchInterface
     private function extractModifier(string $string)
     {
         $parts = explode(':', $string);
-        if (2 === count($parts) && strlen(trim(strval($parts[0]))) > 0 && strlen(trim(strval($parts[1])))) {
-            $type  = trim(strval($parts[0]));
-            $value = trim(strval($parts[1]));
+        if (2 === count($parts) && strlen(trim((string)$parts[0])) > 0 && strlen(trim((string)$parts[1]))) {
+            $type  = trim((string)$parts[0]);
+            $value = trim((string)$parts[1]);
             if (in_array($type, $this->validModifiers)) {
                 // filter for valid type
                 $this->modifiers->push(['type' => $type, 'value' => $value]);
@@ -268,8 +267,8 @@ class Search implements SearchInterface
         // first "modifier" is always the text of the search:
         // check descr of journal:
         if (count($this->words) > 0
-            && !$this->strposArray(strtolower(strval($transaction->description)), $this->words)
-            && !$this->strposArray(strtolower(strval($transaction->transaction_description)), $this->words)
+            && !$this->strposArray(strtolower((string)$transaction->description), $this->words)
+            && !$this->strposArray(strtolower((string)$transaction->transaction_description), $this->words)
         ) {
             Log::debug('Description does not match', $this->words);
 

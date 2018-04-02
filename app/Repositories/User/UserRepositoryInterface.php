@@ -103,16 +103,11 @@ interface UserRepositoryInterface
 
     /**
      * @param int $userId
+     *
      * @deprecated
      * @return User
      */
     public function find(int $userId): User;
-
-    /**
-     * @param int $userId
-     * @return User|null
-     */
-    public function findNull(int $userId): ?User;
 
     /**
      * @param string $email
@@ -120,6 +115,13 @@ interface UserRepositoryInterface
      * @return User|null
      */
     public function findByEmail(string $email): ?User;
+
+    /**
+     * @param int $userId
+     *
+     * @return User|null
+     */
+    public function findNull(int $userId): ?User;
 
     /**
      * Returns the first user in the DB. Generally only works when there is just one.

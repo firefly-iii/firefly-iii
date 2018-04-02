@@ -28,11 +28,11 @@ namespace FireflyIII\Services\Bunq\Object;
 class Alias extends BunqObject
 {
     /** @var string */
-    private $name = '';
+    private $name;
     /** @var string */
-    private $type = '';
+    private $type;
     /** @var string */
-    private $value = '';
+    private $value;
 
     /**
      * Alias constructor.

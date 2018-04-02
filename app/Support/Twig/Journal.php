@@ -64,7 +64,7 @@ class Journal extends Twig_Extension
                     $array[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($entry->name), route('accounts.show', $entry->id));
                 }
                 $array  = array_unique($array);
-                $result = join(', ', $array);
+                $result = implode(', ', $array);
                 $cache->store($result);
 
                 return $result;
@@ -129,7 +129,7 @@ class Journal extends Twig_Extension
                     $array[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($entry->name), route('accounts.show', $entry->id));
                 }
                 $array  = array_unique($array);
-                $result = join(', ', $array);
+                $result = implode(', ', $array);
                 $cache->store($result);
 
                 return $result;
@@ -164,7 +164,7 @@ class Journal extends Twig_Extension
                         $budgets[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($budget->name), route('budgets.show', $budget->id));
                     }
                 }
-                $string = join(', ', array_unique($budgets));
+                $string = implode(', ', array_unique($budgets));
                 $cache->store($string);
 
                 return $string;
@@ -205,7 +205,7 @@ class Journal extends Twig_Extension
                     }
                 }
 
-                $string = join(', ', array_unique($categories));
+                $string = implode(', ', array_unique($categories));
                 $cache->store($string);
 
                 return $string;

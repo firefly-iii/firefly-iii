@@ -44,7 +44,7 @@ class JournalList implements BinderInterface
             $list     = [];
             $incoming = explode(',', $value);
             foreach ($incoming as $entry) {
-                $list[] = intval($entry);
+                $list[] = (int)$entry;
             }
             $list = array_unique($list);
             if (count($list) === 0) {
