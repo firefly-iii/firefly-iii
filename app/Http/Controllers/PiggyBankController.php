@@ -204,7 +204,7 @@ class PiggyBankController extends Controller
         foreach ($collection as $piggyBank) {
 
             $piggyBank->savedSoFar = $piggyRepository->getCurrentAmount($piggyBank);
-            $piggyBank->percentage = 0 !== bccomp('0', $piggyBank->savedSoFar) ? (int)$piggyBank->savedSoFar / $piggyBank->targetamount * 100 : 0;
+            $piggyBank->percentage = (int)(0 !== bccomp('0', $piggyBank->savedSoFar) ? $piggyBank->savedSoFar / $piggyBank->targetamount * 100 : 0);
             $piggyBank->leftToSave = bcsub($piggyBank->targetamount, (string)$piggyBank->savedSoFar);
             $piggyBank->percentage = $piggyBank->percentage > 100 ? 100 : $piggyBank->percentage;
 
