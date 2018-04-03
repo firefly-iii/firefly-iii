@@ -269,6 +269,11 @@ class BillController extends Controller
     {
         $billData = $request->getBillData();
         $bill     = $repository->store($billData);
+        if (null === $bill) {
+            $request->session()->flash('error', (string)trans('firefly.bill_store_error'));
+
+            return redirect(route('bills.create'))->withInput();
+        }
         $request->session()->flash('success', (string)trans('firefly.stored_new_bill', ['name' => $bill->name]));
         Preferences::mark();
 

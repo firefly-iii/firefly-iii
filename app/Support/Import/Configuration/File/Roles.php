@@ -70,6 +70,7 @@ class Roles implements ConfigurationInterface
             $stmt    = (new Statement)->limit(1)->offset(0);
             $records = $stmt->process($reader);
             $headers = $records->fetchOne(0);
+            Log::debug('Detected file headers:', $headers);
         }
 
         // example rows:
