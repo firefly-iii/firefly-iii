@@ -56,9 +56,9 @@ class ImportBill
     }
 
     /**
-     * @return Bill
+     * @return Bill|null
      */
-    public function getBill(): Bill
+    public function getBill(): ?Bill
     {
         if (null === $this->bill) {
             $this->store();
@@ -268,9 +268,14 @@ class ImportBill
         ];
 
         Log::debug('Found no bill so must create one ourselves. Assume default values.', $data);
-
-        $this->bill = $this->repository->store($data);
-        Log::debug(sprintf('Successfully stored new bill #%d: %s', $this->bill->id, $this->bill->name));
+        $result = $this->repository->store($data);
+        if (null !== $result) {
+            $this->bill = $result;
+            Log::debug(sprintf('Successfully stored new bill #%d: %s', $this->bill->id, $this->bill->name));
+        }
+        if (null === $result) {
+            Log::error('Could not store new bill.');
+        }
 
         return true;
     }

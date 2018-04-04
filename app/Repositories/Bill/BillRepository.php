@@ -538,9 +538,9 @@ class BillRepository implements BillRepositoryInterface
     /**
      * @param array $data
      *
-     * @return Bill
+     * @return Bill|null
      */
-    public function store(array $data): Bill
+    public function store(array $data): ?Bill
     {
         /** @var BillFactory $factory */
         $factory = app(BillFactory::class);

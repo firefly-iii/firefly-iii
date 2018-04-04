@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.7.2.2] - 2018-04-04
+### Fixed
+- Bug in split transaction edit routine
+- Piggy bank percentage was very specific.
+- Logging in Slack is easier to config.
+- [Issue 1312](https://github.com/firefly-iii/firefly-iii/issues/1312) Import broken for ING accounts
+- [Issue 1313](https://github.com/firefly-iii/firefly-iii/issues/1313) Error when creating new asset account
+- [Issue 1317](https://github.com/firefly-iii/firefly-iii/issues/1317) Forgot an include :(
+
 ## [4.7.2.1] - 2018-04-02
 ### Fixed
 - Null pointer exception in transaction overview.

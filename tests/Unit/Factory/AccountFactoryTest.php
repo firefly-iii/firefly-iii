@@ -69,6 +69,40 @@ class AccountFactoryTest extends TestCase
     }
 
     /**
+     * Test minimal set of data to make factory work (asset account).
+     *
+     * @covers \FireflyIII\Factory\AccountFactory
+     * @covers \FireflyIII\Factory\AccountMetaFactory
+     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     */
+    public function testCreateBasicEmptyVb()
+    {
+
+        $data = [
+            'account_type_id' => null,
+            'accountType'     => 'asset',
+            'iban'            => null,
+            'name'            => 'Basic asset account #' . random_int(1, 1000),
+            'virtualBalance'  => '',
+            'active'          => true,
+            'accountRole'     => 'defaultAsset',
+        ];
+
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user());
+        $account = $factory->create($data);
+
+        // assert stuff about account:
+        $this->assertEquals($account->name, $data['name']);
+        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
+        $this->assertEquals('', $account->iban);
+        $this->assertTrue($account->active);
+        $this->assertEquals('0', $account->virtual_balance);
+        $this->assertEquals('defaultAsset', $account->getMeta('accountRole'));
+    }
+
+    /**
      * Test creation of CC asset.
      *
      * @covers \FireflyIII\Factory\AccountFactory

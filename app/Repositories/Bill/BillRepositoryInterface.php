@@ -183,9 +183,9 @@ interface BillRepositoryInterface
     /**
      * @param array $data
      *
-     * @return Bill
+     * @return Bill|null
      */
-    public function store(array $data): Bill;
+    public function store(array $data): ?Bill;
 
     /**
      * @param Bill  $bill

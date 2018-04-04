@@ -84,11 +84,11 @@
                     <h3 class="box-title">{{ 'more'|_ }}</h3>
                 </div>
                 <div class="box-body no-padding">
-                    {% if object.notes|length > 0 %}
+                    {% if object.data.notes|length > 0 %}
                         <table class="table">
                             <tr>
                                 <td>{{ trans('list.notes') }}</td>
-                                <td class="markdown">{{ object.notes.data[0].markdown }}</td>
+                                <td class="markdown">{{ object.data.notes|markdown }}</td>
                             </tr>
                         </table>
                     {% endif %}

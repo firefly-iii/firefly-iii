@@ -267,8 +267,8 @@ class SplitController extends Controller
             // take some info from first transaction, that should at least exist.
             $array[$index]                            = $row;
             $array[$index]['currency_id']             = $array[0]['transaction_currency_id'];
-            $array[$index]['currency_code']           = $array[0]['transaction_currency_code'];
-            $array[$index]['currency_symbol']         = $array[0]['transaction_currency_symbol'];
+            $array[$index]['currency_code']           = $array[0]['transaction_currency_code'] ?? '';
+            $array[$index]['currency_symbol']         = $array[0]['transaction_currency_symbol'] ?? '';
             $array[$index]['foreign_amount']          = round($array[0]['foreign_destination_amount'] ?? '0', 12);
             $array[$index]['foreign_currency_id']     = $array[0]['foreign_currency_id'];
             $array[$index]['foreign_currency_code']   = $array[0]['foreign_currency_code'];

@@ -73,6 +73,11 @@ class AccountFactory
             $databaseData['virtual_balance'] = '0';
         }
 
+        // fix virtual balance when it's empty
+        if ($databaseData['virtual_balance'] === '') {
+            $databaseData['virtual_balance'] = '0';
+        }
+
         $newAccount = Account::create($databaseData);
         $this->updateMetaData($newAccount, $data);
 

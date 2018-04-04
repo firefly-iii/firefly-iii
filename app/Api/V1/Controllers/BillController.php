@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\BillRequest;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Transformers\BillTransformer;
@@ -126,10 +127,12 @@ class BillController extends Controller
      * @param BillRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws FireflyException
      */
     public function store(BillRequest $request)
     {
         $bill    = $this->repository->store($request->getAll());
+        if(null !== $bill) {
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
@@ -137,6 +140,8 @@ class BillController extends Controller
         $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        }
+        throw new FireflyException('Could not store new bill.');
 
     }
 
