@@ -52,4 +52,12 @@ class Note extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * @param $value
+     */
+    public function setTextAttribute($value)
+    {
+        $this->attributes['text'] = e($value);
+    }
 }

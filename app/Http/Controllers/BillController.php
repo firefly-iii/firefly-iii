@@ -238,7 +238,7 @@ class BillController extends Controller
         $overallAverage = $repository->getOverallAverage($bill);
         $manager        = new Manager();
         $manager->setSerializer(new DataArraySerializer());
-        $manager->parseIncludes(['attachments']);
+        $manager->parseIncludes(['attachments','notes']);
 
         // Make a resource out of the data and
         $parameters = new ParameterBag();

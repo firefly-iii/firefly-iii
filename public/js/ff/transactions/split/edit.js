@@ -43,13 +43,13 @@ $(document).ready(function () {
 
     $.getJSON('json/categories').done(function (data) {
         categories = data;
-        $('input[name$="category]"]').typeahead({source: categories, autoSelect: false});
+        $('input[name$="category_name]"]').typeahead({source: categories, autoSelect: false});
     });
 
     $.getJSON('json/transaction-journals/' + what).done(function (data) {
         descriptions = data;
         $('input[name="journal_description"]').typeahead({source: descriptions, autoSelect: false});
-        $('input[name$="description]"]').typeahead({source: descriptions, autoSelect: false});
+        $('input[name$="transaction_description]"]').typeahead({source: descriptions, autoSelect: false});
     });
 
     $.getJSON('json/tags').done(function (data) {
@@ -123,10 +123,10 @@ function cloneDivRow() {
         source.find('input[name$="source_account_name]"]').typeahead({source: srcAccounts, autoSelect: false});
     }
     if (categories.length > 0) {
-        source.find('input[name$="category]"]').typeahead({source: categories, autoSelect: false});
+        source.find('input[name$="category_name]"]').typeahead({source: categories, autoSelect: false});
     }
     if (descriptions.length > 0) {
-        source.find('input[name$="description]"]').typeahead({source: descriptions, autoSelect: false});
+        source.find('input[name$="transaction_description]"]').typeahead({source: descriptions, autoSelect: false});
     }
 
     $('div.split_row_holder').append(source);
@@ -180,9 +180,9 @@ function resetDivSplits() {
     // loop each possible field.
 
     // ends with ][description]
-    $.each($('input[name$="][description]"]'), function (i, v) {
+    $.each($('input[name$="][transaction_description]"]'), function (i, v) {
         var input = $(v);
-        input.attr('name', 'transactions[' + i + '][description]');
+        input.attr('name', 'transactions[' + i + '][transaction_description]');
     });
     // ends with ][destination_account_name]
     $.each($('input[name$="][destination_account_name]"]'), function (i, v) {
@@ -225,9 +225,9 @@ function resetDivSplits() {
     });
 
     // ends with ][category]
-    $.each($('input[name$="][category]"]'), function (i, v) {
+    $.each($('input[name$="][category_name]"]'), function (i, v) {
         var input = $(v);
-        input.attr('name', 'transactions[' + i + '][category]');
+        input.attr('name', 'transactions[' + i + '][category_name]');
     });
 }
 
