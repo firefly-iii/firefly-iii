@@ -90,12 +90,12 @@ class SplitJournalFormRequest extends Request
                 'identifier'            => $index,
                 'currency_id'           => $this->integer('journal_currency_id'),
                 'currency_code'         => null,
-                'description'           => $transaction['transaction_description'],
+                'description'           => $transaction['transaction_description'] ?? '',
                 'amount'                => $transaction['amount'],
                 'budget_id'             => (int)($transaction['budget_id'] ?? 0.0),
                 'budget_name'           => null,
                 'category_id'           => null,
-                'category_name'         => $transaction['category_name'],
+                'category_name'         => $transaction['category_name'] ?? '',
             ];
             $data['transactions'][] = $set;
         }
