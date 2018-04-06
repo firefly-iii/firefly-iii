@@ -102,5 +102,5 @@ function completeDone() {
 function displaySoftFail(message) {
     $('#status-box').html('<i class="fa fa-warning"></i> ' + message + '<br /><br />Please read the ' +
                           '<a href="http://firefly-iii.readthedocs.io/en/latest/support/faq.html#i-get-an-error-about-proc-close-being-disabled">' +
-                          'official documentation</a> about this.');
+                          'official documentation</a> about this, and upgrade by hand.');
 }
