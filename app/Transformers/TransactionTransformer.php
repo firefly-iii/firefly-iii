@@ -215,7 +215,6 @@ class TransactionTransformer extends TransformerAbstract
         if (null !== $transaction->transaction_foreign_amount) {
             $data['foreign_amount'] = round($transaction->transaction_foreign_amount, (int)$transaction->foreign_currency_dp);
         }
-
         // switch on type for consistency
         switch ($transaction->transaction_type_type) {
             case TransactionType::WITHDRAWAL:

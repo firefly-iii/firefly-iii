@@ -33,6 +33,7 @@
                         <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
                     </div>
                     <div class="box-body">
+
                         {# ALWAYS AVAILABLE #}
                         {{ ExpandedForm.text('description',journal.description) }}
 
@@ -81,7 +82,11 @@
                     </div>
                     <div class="box-body">
                         {% if what == 'withdrawal' %}
-                            {{ ExpandedForm.select('budget_id',budgetList,data['budget_id']) }}
+                            {% if budgetList|length > 1 %}
+                                {{ ExpandedForm.select('budget_id', budgetList, data['budget_id']) }}
+                            {% else %}
+                                {{ ExpandedForm.select('budget_id', budgetList, data['budget_id'], {helpText: trans('firefly.no_budget_pointer')}) }}
+                            {% endif %}
                         {% endif %}
                         {{ ExpandedForm.text('category',data['category']) }}
                         {{ ExpandedForm.text('tags') }}
@@ -209,8 +214,8 @@
                 </div>
             </div>
         </div>
-        <input type="hidden" name="source_account_currency" value="0" />
-        <input type="hidden" name="destination_account_currency" value="0" />
+        <input type="hidden" name="source_account_currency" value="0"/>
+        <input type="hidden" name="destination_account_currency" value="0"/>
     </form>
 
 

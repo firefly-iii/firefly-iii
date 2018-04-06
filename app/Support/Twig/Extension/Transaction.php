@@ -357,7 +357,7 @@ class Transaction extends Twig_Extension
     {
         $res = '';
         if ($transaction->is_split === true) {
-            $res = '<i class="fa fa-fw fa-share-alt" aria-hidden="true"></i>!!!';
+            $res = '<i class="fa fa-fw fa-share-alt" aria-hidden="true"></i>';
         }
 
         if ($transaction->is_split === null) {

@@ -228,7 +228,7 @@
                                 {% if preFilled.what == 'withdrawal' %}
                                     <div class="col-lg-2 col-md-5 col-sm-12 col-xs-12">
                                         <input autocomplete="off" type="text" name="transactions[{{ loop.index0 }}][destination_name]"
-                                               value="{{ transaction.destination_name }}" class="form-control"/>
+                                               value="{% if transaction.destination_type != 'Cash account' %}{{ transaction.destination_name }}{% endif %}" class="form-control"/>
                                     </div>
                                 {% endif %}
 

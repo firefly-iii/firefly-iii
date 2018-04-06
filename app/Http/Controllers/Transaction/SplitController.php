@@ -33,6 +33,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -114,7 +115,7 @@ class SplitController extends Controller
         /** @var Account $account */
         foreach ($accountList as $account) {
             $accountArray[$account->id]                = $account;
-            $accountArray[$account->id]['currency_id'] = (int)$account->getMeta('currency_id');
+            $accountArray[$account->id]['currency_id'] = (int)$this->accounts->getMetaValue($account, 'currency_id');
         }
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -235,11 +236,19 @@ class SplitController extends Controller
         $set          = $collector->getJournals();
         $transactions = [];
         $transformer  = new TransactionTransformer(new ParameterBag);
-
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
-            if ($transaction->transaction_amount > 0) {
-                $transactions[] = $transformer->transform($transaction);
+            $res = [];
+            if ((float)$transaction->transaction_amount > 0 && $journal->transactionType->type === TransactionType::DEPOSIT) {
+                $res = $transformer->transform($transaction);
+            }
+            if ((float)$transaction->transaction_amount < 0 && $journal->transactionType->type !== TransactionType::DEPOSIT) {
+                $res = $transformer->transform($transaction);
+            }
+
+            if (count($res) > 0) {
+                $res['amount']  = app('steam')->positive((string)$res['amount']);
+                $transactions[] = $res;
             }
         }
 
