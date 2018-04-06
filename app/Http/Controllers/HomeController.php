@@ -28,6 +28,7 @@ use Exception;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Http\Middleware\Installer;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Middleware\IsSandStormUser;
 use FireflyIII\Models\AccountType;
@@ -54,8 +55,10 @@ class HomeController extends Controller
         parent::__construct();
         app('view')->share('title', 'Firefly III');
         app('view')->share('mainTitleIcon', 'fa-fire');
+        $this->middleware(Installer::class);
         $this->middleware(IsDemoUser::class)->except(['dateRange', 'index']);
         $this->middleware(IsSandStormUser::class)->only('routes');
+
     }
 
     /**
