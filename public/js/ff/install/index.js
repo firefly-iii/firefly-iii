@@ -28,8 +28,13 @@ $(function () {
 
 function startMigration() {
     $('#status-box').html('<i class="fa fa-spin fa-spinner"></i> Setting up DB...');
-    $.post(migrateUri, {_token: token}).done(function () {
-        startPassport();
+    $.post(migrateUri, {_token: token}).done(function (data) {
+        if(data.error === false) {
+            startPassport();
+        } else {
+            displaySoftFail(data.message);
+        }
+
     }).fail(function () {
         $('#status-box').html('<i class="fa fa-warning"></i> Migration failed! See log files :(');
     });
@@ -41,7 +46,12 @@ function startMigration() {
 function startPassport() {
     $('#status-box').html('<i class="fa fa-spin fa-spinner"></i> Setting up OAuth2...');
     $.post(keysUri, {_token: token}).done(function () {
-        startUpgrade();
+        if(data.error === false) {
+            startUpgrade();
+        } else {
+            displaySoftFail(data.message);
+        }
+
     }).fail(function () {
         $('#status-box').html('<i class="fa fa-warning"></i> OAuth2 failed! See log files :(');
     });
@@ -53,7 +63,11 @@ function startPassport() {
 function startUpgrade() {
     $('#status-box').html('<i class="fa fa-spin fa-spinner"></i> Upgrading database...');
     $.post(upgradeUri, {_token: token}).done(function () {
-        startVerify();
+        if(data.error === false) {
+            startVerify();
+        } else {
+            displaySoftFail(data.message);
+        }
     }).fail(function () {
         $('#status-box').html('<i class="fa fa-warning"></i> Upgrade failed! See log files :(');
     });
@@ -65,7 +79,11 @@ function startUpgrade() {
 function startVerify() {
     $('#status-box').html('<i class="fa fa-spin fa-spinner"></i> Verify database integrity...');
     $.post(verifyUri, {_token: token}).done(function () {
-        completeDone();
+        if(data.error === false) {
+            completeDone();
+        } else {
+            displaySoftFail(data.message);
+        }
     }).fail(function () {
         $('#status-box').html('<i class="fa fa-warning"></i> Verification failed! See log files :(');
     });
@@ -79,4 +97,10 @@ function completeDone() {
     setTimeout(function () {
         window.location = homeUri;
     }, 3000);
+}
+
+function displaySoftFail(message) {
+    $('#status-box').html('<i class="fa fa-warning"></i> ' + message + '<br /><br />Please read the ' +
+                          '<a href="http://firefly-iii.readthedocs.io/en/latest/support/faq.html#i-get-an-error-about-proc-close-being-disabled">' +
+                          'official documentation</a> about this.');
 }

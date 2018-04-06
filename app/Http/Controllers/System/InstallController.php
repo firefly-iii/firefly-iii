@@ -35,6 +35,8 @@ use phpseclib\Crypt\RSA;
  */
 class InstallController extends Controller
 {
+
+    public const FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
     /** @noinspection MagicMethodsValidityInspection */
     /** @noinspection PhpMissingParentConstructorInspection */
     /**
@@ -58,6 +60,9 @@ class InstallController extends Controller
      */
     public function keys()
     {
+        if ($this->hasForbiddenFunctions()) {
+            return response()->json(['error' => true, 'message' => self::FORBIDDEN_ERROR]);
+        }
         // create keys manually because for some reason the passport namespace
         // does not exist
         $rsa  = new RSA();
@@ -69,13 +74,13 @@ class InstallController extends Controller
         ];
 
         if (file_exists($publicKey) || file_exists($privateKey)) {
-            return response()->json(['OK']);
+            return response()->json(['error' => false, 'message' => 'OK']);
         }
 
         file_put_contents($publicKey, array_get($keys, 'publickey'));
         file_put_contents($privateKey, array_get($keys, 'privatekey'));
 
-        return response()->json(['OK']);
+        return response()->json(['error' => false, 'message' => 'OK']);
     }
 
     /**
@@ -83,11 +88,15 @@ class InstallController extends Controller
      */
     public function migrate()
     {
+        if ($this->hasForbiddenFunctions()) {
+            return response()->json(['error' => true, 'message' => self::FORBIDDEN_ERROR]);
+        }
+
         Log::debug('Am now calling migrate routine...');
         Artisan::call('migrate', ['--seed' => true, '--force' => true]);
         Log::debug(Artisan::output());
 
-        return response()->json(['OK']);
+        return response()->json(['error' => false, 'message' => 'OK']);
     }
 
     /**
@@ -95,11 +104,14 @@ class InstallController extends Controller
      */
     public function upgrade()
     {
+        if ($this->hasForbiddenFunctions()) {
+            return response()->json(['error' => true, 'message' => self::FORBIDDEN_ERROR]);
+        }
         Log::debug('Am now calling upgrade database routine...');
         Artisan::call('firefly:upgrade-database');
         Log::debug(Artisan::output());
 
-        return response()->json(['OK']);
+        return response()->json(['error' => false, 'message' => 'OK']);
     }
 
     /**
@@ -107,11 +119,37 @@ class InstallController extends Controller
      */
     public function verify()
     {
+        if ($this->hasForbiddenFunctions()) {
+            return response()->json(['error' => true, 'message' => self::FORBIDDEN_ERROR]);
+        }
         Log::debug('Am now calling verify database routine...');
         Artisan::call('firefly:verify');
         Log::debug(Artisan::output());
 
-        return response()->json(['OK']);
+        return response()->json(['error' => false, 'message' => 'OK']);
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasForbiddenFunctions(): bool
+    {
+        $list      = ['proc_close'];
+        $forbidden = explode(',', ini_get('disable_functions'));
+        $trimmed   = array_map(
+            function (string $value) {
+                return trim($value);
+            }, $forbidden
+        );
+        foreach ($list as $entry) {
+            if (\in_array($entry, $trimmed, true)) {
+                Log::error('Method "%s" is FORBIDDEN, so the console command cannot be executed.');
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
