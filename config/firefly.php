@@ -9,6 +9,7 @@ use FireflyIII\TransactionRules\Actions\AppendNotes;
 use FireflyIII\TransactionRules\Actions\ClearBudget;
 use FireflyIII\TransactionRules\Actions\ClearCategory;
 use FireflyIII\TransactionRules\Actions\ClearNotes;
+use FireflyIII\TransactionRules\Actions\LinkToBill;
 use FireflyIII\TransactionRules\Actions\PrependDescription;
 use FireflyIII\TransactionRules\Actions\PrependNotes;
 use FireflyIII\TransactionRules\Actions\RemoveAllTags;
@@ -354,6 +355,7 @@ return [
         'append_notes'            => AppendNotes::class,
         'prepend_notes'           => PrependNotes::class,
         'clear_notes'             => ClearNotes::class,
+        'link_to_bill'            => LinkToBill::class,
     ],
     'rule-actions-text'        => [
         'set_category',

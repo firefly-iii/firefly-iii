@@ -404,6 +404,8 @@ return [
     'rule_action_clear_notes_choice'             => 'Remove any notes',
     'rule_action_clear_notes'                    => 'Remove any notes',
     'rule_action_set_notes_choice'               => 'Set notes to..',
+    'rule_action_link_to_bill_choice'            => 'Link to a bill..',
+    'rule_action_link_to_bill'                   => 'Link to bill ":action_value"',
     'rule_action_set_notes'                      => 'Set notes to ":action_value"',
 
     'rules_have_read_warning'                 => 'Have you read the warning?',

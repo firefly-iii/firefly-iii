@@ -31,6 +31,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\TransactionRules\Triggers\TriggerInterface;
@@ -254,6 +255,12 @@ class FireflyValidator extends Validator
                     )->count();
 
                     return 1 === $count;
+                case 'link_to_bill':
+                    /** @var BillRepositoryInterface $repository */
+                    $repository = app(BillRepositoryInterface::class);
+                    $bill       = $repository->findByName((string)$value);
+
+                    return null !== $bill;
                 case 'invalid':
                     return false;
             }
@@ -275,7 +282,7 @@ class FireflyValidator extends Validator
 
         // loop all rule-triggers.
         // check if rule-value matches the thing.
-        if (is_array($this->data['rule-trigger'])) {
+        if (\is_array($this->data['rule-trigger'])) {
             $name  = $this->getRuleTriggerName($index);
             $value = $this->getRuleTriggerValue($index);
 

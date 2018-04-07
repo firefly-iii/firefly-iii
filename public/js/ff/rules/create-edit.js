@@ -224,6 +224,9 @@ function updateActionInput(selectList) {
         case 'set_destination_account':
             createAutoComplete(input, 'json/all-accounts');
             break;
+        case 'link_to_bill':
+            createAutoComplete(input, 'json/bills');
+            break;
         default:
             input.typeahead('destroy');
             break;
