@@ -80,7 +80,7 @@ class BillController extends Controller
     {
         $periods = [];
         foreach (config('firefly.bill_periods') as $current) {
-            $periods[$current] = trans('firefly.' . $current);
+            $periods[$current] = strtolower((string)trans('firefly.repeat_freq_' . $current));
         }
         $subTitle = trans('firefly.create_new_bill');
 
@@ -186,6 +186,11 @@ class BillController extends Controller
                 return $transformer->transform($bill);
             }
         );
+        $bills = $bills->sortBy(
+            function (array $bill) {
+                return (int)!$bill['active'] . strtolower($bill['name']);
+            }
+        );
 
         $paginator->setPath(route('bills.index'));
 
@@ -238,7 +243,7 @@ class BillController extends Controller
         $overallAverage = $repository->getOverallAverage($bill);
         $manager        = new Manager();
         $manager->setSerializer(new DataArraySerializer());
-        $manager->parseIncludes(['attachments','notes']);
+        $manager->parseIncludes(['attachments', 'notes']);
 
         // Make a resource out of the data and
         $parameters = new ParameterBag();
