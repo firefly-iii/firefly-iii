@@ -54,67 +54,9 @@ class JsonController extends Controller
     }
 
     /**
-     * @param BudgetRepositoryInterface $repository
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function budgets(BudgetRepositoryInterface $repository)
-    {
-        $return = array_unique($repository->getBudgets()->pluck('name')->toArray());
-        sort($return);
-
-        return response()->json($return);
-    }
-
-    /**
-     * Returns a list of categories.
-     *
-     * @param CategoryRepositoryInterface $repository
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function categories(CategoryRepositoryInterface $repository)
-    {
-        $return = array_unique($repository->getCategories()->pluck('name')->toArray());
-        sort($return);
-
-        return response()->json($return);
-    }
-
-    /**
-     * Returns a JSON list of all beneficiaries.
-     *
-     * @param TagRepositoryInterface $tagRepository
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function tags(TagRepositoryInterface $tagRepository)
-    {
-        $return = array_unique($tagRepository->get()->pluck('tag')->toArray());
-        sort($return);
-
-        return response()->json($return);
-    }
-
-    /**
-     * @param JournalRepositoryInterface $repository
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function transactionTypes(JournalRepositoryInterface $repository)
-    {
-        $return = array_unique($repository->getTransactionTypes()->pluck('type')->toArray());
-        sort($return);
-
-        return response()->json($return);
-    }
-
-    /**
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
-     *
-
      */
     public function trigger(Request $request)
     {
