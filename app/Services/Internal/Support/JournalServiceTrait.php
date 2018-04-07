@@ -51,7 +51,7 @@ trait JournalServiceTrait
             return; // @codeCoverageIgnore
         }
         foreach ($data['tags'] as $string) {
-            if (strlen($string) > 0) {
+            if (\strlen($string) > 0) {
                 $tag   = $factory->findOrCreate($string);
                 $set[] = $tag->id;
             }

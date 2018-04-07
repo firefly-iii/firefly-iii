@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use ExpandedForm;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\BillFormRequest;
@@ -29,6 +30,8 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Transformers\BillTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -76,13 +79,15 @@ class BillController extends Controller
      *
      * @return View
      */
-    public function create(Request $request)
+    public function create(Request $request, CurrencyRepositoryInterface $repository)
     {
         $periods = [];
         foreach (config('firefly.bill_periods') as $current) {
             $periods[$current] = strtolower((string)trans('firefly.repeat_freq_' . $current));
         }
-        $subTitle = trans('firefly.create_new_bill');
+        $subTitle        = trans('firefly.create_new_bill');
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $currencies      = ExpandedForm::makeSelectList($repository->get());
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('bills.create.fromStore')) {
@@ -90,7 +95,7 @@ class BillController extends Controller
         }
         $request->session()->forget('bills.create.fromStore');
 
-        return view('bills.create', compact('periods', 'subTitle'));
+        return view('bills.create', compact('periods', 'subTitle', 'currencies', 'defaultCurrency'));
     }
 
     /**
@@ -270,7 +275,7 @@ class BillController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(BillFormRequest $request, BillRepositoryInterface $repository)
+    public function store(BillFormRequest $request, BillRepositoryInterface $repository, RuleGroupRepositoryInterface $ruleGroupRepository)
     {
         $billData = $request->getBillData();
         $bill     = $repository->store($billData);
@@ -291,16 +296,22 @@ class BillController extends Controller
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
-        if (1 === (int)$request->get('create_another')) {
-            // @codeCoverageIgnoreStart
-            $request->session()->put('bills.create.fromStore', true);
-
-            return redirect(route('bills.create'))->withInput();
-            // @codeCoverageIgnoreEnd
+        // find first rule group, or create one:
+        $count = $ruleGroupRepository->count();
+        if ($count === 0) {
+            $data  = [
+                'title'       => (string)trans('firefly.rulegroup_for_bills_title'),
+                'description' => (string)trans('firefly.rulegroup_for_bills_description'),
+            ];
+            $group = $ruleGroupRepository->store($data);
+        }
+        if ($count > 0) {
+            $group = $ruleGroupRepository->getActiveGroups(auth()->user())->first();
         }
 
-        // redirect to previous URL.
-        return redirect($this->getPreviousUri('bills.create.uri'));
+
+        // redirect to page that will create a new rule.
+        return redirect(route('rules.create', [$group->id]) . '?fromBill=' . $bill->id);
     }
 
     /**

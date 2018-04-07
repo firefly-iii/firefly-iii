@@ -57,7 +57,7 @@ class Bill extends Model
      */
     protected $fillable
         = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip',
-           'automatch', 'active',];
+           'automatch', 'active','currency_id'];
     /**
      * @var array
      */

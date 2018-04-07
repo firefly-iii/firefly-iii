@@ -43,6 +43,9 @@ class RuleTrigger extends Model
             'stop_processing' => 'boolean',
         ];
 
+    /** @var array */
+    protected $fillable = ['rule_id', 'trigger_type', 'trigger_value', 'order', 'active', 'stop_processing'];
+
     /**
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

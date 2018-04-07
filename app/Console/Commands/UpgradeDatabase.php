@@ -28,13 +28,20 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Attachment;
+use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\Preference;
+use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\RuleGroup;
+use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
@@ -70,6 +77,7 @@ class UpgradeDatabase extends Command
      */
     public function handle()
     {
+        $this->migrateBillsToRules();
         $this->setTransactionIdentifier();
         $this->updateAccountCurrencies();
         $this->createNewTypes();
@@ -79,9 +87,118 @@ class UpgradeDatabase extends Command
         $this->line('Done updating currency information..');
         $this->migrateNotes();
         $this->migrateAttachmentData();
-        $this->info('Firefly III database is up to date.');
 
-        return;
+        $this->info('Firefly III database is up to date.');
+    }
+
+    public function migrateBillsToRules()
+    {
+        foreach (User::get() as $user) {
+            /** @var Preference $lang */
+            $lang               = Preferences::getForUser($user, 'language', 'en_US');
+            $groupName          = (string)trans('firefly.rulegroup_for_bills_title', [], $lang->data);
+            $ruleGroup          = $user->ruleGroups()->where('title', $groupName)->first();
+            $currencyPreference = Preferences::getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
+            $currency           = TransactionCurrency::where('code', $currencyPreference->data)->first();
+
+            if ($ruleGroup === null) {
+                $array     = RuleGroup::get(['order'])->pluck('order')->toArray();
+                $order     = count($array) > 0 ? max($array) + 1 : 1;
+                $ruleGroup = RuleGroup::create(
+                    [
+                        'user_id'     => $user->id,
+                        'title'       => (string)trans('firefly.rulegroup_for_bills_title', [], $lang->data),
+                        'description' => (string)trans('firefly.rulegroup_for_bills_description', [], $lang->data),
+                        'order'       => $order,
+                        'active'      => 1,
+                    ]
+                );
+            }
+
+            // loop bills.
+            $order = 1;
+            /** @var Bill $bill */
+            foreach ($user->bills()->get() as $bill) {
+                if ($bill->match !== 'MIGRATED_TO_RULES') {
+                    $rule = Rule::create(
+                        [
+                            'user_id'         => $user->id,
+                            'rule_group_id'   => $ruleGroup->id,
+                            'title'           => (string)trans('firefly.rule_for_bill_title', ['name' => $bill->name], $lang->data),
+                            'description'     => (string)trans('firefly.rule_for_bill_description', ['name' => $bill->name], $lang->data),
+                            'order'           => $order,
+                            'active'          => 1,
+                            'stop_processing' => 1,
+                        ]
+                    );
+                    // add default trigger
+                    RuleTrigger::create(
+                        [
+                            'rule_id'         => $rule->id,
+                            'trigger_type'    => 'user_action',
+                            'trigger_value'   => 'store-journal',
+                            'active'          => 1,
+                            'stop_processing' => 0,
+                            'order'           => 1,
+                        ]
+                    );
+                    // add trigger for description
+                    $match = implode(' ', explode(',', $bill->match));
+                    RuleTrigger::create(
+                        [
+                            'rule_id'         => $rule->id,
+                            'trigger_type'    => 'description_is',
+                            'trigger_value'   => $match,
+                            'active'          => 1,
+                            'stop_processing' => 0,
+                            'order'           => 2,
+                        ]
+                    );
+
+                    // add triggers for amounts:
+                    RuleTrigger::create(
+                        [
+                            'rule_id'         => $rule->id,
+                            'trigger_type'    => 'amount_less',
+                            'trigger_value'   => round($bill->amount_max, $currency->decimal_places),
+                            'active'          => 1,
+                            'stop_processing' => 0,
+                            'order'           => 3,
+                        ]
+                    );
+                    RuleTrigger::create(
+                        [
+                            'rule_id'         => $rule->id,
+                            'trigger_type'    => 'amount_more',
+                            'trigger_value'   => round($bill->amount_min, $currency->decimal_places),
+                            'active'          => 1,
+                            'stop_processing' => 0,
+                            'order'           => 4,
+                        ]
+                    );
+
+                    // create action
+                    RuleAction::create(
+                        [
+                            'rule_id'         => $rule->id,
+                            'action_type'     => 'link_to_bill',
+                            'action_value'    => $bill->name,
+                            'order'           => 1,
+                            'active'          => 1,
+                            'stop_processing' => 0,
+                        ]
+                    );
+
+                    $order++;
+                    //$bill->match = 'MIGRATED_TO_RULES';
+                    $bill->save();
+                    $this->line(sprintf('Updated bill #%d ("%s") so it will use rules.', $bill->id, $bill->name));
+                }
+            }
+
+            $this->line('Exit');
+            exit;
+        }
     }
 
     /**

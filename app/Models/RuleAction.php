@@ -43,6 +43,9 @@ class RuleAction extends Model
             'stop_processing' => 'boolean',
         ];
 
+    /** @var array */
+    protected $fillable = ['rule_id', 'action_type', 'action_value', 'order', 'active', 'stop_processing'];
+
     /**
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -47,6 +47,8 @@ class Rule extends Model
             'order'           => 'int',
             'stop_processing' => 'boolean',
         ];
+    /** @var array */
+    protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id'];
 
     /**
      * @param string $value

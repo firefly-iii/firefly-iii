@@ -45,22 +45,19 @@ class BillFactory
      */
     public function create(array $data): ?Bill
     {
-        $matchArray = explode(',', $data['match']);
-        $matchArray = array_unique($matchArray);
-        $match      = implode(',', $matchArray);
-
         /** @var Bill $bill */
         $bill = Bill::create(
             [
                 'name'        => $data['name'],
-                'match'       => $match,
+                'match'       => 'MIGRATED_TO_RULES',
                 'amount_min'  => $data['amount_min'],
                 'user_id'     => $this->user->id,
+                'currency_id' => $data['currency_id'],
                 'amount_max'  => $data['amount_max'],
                 'date'        => $data['date'],
                 'repeat_freq' => $data['repeat_freq'],
                 'skip'        => $data['skip'],
-                'automatch'   => $data['automatch'],
+                'automatch'   => true,
                 'active'      => $data['active'],
             ]
         );
@@ -94,7 +91,7 @@ class BillFactory
         }
 
         // then find by name:
-        if (strlen($billName) > 0) {
+        if (\strlen($billName) > 0) {
             $bill = $this->findByName($billName);
             if (null !== $bill) {
                 return $bill;

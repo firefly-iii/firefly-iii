@@ -410,6 +410,14 @@ return [
 
     'rules_have_read_warning'                 => 'Have you read the warning?',
     'apply_rule_warning'                      => 'Warning: running a rule(group) on a large selection of transactions could take ages, and it could time-out. If it does, the rule(group) will only be applied to an unknown subset of your transactions. This might leave your financial administration in tatters. Please be careful.',
+    'rulegroup_for_bills_title'               => 'Rule group for bills',
+    'rulegroup_for_bills_description'         => 'A special rule group for all the rules that involve bills.',
+    'rule_for_bill_title'                     => 'Auto-generated rule for bill ":name"',
+    'rule_for_bill_description'               => 'This rule is auto-generated to try to match bill ":name".',
+    'create_rule_for_bill'                    => 'Create a new rule for bill ":name"',
+    'create_rule_for_bill_txt'                => 'You have just created a new bill called ":name", congratulations! Firefly III can automagically match new withdrawals to this bill. For example, whenever you pay your rent, the bill "rent" will be linked to the expense. This way, Firefly III can accurately show you which bills are due and which ones aren\'t. In order to do so, a new rule must be created. Firefly III has filled in some sensible defaults for you. Please make sure these are correct. If these values are correct, Firefly III will automatically link the correct withdrawal to the correct bill. Please check out the triggers to see if they are correct, and add some if they\'re wrong.',
+    'new_rule_for_bill_title'                 => 'Rule for bill ":name"',
+    'new_rule_for_bill_description'           => 'This rule marks transactions for bill ":name".',
 
     // tags
     'store_new_tag'                           => 'Store new tag',

@@ -10,6 +10,22 @@
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <input type="hidden" name="rule_group_id" value="{{ ruleGroup.id }}"/>
         <input type="hidden" name="active" value="1"/>
+        {% if bill %}
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="box box-success" id="mandatory">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ trans('firefly.create_rule_for_bill', {name: bill.name}) }}</h3>
+                        </div>
+                        <div class="box-body">
+                            <p class="text-info">
+                                {{ trans('firefly.create_rule_for_bill_txt', {name: bill.name}) }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12">
                 <div class="box box-primary" id="mandatory">

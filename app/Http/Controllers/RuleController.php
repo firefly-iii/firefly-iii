@@ -34,6 +34,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
@@ -75,8 +76,11 @@ class RuleController extends Controller
 
 
      */
-    public function create(Request $request, RuleGroup $ruleGroup)
+    public function create(Request $request, RuleGroupRepositoryInterface $ruleGroupRepository, BillRepositoryInterface $billRepository, RuleGroup $ruleGroup)
     {
+        $bill      = null;
+        $billId    = (int)$request->get('fromBill');
+        $preFilled = [];
         // count for possible present previous entered triggers/actions.
         $triggerCount = 0;
         $actionCount  = 0;
@@ -89,12 +93,60 @@ class RuleController extends Controller
         if ($request->old()) {
             // process old triggers.
             $oldTriggers  = $this->getPreviousTriggers($request);
-            $triggerCount = count($oldTriggers);
+            $triggerCount = \count($oldTriggers);
 
             // process old actions
             $oldActions  = $this->getPreviousActions($request);
-            $actionCount = count($oldActions);
+            $actionCount = \count($oldActions);
         }
+        if ($billId > 0) {
+            $bill = $billRepository->find($billId);
+            // create some sensible defaults:
+            $preFilled['title']       = trans('firefly.new_rule_for_bill_title', ['name' => $bill->name]);
+            $preFilled['description'] = trans('firefly.new_rule_for_bill_description', ['name' => $bill->name]);
+            $request->session()->flash('preFilled', $preFilled);
+
+            // pretend there are old triggers, so the page will fill them in:
+            $oldTriggers[] = view(
+                'rules.partials.trigger',
+                [
+                    'oldTrigger' => 'amount_more',
+                    'oldValue'   => round($bill->amount_min,12),
+                    'oldChecked' => false,
+                    'count'      => 1,
+                ]
+            )->render();
+            $oldTriggers[] = view(
+                'rules.partials.trigger',
+                [
+                    'oldTrigger' => 'amount_less',
+                    'oldValue'   => round($bill->amount_max,12),
+                    'oldChecked' => false,
+                    'count'      => 2,
+                ]
+            )->render();
+            $oldTriggers[] = view(
+                'rules.partials.trigger',
+                [
+                    'oldTrigger' => 'description_contains',
+                    'oldValue'   => $bill->name,12,
+                    'oldChecked' => false,
+                    'count'      => 3,
+                ]
+            )->render();
+
+            $oldActions[] = view(
+                'rules.partials.action',
+                [
+                    'oldAction'  => 'link_to_bill',
+                    'oldValue'   => $bill->name,
+                    'oldChecked' => false,
+                    'count'      => 1,
+                ]
+            )->render();
+
+        }
+
 
         $subTitleIcon = 'fa-clone';
         $subTitle     = trans('firefly.make_new_rule', ['title' => $ruleGroup->title]);
@@ -107,7 +159,7 @@ class RuleController extends Controller
 
         return view(
             'rules.rule.create',
-            compact('subTitleIcon', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup', 'subTitle')
+            compact('subTitleIcon', 'oldTriggers', 'preFilled', 'bill', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup', 'subTitle')
         );
     }
 
