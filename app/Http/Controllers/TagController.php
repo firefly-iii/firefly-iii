@@ -171,6 +171,7 @@ class TagController extends Controller
         $now               = new Carbon;
         $clouds            = [];
         $clouds['no-date'] = $repository->tagCloud(null);
+
         while ($now > $start) {
             $year          = $now->year;
             $clouds[$year] = $repository->tagCloud($year);
