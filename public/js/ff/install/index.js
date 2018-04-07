@@ -45,7 +45,7 @@ function startMigration() {
  */
 function startPassport() {
     $('#status-box').html('<i class="fa fa-spin fa-spinner"></i> Setting up OAuth2...');
-    $.post(keysUri, {_token: token}).done(function () {
+    $.post(keysUri, {_token: token}).done(function (data) {
         if(data.error === false) {
             startUpgrade();
         } else {
@@ -62,7 +62,7 @@ function startPassport() {
  */
 function startUpgrade() {
     $('#status-box').html('<i class="fa fa-spin fa-spinner"></i> Upgrading database...');
-    $.post(upgradeUri, {_token: token}).done(function () {
+    $.post(upgradeUri, {_token: token}).done(function (data) {
         if(data.error === false) {
             startVerify();
         } else {
@@ -78,7 +78,7 @@ function startUpgrade() {
  */
 function startVerify() {
     $('#status-box').html('<i class="fa fa-spin fa-spinner"></i> Verify database integrity...');
-    $.post(verifyUri, {_token: token}).done(function () {
+    $.post(verifyUri, {_token: token}).done(function (data) {
         if(data.error === false) {
             completeDone();
         } else {
