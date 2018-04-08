@@ -439,13 +439,14 @@ class AccountController extends Controller
 
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app(CurrencyRepositoryInterface::class);
-        $chartData = [];
+        $default    = app('amount')->getDefaultCurrency();
+        $chartData  = [];
         foreach ($accounts as $account) {
-            Log::debug(sprintf('Now at account #%d', $account->id));
-            Log::debug(sprintf('Currency preference is: %d', (int)$account->getMeta('currency_id')));
-            $currency     = $repository->findNull((int)$account->getMeta('currency_id'));
-            Log::debug(sprintf('Currency is null? %s', var_export($currency === null, true)));
-            $currentSet   = [
+            $currency = $repository->findNull((int)$account->getMeta('currency_id'));
+            if (null === $currency) {
+                $currency = $default;
+            }
+            $currentSet = [
                 'label'           => $account->name,
                 'currency_symbol' => $currency->symbol,
                 'entries'         => [],
