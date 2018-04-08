@@ -33,6 +33,7 @@ return [
     'name'                    => 'Name',
     'role'                    => 'Role',
     'currentBalance'          => 'Current balance',
+    'linked_to_rules'         => 'Relevant rules',
     'active'                  => 'Is active?',
     'lastActivity'            => 'Last activity',
     'balanceDiff'             => 'Balance difference',
