@@ -439,15 +439,17 @@ class AccountController extends Controller
 
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app(CurrencyRepositoryInterface::class);
-
         $chartData = [];
         foreach ($accounts as $account) {
+            Log::debug(sprintf('Now at account #%d', $account->id));
             $currency     = $repository->findNull((int)$account->getMeta('currency_id'));
+            Log::debug(sprintf('Currency is null? %s', var_export($currency === null, true)));
             $currentSet   = [
                 'label'           => $account->name,
                 'currency_symbol' => $currency->symbol,
                 'entries'         => [],
             ];
+
             $currentStart = clone $start;
             $range        = app('steam')->balanceInRange($account, $start, clone $end);
             $previous     = array_values($range)[0];
