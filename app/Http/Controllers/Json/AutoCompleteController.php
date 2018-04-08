@@ -31,6 +31,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -114,6 +115,19 @@ class AutoCompleteController extends Controller
     public function categories(CategoryRepositoryInterface $repository)
     {
         $return = array_unique($repository->getCategories()->pluck('name')->toArray());
+        sort($return);
+
+        return response()->json($return);
+    }
+
+    /**
+     * @param CurrencyRepositoryInterface $repository
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function currencyNames(CurrencyRepositoryInterface $repository)
+    {
+        $return = $repository->get()->pluck('name')->toArray();
         sort($return);
 
         return response()->json($return);

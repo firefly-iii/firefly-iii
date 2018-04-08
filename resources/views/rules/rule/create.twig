@@ -6,9 +6,12 @@
 
 {% block content %}
 
-    <form method="POST" action="{{ route('rules.store', ruleGroup.id) }}" accept-charset="UTF-8" class="form-horizontal" id="store">
+    <form method="POST" action="{{ route('rules.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <input type="hidden" name="rule_group_id" value="{{ ruleGroup.id }}"/>
+        <input type="hidden" name="return_to_bill" value="{% if returnToBill %}true{% else %}false{% endif %}"/>
+        <input type="hidden" name="bill_id" value="{% if bill %}{{ bill.id }}{% else %}0{% endif %}"/>
+
         <input type="hidden" name="active" value="1"/>
         {% if bill %}
             <div class="row">
@@ -35,6 +38,7 @@
                     <div class="box-body">
                         {{ ExpandedForm.text('title') }}
                         {{ ExpandedForm.select('trigger',allJournalTriggers()) }}
+                        {{ ExpandedForm.select('rule_group_id',groups, ruleGroup.id) }}
                         {{ ExpandedForm.checkbox('stop_processing',1,null, {helpText: trans('firefly.rule_help_stop_processing')}) }}
                     </div>
                 </div>

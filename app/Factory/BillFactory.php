@@ -48,17 +48,17 @@ class BillFactory
         /** @var Bill $bill */
         $bill = Bill::create(
             [
-                'name'        => $data['name'],
-                'match'       => 'MIGRATED_TO_RULES',
-                'amount_min'  => $data['amount_min'],
-                'user_id'     => $this->user->id,
-                'currency_id' => $data['currency_id'],
-                'amount_max'  => $data['amount_max'],
-                'date'        => $data['date'],
-                'repeat_freq' => $data['repeat_freq'],
-                'skip'        => $data['skip'],
-                'automatch'   => true,
-                'active'      => $data['active'],
+                'name'                    => $data['name'],
+                'match'                   => 'MIGRATED_TO_RULES',
+                'amount_min'              => $data['amount_min'],
+                'user_id'                 => $this->user->id,
+                'transaction_currency_id' => $data['transaction_currency_id'],
+                'amount_max'              => $data['amount_max'],
+                'date'                    => $data['date'],
+                'repeat_freq'             => $data['repeat_freq'],
+                'skip'                    => $data['skip'],
+                'automatch'               => true,
+                'active'                  => $data['active'],
             ]
         );
 

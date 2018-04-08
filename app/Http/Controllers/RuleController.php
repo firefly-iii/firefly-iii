@@ -29,6 +29,7 @@ use FireflyIII\Http\Requests\SelectTransactionsRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Bill;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
@@ -39,8 +40,10 @@ use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use Illuminate\Http\Request;
+use Log;
 use Preferences;
 use Session;
+use Throwable;
 use View;
 
 /**
@@ -73,81 +76,47 @@ class RuleController extends Controller
      *
      * @return View
      *
-
-
      */
     public function create(Request $request, RuleGroupRepositoryInterface $ruleGroupRepository, BillRepositoryInterface $billRepository, RuleGroup $ruleGroup)
     {
-        $bill      = null;
-        $billId    = (int)$request->get('fromBill');
-        $preFilled = [];
-        // count for possible present previous entered triggers/actions.
-        $triggerCount = 0;
-        $actionCount  = 0;
+        $bill         = null;
+        $billId       = (int)$request->get('fromBill');
+        $preFilled    = [];
+        $groups       = ExpandedForm::makeSelectList($ruleGroupRepository->get());
+        $oldTriggers  = [];
+        $oldActions   = [];
+        $returnToBill = false;
 
-        // collection of those triggers/actions.
-        $oldTriggers = [];
-        $oldActions  = [];
+        if ($request->get('return') === 'true') {
+            $returnToBill = true;
+        }
+
+        // has bill?
+        if ($billId > 0) {
+            $bill = $billRepository->find($billId);
+        }
 
         // has old input?
         if ($request->old()) {
-            // process old triggers.
-            $oldTriggers  = $this->getPreviousTriggers($request);
-            $triggerCount = \count($oldTriggers);
-
-            // process old actions
+            $oldTriggers = $this->getPreviousTriggers($request);
             $oldActions  = $this->getPreviousActions($request);
-            $actionCount = \count($oldActions);
+
         }
-        if ($billId > 0) {
-            $bill = $billRepository->find($billId);
+        // has existing bill refered to in URI?
+        if (null !== $bill && !$request->old()) {
+
             // create some sensible defaults:
             $preFilled['title']       = trans('firefly.new_rule_for_bill_title', ['name' => $bill->name]);
             $preFilled['description'] = trans('firefly.new_rule_for_bill_description', ['name' => $bill->name]);
             $request->session()->flash('preFilled', $preFilled);
 
-            // pretend there are old triggers, so the page will fill them in:
-            $oldTriggers[] = view(
-                'rules.partials.trigger',
-                [
-                    'oldTrigger' => 'amount_more',
-                    'oldValue'   => round($bill->amount_min,12),
-                    'oldChecked' => false,
-                    'count'      => 1,
-                ]
-            )->render();
-            $oldTriggers[] = view(
-                'rules.partials.trigger',
-                [
-                    'oldTrigger' => 'amount_less',
-                    'oldValue'   => round($bill->amount_max,12),
-                    'oldChecked' => false,
-                    'count'      => 2,
-                ]
-            )->render();
-            $oldTriggers[] = view(
-                'rules.partials.trigger',
-                [
-                    'oldTrigger' => 'description_contains',
-                    'oldValue'   => $bill->name,12,
-                    'oldChecked' => false,
-                    'count'      => 3,
-                ]
-            )->render();
-
-            $oldActions[] = view(
-                'rules.partials.action',
-                [
-                    'oldAction'  => 'link_to_bill',
-                    'oldValue'   => $bill->name,
-                    'oldChecked' => false,
-                    'count'      => 1,
-                ]
-            )->render();
-
+            // get triggers and actions for bill:
+            $oldTriggers = $this->getTriggersForBill($bill);
+            $oldActions  = $this->getActionsForBill($bill);
         }
 
-
+        $triggerCount = \count($oldTriggers);
+        $actionCount  = \count($oldActions);
         $subTitleIcon = 'fa-clone';
         $subTitle     = trans('firefly.make_new_rule', ['title' => $ruleGroup->title]);
 
@@ -159,7 +128,10 @@ class RuleController extends Controller
 
         return view(
             'rules.rule.create',
-            compact('subTitleIcon', 'oldTriggers', 'preFilled', 'bill', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup', 'subTitle')
+            compact(
+                'subTitleIcon', 'oldTriggers', 'returnToBill', 'groups', 'preFilled', 'bill', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup',
+                'subTitle'
+            )
         );
     }
 
@@ -380,24 +352,32 @@ class RuleController extends Controller
     /**
      * @param RuleFormRequest         $request
      * @param RuleRepositoryInterface $repository
-     * @param RuleGroup               $ruleGroup
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(RuleFormRequest $request, RuleRepositoryInterface $repository, RuleGroup $ruleGroup)
+    public function store(RuleFormRequest $request, RuleRepositoryInterface $repository)
     {
-        $data                  = $request->getRuleData();
-        $data['rule_group_id'] = $ruleGroup->id;
-
+        $data = $request->getRuleData();
         $rule = $repository->store($data);
-        Session::flash('success', trans('firefly.stored_new_rule', ['title' => $rule->title]));
+        session()->flash('success', trans('firefly.stored_new_rule', ['title' => $rule->title]));
         Preferences::mark();
+
+        // redirect to show bill.
+        if ($request->get('return_to_bill') === 'true' && (int)$request->get('bill_id') > 0) {
+            return redirect(route('bills.show', [(int)$request->get('bill_id')]));
+        }
+
+        // redirect to new bill creation.
+        if ((int)$request->get('bill_id') > 0) {
+            return redirect(route('bills.create'));
+        }
+
 
         if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
             Session::put('rules.create.fromStore', true);
 
-            return redirect(route('rules.create', [$ruleGroup]))->withInput();
+            return redirect(route('rules.create', [$data['rule_group_id']]))->withInput();
             // @codeCoverageIgnoreEnd
         }
 
@@ -416,7 +396,6 @@ class RuleController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      *
-
      */
     public function testTriggers(TestRuleFormRequest $request)
     {
@@ -587,6 +566,31 @@ class RuleController extends Controller
     }
 
     /**
+     * @param Bill $bill
+     *
+     * @return array
+     */
+    private function getActionsForBill(Bill $bill): array
+    {
+        $actions = [];
+        try {
+            $actions[] = view(
+                'rules.partials.action',
+                [
+                    'oldAction'  => 'link_to_bill',
+                    'oldValue'   => $bill->name,
+                    'oldChecked' => false,
+                    'count'      => 1,
+                ]
+            )->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Throwable was thrown in getActionsForBill(): %s', $e->getMessage()));
+        }
+
+        return $actions;
+    }
+
+    /**
      * @param Rule $rule
      *
      * @return array
@@ -600,16 +604,20 @@ class RuleController extends Controller
 
         /** @var RuleAction $entry */
         foreach ($rule->ruleActions as $entry) {
-            $count     = ($index + 1);
-            $actions[] = view(
-                'rules.partials.action',
-                [
-                    'oldAction'  => $entry->action_type,
-                    'oldValue'   => $entry->action_value,
-                    'oldChecked' => $entry->stop_processing,
-                    'count'      => $count,
-                ]
-            )->render();
+            $count = ($index + 1);
+            try {
+                $actions[] = view(
+                    'rules.partials.action',
+                    [
+                        'oldAction'  => $entry->action_type,
+                        'oldValue'   => $entry->action_value,
+                        'oldChecked' => $entry->stop_processing,
+                        'count'      => $count,
+                    ]
+                )->render();
+            } catch (Throwable $e) {
+                Log::debug(sprintf('Throwable was thrown in getCurrentActions(): %s', $e->getMessage()));
+            }
             ++$index;
         }
 
@@ -631,16 +639,20 @@ class RuleController extends Controller
         /** @var RuleTrigger $entry */
         foreach ($rule->ruleTriggers as $entry) {
             if ('user_action' !== $entry->trigger_type) {
-                $count      = ($index + 1);
-                $triggers[] = view(
-                    'rules.partials.trigger',
-                    [
-                        'oldTrigger' => $entry->trigger_type,
-                        'oldValue'   => $entry->trigger_value,
-                        'oldChecked' => $entry->stop_processing,
-                        'count'      => $count,
-                    ]
-                )->render();
+                $count = ($index + 1);
+                try {
+                    $triggers[] = view(
+                        'rules.partials.trigger',
+                        [
+                            'oldTrigger' => $entry->trigger_type,
+                            'oldValue'   => $entry->trigger_value,
+                            'oldChecked' => $entry->stop_processing,
+                            'count'      => $count,
+                        ]
+                    )->render();
+                } catch (Throwable $e) {
+                    Log::debug(sprintf('Throwable was thrown in getCurrentTriggers(): %s', $e->getMessage()));
+                }
                 ++$index;
             }
         }
@@ -662,17 +674,21 @@ class RuleController extends Controller
         /** @var array $oldActions */
         $oldActions = is_array($request->old('rule-action')) ? $request->old('rule-action') : [];
         foreach ($oldActions as $index => $entry) {
-            $count     = ($newIndex + 1);
-            $checked   = isset($request->old('rule-action-stop')[$index]) ? true : false;
-            $actions[] = view(
-                'rules.partials.action',
-                [
-                    'oldAction'  => $entry,
-                    'oldValue'   => $request->old('rule-action-value')[$index],
-                    'oldChecked' => $checked,
-                    'count'      => $count,
-                ]
-            )->render();
+            $count   = ($newIndex + 1);
+            $checked = isset($request->old('rule-action-stop')[$index]) ? true : false;
+            try {
+                $actions[] = view(
+                    'rules.partials.action',
+                    [
+                        'oldAction'  => $entry,
+                        'oldValue'   => $request->old('rule-action-value')[$index],
+                        'oldChecked' => $checked,
+                        'count'      => $count,
+                    ]
+                )->render();
+            } catch (Throwable $e) {
+                Log::debug(sprintf('Throwable was thrown in getPreviousActions(): %s', $e->getMessage()));
+            }
             ++$newIndex;
         }
 
@@ -695,16 +711,77 @@ class RuleController extends Controller
         foreach ($oldTriggers as $index => $entry) {
             $count      = ($newIndex + 1);
             $oldChecked = isset($request->old('rule-trigger-stop')[$index]) ? true : false;
+            try {
+                $triggers[] = view(
+                    'rules.partials.trigger',
+                    [
+                        'oldTrigger' => $entry,
+                        'oldValue'   => $request->old('rule-trigger-value')[$index],
+                        'oldChecked' => $oldChecked,
+                        'count'      => $count,
+                    ]
+                )->render();
+            } catch (Throwable $e) {
+                Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
+            }
+            ++$newIndex;
+        }
+
+        return $triggers;
+    }
+
+    /**
+     * Create fake triggers to match the bill's properties
+     *
+     * @param Bill $bill
+     *
+     * @return array
+     */
+    private function getTriggersForBill(Bill $bill): array
+    {
+        $triggers = [];
+        try {
             $triggers[] = view(
                 'rules.partials.trigger',
                 [
-                    'oldTrigger' => $entry,
-                    'oldValue'   => $request->old('rule-trigger-value')[$index],
-                    'oldChecked' => $oldChecked,
-                    'count'      => $count,
+                    'oldTrigger' => 'currency_is',
+                    'oldValue'   => $bill->transactionCurrency()->first()->name,
+                    'oldChecked' => false,
+                    'count'      => 1,
                 ]
             )->render();
-            ++$newIndex;
+
+            $triggers[] = view(
+                'rules.partials.trigger',
+                [
+                    'oldTrigger' => 'amount_more',
+                    'oldValue'   => round($bill->amount_min, 12),
+                    'oldChecked' => false,
+                    'count'      => 2,
+                ]
+            )->render();
+
+            $triggers[] = view(
+                'rules.partials.trigger',
+                [
+                    'oldTrigger' => 'amount_less',
+                    'oldValue'   => round($bill->amount_max, 12),
+                    'oldChecked' => false,
+                    'count'      => 3,
+                ]
+            )->render();
+            $triggers[] = view(
+                'rules.partials.trigger',
+                [
+                    'oldTrigger' => 'description_contains',
+                    'oldValue'   => $bill->name, 12,
+                    'oldChecked' => false,
+                    'count'      => 4,
+                ]
+            )->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
+            Log::debug($e->getTraceAsString());
         }
 
         return $triggers;
@@ -723,7 +800,7 @@ class RuleController extends Controller
             'rule-trigger-values' => $request->get('rule-trigger-value'),
             'rule-trigger-stop'   => $request->get('rule-trigger-stop'),
         ];
-        if (is_array($data['rule-triggers'])) {
+        if (\is_array($data['rule-triggers'])) {
             foreach ($data['rule-triggers'] as $index => $triggerType) {
                 $data['rule-trigger-stop'][$index] = (int)($data['rule-trigger-stop'][$index] ?? 0.0);
                 $triggers[]                        = [

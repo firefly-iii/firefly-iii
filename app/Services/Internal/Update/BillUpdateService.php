@@ -42,20 +42,15 @@ class BillUpdateService
      */
     public function update(Bill $bill, array $data): Bill
     {
-
-        $matchArray = explode(',', $data['match']);
-        $matchArray = array_unique($matchArray);
-        $match      = implode(',', $matchArray);
-
-        $bill->name        = $data['name'];
-        $bill->match       = $match;
-        $bill->amount_min  = $data['amount_min'];
-        $bill->amount_max  = $data['amount_max'];
-        $bill->date        = $data['date'];
-        $bill->repeat_freq = $data['repeat_freq'];
-        $bill->skip        = $data['skip'];
-        $bill->automatch   = $data['automatch'];
-        $bill->active      = $data['active'];
+        $bill->name                    = $data['name'];
+        $bill->amount_min              = $data['amount_min'];
+        $bill->amount_max              = $data['amount_max'];
+        $bill->date                    = $data['date'];
+        $bill->transaction_currency_id = $data['transaction_currency_id'];
+        $bill->repeat_freq             = $data['repeat_freq'];
+        $bill->skip                    = $data['skip'];
+        $bill->automatch               = true;
+        $bill->active                  = $data['active'];
         $bill->save();
 
         // update note:

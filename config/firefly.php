@@ -25,6 +25,7 @@ use FireflyIII\TransactionRules\Triggers\AmountLess;
 use FireflyIII\TransactionRules\Triggers\AmountMore;
 use FireflyIII\TransactionRules\Triggers\BudgetIs;
 use FireflyIII\TransactionRules\Triggers\CategoryIs;
+use FireflyIII\TransactionRules\Triggers\CurrencyIs;
 use FireflyIII\TransactionRules\Triggers\DescriptionContains;
 use FireflyIII\TransactionRules\Triggers\DescriptionEnds;
 use FireflyIII\TransactionRules\Triggers\DescriptionIs;
@@ -89,7 +90,7 @@ return [
     'encryption'     => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
     'version'        => '4.7.2.2',
     'api_version'    => '0.1',
-    'db_version'     => 2,
+    'db_version'     => 3,
     'maxUploadSize'  => 15242880,
     'allowedMimes'   => [
         /* plain files */
@@ -324,6 +325,7 @@ return [
         'category_is'           => CategoryIs::class,
         'budget_is'             => BudgetIs::class,
         'tag_is'                => TagIs::class,
+        'currency_is'           => CurrencyIs::class,
         'has_attachments'       => HasAttachment::class,
         'has_no_category'       => HasNoCategory::class,
         'has_any_category'      => HasAnyCategory::class,
@@ -362,6 +364,7 @@ return [
         'set_budget',
         'add_tag',
         'remove_tag',
+        'link_to_bill',
         'set_description',
         'append_description',
         'prepend_description',

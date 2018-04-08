@@ -136,7 +136,7 @@ class BillController extends Controller
      *
      * @return View
      */
-    public function edit(Request $request, Bill $bill)
+    public function edit(Request $request, CurrencyRepositoryInterface $repository, Bill $bill)
     {
         $periods = [];
         foreach (config('firefly.bill_periods') as $current) {
@@ -152,6 +152,8 @@ class BillController extends Controller
         $currency         = app('amount')->getDefaultCurrency();
         $bill->amount_min = round($bill->amount_min, $currency->decimal_places);
         $bill->amount_max = round($bill->amount_max, $currency->decimal_places);
+        $defaultCurrency  = app('amount')->getDefaultCurrency();
+        $currencies       = ExpandedForm::makeSelectList($repository->get());
 
         $preFilled = [
             'notes' => '',
@@ -167,7 +169,7 @@ class BillController extends Controller
 
         $request->session()->forget('bills.edit.fromUpdate');
 
-        return view('bills.edit', compact('subTitle', 'periods', 'bill'));
+        return view('bills.edit', compact('subTitle', 'periods', 'bill', 'defaultCurrency', 'currencies'));
     }
 
     /**
@@ -296,6 +298,12 @@ class BillController extends Controller
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
+        // do return to original bill form?
+        $return = 'false';
+        if (1 === (int)$request->get('create_another')) {
+            $return = 'true';
+        }
+
         // find first rule group, or create one:
         $count = $ruleGroupRepository->count();
         if ($count === 0) {
@@ -309,9 +317,10 @@ class BillController extends Controller
             $group = $ruleGroupRepository->getActiveGroups(auth()->user())->first();
         }
 
-
         // redirect to page that will create a new rule.
-        return redirect(route('rules.create', [$group->id]) . '?fromBill=' . $bill->id);
+        $params = http_build_query(['fromBill' => $bill->id, 'return' => $return]);
+
+        return redirect(route('rules.create', [$group->id]) . '?' . $params);
     }
 
     /**

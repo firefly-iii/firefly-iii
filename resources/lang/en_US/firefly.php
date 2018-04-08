@@ -345,6 +345,8 @@ return [
     'rule_trigger_budget_is'                     => 'Budget is ":trigger_value"',
     'rule_trigger_tag_is_choice'                 => '(A) tag is..',
     'rule_trigger_tag_is'                        => 'A tag is ":trigger_value"',
+    'rule_trigger_currency_is_choice'            => 'Transaction currency is..',
+    'rule_trigger_currency_is'                   => 'Transaction currency is ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Has at least this many attachments',
     'rule_trigger_has_attachments'               => 'Has at least :trigger_value attachment(s)',
     'rule_trigger_store_journal'                 => 'When a transaction is created',

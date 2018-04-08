@@ -42,15 +42,15 @@ class BillFormRequest extends Request
     public function getBillData()
     {
         return [
-            'name'        => $this->string('name'),
-            'amount_min'  => $this->string('amount_min'),
-            'currency_id' => $this->integer('currency_id'),
-            'amount_max'  => $this->string('amount_max'),
-            'date'        => $this->date('date'),
-            'repeat_freq' => $this->string('repeat_freq'),
-            'skip'        => $this->integer('skip'),
-            'active'      => $this->boolean('active'),
-            'notes'       => $this->string('notes'),
+            'name'                    => $this->string('name'),
+            'amount_min'              => $this->string('amount_min'),
+            'transaction_currency_id' => $this->integer('transaction_currency_id'),
+            'amount_max'              => $this->string('amount_max'),
+            'date'                    => $this->date('date'),
+            'repeat_freq'             => $this->string('repeat_freq'),
+            'skip'                    => $this->integer('skip'),
+            'active'                  => $this->boolean('active'),
+            'notes'                   => $this->string('notes'),
         ];
     }
 
@@ -66,15 +66,15 @@ class BillFormRequest extends Request
         }
         // is OK
         $rules = [
-            'name'        => $nameRule,
-            'amount_min'  => 'required|numeric|more:0',
-            'amount_max'  => 'required|numeric|more:0',
-            'currency_id' => 'required|exists:transaction_currencies,id',
-            'date'        => 'required|date',
-            'repeat_freq' => 'required|in:weekly,monthly,quarterly,half-year,yearly',
-            'skip'        => 'required|between:0,31',
-            'automatch'   => 'in:1',
-            'active'      => 'in:1',
+            'name'                    => $nameRule,
+            'amount_min'              => 'required|numeric|more:0',
+            'amount_max'              => 'required|numeric|more:0',
+            'transaction_currency_id' => 'required|exists:transaction_currencies,id',
+            'date'                    => 'required|date',
+            'repeat_freq'             => 'required|in:weekly,monthly,quarterly,half-year,yearly',
+            'skip'                    => 'required|between:0,31',
+            'automatch'               => 'in:1',
+            'active'                  => 'in:1',
         ];
 
         return $rules;

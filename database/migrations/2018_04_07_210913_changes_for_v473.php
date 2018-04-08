@@ -28,8 +28,8 @@ class ChangesForV473 extends Migration
         Schema::table(
             'bills',
             function (Blueprint $table) {
-                $table->integer('currency_id', false, true)->nullable()->after('user_id');
-                $table->foreign('currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
+                $table->integer('transaction_currency_id', false, true)->nullable()->after('user_id');
+                $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
             }
         );
     }

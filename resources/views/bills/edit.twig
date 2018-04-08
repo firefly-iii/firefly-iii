@@ -18,9 +18,9 @@
                 </div>
                 <div class="box-body">
                     {{ ExpandedForm.text('name') }}
-                    {{ ExpandedForm.tags('match') }}
-                    {{ ExpandedForm.amount('amount_min') }}
-                    {{ ExpandedForm.amount('amount_max') }}
+                    {{ ExpandedForm.select('transaction_currency_id',currencies) }}
+                    {{ ExpandedForm.amountNoCurrency('amount_min') }}
+                    {{ ExpandedForm.amountNoCurrency('amount_max') }}
                     {{ ExpandedForm.date('date',bill.date.format('Y-m-d')) }}
                     {{ ExpandedForm.select('repeat_freq',periods) }}
                 </div>
@@ -37,7 +37,6 @@
                     {{ ExpandedForm.textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
                     {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                     {{ ExpandedForm.integer('skip') }}
-                    {{ ExpandedForm.checkbox('automatch',1) }}
                     {{ ExpandedForm.checkbox('active',1) }}
 
                 </div>

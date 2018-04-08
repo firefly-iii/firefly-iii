@@ -285,6 +285,9 @@ function updateTriggerInput(selectList) {
             input.prop('disabled', true);
             input.typeahead('destroy');
             break;
+        case 'currency_is':
+            createAutoComplete(input, 'json/currency-names');
+            break;
         default:
             input.typeahead('destroy');
             break;

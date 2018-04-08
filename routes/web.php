@@ -501,6 +501,7 @@ Route::group(
     Route::get('budgets', ['uses' => 'Json\AutoCompleteController@budgets', 'as' => 'budgets']);
     Route::get('tags', ['uses' => 'Json\AutoCompleteController@tags', 'as' => 'tags']);
     Route::get('bills', ['uses' => 'Json\AutoCompleteController@bills', 'as' => 'bills']);
+    Route::get('currency-names', ['uses' => 'Json\AutoCompleteController@currencyNames', 'as' => 'currency-names']);
     Route::get('transaction-journals/all', ['uses' => 'Json\AutoCompleteController@allTransactionJournals', 'as' => 'all-transaction-journals']);
     Route::get('transaction-journals/with-id/{tj}', ['uses' => 'Json\AutoCompleteController@journalsWithId', 'as' => 'journals-with-id']);
     Route::get('transaction-journals/{what}', ['uses' => 'Json\AutoCompleteController@transactionJournals', 'as' => 'transaction-journals']);
@@ -723,7 +724,7 @@ Route::group(
 
     Route::post('trigger/order/{rule}', ['uses' => 'RuleController@reorderRuleTriggers', 'as' => 'reorder-triggers']);
     Route::post('action/order/{rule}', ['uses' => 'RuleController@reorderRuleActions', 'as' => 'reorder-actions']);
-    Route::post('store/{ruleGroup}', ['uses' => 'RuleController@store', 'as' => 'store']);
+    Route::post('store', ['uses' => 'RuleController@store', 'as' => 'store']);
     Route::post('update/{rule}', ['uses' => 'RuleController@update', 'as' => 'update']);
     Route::post('destroy/{rule}', ['uses' => 'RuleController@destroy', 'as' => 'destroy']);
     Route::post('execute/{rule}', ['uses' => 'RuleController@execute', 'as' => 'execute']);

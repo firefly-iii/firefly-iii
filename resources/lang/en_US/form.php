@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * form.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -36,6 +37,7 @@ return [
     'repeat_freq'                    => 'Repeats',
     'journal_currency_id'            => 'Currency',
     'currency_id'                    => 'Currency',
+    'transaction_currency_id'        => 'Currency',
     'attachments'                    => 'Attachments',
     'journal_amount'                 => 'Amount',
     'journal_source_account_name'    => 'Revenue account (source)',
