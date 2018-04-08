@@ -442,6 +442,7 @@ class AccountController extends Controller
         $chartData = [];
         foreach ($accounts as $account) {
             Log::debug(sprintf('Now at account #%d', $account->id));
+            Log::debug(sprintf('Currency preference is: %d', (int)$account->getMeta('currency_id')));
             $currency     = $repository->findNull((int)$account->getMeta('currency_id'));
             Log::debug(sprintf('Currency is null? %s', var_export($currency === null, true)));
             $currentSet   = [
