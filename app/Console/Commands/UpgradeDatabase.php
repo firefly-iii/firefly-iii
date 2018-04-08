@@ -77,7 +77,6 @@ class UpgradeDatabase extends Command
      */
     public function handle()
     {
-        $this->migrateBillsToRules();
         $this->setTransactionIdentifier();
         $this->updateAccountCurrencies();
         $this->createNewTypes();
@@ -87,6 +86,7 @@ class UpgradeDatabase extends Command
         $this->line('Done updating currency information..');
         $this->migrateNotes();
         $this->migrateAttachmentData();
+        $this->migrateBillsToRules();
 
         $this->info('Firefly III database is up to date.');
     }
@@ -100,6 +100,9 @@ class UpgradeDatabase extends Command
             $ruleGroup          = $user->ruleGroups()->where('title', $groupName)->first();
             $currencyPreference = Preferences::getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
             $currency           = TransactionCurrency::where('code', $currencyPreference->data)->first();
+            if (null === $currency) {
+                $currency = app('amount')->getDefaultCurrency();
+            }
 
             if ($ruleGroup === null) {
                 $array     = RuleGroup::get(['order'])->pluck('order')->toArray();
@@ -190,14 +193,18 @@ class UpgradeDatabase extends Command
                     );
 
                     $order++;
-                    //$bill->match = 'MIGRATED_TO_RULES';
+                    $bill->match = 'MIGRATED_TO_RULES';
                     $bill->save();
                     $this->line(sprintf('Updated bill #%d ("%s") so it will use rules.', $bill->id, $bill->name));
                 }
-            }
 
-            $this->line('Exit');
-            exit;
+                // give bills a currency when they dont have one.
+                if (null === $bill->transaction_currency_id) {
+                    $this->line(sprintf('Gave bill #%d ("%s") a currency (%s).', $bill->id, $bill->name, $currency->name));
+                    $bill->transactionCurrency()->associate($currency);
+                    $bill->save();
+                }
+            }
         }
     }
 
