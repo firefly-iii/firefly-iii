@@ -368,6 +368,35 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * Return all rules related to the bills in the collection, in an associative array:
+     * 5= billid
+     *
+     * 5 => [['id' => 1, 'title' => 'Some rule'],['id' => 2, 'title' => 'Some other rule']]
+     *
+     * @param Collection $collection
+     *
+     * @return array
+     */
+    public function getRulesForBills(Collection $collection): array
+    {
+        $rules = $this->user->rules()
+                            ->leftJoin('rule_actions', 'rule_actions.rule_id', '=', 'rules.id')
+                            ->where('rule_actions.action_type', 'link_to_bill')
+                            ->get(['rules.id', 'rules.title', 'rule_actions.action_value']);
+        $array = [];
+        foreach ($rules as $rule) {
+            $array[$rule->action_value]   = $array[$rule->action_value] ?? [];
+            $array[$rule->action_value][] = ['id' => $rule->id, 'title' => $rule->title];
+        }
+        $return = [];
+        foreach ($collection as $bill) {
+            $return[$bill->id] = $array[$bill->name] ?? [];
+        }
+
+        return $return;
+    }
+
+    /**
      * @param Bill   $bill
      * @param Carbon $date
      *

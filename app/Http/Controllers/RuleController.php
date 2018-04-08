@@ -369,7 +369,7 @@ class RuleController extends Controller
 
         // redirect to new bill creation.
         if ((int)$request->get('bill_id') > 0) {
-            return redirect(route('bills.create'));
+            return redirect($this->getPreviousUri('bills.create.uri'));
         }
 
 

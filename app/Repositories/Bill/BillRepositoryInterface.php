@@ -141,6 +141,18 @@ interface BillRepositoryInterface
     public function getPossiblyRelatedJournals(Bill $bill): Collection;
 
     /**
+     * Return all rules related to the bills in the collection, in an associative array:
+     * 5= billid
+     *
+     * 5 => [['id' => 1, 'title' => 'Some rule'],['id' => 2, 'title' => 'Some other rule']]
+     *
+     * @param Collection $collection
+     *
+     * @return array
+     */
+    public function getRulesForBills(Collection $collection): array;
+
+    /**
      * @param Bill   $bill
      * @param Carbon $date
      *

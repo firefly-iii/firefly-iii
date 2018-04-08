@@ -199,6 +199,16 @@ class BillController extends Controller
             }
         );
 
+        // add info about rules:
+        $rules = $repository->getRulesForBills($paginator->getCollection());
+        $bills = $bills->map(
+            function (array $bill) use ($rules) {
+                $bill['rules'] = $rules[$bill['id']] ?? [];
+
+                return $bill;
+            }
+        );
+
         $paginator->setPath(route('bills.index'));
 
         return view('bills.index', compact('bills', 'paginator'));

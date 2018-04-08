@@ -119,9 +119,11 @@ class UpgradeDatabase extends Command
             }
 
             // loop bills.
-            $order = 1;
+            $order      = 1;
+            /** @var Collection $collection */
+            $collection = $user->bills()->where('active', 1)->get();
             /** @var Bill $bill */
-            foreach ($user->bills()->get() as $bill) {
+            foreach ($collection as $bill) {
                 if ($bill->match !== 'MIGRATED_TO_RULES') {
                     $rule = Rule::create(
                         [
