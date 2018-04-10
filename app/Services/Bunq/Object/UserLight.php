@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Bunq\Object;
 
 use Carbon\Carbon;
-
+use FireflyIII\Exceptions\FireflyException;
 /**
  * Class UserLight.
  */
@@ -81,6 +81,6 @@ class UserLight extends BunqObject
      */
     public function toArray(): array
     {
-        die(sprintf('Cannot convert %s to array.', get_class($this)));
+        throw new FireflyException(sprintf('Cannot convert %s to array.', \get_class($this)));
     }
 }

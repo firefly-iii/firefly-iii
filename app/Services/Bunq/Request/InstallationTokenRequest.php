@@ -58,8 +58,6 @@ class InstallationTokenRequest extends BunqRequest
         Log::debug(sprintf('Installation ID: %s', $this->installationId->getId()));
         Log::debug(sprintf('Installation token: %s', $this->installationToken->getToken()));
         Log::debug('Server public key: (not included)');
-
-        return;
     }
 
     /**

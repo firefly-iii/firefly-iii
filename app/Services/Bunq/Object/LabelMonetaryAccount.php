@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Object;
 
-
+use FireflyIII\Exceptions\FireflyException;
 /**
  * Class LabelMonetaryAccount
  */
@@ -75,7 +75,7 @@ class LabelMonetaryAccount extends BunqObject
      */
     public function toArray(): array
     {
-        die(sprintf('Cannot convert %s to array.', get_class($this)));
+        throw new FireflyException(sprintf('Cannot convert %s to array.', \get_class($this)));
     }
 
 }

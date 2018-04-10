@@ -51,6 +51,10 @@ class Avatar extends BunqObject
      */
     public function toArray(): array
     {
-        die(sprintf('Cannot convert %s to array.', get_class($this)));
+        return [
+            'uuid'        => $this->uuid,
+            'anchor_uuid' => $this->anchorUuid,
+            'image'       => $this->image->toArray(),
+        ];
     }
 }

@@ -94,8 +94,8 @@ class MonetaryAccountBank extends BunqObject
         $this->setting                = new MonetaryAccountSetting($data['setting']);
         $this->overdraftLimit         = new Amount($data['overdraft_limit']);
         $this->avatar                 = new Avatar($data['avatar']);
-        $this->reason                 = $data['reason'];
-        $this->reasonDescription      = $data['reason_description'];
+        $this->reason                 = $data['reason'] ?? '';
+        $this->reasonDescription      = $data['reason_description'] ?? '';
 
         // create aliases:
         foreach ($data['alias'] as $alias) {

@@ -103,7 +103,5 @@ class BunqToken
         $this->created = Carbon::createFromFormat('Y-m-d H:i:s.u', $response['created']);
         $this->updated = Carbon::createFromFormat('Y-m-d H:i:s.u', $response['updated']);
         $this->token   = $response['token'];
-
-        return;
     }
 }

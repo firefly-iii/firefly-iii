@@ -25,7 +25,6 @@ namespace FireflyIII\Import\Routine;
 
 use Carbon\Carbon;
 use DB;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Factory\TransactionJournalFactory;
@@ -53,10 +52,10 @@ use FireflyIII\Services\Bunq\Request\ListMonetaryAccountRequest;
 use FireflyIII\Services\Bunq\Request\ListPaymentRequest;
 use FireflyIII\Services\Bunq\Token\InstallationToken;
 use FireflyIII\Services\Bunq\Token\SessionToken;
+use FireflyIII\Services\IP\IPRetrievalInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Requests;
 
 /**
  * Class BunqRoutine
@@ -212,7 +211,7 @@ class BunqRoutine implements RoutineInterface
     /**
      * @throws FireflyException
      */
-    protected function runStageInitial()
+    protected function runStageInitial(): void
     {
         $this->addStep();
         Log::debug('In runStageInitial()');
@@ -237,8 +236,8 @@ class BunqRoutine implements RoutineInterface
     {
         $this->addStep();
         Log::debug('Now in runStageRegistered()');
-        $apiKey            = Preferences::getForUser($this->job->user, 'bunq_api_key')->data;
-        $serverPublicKey   = Preferences::getForUser($this->job->user, 'bunq_server_public_key')->data;
+        $apiKey            = (string)Preferences::getForUser($this->job->user, 'bunq_api_key')->data;
+        $serverPublicKey   = new ServerPublicKey(Preferences::getForUser($this->job->user, 'bunq_server_public_key', [])->data);
         $installationToken = $this->getInstallationToken();
         $request           = new DeviceSessionRequest;
         $request->setInstallationToken($installationToken);
@@ -265,14 +264,12 @@ class BunqRoutine implements RoutineInterface
         $this->addStep();
 
         Log::debug('Session stored in job.');
-
-        return;
     }
 
     /**
      * Shorthand method.
      */
-    private function addStep()
+    private function addStep(): void
     {
         $this->addSteps(1);
     }
@@ -282,17 +279,17 @@ class BunqRoutine implements RoutineInterface
      *
      * @param int $count
      */
-    private function addSteps(int $count)
+    private function addSteps(int $count): void
     {
         $this->repository->addStepsDone($this->job, $count);
     }
 
     /**
-     * Shorthand
+     * Shorthand method
      *
      * @param int $steps
      */
-    private function addTotalSteps(int $steps)
+    private function addTotalSteps(int $steps): void
     {
         $this->repository->addTotalSteps($this->job, $steps);
     }
@@ -334,7 +331,7 @@ class BunqRoutine implements RoutineInterface
         // try to find asset account just in case:
         if ($expectedType !== AccountType::ASSET) {
             $result = $this->accountRepository->findByIbanNull($party->getIban(), [AccountType::ASSET]);
-            if (nul !== $result) {
+            if (null !== $result) {
                 Log::debug(sprintf('Search for Asset "%s" resulted in account %s (#%d)', $party->getIban(), $result->name, $result->id));
 
                 return $result;
@@ -403,6 +400,8 @@ class BunqRoutine implements RoutineInterface
     }
 
     /**
+     * Shorthand method.
+     *
      * @return array
      */
     private function getConfig(): array
@@ -466,7 +465,7 @@ class BunqRoutine implements RoutineInterface
         if (null !== $token) {
             Log::debug('Have installation token, return it.');
 
-            return $token->data;
+            return new InstallationToken($token->data);
         }
         Log::debug('Have no installation token, request one.');
 
@@ -481,9 +480,12 @@ class BunqRoutine implements RoutineInterface
         $installationId    = $request->getInstallationId();
         $serverPublicKey   = $request->getServerPublicKey();
 
-        Preferences::setForUser($this->job->user, 'bunq_installation_token', $installationToken);
-        Preferences::setForUser($this->job->user, 'bunq_installation_id', $installationId);
-        Preferences::setForUser($this->job->user, 'bunq_server_public_key', $serverPublicKey);
+        Log::debug('Have all values from InstallationTokenRequest');
+
+
+        Preferences::setForUser($this->job->user, 'bunq_installation_token', $installationToken->toArray());
+        Preferences::setForUser($this->job->user, 'bunq_installation_id', $installationId->toArray());
+        Preferences::setForUser($this->job->user, 'bunq_server_public_key', $serverPublicKey->toArray());
 
         Log::debug('Stored token, ID and pub key.');
 
@@ -507,7 +509,7 @@ class BunqRoutine implements RoutineInterface
         $preference = Preferences::getForUser($this->job->user, 'bunq_private_key', null);
         Log::debug('Return private key for user');
 
-        return $preference->data;
+        return (string)$preference->data;
     }
 
     /**
@@ -527,7 +529,7 @@ class BunqRoutine implements RoutineInterface
         $preference = Preferences::getForUser($this->job->user, 'bunq_public_key', null);
         Log::debug('Return public key for user');
 
-        return $preference->data;
+        return (string)$preference->data;
     }
 
     /**
@@ -537,20 +539,18 @@ class BunqRoutine implements RoutineInterface
      *
      * @throws FireflyException
      */
-    private function getRemoteIp(): string
+    private function getRemoteIp(): ?string
     {
+
         $preference = Preferences::getForUser($this->job->user, 'external_ip', null);
         if (null === $preference) {
-            try {
-                $response = Requests::get('https://api.ipify.org');
-            } catch (Exception $e) {
-                throw new FireflyException(sprintf('Could not retrieve external IP: %s', $e->getMessage()));
+
+            /** @var IPRetrievalInterface $service */
+            $service  = app(IPRetrievalInterface::class);
+            $serverIp = $service->getIP();
+            if (null !== $serverIp) {
+                Preferences::setForUser($this->job->user, 'external_ip', $serverIp);
             }
-            if (200 !== $response->status_code) {
-                throw new FireflyException(sprintf('Could not retrieve external IP: %d %s', $response->status_code, $response->body));
-            }
-            $serverIp = $response->body;
-            Preferences::setForUser($this->job->user, 'external_ip', $serverIp);
 
             return $serverIp;
         }
@@ -572,7 +572,7 @@ class BunqRoutine implements RoutineInterface
             throw new FireflyException('Cannot determine bunq server public key, but should have it at this point.');
         }
 
-        return $pref;
+        return new ServerPublicKey($pref);
     }
 
     /**
@@ -738,7 +738,7 @@ class BunqRoutine implements RoutineInterface
         if (null !== $deviceServerId) {
             Log::debug('Already have device server ID.');
 
-            return $deviceServerId->data;
+            return new DeviceServerId($deviceServerId->data);
         }
 
         Log::debug('Device server ID is null, we have to find an existing one or register a new one.');
@@ -778,8 +778,8 @@ class BunqRoutine implements RoutineInterface
             throw new FireflyException('Was not able to register server with bunq. Please see the log files.');
         }
 
-        Preferences::setForUser($this->job->user, 'bunq_device_server_id', $deviceServerId);
-        Log::debug(sprintf('Server ID: %s', serialize($deviceServerId)));
+        Preferences::setForUser($this->job->user, 'bunq_device_server_id', $deviceServerId->toArray());
+        Log::debug(sprintf('Server ID: %s', json_encode($deviceServerId)));
 
         return $deviceServerId;
     }

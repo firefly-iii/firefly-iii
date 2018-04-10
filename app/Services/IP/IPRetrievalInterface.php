@@ -1,8 +1,7 @@
 <?php
-
 /**
- * BunqId.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * IPRetrievalInterface.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -19,54 +18,23 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace FireflyIII\Services\Bunq\Id;
+namespace FireflyIII\Services\IP;
 
-use Log;
 /**
- * Class BunqId.
+ * Interface IPRetrievalInterface
+ *
+ * @package FireflyIII\Services\IP
  */
-class BunqId
+interface IPRetrievalInterface
 {
-    /** @var int */
-    private $id = 0;
 
     /**
-     * BunqId constructor.
+     * Returns the user's IP address.
      *
-     * @param null $data
+     * @return null|string
      */
-    public function __construct($data = null)
-    {
-        if (null !== $data) {
-            $this->id = $data['id'];
-        }
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId(int $id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->id,
-        ];
-    }
+    public function getIP(): ?string;
 }

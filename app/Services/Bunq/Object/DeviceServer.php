@@ -25,6 +25,8 @@ namespace FireflyIII\Services\Bunq\Object;
 use Carbon\Carbon;
 use FireflyIII\Services\Bunq\Id\DeviceServerId;
 
+use FireflyIII\Exceptions\FireflyException;
+
 /**
  * Class DeviceServer
  */
@@ -82,6 +84,6 @@ class DeviceServer extends BunqObject
      */
     public function toArray(): array
     {
-        die(sprintf('Cannot convert %s to array.', get_class($this)));
+        throw new FireflyException(sprintf('Cannot convert %s to array.', \get_class($this)));
     }
 }

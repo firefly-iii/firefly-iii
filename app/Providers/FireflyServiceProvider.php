@@ -48,6 +48,8 @@ use FireflyIII\Repositories\User\UserRepository;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Currency\ExchangeRateInterface;
 use FireflyIII\Services\Currency\FixerIOv2;
+use FireflyIII\Services\IP\IpifyOrg;
+use FireflyIII\Services\IP\IPRetrievalInterface;
 use FireflyIII\Services\Password\PwndVerifierV2;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\Amount;
@@ -180,5 +182,8 @@ class FireflyServiceProvider extends ServiceProvider
 
         // password verifier thing
         $this->app->bind(Verifier::class, PwndVerifierV2::class);
+
+        // IP thing:
+        $this->app->bind(IPRetrievalInterface::class, IpifyOrg::class);
     }
 }
