@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\UserRequest;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Transformers\UserTransformer;
 use FireflyIII\User;
@@ -35,7 +36,7 @@ use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 use Preferences;
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
+
 
 /**
  * Class UserController
@@ -70,7 +71,7 @@ class UserController extends Controller
      * @param  \FireflyIII\User $user
      *
      * @return \Illuminate\Http\Response
-     * @throws \Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException
+     * @throws FireflyException
      */
     public function delete(User $user)
     {
@@ -79,7 +80,7 @@ class UserController extends Controller
 
             return response()->json([], 204);
         }
-        throw new AccessDeniedException(''); // @codeCoverageIgnore
+        throw new FireflyException('No access to method.'); // @codeCoverageIgnore
     }
 
     /**

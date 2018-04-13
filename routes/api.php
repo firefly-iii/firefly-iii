@@ -58,6 +58,18 @@ Route::group(
 
 
 Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'currencies', 'as' => 'api.v1.currencies.'], function () {
+
+    // Transaction currency API routes:
+    Route::get('', ['uses' => 'CurrencyController@index', 'as' => 'index']);
+    Route::post('', ['uses' => 'CurrencyController@store', 'as' => 'store']);
+    Route::get('{currency}', ['uses' => 'CurrencyController@show', 'as' => 'show']);
+    Route::put('{currency}', ['uses' => 'CurrencyController@update', 'as' => 'update']);
+    Route::delete('{currency}', ['uses' => 'CurrencyController@delete', 'as' => 'delete']);
+}
+);
+
+Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transactions', 'as' => 'api.v1.transactions.'],
     function () {
 
