@@ -28,7 +28,6 @@ use FireflyIII\Factory\BillFactory;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\BillDestroyService;
 use FireflyIII\Services\Internal\Update\BillUpdateService;
@@ -427,11 +426,12 @@ class BillRepository implements BillRepositoryInterface
      */
     public function linkCollectionToBill(Bill $bill, Collection $journals): void
     {
-        $ids = $journals->pluck('id')->toArray();
-        DB::table('transaction_journals')
-          ->where('user_id', $this->user->id)
-          ->whereIn('id', $ids)
-          ->update(['bill_id' =>  $bill->id]);
+        /** @var TransactionJournal $journal */
+        foreach ($journals as $journal) {
+            $journal->bill_id = $bill->id;
+            $journal->save();
+            Log::debug(sprintf('Linked journal #%d to bill #%d', $journal->id, $bill->id));
+        }
     }
 
     /**
