@@ -46,9 +46,10 @@ class Rule extends Model
             'active'          => 'boolean',
             'order'           => 'int',
             'stop_processing' => 'boolean',
+            'strict'          => 'boolean',
         ];
     /** @var array */
-    protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id'];
+    protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id','strict'];
 
     /**
      * @param string $value

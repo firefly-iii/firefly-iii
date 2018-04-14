@@ -102,7 +102,6 @@ class RuleController extends Controller
         if ($request->old()) {
             $oldTriggers = $this->getPreviousTriggers($request);
             $oldActions  = $this->getPreviousActions($request);
-
         }
         // has existing bill refered to in URI?
         if (null !== $bill && !$request->old()) {
@@ -110,7 +109,7 @@ class RuleController extends Controller
             // create some sensible defaults:
             $preFilled['title']       = trans('firefly.new_rule_for_bill_title', ['name' => $bill->name]);
             $preFilled['description'] = trans('firefly.new_rule_for_bill_description', ['name' => $bill->name]);
-            $request->session()->flash('preFilled', $preFilled);
+
 
             // get triggers and actions for bill:
             $oldTriggers = $this->getTriggersForBill($bill);
@@ -121,6 +120,8 @@ class RuleController extends Controller
         $actionCount  = \count($oldActions);
         $subTitleIcon = 'fa-clone';
         $subTitle     = trans('firefly.make_new_rule', ['title' => $ruleGroup->title]);
+
+        $request->session()->flash('preFilled', $preFilled);
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('rules.create.fromStore')) {

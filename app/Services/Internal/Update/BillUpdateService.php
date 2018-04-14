@@ -42,6 +42,7 @@ class BillUpdateService
      */
     public function update(Bill $bill, array $data): Bill
     {
+        $oldName                       = $bill->name;
         $bill->name                    = $data['name'];
         $bill->amount_min              = $data['amount_min'];
         $bill->amount_max              = $data['amount_max'];
@@ -57,6 +58,9 @@ class BillUpdateService
         if (isset($data['notes']) && null !== $data['notes']) {
             $this->updateNote($bill, (string)$data['notes']);
         }
+
+        // update rule actions.
+        $this->updateBillActions($bill, $oldName, $data['name']);
 
         return $bill;
     }

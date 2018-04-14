@@ -40,6 +40,7 @@
                         {{ ExpandedForm.select('trigger',allJournalTriggers()) }}
                         {{ ExpandedForm.select('rule_group_id',groups, ruleGroup.id) }}
                         {{ ExpandedForm.checkbox('stop_processing',1,null, {helpText: trans('firefly.rule_help_stop_processing')}) }}
+                        {{ ExpandedForm.checkbox('strict',1, null,{helpText: trans('firefly.rule_help_strict')}) }}
                     </div>
                 </div>
             </div>

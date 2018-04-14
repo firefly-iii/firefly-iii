@@ -258,6 +258,7 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->rule_group_id   = $data['rule_group_id'];
         $rule->order           = ($order + 1);
         $rule->active          = 1;
+        $rule->strict          = $data['strict'] ?? false;
         $rule->stop_processing = 1 === (int)$data['stop_processing'];
         $rule->title           = $data['title'];
         $rule->description     = strlen($data['description']) > 0 ? $data['description'] : null;
@@ -326,6 +327,7 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->active          = $data['active'];
         $rule->stop_processing = $data['stop_processing'];
         $rule->title           = $data['title'];
+        $rule->strict          = $data['strict'] ?? false;
         $rule->description     = $data['description'];
         $rule->save();
 

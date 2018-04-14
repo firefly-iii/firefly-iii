@@ -32,5 +32,11 @@ class ChangesForV473 extends Migration
                 $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
             }
         );
+        Schema::table(
+            'rules',
+            function (Blueprint $table) {
+                $table->boolean('strict')->default(true);
+            }
+        );
     }
 }

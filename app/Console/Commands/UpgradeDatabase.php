@@ -119,9 +119,9 @@ class UpgradeDatabase extends Command
             }
 
             // loop bills.
-            $order      = 1;
+            $order = 1;
             /** @var Collection $collection */
-            $collection = $user->bills()->where('active', 1)->get();
+            $collection = $user->bills()->get();
             /** @var Bill $bill */
             foreach ($collection as $bill) {
                 if ($bill->match !== 'MIGRATED_TO_RULES') {
@@ -132,7 +132,7 @@ class UpgradeDatabase extends Command
                             'title'           => (string)trans('firefly.rule_for_bill_title', ['name' => $bill->name], $lang->data),
                             'description'     => (string)trans('firefly.rule_for_bill_description', ['name' => $bill->name], $lang->data),
                             'order'           => $order,
-                            'active'          => 1,
+                            'active'          => $bill->active,
                             'stop_processing' => 1,
                         ]
                     );

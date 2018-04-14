@@ -686,35 +686,36 @@ class BunqRoutine implements RoutineInterface
 
             }
         }
+        if ($journals->count() > 0) {
+            // link to tag
+            /** @var TagRepositoryInterface $repository */
+            $repository = app(TagRepositoryInterface::class);
+            $repository->setUser($this->job->user);
+            $data            = [
+                'tag'         => trans('import.import_with_key', ['key' => $this->job->key]),
+                'date'        => new Carbon,
+                'description' => null,
+                'latitude'    => null,
+                'longitude'   => null,
+                'zoomLevel'   => null,
+                'tagMode'     => 'nothing',
+            ];
+            $tag             = $repository->store($data);
+            $extended        = $this->getExtendedStatus();
+            $extended['tag'] = $tag->id;
+            $this->setExtendedStatus($extended);
 
-        // link to tag
-        /** @var TagRepositoryInterface $repository */
-        $repository = app(TagRepositoryInterface::class);
-        $repository->setUser($this->job->user);
-        $data            = [
-            'tag'         => trans('import.import_with_key', ['key' => $this->job->key]),
-            'date'        => new Carbon,
-            'description' => null,
-            'latitude'    => null,
-            'longitude'   => null,
-            'zoomLevel'   => null,
-            'tagMode'     => 'nothing',
-        ];
-        $tag             = $repository->store($data);
-        $extended        = $this->getExtendedStatus();
-        $extended['tag'] = $tag->id;
-        $this->setExtendedStatus($extended);
+            Log::debug(sprintf('Created tag #%d ("%s")', $tag->id, $tag->tag));
+            Log::debug('Looping journals...');
+            $tagId = $tag->id;
 
-        Log::debug(sprintf('Created tag #%d ("%s")', $tag->id, $tag->tag));
-        Log::debug('Looping journals...');
-        $tagId = $tag->id;
-
-        foreach ($journals as $journal) {
-            Log::debug(sprintf('Linking journal #%d to tag #%d...', $journal->id, $tagId));
-            DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journal->id, 'tag_id' => $tagId]);
-            $this->addStep();
+            foreach ($journals as $journal) {
+                Log::debug(sprintf('Linking journal #%d to tag #%d...', $journal->id, $tagId));
+                DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journal->id, 'tag_id' => $tagId]);
+                $this->addStep();
+            }
+            Log::info(sprintf('Linked %d journals to tag #%d ("%s")', $journals->count(), $tag->id, $tag->tag));
         }
-        Log::info(sprintf('Linked %d journals to tag #%d ("%s")', $journals->count(), $tag->id, $tag->tag));
 
         // set status to "finished"?
         // update job:
