@@ -61,7 +61,10 @@ class BudgetRepository implements BudgetRepositoryInterface
         $total = '0';
         $count = 0;
         foreach ($budget->budgetlimits as $limit) {
-            $diff   = (string)$limit->start_date->diffInDays($limit->end_date);
+            $diff = (string)$limit->start_date->diffInDays($limit->end_date);
+            if (bccomp('0', $diff) === 0) {
+                $diff = '1';
+            }
             $amount = (string)$limit->amount;
             $perDay = bcdiv($amount, $diff);
             $total  = bcadd($total, $perDay);
