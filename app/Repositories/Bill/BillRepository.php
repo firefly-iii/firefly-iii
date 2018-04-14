@@ -422,12 +422,13 @@ class BillRepository implements BillRepositoryInterface
      * Link a set of journals to a bill.
      *
      * @param Bill       $bill
-     * @param Collection $journals
+     * @param Collection $transactions
      */
-    public function linkCollectionToBill(Bill $bill, Collection $journals): void
+    public function linkCollectionToBill(Bill $bill, Collection $transactions): void
     {
-        /** @var TransactionJournal $journal */
-        foreach ($journals as $journal) {
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $journal          = $transaction->transactionJournal;
             $journal->bill_id = $bill->id;
             $journal->save();
             Log::debug(sprintf('Linked journal #%d to bill #%d', $journal->id, $bill->id));
