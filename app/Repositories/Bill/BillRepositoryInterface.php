@@ -134,13 +134,6 @@ interface BillRepositoryInterface
     public function getPayDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection;
 
     /**
-     * @param Bill $bill
-     *
-     * @return Collection
-     */
-    public function getPossiblyRelatedJournals(Bill $bill): Collection;
-
-    /**
      * Return all rules for one bill
      *
      * @param Bill $bill

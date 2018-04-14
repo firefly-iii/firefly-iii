@@ -118,17 +118,18 @@ $factory->define(
     FireflyIII\Models\Bill::class,
     function (Faker\Generator $faker) {
         return [
-            'created_at'  => new Carbon,
-            'updated_at'  => new Carbon,
-            'user_id'     => 1,
-            'name'        => $faker->words(3, true),
-            'match'       => $faker->words(3, true),
-            'amount_min'  => '100.00',
-            'amount_max'  => '100.00',
-            'date'        => '2017-01-01',
-            'repeat_freq' => 'monthly',
-            'skip'        => 0,
-            'automatch'   => 1,
+            'created_at'              => new Carbon,
+            'updated_at'              => new Carbon,
+            'user_id'                 => 1,
+            'transaction_currency_id' => 1,
+            'name'                    => $faker->words(3, true),
+            'match'                   => $faker->words(3, true),
+            'amount_min'              => '100.00',
+            'amount_max'              => '100.00',
+            'date'                    => '2017-01-01',
+            'repeat_freq'             => 'monthly',
+            'skip'                    => 0,
+            'automatch'               => 1,
         ];
     }
 );

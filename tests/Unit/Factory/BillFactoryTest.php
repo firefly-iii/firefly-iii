@@ -42,16 +42,16 @@ class BillFactoryTest extends TestCase
     public function testCreateBasic()
     {
         $data = [
-            'name'        => 'Some new bill #' . random_int(1, 1000),
-            'match'       => 'i,am,word' . random_int(1, 1000),
-            'amount_min'  => '5',
-            'amount_max'  => '10',
-            'date'        => '2018-01-01',
-            'repeat_freq' => 'monthly',
-            'skip'        => 0,
-            'automatch'   => true,
-            'active'      => true,
-            'notes'       => 'Hello!',
+            'name'                    => 'Some new bill #' . random_int(1, 1000),
+            'amount_min'              => '5',
+            'transaction_currency_id' => 1,
+            'amount_max'              => '10',
+            'date'                    => '2018-01-01',
+            'repeat_freq'             => 'monthly',
+            'skip'                    => 0,
+            'automatch'               => true,
+            'active'                  => true,
+            'notes'                   => 'Hello!',
         ];
 
         /** @var BillFactory $factory */
@@ -60,7 +60,6 @@ class BillFactoryTest extends TestCase
         $bill = $factory->create($data);
 
         $this->assertEquals($data['name'], $bill->name);
-        $this->assertEquals($data['match'], $bill->match);
         $this->assertEquals($data['amount_min'], $bill->amount_min);
         $this->assertEquals($data['repeat_freq'], $bill->repeat_freq);
         $note = $bill->notes()->first();
@@ -77,16 +76,16 @@ class BillFactoryTest extends TestCase
     public function testCreateEmptyNotes()
     {
         $data = [
-            'name'        => 'Some new bill #' . random_int(1, 1000),
-            'match'       => 'i,am,word' . random_int(1, 1000),
-            'amount_min'  => '5',
-            'amount_max'  => '10',
-            'date'        => '2018-01-01',
-            'repeat_freq' => 'monthly',
-            'skip'        => 0,
-            'automatch'   => true,
-            'active'      => true,
-            'notes'       => '',
+            'name'                    => 'Some new bill #' . random_int(1, 1000),
+            'amount_min'              => '5',
+            'amount_max'              => '10',
+            'date'                    => '2018-01-01',
+            'repeat_freq'             => 'monthly',
+            'transaction_currency_id' => 1,
+            'skip'                    => 0,
+            'automatch'               => true,
+            'active'                  => true,
+            'notes'                   => '',
         ];
 
         /** @var BillFactory $factory */
@@ -95,7 +94,6 @@ class BillFactoryTest extends TestCase
         $bill = $factory->create($data);
 
         $this->assertEquals($data['name'], $bill->name);
-        $this->assertEquals($data['match'], $bill->match);
         $this->assertEquals($data['amount_min'], $bill->amount_min);
         $this->assertEquals($data['repeat_freq'], $bill->repeat_freq);
         $this->assertEquals(0, $bill->notes()->count());

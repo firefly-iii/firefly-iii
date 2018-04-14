@@ -140,6 +140,7 @@ class BillControllerTest extends TestCase
         $repository->shouldReceive('getPaginator')->andReturn(new LengthAwarePaginator($collection, 1, 50))->once();
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('getPaidDatesInRange')->twice()->andReturn(new Collection([new Carbon, new Carbon, new Carbon]));
+        $repository->shouldReceive('getRulesForBills')->andReturn([]);
 
 
         $this->be($this->user());
@@ -159,10 +160,8 @@ class BillControllerTest extends TestCase
         $journal      = factory(TransactionJournal::class)->make();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(BillRepositoryInterface::class);
-        $repository->shouldReceive('getPossiblyRelatedJournals')->once()->andReturn(new Collection([$journal]));
-        $repository->shouldReceive('scan')->once();
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-
+        $repository->shouldReceive('getRulesForBill')->andReturn(new Collection);
         $this->be($this->user());
         $response = $this->get(route('bills.rescan', [1]));
         $response->assertStatus(302);
@@ -199,6 +198,7 @@ class BillControllerTest extends TestCase
         $repository->shouldReceive('getYearAverage')->andReturn('0');
         $repository->shouldReceive('getOverallAverage')->andReturn('0');
         $repository->shouldReceive('nextExpectedMatch')->andReturn(new Carbon);
+        $repository->shouldReceive('getRulesForBill')->andReturn(new Collection);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
@@ -235,15 +235,14 @@ class BillControllerTest extends TestCase
         $attachHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
 
         $data = [
-            'name'                          => 'New Bill ' . random_int(1000, 9999),
-            'match'                         => 'some words',
-            'amount_min'                    => '100',
-            'amount_currency_id_amount_min' => 1,
-            'amount_currency_id_amount_max' => 1,
-            'skip'                          => 0,
-            'amount_max'                    => '100',
-            'date'                          => '2016-01-01',
-            'repeat_freq'                   => 'monthly',
+            'name'                    => 'New Bill ' . random_int(1000, 9999),
+            'amount_min'              => '100',
+            'transaction_currency_id' => 1,
+            'skip'                    => 0,
+            'strict'                  => 1,
+            'amount_max'              => '100',
+            'date'                    => '2016-01-01',
+            'repeat_freq'             => 'monthly',
         ];
         $this->session(['bills.create.uri' => 'http://localhost']);
         $this->be($this->user());
@@ -271,10 +270,8 @@ class BillControllerTest extends TestCase
         $data = [
             'id'                            => 1,
             'name'                          => 'Updated Bill ' . random_int(1000, 9999),
-            'match'                         => 'some more words',
             'amount_min'                    => '100',
-            'amount_currency_id_amount_min' => 1,
-            'amount_currency_id_amount_max' => 1,
+            'transaction_currency_id' => 1,
             'skip'                          => 0,
             'amount_max'                    => '100',
             'date'                          => '2016-01-01',

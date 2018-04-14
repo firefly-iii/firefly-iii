@@ -345,29 +345,6 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * @param Bill $bill
-     *
-     * @return Collection
-     */
-    public function getPossiblyRelatedJournals(Bill $bill): Collection
-    {
-        $set = new Collection(
-            DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $bill->amount_min)->where('amount', '<=', $bill->amount_max)
-              ->get(['transaction_journal_id'])
-        );
-        $ids = $set->pluck('transaction_journal_id')->toArray();
-
-        $journals = new Collection;
-        if (count($ids) > 0) {
-            $journals = $this->user->transactionJournals()->transactionTypes([TransactionType::WITHDRAWAL])->whereIn('transaction_journals.id', $ids)->get(
-                ['transaction_journals.*']
-            );
-        }
-
-        return $journals;
-    }
-
-    /**
      * Return all rules for one bill
      *
      * @param Bill $bill
