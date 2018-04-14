@@ -197,12 +197,15 @@ class TransactionMatcher
             foreach ($allTriggers as $trigger) {
                 if ($trigger->trigger_type === 'amount_less') {
                     $this->maxAmount = $trigger->trigger_value;
+                    Log::debug(sprintf('Set max amount to be %s', $trigger->trigger_value));
                 }
                 if ($trigger->trigger_type === 'amount_more') {
                     $this->minAmount = $trigger->trigger_value;
+                    Log::debug(sprintf('Set min amount to be %s', $trigger->trigger_value));
                 }
                 if ($trigger->trigger_type === 'amount_exactly') {
                     $this->exactAmount = $trigger->trigger_value;
+                    Log::debug(sprintf('Set exact amount to be %s', $trigger->trigger_value));
                 }
             }
         }
@@ -239,12 +242,15 @@ class TransactionMatcher
             $collector->setUser(auth()->user());
             $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTypes($this->transactionTypes);
             if (null !== $this->maxAmount) {
+                Log::debug(sprintf('Amount must be less than %s', $this->maxAmount));
                 $collector->amountLess($this->maxAmount);
             }
             if (null !== $this->minAmount) {
+                Log::debug(sprintf('Amount must be more than %s', $this->minAmount));
                 $collector->amountMore($this->minAmount);
             }
             if (null !== $this->exactAmount) {
+                Log::debug(sprintf('Amount must be exactly %s', $this->exactAmount));
                 $collector->amountIs($this->exactAmount);
             }
 
