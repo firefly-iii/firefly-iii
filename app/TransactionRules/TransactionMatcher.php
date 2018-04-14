@@ -54,7 +54,7 @@ class TransactionMatcher
      * @return Collection
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function findTransactionsByRule()
+    public function findTransactionsByRule(): Collection
     {
         if (0 === count($this->rule->ruleTriggers)) {
             return new Collection;
@@ -202,6 +202,10 @@ class TransactionMatcher
             $collector = app(JournalCollectorInterface::class);
             $collector->setUser(auth()->user());
             $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTypes($this->transactionTypes);
+
+
+
+
             $set = $collector->getPaginatedJournals();
             Log::debug(sprintf('Found %d journals to check. ', $set->count()));
 

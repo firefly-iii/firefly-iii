@@ -310,6 +310,13 @@ function createAutoComplete(input, URI) {
 function testRuleTriggers() {
     "use strict";
 
+    // find the button:
+    var button = $('.test_rule_triggers');
+
+    // replace with spinner. fa-spin fa-spinner
+    button.html('<i class="fa fa-spin fa-spinner"></i> ' + testRuleTriggersText);
+    button.attr('disabled', 'disabled');
+
     // Serialize all trigger data
     var triggerData = $(".rule-trigger-tbody").find("input[type=text], input[type=checkbox], select").serializeArray();
 
@@ -319,7 +326,7 @@ function testRuleTriggers() {
 
         // Set title and body
         modal.find(".transactions-list").html(data.html);
-
+        button.attr('disabled', '');
         // Show warning if appropriate
         if (data.warning) {
             modal.find(".transaction-warning .warning-contents").text(data.warning);
@@ -327,7 +334,8 @@ function testRuleTriggers() {
         } else {
             modal.find(".transaction-warning").hide();
         }
-
+        button.removeAttr('disabled');
+        button.html('<i class="fa fa-flask"></i> ' + testRuleTriggersText);
         // Show the modal dialog
         modal.modal();
     }).fail(function () {

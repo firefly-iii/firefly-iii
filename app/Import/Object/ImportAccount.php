@@ -446,11 +446,24 @@ class ImportAccount
         // 5: then maybe, create one:
         Log::debug(sprintf('Found no account of type %s so must create one ourselves.', $this->expectedType));
 
+        // make sure name field is sensible.
+        $name = '(no name)';
+        if (isset($this->accountNumber['value'])) {
+            $name = $this->accountNumber['value'];
+        }
+        if (isset($this->accountIban['value'])) {
+            $name = $this->accountIban['value'];
+        }
+        if (isset($this->accountName['value'])) {
+            $name = $this->accountName['value'];
+        }
+
         $data = [
             'accountType'     => config('firefly.shortNamesByFullName.' . $this->expectedType),
-            'name'            => $this->accountName['value'] ?? '(no name)',
+            'name'            => $name,
             'iban'            => $this->accountIban['value'] ?? null,
             'active'          => true,
+            'accountNumber'   => $this->accountNumber['value'] ?? null,
             'virtualBalance'  => '0',
             'account_type_id' => null,
             'BIC'             => $this->accountBic['value'] ?? null,

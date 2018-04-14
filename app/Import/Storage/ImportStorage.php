@@ -256,6 +256,7 @@ class ImportStorage
                 'sepa-country'       => $importJournal->getMetaString('sepa-country'),
                 'sepa-ep'            => $importJournal->getMetaString('sepa-ep'),
                 'sepa-ci'            => $importJournal->getMetaString('sepa-ci'),
+                'importHash'         => $importJournal->hash,
                 'transactions'       => [
                     // single transaction:
                     [

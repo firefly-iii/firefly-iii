@@ -87,12 +87,13 @@ class VerifyDatabase extends Command
         $this->createLinkTypes();
         $this->createAccessTokens();
         $this->fixDoubleAmounts();
+        $this->fixBadMeta();
     }
 
     /**
      * Create user access tokens, if not present already.
      */
-    private function createAccessTokens()
+    private function createAccessTokens(): void
     {
         $count = 0;
         $users = User::get();
@@ -114,7 +115,7 @@ class VerifyDatabase extends Command
     /**
      * Create default link types if necessary.
      */
-    private function createLinkTypes()
+    private function createLinkTypes(): void
     {
         $count = 0;
         $set   = [
@@ -140,7 +141,69 @@ class VerifyDatabase extends Command
         }
     }
 
-    private function fixDoubleAmounts()
+    /**
+     * Fix the situation where the matching transactions
+     * of a journal somehow have non-matching categories
+     * or budgets
+     */
+    private function fixBadMeta(): void
+    {
+        // categories
+        $set     = Transaction
+            ::leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id')
+            ->whereNull('transactions.deleted_at')
+            ->get(['transactions.id', 'transaction_journal_id', 'identifier', 'category_transaction.category_id', 'category_transaction.id as ct_id']);
+        $results = [];
+        foreach ($set as $obj) {
+            $key      = $obj->transaction_journal_id . '-' . $obj->identifier;
+            $category = (int)$obj->category_id;
+
+            // value exists and is not category:
+            if (isset($results[$key]) && $results[$key] !== $category) {
+                $this->error(
+                    sprintf(
+                        'Transaction #%d referred to the wrong category. Was category #%d but is fixed to be category #%d.', $obj->transaction_journal_id, $category, $results[$key]
+                    )
+                );
+                DB::table('category_transaction')->where('id', $obj->ct_id)->update(['category_id' => $results[$key]]);
+
+            }
+
+            // value does not exist:
+            if ($category > 0 && !isset($results[$key])) {
+                $results[$key] = $category;
+            }
+        }
+
+        // budgets
+        $set     = Transaction
+            ::leftJoin('budget_transaction', 'budget_transaction.transaction_id', '=', 'transactions.id')
+            ->whereNull('transactions.deleted_at')
+            ->get(['transactions.id', 'transaction_journal_id', 'identifier', 'budget_transaction.budget_id', 'budget_transaction.id as ct_id']);
+        $results = [];
+        foreach ($set as $obj) {
+            $key      = $obj->transaction_journal_id . '-' . $obj->identifier;
+            $budget = (int)$obj->budget_id;
+
+            // value exists and is not budget:
+            if (isset($results[$key]) && $results[$key] !== $budget) {
+                $this->error(
+                    sprintf(
+                        'Transaction #%d referred to the wrong budget. Was budget #%d but is fixed to be budget #%d.', $obj->transaction_journal_id, $budget, $results[$key]
+                    )
+                );
+                DB::table('budget_transaction')->where('id', $obj->ct_id)->update(['budget_id' => $results[$key]]);
+
+            }
+
+            // value does not exist:
+            if ($budget > 0 && !isset($results[$key])) {
+                $results[$key] = $budget;
+            }
+        }
+    }
+
+    private function fixDoubleAmounts(): void
     {
         $count = 0;
         // get invalid journals
@@ -186,8 +249,6 @@ class VerifyDatabase extends Command
         if (0 === $count) {
             $this->info('Amount integrity OK!');
         }
-
-        return;
     }
 
     /**
@@ -217,8 +278,6 @@ class VerifyDatabase extends Command
                 return true;
             }
         );
-
-        return;
     }
 
     /**
@@ -246,7 +305,7 @@ class VerifyDatabase extends Command
     /**
      * Reports on budgets with no budget limits (which makes them pointless).
      */
-    private function reportBudgetLimits()
+    private function reportBudgetLimits(): void
     {
         $set = Budget::leftJoin('budget_limits', 'budget_limits.budget_id', '=', 'budgets.id')
                      ->leftJoin('users', 'budgets.user_id', '=', 'users.id')
@@ -270,7 +329,7 @@ class VerifyDatabase extends Command
     /**
      * Reports on deleted accounts that still have not deleted transactions or journals attached to them.
      */
-    private function reportDeletedAccounts()
+    private function reportDeletedAccounts(): void
     {
         $set = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
                       ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
@@ -300,7 +359,7 @@ class VerifyDatabase extends Command
     /**
      * Report on journals with bad account types linked to them.
      */
-    private function reportIncorrectJournals()
+    private function reportIncorrectJournals(): void
     {
         $configuration = [
             // a withdrawal can not have revenue account:
@@ -342,7 +401,7 @@ class VerifyDatabase extends Command
     /**
      * Any deleted transaction journals that have transactions that are NOT deleted:.
      */
-    private function reportJournals()
+    private function reportJournals(): void
     {
         $count = 0;
         $set   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
@@ -373,7 +432,7 @@ class VerifyDatabase extends Command
     /**
      * Report on journals without transactions.
      */
-    private function reportNoTransactions()
+    private function reportNoTransactions(): void
     {
         $count = 0;
         $set   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
@@ -397,7 +456,7 @@ class VerifyDatabase extends Command
      *
      * @param string $name
      */
-    private function reportObject(string $name)
+    private function reportObject(string $name): void
     {
         $plural = str_plural($name);
         $class  = sprintf('FireflyIII\Models\%s', ucfirst($name));
@@ -433,7 +492,7 @@ class VerifyDatabase extends Command
     /**
      * Reports for each user when the sum of their transactions is not zero.
      */
-    private function reportSum()
+    private function reportSum(): void
     {
         /** @var UserRepositoryInterface $userRepository */
         $userRepository = app(UserRepositoryInterface::class);
@@ -452,7 +511,7 @@ class VerifyDatabase extends Command
     /**
      * Reports on deleted transactions that are connected to a not deleted journal.
      */
-    private function reportTransactions()
+    private function reportTransactions(): void
     {
         $set = Transaction::leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                           ->whereNotNull('transactions.deleted_at')

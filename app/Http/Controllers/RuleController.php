@@ -79,6 +79,8 @@ class RuleController extends Controller
      */
     public function create(Request $request, RuleGroupRepositoryInterface $ruleGroupRepository, BillRepositoryInterface $billRepository, RuleGroup $ruleGroup)
     {
+        $this->createDefaultRuleGroup();
+        $this->createDefaultRule();
         $bill         = null;
         $billId       = (int)$request->get('fromBill');
         $preFilled    = [];
@@ -443,8 +445,8 @@ class RuleController extends Controller
      * @param Rule $rule
      *
      * @return \Illuminate\Http\JsonResponse
-     *
-
+     * @throws Throwable
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function testTriggersByRule(Rule $rule)
     {
@@ -466,10 +468,10 @@ class RuleController extends Controller
 
         // Warn the user if only a subset of transactions is returned
         $warning = '';
-        if (count($matchingTransactions) === $limit) {
+        if (\count($matchingTransactions) === $limit) {
             $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]); // @codeCoverageIgnore
         }
-        if (0 === count($matchingTransactions)) {
+        if (0 === \count($matchingTransactions)) {
             $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]); // @codeCoverageIgnore
         }
 

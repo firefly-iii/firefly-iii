@@ -68,7 +68,7 @@
 		"twig/twig": "1.*"
 	},
 	"require-dev": {
-		"barryvdh/laravel-debugbar": "3.*",
+		"roave/security-advisories": "dev-master",
 		"barryvdh/laravel-ide-helper": "2.*",
 		"filp/whoops": "2.*",
 		"fzaninotto/faker": "1.*",

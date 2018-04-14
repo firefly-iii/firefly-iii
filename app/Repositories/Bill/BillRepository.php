@@ -368,6 +368,22 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * Return all rules for one bill
+     *
+     * @param Bill $bill
+     *
+     * @return Collection
+     */
+    public function getRulesForBill(Bill $bill): Collection
+    {
+        return $this->user->rules()
+                          ->leftJoin('rule_actions', 'rule_actions.rule_id', '=', 'rules.id')
+                          ->where('rule_actions.action_type', 'link_to_bill')
+                          ->where('rule_actions.action_value', $bill->name)
+                          ->get(['rules.*']);
+    }
+
+    /**
      * Return all rules related to the bills in the collection, in an associative array:
      * 5= billid
      *
@@ -424,6 +440,21 @@ class BillRepository implements BillRepositoryInterface
         }
 
         return $avg;
+    }
+
+    /**
+     * Link a set of journals to a bill.
+     *
+     * @param Bill       $bill
+     * @param Collection $journals
+     */
+    public function linkCollectionToBill(Bill $bill, Collection $journals): void
+    {
+        $ids = $journals->pluck('id')->toArray();
+        DB::table('transaction_journals')
+          ->where('user_id', $this->user->id)
+          ->whereIn('id', $ids)
+          ->update(['bill_id' =>  $bill->id]);
     }
 
     /**

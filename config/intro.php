@@ -124,6 +124,7 @@ return [
 
     // bills: index, create, show
     'bills_index'                    => [
+        'rules'              => ['element' => '.rules'],
         'paid_in_period'     => ['element' => '.paid_in_period'],
         'expected_in_period' => ['element' => '.expected_in_period'],
     ],

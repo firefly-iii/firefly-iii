@@ -339,6 +339,7 @@ class CsvProcessor implements FileProcessorInterface
     {
         $hash  = $this->getRowHash($array);
         $count = $this->repository->countByHash($hash);
+        Log::debug(sprintf('Hash is %s and count is %d', $hash, $count));
 
         return $count > 0;
     }

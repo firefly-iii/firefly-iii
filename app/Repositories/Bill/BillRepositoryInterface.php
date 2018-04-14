@@ -141,6 +141,15 @@ interface BillRepositoryInterface
     public function getPossiblyRelatedJournals(Bill $bill): Collection;
 
     /**
+     * Return all rules for one bill
+     *
+     * @param Bill $bill
+     *
+     * @return Collection
+     */
+    public function getRulesForBill(Bill $bill): Collection;
+
+    /**
      * Return all rules related to the bills in the collection, in an associative array:
      * 5= billid
      *
@@ -159,6 +168,14 @@ interface BillRepositoryInterface
      * @return string
      */
     public function getYearAverage(Bill $bill, Carbon $date): string;
+
+    /**
+     * Link a set of journals to a bill.
+     *
+     * @param Bill       $bill
+     * @param Collection $journals
+     */
+    public function linkCollectionToBill(Bill $bill, Collection $journals): void;
 
     /**
      * Given a bill and a date, this method will tell you at which moment this bill expects its next

@@ -82,7 +82,7 @@
                         <p>
                             <br/>
                             <button type="button" class="btn btn-default add_rule_trigger">{{ 'add_rule_trigger'|_ }}</button>
-                            <a href="#" class="btn btn-default test_rule_triggers">{{ 'test_rule_triggers'|_ }}</a>
+                            <a href="#" class="btn btn-default test_rule_triggers"><i class="fa fa-flask"></i> {{ 'test_rule_triggers'|_ }}</a>
                         </p>
                     </div>
                 </div>
@@ -148,6 +148,7 @@
     <script type="text/javascript">
         var triggerCount = {{ triggerCount }};
         var actionCount = {{ actionCount }};
+        var testRuleTriggersText = '{{ 'test_rule_triggers'|_|escape('js') }}';
     </script>
     <script type="text/javascript" src="js/ff/rules/create-edit.js?v={{ FF_VERSION }}"></script>
 

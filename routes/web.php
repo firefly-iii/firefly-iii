@@ -713,7 +713,7 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'rules', 'as' => 'rules.'], function () {
 
     Route::get('', ['uses' => 'RuleController@index', 'as' => 'index']);
-    Route::get('create/{ruleGroup}', ['uses' => 'RuleController@create', 'as' => 'create']);
+    Route::get('create/{ruleGroup?}', ['uses' => 'RuleController@create', 'as' => 'create']);
     Route::get('up/{rule}', ['uses' => 'RuleController@up', 'as' => 'up']);
     Route::get('down/{rule}', ['uses' => 'RuleController@down', 'as' => 'down']);
     Route::get('edit/{rule}', ['uses' => 'RuleController@edit', 'as' => 'edit']);

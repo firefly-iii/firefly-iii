@@ -28,10 +28,10 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\BillTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -220,6 +220,7 @@ class BillController extends Controller
      * @param Bill                    $bill
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function rescan(Request $request, BillRepositoryInterface $repository, Bill $bill)
     {
@@ -228,14 +229,22 @@ class BillController extends Controller
 
             return redirect(URL::previous());
         }
-
-        $journals = $repository->getPossiblyRelatedJournals($bill);
-        /** @var TransactionJournal $journal */
-        foreach ($journals as $journal) {
-            $repository->scan($bill, $journal);
+        $set   = $repository->getRulesForBill($bill);
+        $total = 0;
+        foreach ($set as $rule) {
+            // simply fire off all rules?
+            /** @var TransactionMatcher $matcher */
+            $matcher = app(TransactionMatcher::class);
+            $matcher->setLimit(100000); // large upper limit
+            $matcher->setRange(100000); // large upper limit
+            $matcher->setRule($rule);
+            $matchingTransactions = $matcher->findTransactionsByRule();
+            $total                += $matchingTransactions->count();
+            $repository->linkCollectionToBill($bill, $matchingTransactions);
         }
 
-        $request->session()->flash('success', (string)trans('firefly.rescanned_bill'));
+
+        $request->session()->flash('success', (string)trans('firefly.rescanned_bill', ['total' => $total]));
         Preferences::mark();
 
         return redirect(URL::previous());
@@ -250,6 +259,8 @@ class BillController extends Controller
      */
     public function show(Request $request, BillRepositoryInterface $repository, Bill $bill)
     {
+        // add info about rules:
+        $rules          = $repository->getRulesForBill($bill);
         $subTitle       = $bill->name;
         $start          = session('start');
         $end            = session('end');
@@ -278,7 +289,7 @@ class BillController extends Controller
         $transactions->setPath(route('bills.show', [$bill->id]));
 
 
-        return view('bills.show', compact('transactions', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
+        return view('bills.show', compact('transactions', 'rules', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
     }
 
     /**

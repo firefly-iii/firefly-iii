@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Model;
 use Log;
+use FireflyIII\User;
 
 /**
  * Class Preference.
@@ -71,9 +72,8 @@ class Preference extends Model
         $serialized = true;
         try {
             unserialize($data, ['allowed_classes' => false]);
-        } catch (Exception $e) {
+        } /** @noinspection BadExceptionsProcessingInspection */ catch (Exception $e) {
             $serialized = false;
-            Log::debug(sprintf('Could not unserialise preference #%d ("%s"). This is good. %s', $this->id, $this->name, $e->getMessage()));
         }
         if (!$serialized) {
             $result = json_decode($data, true);
@@ -103,6 +103,6 @@ class Preference extends Model
      */
     public function user()
     {
-        return $this->belongsTo('FireflyIII\User');
+        return $this->belongsTo(User::class);
     }
 }
