@@ -53,7 +53,6 @@ class FileConfigurator implements ConfiguratorInterface
             'file-type'             => 'csv', // assume
             'has-config-file'       => true,
             'apply-rules'           => true,
-            'match-bills'           => false,
             'auto-start'            => false,
         ];
     /** @var ImportJob */

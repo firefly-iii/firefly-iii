@@ -33,7 +33,6 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\TransactionRules\Processor;
 use Illuminate\Database\Query\JoinClause;
@@ -45,10 +44,6 @@ use Log;
  */
 trait ImportSupport
 {
-    /** @var BillRepositoryInterface */
-    protected $billRepository;
-    /** @var Collection */
-    protected $bills;
     /** @var int */
     protected $defaultCurrencyId = 1;
     /** @var ImportJob */
@@ -82,41 +77,6 @@ trait ImportSupport
         }
 
         return true;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return bool
-     */
-    protected function matchBills(TransactionJournal $journal): bool
-    {
-        if (null !== $journal->bill_id) {
-            Log::debug('Journal is already linked to a bill, will not scan.');
-
-            return true;
-        }
-        if ($this->bills->count() > 0) {
-            $this->bills->each(
-                function (Bill $bill) use ($journal) {
-                    Log::debug(sprintf('Going to match bill #%d to journal %d.', $bill->id, $journal->id));
-                    $this->billRepository->scan($bill, $journal);
-                }
-            );
-        }
-
-        return true;
-    }
-
-    /**
-     * @return Collection
-     */
-    private function getBills(): Collection
-    {
-        $set = Bill::where('user_id', $this->job->user->id)->where('active', 1)->where('automatch', 1)->get(['bills.*']);
-        Log::debug(sprintf('Found %d user bills.', $set->count()));
-
-        return $set;
     }
 
     /**

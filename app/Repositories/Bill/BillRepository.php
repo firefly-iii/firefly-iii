@@ -542,52 +542,6 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * @param Bill               $bill
-     * @param TransactionJournal $journal
-     *
-     * @deprecated
-     * @return bool
-     */
-    public function scan(Bill $bill, TransactionJournal $journal): bool
-    {
-        // Can only support withdrawals.
-        if (false === $journal->isWithdrawal()) {
-            return false;
-        }
-
-        /** @var JournalRepositoryInterface $repos */
-        $repos = app(JournalRepositoryInterface::class);
-        $repos->setUser($this->user);
-
-        $destinationAccounts = $repos->getJournalDestinationAccounts($journal);
-        $sourceAccounts      = $repos->getJournalDestinationAccounts($journal);
-        $matches             = explode(',', $bill->match);
-        $description         = strtolower($journal->description) . ' ';
-        $description         .= strtolower(implode(' ', $destinationAccounts->pluck('name')->toArray()));
-        $description         .= strtolower(implode(' ', $sourceAccounts->pluck('name')->toArray()));
-
-        $wordMatch   = $this->doWordMatch($matches, $description);
-        $amountMatch = $this->doAmountMatch($repos->getJournalTotal($journal), $bill->amount_min, $bill->amount_max);
-
-        // when both, update!
-        if ($wordMatch && $amountMatch) {
-            $journal->bill()->associate($bill);
-            $journal->save();
-
-            return true;
-        }
-        if ($bill->id === $journal->bill_id) {
-            // if no match, but bill used to match, remove it:
-            $journal->bill_id = null;
-            $journal->save();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * @param User $user
      */
     public function setUser(User $user)

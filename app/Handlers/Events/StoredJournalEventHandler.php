@@ -28,7 +28,6 @@ use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface as JRI;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface as PRI;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface as RGRI;
-use FireflyIII\Support\Events\BillScanner;
 use FireflyIII\TransactionRules\Processor;
 
 /**
@@ -91,18 +90,4 @@ class StoredJournalEventHandler
         return true;
     }
 
-    /**
-     * This method calls a special bill scanner that will check if the stored journal is part of a bill.
-     *
-     * @param StoredTransactionJournal $storedJournalEvent
-     *
-     * @return bool
-     */
-    public function scanBills(StoredTransactionJournal $storedJournalEvent): bool
-    {
-        $journal = $storedJournalEvent->journal;
-        BillScanner::scan($journal);
-
-        return true;
-    }
 }

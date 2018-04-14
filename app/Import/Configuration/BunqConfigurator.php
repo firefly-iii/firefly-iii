@@ -185,7 +185,6 @@ class BunqConfigurator implements ConfiguratorInterface
             'stage'         => 'initial',
             'auto-start'    => true,
             'apply-rules'   => true,
-            'match-bills'   => false,
         ];
         $currentConfig = $this->repository->getConfiguration($job);
         $finalConfig   = array_merge($defaultConfig, $currentConfig);

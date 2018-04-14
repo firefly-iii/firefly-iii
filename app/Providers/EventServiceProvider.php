@@ -76,12 +76,10 @@ class EventServiceProvider extends ServiceProvider
             ],
             // is a Transaction Journal related event.
             StoredTransactionJournal::class    => [
-                'FireflyIII\Handlers\Events\StoredJournalEventHandler@scanBills',
                 'FireflyIII\Handlers\Events\StoredJournalEventHandler@processRules',
             ],
             // is a Transaction Journal related event.
             UpdatedTransactionJournal::class   => [
-                'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@scanBills',
                 'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@processRules',
             ],
         ];

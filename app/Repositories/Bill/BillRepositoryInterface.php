@@ -197,14 +197,6 @@ interface BillRepositoryInterface
     public function nextExpectedMatch(Bill $bill, Carbon $date): Carbon;
 
     /**
-     * @param Bill               $bill
-     * @param TransactionJournal $journal
-     *
-     * @return bool
-     */
-    public function scan(Bill $bill, TransactionJournal $journal): bool;
-
-    /**
      * @param User $user
      */
     public function setUser(User $user);
