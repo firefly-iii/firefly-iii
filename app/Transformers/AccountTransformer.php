@@ -148,7 +148,7 @@ class AccountTransformer extends TransformerAbstract
 
         $type = $account->accountType->type;
         $role = $this->repository->getMetaValue($account, 'accountRole');
-        if (strlen($role) === 0 || $type !== AccountType::ASSET) {
+        if ($type !== AccountType::ASSET || (string)$role === '') {
             $role = null;
         }
         $currencyId    = (int)$this->repository->getMetaValue($account, 'currency_id');

@@ -57,7 +57,7 @@ class Controller extends BaseController
 
         // do not expose API on demo site:
         if (true === $isDemoSite) {
-            throw new FireflyException('The API is not available on the demo site.');
+            //throw new FireflyException('The API is not available on the demo site.');
         }
 
         // get global parameters
