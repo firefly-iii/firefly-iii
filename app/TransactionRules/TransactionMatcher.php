@@ -24,6 +24,7 @@ namespace FireflyIII\TransactionRules;
 
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
@@ -35,8 +36,14 @@ use Log;
  */
 class TransactionMatcher
 {
+    /** @var string */
+    private $exactAmount;
     /** @var int Limit of matcher */
     private $limit = 10;
+    /** @var string */
+    private $maxAmount;
+    /** @var string */
+    private $minAmount;
     /** @var int Maximum number of transaction to search in (for performance reasons) * */
     private $range = 200;
     /** @var Rule The rule to apply */
@@ -56,7 +63,7 @@ class TransactionMatcher
      */
     public function findTransactionsByRule(): Collection
     {
-        if (0 === count($this->rule->ruleTriggers)) {
+        if (0 === \count($this->rule->ruleTriggers)) {
             return new Collection;
         }
 
@@ -81,7 +88,7 @@ class TransactionMatcher
      */
     public function findTransactionsByTriggers(): Collection
     {
-        if (0 === count($this->triggers)) {
+        if (0 === \count($this->triggers)) {
             return new Collection;
         }
 
@@ -173,9 +180,32 @@ class TransactionMatcher
      *
      * @param Rule $rule
      */
-    public function setRule(Rule $rule)
+    public function setRule(Rule $rule): void
     {
         $this->rule = $rule;
+    }
+
+    /**
+     *
+     */
+    private function readTriggers(): void
+    {
+        $valid = ['amount_less', 'amount_more', 'amount_exactly'];
+        if (null !== $this->rule) {
+            $allTriggers = $this->rule->ruleTriggers()->whereIn('trigger_type', $valid)->get();
+            /** @var RuleTrigger $trigger */
+            foreach ($allTriggers as $trigger) {
+                if ($trigger->trigger_type === 'amount_less') {
+                    $this->maxAmount = $trigger->trigger_value;
+                }
+                if ($trigger->trigger_type === 'amount_more') {
+                    $this->minAmount = $trigger->trigger_value;
+                }
+                if ($trigger->trigger_type === 'amount_exactly') {
+                    $this->exactAmount = $trigger->trigger_value;
+                }
+            }
+        }
     }
 
     /**
@@ -188,6 +218,12 @@ class TransactionMatcher
      */
     private function runProcessor(Processor $processor): Collection
     {
+        // since we have a rule in $this->rule, we can add some of the triggers
+        // to the Journal Collector.
+        // Firefly III will then have to search through less transactions.
+        $this->readTriggers();
+
+
         // Start a loop to fetch batches of transactions. The loop will finish if:
         //   - all transactions have been fetched from the database
         //   - the maximum number of transactions to return has been found
@@ -202,8 +238,15 @@ class TransactionMatcher
             $collector = app(JournalCollectorInterface::class);
             $collector->setUser(auth()->user());
             $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTypes($this->transactionTypes);
-
-
+            if (null !== $this->maxAmount) {
+                $collector->amountLess($this->maxAmount);
+            }
+            if (null !== $this->minAmount) {
+                $collector->amountMore($this->minAmount);
+            }
+            if (null !== $this->exactAmount) {
+                $collector->amountIs($this->exactAmount);
+            }
 
 
             $set = $collector->getPaginatedJournals();
