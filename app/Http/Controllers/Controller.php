@@ -98,6 +98,10 @@ class Controller extends BaseController
                         Log::debug(sprintf('Check if user has already seen intro with key "%s". Result is %d', $key, $shownDemo));
                     }
 
+                    // share language
+                    $language           = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
+
+                    View::share('language', $language);
                     View::share('shownDemo', $shownDemo);
                     View::share('current_route_name', $page);
                     View::share('original_route_name', Route::currentRouteName());
