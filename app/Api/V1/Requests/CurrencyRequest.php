@@ -74,9 +74,6 @@ class CurrencyRequest extends Request
                 $rules['name']   = 'required|between:1,255|unique:transaction_currencies,name,' . $currency->id;
                 $rules['code']   = 'required|between:1,255|unique:transaction_currencies,code,' . $currency->id;
                 $rules['symbol'] = 'required|between:1,255|unique:transaction_currencies,symbol,' . $currency->id;
-                //$bill           = $this->route()->parameter('bill');
-                //$rules['name']  .= ',' . $bill->id;
-                //$rules['match'] .= ',' . $bill->id;
                 break;
         }
 

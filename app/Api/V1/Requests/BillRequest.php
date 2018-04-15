@@ -46,18 +46,17 @@ class BillRequest extends Request
     public function getAll(): array
     {
         $data = [
-            'name'        => $this->string('name'),
-            'match'       => $this->string('match'),
-            'amount_min'  => $this->string('amount_min'),
-            'amount_max'  => $this->string('amount_max'),
-            //'currency_id'   => $this->integer('currency_id'),
-            //'currency_code' => $this->string('currency_code'),
-            'date'        => $this->date('date'),
-            'repeat_freq' => $this->string('repeat_freq'),
-            'skip'        => $this->integer('skip'),
-            'automatch'   => $this->boolean('automatch'),
-            'active'      => $this->boolean('active'),
-            'notes'       => $this->string('notes'),
+            'name'          => $this->string('name'),
+            'amount_min'    => $this->string('amount_min'),
+            'amount_max'    => $this->string('amount_max'),
+            'currency_id'   => $this->integer('currency_id'),
+            'currency_code' => $this->string('currency_code'),
+            'date'          => $this->date('date'),
+            'repeat_freq'   => $this->string('repeat_freq'),
+            'skip'          => $this->integer('skip'),
+            'automatch'     => $this->boolean('automatch'),
+            'active'        => $this->boolean('active'),
+            'notes'         => $this->string('notes'),
         ];
 
         return $data;
@@ -69,18 +68,17 @@ class BillRequest extends Request
     public function rules(): array
     {
         $rules = [
-            'name'        => 'required|between:1,255|uniqueObjectForUser:bills,name',
-            'match'       => 'required|between:1,255|uniqueObjectForUser:bills,match',
-            'amount_min'  => 'required|numeric|more:0',
-            'amount_max'  => 'required|numeric|more:0',
-            //'currency_id'   => 'numeric|exists:transaction_currencies,id|required_without:currency_code',
-            //'currency_code' => 'min:3|max:3|exists:transaction_currencies,code|required_without:currency_id',
-            'date'        => 'required|date',
-            'repeat_freq' => 'required|in:weekly,monthly,quarterly,half-year,yearly',
-            'skip'        => 'required|between:0,31',
-            'automatch'   => 'required|boolean',
-            'active'      => 'required|boolean',
-            'notes'       => 'between:1,65536',
+            'name'          => 'required|between:1,255|uniqueObjectForUser:bills,name',
+            'amount_min'    => 'required|numeric|more:0',
+            'amount_max'    => 'required|numeric|more:0',
+            'currency_id'   => 'numeric|exists:transaction_currencies,id|required_without:currency_code',
+            'currency_code' => 'min:3|max:3|exists:transaction_currencies,code|required_without:currency_id',
+            'date'          => 'required|date',
+            'repeat_freq'   => 'required|in:weekly,monthly,quarterly,half-year,yearly',
+            'skip'          => 'required|between:0,31',
+            'automatch'     => 'required|boolean',
+            'active'        => 'required|boolean',
+            'notes'         => 'between:1,65536',
         ];
         switch ($this->method()) {
             default:

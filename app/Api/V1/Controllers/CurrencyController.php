@@ -20,25 +20,7 @@
  */
 
 declare(strict_types=1);
-/**
- * CurrencyController.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
- *
- * This file is part of Firefly III.
- *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Firefly III is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
- */
+
 
 namespace FireflyIII\Api\V1\Controllers;
 
@@ -49,8 +31,11 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Transformers\CurrencyTransformer;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Manager;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
@@ -69,7 +54,7 @@ class CurrencyController extends Controller
     /**
      * CurrencyRepository constructor.
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function __construct()
     {
@@ -91,10 +76,10 @@ class CurrencyController extends Controller
      *
      * @param  TransactionCurrency $currency
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      * @throws FireflyException
      */
-    public function delete(TransactionCurrency $currency)
+    public function delete(TransactionCurrency $currency): JsonResponse
     {
         if (!$this->userRepository->hasRole(auth()->user(), 'owner')) {
             // access denied:
@@ -113,18 +98,27 @@ class CurrencyController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
+        $pageSize   = (int)Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection = $this->repository->get();
-        $manager    = new Manager();
-        $baseUrl    = $request->getSchemeAndHttpHost() . '/api/v1';
+        $count      = $collection->count();
+        // slice them:
+        $currencies = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $paginator  = new LengthAwarePaginator($currencies, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.currencies.index') . $this->buildParams());
+
+
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
         $this->parameters->set('defaultCurrency', $defaultCurrency);
 
-        $resource = new FractalCollection($collection, new CurrencyTransformer($this->parameters), 'currencies');
+        $resource = new FractalCollection($currencies, new CurrencyTransformer($this->parameters), 'currencies');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -134,9 +128,9 @@ class CurrencyController extends Controller
      * @param Request             $request
      * @param TransactionCurrency $currency
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function show(Request $request, TransactionCurrency $currency)
+    public function show(Request $request, TransactionCurrency $currency): JsonResponse
     {
         $manager = new Manager();
         // add include parameter:
@@ -156,10 +150,10 @@ class CurrencyController extends Controller
     /**
      * @param CurrencyRequest $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws FireflyException
      */
-    public function store(CurrencyRequest $request)
+    public function store(CurrencyRequest $request): JsonResponse
     {
         $currency = $this->repository->store($request->getAll());
 
@@ -178,18 +172,18 @@ class CurrencyController extends Controller
 
             return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
         }
-        throw new FireflyException('Could not store new currency.');
+        throw new FireflyException('Could not store new currency.'); // @codeCoverageIgnore
 
     }
 
 
     /**
-     * @param BillRequest         $request
+     * @param CurrencyRequest         $request
      * @param TransactionCurrency $currency
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function update(CurrencyRequest $request, TransactionCurrency $currency)
+    public function update(CurrencyRequest $request, TransactionCurrency $currency): JsonResponse
     {
         $data     = $request->getAll();
         $currency = $this->repository->update($currency, $data);
@@ -199,8 +193,8 @@ class CurrencyController extends Controller
             Preferences::mark();
         }
 
-        $manager  = new Manager();
-        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());

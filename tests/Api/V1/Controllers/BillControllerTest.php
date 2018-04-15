@@ -50,8 +50,7 @@ class BillControllerTest extends TestCase
     /**
      * Send delete
      *
-     * @covers \FireflyIII\Api\V1\Controllers\BillController::delete
-     * @covers \FireflyIII\Api\V1\Controllers\BillController::__construct
+     * @covers \FireflyIII\Api\V1\Controllers\BillController
      */
     public function testDelete()
     {
