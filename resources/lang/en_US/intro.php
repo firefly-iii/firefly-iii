@@ -92,6 +92,7 @@ return [
     'piggy-banks_show_piggyEvents'                            => 'Any additions or removals are also listed here.',
 
     // bill index
+    'bills_index_rules'                                       => 'Here you see which rules will check if this bill is hit',
     'bills_index_paid_in_period'                              => 'This field indicates when the bill was last paid.',
     'bills_index_expected_in_period'                          => 'This field indicates for each bill if and when the next bill is expected to hit.',
 
