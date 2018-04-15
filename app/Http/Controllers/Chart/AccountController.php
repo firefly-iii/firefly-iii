@@ -349,7 +349,7 @@ class AccountController extends Controller
                     $balance           = (float)app('steam')->balance($account, $current);
                     $label             = app('navigation')->periodShow($current, $step);
                     $chartData[$label] = $balance;
-                    $current           = app('navigation')->addPeriod($current, $step, 1);
+                    $current           = app('navigation')->addPeriod($current, $step, 0);
                 }
                 break;
             // @codeCoverageIgnoreEnd
