@@ -30,7 +30,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Tests\TestCase;
-
+use Preferences;
 /**
  * Class PreferencesControllerTest
  *

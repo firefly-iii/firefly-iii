@@ -97,13 +97,14 @@ class NewUserControllerTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('store')->times(2);
+        $accountRepos->shouldReceive('store')->times(3);
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
 
         $data = [
             'bank_name'                       => 'New bank',
             'savings_balance'                 => '1000',
             'bank_balance'                    => '100',
+            'language'                        => 'en_US',
             'amount_currency_id_bank_balance' => 1,
         ];
         $this->be($this->emptyUser());
@@ -122,7 +123,7 @@ class NewUserControllerTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('store')->twice();
+        $accountRepos->shouldReceive('store')->times(3);
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
 
         $data = [
