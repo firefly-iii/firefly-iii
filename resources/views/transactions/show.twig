@@ -360,7 +360,9 @@
                         </thead>
                         <tbody>
 
-                        {% set maxIdentifier = ((transactions|length) / 2) -1 %}
+                        {{ dump(transactions|length) }}
+
+                        {#{% set maxIdentifier = ((transactions|length) / 2) -1 %}#}
                         {% for x in 0..maxIdentifier %}
                             <tr>
                                 {# loop each transaction in the array.#}
