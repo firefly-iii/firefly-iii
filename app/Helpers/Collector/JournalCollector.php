@@ -254,6 +254,9 @@ class JournalCollector implements JournalCollectorInterface
         $key   = 'query-' . substr($hash, -8);
         $cache = new CacheProperties;
         $cache->addProperty($key);
+        foreach($this->filters as $filter) {
+            $cache->addProperty((string)$filter);
+        }
         if ($cache->has()) {
             Log::debug(sprintf('Return cache of query with ID "%s".', $key));
 
