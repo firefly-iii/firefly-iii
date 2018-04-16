@@ -29,6 +29,7 @@ use Route;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
+use FireflyIII\Support\Twig\Extension\Account as AccountExtension;
 
 /**
  * Class TwigSupport.
@@ -58,12 +59,11 @@ class General extends Twig_Extension
             $this->getCurrencySymbol(),
             $this->phpdate(),
             $this->env(),
-            //$this->getAmountFromJournal(),
             $this->activeRouteStrict(),
-            //$this->steamPositive(),
             $this->activeRoutePartial(),
             $this->activeRoutePartialWhat(),
             $this->formatDate(),
+            new Twig_SimpleFunction('accountGetMetaField', [AccountExtension::class, 'getMetaField']),
         ];
     }
 

@@ -61,6 +61,7 @@ use FireflyIII\Support\Steam;
 use FireflyIII\Support\Twig\AmountFormat;
 use FireflyIII\Support\Twig\General;
 use FireflyIII\Support\Twig\Journal;
+use FireflyIII\Support\Twig\Loader\AccountLoader;
 use FireflyIII\Support\Twig\Loader\TransactionJournalLoader;
 use FireflyIII\Support\Twig\Loader\TransactionLoader;
 use FireflyIII\Support\Twig\PiggyBank;
@@ -93,6 +94,7 @@ class FireflyServiceProvider extends ServiceProvider
         $config = app('config');
         Twig::addExtension(new Functions($config));
         Twig::addRuntimeLoader(new TransactionLoader);
+        Twig::addRuntimeLoader(new AccountLoader);
         Twig::addRuntimeLoader(new TransactionJournalLoader);
         Twig::addExtension(new PiggyBank);
         Twig::addExtension(new General);

@@ -41,8 +41,8 @@
                                     {% for account in accounts %}
                                         <option
                                                 value="{{ account.id }}"
-                                                label="{{ account.name }}{% if account.getMeta('accountRole') == 'sharedAsset' %} ({{ 'shared'|_|lower }}){% endif %}">
-                                            {{ account.name }}{% if account.getMeta('accountRole') == 'sharedAsset' %} ({{ 'shared'|_|lower }}){% endif %}
+                                                label="{{ account.name }}{% if accountGetMetaField(account, 'accountRole') == 'sharedAsset' %} ({{ 'shared'|_|lower }}){% endif %}">
+                                            {{ account.name }}{% if accountGetMetaField(account, 'accountRole') == 'sharedAsset' %} ({{ 'shared'|_|lower }}){% endif %}
                                         </option>
                                     {% endfor %}
                                 </select>

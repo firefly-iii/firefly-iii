@@ -40,7 +40,7 @@
                     {% endfor %}
                 </td>
             {% endif %}
-            <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ account.getMeta('accountNumber') }}{% endif %}</td>
+            <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ accountGetMetaField(account, 'accountNumber') }}{% endif %}</td>
             <td data-value="{{ account.endBalance }}" style="text-align: right;">
                 <span style="margin-right:5px;">
                 {{ formatAmountByAccount(account, account.endBalance) }}
