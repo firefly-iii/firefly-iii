@@ -228,6 +228,9 @@ class TransactionController extends Controller
         $what     = strtolower($transactionType);
         $subTitle = trans('firefly.' . $what) . ' "' . $journal->description . '"';
 
+        var_dump($transactions);
+        exit;
+
         return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'linkTypes', 'links'));
     }
 
