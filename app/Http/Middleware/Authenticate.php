@@ -24,8 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
+use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Factory as Auth;
+use Illuminate\Database\QueryException;
 
 /**
  * Class Authenticate
@@ -76,24 +78,31 @@ class Authenticate
      *
      * @return mixed
      * @throws \Illuminate\Auth\AuthenticationException
+     * @throws FireflyException
      */
     protected function authenticate(array $guards)
     {
-        if (empty($guards)) {
-            // go for default guard:
-            if ($this->auth->check()) {
-                // do an extra check on user object.
-                $user = $this->auth->authenticate();
-                if (1 === (int)$user->blocked) {
-                    $message = (string)trans('firefly.block_account_logout');
-                    if ('email_changed' === $user->blocked_code) {
-                        $message = (string)trans('firefly.email_changed_logout');
-                    }
-                    app('session')->flash('logoutMessage', $message);
-                    $this->auth->logout();
 
-                    throw new AuthenticationException('Blocked account.', $guards);
+        if (empty($guards)) {
+            try {
+                // go for default guard:
+                if ($this->auth->check()) {
+
+                    // do an extra check on user object.
+                    $user = $this->auth->authenticate();
+                    if (1 === (int)$user->blocked) {
+                        $message = (string)trans('firefly.block_account_logout');
+                        if ('email_changed' === $user->blocked_code) {
+                            $message = (string)trans('firefly.email_changed_logout');
+                        }
+                        app('session')->flash('logoutMessage', $message);
+                        $this->auth->logout();
+
+                        throw new AuthenticationException('Blocked account.', $guards);
+                    }
                 }
+            } catch (QueryException $e) {
+                throw new FireflyException('It seems the database has not yet been initialized. Did you run the correct upgrade or installation commands?');
             }
 
             return $this->auth->authenticate();
