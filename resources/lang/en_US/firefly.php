@@ -1022,6 +1022,7 @@ return [
     'events'                    => 'Events',
     'target_amount'             => 'Target amount',
     'start_date'                => 'Start date',
+    'no_start_date'             => 'No start date',
     'target_date'               => 'Target date',
     'no_target_date'            => 'No target date',
     'table'                     => 'Table',
@@ -1159,6 +1160,13 @@ return [
     'import_index_sub_title'                => 'Index',
     'import_general_index_intro'            => 'Welcome to Firefly III\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
     'upload_error'                          => 'The file you have uploaded could not be processed. Possibly it is of an invalid file type or encoding. The log files will have more information.',
+    'reset_import_settings_title'           => 'Reset import configuration',
+    'reset_import_settings_text'            => 'You can use these links to reset your import settings for specific providers. This is useful when bad settings stop you from importing data.',
+    'reset_settings_bunq'                   => 'Remove bunq API key, local external IP address and bunq related RSA keys.',
+    'reset_settings_spectre'                => 'Remove Spectre client ID, service secret and app secret. This will also remove your Spectre keypair. Remember to update the new one.',
+    'settings_reset_for_bunq'               => 'Bunq settings reset.',
+    'settings_reset_for_spectre'            => 'Spectre settings reset.',
+
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',
