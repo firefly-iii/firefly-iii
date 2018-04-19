@@ -210,9 +210,14 @@ class ImportStorage
             $source      = $assetAccount;
             $destination = $opposingAccount;
 
+            // switch account arounds when the transaction type is a deposit.
             if ($transactionType === TransactionType::DEPOSIT) {
-                $destination = $assetAccount;
-                $source      = $opposingAccount;
+                [$destination, $source] = [$source, $destination];
+            }
+            // switch accounts around when the amount is negative and it's a transfer.
+            // credits to @NyKoF
+            if($transactionType === TransactionType::TRANSFER && -1 === bccomp($amount, '0')) {
+                [$destination, $source] = [$source, $destination];
             }
             Log::debug(
                 sprintf('Will make #%s (%s) the source and #%s (%s) the destination.', $source->id, $source->name, $destination->id, $destination->name)
@@ -248,7 +253,7 @@ class ImportStorage
                     [
                         'description'           => null,
                         'amount'                => $amount,
-                        'currency_id'           => (int)$currencyId,
+                        'currency_id'           => $currencyId,
                         'currency_code'         => null,
                         'foreign_amount'        => $foreignAmount,
                         'foreign_currency_id'   => $foreignCurrencyId,
