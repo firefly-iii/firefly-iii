@@ -446,6 +446,7 @@ Route::group(
     // import method prerequisites:
     Route::get('prerequisites/{bank}', ['uses' => 'Import\PrerequisitesController@index', 'as' => 'prerequisites']);
     Route::post('prerequisites/{bank}', ['uses' => 'Import\PrerequisitesController@post', 'as' => 'prerequisites.post']);
+    Route::get('reset/{bank}', ['uses' => 'Import\IndexController@reset', 'as' => 'reset']);
 
     // create the job:
     Route::get('create/{bank}', ['uses' => 'Import\IndexController@create', 'as' => 'create-job']);

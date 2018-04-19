@@ -28,8 +28,10 @@ use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Import\Routine\RoutineInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response as LaravelResponse;
 use Log;
+use Preferences;
 use View;
 
 
@@ -130,6 +132,44 @@ class IndexController extends Controller
         $routines     = config('import.enabled');
 
         return view('import.index', compact('subTitle', 'subTitleIcon', 'routines'));
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $bank
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function reset(Request $request, string $bank)
+    {
+        if ($bank === 'bunq') {
+            // remove bunq related preferences.
+            Preferences::delete('bunq_api_key');
+            Preferences::delete('bunq_server_public_key');
+            Preferences::delete('bunq_private_key');
+            Preferences::delete('bunq_public_key');
+            Preferences::delete('bunq_installation_token');
+            Preferences::delete('bunq_installation_id');
+            Preferences::delete('bunq_device_server_id');
+            Preferences::delete('external_ip');
+
+        }
+
+        if ($bank === 'spectre') {
+            // remove spectre related preferences:
+            Preferences::delete('spectre_client_id');
+            Preferences::delete('spectre_app_secret');
+            Preferences::delete('spectre_service_secret');
+            Preferences::delete('spectre_private_key');
+            Preferences::delete('spectre_public_key');
+            Preferences::delete('spectre_customer');
+        }
+
+        Preferences::mark();
+        $request->session()->flash('info', (string)trans('firefly.settings_reset_for_' . $bank));
+
+        return redirect(route('import.index'));
+
     }
 
     /**

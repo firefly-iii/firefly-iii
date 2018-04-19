@@ -64,6 +64,35 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'reset_import_settings_title'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {{ 'reset_import_settings_text'|_ }}
+                    </p>
+                    <ul>
+                        {# bunq import #}
+                        {% if routines.bunq == true %}
+                            <li><a href="{{ route('import.reset', ['bunq']) }}">{{ 'reset_settings_bunq'|_ }}</a></li>
+                        {% endif %}
+
+                        {# import from Spectre #}
+                        {% if routines.spectre == true %}
+                            <li><a href="{{ route('import.reset', ['spectre']) }}">{{ 'reset_settings_spectre'|_ }}</a></li>
+                        {% endif %}
+
+                        {# import from Plaid #}
+                        {% if routines.plaid == true %}
+                            <li><a href="{{ route('import.reset', ['plaid']) }}">{{ 'reset_settings_plaid'|_ }}</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 {% block scripts %}
