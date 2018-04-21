@@ -197,8 +197,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getCurrentAmount(PiggyBank $piggyBank): string
     {
-        /** @var PiggyBankRepetition $rep */
-        $rep = $piggyBank->piggyBankRepetitions()->first(['piggy_bank_repetitions.*']);
+        $rep = $this->getRepetition($piggyBank);
         if (null === $rep) {
             return '0';
         }
@@ -302,18 +301,39 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     /**
      * @param PiggyBank $piggyBank
+     *
+     * @return PiggyBankRepetition|null
+     */
+    public function getRepetition(PiggyBank $piggyBank): ?PiggyBankRepetition
+    {
+        return $piggyBank->piggyBankRepetitions()->first();
+    }
+
+    /**
+     * Get for piggy account what is left to put in piggies.
+     *
+     * @param PiggyBank $piggyBank
      * @param Carbon    $date
      *
-     * @return PiggyBankRepetition
+     * @return string
      */
-    public function getRepetition(PiggyBank $piggyBank, Carbon $date): PiggyBankRepetition
+    public function leftOnAccount(PiggyBank $piggyBank, Carbon $date): string
     {
-        $repetition = $piggyBank->piggyBankRepetitions()->relevantOnDate($date)->first();
-        if (null === $repetition) {
-            return new PiggyBankRepetition;
+
+        $balance = app('steam')->balanceIgnoreVirtual($piggyBank->account, $date);
+
+        /** @var Collection $piggies */
+        $piggies = $piggyBank->account->piggyBanks;
+
+        /** @var PiggyBank $current */
+        foreach ($piggies as $current) {
+            $repetition = $this->getRepetition($current);
+            if(null !== $repetition) {
+                $balance = bcsub($balance, $repetition->currentamount);
+            }
         }
 
-        return $repetition;
+        return $balance;
     }
 
     /**

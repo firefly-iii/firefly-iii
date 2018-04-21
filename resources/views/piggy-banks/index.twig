@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    {% if piggyBanks.count == 0 %}
+    {% if piggyBanks|length == 0 %}
         {% include 'partials.empty' with {what: 'default', type: 'piggies',route: route('piggy-banks.create')} %}
     {% else %}
 <div class="row">
@@ -49,11 +49,21 @@
                     {% for id,info in accounts %}
                         <tr>
                             <td><a href="{{ route('accounts.show',id) }}" title="{{ info.name }}">{{ info.name }}</a></td>
-                            <td style="text-align:right;" class="hidden-sm hidden-xs">{{ info.balance|formatAmount }}</td>
-                            <td style="text-align:right;">{{ info.leftForPiggyBanks|formatAmount }}</td>
-                            <td style="text-align:right;" class="hidden-sm hidden-xs">{{ info.sumOfTargets|formatAmount }}</td>
-                            <td style="text-align:right;" class="hidden-sm hidden-xs">{{ info.sumOfSaved|formatAmount }}</td>
-                            <td style="text-align:right;" class="hidden-sm hidden-xs">{{ info.leftToSave|formatAmount }}</td>
+                            <td style="text-align:right;" class="hidden-sm hidden-xs">
+                                {{ formatAmountBySymbol(info.current_balance,info.currency_symbol,info.currency_dp) }}
+                                </td>
+                            <td style="text-align:right;">
+                                {{ formatAmountBySymbol(info.left,info.currency_symbol,info.currency_dp) }}
+                            </td>
+                            <td style="text-align:right;" class="hidden-sm hidden-xs">
+                                {{ formatAmountBySymbol(info.target,info.currency_symbol,info.currency_dp) }}
+                            </td>
+                            <td style="text-align:right;" class="hidden-sm hidden-xs">
+                                {{ formatAmountBySymbol(info.saved,info.currency_symbol,info.currency_dp) }}
+                                </td>
+                            <td style="text-align:right;" class="hidden-sm hidden-xs">
+                                {{ formatAmountBySymbol(info.to_save,info.currency_symbol,info.currency_dp) }}
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
