@@ -551,7 +551,13 @@ class UpgradeDatabase extends Command
     {
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app(CurrencyRepositoryInterface::class);
-        $currency   = $repository->find((int)$transaction->account->getMeta('currency_id'));
+        $currency   = $repository->findNull((int)$transaction->account->getMeta('currency_id'));
+
+        if (null === $currency) {
+            Log::error(sprintf('Account #%d ("%s") must have currency preference but has none.', $transaction->account->id, $transaction->account->name));
+
+            return;
+        }
 
         // has no currency ID? Must have, so fill in using account preference:
         if (null === $transaction->transaction_currency_id) {
@@ -581,9 +587,9 @@ class UpgradeDatabase extends Command
         $journal = $transaction->transactionJournal;
         /** @var Transaction $opposing */
         $opposing         = $journal->transactions()->where('amount', '>', 0)->where('identifier', $transaction->identifier)->first();
-        $opposingCurrency = $repository->find((int)$opposing->account->getMeta('currency_id'));
+        $opposingCurrency = $repository->findNull((int)$opposing->account->getMeta('currency_id'));
 
-        if (null === $opposingCurrency->id) {
+        if (null === $opposingCurrency) {
             Log::error(sprintf('Account #%d ("%s") must have currency preference but has none.', $opposing->account->id, $opposing->account->name));
 
             return;
@@ -599,7 +605,12 @@ class UpgradeDatabase extends Command
             $opposing->transaction_currency_id = $currency->id;
             $transaction->save();
             $opposing->save();
-            Log::debug(sprintf('Cleaned up transaction #%d and #%d', $transaction->id, $opposing->id));
+            Log::debug(sprintf('Currency for account "%s" is %s, and currency for account "%s" is also
+             %s, so %s #%d (#%d and #%d) has been verified to be to %s exclusively.',
+                               $opposing->account->name, $opposingCurrency->code,
+                               $transaction->account->name, $transaction->transactionCurrency->code,
+                               $journal->transactionType->type, $journal->id,
+                               $transaction->id, $opposing->id, $currency->code));
 
             return;
         }
