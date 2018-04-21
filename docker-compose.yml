@@ -34,7 +34,7 @@ services:
       - MYSQL_USER=firefly_db
       - MYSQL_PASSWORD=firefly_db_secret
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
-    image: "mysql:latest"
+    image: "mariadb:latest"
     networks: 
       - firefly_iii_net
     volumes: 
