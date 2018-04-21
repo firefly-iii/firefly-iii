@@ -98,6 +98,13 @@ class UserCompany extends BunqObject
      */
     public function __construct(array $data)
     {
+        if (\count($data) === 0 || (isset($data['id']) && (int)$data['id'] === 0)) {
+            $this->id      = 0;
+            $this->created = new Carbon;
+            $this->updated = new Carbon;
+
+            return;
+        }
         $this->id                   = (int)$data['id'];
         $this->created              = Carbon::createFromFormat('Y-m-d H:i:s.u', $data['created']);
         $this->updated              = Carbon::createFromFormat('Y-m-d H:i:s.u', $data['updated']);
