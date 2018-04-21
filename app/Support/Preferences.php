@@ -139,10 +139,10 @@ class Preferences
             } catch (Exception $e) {
                 Log::debug(sprintf('Could not delete preference #%d', $preference->id));
             }
-            $preference = false;
+            $preference = null;
         }
 
-        if ($preference) {
+        if (null !== $preference) {
             Cache::forever($fullName, $preference);
 
             return $preference;
