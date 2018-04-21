@@ -55,6 +55,9 @@ class Range
 
             // set more view variables:
             $this->configureList();
+
+            // flash a big fat warning when users use SQLite in Docker
+            $this->loseItAll($request);
         }
 
         return $next($request);
@@ -97,6 +100,18 @@ class Range
         View::share('monthAndDayFormat', $monthAndDayFormat);
         View::share('dateTimeFormat', $dateTimeFormat);
         View::share('defaultCurrency', $defaultCurrency);
+    }
+
+    /**
+     * @param Request $request
+     */
+    private function loseItAll(Request $request)
+    {
+        if (getenv('DB_CONNECTION') === 'sqlite' && getenv('IS_DOCKER') === true) {
+            $request->session()->flash(
+                'error', 'You seem to be using SQLite in a Docker container. Don\'t do this. If the container restarts all your data will be gone.'
+            );
+        }
     }
 
     /**
