@@ -190,7 +190,7 @@ class ReconcileController extends Controller
         }
         $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
         $currency   = $this->currencyRepos->findNull($currencyId);
-        if (0 === $currencyId) {
+        if (null === $currency) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
 
@@ -217,7 +217,6 @@ class ReconcileController extends Controller
         $transactionsUri = route('accounts.reconcile.transactions', [$account->id, '%start%', '%end%']);
         $overviewUri     = route('accounts.reconcile.overview', [$account->id, '%start%', '%end%']);
         $indexUri        = route('accounts.reconcile', [$account->id, '%start%', '%end%']);
-
         return view(
             'accounts.reconcile.index', compact(
                                           'account', 'currency', 'subTitleIcon', 'start', 'end', 'subTitle', 'startBalance', 'endBalance', 'transactionsUri',
@@ -350,7 +349,7 @@ class ReconcileController extends Controller
 
         $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
         $currency   = $this->currencyRepos->findNull($currencyId);
-        if (0 === $currencyId) {
+        if (0 === $currency) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
 
@@ -369,7 +368,7 @@ class ReconcileController extends Controller
         $collector->setAccounts(new Collection([$account]))
                   ->setRange($selectionStart, $selectionEnd)->withBudgetInformation()->withOpposingAccount()->withCategoryInformation();
         $transactions = $collector->getJournals();
-        $html         = view('accounts.reconcile.transactions', compact('account', 'transactions', 'start', 'end', 'selectionStart', 'selectionEnd'))->render();
+        $html         = view('accounts.reconcile.transactions', compact('account', 'transactions','currency', 'start', 'end', 'selectionStart', 'selectionEnd'))->render();
 
         return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
     }
