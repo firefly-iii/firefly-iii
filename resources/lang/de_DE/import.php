@@ -164,6 +164,7 @@ return [
     // bunq
     'bunq_prerequisites_title'             => 'Voraussetzungen für einen Import von bunq',
     'bunq_prerequisites_text'              => 'Um aus „bunq” importieren zu können, benötigen Sie einen API-Schlüssel. Sie können diesen über die App bekommen. Bitte beachten Sie, dass sich die Importfunktion von „bunq” noch im BETA-Stadium befindet. Es wurde nur gegen die Sandbox-API getestet.',
+    'bunq_prerequisites_text_ip'           => '„Bunq” benötigt Ihre öffentlich zugängliche IP-Adresse. Firefly III versuchte, diese mithilfe <a href="https://www.ipify.org/">des ipify-Diensts </a> auszufüllen. Stellen Sie sicher, dass diese IP-Adresse korrekt ist, da sonst der Import fehlschlägt.',
     'bunq_do_import'                       => 'Ja, von diesem Konto importieren',
     'bunq_accounts_title'                  => 'Bunq-Konten',
     'bunq_accounts_text'                   => 'Dies sind jene Konten, die mit Ihrem „bunq”-Konto verknüpft sind. Bitte wählen Sie die Konten aus, von denen Sie importieren möchten, und in welches Konto die Buchungen importiert werden sollen.',

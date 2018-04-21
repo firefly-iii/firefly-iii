@@ -33,6 +33,7 @@ return [
     'name'                    => 'Name',
     'role'                    => 'Rolle',
     'currentBalance'          => 'Aktueller Kontostand',
+    'linked_to_rules'         => 'Verlinkte Regeln',
     'active'                  => 'Aktiv?',
     'lastActivity'            => 'Letzte Aktivität',
     'balanceDiff'             => 'Saldendifferenz',

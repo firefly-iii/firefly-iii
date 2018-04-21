@@ -33,6 +33,7 @@ return [
     'name'                    => 'Nama',
     'role'                    => 'Peran',
     'currentBalance'          => 'Saldo saat ini',
+    'linked_to_rules'         => 'Relevant rules',
     'active'                  => 'Aktif?',
     'lastActivity'            => 'Aktifitas terakhir',
     'balanceDiff'             => 'Perbedaan saldo',

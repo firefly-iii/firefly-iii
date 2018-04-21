@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * form.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -33,9 +34,12 @@ return [
     'amount_min'                     => 'Mindestbetrag',
     'amount_max'                     => 'Höchstbetrag',
     'match'                          => 'Reagiert auf',
+    'strict'                         => 'Strenger Modus',
     'repeat_freq'                    => 'Wiederholungen',
     'journal_currency_id'            => 'Währung',
     'currency_id'                    => 'Währung',
+    'transaction_currency_id'        => 'Währung',
+    'external_ip'                    => 'Die externe IP-Adresse Ihres Servers',
     'attachments'                    => 'Anhänge',
     'journal_amount'                 => 'Betrag',
     'journal_source_account_name'    => 'Kreditor (Quelle)',
@@ -155,7 +159,7 @@ return [
     'piggyBank_areYouSure'       => 'Möchten Sie das Sparschwein „:name” wirklich löschen?',
     'journal_areYouSure'         => 'Sind Sie sicher, dass Sie die Überweisung mit dem Namen ":description" löschen möchten?',
     'mass_journal_are_you_sure'  => 'Sind Sie sicher, dass Sie diese Überweisung löschen möchten?',
-    'tag_areYouSure'             => 'Möchten Sie das Schlagwort „:name” wirklich löschen?',
+    'tag_areYouSure'             => 'Möchten Sie das Schlagwort „:tag” wirklich löschen?',
     'journal_link_areYouSure'    => 'Sind Sie sicher, dass Sie die Verknüpfung zwischen <a href=":source_link">:source</a> und <a href=":destination_link">:destination</a> löschen möchten?',
     'linkType_areYouSure'        => 'Möchten Sie den Verknüpfungstyp „:name” („:inward”/„:outward”) wirklich löschen?',
     'permDeleteWarning'          => 'Das Löschen von Dingen in Firefly III ist dauerhaft und kann nicht rückgängig gemacht werden.',

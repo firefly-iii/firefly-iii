@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * form.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -33,9 +34,12 @@ return [
     'amount_min'                     => 'Importo minimo',
     'amount_max'                     => 'Importo massimo',
     'match'                          => 'Partite su',
+    'strict'                         => 'Modalità severa',
     'repeat_freq'                    => 'Ripetizioni',
     'journal_currency_id'            => 'Valuta',
     'currency_id'                    => 'Valuta',
+    'transaction_currency_id'        => 'Valuta',
+    'external_ip'                    => 'L\'IP esterno del tuo server',
     'attachments'                    => 'Allegati',
     'journal_amount'                 => 'Importo',
     'journal_source_account_name'    => 'Conto entrate (origine)',
@@ -53,7 +57,7 @@ return [
     'split_journal_explanation'      => 'Dividi questa transazione in più parti',
     'currency'                       => 'Valuta',
     'account_id'                     => 'Conto attività',
-    'budget_id'                      => 'Bilancio',
+    'budget_id'                      => 'Budget',
     'openingBalance'                 => 'Saldo di apertura',
     'tagMode'                        => 'Modalità etichetta',
     'tag_position'                   => 'Posizione etichetta',
@@ -133,8 +137,8 @@ return [
     'include_old_uploads'        => 'Includi dati importati',
     'accounts'                   => 'Esporta le transazioni da questi conti',
     'delete_account'             => 'Elimina conto ":name"',
-    'delete_bill'                => 'Elimina fattura ":name"',
-    'delete_budget'              => 'Elimina bilancio ":name"',
+    'delete_bill'                => 'Elimina bolletta ":name"',
+    'delete_budget'              => 'Elimina budget ":name"',
     'delete_category'            => 'Elimina categoria ":name"',
     'delete_currency'            => 'Elimina valuta ":name"',
     'delete_journal'             => 'Elimina transazione con descrizione ":description"',
@@ -149,7 +153,7 @@ return [
     'bill_areYouSure'            => 'Sei sicuro di voler eliminare il conto ":name"?',
     'rule_areYouSure'            => 'Sei sicuro di voler eliminare la regola ":title"?',
     'ruleGroup_areYouSure'       => 'Sei sicuro di voler eliminare il gruppo regole ":title"?',
-    'budget_areYouSure'          => 'Sei sicuro di voler eliminare il bilancio ":name"?',
+    'budget_areYouSure'          => 'Sei sicuro di voler eliminare il budget ":name"?',
     'category_areYouSure'        => 'Sei sicuro di voler eliminare categoria ":name"?',
     'currency_areYouSure'        => 'Sei sicuro di voler eliminare la valuta ":name"?',
     'piggyBank_areYouSure'       => 'Sei sicuro di voler eliminare il salvadanaio ":name"?',
@@ -166,8 +170,8 @@ return [
     'also_delete_connections'    => 'L\'unica transazione collegata a questo tipo di collegamento perderà questa connessione. | Tutto :count le transazioni di conteggio collegate a questo tipo di collegamento perderanno la connessione.',
     'also_delete_rules'          => 'Anche l\'unica regola collegata a questo gruppo di regole verrà eliminata. | Tutto :count verranno eliminate anche le regole di conteggio collegate a questo gruppo di regole.',
     'also_delete_piggyBanks'     => 'Verrà eliminato anche l\'unico salvadanaio collegato a questo conto. | Tutti :count il conteggio del salvadanaio collegato a questo conto verrà eliminato.',
-    'bill_keep_transactions'     => 'L\'unica transazione connessa a questa fattura non verrà eliminata. | Tutto :count le transazioni del conto collegate a questa fattura non verranno cancellate.',
-    'budget_keep_transactions'   => 'L\'unica transazione collegata a questo bilancio non verrà eliminata. | Tutto :count le transazioni del conto collegate a questo bilancio non verranno cancellate.',
+    'bill_keep_transactions'     => 'L\'unica transazione connessa a questa bolletta non verrà eliminata. | Tutte le :count transazioni del conto collegate a questa bolletta non verranno cancellate.',
+    'budget_keep_transactions'   => 'L\'unica transazione collegata a questo budget non verrà eliminata. | Tutte le :count transazioni del conto collegate a questo budget non verranno cancellate.',
     'category_keep_transactions' => 'L\'unica transazione collegata a questa categoria non verrà eliminata. | Tutto :count le transazioni del conto collegate a questa categoria non verranno cancellate.',
     'tag_keep_transactions'      => 'L\'unica transazione connessa a questa etichetta non verrà eliminata. | Tutto :count le transazioni del conto collegate a questa etichetta non verranno cancellate.',
     'check_for_updates'          => 'Controlla gli aggiornamenti',
@@ -202,7 +206,7 @@ return [
 
     'due_date'           => 'Data scadenza',
     'payment_date'       => 'Data pagamento',
-    'invoice_date'       => 'Data fattura',
+    'invoice_date'       => 'Data bolletta',
     'internal_reference' => 'Referenze interne',
     'inward'             => 'Descrizione interna',
     'outward'            => 'Descrizione esterna',

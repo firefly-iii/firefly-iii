@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * form.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -33,9 +34,12 @@ return [
     'amount_min'                     => 'Минимальная сумма',
     'amount_max'                     => 'Максимальная сумма',
     'match'                          => 'Ключи для связи',
+    'strict'                         => 'Strict mode',
     'repeat_freq'                    => 'Повторы',
     'journal_currency_id'            => 'Валюта',
     'currency_id'                    => 'Валюта',
+    'transaction_currency_id'        => 'Валюта',
+    'external_ip'                    => 'Внешний IP-адрес вашего сервера',
     'attachments'                    => 'Вложения',
     'journal_amount'                 => 'Сумма',
     'journal_source_account_name'    => 'Доходный счет (источник)',

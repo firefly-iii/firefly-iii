@@ -33,6 +33,7 @@ return [
     'name'                    => 'Nom',
     'role'                    => 'Rôle',
     'currentBalance'          => 'Solde courant',
+    'linked_to_rules'         => 'Relevant rules',
     'active'                  => 'Actif ?',
     'lastActivity'            => 'Activité récente',
     'balanceDiff'             => 'Différence d\'équilibre',
@@ -110,5 +111,5 @@ return [
     'sepa-cc'                 => 'Code de compensation SEPA',
     'sepa-ep'                 => 'Objectif externe SEPA',
     'sepa-ci'                 => 'Identifiant SEPA Creditor',
-    'account_at_bunq'         => 'Account with bunq',
+    'account_at_bunq'         => 'Compte avec bunq',
 ];

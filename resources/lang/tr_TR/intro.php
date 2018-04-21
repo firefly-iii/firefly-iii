@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * intro.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -91,6 +92,7 @@ return [
     'piggy-banks_show_piggyEvents'                            => 'Herhangi bir ekleme veya çıkarma işlemi de burada listelenmektedir.',
 
     // bill index
+    'bills_index_rules'                                       => 'Here you see which rules will check if this bill is hit',
     'bills_index_paid_in_period'                              => 'Bu alan faturanın en son ne zaman ödendiğini gösterir.',
     'bills_index_expected_in_period'                          => 'Bu alan, her fatura için, eğer ödenmesi gerekiyorsa bir sonraki faturanın ne zaman ödeneceğini gösterir.',
 
@@ -100,11 +102,12 @@ return [
     'bills_show_billChart'                                    => 'Bu tablo, bu faturaya ilişkilendirilmiş işlemleri gösterir.',
 
     // create bill
+    'bills_create_intro'                                      => 'Use bills to track the amount of money you\'re due every period. Think about expenses like rent, insurance or mortgage payments.',
     'bills_create_name'                                       => '"Kira" veya "Sağlık sigortası" gibi açıklayıcı bir isim kullanın.',
-    'bills_create_match'                                      => 'İşlemleri eşleştirmek için, bu işlemlerden veya ilgili gider hesabından gelen terimleri kullanın. Tüm kelimeler eşleşmelidir.',
+    //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
     'bills_create_amount_min_holder'                          => 'Bu fatura için minimum ve maksimum bir tutar seçin.',
     'bills_create_repeat_freq_holder'                         => 'Birçok fatura aylık yinelenir, fakat burada başka bir sıklık ayarlayabilirsiniz.',
-    'bills_create_skip_holder'                                => 'Örneğin bir fatura her 2 haftada yineleniyorsa, "atla" alanı iki haftada bir atlaması için "1" olarak ayarlanmalıdır.',
+    'bills_create_skip_holder'                                => 'If a bill repeats every 2 weeks, the "skip"-field should be set to "1" to skip every other week.',
 
     // rules index
     'rules_index_intro'                                       => 'Firefly III, oluşturduğunuz veya düzenlediğiniz herhangi bir işleme otomatik olarak uygulanacak olan kuralları yönetmenize olanak verir.',

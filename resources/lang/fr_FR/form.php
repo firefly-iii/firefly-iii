@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * form.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -33,9 +34,12 @@ return [
     'amount_min'                     => 'Montant minimum',
     'amount_max'                     => 'Montant maximum',
     'match'                          => 'Correspondre à',
+    'strict'                         => 'Strict mode',
     'repeat_freq'                    => 'Répétitions',
     'journal_currency_id'            => 'Devise',
     'currency_id'                    => 'Devise',
+    'transaction_currency_id'        => 'Currency',
+    'external_ip'                    => 'Your server\'s external IP',
     'attachments'                    => 'Documents joints',
     'journal_amount'                 => 'Montant',
     'journal_source_account_name'    => 'Compte de recettes (source)',

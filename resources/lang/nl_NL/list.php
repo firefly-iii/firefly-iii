@@ -33,6 +33,7 @@ return [
     'name'                    => 'Naam',
     'role'                    => 'Rol',
     'currentBalance'          => 'Huidig saldo',
+    'linked_to_rules'         => 'Relevante regels',
     'active'                  => 'Actief?',
     'lastActivity'            => 'Laatste activiteit',
     'balanceDiff'             => 'Saldoverschil',

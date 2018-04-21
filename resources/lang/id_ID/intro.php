@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * intro.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -91,6 +92,7 @@ return [
     'piggy-banks_show_piggyEvents'                            => 'Setiap tambahan atau kepindahan juga tercantum di sini.',
 
     // bill index
+    'bills_index_rules'                                       => 'Here you see which rules will check if this bill is hit',
     'bills_index_paid_in_period'                              => 'Bagian ini menunjukkan kapan tagihan terakhir dibayarkan.',
     'bills_index_expected_in_period'                          => 'Bagian ini menunjukkan setiap tagihan jika dan kapan tagihan berikutnya diperkirakan akan dibayar.',
 
@@ -100,11 +102,12 @@ return [
     'bills_show_billChart'                                    => 'Bagan ini menunjukkan transaksi yang terkait dengan tagihan ini.',
 
     // create bill
+    'bills_create_intro'                                      => 'Use bills to track the amount of money you\'re due every period. Think about expenses like rent, insurance or mortgage payments.',
     'bills_create_name'                                       => 'Gunakan nama yang deskriptif seperti "Rent" atau "Health insurance".',
-    'bills_create_match'                                      => 'Untuk mencocokan transaksi, gunakan persyaratan dari transaksi tersebut atau akun biaya yang terlibat. Semua kata harus sesuai.',
+    //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
     'bills_create_amount_min_holder'                          => 'Pilih jumlah minimum dan maksimum untuk tagihan ini.',
     'bills_create_repeat_freq_holder'                         => 'Sebagian besar tagihan diulang setiap bulannya, tapi anda bisa mengatur frekuensi lain di sini.',
-    'bills_create_skip_holder'                                => 'Jika tagihan berulang setiap 2 minggu misalnya, bagian "lewati" harus ditetapkan ke "1" untuk melewati setiap minggu lainnya.',
+    'bills_create_skip_holder'                                => 'If a bill repeats every 2 weeks, the "skip"-field should be set to "1" to skip every other week.',
 
     // rules index
     'rules_index_intro'                                       => 'Firefly III memungkinkan anda mengatur peraturan-peraturan, yang otomatis akan diterapkan pada transaksi yang anda buat atau edit.',

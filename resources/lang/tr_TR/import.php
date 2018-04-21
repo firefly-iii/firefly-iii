@@ -164,6 +164,7 @@ return [
     // bunq
     'bunq_prerequisites_title'             => 'Bunq\'dan içeri aktarım için şartlar',
     'bunq_prerequisites_text'              => 'In order to import from bunq, you need to obtain an API key. You can do this through the app. Please note that the import function for bunq is in BETA. It has only been tested against the sandbox API.',
+    'bunq_prerequisites_text_ip'           => 'Bunq requires your externally facing IP address. Firefly III has tried to fill this in using <a href="https://www.ipify.org/">the ipify service</a>. Make sure this IP address is correct, or the import will fail.',
     'bunq_do_import'                       => 'Yes, import from this account',
     'bunq_accounts_title'                  => 'Bunq accounts',
     'bunq_accounts_text'                   => 'These are the accounts associated with your bunq account. Please select the accounts from which you want to import, and in which account the transactions must be imported.',

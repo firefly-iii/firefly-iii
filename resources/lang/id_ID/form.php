@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * form.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -33,9 +34,12 @@ return [
     'amount_min'                     => 'Jumlah minimal',
     'amount_max'                     => 'Jumlah maksimum',
     'match'                          => 'Cocok di',
+    'strict'                         => 'Strict mode',
     'repeat_freq'                    => 'Berulang',
     'journal_currency_id'            => 'Mata uang',
     'currency_id'                    => 'Mata uang',
+    'transaction_currency_id'        => 'Currency',
+    'external_ip'                    => 'Your server\'s external IP',
     'attachments'                    => 'Lampiran',
     'journal_amount'                 => 'Jumlah',
     'journal_source_account_name'    => 'Akun pendapatan (sumber)',

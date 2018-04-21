@@ -33,6 +33,7 @@ return [
     'name'                    => 'İsim',
     'role'                    => 'Rol',
     'currentBalance'          => 'Cari bakiye',
+    'linked_to_rules'         => 'Relevant rules',
     'active'                  => 'Aktif mi?',
     'lastActivity'            => 'Son Etkinlik',
     'balanceDiff'             => 'Bakiye farkı',

@@ -75,13 +75,13 @@ return [
     'csv_initial_date_help'                => 'Formato della data e ora nel tuo CSV. Segui il formato <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">indica questa pagina</a>. Il valore predefinito analizzerà le date che assomigliano a questo: :dateExample.',
     'csv_initial_delimiter_help'           => 'Scegli il delimitatore di campo che viene utilizzato nel file di input. Se non si è sicuri, la virgola è l\'opzione più sicura.',
     'csv_initial_import_account_help'      => 'Se il tuo file CSV NON contiene informazioni sui tuoi conti di attività, utilizza questo menu a discesa per selezionare a quale conto appartengono le transazioni nel CSV.',
-    'csv_initial_submit'                   => 'Continue with step 3/4',
+    'csv_initial_submit'                   => 'Continua con il passo 3/4',
 
     // file, new options:
     'file_apply_rules_title'               => 'Applica regole',
     'file_apply_rules_description'         => 'Applica le tue regole. Si noti che questo rallenta l\'importazione in modo significativo.',
-    'file_match_bills_title'               => 'Abbina le fatture',
-    'file_match_bills_description'         => 'Abbina le tue fatture ai prelievi di nuova creazione. Si noti che questo rallenta l\'importazione in modo significativo.',
+    'file_match_bills_title'               => 'Abbina le bollette',
+    'file_match_bills_description'         => 'Abbina le tue bollette ai prelievi di nuova creazione. Si noti che questo rallenta l\'importazione in modo significativo.',
 
     // file, roles config
     'csv_roles_title'                      => 'Importa configurazione (3/4) - Definisci il ruolo di ogni colonna',
@@ -120,8 +120,8 @@ return [
     'column_amount-comma-separated'        => 'Importo (virgola come separatore decimale)',
     'column_bill-id'                       => 'ID conto (matching FF3)',
     'column_bill-name'                     => 'Nome conto',
-    'column_budget-id'                     => 'ID Bilancio (matching FF3)',
-    'column_budget-name'                   => 'Nome bilancio',
+    'column_budget-id'                     => 'ID budget (matching FF3)',
+    'column_budget-name'                   => 'Nome budget',
     'column_category-id'                   => 'ID Categoria (matching FF3)',
     'column_category-name'                 => 'Nome categoria',
     'column_currency-code'                 => 'Codice valuta (ISO 4217)',
@@ -133,12 +133,12 @@ return [
     'column_date-book'                     => 'Data prenotazione della transazione',
     'column_date-process'                  => 'Data processo della transazione',
     'column_date-transaction'              => 'Data',
-    'column_date-due'                      => 'Transaction due date',
-    'column_date-payment'                  => 'Transaction payment date',
-    'column_date-invoice'                  => 'Transaction invoice date',
+    'column_date-due'                      => 'Data di scadenza della transazione',
+    'column_date-payment'                  => 'Data di pagamento della transazione',
+    'column_date-invoice'                  => 'Data di fatturazione della transazione',
     'column_description'                   => 'Descrizione',
     'column_opposing-iban'                 => 'Conto opposto (IBAN)',
-    'column_opposing-bic'                  => 'Opposing account (BIC)',
+    'column_opposing-bic'                  => 'Conto della controparte (BIC)',
     'column_opposing-id'                   => 'ID Conto opposto (matching FF3)',
     'column_external-id'                   => 'ID esterno',
     'column_opposing-name'                 => 'Conto opposto (nome)',
@@ -156,7 +156,7 @@ return [
     'column_account-number'                => 'Conto patrimonio (numero conto)',
     'column_opposing-number'               => 'Conto opposto (numero conto)',
     'column_note'                          => 'Nota(e)',
-    'column_internal-reference'            => 'Internal reference',
+    'column_internal-reference'            => 'Riferimento interno',
 
     // prerequisites
     'prerequisites'                        => 'Prerequisiti',
@@ -164,9 +164,10 @@ return [
     // bunq
     'bunq_prerequisites_title'             => 'Prerequisiti per un\'importazione da bunq',
     'bunq_prerequisites_text'              => 'Per importare da bunq, è necessario ottenere una chiave API. Puoi farlo attraverso l\'applicazione.',
-    'bunq_do_import'                       => 'Yes, import from this account',
-    'bunq_accounts_title'                  => 'Bunq accounts',
-    'bunq_accounts_text'                   => 'These are the accounts associated with your bunq account. Please select the accounts from which you want to import, and in which account the transactions must be imported.',
+    'bunq_prerequisites_text_ip'           => 'Bunq richiede il tuo indirizzo IP esterno. Firefly III ha provato a riempire questo campo utilizzando <a href="https://www.ipify.org/">il servizio ipify</a>. Assicurati che questo indirizzo IP sia corretto altrimenti l\'importazione fallirà.',
+    'bunq_do_import'                       => 'Sì, importa da questo conto',
+    'bunq_accounts_title'                  => 'Conti Bunq',
+    'bunq_accounts_text'                   => 'Questi sono i conti associati al tuo conto Bunq. Seleziona i conti dai quali vuoi effettuare l\'importazione e in quale conto devono essere importate le transazioni.',
 
     // Spectre
     'spectre_title'                        => 'Importa usando uno Spectre',

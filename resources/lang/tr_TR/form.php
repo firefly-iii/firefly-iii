@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * form.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -33,9 +34,12 @@ return [
     'amount_min'                     => 'Minimum tutar',
     'amount_max'                     => 'Minimum tutar',
     'match'                          => 'Eşleşti',
+    'strict'                         => 'Strict mode',
     'repeat_freq'                    => 'Tekrarlar',
     'journal_currency_id'            => 'Para birimi',
     'currency_id'                    => 'Para birimi',
+    'transaction_currency_id'        => 'Currency',
+    'external_ip'                    => 'Your server\'s external IP',
     'attachments'                    => 'Ekler',
     'journal_amount'                 => 'Tutar',
     'journal_source_account_name'    => 'Gelir hesabı (kaynak)',

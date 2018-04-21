@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * intro.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -91,6 +92,7 @@ return [
     'piggy-banks_show_piggyEvents'                            => 'Wszelkie dodatki lub usunięcia są również tutaj wymienione.',
 
     // bill index
+    'bills_index_rules'                                       => 'Tutaj zobaczysz, które reguły sprawdzą dopasowanie transakcji do rachunku',
     'bills_index_paid_in_period'                              => 'To pole wskazuje, kiedy rachunek został ostatnio opłacony.',
     'bills_index_expected_in_period'                          => 'To pole wskazuje dla każdego rachunku, czy i kiedy oczekuje się następnego rachunku.',
 
@@ -100,8 +102,9 @@ return [
     'bills_show_billChart'                                    => 'Ten wykres pokazuje transakcje powiązane z tym rachunkiem.',
 
     // create bill
+    'bills_create_intro'                                      => 'Korzystaj z rachunków, aby śledzić kwotę pieniędzy, którą jesteś winny w każdym okresie. Pomyśl o takich wydatkach jak czynsz, ubezpieczenie czy spłata kredytu hipotecznego.',
     'bills_create_name'                                       => 'Użyj opisowej nazwy, takiej jak "Czynsz" lub "Ubezpieczenie zdrowotne".',
-    'bills_create_match'                                      => 'Aby dopasować transakcje, użyj zwrotów z tych transakcji lub konta wydatków. Wszystkie słowa muszą pasować.',
+    //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
     'bills_create_amount_min_holder'                          => 'Wybierz minimalną i maksymalną kwotę dla tego rachunku.',
     'bills_create_repeat_freq_holder'                         => 'Większość rachunków powtarza się co miesiąc, ale możesz ustawić inną częstotliwość tutaj.',
     'bills_create_skip_holder'                                => 'Jeśli rachunek powtarza się co 2 tygodnie, pole "Pomiń" powinno być ustawione na "1", aby pominąć co drugi tydzień.',

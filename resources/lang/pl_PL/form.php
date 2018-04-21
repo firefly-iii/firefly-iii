@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * form.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -33,9 +34,12 @@ return [
     'amount_min'                     => 'Minimalna kwota',
     'amount_max'                     => 'Maksymalna kwota',
     'match'                          => 'Dopasowanie',
+    'strict'                         => 'Tryb ścisły',
     'repeat_freq'                    => 'Powtarza się',
     'journal_currency_id'            => 'Waluta',
     'currency_id'                    => 'Waluta',
+    'transaction_currency_id'        => 'Waluta',
+    'external_ip'                    => 'Zewnętrzny adres IP Twojego serwera',
     'attachments'                    => 'Załączniki',
     'journal_amount'                 => 'Kwota',
     'journal_source_account_name'    => 'Konto przychodów (źródło)',

@@ -164,6 +164,7 @@ return [
     // bunq
     'bunq_prerequisites_title'             => 'Wymagania wstępne dla importu z bunq',
     'bunq_prerequisites_text'              => 'Aby importować z Bunq, musisz uzyskać klucz API. Możesz to zrobić za pomocą aplikacji. Zwróć uwagę, że funkcja importu z Bunq jest w wersji BETA. Została przetestowana tylko przy użyciu testowej wersji API.',
+    'bunq_prerequisites_text_ip'           => 'Bunq musi znać zewnętrzny adres IP Twojego serwera. Firefly III próbował ustalić go używając <a href="https://www.ipify.org/">usługi ipify</a>. Upewnij się, że ten adres IP jest poprawny albo import się nie powiedzie.',
     'bunq_do_import'                       => 'Tak, importuj z tego konta',
     'bunq_accounts_title'                  => 'Konta Bunq',
     'bunq_accounts_text'                   => 'Te konta są powiązane z Twoim kontem Bunq. Wybierz konta, z których chcesz importować transakcje i na które konto mają trafić.',

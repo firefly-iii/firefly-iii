@@ -33,6 +33,7 @@ return [
     'name'                    => 'Имя',
     'role'                    => 'Роль',
     'currentBalance'          => 'Текущий баланс',
+    'linked_to_rules'         => 'Подходящие правила',
     'active'                  => 'Активен?',
     'lastActivity'            => 'Последняя активность',
     'balanceDiff'             => 'Разность баланса',

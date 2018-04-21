@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * form.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -33,9 +34,12 @@ return [
     'amount_min'                     => 'Minimumbedrag',
     'amount_max'                     => 'Maximumbedrag',
     'match'                          => 'Reageert op',
+    'strict'                         => 'Strikte modus',
     'repeat_freq'                    => 'Herhaling',
     'journal_currency_id'            => 'Valuta',
     'currency_id'                    => 'Valuta',
+    'transaction_currency_id'        => 'Valuta',
+    'external_ip'                    => 'Het externe IP-adres van je server',
     'attachments'                    => 'Bijlagen',
     'journal_amount'                 => 'Bedrag',
     'journal_source_account_name'    => 'Debiteur (bron)',
