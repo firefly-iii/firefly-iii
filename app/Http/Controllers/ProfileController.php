@@ -307,7 +307,7 @@ class ProfileController extends Controller
     public function postCode(TokenFormRequest $request)
     {
         Preferences::set('twoFactorAuthEnabled', 1);
-        Preferences::set('twoFactorAuthSecret', Session::get('two-factor-secret'));
+        Preferences::set('twoFactorAuthSecret', session()->get('two-factor-secret'));
 
         session()->flash('success', (string)trans('firefly.saved_preferences'));
         Preferences::mark();
@@ -332,7 +332,7 @@ class ProfileController extends Controller
         Log::info(sprintf('User #%d has opted to delete their account', auth()->user()->id));
         // make repository delete user:
         auth()->logout();
-        Session::flush();
+        session()->flush();
         $repository->destroy($user);
 
         return redirect(route('index'));

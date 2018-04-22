@@ -105,9 +105,9 @@ class PreferencesController extends Controller
         // view range:
         Preferences::set('viewRange', $request->get('viewRange'));
         // forget session values:
-        Session::forget('start');
-        Session::forget('end');
-        Session::forget('range');
+        session()->forget('start');
+        session()->forget('end');
+        session()->forget('range');
 
         // custom fiscal year
         $customFiscalYear = 1 === (int)$request->get('customFiscalYear');

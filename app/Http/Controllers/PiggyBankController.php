@@ -137,7 +137,7 @@ class PiggyBankController extends Controller
         if (true !== session('piggy-banks.create.fromStore')) {
             $this->rememberPreviousUri('piggy-banks.create.uri');
         }
-        Session::forget('piggy-banks.create.fromStore');
+        session()->forget('piggy-banks.create.fromStore');
 
         return view('piggy-banks.create', compact('subTitle', 'subTitleIcon'));
     }
@@ -204,7 +204,7 @@ class PiggyBankController extends Controller
         if (true !== session('piggy-banks.edit.fromUpdate')) {
             $this->rememberPreviousUri('piggy-banks.edit.uri');
         }
-        Session::forget('piggy-banks.edit.fromUpdate');
+        session()->forget('piggy-banks.edit.fromUpdate');
 
         return view('piggy-banks.edit', compact('subTitle', 'subTitleIcon', 'piggyBank', 'preFilled'));
     }
@@ -435,7 +435,7 @@ class PiggyBankController extends Controller
 
         if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
-            Session::put('piggy-banks.create.fromStore', true);
+            session()->put('piggy-banks.create.fromStore', true);
 
             return redirect(route('piggy-banks.create'))->withInput();
             // @codeCoverageIgnoreEnd
@@ -460,7 +460,7 @@ class PiggyBankController extends Controller
 
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
-            Session::put('piggy-banks.edit.fromUpdate', true);
+            session()->put('piggy-banks.edit.fromUpdate', true);
 
             return redirect(route('piggy-banks.edit', [$piggyBank->id]));
             // @codeCoverageIgnoreEnd

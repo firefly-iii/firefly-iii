@@ -106,7 +106,7 @@ class ReconcileController extends Controller
         if (true !== session('reconcile.edit.fromUpdate')) {
             $this->rememberPreviousUri('reconcile.edit.uri');
         }
-        Session::forget('reconcile.edit.fromUpdate');
+        session()->forget('reconcile.edit.fromUpdate');
 
         return view(
             'accounts.reconcile.edit',
@@ -444,7 +444,7 @@ class ReconcileController extends Controller
 
         // @codeCoverageIgnoreStart
         if (1 === (int)$request->get('return_to_edit')) {
-            Session::put('reconcile.edit.fromUpdate', true);
+            session()->put('reconcile.edit.fromUpdate', true);
 
             return redirect(route('accounts.reconcile.edit', [$journal->id]))->withInput(['return_to_edit' => 1]);
         }

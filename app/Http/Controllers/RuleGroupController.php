@@ -70,7 +70,7 @@ class RuleGroupController extends Controller
         if (true !== session('rule-groups.create.fromStore')) {
             $this->rememberPreviousUri('rule-groups.create.uri');
         }
-        Session::forget('rule-groups.create.fromStore');
+        session()->forget('rule-groups.create.fromStore');
 
         return view('rules.rule-group.create', compact('subTitleIcon', 'subTitle'));
     }
@@ -140,7 +140,7 @@ class RuleGroupController extends Controller
         if (true !== session('rule-groups.edit.fromUpdate')) {
             $this->rememberPreviousUri('rule-groups.edit.uri');
         }
-        Session::forget('rule-groups.edit.fromUpdate');
+        session()->forget('rule-groups.edit.fromUpdate');
 
         return view('rules.rule-group.edit', compact('ruleGroup', 'subTitle'));
     }
@@ -214,7 +214,7 @@ class RuleGroupController extends Controller
 
         if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
-            Session::put('rule-groups.create.fromStore', true);
+            session()->put('rule-groups.create.fromStore', true);
 
             return redirect(route('rule-groups.create'))->withInput();
             // @codeCoverageIgnoreEnd
@@ -258,7 +258,7 @@ class RuleGroupController extends Controller
 
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
-            Session::put('rule-groups.edit.fromUpdate', true);
+            session()->put('rule-groups.edit.fromUpdate', true);
 
             return redirect(route('rule-groups.edit', [$ruleGroup->id]))->withInput(['return_to_edit' => 1]);
             // @codeCoverageIgnoreEnd

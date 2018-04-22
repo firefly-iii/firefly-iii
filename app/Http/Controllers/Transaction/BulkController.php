@@ -30,8 +30,6 @@ use FireflyIII\Http\Requests\BulkEditJournalRequest;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Services\Internal\Update\JournalUpdateService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;

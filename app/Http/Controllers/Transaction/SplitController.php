@@ -122,7 +122,7 @@ class SplitController extends Controller
         if (true !== session('transactions.edit-split.fromUpdate')) {
             $this->rememberPreviousUri('transactions.edit-split.uri');
         }
-        Session::forget('transactions.edit-split.fromUpdate');
+        session()->forget('transactions.edit-split.fromUpdate');
 
         return view(
             'transactions.split.edit', compact(
@@ -170,7 +170,7 @@ class SplitController extends Controller
         // @codeCoverageIgnoreStart
         if (1 === (int)$request->get('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
-            Session::put('transactions.edit-split.fromUpdate', true);
+            session()->put('transactions.edit-split.fromUpdate', true);
 
             return redirect(route('transactions.split.edit', [$journal->id]))->withInput(['return_to_edit' => 1]);
         }

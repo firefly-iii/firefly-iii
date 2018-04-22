@@ -158,7 +158,7 @@ class SingleController extends Controller
         $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $piggyBanks     = $this->piggyBanks->getPiggyBanksWithAmount();
         $piggies        = ExpandedForm::makeSelectListWithEmpty($piggyBanks);
-        $preFilled      = Session::has('preFilled') ? session('preFilled') : [];
+        $preFilled      = session()->has('preFilled') ? session('preFilled') : [];
         $subTitle       = trans('form.add_new_' . $what);
         $subTitleIcon   = 'fa-plus';
         $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
@@ -171,13 +171,13 @@ class SingleController extends Controller
             $preFilled['destination_account_id'] = $source;
         }
 
-        Session::put('preFilled', $preFilled);
+        session()->put('preFilled', $preFilled);
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('transactions.create.fromStore')) {
             $this->rememberPreviousUri('transactions.create.uri');
         }
-        Session::forget('transactions.create.fromStore');
+        session()->forget('transactions.create.fromStore');
 
         asort($piggies);
 
@@ -318,7 +318,7 @@ class SingleController extends Controller
         if (true !== session('transactions.edit.fromUpdate')) {
             $this->rememberPreviousUri('transactions.edit.uri');
         }
-        Session::forget('transactions.edit.fromUpdate');
+        session()->forget('transactions.edit.fromUpdate');
 
         return view(
             'transactions.single.edit',
@@ -369,7 +369,7 @@ class SingleController extends Controller
 
         // @codeCoverageIgnoreStart
         if (true === $createAnother) {
-            Session::put('transactions.create.fromStore', true);
+            session()->put('transactions.create.fromStore', true);
 
             return redirect(route('transactions.create', [$request->input('what')]))->withInput();
         }
@@ -426,7 +426,7 @@ class SingleController extends Controller
 
         // @codeCoverageIgnoreStart
         if (1 === (int)$request->get('return_to_edit')) {
-            Session::put('transactions.edit.fromUpdate', true);
+            session()->put('transactions.edit.fromUpdate', true);
 
             return redirect(route('transactions.edit', [$journal->id]))->withInput(['return_to_edit' => 1]);
         }

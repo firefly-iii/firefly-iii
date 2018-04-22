@@ -94,7 +94,7 @@ class UserController extends Controller
         if (true !== session('users.edit.fromUpdate')) {
             $this->rememberPreviousUri('users.edit.uri');
         }
-        Session::forget('users.edit.fromUpdate');
+        session()->forget('users.edit.fromUpdate');
 
         $subTitle     = (string)trans('firefly.edit_user', ['email' => $user->email]);
         $subTitleIcon = 'fa-user-o';
@@ -187,7 +187,7 @@ class UserController extends Controller
 
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
-            Session::put('users.edit.fromUpdate', true);
+            session()->put('users.edit.fromUpdate', true);
 
             return redirect(route('admin.users.edit', [$user->id]))->withInput(['return_to_edit' => 1]);
             // @codeCoverageIgnoreEnd

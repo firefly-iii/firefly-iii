@@ -146,7 +146,7 @@ class RuleController extends Controller
         if (true !== session('rules.create.fromStore')) {
             $this->rememberPreviousUri('rules.create.uri');
         }
-        Session::forget('rules.create.fromStore');
+        session()->forget('rules.create.fromStore');
 
         return view(
             'rules.rule.create',
@@ -242,7 +242,7 @@ class RuleController extends Controller
         if (true !== session('rules.edit.fromUpdate')) {
             $this->rememberPreviousUri('rules.edit.uri');
         }
-        Session::forget('rules.edit.fromUpdate');
+        session()->forget('rules.edit.fromUpdate');
 
         return view('rules.rule.edit', compact('rule', 'subTitle', 'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroups'));
     }
@@ -370,7 +370,7 @@ class RuleController extends Controller
 
         if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
-            Session::put('rules.create.fromStore', true);
+            session()->put('rules.create.fromStore', true);
 
             return redirect(route('rules.create', [$data['rule_group_id']]))->withInput();
             // @codeCoverageIgnoreEnd
@@ -522,7 +522,7 @@ class RuleController extends Controller
 
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
-            Session::put('rules.edit.fromUpdate', true);
+            session()->put('rules.edit.fromUpdate', true);
 
             return redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
             // @codeCoverageIgnoreEnd

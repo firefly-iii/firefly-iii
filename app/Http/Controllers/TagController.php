@@ -86,7 +86,7 @@ class TagController extends Controller
         if (true !== session('tags.create.fromStore')) {
             $this->rememberPreviousUri('tags.create.uri');
         }
-        Session::forget('tags.create.fromStore');
+        session()->forget('tags.create.fromStore');
 
         return view('tags.create', compact('subTitle', 'subTitleIcon', 'apiKey'));
     }
@@ -141,7 +141,7 @@ class TagController extends Controller
         if (true !== session('tags.edit.fromUpdate')) {
             $this->rememberPreviousUri('tags.edit.uri');
         }
-        Session::forget('tags.edit.fromUpdate');
+        session()->forget('tags.edit.fromUpdate');
 
         return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon', 'apiKey'));
     }
@@ -266,7 +266,7 @@ class TagController extends Controller
 
         if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
-            Session::put('tags.create.fromStore', true);
+            session()->put('tags.create.fromStore', true);
 
             return redirect(route('tags.create'))->withInput();
             // @codeCoverageIgnoreEnd
@@ -291,7 +291,7 @@ class TagController extends Controller
 
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
-            Session::put('tags.edit.fromUpdate', true);
+            session()->put('tags.edit.fromUpdate', true);
 
             return redirect(route('tags.edit', [$tag->id]))->withInput(['return_to_edit' => 1]);
             // @codeCoverageIgnoreEnd
