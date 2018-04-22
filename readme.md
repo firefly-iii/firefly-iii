@@ -128,7 +128,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 This work [is licensed](https://github.com/firefly-iii/firefly-iii/blob/master/LICENSE) under the [GPL v3](https://www.gnu.org/licenses/gpl.html).
 
 ### Donate
-If you like Firefly III and if it helps you save lots of money, why not send me a dime for every dollar you saved using Firefly III!
+If you like Firefly III and if it helps you save lots of money, why not send me a dime for every dollar saved!
 
 OK that was a joke. Thank you for considering donating to Firefly III! Please checkout [my Patreon page](https://www.patreon.com/jc5) or visit [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA).
 
