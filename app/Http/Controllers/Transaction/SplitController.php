@@ -247,8 +247,9 @@ class SplitController extends Controller
             }
 
             if (count($res) > 0) {
-                $res['amount']  = app('steam')->positive((string)$res['amount']);
-                $transactions[] = $res;
+                $res['amount']         = app('steam')->positive((string)$res['amount']);
+                $res['foreign_amount'] = app('steam')->positive((string)$res['foreign_amount']);
+                $transactions[]        = $res;
             }
         }
 
