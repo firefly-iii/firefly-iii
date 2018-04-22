@@ -52,6 +52,8 @@ $(document).ready(function () {
     // convert source currency to destination currency (slightly different routine for transfers)
     $('#ffInput_source_amount').on('change', convertSourceToDestination);
 
+    //
+
 
 });
 

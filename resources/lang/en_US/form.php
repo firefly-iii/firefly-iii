@@ -95,6 +95,7 @@ return [
 
     'amount'                     => 'Amount',
     'foreign_amount'             => 'Foreign amount',
+    'existing_attachments'       => 'Existing attachments',
     'date'                       => 'Date',
     'interest_date'              => 'Interest date',
     'book_date'                  => 'Book date',
