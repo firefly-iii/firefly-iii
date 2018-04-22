@@ -402,9 +402,6 @@ class SingleController extends Controller
 
         // keep current bill:
         $data['bill_id'] = $journal->bill_id;
-        var_dump($data);
-
-        exit;
 
         $journal = $repository->update($journal, $data);
         /** @var array $files */
