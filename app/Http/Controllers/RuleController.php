@@ -83,7 +83,9 @@ class RuleController extends Controller
         $this->createDefaultRule();
         $bill         = null;
         $billId       = (int)$request->get('fromBill');
-        $preFilled    = [];
+        $preFilled    = [
+            'strict' => true,
+        ];
         $groups       = ExpandedForm::makeSelectList($ruleGroupRepository->get());
         $oldTriggers  = [];
         $oldActions   = [];

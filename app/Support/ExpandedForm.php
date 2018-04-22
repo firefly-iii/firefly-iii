@@ -169,11 +169,17 @@ class ExpandedForm
      */
     public function checkbox(string $name, $value = 1, $checked = null, $options = []): string
     {
-        $options['checked'] = true === $checked ? true : null;
-        $label              = $this->label($name, $options);
-        $options            = $this->expandOptionArray($name, $label, $options);
-        $classes            = $this->getHolderClasses($name);
-        $value              = $this->fillFieldValue($name, $value);
+        $options['checked'] = true === $checked ? true : false;
+
+        if (Session::has('preFilled')) {
+            $preFilled          = session('preFilled');
+            $options['checked'] = $preFilled[$name] ?? $options['checked'];
+        }
+
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $value   = $this->fillFieldValue($name, $value);
 
         unset($options['placeholder'], $options['autocomplete'], $options['class']);
 
