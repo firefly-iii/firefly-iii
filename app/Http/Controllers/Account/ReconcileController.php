@@ -320,9 +320,11 @@ class ReconcileController extends Controller
                 'notes'           => implode(', ', $data['transactions']),
             ];
 
-            $journal = $repository->store($journalData);
+            $repository->store($journalData);
         }
         Log::debug('End of routine.');
+
+        Preferences::mark();
 
         Session::flash('success', trans('firefly.reconciliation_stored'));
 
@@ -437,6 +439,8 @@ class ReconcileController extends Controller
         ];
 
         $this->repository->update($journal, $data);
+
+
 
         // @codeCoverageIgnoreStart
         if (1 === (int)$request->get('return_to_edit')) {
