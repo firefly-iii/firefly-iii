@@ -87,16 +87,31 @@ class BudgetController extends Controller
         $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
         $largeDiff   = false;
         $warnText    = '';
-        $average     = '0';
-        $current     = '0';
         if (0 === bccomp($amount, '0')) {
             $budgetLimit = null;
         }
 
+        // if today is between start and end, use the diff in days between end and today (days left)
+        // otherwise, use diff between start and end.
+        $today = new Carbon;
+        if ($today->gte($start) && $today->lte($end)) {
+            $days = $end->diffInDays($today);
+        }
+        if ($today->lte($start) || $today->gte($end)) {
+            $days = $start->diffInDays($end);
+        }
+        $days = $days === 0 ? 1 : $days;
+
         // calculate left in budget:
-        $spent    = $repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
-        $currency = app('amount')->getDefaultCurrency();
-        $left     = app('amount')->formatAnything($currency, bcadd($amount, $spent), true);
+        $spent      = $repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
+        $currency   = app('amount')->getDefaultCurrency();
+        $left       = app('amount')->formatAnything($currency, bcadd($amount, $spent), true);
+        $leftPerDay = 'none';
+
+        // is user has money left, calculate.
+        if (1 === bccomp(bcadd($amount, $spent), '0')) {
+            $leftPerDay = app('amount')->formatAnything($currency, bcdiv(bcadd($amount, $spent), (string)$days), true);
+        }
 
 
         // over or under budgeting, compared to previous budgets?
@@ -112,8 +127,8 @@ class BudgetController extends Controller
             $warnText  = (string)trans(
                 'firefly.over_budget_warn',
                 [
-                    'amount'      => app('amount')->formatAnything($currency, $average, false),
-                    'over_amount' => app('amount')->formatAnything($currency, $current, false),
+                    'amount'       => app('amount')->formatAnything($currency, $average, false),
+                    'over_amount'  => app('amount')->formatAnything($currency, $current, false),
                 ]
             );
         }
@@ -122,14 +137,15 @@ class BudgetController extends Controller
 
         return response()->json(
             [
-                'left'       => $left,
-                'name'       => $budget->name,
-                'limit'      => $budgetLimit ? $budgetLimit->id : 0,
-                'amount'     => $amount,
-                'current'    => $current,
-                'average'    => $average,
-                'large_diff' => $largeDiff,
-                'warn_text'  => $warnText,
+                'left'         => $left,
+                'name'         => $budget->name,
+                'limit'        => $budgetLimit ? $budgetLimit->id : 0,
+                'amount'       => $amount,
+                'current'      => $current,
+                'average'      => $average,
+                'large_diff'   => $largeDiff,
+                'left_per_day' => $leftPerDay,
+                'warn_text'    => $warnText,
 
             ]
         );
@@ -219,6 +235,17 @@ class BudgetController extends Controller
         $page     = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
         $pageSize = (int)Preferences::get('listPageSize', 50)->data;
 
+        // if today is between start and end, use the diff in days between end and today (days left)
+        // otherwise, use diff between start and end.
+        $today = new Carbon;
+        if ($today->gte($start) && $today->lte($end)) {
+            $days = $end->diffInDays($today);
+        }
+        if ($today->lte($start) || $today->gte($end)) {
+            $days = $start->diffInDays($end);
+        }
+        $days = $days === 0 ? 1 : $days;
+
         // make date if present:
         if (null !== $moment || '' !== (string)$moment) {
             try {
@@ -283,27 +310,11 @@ class BudgetController extends Controller
         $prevText     = app('navigation')->periodShow($prev, $range);
 
         return view(
-            'budgets.index',
-            compact(
-                'available',
-                'currentMonth',
-                'next',
-                'nextText',
-                'prev', 'allBudgets',
-                'prevText',
-                'periodStart',
-                'periodEnd',
-                'page',
-                'budgetInformation',
-                'inactive',
-                'budgets',
-                'spent',
-                'budgeted',
-                'previousLoop',
-                'nextLoop',
-                'start',
-                'end'
-            )
+            'budgets.index', compact(
+                               'available', 'currentMonth', 'next', 'nextText', 'prev', 'allBudgets', 'prevText', 'periodStart', 'periodEnd', 'days', 'page',
+                               'budgetInformation',
+                               'inactive', 'budgets', 'spent', 'budgeted', 'previousLoop', 'nextLoop', 'start', 'end'
+                           )
         );
     }
 

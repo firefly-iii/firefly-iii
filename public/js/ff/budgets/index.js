@@ -129,7 +129,13 @@ function updateBudgetedAmounts(e) {
         budgeted = budgeted + difference;
 
         // fill in "left" value:
-        leftCell.html(data.left);
+
+
+        if (data.left_per_day !== 'none') {
+            leftCell.html(data.left + '(' + data.left_per_day + ')');
+        } else {
+            leftCell.html(data.left);
+        }
 
         // update "budgeted" input:
         target.val(data.amount);
