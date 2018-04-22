@@ -144,6 +144,10 @@ class SplitController extends Controller
             return $this->redirectToAccount($journal); // @codeCoverageIgnore
         }
         $data    = $request->getAll();
+
+        // keep current bill:
+        $data['bill_id'] = $journal->bill_id;
+
         $journal = $this->repository->update($journal, $data);
 
         /** @var array $files */

@@ -43,16 +43,6 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>{{ 'bill_will_automatch'|_ }}</td>
-                            <td>
-                                {% if object.data.automatch %}
-                                    <i class="fa fa-check fa-fw" title="{{ 'auto_match_on'|_ }}"></i> {{ 'yes'|_ }}
-                                {% else %}
-                                    <i class="fa fa-times fa-fw" title="{{ 'auto_match_off'|_ }}"></i> {{ 'no'|_ }}
-                                {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
                             <td>{{ 'next_expected_match'|_ }}</td>
                             <td>
                                 {% if object.data.next_expected_match|length > 0 %}

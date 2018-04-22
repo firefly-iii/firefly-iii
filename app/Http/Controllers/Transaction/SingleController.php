@@ -398,7 +398,14 @@ class SingleController extends Controller
         }
         // @codeCoverageIgnoreEnd
 
-        $data    = $request->getJournalData();
+        $data = $request->getJournalData();
+
+        // keep current bill:
+        $data['bill_id'] = $journal->bill_id;
+        var_dump($data);
+
+        exit;
+
         $journal = $repository->update($journal, $data);
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
