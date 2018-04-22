@@ -254,7 +254,7 @@ class JournalCollector implements JournalCollectorInterface
         $key   = 'query-' . substr($hash, -8);
         $cache = new CacheProperties;
         $cache->addProperty($key);
-        foreach($this->filters as $filter) {
+        foreach ($this->filters as $filter) {
             $cache->addProperty((string)$filter);
         }
         if ($cache->has()) {
@@ -682,6 +682,7 @@ class JournalCollector implements JournalCollectorInterface
                             ->orderBy('transaction_journals.order', 'ASC')
                             ->orderBy('transaction_journals.id', 'DESC')
                             ->orderBy('transaction_journals.description', 'DESC')
+                            ->orderBy('transactions.identifier', 'ASC')
                             ->orderBy('transactions.amount', 'DESC');
 
         $this->query = $query;
