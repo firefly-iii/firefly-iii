@@ -165,7 +165,7 @@ return [
     'default_export_format'    => 'csv',
     'default_import_format'    => 'csv',
     'bill_periods'             => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
-    'accountRoles'             => ['defaultAsset', 'sharedAsset', 'savingAsset', 'ccAsset','cashWalletAsset'],
+    'accountRoles'             => ['defaultAsset', 'sharedAsset', 'savingAsset', 'ccAsset', 'cashWalletAsset'],
     'ccTypes'                  => [
         'monthlyFull' => 'Full payment every month',
     ],
@@ -296,6 +296,7 @@ return [
         'journalList'       => \FireflyIII\Support\Binder\JournalList::class,
         'categoryList'      => \FireflyIII\Support\Binder\CategoryList::class,
         'tagList'           => \FireflyIII\Support\Binder\TagList::class,
+        'simpleJournalList' => \FireflyIII\Support\Binder\SimpleJournalList::class,
 
         // others
         'fromCurrencyCode'  => \FireflyIII\Support\Binder\CurrencyCode::class,

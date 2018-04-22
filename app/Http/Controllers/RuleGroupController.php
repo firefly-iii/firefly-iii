@@ -108,7 +108,7 @@ class RuleGroupController extends Controller
 
         $repository->destroy($ruleGroup, $moveTo);
 
-        Session::flash('success', (string)trans('firefly.deleted_rule_group', ['title' => $title]));
+        session()->flash('success', (string)trans('firefly.deleted_rule_group', ['title' => $title]));
         Preferences::mark();
 
         return redirect($this->getPreviousUri('rule-groups.delete.uri'));
@@ -174,7 +174,7 @@ class RuleGroupController extends Controller
         $this->dispatch($job);
 
         // Tell the user that the job is queued
-        Session::flash('success', (string)trans('firefly.applied_rule_group_selection', ['title' => $ruleGroup->title]));
+        session()->flash('success', (string)trans('firefly.applied_rule_group_selection', ['title' => $ruleGroup->title]));
 
         return redirect()->route('rules.index');
     }
@@ -209,7 +209,7 @@ class RuleGroupController extends Controller
         $data      = $request->getRuleGroupData();
         $ruleGroup = $repository->store($data);
 
-        Session::flash('success', (string)trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title]));
+        session()->flash('success', (string)trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title]));
         Preferences::mark();
 
         if (1 === (int)$request->get('create_another')) {
@@ -253,7 +253,7 @@ class RuleGroupController extends Controller
 
         $repository->update($ruleGroup, $data);
 
-        Session::flash('success', (string)trans('firefly.updated_rule_group', ['title' => $ruleGroup->title]));
+        session()->flash('success', (string)trans('firefly.updated_rule_group', ['title' => $ruleGroup->title]));
         Preferences::mark();
 
         if (1 === (int)$request->get('return_to_edit')) {

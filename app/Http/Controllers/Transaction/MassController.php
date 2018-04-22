@@ -108,7 +108,7 @@ class MassController extends Controller
         }
 
         Preferences::mark();
-        Session::flash('success', trans('firefly.mass_deleted_transactions_success', ['amount' => $count]));
+        session()->flash('success', trans('firefly.mass_deleted_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-delete.uri'));
@@ -163,7 +163,7 @@ class MassController extends Controller
         }
 
         if (count($messages) > 0) {
-            Session::flash('info', $messages);
+            session()->flash('info', $messages);
         }
 
         // put previous url in session
@@ -196,7 +196,7 @@ class MassController extends Controller
         );
 
         if (0 === $filtered->count()) {
-            Session::flash('error', trans('firefly.no_edit_multiple_left'));
+            session()->flash('error', trans('firefly.no_edit_multiple_left'));
         }
 
         $journals = $filtered;
@@ -281,7 +281,7 @@ class MassController extends Controller
             }
         }
         Preferences::mark();
-        Session::flash('success', trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
+        session()->flash('success', trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-edit.uri'));

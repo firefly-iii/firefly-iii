@@ -143,7 +143,7 @@ class PreferencesController extends Controller
         ];
         Preferences::set('transaction_journal_optional_fields', $optionalTj);
 
-        Session::flash('success', (string)trans('firefly.saved_preferences'));
+        session()->flash('success', (string)trans('firefly.saved_preferences'));
         Preferences::mark();
 
         return redirect(route('preferences.index'));

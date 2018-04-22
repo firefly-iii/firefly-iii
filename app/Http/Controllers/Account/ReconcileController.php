@@ -100,7 +100,7 @@ class ReconcileController extends Controller
             'amount'   => $pTransaction->amount,
         ];
 
-        Session::flash('preFilled', $preFilled);
+        session()->flash('preFilled', $preFilled);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('reconcile.edit.fromUpdate')) {
@@ -184,7 +184,7 @@ class ReconcileController extends Controller
             return $this->redirectToOriginalAccount($account);
         }
         if (AccountType::ASSET !== $account->accountType->type) {
-            Session::flash('error', trans('firefly.must_be_asset_account'));
+            session()->flash('error', trans('firefly.must_be_asset_account'));
 
             return redirect(route('accounts.index', [config('firefly.shortNamesByFullName.' . $account->accountType->type)]));
         }
@@ -326,7 +326,7 @@ class ReconcileController extends Controller
 
         Preferences::mark();
 
-        Session::flash('success', trans('firefly.reconciliation_stored'));
+        session()->flash('success', trans('firefly.reconciliation_stored'));
 
         return redirect(route('accounts.show', [$account->id]));
     }
@@ -387,7 +387,7 @@ class ReconcileController extends Controller
             return redirect(route('transactions.show', [$journal->id]));
         }
         if (0 === bccomp('0', $request->get('amount'))) {
-            Session::flash('error', trans('firefly.amount_cannot_be_zero'));
+            session()->flash('error', trans('firefly.amount_cannot_be_zero'));
 
             return redirect(route('accounts.reconcile.edit', [$journal->id]))->withInput();
         }

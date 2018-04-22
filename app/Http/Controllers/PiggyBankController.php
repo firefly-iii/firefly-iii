@@ -164,7 +164,7 @@ class PiggyBankController extends Controller
      */
     public function destroy(PiggyBank $piggyBank)
     {
-        Session::flash('success', (string)trans('firefly.deleted_piggy_bank', ['name' => $piggyBank->name]));
+        session()->flash('success', (string)trans('firefly.deleted_piggy_bank', ['name' => $piggyBank->name]));
         Preferences::mark();
         $this->piggyRepos->destroy($piggyBank);
 
@@ -198,7 +198,7 @@ class PiggyBankController extends Controller
                       'startdate'    => $startDate,
                       'note'         => null === $note ? '' : $note->text,
         ];
-        Session::flash('preFilled', $preFilled);
+        session()->flash('preFilled', $preFilled);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('piggy-banks.edit.fromUpdate')) {
@@ -299,7 +299,7 @@ class PiggyBankController extends Controller
         }
         if ($this->piggyRepos->canAddAmount($piggyBank, $amount)) {
             $this->piggyRepos->addAmount($piggyBank, $amount);
-            Session::flash(
+            session()->flash(
                 'success',
                 (string)trans(
                     'firefly.added_amount_to_piggy',
@@ -312,7 +312,7 @@ class PiggyBankController extends Controller
         }
 
         Log::error('Cannot add ' . $amount . ' because canAddAmount returned false.');
-        Session::flash(
+        session()->flash(
             'error',
             (string)trans(
                 'firefly.cannot_add_amount_piggy',
@@ -339,7 +339,7 @@ class PiggyBankController extends Controller
         }
         if ($this->piggyRepos->canRemoveAmount($piggyBank, $amount)) {
             $this->piggyRepos->removeAmount($piggyBank, $amount);
-            Session::flash(
+            session()->flash(
                 'success',
                 (string)trans(
                     'firefly.removed_amount_from_piggy',
@@ -353,7 +353,7 @@ class PiggyBankController extends Controller
 
         $amount = (string)round($request->get('amount'), 12);
 
-        Session::flash(
+        session()->flash(
             'error',
             (string)trans(
                 'firefly.cannot_remove_from_piggy',
@@ -430,7 +430,7 @@ class PiggyBankController extends Controller
         }
         $piggyBank = $this->piggyRepos->store($data);
 
-        Session::flash('success', (string)trans('firefly.stored_piggy_bank', ['name' => $piggyBank->name]));
+        session()->flash('success', (string)trans('firefly.stored_piggy_bank', ['name' => $piggyBank->name]));
         Preferences::mark();
 
         if (1 === (int)$request->get('create_another')) {
@@ -455,7 +455,7 @@ class PiggyBankController extends Controller
         $data      = $request->getPiggyBankData();
         $piggyBank = $this->piggyRepos->update($piggyBank, $data);
 
-        Session::flash('success', (string)trans('firefly.updated_piggy_bank', ['name' => $piggyBank->name]));
+        session()->flash('success', (string)trans('firefly.updated_piggy_bank', ['name' => $piggyBank->name]));
         Preferences::mark();
 
         if (1 === (int)$request->get('return_to_edit')) {

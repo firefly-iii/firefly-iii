@@ -140,7 +140,7 @@ class SingleController extends Controller
             $preFilled['notes'] = $note->text;
         }
 
-        Session::flash('preFilled', $preFilled);
+        session()->flash('preFilled', $preFilled);
 
         return redirect(route('transactions.create', [strtolower($journal->transactionType->type)]));
     }
@@ -227,7 +227,7 @@ class SingleController extends Controller
         }
         // @codeCoverageIgnoreEnd
         $type = $transactionJournal->transactionTypeStr();
-        Session::flash('success', (string)trans('firefly.deleted_' . strtolower($type), ['description' => $transactionJournal->description]));
+        session()->flash('success', (string)trans('firefly.deleted_' . strtolower($type), ['description' => $transactionJournal->description]));
 
         $this->repository->destroy($transactionJournal);
 
@@ -312,7 +312,7 @@ class SingleController extends Controller
             $preFilled['currency'] = $pTransaction->foreignCurrency;
         }
 
-        Session::flash('preFilled', $preFilled);
+        session()->flash('preFilled', $preFilled);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('transactions.edit.fromUpdate')) {
@@ -343,7 +343,7 @@ class SingleController extends Controller
         if (null === $journal->id) {
             // error!
             Log::error('Could not store transaction journal.');
-            Session::flash('error', (string)trans('firefly.unknown_journal_error'));
+            session()->flash('error', (string)trans('firefly.unknown_journal_error'));
 
             return redirect(route('transactions.create', [$request->input('what')]))->withInput();
         }
@@ -355,16 +355,16 @@ class SingleController extends Controller
         // store the journal only, flash the rest.
         Log::debug(sprintf('Count of error messages is %d', $this->attachments->getErrors()->count()));
         if (\count($this->attachments->getErrors()->get('attachments')) > 0) {
-            Session::flash('error', $this->attachments->getErrors()->get('attachments'));
+            session()->flash('error', $this->attachments->getErrors()->get('attachments'));
         }
         // flash messages
         if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
-            Session::flash('info', $this->attachments->getMessages()->get('attachments'));
+            session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
         event(new StoredTransactionJournal($journal, $data['piggy_bank_id']));
 
-        Session::flash('success', (string)trans('firefly.stored_journal', ['description' => $journal->description]));
+        session()->flash('success', (string)trans('firefly.stored_journal', ['description' => $journal->description]));
         Preferences::mark();
 
         // @codeCoverageIgnoreStart
@@ -410,10 +410,10 @@ class SingleController extends Controller
 
         // @codeCoverageIgnoreStart
         if (count($this->attachments->getErrors()->get('attachments')) > 0) {
-            Session::flash('error', $this->attachments->getErrors()->get('attachments'));
+            session()->flash('error', $this->attachments->getErrors()->get('attachments'));
         }
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            Session::flash('info', $this->attachments->getMessages()->get('attachments'));
+            session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
         // @codeCoverageIgnoreEnd
 
@@ -421,7 +421,7 @@ class SingleController extends Controller
         // update, get events by date and sort DESC
 
         $type = strtolower($this->repository->getTransactionType($journal));
-        Session::flash('success', (string)trans('firefly.updated_' . $type, ['description' => $data['description']]));
+        session()->flash('success', (string)trans('firefly.updated_' . $type, ['description' => $data['description']]));
         Preferences::mark();
 
         // @codeCoverageIgnoreStart

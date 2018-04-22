@@ -163,7 +163,7 @@ class Controller extends BaseController
             }
         }
         // @codeCoverageIgnoreStart
-        Session::flash('error', (string)trans('firefly.cannot_redirect_to_account'));
+        session()->flash('error', (string)trans('firefly.cannot_redirect_to_account'));
 
         return redirect(route('index'));
         // @codeCoverageIgnoreEnd

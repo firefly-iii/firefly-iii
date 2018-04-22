@@ -835,7 +835,7 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/bulk', 'as' => 'transactions.bulk.'],
     function () {
-        Route::get('edit/{journalList}', ['uses' => 'BulkController@edit', 'as' => 'edit']);
+        Route::get('edit/{simpleJournalList}', ['uses' => 'BulkController@edit', 'as' => 'edit']);
         Route::post('update', ['uses' => 'BulkController@update', 'as' => 'update']);
     }
 );

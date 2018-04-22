@@ -81,14 +81,14 @@ class ConvertController extends Controller
 
         // cannot convert to its own type.
         if ($sourceType->type === $destinationType->type) {
-            Session::flash('info', trans('firefly.convert_is_already_type_' . $destinationType->type));
+            session()->flash('info', trans('firefly.convert_is_already_type_' . $destinationType->type));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
 
         // cannot convert split.
         if ($journal->transactions()->count() > 2) {
-            Session::flash('error', trans('firefly.cannot_convert_split_journal'));
+            session()->flash('error', trans('firefly.cannot_convert_split_journal'));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
@@ -138,13 +138,13 @@ class ConvertController extends Controller
         $data = $request->all();
 
         if ($journal->transactionType->type === $destinationType->type) {
-            Session::flash('error', trans('firefly.convert_is_already_type_' . $destinationType->type));
+            session()->flash('error', trans('firefly.convert_is_already_type_' . $destinationType->type));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
 
         if ($journal->transactions()->count() > 2) {
-            Session::flash('error', trans('firefly.cannot_convert_split_journal'));
+            session()->flash('error', trans('firefly.cannot_convert_split_journal'));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
@@ -160,7 +160,7 @@ class ConvertController extends Controller
             return redirect(route('transactions.convert.index', [strtolower($destinationType->type), $journal->id]))->withErrors($errors)->withInput();
         }
 
-        Session::flash('success', trans('firefly.converted_to_' . $destinationType->type));
+        session()->flash('success', trans('firefly.converted_to_' . $destinationType->type));
 
         return redirect(route('transactions.show', [$journal->id]));
     }

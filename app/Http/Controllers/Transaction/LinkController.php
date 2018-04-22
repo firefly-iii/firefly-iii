@@ -86,7 +86,7 @@ class LinkController extends Controller
     {
         $this->repository->destroyLink($link);
 
-        Session::flash('success', (string)trans('firefly.deleted_link'));
+        session()->flash('success', (string)trans('firefly.deleted_link'));
         Preferences::mark();
 
         return redirect((string)session('journal_links.delete.uri'));
@@ -104,7 +104,7 @@ class LinkController extends Controller
         Log::debug('We are here (store)');
         $linkInfo = $request->getLinkInfo();
         if (0 === $linkInfo['transaction_journal_id']) {
-            Session::flash('error', trans('firefly.invalid_link_selection'));
+            session()->flash('error', trans('firefly.invalid_link_selection'));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
@@ -112,19 +112,19 @@ class LinkController extends Controller
         $alreadyLinked = $this->repository->findLink($journal, $other);
 
         if ($other->id === $journal->id) {
-            Session::flash('error', trans('firefly.journals_link_to_self'));
+            session()->flash('error', trans('firefly.journals_link_to_self'));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
 
         if ($alreadyLinked) {
-            Session::flash('error', trans('firefly.journals_error_linked'));
+            session()->flash('error', trans('firefly.journals_error_linked'));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
         Log::debug(sprintf('Journal is %d, opposing is %d', $journal->id, $other->id));
         $this->repository->storeLink($linkInfo, $other, $journal);
-        Session::flash('success', trans('firefly.journals_linked'));
+        session()->flash('success', trans('firefly.journals_linked'));
 
         return redirect(route('transactions.show', [$journal->id]));
     }

@@ -90,7 +90,7 @@ class UpdateController extends Controller
         $checkForUpdates = (int)$request->get('check_for_updates');
         FireflyConfig::set('permission_update_check', $checkForUpdates);
         FireflyConfig::set('last_update_check', time());
-        Session::flash('success', (string)trans('firefly.configuration_updated'));
+        session()->flash('success', (string)trans('firefly.configuration_updated'));
 
         return redirect(route('admin.update-check'));
     }

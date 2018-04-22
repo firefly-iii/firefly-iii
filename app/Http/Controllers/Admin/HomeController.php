@@ -66,7 +66,7 @@ class HomeController extends Controller
         $ipAddress = $request->ip();
         Log::debug(sprintf('Now in testMessage() controller. IP is %s', $ipAddress));
         event(new AdminRequestedTestMessage(auth()->user(), $ipAddress));
-        Session::flash('info', (string)trans('firefly.send_test_triggered'));
+        session()->flash('info', (string)trans('firefly.send_test_triggered'));
 
         return redirect(route('admin.index'));
     }

@@ -159,12 +159,12 @@ class SplitController extends Controller
         // flash messages
         // @codeCoverageIgnoreStart
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            Session::flash('info', $this->attachments->getMessages()->get('attachments'));
+            session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
         // @codeCoverageIgnoreEnd
 
         $type = strtolower($this->repository->getTransactionType($journal));
-        Session::flash('success', (string)trans('firefly.updated_' . $type, ['description' => $journal->description]));
+        session()->flash('success', (string)trans('firefly.updated_' . $type, ['description' => $journal->description]));
         Preferences::mark();
 
         // @codeCoverageIgnoreStart

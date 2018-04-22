@@ -78,7 +78,7 @@ class UserController extends Controller
     public function destroy(User $user, UserRepositoryInterface $repository)
     {
         $repository->destroy($user);
-        Session::flash('success', (string)trans('firefly.user_deleted'));
+        session()->flash('success', (string)trans('firefly.user_deleted'));
 
         return redirect(route('admin.users'));
     }
@@ -182,7 +182,7 @@ class UserController extends Controller
         $repository->changeStatus($user, $data['blocked'], $data['blocked_code']);
         $repository->updateEmail($user, $data['email']);
 
-        Session::flash('success', (string)trans('firefly.updated_user', ['email' => $user->email]));
+        session()->flash('success', (string)trans('firefly.updated_user', ['email' => $user->email]));
         Preferences::mark();
 
         if (1 === (int)$request->get('return_to_edit')) {
