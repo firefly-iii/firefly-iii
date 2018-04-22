@@ -94,6 +94,8 @@ return [
     'convert_Transfer'            => 'Convertir transferencia',
 
     'amount'                     => 'Importe',
+    'foreign_amount'             => 'Foreign amount',
+    'existing_attachments'       => 'Existing attachments',
     'date'                       => 'Fecha',
     'interest_date'              => 'Fecha de interés',
     'book_date'                  => 'Fecha de registro',

@@ -94,6 +94,8 @@ return [
     'convert_Transfer'            => 'Converti giroconto',
 
     'amount'                     => 'Importo',
+    'foreign_amount'             => 'Foreign amount',
+    'existing_attachments'       => 'Existing attachments',
     'date'                       => 'Data',
     'interest_date'              => 'Data interesse',
     'book_date'                  => 'Agenda',

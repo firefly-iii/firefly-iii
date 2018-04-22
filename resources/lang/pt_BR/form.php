@@ -94,6 +94,8 @@ return [
     'convert_Transfer'            => 'Converter a transferência',
 
     'amount'                     => 'Valor',
+    'foreign_amount'             => 'Foreign amount',
+    'existing_attachments'       => 'Existing attachments',
     'date'                       => 'Data',
     'interest_date'              => 'Data de interesse',
     'book_date'                  => 'Data reserva',

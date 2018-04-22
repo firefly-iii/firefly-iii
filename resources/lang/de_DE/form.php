@@ -94,6 +94,8 @@ return [
     'convert_Transfer'            => 'In Umbuchung umwandeln',
 
     'amount'                     => 'Betrag',
+    'foreign_amount'             => 'Foreign amount',
+    'existing_attachments'       => 'Existing attachments',
     'date'                       => 'Datum',
     'interest_date'              => 'Zinstermin',
     'book_date'                  => 'Buchungsdatum',

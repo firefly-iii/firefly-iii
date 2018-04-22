@@ -94,6 +94,8 @@ return [
     'convert_Transfer'            => 'Verander overschrijving',
 
     'amount'                     => 'Bedrag',
+    'foreign_amount'             => 'Bedrag in vreemde valuta',
+    'existing_attachments'       => 'Bestaande bijlagen',
     'date'                       => 'Datum',
     'interest_date'              => 'Rentedatum',
     'book_date'                  => 'Boekdatum',

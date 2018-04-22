@@ -154,7 +154,7 @@ return [
     'journals_in_period_for_category'            => 'Alle transacties in categorie :name tussen :start en :end',
     'journals_in_period_for_tag'                 => 'Alle transacties voor tag :tag tussen :start en :end',
     'not_available_demo_user'                    => 'De functie die je probeert te gebruiken is niet beschikbaar voor gebruikers van de demo.',
-    'exchange_rate_instructions'                 => 'Betaalrekening "@naam" accepteert alleen boekingen in @native_currency. Als je @foreign_currency wilt gebruiken moet je ook het bedrag in @native_currency opgeven:',
+    'exchange_rate_instructions'                 => 'Betaalrekening "@name" accepteert alleen boekingen in @native_currency. Als je @foreign_currency wilt gebruiken moet je ook het bedrag in @native_currency opgeven:',
     'transfer_exchange_rate_instructions'        => 'Bronbetaalrekening "@source_name" accepteert alleen overschrijvingen in @source_currency. Doelbetaalrekening "@dest_name" accepteert alleen overschrijvingen in @dest_currency. Je moet het juiste bedrag in beide valuta opgeven.',
     'transaction_data'                           => 'Transactiegegevens',
     'invalid_server_configuration'               => 'Ongeldige serverconfiguratie',

@@ -94,6 +94,8 @@ return [
     'convert_Transfer'            => 'Aktarımı dönüştür',
 
     'amount'                     => 'Tutar',
+    'foreign_amount'             => 'Foreign amount',
+    'existing_attachments'       => 'Existing attachments',
     'date'                       => 'Tarih',
     'interest_date'              => 'Faiz tarihi',
     'book_date'                  => 'Kitap Tarihi',

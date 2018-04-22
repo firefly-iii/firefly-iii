@@ -34,7 +34,7 @@ return [
     'amount_min'                     => 'Минимальная сумма',
     'amount_max'                     => 'Максимальная сумма',
     'match'                          => 'Ключи для связи',
-    'strict'                         => 'Strict mode',
+    'strict'                         => 'Строгий режим',
     'repeat_freq'                    => 'Повторы',
     'journal_currency_id'            => 'Валюта',
     'currency_id'                    => 'Валюта',
@@ -94,6 +94,8 @@ return [
     'convert_Transfer'            => 'Конвертировать перевод',
 
     'amount'                     => 'Сумма',
+    'foreign_amount'             => 'Foreign amount',
+    'existing_attachments'       => 'Existing attachments',
     'date'                       => 'Дата',
     'interest_date'              => 'Дата выплаты',
     'book_date'                  => 'Дата бронирования',

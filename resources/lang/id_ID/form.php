@@ -94,6 +94,8 @@ return [
     'convert_Transfer'            => 'Mengkonversi transfer',
 
     'amount'                     => 'Jumlah',
+    'foreign_amount'             => 'Foreign amount',
+    'existing_attachments'       => 'Existing attachments',
     'date'                       => 'Tanggal',
     'interest_date'              => 'Tanggal bunga',
     'book_date'                  => 'Tanggal buku',

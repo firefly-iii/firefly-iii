@@ -1022,7 +1022,7 @@ return [
     'events'                    => 'Eventi',
     'target_amount'             => 'Importo obiettivo',
     'start_date'                => 'Data inizio',
-    'no_start_date'             => 'No start date',
+    'no_start_date'             => 'Nessuna data di inizio',
     'target_date'               => 'Data fine',
     'no_target_date'            => 'Nessuna data fine',
     'table'                     => 'Tabella',
@@ -1160,12 +1160,12 @@ return [
     'import_index_sub_title'                => 'Indice',
     'import_general_index_intro'            => 'Benvenuti nella routine di importazione di Firefly III. Esistono alcuni modi per importare dati in Firefly III, visualizzati qui come pulsanti.',
     'upload_error'                          => 'Il file che hai caricato non può essere elaborato. Probabilmente è un tipo di file o una codifica non valida. I file di log avranno maggiori informazioni.',
-    'reset_import_settings_title'           => 'Reset import configuration',
-    'reset_import_settings_text'            => 'You can use these links to reset your import settings for specific providers. This is useful when bad settings stop you from importing data.',
-    'reset_settings_bunq'                   => 'Remove bunq API key, local external IP address and bunq related RSA keys.',
-    'reset_settings_spectre'                => 'Remove Spectre client ID, service secret and app secret. This will also remove your Spectre keypair. Remember to update the new one.',
-    'settings_reset_for_bunq'               => 'Bunq settings reset.',
-    'settings_reset_for_spectre'            => 'Spectre settings reset.',
+    'reset_import_settings_title'           => 'Reimposta la configurazione di importazione',
+    'reset_import_settings_text'            => 'Puoi utilizzare questi collegamenti per ripristinare le impostazioni di importazione per specifici fornitori. Ciò è utile quando delle impostazioni errate impediscono l\'importazione dei dati.',
+    'reset_settings_bunq'                   => 'Rimuovi la chiave API di bunq, l\'indirizzo IP locale esterno e le chiavi RSA correlate a bunq.',
+    'reset_settings_spectre'                => 'Rimuovi l\'ID cliente di Spectre, il segreto del servizio e il segreto dell\'app. Questo rimuoverà anche la tua coppia di chiavi Spectre. Ricordati di aggiornare quella nuova.',
+    'settings_reset_for_bunq'               => 'Ripristina impostazioni bunq.',
+    'settings_reset_for_spectre'            => 'Ripristina impostazioni Spectre.',
 
 
     // sandstorm.io errors and messages:
