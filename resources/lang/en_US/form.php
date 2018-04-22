@@ -94,6 +94,7 @@ return [
     'convert_Transfer'            => 'Convert transfer',
 
     'amount'                     => 'Amount',
+    'foreign_amount'             => 'Foreign amount',
     'date'                       => 'Date',
     'interest_date'              => 'Interest date',
     'book_date'                  => 'Book date',

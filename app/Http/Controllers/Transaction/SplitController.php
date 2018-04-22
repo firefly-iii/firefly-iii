@@ -189,7 +189,8 @@ class SplitController extends Controller
         $destinationAccounts = $this->repository->getJournalDestinationAccounts($journal);
         $array               = [
             'journal_description'            => $request->old('journal_description', $journal->description),
-            'journal_amount'                 => $this->repository->getJournalTotal($journal),
+            'journal_amount'                 => '0',
+            'journal_foreign_amount'         => '0',
             'sourceAccounts'                 => $sourceAccounts,
             'journal_source_account_id'      => $request->old('journal_source_account_id', $sourceAccounts->first()->id),
             'journal_source_account_name'    => $request->old('journal_source_account_name', $sourceAccounts->first()->name),
@@ -213,8 +214,11 @@ class SplitController extends Controller
             'transactions'                   => $this->getTransactionDataFromJournal($journal),
         ];
         // update transactions array with old request data.
-
         $array['transactions'] = $this->updateWithPrevious($array['transactions'], $request->old());
+
+        // update journal amount and foreign amount:
+        $array['journal_amount'] = array_sum(array_column($array['transactions'], 'amount'));
+        $array['journal_foreign_amount'] = array_sum(array_column($array['transactions'], 'foreign_amount'));
 
         return $array;
     }
