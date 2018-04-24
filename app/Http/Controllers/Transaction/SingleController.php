@@ -225,7 +225,7 @@ class SingleController extends Controller
             return $this->redirectToAccount($transactionJournal);
         }
         // @codeCoverageIgnoreEnd
-        $type = $transactionJournal->transactionTypeStr();
+        $type = $this->repository->getTransactionType($transactionJournal);
         session()->flash('success', (string)trans('firefly.deleted_' . strtolower($type), ['description' => $transactionJournal->description]));
 
         $this->repository->destroy($transactionJournal);
