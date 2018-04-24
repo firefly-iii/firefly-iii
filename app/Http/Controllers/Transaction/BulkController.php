@@ -88,39 +88,44 @@ class BulkController extends Controller
 
     /**
      * @param BulkEditJournalRequest     $request
-     * @param JournalRepositoryInterface $repository
      *
      * @return mixed
      */
-    public function update(BulkEditJournalRequest $request, JournalRepositoryInterface $repository)
+    public function update(BulkEditJournalRequest $request)
     {
         $journalIds     = $request->get('journals');
+        $journalIds     = \is_array($journalIds) ? $journalIds : [];
         $ignoreCategory = (int)$request->get('ignore_category') === 1;
         $ignoreBudget   = (int)$request->get('ignore_budget') === 1;
         $ignoreTags     = (int)$request->get('ignore_tags') === 1;
         $count          = 0;
 
-        if (\is_array($journalIds)) {
-            foreach ($journalIds as $journalId) {
-                $journal = $repository->find((int)$journalId);
-                $count++;
-                Log::debug(sprintf('Found journal #%d', $journal->id));
+        foreach ($journalIds as $journalId) {
+            $journal = $this->repository->findNull((int)$journalId);
+            if (null === $journal) {
+                continue;
+            }
 
-                // update category if not told to ignore
-                if ($ignoreCategory === false) {
-                    Log::debug(sprintf('Set category to %s', $request->string('category')));
+            $count++;
+            Log::debug(sprintf('Found journal #%d', $journal->id));
 
-                    $repository->updateCategory($journal, $request->string('category'));
-                }
-                // update budget if not told to ignore (and is withdrawal)
-                if ($ignoreBudget === false) {
-                    Log::debug(sprintf('Set budget to %d', $request->integer('budget_id')));
-                    $repository->updateBudget($journal, $request->integer('budget_id'));
-                }
-                if ($ignoreTags === false) {
-                    Log::debug(sprintf('Set tags to %s', $request->string('budget_id')));
-                    $repository->updateTags($journal, ['tags' => explode(',', $request->string('tags'))]);
-                }
+            // update category if not told to ignore
+            if ($ignoreCategory === false) {
+                Log::debug(sprintf('Set category to %s', $request->string('category')));
+
+                $this->repository->updateCategory($journal, $request->string('category'));
+            }
+
+            // update budget if not told to ignore (and is withdrawal)
+            if ($ignoreBudget === false) {
+                Log::debug(sprintf('Set budget to %d', $request->integer('budget_id')));
+                $this->repository->updateBudget($journal, $request->integer('budget_id'));
+            }
+
+            // update tags:
+            if ($ignoreTags === false) {
+                Log::debug(sprintf('Set tags to %s', $request->string('budget_id')));
+                $this->repository->updateTags($journal, ['tags' => explode(',', $request->string('tags'))]);
             }
         }
 
@@ -130,5 +135,4 @@ class BulkController extends Controller
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.bulk-edit.uri'));
     }
-
 }

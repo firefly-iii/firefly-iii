@@ -27,7 +27,6 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\MassDeleteJournalRequest;
-use FireflyIII\Http\Requests\MassEditBulkJournalRequest;
 use FireflyIII\Http\Requests\MassEditJournalRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;

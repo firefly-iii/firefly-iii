@@ -97,36 +97,23 @@ class ConvertController extends Controller
         $destinationAccount = $this->repository->getJournalDestinationAccounts($journal)->first();
 
         return view(
-            'transactions.convert',
-            compact(
-                'sourceType',
-                'destinationType',
-                'journal',
-                'positiveAmount',
-                'sourceAccount',
-                'destinationAccount',
-                'sourceType',
-                'subTitle',
-                'subTitleIcon'
-            )
+            'transactions.convert', compact(
+            'sourceType', 'destinationType', 'journal', 'positiveAmount', 'sourceAccount', 'destinationAccount', 'sourceType', 'subTitle', 'subTitleIcon'
+        )
         );
-
-        // convert withdrawal to deposit requires a new source account ()
-        //  or to transfer requires
     }
 
     /**
-     * @param Request                    $request
-     * @param JournalRepositoryInterface $repository
-     * @param TransactionType            $destinationType
-     * @param TransactionJournal         $journal
+     * @param Request            $request
+     * @param TransactionType    $destinationType
+     * @param TransactionJournal $journal
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
      * @throws FireflyException
      * @throws FireflyException
      */
-    public function postIndex(Request $request, JournalRepositoryInterface $repository, TransactionType $destinationType, TransactionJournal $journal)
+    public function postIndex(Request $request, TransactionType $destinationType, TransactionJournal $journal)
     {
         // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($journal)) {
@@ -153,7 +140,7 @@ class ConvertController extends Controller
         $destination = $this->getDestinationAccount($journal, $destinationType, $data);
 
         // update the journal:
-        $errors = $repository->convert($journal, $destinationType, $source, $destination);
+        $errors = $this->repository->convert($journal, $destinationType, $source, $destination);
 
         if ($errors->count() > 0) {
             return redirect(route('transactions.convert.index', [strtolower($destinationType->type), $journal->id]))->withErrors($errors)->withInput();

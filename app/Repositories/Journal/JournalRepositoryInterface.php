@@ -78,7 +78,6 @@ interface JournalRepositoryInterface
      * Find a specific journal.
      *
      * @param int $journalId
-     * @deprecated
      *
      * @return TransactionJournal|null
      */
