@@ -90,7 +90,7 @@ trait AccountServiceTrait
         $rules     = ['iban' => 'required|iban'];
         $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
-            Log::error(sprintf('Detected invalid IBAN ("%s"). Return NULL instead.', $iban));
+            Log::info(sprintf('Detected invalid IBAN ("%s"). Return NULL instead.', $iban));
 
             return null;
         }
