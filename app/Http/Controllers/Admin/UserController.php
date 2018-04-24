@@ -30,7 +30,6 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Log;
 use Preferences;
-use Session;
 use View;
 
 /**

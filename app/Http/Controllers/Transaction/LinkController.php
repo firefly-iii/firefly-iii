@@ -30,7 +30,6 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use Log;
 use Preferences;
-use Session;
 use URL;
 
 /**

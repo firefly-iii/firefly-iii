@@ -36,7 +36,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Session;
 use View;
 
 /**

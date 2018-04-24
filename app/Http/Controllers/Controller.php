@@ -34,7 +34,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Log;
 use Route;
-use Session;
 use URL;
 use View;
 
@@ -99,7 +98,7 @@ class Controller extends BaseController
                     }
 
                     // share language
-                    $language           = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
+                    $language = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
 
                     View::share('language', $language);
                     View::share('shownDemo', $shownDemo);

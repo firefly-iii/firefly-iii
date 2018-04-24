@@ -157,16 +157,12 @@ class TransactionTransformer extends TransformerAbstract
         $categoryName = null;
         $budgetId     = null;
         $budgetName   = null;
-        $categoryId   = null === $transaction->transaction_category_id ? $transaction->transaction_journal_category_id
-            : $transaction->transaction_category_id;
-        $categoryName = null === $transaction->transaction_category_name ? $transaction->transaction_journal_category_name
-            : $transaction->transaction_category_name;
+        $categoryId   = $transaction->transaction_category_id ?? $transaction->transaction_journal_category_id;
+        $categoryName = $transaction->transaction_category_name ?? $transaction->transaction_journal_category_name;
 
         if ($transaction->transaction_type_type === TransactionType::WITHDRAWAL) {
-            $budgetId   = null === $transaction->transaction_budget_id ? $transaction->transaction_journal_budget_id
-                : $transaction->transaction_budget_id;
-            $budgetName = null === $transaction->transaction_budget_name ? $transaction->transaction_journal_budget_name
-                : $transaction->transaction_budget_name;
+            $budgetId   = $transaction->transaction_budget_id ?? $transaction->transaction_journal_budget_id;
+            $budgetName = $transaction->transaction_budget_name ?? $transaction->transaction_journal_budget_name;
         }
         /** @var Note $dbNote */
         $dbNote = $transaction->transactionJournal->notes()->first();
@@ -250,7 +246,7 @@ class TransactionTransformer extends TransformerAbstract
         }
 
         // expand description.
-        if (strlen((string)$transaction->transaction_description) > 0) {
+        if (\strlen((string)$transaction->transaction_description) > 0) {
             $data['description'] = $transaction->transaction_description . ' (' . $transaction->description . ')';
         }
 

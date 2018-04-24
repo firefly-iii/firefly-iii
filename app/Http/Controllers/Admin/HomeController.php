@@ -28,7 +28,6 @@ use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Middleware\IsSandStormUser;
 use Illuminate\Http\Request;
 use Log;
-use Session;
 
 /**
  * Class HomeController.

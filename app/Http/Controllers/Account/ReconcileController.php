@@ -41,7 +41,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Session;
 
 /**
  * Class ReconcileController.
@@ -217,6 +216,7 @@ class ReconcileController extends Controller
         $transactionsUri = route('accounts.reconcile.transactions', [$account->id, '%start%', '%end%']);
         $overviewUri     = route('accounts.reconcile.overview', [$account->id, '%start%', '%end%']);
         $indexUri        = route('accounts.reconcile', [$account->id, '%start%', '%end%']);
+
         return view(
             'accounts.reconcile.index', compact(
                                           'account', 'currency', 'subTitleIcon', 'start', 'end', 'subTitle', 'startBalance', 'endBalance', 'transactionsUri',
@@ -370,7 +370,9 @@ class ReconcileController extends Controller
         $collector->setAccounts(new Collection([$account]))
                   ->setRange($selectionStart, $selectionEnd)->withBudgetInformation()->withOpposingAccount()->withCategoryInformation();
         $transactions = $collector->getJournals();
-        $html         = view('accounts.reconcile.transactions', compact('account', 'transactions','currency', 'start', 'end', 'selectionStart', 'selectionEnd'))->render();
+        $html         = view(
+            'accounts.reconcile.transactions', compact('account', 'transactions', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
+        )->render();
 
         return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
     }
@@ -439,7 +441,6 @@ class ReconcileController extends Controller
         ];
 
         $this->repository->update($journal, $data);
-
 
 
         // @codeCoverageIgnoreStart

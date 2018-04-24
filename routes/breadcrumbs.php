@@ -973,18 +973,15 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'transactions.mass.edit',
     function (BreadCrumbsGenerator $breadcrumbs, Collection $journals): void {
-        if ($journals->count() > 0) {
+        if (\count($journals) > 0) {
             $journalIds = $journals->pluck('id')->toArray();
-            $what       = strtolower($journals->first()->transactionType->type);
+            $what       = strtolower($journals->first()['type']);
             $breadcrumbs->parent('transactions.index', $what);
             $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.edit', $journalIds));
 
             return;
         }
-
         $breadcrumbs->parent('index');
-
-        return;
     }
 );
 

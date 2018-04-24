@@ -127,8 +127,8 @@ class BudgetController extends Controller
             $warnText  = (string)trans(
                 'firefly.over_budget_warn',
                 [
-                    'amount'       => app('amount')->formatAnything($currency, $average, false),
-                    'over_amount'  => app('amount')->formatAnything($currency, $current, false),
+                    'amount'      => app('amount')->formatAnything($currency, $average, false),
+                    'over_amount' => app('amount')->formatAnything($currency, $current, false),
                 ]
             );
         }

@@ -45,7 +45,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Session;
 use Throwable;
 use View;
 

@@ -44,7 +44,6 @@ use Laravel\Passport\Passport;
 use Log;
 use phpseclib\Crypt\RSA;
 use Preferences;
-use Session;
 use View;
 
 /**

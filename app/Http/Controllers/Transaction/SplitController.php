@@ -42,7 +42,6 @@ use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Preferences;
-use Session;
 use Steam;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use View;
@@ -143,7 +142,7 @@ class SplitController extends Controller
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal); // @codeCoverageIgnore
         }
-        $data    = $request->getAll();
+        $data = $request->getAll();
 
         // keep current bill:
         $data['bill_id'] = $journal->bill_id;
@@ -221,7 +220,7 @@ class SplitController extends Controller
         $array['transactions'] = $this->updateWithPrevious($array['transactions'], $request->old());
 
         // update journal amount and foreign amount:
-        $array['journal_amount'] = array_sum(array_column($array['transactions'], 'amount'));
+        $array['journal_amount']         = array_sum(array_column($array['transactions'], 'amount'));
         $array['journal_foreign_amount'] = array_sum(array_column($array['transactions'], 'foreign_amount'));
 
         return $array;

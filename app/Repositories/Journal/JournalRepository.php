@@ -133,6 +133,20 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Find a specific journal.
+     *
+     * @param int $journalId
+     *
+     * @deprecated
+     *
+     * @return TransactionJournal|null
+     */
+    public function findNull(int $journalId): ?TransactionJournal
+    {
+        return $this->user->transactionJournals()->where('id', $journalId)->first();
+    }
+
+    /**
      * @param Transaction $transaction
      *
      * @return Transaction|null

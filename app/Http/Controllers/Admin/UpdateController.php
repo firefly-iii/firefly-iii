@@ -32,7 +32,6 @@ use FireflyIII\Services\Github\Object\Release;
 use FireflyIII\Services\Github\Request\UpdateRequest;
 use Illuminate\Http\Request;
 use Log;
-use Session;
 
 /**
  * Class HomeController.

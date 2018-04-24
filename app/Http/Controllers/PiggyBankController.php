@@ -35,7 +35,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Session;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use View;
 
@@ -158,7 +157,7 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param PiggyBank                    $piggyBank
+     * @param PiggyBank $piggyBank
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -210,7 +209,7 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param Request                      $request
+     * @param Request $request
      *
      * @return View
      */
@@ -263,7 +262,7 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param Request                      $request
+     * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -284,15 +283,15 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param Request                      $request
-     * @param PiggyBank                    $piggyBank
+     * @param Request   $request
+     * @param PiggyBank $piggyBank
      *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postAdd(Request $request, PiggyBank $piggyBank)
     {
-        $amount   = $request->get('amount') ?? '0';
-        $currency = app('amount')->getDefaultCurrency();
+        $amount     = $request->get('amount') ?? '0';
+        $currency   = app('amount')->getDefaultCurrency();
         $currencyId = (int)$this->accountRepos->getMetaValue($piggyBank->account, 'currency_id');
         if ($currencyId > 0) {
             $currency = $this->currencyRepos->findNull($currencyId);
@@ -324,15 +323,15 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param Request                      $request
-     * @param PiggyBank                    $piggyBank
+     * @param Request   $request
+     * @param PiggyBank $piggyBank
      *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postRemove(Request $request, PiggyBank $piggyBank)
     {
-        $amount   = $request->get('amount') ?? '0';
-        $currency = app('amount')->getDefaultCurrency();
+        $amount     = $request->get('amount') ?? '0';
+        $currency   = app('amount')->getDefaultCurrency();
         $currencyId = (int)$this->accountRepos->getMetaValue($piggyBank->account, 'currency_id');
         if ($currencyId > 0) {
             $currency = $this->currencyRepos->findNull($currencyId);
@@ -404,7 +403,7 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param PiggyBank                    $piggyBank
+     * @param PiggyBank $piggyBank
      *
      * @return View
      */
@@ -418,7 +417,7 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param PiggyBankFormRequest         $request
+     * @param PiggyBankFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -445,8 +444,8 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param PiggyBankFormRequest         $request
-     * @param PiggyBank                    $piggyBank
+     * @param PiggyBankFormRequest $request
+     * @param PiggyBank            $piggyBank
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */

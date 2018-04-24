@@ -40,7 +40,6 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Http\Request;
 use Log;
 use Preferences;
-use Session;
 use View;
 
 /**

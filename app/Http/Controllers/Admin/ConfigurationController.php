@@ -29,7 +29,6 @@ use FireflyIII\Http\Requests\ConfigurationRequest;
 use FireflyIII\Support\Facades\FireflyConfig;
 use Preferences;
 use Redirect;
-use Session;
 use View;
 
 /**

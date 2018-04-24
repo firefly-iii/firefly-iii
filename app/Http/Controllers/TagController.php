@@ -32,7 +32,6 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Preferences;
-use Session;
 use View;
 
 /**
