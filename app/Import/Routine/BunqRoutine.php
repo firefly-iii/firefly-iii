@@ -320,23 +320,27 @@ class BunqRoutine implements RoutineInterface
     private function convertToAccount(LabelMonetaryAccount $party, string $expectedType): Account
     {
         Log::debug('in convertToAccount()');
-        // find opposing party by IBAN first.
-        $result = $this->accountRepository->findByIbanNull($party->getIban(), [$expectedType]);
-        if (null !== $result) {
-            Log::debug(sprintf('Search for %s resulted in account %s (#%d)', $party->getIban(), $result->name, $result->id));
 
-            return $result;
-        }
-
-        // try to find asset account just in case:
-        if ($expectedType !== AccountType::ASSET) {
-            $result = $this->accountRepository->findByIbanNull($party->getIban(), [AccountType::ASSET]);
+        if ($party->getIban() !== null) {
+            // find opposing party by IBAN first.
+            $result = $this->accountRepository->findByIbanNull($party->getIban(), [$expectedType]);
             if (null !== $result) {
-                Log::debug(sprintf('Search for Asset "%s" resulted in account %s (#%d)', $party->getIban(), $result->name, $result->id));
+                Log::debug(sprintf('Search for %s resulted in account %s (#%d)', $party->getIban(), $result->name, $result->id));
 
                 return $result;
             }
+
+            // try to find asset account just in case:
+            if ($expectedType !== AccountType::ASSET) {
+                $result = $this->accountRepository->findByIbanNull($party->getIban(), [AccountType::ASSET]);
+                if (null !== $result) {
+                    Log::debug(sprintf('Search for Asset "%s" resulted in account %s (#%d)', $party->getIban(), $result->name, $result->id));
+
+                    return $result;
+                }
+            }
         }
+
         // create new account:
         $data    = [
             'user_id'         => $this->job->user_id,
