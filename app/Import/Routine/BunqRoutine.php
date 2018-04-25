@@ -810,7 +810,7 @@ class BunqRoutine implements RoutineInterface
             $this->addStep();
             $account  = new MonetaryAccountBank($accountData);
             $importId = $account->getId();
-            if (1 === $mapping[$importId]) {
+            if (isset($mapping[$importId])) {
                 Log::debug(sprintf('Will grab payments for account %s', $account->getDescription()));
                 $request = new ListPaymentRequest();
                 $request->setPrivateKey($this->getPrivateKey());

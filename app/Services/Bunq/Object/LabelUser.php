@@ -51,7 +51,7 @@ class LabelUser extends BunqObject
         $this->displayName    = $data['display_name'];
         $this->country        = $data['country'];
         $this->publicNickName = $data['public_nick_name'];
-        $this->avatar         = new Avatar($data['avatar']);
+        $this->avatar         = isset($data['avatar']) ? new Avatar($data['avatar']) : null;
     }
 
     /**
