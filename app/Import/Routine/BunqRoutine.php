@@ -798,6 +798,7 @@ class BunqRoutine implements RoutineInterface
         $mapping = $config['accounts-mapped'];
         $token   = new SessionToken($config['session_token']);
         $count   = 0;
+        $all     = [];
         if (0 === $user->getId()) {
             $user = new UserCompany($config['user_company']);
             Log::debug(sprintf('Will try to get transactions for company #%d', $user->getId()));
@@ -826,7 +827,7 @@ class BunqRoutine implements RoutineInterface
                     'import_id' => $importId,
                     'payments'  => $payments,
                 ];
-                $count                  += count($payments);
+                $count                  += \count($payments);
             }
             Log::debug(sprintf('Total number of payments: %d', $count));
             $this->addStep();
