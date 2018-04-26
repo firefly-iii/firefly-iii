@@ -28,7 +28,7 @@ RUN apt-get update -y && \
 RUN docker-php-ext-install -j$(nproc) curl gd intl json readline tidy zip bcmath xml mbstring pdo_sqlite pdo_mysql bz2 pdo_pgsql
 
 # Generate locales supported by Firefly III
-RUN echo "de_DE.UTF-8 UTF-8\nen_US.UTF-8 UTF-8\nfr_FR.UTF-8 UTF-8\nid_ID.UTF-8 UTF-8\nnl_NL.UTF-8 UTF-8\npl_PL.UTF-8 UTF-8" > /etc/locale.gen && locale-gen
+RUN echo "de_DE.UTF-8 UTF-8\nen_US.UTF-8 UTF-8\nes_ES.UTF-8 UTF-8\nfr_FR.UTF-8 UTF-8\nid_ID.UTF-8 UTF-8\nit_IT.UTF-8 UTF-8\nnl_NL.UTF-8 UTF-8\npl_PL.UTF-8 UTF-8pt_BR.UTF-8 UTF-8ru_RU.UTF-8 UTF-8\ntr_TR.UTF-8 UTF-8\n\n" > /etc/locale.gen && locale-gen
 
 # copy Apache config to correct spot.
 COPY ./.deploy/docker/apache2.conf /etc/apache2/apache2.conf
