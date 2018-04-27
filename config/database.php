@@ -38,19 +38,19 @@ if (!($databaseUrl === false)) {
 
 return [
 
-    'default'     => env('DB_CONNECTION', 'mysql'),
+    'default'     => envNonEmpty('DB_CONNECTION', 'mysql'),
     'connections' => [
         'sqlite' => [
             'driver'   => 'sqlite',
-            'database' => env('DB_DATABASE', storage_path('database/database.sqlite')),
+            'database' => envNonEmpty('DB_DATABASE', storage_path('database/database.sqlite')),
             'prefix'   => '',
         ],
         'mysql'  => [
             'driver'      => 'mysql',
-            'host'        => env('DB_HOST', '127.0.0.1'),
-            'port'        => env('DB_PORT', '3306'),
-            'database'    => env('DB_DATABASE', 'forge'),
-            'username'    => env('DB_USERNAME', 'forge'),
+            'host'        => envNonEmpty('DB_HOST', '127.0.0.1'),
+            'port'        => envNonEmpty('DB_PORT', '3306'),
+            'database'    => envNonEmpty('DB_DATABASE', 'forge'),
+            'username'    => envNonEmpty('DB_USERNAME', 'forge'),
             'password'    => env('DB_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset'     => 'utf8mb4',
@@ -61,10 +61,10 @@ return [
         ],
         'pgsql'  => [
             'driver'   => 'pgsql',
-            'host'     => env('DB_HOST', $host),
-            'port'     => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', $database),
-            'username' => env('DB_USERNAME', $username),
+            'host'     => envNonEmpty('DB_HOST', $host),
+            'port'     => envNonEmpty('DB_PORT', '5432'),
+            'database' => envNonEmpty('DB_DATABASE', $database),
+            'username' => envNonEmpty('DB_USERNAME', $username),
             'password' => env('DB_PASSWORD', $password),
             'charset'  => 'utf8',
             'prefix'   => '',

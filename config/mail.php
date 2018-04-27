@@ -38,7 +38,7 @@ return [
     |
     */
 
-    'driver' => env('MAIL_DRIVER', 'log'),
+    'driver' => envNonEmpty('MAIL_DRIVER', 'log'),
 
     /*
     |--------------------------------------------------------------------------
@@ -76,7 +76,7 @@ return [
     | used globally for all e-mails that are sent by your application.
     |
     */
-    'from' => ['address' => env('MAIL_FROM', 'changeme@example.com'), 'name' => 'Firefly III Mailer'],
+    'from' => ['address' => envNonEmpty('MAIL_FROM', 'changeme@example.com'), 'name' => 'Firefly III Mailer'],
 
 
     /*
