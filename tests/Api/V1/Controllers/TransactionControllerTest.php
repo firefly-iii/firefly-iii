@@ -341,7 +341,7 @@ class TransactionControllerTest extends TestCase
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection);
-        $accountRepos->shouldReceive('findByNameNull')->andReturn(null);
+        $accountRepos->shouldReceive('findByName')->andReturn(null);
 
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 1000),
@@ -1661,7 +1661,7 @@ class TransactionControllerTest extends TestCase
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection);
-        $accountRepos->shouldReceive('findByNameNull')->andReturn($account);
+        $accountRepos->shouldReceive('findByName')->andReturn($account);
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
 

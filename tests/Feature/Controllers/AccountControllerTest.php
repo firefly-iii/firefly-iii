@@ -182,6 +182,8 @@ class AccountControllerTest extends TestCase
         Steam::shouldReceive('balancesByAccounts')->andReturn([$account->id => '100']);
         Steam::shouldReceive('getLastActivities')->andReturn([]);
 
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'accountNumber'])->andReturn('123');
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('accounts.index', ['asset']));

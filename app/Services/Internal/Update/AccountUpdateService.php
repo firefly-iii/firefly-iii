@@ -51,7 +51,7 @@ class AccountUpdateService
         $account->iban            = $data['iban'];
         $account->save();
 
-        if($data['currency_id'] === 0) {
+        if(isset($data['currency_id']) && $data['currency_id'] === 0) {
             unset($data['currency_id']);
         }
 

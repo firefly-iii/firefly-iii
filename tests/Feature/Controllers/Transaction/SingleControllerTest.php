@@ -209,6 +209,8 @@ class SingleControllerTest extends TestCase
 
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('destroy')->once();
+        $journalRepos->shouldReceive('getTransactionType')->once()->andReturn('Withdrawal');
+
 
         $this->session(['transactions.delete.uri' => 'http://localhost']);
         $this->be($this->user());

@@ -72,9 +72,13 @@ class ToAccountEndsTest extends TestCase
      */
     public function testTriggeredNot()
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $count = 0;
+        while ($count === 0) {
+            $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+            $count       = $journal->transactions()->where('amount', '>', 0)->count();
+        }
 
-        $trigger = ToAccountEnds::makeFromStrings((string)random_int(1, 234), false);
+        $trigger = ToAccountEnds::makeFromStrings((string)random_int(1, 1234), false);
         $result  = $trigger->triggered($journal);
         $this->assertFalse($result);
     }

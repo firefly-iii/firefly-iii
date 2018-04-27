@@ -303,7 +303,7 @@ class RuleController extends Controller
     {
         $ids = $request->get('actions');
         if (\is_array($ids)) {
-            $this->ruleGroupRepos->reorderRuleActions($rule, $ids);
+            $this->ruleRepos->reorderRuleActions($rule, $ids);
         }
 
         return response()->json('true');
@@ -320,7 +320,7 @@ class RuleController extends Controller
     {
         $ids = $request->get('triggers');
         if (\is_array($ids)) {
-            $this->ruleGroupRepos->reorderRuleTriggers($rule, $ids);
+            $this->ruleRepos->reorderRuleTriggers($rule, $ids);
         }
 
         return response()->json('true');

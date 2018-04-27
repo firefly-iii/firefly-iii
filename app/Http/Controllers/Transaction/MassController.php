@@ -39,6 +39,7 @@ use Illuminate\Support\Collection;
 use Preferences;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use View;
+use Illuminate\View\View as IlluminateView;
 
 /**
  * Class MassController.
@@ -69,9 +70,9 @@ class MassController extends Controller
     /**
      * @param Collection $journals
      *
-     * @return View
+     * @return IlluminateView
      */
-    public function delete(Collection $journals): View
+    public function delete(Collection $journals): IlluminateView
     {
         $subTitle = trans('firefly.mass_delete_journals');
 
@@ -121,7 +122,7 @@ class MassController extends Controller
      *
      * @return View
      */
-    public function edit(Collection $journals)
+    public function edit(Collection $journals): IlluminateView
     {
         $subTitle = trans('firefly.mass_edit_journals');
 

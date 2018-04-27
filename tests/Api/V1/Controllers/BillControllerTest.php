@@ -144,6 +144,7 @@ class BillControllerTest extends TestCase
             'amount_min'  => '66.34',
             'amount_max'  => '45.67',
             'date'        => '2018-01-01',
+            'currency_id' => 1,
             'repeat_freq' => 'monthly',
             'skip'        => 0,
             'automatch'   => 1,
@@ -192,6 +193,7 @@ class BillControllerTest extends TestCase
             'skip'        => 0,
             'automatch'   => 1,
             'active'      => 1,
+            'currency_id' => 1,
 
         ];
 
@@ -230,7 +232,7 @@ class BillControllerTest extends TestCase
             'skip'        => 0,
             'automatch'   => 1,
             'active'      => 1,
-
+            'currency_id' => 1,
         ];
 
         // test API

@@ -152,10 +152,12 @@ $factory->define(
     function (Faker\Generator $faker) {
         return [
             'id'            => $faker->unique()->numberBetween(100, 10000),
+            'created_at'    => new Carbon,
+            'updated_at'    => new Carbon,
             'account_id'    => $faker->numberBetween(1, 10),
             'name'          => $faker->words(3, true),
             'target_amount' => '1000.00',
-            'startdate'     => '2017-01-01',
+            'startdate'     => new Carbon('2017-01-01'),
             'order'         => 1,
             'active'        => 1,
             'encrypted'     => 0,

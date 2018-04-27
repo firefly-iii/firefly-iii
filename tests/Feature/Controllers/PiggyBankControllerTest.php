@@ -66,6 +66,8 @@ class PiggyBankControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $piggyRepos->shouldReceive('getCurrentAmount')->andReturn('0');
+        $piggyRepos->shouldReceive('leftOnAccount')->andReturn('0');
+
         $this->be($this->user());
         $response = $this->get(route('piggy-banks.add', [1]));
         $response->assertStatus(200);
@@ -81,6 +83,7 @@ class PiggyBankControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $piggyRepos->shouldReceive('getCurrentAmount')->andReturn('0');
+        $piggyRepos->shouldReceive('leftOnAccount')->andReturn('0');
 
         $this->be($this->user());
         $response = $this->get(route('piggy-banks.add-money-mobile', [1]));
@@ -200,8 +203,9 @@ class PiggyBankControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getPiggyBanks')->andReturn(new Collection([$one, $two]));
         $repository->shouldReceive('getCurrentAmount')->andReturn('10');
+        $repository->shouldReceive('setUser');
 
-        Steam::shouldReceive('balanceIgnoreVirtual')->twice()->andReturn('1');
+        Steam::shouldReceive('balance')->twice()->andReturn('1');
 
         $this->be($this->user());
         $response = $this->get(route('piggy-banks.index'));

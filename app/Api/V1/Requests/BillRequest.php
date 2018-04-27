@@ -87,7 +87,6 @@ class BillRequest extends Request
             case 'PATCH':
                 $bill           = $this->route()->parameter('bill');
                 $rules['name']  .= ',' . $bill->id;
-                $rules['match'] .= ',' . $bill->id;
                 break;
         }
 

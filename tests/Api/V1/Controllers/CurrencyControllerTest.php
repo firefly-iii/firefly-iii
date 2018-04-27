@@ -97,9 +97,17 @@ class CurrencyControllerTest extends TestCase
         $response = $this->get('/api/v1/currencies');
         $response->assertStatus(200);
         $response->assertJson(['data' => [],]);
-        $response->assertJson(
-            ['meta' => ['pagination' => ['total'       => $collection->count(), 'count' => $collection->count(), 'per_page' => 50, 'current_page' => 1,
-                                         'total_pages' => 1]],]
+        $response->assertJson([
+                'meta' => [
+                    'pagination' => [
+                        'total'        => $collection->count(),
+                        'count'        => $collection->count(),
+                        'per_page'     => 100,
+                        'current_page' => 1,
+                        'total_pages'  => 1,
+                    ],
+                ],
+            ]
         );
         $response->assertJson(
             ['links' => ['self' => true, 'first' => true, 'last' => true,],]

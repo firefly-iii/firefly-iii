@@ -86,16 +86,16 @@ class BulkControllerTest extends TestCase
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection);
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalSourceAccounts')
-                     ->andReturn(new Collection([1, 2, 3]), new Collection, new Collection, new Collection);
+                     ->andReturn(new Collection([1, 2, 3]), new Collection, new Collection, new Collection, new Collection([1]));
         $journalRepos->shouldReceive('getJournalDestinationAccounts')
-                     ->andReturn(new Collection, new Collection([1, 2, 3]), new Collection, new Collection);
+                     ->andReturn(new Collection, new Collection([1, 2, 3]), new Collection, new Collection, new Collection([1]));
         $journalRepos->shouldReceive('getTransactionType')
-                     ->andReturn('Withdrawal', 'Opening balance');
+                     ->andReturn('Withdrawal', 'Opening balance', 'Withdrawal', 'Withdrawal', 'Withdrawal');
         $journalRepos->shouldReceive('isJournalReconciled')
-                     ->andReturn(true, false);
+                     ->andReturn(true, false, false, false, false);
 
         // default transactions
-        $collection = $this->user()->transactionJournals()->take(4)->get();
+        $collection = $this->user()->transactionJournals()->take(5)->get();
         $allIds     = $collection->pluck('id')->toArray();
         $route      = route('transactions.bulk.edit', implode(',', $allIds));
         $this->be($this->user());
@@ -105,43 +105,6 @@ class BulkControllerTest extends TestCase
         $response->assertSessionHas('info');
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
-        $response->assertSee('marked as reconciled');
-        $response->assertSee('multiple source accounts');
-        $response->assertSee('multiple destination accounts');
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\BulkController::edit
-     */
-    public function testEditMultipleNothingLeft()
-    {
-        // mock stuff:
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
-        $journalRepos->shouldReceive('getJournalSourceAccounts')
-                     ->andReturn(new Collection([1, 2, 3]), new Collection, new Collection, new Collection);
-        $journalRepos->shouldReceive('getJournalDestinationAccounts')
-                     ->andReturn(new Collection, new Collection([1, 2, 3]), new Collection, new Collection);
-        $journalRepos->shouldReceive('getTransactionType')
-                     ->andReturn('Withdrawal', 'Opening balance');
-        $journalRepos->shouldReceive('isJournalReconciled')
-                     ->andReturn(true, true);
-
-
-        // default transactions
-        $collection = $this->user()->transactionJournals()->take(4)->get();
-        $allIds     = $collection->pluck('id')->toArray();
-        $route      = route('transactions.bulk.edit', implode(',', $allIds));
-        $this->be($this->user());
-        $response = $this->get($route);
-        $response->assertStatus(200);
-        $response->assertSee('Bulk edit a number of transactions');
-        $response->assertSessionHas('info');
-        // has bread crumb
-        $response->assertSee('<ol class="breadcrumb">');
-        $response->assertSessionHas('error', 'You have selected no valid transactions to edit.');
         $response->assertSee('marked as reconciled');
         $response->assertSee('multiple source accounts');
         $response->assertSee('multiple destination accounts');
@@ -166,7 +129,7 @@ class BulkControllerTest extends TestCase
 
         $repository = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('find')->times(4)->andReturn(new TransactionJournal);
+        $repository->shouldReceive('findNull')->times(4)->andReturn(new TransactionJournal);
 
         $repository->shouldReceive('updateCategory')->times(4)->andReturn(new TransactionJournal())
                    ->withArgs([Mockery::any(), $data['category']]);
