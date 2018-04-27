@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 return [
     // new user:
-    'bank_name'                      => 'Nome Banca',
+    'bank_name'                      => 'Nome banca',
     'bank_balance'                   => 'Saldo',
     'savings_balance'                => 'Saldo risparmio',
     'credit_card_limit'              => 'Limite Carta di Credito',
@@ -94,8 +94,8 @@ return [
     'convert_Transfer'            => 'Converti giroconto',
 
     'amount'                     => 'Importo',
-    'foreign_amount'             => 'Foreign amount',
-    'existing_attachments'       => 'Existing attachments',
+    'foreign_amount'             => 'Importo estero',
+    'existing_attachments'       => 'Allegati esistenti',
     'date'                       => 'Data',
     'interest_date'              => 'Data interesse',
     'book_date'                  => 'Agenda',

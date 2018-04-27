@@ -584,6 +584,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'converted_to_Deposit'                    => 'Die Transaktion wurde in eine Einzahlung konvertiert',
     'converted_to_Transfer'                   => 'Die Transaktion wurde in eine Umbuchung konvertiert',
     'invalid_convert_selection'               => 'Das von Ihnen ausgewählte Konto wird für diese Transaktion bereits verwendet oder ist nicht vorhanden.',
+    'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Erstelle eine neue Ausgabe',
@@ -1164,9 +1165,9 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'reset_import_settings_title'           => 'Importeinstellungen zurücksetzen',
     'reset_import_settings_text'            => 'Über diese Links können Sie Ihre Importeinstellungen für bestimmte Anbieter zurücksetzen. Dies ist nützlich, wenn fehlerhafte Einstellungen den Import von Daten verhindern.',
     'reset_settings_bunq'                   => 'Bunq-API-Schlüssel entfernen (lokale externe IP-Adresse und Bunq-bezogene RSA-Schlüssel).',
-    'reset_settings_spectre'                => 'Remove Spectre client ID, service secret and app secret. This will also remove your Spectre keypair. Remember to update the new one.',
-    'settings_reset_for_bunq'               => 'Bunq settings reset.',
-    'settings_reset_for_spectre'            => 'Spectre settings reset.',
+    'reset_settings_spectre'                => '„Spectre”-Client-ID, das Dienst-Geheimnis und das App-Geheimnis. Dadurch wird auch Ihr „Spectre”-Schlüsselpaar entfernt. Denken Sie daran, die neue Version zu aktualisieren.',
+    'settings_reset_for_bunq'               => 'Bunq-Einstellungen zurückgesetzt',
+    'settings_reset_for_spectre'            => 'Spectre-Einstellungen zurückgesetzt',
 
 
     // sandstorm.io errors and messages:

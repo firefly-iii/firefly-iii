@@ -583,6 +583,7 @@ return [
     'converted_to_Deposit'                    => 'Транзакция была преобразована в доход',
     'converted_to_Transfer'                   => 'Транзакция была преобразована в перевод',
     'invalid_convert_selection'               => 'Выбранный вами счёт уже используется в этой транзакции или не существует.',
+    'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Создать новый расход',

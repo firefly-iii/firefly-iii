@@ -583,6 +583,7 @@ return [
     'converted_to_Deposit'                    => 'De transactie is veranderd in inkomsten',
     'converted_to_Transfer'                   => 'De transactie is veranderd in een overschrijving',
     'invalid_convert_selection'               => 'De rekening die je hebt geselecteerd wordt al gebruikt in deze transactie, of bestaat niet.',
+    'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Nieuwe uitgave',

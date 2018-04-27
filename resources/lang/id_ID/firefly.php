@@ -583,6 +583,7 @@ return [
     'converted_to_Deposit'                    => 'Transaksi telah dikonversi menjadi deposit',
     'converted_to_Transfer'                   => 'Transaksi telah dikonversi menjadi transfer',
     'invalid_convert_selection'               => 'Akun yang telah Anda pilih sudah digunakan dalam transaksi ini atau tidak ada.',
+    'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Buat penarikan baru',

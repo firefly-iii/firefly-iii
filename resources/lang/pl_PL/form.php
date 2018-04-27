@@ -94,8 +94,8 @@ return [
     'convert_Transfer'            => 'Konwertuj transfer',
 
     'amount'                     => 'Kwota',
-    'foreign_amount'             => 'Foreign amount',
-    'existing_attachments'       => 'Existing attachments',
+    'foreign_amount'             => 'Kwota zagraniczna',
+    'existing_attachments'       => 'Istniejące załączniki',
     'date'                       => 'Data',
     'interest_date'              => 'Data odsetek',
     'book_date'                  => 'Data księgowania',

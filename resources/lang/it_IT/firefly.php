@@ -583,6 +583,7 @@ return [
     'converted_to_Deposit'                    => 'La transazione è stata convertita in un deposito',
     'converted_to_Transfer'                   => 'La transazione è stata convertita in un giroconto',
     'invalid_convert_selection'               => 'Tl\'account che hai selezionato è già utilizzato in questa transazione o non esiste.',
+    'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Crea un nuovo prelievo',

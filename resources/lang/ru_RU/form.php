@@ -94,8 +94,8 @@ return [
     'convert_Transfer'            => 'Конвертировать перевод',
 
     'amount'                     => 'Сумма',
-    'foreign_amount'             => 'Foreign amount',
-    'existing_attachments'       => 'Existing attachments',
+    'foreign_amount'             => 'Сумму в иностранной валюте',
+    'existing_attachments'       => 'Существующие вложения',
     'date'                       => 'Дата',
     'interest_date'              => 'Дата выплаты',
     'book_date'                  => 'Дата бронирования',

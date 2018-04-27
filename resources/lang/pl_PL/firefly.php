@@ -583,6 +583,7 @@ return [
     'converted_to_Deposit'                    => 'Transakcja została przekonwertowana do wpłaty',
     'converted_to_Transfer'                   => 'Transakcja została przekonwertowana do transferu',
     'invalid_convert_selection'               => 'Wybrane konto jest już używane w tej transakcji lub nie istnieje.',
+    'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Utwórz nową wypłatę',

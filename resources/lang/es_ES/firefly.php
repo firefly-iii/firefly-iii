@@ -583,6 +583,7 @@ return [
     'converted_to_Deposit'                    => 'La transacción se ha convertido en un deposito',
     'converted_to_Transfer'                   => 'La transacción se convirtió en transferencia',
     'invalid_convert_selection'               => 'L a cuenta que usted ha selecionado ya esta en uso o no existe.',
+    'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Crear nuevo retiro',

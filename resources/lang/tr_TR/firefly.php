@@ -584,6 +584,7 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'converted_to_Deposit'                    => 'İşlem depozitoya dönüştürüldü',
     'converted_to_Transfer'                   => 'İşlem aktarıma dönüştürüldü',
     'invalid_convert_selection'               => 'Seçtiğiniz hesap zaten bu işlemde kullanılmış veya mevcut değil.',
+    'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Yeni çekim oluştur',

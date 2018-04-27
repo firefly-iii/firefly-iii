@@ -583,6 +583,7 @@ return [
     'converted_to_Deposit'                    => 'A transação foi convertida em depósito',
     'converted_to_Transfer'                   => 'A transação foi convertida em uma transferência',
     'invalid_convert_selection'               => 'A conta que você selecionou já é usada nesta transação ou não existe.',
+    'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Criar nova retirada',
@@ -773,7 +774,7 @@ return [
     'deleted_withdrawal'                      => 'Retirada ":description" excluída com sucesso',
     'deleted_deposit'                         => 'Depósito ":description" excluído com sucesso',
     'deleted_transfer'                        => 'Transferência ":description" excluída com sucesso',
-    'stored_journal'                          => 'Transação ":description" excluída com sucesso',
+    'stored_journal'                          => 'Transação ":description" incluída com sucesso',
     'select_transactions'                     => 'Selecione as transações',
     'rule_group_select_transactions'          => 'Aplicar ":title" às transações',
     'rule_select_transactions'                => 'Aplicar ":title" às transações',
