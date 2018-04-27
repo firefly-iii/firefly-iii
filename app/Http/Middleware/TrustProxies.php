@@ -50,8 +50,14 @@ class TrustProxies extends Middleware
     public function __construct(Repository $config)
     {
         $trustedProxies = env('TRUSTED_PROXIES', null);
-        if (false !== $trustedProxies && null !== $trustedProxies && strlen($trustedProxies) > 0) {
-            $this->proxies = (string)$trustedProxies;
+        if (false !== $trustedProxies && null !== $trustedProxies && \strlen($trustedProxies) > 0) {
+            if ($trustedProxies === '*' || $trustedProxies === '**') {
+                $this->proxies = (string)$trustedProxies;
+
+            }
+            if ($trustedProxies !== '*' && $trustedProxies !== '**') {
+                $this->proxies = explode(',', $trustedProxies);
+            }
         }
 
         parent::__construct($config);
