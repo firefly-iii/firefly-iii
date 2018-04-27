@@ -68,13 +68,15 @@
 		"twig/twig": "1.*"
 	},
 	"require-dev": {
-		"roave/security-advisories": "dev-master",
+		"barryvdh/laravel-debugbar": "^3.1",
 		"barryvdh/laravel-ide-helper": "2.*",
 		"filp/whoops": "2.*",
 		"fzaninotto/faker": "1.*",
+		"johnkary/phpunit-speedtrap": "^3.0",
 		"mockery/mockery": "^1.0",
 		"php-coveralls/php-coveralls": "^2.0",
-		"phpunit/phpunit": "~7.0"
+		"phpunit/phpunit": "~7.0",
+		"roave/security-advisories": "dev-master"
 	},
 	"autoload": {
 		"classmap": [
