@@ -152,7 +152,7 @@ class UpgradeDatabase extends Command
                     RuleTrigger::create(
                         [
                             'rule_id'         => $rule->id,
-                            'trigger_type'    => 'description_is',
+                            'trigger_type'    => 'description_contains',
                             'trigger_value'   => $match,
                             'active'          => 1,
                             'stop_processing' => 0,
