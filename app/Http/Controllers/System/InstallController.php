@@ -25,7 +25,9 @@ namespace FireflyIII\Http\Controllers\System;
 
 
 use Artisan;
+use Exception;
 use FireflyIII\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Laravel\Passport\Passport;
 use Log;
 use phpseclib\Crypt\RSA;
@@ -35,8 +37,12 @@ use phpseclib\Crypt\RSA;
  */
 class InstallController extends Controller
 {
-
+    /** @var string */
     public const FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
+    /** @var string */
+    public const BASEDIR_ERROR = 'Firefly III cannot execute the upgrade commands. It is not allowed to because of an open_basedir restriction.';
+    /** @var string */
+    public const OTHER_ERROR = 'An unknown error prevented Firefly III from executing the upgrade commands. Sorry.';
     /** @noinspection MagicMethodsValidityInspection */
     /** @noinspection PhpMissingParentConstructorInspection */
     /**
@@ -84,17 +90,28 @@ class InstallController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function migrate()
+    public function migrate(): JsonResponse
     {
         if ($this->hasForbiddenFunctions()) {
             return response()->json(['error' => true, 'message' => self::FORBIDDEN_ERROR]);
         }
 
-        Log::debug('Am now calling migrate routine...');
-        Artisan::call('migrate', ['--seed' => true, '--force' => true]);
-        Log::debug(Artisan::output());
+        try {
+            Log::debug('Am now calling migrate routine...');
+            Artisan::call('migrate', ['--seed' => true, '--force' => true]);
+            Log::debug(Artisan::output());
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            if (strpos($e->getMessage(), 'open_basedir restriction in effect')) {
+                return response()->json(['error' => true, 'message' => self::BASEDIR_ERROR]);
+            }
+
+            return response()->json(['error' => true, 'message' => self::OTHER_ERROR]);
+        }
+
 
         return response()->json(['error' => false, 'message' => 'OK']);
     }
@@ -102,14 +119,24 @@ class InstallController extends Controller
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function upgrade()
+    public function upgrade(): JsonResponse
     {
         if ($this->hasForbiddenFunctions()) {
             return response()->json(['error' => true, 'message' => self::FORBIDDEN_ERROR]);
         }
-        Log::debug('Am now calling upgrade database routine...');
-        Artisan::call('firefly:upgrade-database');
-        Log::debug(Artisan::output());
+        try {
+            Log::debug('Am now calling upgrade database routine...');
+            Artisan::call('firefly:upgrade-database');
+            Log::debug(Artisan::output());
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            if (strpos($e->getMessage(), 'open_basedir restriction in effect')) {
+                return response()->json(['error' => true, 'message' => self::BASEDIR_ERROR]);
+            }
+
+            return response()->json(['error' => true, 'message' => self::OTHER_ERROR]);
+        }
 
         return response()->json(['error' => false, 'message' => 'OK']);
     }
@@ -122,9 +149,19 @@ class InstallController extends Controller
         if ($this->hasForbiddenFunctions()) {
             return response()->json(['error' => true, 'message' => self::FORBIDDEN_ERROR]);
         }
-        Log::debug('Am now calling verify database routine...');
-        Artisan::call('firefly:verify');
-        Log::debug(Artisan::output());
+        try {
+            Log::debug('Am now calling verify database routine...');
+            Artisan::call('firefly:verify');
+            Log::debug(Artisan::output());
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            if (strpos($e->getMessage(), 'open_basedir restriction in effect')) {
+                return response()->json(['error' => true, 'message' => self::BASEDIR_ERROR]);
+            }
+
+            return response()->json(['error' => true, 'message' => self::OTHER_ERROR]);
+        }
 
         return response()->json(['error' => false, 'message' => 'OK']);
     }
