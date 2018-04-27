@@ -50,7 +50,7 @@ class ListTransactionsRequest extends SpectreRequest
         while ($hasNextPage) {
             Log::debug(sprintf('Now calling ListTransactionsRequest for next_id %d', $nextId));
             $parameters = ['from_id' => $nextId, 'account_id' => $this->account->getId()];
-            $uri        = '/api/v3/transactions?' . http_build_query($parameters);
+            $uri        = '/api/v4/transactions?' . http_build_query($parameters);
             $response   = $this->sendSignedSpectreGet($uri, []);
 
             // count entries:

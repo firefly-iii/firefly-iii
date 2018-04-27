@@ -47,7 +47,7 @@ class ListCustomersRequest extends SpectreRequest
         while ($hasNextPage) {
             Log::debug(sprintf('Now calling ListCustomersRequest for next_id %d', $nextId));
             $parameters = ['from_id' => $nextId];
-            $uri        = '/api/v3/customers/?' . http_build_query($parameters);
+            $uri        = '/api/v4/customers/?' . http_build_query($parameters);
             $response   = $this->sendSignedSpectreGet($uri, []);
 
             // count entries:

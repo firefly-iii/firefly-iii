@@ -60,11 +60,9 @@ class CreateTokenRequest extends SpectreRequest
                 'return_to'                 => $this->uri,
             ],
         ];
-        $uri         = '/api/v3/tokens/create';
+        $uri         = '/api/v4/tokens/create';
         $response    = $this->sendSignedSpectrePost($uri, $data);
         $this->token = new Token($response['data']);
-
-        return;
     }
 
     /**

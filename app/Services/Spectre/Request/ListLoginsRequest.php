@@ -50,7 +50,7 @@ class ListLoginsRequest extends SpectreRequest
         while ($hasNextPage) {
             Log::debug(sprintf('Now calling ListLoginsRequest for next_id %d', $nextId));
             $parameters = ['from_id' => $nextId, 'customer_id' => $this->customer->getId()];
-            $uri        = '/api/v3/logins/?' . http_build_query($parameters);
+            $uri        = '/api/v4/logins/?' . http_build_query($parameters);
             $response   = $this->sendSignedSpectreGet($uri, []);
 
             // count entries:
