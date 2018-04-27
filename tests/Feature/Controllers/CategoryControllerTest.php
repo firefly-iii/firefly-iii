@@ -392,7 +392,9 @@ class CategoryControllerTest extends TestCase
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('categories.show', [1, '2015-01-01']));
+        $today = new Carbon();
+        $today->subDay();
+        $response = $this->get(route('categories.show', [1, $today->format('Y-m-d')]));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
     }
