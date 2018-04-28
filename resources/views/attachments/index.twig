@@ -10,45 +10,47 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        List of all attachments
+                        {{ 'list_all_attachments'|_ }}
                     </h3>
                 </div>
                 <div class="box-body no-padding">
-                    <table class="table table-striped">
+                    <table class="table table-striped sortable">
                         <thead>
                         <tr>
-                            <th colspan="2">File name</th>
-                            <th>Size of file</th>
-                            <th>Type of file</th>
-                            <th>Attached to</th>
-                            <th>Exists?</th>
+                            <th data-defaultsign="_19" colspan="2">{{ trans('list.file_name') }}</th>
+                            <th data-defaultsign="_19">{{ trans('list.file_size') }}</th>
+                            <th data-defaultsign="az">{{ trans('list.file_type') }}</th>
+                            <th data-defaultsign="az">{{ trans('list.attached_to') }}</th>
+                            <th data-defaultsign="_19">{{ trans('list.file_exists') }}</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for att in set %}
                             <tr>
-                                <td>
+                                <td data-value="{{ att.id }}">
                                     <div class="btn-group btn-group-xs">
                                         <a href="{{ route('attachments.edit', att.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
                                         <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
                                         <a href="{{ route('attachments.download', att.id) }}" class="btn btn-default"><i class="fa fa-download"></i></a>
                                     </div>
                                 </td>
-                                <td>
+                                <td data-value="{{ att.filename }}">
                                     <a href="{{ route('attachments.view', att.id) }}" title="{{ att.filename }}">
-                                    {{ att.filename }}
+                                        {{ att.filename }}
                                     </a>
                                 </td>
-                                <td>{{ att.size|filesize }}</td>
-                                <td>{{ att.mime }}</td>
-                                <td>
+                                <td data-value="{{ att.size }}">{{ att.size|filesize }}</td>
+                                <td data-value="{{ att.mime }}">{{ att.mime }}</td>
+                                <td data-value="{{ att.attachable_type }}_{{ att.attachable_id }}">
                                     {% if att.attachable_type == 'FireflyIII\\Models\\TransactionJournal' %}
                                         <a href="{{ route('transactions.show', [att.attachable_id]) }}">
                                             {{ att.attachable.description }}
                                         </a>
+                                    {% else %}
+                                        {{ att.attachable_type }}
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td data-value="{% if att.file_exists %}1{% else %}0{% endif %}">
                                     {% if att.file_exists %}
                                         <i class="fa fa-check text-success"></i>
                                     {% else %}
@@ -64,9 +66,11 @@
         </div>
     </div>
 {% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="js/lib/bootstrap-sortable.js?v={{ FF_VERSION }}"></script>
+{% endblock %}
 
 {% block styles %}
+    <link rel="stylesheet" href="css/bootstrap-sortable.css?v={{ FF_VERSION }}" type="text/css" media="all"/>
 {% endblock %}
 
-{% block scripts %}
-{% endblock %}

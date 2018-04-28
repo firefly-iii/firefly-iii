@@ -152,7 +152,7 @@ class AttachmentController extends Controller
      */
     public function index()
     {
-        $set = $this->repository->get();
+        $set = $this->repository->get()->reverse();
         $set = $set->each(
             function (Attachment $attachment) {
                 $attachment->file_exists = $this->repository->exists($attachment);
