@@ -541,6 +541,7 @@ return [
     'attachment_deleted'                      => 'Allegato eliminato ":name"',
     'attachment_updated'                      => 'Allegato aggiornato ":name"',
     'upload_max_file_size'                    => 'Dimensione massima del file: :size',
+    'list_all_attachments'                    => 'List of all attachments',
 
     // transaction index
     'title_expenses'                          => 'Spese',
@@ -583,7 +584,7 @@ return [
     'converted_to_Deposit'                    => 'La transazione è stata convertita in un deposito',
     'converted_to_Transfer'                   => 'La transazione è stata convertita in un giroconto',
     'invalid_convert_selection'               => 'Tl\'account che hai selezionato è già utilizzato in questa transazione o non esiste.',
-    'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
+    'source_or_dest_invalid'                  => 'Impossibile trovare i dettagli corretti della transazione. Non è possibile effettuare la conversione.',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Crea un nuovo prelievo',
@@ -1164,7 +1165,7 @@ return [
     'reset_import_settings_title'           => 'Reimposta la configurazione di importazione',
     'reset_import_settings_text'            => 'Puoi utilizzare questi collegamenti per ripristinare le impostazioni di importazione per specifici fornitori. Ciò è utile quando delle impostazioni errate impediscono l\'importazione dei dati.',
     'reset_settings_bunq'                   => 'Rimuovi la chiave API di bunq, l\'indirizzo IP locale esterno e le chiavi RSA correlate a bunq.',
-    'reset_settings_spectre'                => 'Rimuovi l\'ID cliente di Spectre, il segreto del servizio e il segreto dell\'app. Questo rimuoverà anche la tua coppia di chiavi Spectre. Ricordati di aggiornare quella nuova.',
+    'reset_settings_spectre'                => 'Rimuovi i segreti e gli ID di Spectre. Questo rimuoverà anche la tua coppia di chiavi di Spectre. Ricordati di aggiornare quella nuova.',
     'settings_reset_for_bunq'               => 'Ripristina impostazioni bunq.',
     'settings_reset_for_spectre'            => 'Ripristina impostazioni Spectre.',
 

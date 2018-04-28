@@ -172,11 +172,12 @@ return [
     // Spectre
     'spectre_title'                        => 'Importieren mit Spectre',
     'spectre_prerequisites_title'          => 'Voraussetzungen für einen Import von Spectre',
-    'spectre_prerequisites_text'           => 'Um Daten mithilfe der Spectre-API importieren zu können, müssen einige Daten angegeben werden. Diese finden Sie auf der <a href="https://www.saltedge.com/clients/profile/secrets">Secrets</a>-Seite bei Saltedge.',
-    'spectre_enter_pub_key'                => 'Der Import funktioniert nur, wenn Sie diesen öffentlichen Schlüssel auf Ihrer <a href="https://www.saltedge.com/clients/security/edit">Sicherheitsseite</a> eingeben.',
+    'spectre_prerequisites_text'           => 'Um Daten über die Spectre-API (v4) zu importieren, müssen Sie Firefly III zwei geheime Werte zur Verfügung stellen. Diese können auf der <a href="https://www.saltedge.com/clients/profile/secrets">Geheimnisse-Seite</a> gefunden werden.',
+    'spectre_enter_pub_key'                => 'Der Import funktioniert nur, wenn Sie diesen öffentlichen Schlüssel auf Ihrer <a href="https://www.saltedge.com/clients/profile/secrets">Sicherheitsseite</a> eingeben.',
     'spectre_accounts_title'               => 'Import-Konten auswählen',
     'spectre_accounts_text'                => 'Die Konten auf der linken Seite wurde von Spectre gefunden und können für den Import verwendet werden. Ordnen Sie jeweils ein eigenes Konto zu, in das die Buchungen importiert werden sollen. Nicht ausgwählte Konten werden beim Import ignoriert.',
     'spectre_do_import'                    => 'Ja, von diesem Konto importieren',
+    'spectre_no_supported_accounts'        => 'Von diesem Konto können Sie nicht importieren, da die Währungen nicht übereinstimmen.',
 
     // keys from "extra" array:
     'spectre_extra_key_iban'               => 'IBAN',

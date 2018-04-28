@@ -112,4 +112,9 @@ return [
     'sepa-ep'                 => 'SEPA transactiedoeleinde',
     'sepa-ci'                 => 'SEPA crediteuridentificatie',
     'account_at_bunq'         => 'Bunq-account',
+    'file_name'               => 'Bestandsnaam',
+    'file_size'               => 'Bestandsgrootte',
+    'file_type'               => 'Bestandstype',
+    'attached_to'             => 'Bijlage van',
+    'file_exists'             => 'Bestand bestaat',
 ];

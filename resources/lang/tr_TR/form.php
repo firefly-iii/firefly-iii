@@ -202,6 +202,8 @@ return [
     'client_id'             => 'Müşteri Kimliği',
     'service_secret'        => 'Hizmet Sırrı',
     'app_secret'            => 'Uygulama Sırrı',
+    'app_id'                => 'App ID',
+    'secret'                => 'Secret',
     'public_key'            => 'Genel anahtar',
     'country_code'          => 'Ülke kodu',
     'provider_code'         => 'Banka ya da veri sağlayıcı',

@@ -92,7 +92,7 @@ return [
     'piggy-banks_show_piggyEvents'                            => 'Todas as adições ou remoções também estão listadas aqui.',
 
     // bill index
-    'bills_index_rules'                                       => 'Here you see which rules will check if this bill is hit',
+    'bills_index_rules'                                       => 'Aqui você visualiza as regras que verificam se esta fatura é afetada',
     'bills_index_paid_in_period'                              => 'Este campo indica quando a conta foi paga pela última vez.',
     'bills_index_expected_in_period'                          => 'Este campo indica, para cada conta, se e quando a próxima fatura é esperada para cair em conta.',
 
@@ -102,12 +102,12 @@ return [
     'bills_show_billChart'                                    => 'Este gráfico mostra as operações vinculadas a este projeto.',
 
     // create bill
-    'bills_create_intro'                                      => 'Use bills to track the amount of money you\'re due every period. Think about expenses like rent, insurance or mortgage payments.',
+    'bills_create_intro'                                      => 'Use as faturas para acompanhar a quantidade de dinheiro devido por período. Pense em gastos como aluguel, seguro ou pagamentos de hipoteca.',
     'bills_create_name'                                       => 'Use um nome descritivo como "Aluguel" ou "Seguro de saúde".',
     //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
     'bills_create_amount_min_holder'                          => 'Selecione um valor mínimo e máximo para esta conta.',
     'bills_create_repeat_freq_holder'                         => 'A maioria das contas são repetidas mensalmente, como no caso de pagamentos fixos mensais. Mas você pode definir outra frequência neste menu aqui.',
-    'bills_create_skip_holder'                                => 'If a bill repeats every 2 weeks, the "skip"-field should be set to "1" to skip every other week.',
+    'bills_create_skip_holder'                                => 'Se uma fatura se repete a cada 2 semanas, o campo "ignorar" deve ser definido como "1" para a repetição quinzenal.',
 
     // rules index
     'rules_index_intro'                                       => 'O Firefly III permite que você gerencie as regras, que serão automaticamente aplicadas a qualquer transação que você crie ou edite.',

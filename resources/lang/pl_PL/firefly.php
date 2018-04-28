@@ -455,7 +455,7 @@ return [
     'pref_custom_fiscal_year_help'            => 'W krajach, w których rok podatkowy nie zaczyna się 1 stycznia i nie kończy 31 grudnia, możesz włączyć tą opcję oraz podać początek / koniec roku podatkowego',
     'pref_fiscal_year_start_label'            => 'Początek roku podatkowego',
     'pref_two_factor_auth'                    => 'Weryfikacja dwuetapowa',
-    'pref_two_factor_auth_help'               => 'Po włączeniu weryfikacji dwuetapowej (znanej również jako uwierzytelnianie dwuskładnikowe) dodajesz dodatkową warstwę zabezpieczeń do swojego konta. Logujesz się czymś, co znasz (hasło) i czymś masz coś (kod weryfikacyjny). Kody weryfikacyjne generowane są przez aplikację w telefonie, na przykład Authy lub Google Authenticator.',
+    'pref_two_factor_auth_help'               => 'Po włączeniu weryfikacji dwuetapowej (znanej również jako uwierzytelnianie dwuskładnikowe) dodajesz dodatkową warstwę zabezpieczeń do swojego konta. Logujesz się czymś, co znasz (hasło) i czymś co masz (kod weryfikacyjny). Kody weryfikacyjne generowane są przez aplikację w telefonie, na przykład Authy lub Google Authenticator.',
     'pref_enable_two_factor_auth'             => 'Włącz weryfikację dwuetapową',
     'pref_two_factor_auth_disabled'           => 'Kod weryfikacji dwuetapowej został usunięty i wyłączony',
     'pref_two_factor_auth_remove_it'          => 'Nie zapomnij usunąć konta z aplikacji uwierzytelniajcej!',
@@ -541,6 +541,7 @@ return [
     'attachment_deleted'                      => 'Usunięto załącznik ":name"',
     'attachment_updated'                      => 'Zmodyfikowano załącznik ":name"',
     'upload_max_file_size'                    => 'Maksymalny rozmiar pliku to: :size',
+    'list_all_attachments'                    => 'Lista wszystkich załączników',
 
     // transaction index
     'title_expenses'                          => 'Wydatki',
@@ -583,7 +584,7 @@ return [
     'converted_to_Deposit'                    => 'Transakcja została przekonwertowana do wpłaty',
     'converted_to_Transfer'                   => 'Transakcja została przekonwertowana do transferu',
     'invalid_convert_selection'               => 'Wybrane konto jest już używane w tej transakcji lub nie istnieje.',
-    'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
+    'source_or_dest_invalid'                  => 'Nie można znaleźć poprawnych szczegółów transakcji. Konwersja nie jest możliwa.',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Utwórz nową wypłatę',
@@ -1164,7 +1165,7 @@ return [
     'reset_import_settings_title'           => 'Zresetuj konfigurację importu',
     'reset_import_settings_text'            => 'Możesz użyć tych linków, aby zresetować ustawienia importu dla konkretnych dostawców. Jest to przydatne, gdy złe ustawienia uniemożliwiają importowanie danych.',
     'reset_settings_bunq'                   => 'Usuń klucz API, lokalny zewnętrzny adres IP oraz klucze RSA związane z Bunq.',
-    'reset_settings_spectre'                => 'Usuń identyfikator klienta Spectre, sekret usługi oraz klucz aplikacji. Spowoduje to również usunięcie Twojego klucza Spectre. Pamiętaj, aby zaktualizować nowy.',
+    'reset_settings_spectre'                => 'Usuń identyfikatory i sekrety Spectre. Spowoduje to również usunięcie Twojego klucza Spectre. Pamiętaj, aby zaktualizować nowy.',
     'settings_reset_for_bunq'               => 'Resetowanie ustawień Bunq.',
     'settings_reset_for_spectre'            => 'Resetowanie ustawień Spectre.',
 

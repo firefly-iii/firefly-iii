@@ -202,6 +202,8 @@ return [
     'client_id'             => 'ID klien',
     'service_secret'        => 'Rahasia layanan',
     'app_secret'            => 'Rahasia app',
+    'app_id'                => 'App ID',
+    'secret'                => 'Secret',
     'public_key'            => 'Kunci publik',
     'country_code'          => 'Kode negara',
     'provider_code'         => 'Bank atau penyedia data',

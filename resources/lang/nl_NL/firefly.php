@@ -541,6 +541,7 @@ return [
     'attachment_deleted'                      => 'Bijlage ":name" verwijderd',
     'attachment_updated'                      => 'Attachment ":name" geüpdatet',
     'upload_max_file_size'                    => 'Maximale grootte: :size',
+    'list_all_attachments'                    => 'Lijst van alle bijlagen',
 
     // transaction index
     'title_expenses'                          => 'Uitgaven',
@@ -583,7 +584,7 @@ return [
     'converted_to_Deposit'                    => 'De transactie is veranderd in inkomsten',
     'converted_to_Transfer'                   => 'De transactie is veranderd in een overschrijving',
     'invalid_convert_selection'               => 'De rekening die je hebt geselecteerd wordt al gebruikt in deze transactie, of bestaat niet.',
-    'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
+    'source_or_dest_invalid'                  => 'Kan de juiste transactiegegevens niet vinden. Conversie is niet mogelijk.',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Nieuwe uitgave',
@@ -1164,7 +1165,7 @@ return [
     'reset_import_settings_title'           => 'Reset importconfiguratie',
     'reset_import_settings_text'            => 'Gebruik deze links om importinstellingen voor specifieke providers te resetten. Handig als verkeerde instellingen voorkomen dat je verder kan.',
     'reset_settings_bunq'                   => 'Verwijdert de bunq API key, je externe IP adres zoals Firefly III die kent, en de voor bunq gegenereerde RSA sleutels.',
-    'reset_settings_spectre'                => 'Verwijdert je Spectre client ID, service secret en app secret. Dit verwijdert ook je Spectre keypair. Vergeet die niet te updaten.',
+    'reset_settings_spectre'                => 'Verwijdert je Spectre secrets en ID\'s. Dit verwijdert ook je Spectre keypair. Vergeet die niet te updaten.',
     'settings_reset_for_bunq'               => 'Bunq-instellingen zijn gereset.',
     'settings_reset_for_spectre'            => 'Spectre-instellingen zijn gereset.',
 

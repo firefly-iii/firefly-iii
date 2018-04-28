@@ -112,4 +112,9 @@ return [
     'sepa-ep'                 => 'SEPA External Purpose',
     'sepa-ci'                 => 'SEPA Creditor Identifier',
     'account_at_bunq'         => 'Conto con Bunq',
+    'file_name'               => 'File name',
+    'file_size'               => 'File size',
+    'file_type'               => 'File type',
+    'attached_to'             => 'Attached to',
+    'file_exists'             => 'File exists',
 ];

@@ -541,6 +541,7 @@ return [
     'attachment_deleted'                      => 'Вложение ":name" удалено',
     'attachment_updated'                      => 'Вложение ":name" обновлено',
     'upload_max_file_size'                    => 'Максимальный размер файла: :size',
+    'list_all_attachments'                    => 'Список всех вложений',
 
     // transaction index
     'title_expenses'                          => 'Расходы',
@@ -583,7 +584,7 @@ return [
     'converted_to_Deposit'                    => 'Транзакция была преобразована в доход',
     'converted_to_Transfer'                   => 'Транзакция была преобразована в перевод',
     'invalid_convert_selection'               => 'Выбранный вами счёт уже используется в этой транзакции или не существует.',
-    'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
+    'source_or_dest_invalid'                  => 'Не удается найти правильные сведения о транзакции. Преобразование невозможно.',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Создать новый расход',

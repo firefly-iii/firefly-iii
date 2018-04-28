@@ -172,11 +172,12 @@ return [
     // Spectre
     'spectre_title'                        => 'Importa usando uno Spectre',
     'spectre_prerequisites_title'          => 'Prerequisiti per un\'importazione utilizzando Spectre',
-    'spectre_prerequisites_text'           => 'Per importare i dati usando l\'API Spectre, devi fornire a Firefly III due valori segreti. Possono essere trovati nella <a href="https://www.saltedge.com/clients/profile/secrets">pagina codifiche</a>.',
-    'spectre_enter_pub_key'                => 'L\'importazione funzionerà solo quando inserisci questa chiave pubblica nella <a href="https://www.saltedge.com/clients/security/edit">pagina di sicurezza</a>.',
+    'spectre_prerequisites_text'           => 'In order to import data using the Spectre API (v4), you must provide Firefly III with two secret values. They can be found on the <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
+    'spectre_enter_pub_key'                => 'The import will only work when you enter this public key on your <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
     'spectre_accounts_title'               => 'Seleziona i conti dai quali importare',
     'spectre_accounts_text'                => 'Ogni account sulla sinistra in basso è stato trovato da Spectre e può essere importato in Firefly III. Seleziona il conto attività che dovrebbe contenere una determinata transazione. Se non desideri importare da un conto specifico, rimuovi il segno di spunta dalla casella di controllo.',
     'spectre_do_import'                    => 'Si, importa da questo conto',
+    'spectre_no_supported_accounts'        => 'You cannot import from this account due to a currency mismatch.',
 
     // keys from "extra" array:
     'spectre_extra_key_iban'               => 'IBAN',

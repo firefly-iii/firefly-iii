@@ -202,6 +202,8 @@ return [
     'client_id'             => 'Identifiant',
     'service_secret'        => 'Secret de service',
     'app_secret'            => 'Secret d\'application',
+    'app_id'                => 'App ID',
+    'secret'                => 'Secret',
     'public_key'            => 'Clé publique',
     'country_code'          => 'Code pays',
     'provider_code'         => 'Banque ou fournisseur de données',

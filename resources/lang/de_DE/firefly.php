@@ -542,6 +542,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'attachment_deleted'                      => 'Anhang „:name” gelöscht',
     'attachment_updated'                      => 'Anhang „:name” aktualisiert',
     'upload_max_file_size'                    => 'Maximale Dateigröße: :size',
+    'list_all_attachments'                    => 'Liste aller Anhänge',
 
     // transaction index
     'title_expenses'                          => 'Ausgaben',
@@ -584,7 +585,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'converted_to_Deposit'                    => 'Die Transaktion wurde in eine Einzahlung konvertiert',
     'converted_to_Transfer'                   => 'Die Transaktion wurde in eine Umbuchung konvertiert',
     'invalid_convert_selection'               => 'Das von Ihnen ausgewählte Konto wird für diese Transaktion bereits verwendet oder ist nicht vorhanden.',
-    'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
+    'source_or_dest_invalid'                  => 'Die korrekten Buchungsdetails konnten nicht gefunden werden. Eine Konvertierung ist nicht möglich.',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Erstelle eine neue Ausgabe',
@@ -1165,7 +1166,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'reset_import_settings_title'           => 'Importeinstellungen zurücksetzen',
     'reset_import_settings_text'            => 'Über diese Links können Sie Ihre Importeinstellungen für bestimmte Anbieter zurücksetzen. Dies ist nützlich, wenn fehlerhafte Einstellungen den Import von Daten verhindern.',
     'reset_settings_bunq'                   => 'Bunq-API-Schlüssel entfernen (lokale externe IP-Adresse und Bunq-bezogene RSA-Schlüssel).',
-    'reset_settings_spectre'                => '„Spectre”-Client-ID, das Dienst-Geheimnis und das App-Geheimnis. Dadurch wird auch Ihr „Spectre”-Schlüsselpaar entfernt. Denken Sie daran, die neue Version zu aktualisieren.',
+    'reset_settings_spectre'                => '„Spectre”-Geheimnisse und -IDs entfernen. Dadurch wird auch Ihr „Spectre”-Schlüsselpaar entfernt. Denken Sie daran, die neue Version zu aktualisieren.',
     'settings_reset_for_bunq'               => 'Bunq-Einstellungen zurückgesetzt',
     'settings_reset_for_spectre'            => 'Spectre-Einstellungen zurückgesetzt',
 
