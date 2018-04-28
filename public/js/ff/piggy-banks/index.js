@@ -83,13 +83,36 @@ function removeMoney(e) {
 function stopSorting() {
     "use strict";
     $('.loadSpin').addClass('fa fa-refresh fa-spin');
-    var order = [];
+
     $.each($('#sortable-piggy>tbody>tr'), function (i, v) {
         var holder = $(v);
+        var position = parseInt(holder.data('position'));
+        var originalOrder = parseInt(holder.data('order'));
         var id = holder.data('id');
-        order.push(id);
+        console.log('Now at row ' + i);
+        var newOrder;
+        if (position === i) {
+            return;
+        }
+        if (position < i) {
+            console.log('Row ' + i + ' has moved up!');
+            // update position:
+            holder.data('position', i);
+            newOrder = originalOrder + 1;
+
+
+        }
+        if (position > i) {
+            console.log('Row ' + i + ' has moved down!');
+            // update position:
+            holder.data('position', i);
+            newOrder = originalOrder - 1;
+
+
+        }
+
+        $.post('piggy-banks/set-order/' + id, {order: newOrder, _token: token})
     });
-    $.post('piggy-banks/sort', {order: order, _token: token}).done(function () {
-        $('.loadSpin').removeClass('fa fa-refresh fa-spin');
-    });
+    $('.loadSpin').removeClass('fa fa-refresh fa-spin');
+
 }

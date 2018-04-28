@@ -105,6 +105,22 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
+     * Correct order of piggies in case of issues.
+     */
+    public function correctOrder(): void
+    {
+        $set     = $this->user->piggyBanks()->orderBy('order', 'ASC')->get();
+        $current = 1;
+        foreach ($set as $piggyBank) {
+            if ((int)$piggyBank->order !== $current) {
+                $piggyBank->order = $current;
+                $piggyBank->save();
+            }
+            $current++;
+        }
+    }
+
+    /**
      * @param PiggyBank $piggyBank
      * @param string    $amount
      *
@@ -327,7 +343,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         /** @var PiggyBank $current */
         foreach ($piggies as $current) {
             $repetition = $this->getRepetition($current);
-            if(null !== $repetition) {
+            if (null !== $repetition) {
                 $balance = bcsub($balance, $repetition->currentamount);
             }
         }
@@ -379,14 +395,10 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      *
      * @return bool
      */
-    public function setOrder(int $piggyBankId, int $order): bool
+    public function setOrder(PiggyBank $piggyBank, int $order): bool
     {
-        $piggyBank = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')->where('accounts.user_id', $this->user->id)
-                              ->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
-        if ($piggyBank) {
-            $piggyBank->order = $order;
-            $piggyBank->save();
-        }
+        $piggyBank->order = $order;
+        $piggyBank->save();
 
         return true;
     }

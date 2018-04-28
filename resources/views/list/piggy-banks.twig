@@ -14,7 +14,7 @@
     </thead>
     <tbody>
     {% for piggy in piggyBanks %}
-        <tr data-id="{{ piggy.id }}">
+        <tr data-id="{{ piggy.id }}" data-order="{{ piggy.order }}" data-position="{{ loop.index0 }}">
             <td class="visible-xs visible-sm hidden-md hidden-lg">
                 &nbsp;
             </td>

@@ -63,6 +63,10 @@ function checkJobStatus() {
  */
 function reportFailedJob(jqxhr, textStatus, error) {
     console.log('In reportFailedJob()');
+
+    // cancel refresh
+    clearTimeout(timeOutId);
+
     // hide all possible boxes:
     $('.statusbox').hide();
 
@@ -133,6 +137,7 @@ function reportOnJobStatus(data) {
             $('#import-status-more-info').html(data.finishedText);
             break;
         case "error":
+            clearTimeout(timeOutId);
             console.log('Job reports ERROR.');
             // hide all possible boxes:
             $('.statusbox').hide();

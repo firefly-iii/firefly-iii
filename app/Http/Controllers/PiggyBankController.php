@@ -30,6 +30,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Transformers\AccountTransformer;
 use FireflyIII\Transformers\PiggyBankTransformer;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -215,6 +216,7 @@ class PiggyBankController extends Controller
      */
     public function index(Request $request)
     {
+        $this->piggyRepos->correctOrder();
         $collection = $this->piggyRepos->getPiggyBanks();
         $total      = $collection->count();
         $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
@@ -259,27 +261,6 @@ class PiggyBankController extends Controller
         $piggyBanks->setPath(route('piggy-banks.index'));
 
         return view('piggy-banks.index', compact('piggyBanks', 'accounts'));
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function order(Request $request)
-    {
-        $data = $request->get('order');
-
-        // set all users piggy banks to zero:
-        $this->piggyRepos->reset();
-
-        if (\is_array($data)) {
-            foreach ($data as $order => $id) {
-                $this->piggyRepos->setOrder((int)$id, $order + 1);
-            }
-        }
-
-        return response()->json(['result' => 'ok']);
     }
 
     /**
@@ -400,6 +381,20 @@ class PiggyBankController extends Controller
 
 
         return view('piggy-banks.remove-mobile', compact('piggyBank', 'repetition', 'currency'));
+    }
+
+    /**
+     * @param Request   $request
+     * @param PiggyBank $piggyBank
+     *
+     * @return JsonResponse
+     */
+    public function setOrder(Request $request, PiggyBank $piggyBank): JsonResponse
+    {
+        $newOrder = (int)$request->get('order');
+        $this->piggyRepos->setOrder($piggyBank, $newOrder);
+
+        return response()->json(['data' => 'OK']);
     }
 
     /**

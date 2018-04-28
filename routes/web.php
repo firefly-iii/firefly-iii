@@ -564,7 +564,8 @@ Route::group(
     Route::post('destroy/{piggyBank}', ['uses' => 'PiggyBankController@destroy', 'as' => 'destroy']);
     Route::post('add/{piggyBank}', ['uses' => 'PiggyBankController@postAdd', 'as' => 'add']);
     Route::post('remove/{piggyBank}', ['uses' => 'PiggyBankController@postRemove', 'as' => 'remove']);
-    Route::post('sort', ['uses' => 'PiggyBankController@order', 'as' => 'order']);
+
+    Route::post('set-order/{piggyBank}', ['uses' => 'PiggyBankController@setOrder', 'as' => 'set-order']);
 
 
 }
