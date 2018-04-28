@@ -541,6 +541,7 @@ return [
     'attachment_deleted'                      => 'Deleted attachment ":name"',
     'attachment_updated'                      => 'Updated attachment ":name"',
     'upload_max_file_size'                    => 'Maximum file size: :size',
+    'list_all_attachments'                    => 'List of all attachments',
 
     // transaction index
     'title_expenses'                          => 'Expenses',
@@ -1164,7 +1165,7 @@ return [
     'reset_import_settings_title'           => 'Reset import configuration',
     'reset_import_settings_text'            => 'You can use these links to reset your import settings for specific providers. This is useful when bad settings stop you from importing data.',
     'reset_settings_bunq'                   => 'Remove bunq API key, local external IP address and bunq related RSA keys.',
-    'reset_settings_spectre'                => 'Remove Spectre client ID, service secret and app secret. This will also remove your Spectre keypair. Remember to update the new one.',
+    'reset_settings_spectre'                => 'Remove Spectre secrets and ID\'s. This will also remove your Spectre keypair. Remember to update the new one.',
     'settings_reset_for_bunq'               => 'Bunq settings reset.',
     'settings_reset_for_spectre'            => 'Spectre settings reset.',
 
