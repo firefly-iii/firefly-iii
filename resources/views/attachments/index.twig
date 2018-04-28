@@ -28,9 +28,17 @@
                         {% for att in set %}
                             <tr>
                                 <td>
-
+                                    <div class="btn-group btn-group-xs">
+                                        <a href="{{ route('attachments.edit', att.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
+                                        <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                        <a href="{{ route('attachments.download', att.id) }}" class="btn btn-default"><i class="fa fa-download"></i></a>
+                                    </div>
                                 </td>
-                                <td>{{ att.filename }}</td>
+                                <td>
+                                    <a href="{{ route('attachments.view', att.id) }}" title="{{ att.filename }}">
+                                    {{ att.filename }}
+                                    </a>
+                                </td>
                                 <td>{{ att.size|filesize }}</td>
                                 <td>{{ att.mime }}</td>
                                 <td>
