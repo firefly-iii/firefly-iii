@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * validation.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -22,7 +23,7 @@ declare(strict_types=1);
 
 return [
     'iban'                           => 'Questo non è un IBAN valido.',
-    'source_equals_destination'      => 'The source account equals the destination account',
+    'source_equals_destination'      => 'Il conto di origine è uguale al conto di destinazione',
     'unique_account_number_for_user' => 'Sembra che questo numero di conto sia già in uso.',
     'unique_iban_for_user'           => 'Sembra che questo IBAN sia già in uso.',
     'deleted_user'                   => 'A causa dei vincoli di sicurezza, non è possibile registrarsi utilizzando questo indirizzo email.',

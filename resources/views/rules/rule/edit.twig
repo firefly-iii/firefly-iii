@@ -19,6 +19,7 @@
                     {{ ExpandedForm.select('trigger',allJournalTriggers(), primaryTrigger) }}
                     {{ ExpandedForm.checkbox('active',1,rule.active, {helpText: trans('firefly.rule_help_active')}) }}
                     {{ ExpandedForm.checkbox('stop_processing',1,rule.stop_processing, {helpText: trans('firefly.rule_help_stop_processing')}) }}
+                    {{ ExpandedForm.checkbox('strict',1,rule.strict, {helpText: trans('firefly.rule_help_strict')}) }}
                 </div>
             </div>
         </div>
@@ -128,6 +129,7 @@
     <script type="text/javascript">
         var triggerCount = {{ triggerCount }};
         var actionCount = {{ actionCount }};
+        var testRuleTriggersText = '{{ 'test_rule_triggers'|_|escape('js') }}';
     </script>
     <script type="text/javascript" src="js/ff/rules/create-edit.js?v={{ FF_VERSION }}"></script>
 

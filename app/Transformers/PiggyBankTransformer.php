@@ -24,8 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -116,39 +118,60 @@ class PiggyBankTransformer extends TransformerAbstract
      */
     public function transform(PiggyBank $piggyBank): array
     {
-        $account       = $piggyBank->account;
-        $currencyId    = (int)$account->getMeta('currency_id');
-        $decimalPlaces = 2;
+        /** @var Account $account */
+        $account = $piggyBank->account;
+        /** @var AccountRepositoryInterface $accountRepos */
+        $accountRepos = app(AccountRepositoryInterface::class);
+        $accountRepos->setUser($account->user);
+        $currencyId = (int)$accountRepos->getMetaValue($account, 'currency_id');
+
+        if ($currencyId === 0) {
+            $currency = app('amount')->getDefaultCurrencyByUser($account->user);
+        }
+
         if ($currencyId > 0) {
             /** @var CurrencyRepositoryInterface $repository */
             $repository = app(CurrencyRepositoryInterface::class);
             $repository->setUser($account->user);
-            $currency      = $repository->findNull($currencyId);
-            $decimalPlaces = $currency->decimal_places;
+            $currency = $repository->findNull($currencyId);
         }
+
+        $decimalPlaces = $currency->decimal_places;
 
         // get currently saved amount:
         /** @var PiggyBankRepositoryInterface $piggyRepos */
         $piggyRepos = app(PiggyBankRepositoryInterface::class);
         $piggyRepos->setUser($account->user);
-        $currentAmount = round($piggyRepos->getCurrentAmount($piggyBank), $decimalPlaces);
 
+        // current amount in piggy bank:
+        $currentAmountStr = $piggyRepos->getCurrentAmount($piggyBank);
+        $currentAmount    = round($currentAmountStr, $decimalPlaces);
+
+        // left to save to target:
+        $leftToSave   = bcsub($piggyBank->targetamount, $currentAmountStr);
         $startDate    = null === $piggyBank->startdate ? null : $piggyBank->startdate->format('Y-m-d');
         $targetDate   = null === $piggyBank->targetdate ? null : $piggyBank->targetdate->format('Y-m-d');
         $targetAmount = round($piggyBank->targetamount, $decimalPlaces);
+        $percentage   = (int)(0 !== bccomp('0', $currentAmountStr) ? $currentAmount / $targetAmount * 100 : 0);
         $data         = [
-            'id'             => (int)$piggyBank->id,
-            'updated_at'     => $piggyBank->updated_at->toAtomString(),
-            'created_at'     => $piggyBank->created_at->toAtomString(),
-            'name'           => $piggyBank->name,
-            'target_amount'  => $targetAmount,
-            'current_amount' => $currentAmount,
-            'startdate'      => $startDate,
-            'targetdate'     => $targetDate,
-            'order'          => (int)$piggyBank->order,
-            'active'         => (int)$piggyBank->active === 1,
-            'notes'          => null,
-            'links'          => [
+            'id'              => (int)$piggyBank->id,
+            'updated_at'      => $piggyBank->updated_at->toAtomString(),
+            'created_at'      => $piggyBank->created_at->toAtomString(),
+            'name'            => $piggyBank->name,
+            'currency_id'     => $currency->id,
+            'currency_code'   => $currency->code,
+            'currency_symbol' => $currency->symbol,
+            'currency_dp'     => $currency->decimal_places,
+            'target_amount'   => $targetAmount,
+            'percentage'      => $percentage,
+            'current_amount'  => $currentAmount,
+            'left_to_save'    => round($leftToSave, $decimalPlaces),
+            'startdate'       => $startDate,
+            'targetdate'      => $targetDate,
+            'order'           => (int)$piggyBank->order,
+            'active'          => (int)$piggyBank->active === 1,
+            'notes'           => null,
+            'links'           => [
                 [
                     'rel' => 'self',
                     'uri' => '/piggy_banks/' . $piggyBank->id,

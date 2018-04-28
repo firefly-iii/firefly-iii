@@ -96,7 +96,7 @@ class ImportCategory
      */
     private function findById(): ?Category
     {
-        if (3 === count($this->id)) {
+        if (3 === \count($this->id)) {
             Log::debug(sprintf('Finding category with ID #%d', $this->id['value']));
             /** @var Category $category */
             $category = $this->repository->findNull((int)$this->id['value']);
@@ -118,7 +118,7 @@ class ImportCategory
      */
     private function findByName(): ?Category
     {
-        if (3 === count($this->name)) {
+        if (3 === \count($this->name)) {
             $categories = $this->repository->getCategories();
             $name       = $this->name['value'];
             Log::debug(sprintf('Finding category with name %s', $name));
@@ -195,7 +195,7 @@ class ImportCategory
     private function getMappedObject(array $array): ?Category
     {
         Log::debug('In getMappedObject() for Category');
-        if (0 === count($array)) {
+        if (0 === \count($array)) {
             Log::debug('Array is empty, nothing will come of this.');
 
             return null;
@@ -244,7 +244,7 @@ class ImportCategory
         }
         $name = $this->name['value'] ?? '';
 
-        if (0 === strlen($name)) {
+        if (0 === \strlen($name)) {
             return true;
         }
 

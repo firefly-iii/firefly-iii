@@ -49,7 +49,7 @@ class Amount implements ConverterInterface
         $original        = $value;
         $value           = (string)$value;
         $value           = $this->stripAmount($value);
-        $len             = strlen($value);
+        $len             = \strlen($value);
         $decimalPosition = $len - 3;
         $altPosition     = $len - 2;
         $decimal         = null;
@@ -99,7 +99,7 @@ class Amount implements ConverterInterface
             Log::debug(sprintf('No decimal character found. Converted amount from "%s" to "%s".', $original, $value));
         }
 
-        return strval(number_format(round(floatval($value), 12), 12, '.', ''));
+        return (string)number_format(round(floatval($value), 12), 12, '.', '');
     }
 
     /**
@@ -110,7 +110,7 @@ class Amount implements ConverterInterface
     private function stripAmount(string $value): string
     {
         $str = preg_replace('/[^\-\(\)\.\,0-9 ]/', '', $value);
-        $len = strlen($str);
+        $len = \strlen($str);
         if ('(' === $str[0] && ')' === $str[$len - 1]) {
             $str = '-' . substr($str, 1, $len - 2);
         }

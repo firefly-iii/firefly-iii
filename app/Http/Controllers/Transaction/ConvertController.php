@@ -30,7 +30,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\Request;
-use Session;
 use View;
 
 /**
@@ -81,14 +80,14 @@ class ConvertController extends Controller
 
         // cannot convert to its own type.
         if ($sourceType->type === $destinationType->type) {
-            Session::flash('info', trans('firefly.convert_is_already_type_' . $destinationType->type));
+            session()->flash('info', trans('firefly.convert_is_already_type_' . $destinationType->type));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
 
         // cannot convert split.
         if ($journal->transactions()->count() > 2) {
-            Session::flash('error', trans('firefly.cannot_convert_split_journal'));
+            session()->flash('error', trans('firefly.cannot_convert_split_journal'));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
@@ -98,36 +97,23 @@ class ConvertController extends Controller
         $destinationAccount = $this->repository->getJournalDestinationAccounts($journal)->first();
 
         return view(
-            'transactions.convert',
-            compact(
-                'sourceType',
-                'destinationType',
-                'journal',
-                'positiveAmount',
-                'sourceAccount',
-                'destinationAccount',
-                'sourceType',
-                'subTitle',
-                'subTitleIcon'
-            )
+            'transactions.convert', compact(
+            'sourceType', 'destinationType', 'journal', 'positiveAmount', 'sourceAccount', 'destinationAccount', 'sourceType', 'subTitle', 'subTitleIcon'
+        )
         );
-
-        // convert withdrawal to deposit requires a new source account ()
-        //  or to transfer requires
     }
 
     /**
-     * @param Request                    $request
-     * @param JournalRepositoryInterface $repository
-     * @param TransactionType            $destinationType
-     * @param TransactionJournal         $journal
+     * @param Request            $request
+     * @param TransactionType    $destinationType
+     * @param TransactionJournal $journal
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
      * @throws FireflyException
      * @throws FireflyException
      */
-    public function postIndex(Request $request, JournalRepositoryInterface $repository, TransactionType $destinationType, TransactionJournal $journal)
+    public function postIndex(Request $request, TransactionType $destinationType, TransactionJournal $journal)
     {
         // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($journal)) {
@@ -138,13 +124,13 @@ class ConvertController extends Controller
         $data = $request->all();
 
         if ($journal->transactionType->type === $destinationType->type) {
-            Session::flash('error', trans('firefly.convert_is_already_type_' . $destinationType->type));
+            session()->flash('error', trans('firefly.convert_is_already_type_' . $destinationType->type));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
 
         if ($journal->transactions()->count() > 2) {
-            Session::flash('error', trans('firefly.cannot_convert_split_journal'));
+            session()->flash('error', trans('firefly.cannot_convert_split_journal'));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
@@ -154,13 +140,13 @@ class ConvertController extends Controller
         $destination = $this->getDestinationAccount($journal, $destinationType, $data);
 
         // update the journal:
-        $errors = $repository->convert($journal, $destinationType, $source, $destination);
+        $errors = $this->repository->convert($journal, $destinationType, $source, $destination);
 
         if ($errors->count() > 0) {
             return redirect(route('transactions.convert.index', [strtolower($destinationType->type), $journal->id]))->withErrors($errors)->withInput();
         }
 
-        Session::flash('success', trans('firefly.converted_to_' . $destinationType->type));
+        session()->flash('success', trans('firefly.converted_to_' . $destinationType->type));
 
         return redirect(route('transactions.show', [$journal->id]));
     }

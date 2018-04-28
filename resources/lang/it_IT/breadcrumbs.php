@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * breadcrumbs.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -30,11 +31,11 @@ return [
     'profile'             => 'Profilo',
     'changePassword'      => 'Cambia la tua password',
     'change_email'        => 'Cambia il tuo indirizzo email',
-    'bills'               => 'Fatture',
-    'newBill'             => 'Nuova fattura',
-    'edit_bill'           => 'Modifica fattura ":name"',
-    'delete_bill'         => 'Elimina fattura ":name"',
-    'reports'             => 'Stampe',
+    'bills'               => 'Bollette',
+    'newBill'             => 'Nuova bolletta',
+    'edit_bill'           => 'Modifica bolletta ":name"',
+    'delete_bill'         => 'Elimina bolletta ":name"',
+    'reports'             => 'Resoconti',
     'search_result'       => 'Risultati di ricerca per ":query"',
     'withdrawal_list'     => 'Spese',
     'deposit_list'        => 'Entrate, entrate e depositi',

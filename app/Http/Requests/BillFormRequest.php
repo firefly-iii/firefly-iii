@@ -42,18 +42,15 @@ class BillFormRequest extends Request
     public function getBillData()
     {
         return [
-            'name'                          => $this->string('name'),
-            'match'                         => $this->string('match'),
-            'amount_min'                    => $this->string('amount_min'),
-            'amount_currency_id_amount_min' => $this->integer('amount_currency_id_amount_min'),
-            'amount_currency_id_amount_max' => $this->integer('amount_currency_id_amount_max'),
-            'amount_max'                    => $this->string('amount_max'),
-            'date'                          => $this->date('date'),
-            'repeat_freq'                   => $this->string('repeat_freq'),
-            'skip'                          => $this->integer('skip'),
-            'automatch'                     => $this->boolean('automatch'),
-            'active'                        => $this->boolean('active'),
-            'notes'                         => $this->string('notes'),
+            'name'                    => $this->string('name'),
+            'amount_min'              => $this->string('amount_min'),
+            'transaction_currency_id' => $this->integer('transaction_currency_id'),
+            'amount_max'              => $this->string('amount_max'),
+            'date'                    => $this->date('date'),
+            'repeat_freq'             => $this->string('repeat_freq'),
+            'skip'                    => $this->integer('skip'),
+            'active'                  => $this->boolean('active'),
+            'notes'                   => $this->string('notes'),
         ];
     }
 
@@ -62,25 +59,22 @@ class BillFormRequest extends Request
      */
     public function rules()
     {
-        $nameRule  = 'required|between:1,255|uniqueObjectForUser:bills,name';
-        $matchRule = 'required|between:1,255|uniqueObjectForUser:bills,match';
+        $nameRule = 'required|between:1,255|uniqueObjectForUser:bills,name';
         if ($this->integer('id') > 0) {
-            $nameRule  .= ',' . $this->integer('id');
-            $matchRule .= ',' . $this->integer('id');
+            // todo is a fix to do this better.
+            $nameRule .= ',' . $this->integer('id');
         }
         // is OK
         $rules = [
-            'name'                          => $nameRule,
-            'match'                         => $matchRule,
-            'amount_min'                    => 'required|numeric|more:0',
-            'amount_max'                    => 'required|numeric|more:0',
-            'amount_currency_id_amount_min' => 'required|exists:transaction_currencies,id',
-            'amount_currency_id_amount_max' => 'required|exists:transaction_currencies,id',
-            'date'                          => 'required|date',
-            'repeat_freq'                   => 'required|in:weekly,monthly,quarterly,half-year,yearly',
-            'skip'                          => 'required|between:0,31',
-            'automatch'                     => 'in:1',
-            'active'                        => 'in:1',
+            'name'                    => $nameRule,
+            'amount_min'              => 'required|numeric|more:0',
+            'amount_max'              => 'required|numeric|more:0',
+            'transaction_currency_id' => 'required|exists:transaction_currencies,id',
+            'date'                    => 'required|date',
+            'repeat_freq'             => 'required|in:weekly,monthly,quarterly,half-year,yearly',
+            'skip'                    => 'required|between:0,31',
+            'automatch'               => 'in:1',
+            'active'                  => 'in:1',
         ];
 
         return $rules;

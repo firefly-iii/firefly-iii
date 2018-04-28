@@ -164,6 +164,7 @@ return [
     // bunq
     'bunq_prerequisites_title'             => 'Требования для импорта из bunq',
     'bunq_prerequisites_text'              => 'Чтобы импортировать из bunq, вам нужно получить ключ API. Вы можете сделать это через приложение. Обратите внимание, что функция импорта для bunq находится в бета-тестирования. Было протестировано только API песочницы (sandbox).',
+    'bunq_prerequisites_text_ip'           => 'Для работы с Bunq необходимо указать ваш внешний IP-адрес. Firefly III попытался узнать ваш адрес с помощью <a href="https://www.ipify.org/">службы ipify</a>. Убедитесь, что этот IP-адрес верен, иначе импорт не будет выполнен.',
     'bunq_do_import'                       => 'Да, импортировать с этого счёта',
     'bunq_accounts_title'                  => 'Счета Bunq',
     'bunq_accounts_text'                   => 'Эти счета связаны с вашей учётной записью bunq. Выберите счета, данные о о которых вы хотите импортировать, и счёт, на который будут импортированы транзакции.',
@@ -171,11 +172,12 @@ return [
     // Spectre
     'spectre_title'                        => 'Импорт с использованием Spectre',
     'spectre_prerequisites_title'          => 'Требования для импорта с использованием Spectre',
-    'spectre_prerequisites_text'           => 'Чтобы импортировать данные с помощью API-интерфейса Spectre, вы должны предоставить Firefly III два секретных значения. Их можно найти на странице <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
-    'spectre_enter_pub_key'                => 'Импорт будет работать только если вы введёте этот ключ безопасности на своей <a href="https://www.saltedge.com/clients/security/edit">странице</a>.',
+    'spectre_prerequisites_text'           => 'Чтобы импортировать данные с помощью Spectre API (v4), вы должны предоставить Firefly III два секретных значения. Их можно найти на странице <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
+    'spectre_enter_pub_key'                => 'Импорт будет работать только если вы введёте этот ключ безопасности на <a href="https://www.saltedge.com/clients/profile/secrets">странице с ключами</a> в своём аккаунте.',
     'spectre_accounts_title'               => 'Выберите счёта, с которых будет производиться импорт',
     'spectre_accounts_text'                => 'Каждый счёт в списке слева был найден в в Spectre и может быть импортирован в Firefly III. Выберите основной счёт, на котором нужно сохранить импортируемые транзакции. Если вы не хотите импортировать данные с какого-либо конкретного счёта, снимите соответствующий флажок.',
     'spectre_do_import'                    => 'Да, импортировать с этого счёта',
+    'spectre_no_supported_accounts'        => 'Вы не можете импортировать с этого счёта из-за несоответствия валюты.',
 
     // keys from "extra" array:
     'spectre_extra_key_iban'               => 'IBAN',

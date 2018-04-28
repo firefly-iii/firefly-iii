@@ -34,7 +34,7 @@ return [
     |
     */
 
-    'default' => env('LOG_CHANNEL', 'daily'),
+    'default' => envNonEmpty('LOG_CHANNEL', 'daily'),
 
     /*
     |--------------------------------------------------------------------------
@@ -65,13 +65,13 @@ return [
         'daily'     => [
             'driver' => 'daily',
             'path'   => storage_path('logs/ff3-' . PHP_SAPI . '.log'),
-            'level'  => env('APP_LOG_LEVEL', 'info'),
+            'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
             'days'   => 7,
         ],
         'dailytest' => [
             'driver' => 'daily',
             'path'   => storage_path('logs/test-ff3-' . PHP_SAPI . '.log'),
-            'level'  => env('APP_LOG_LEVEL', 'info'),
+            'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
             'days'   => 7,
         ],
 
@@ -85,12 +85,12 @@ return [
 
         'syslog' => [
             'driver' => 'syslog',
-            'level'  => env('APP_LOG_LEVEL', 'info'),
+            'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
         ],
 
         'errorlog' => [
             'driver' => 'errorlog',
-            'level'  => env('APP_LOG_LEVEL', 'info'),
+            'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
         ],
     ],
 

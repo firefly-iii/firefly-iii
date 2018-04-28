@@ -135,10 +135,12 @@ else
     else
         echo "Must run PHPUnit with coverage"
     fi
+
+    echo "./vendor/bin/phpunit $verbalflag --configuration $configfile $featuretestclass $unittestclass $apitestclass $testsuite"
+    ./vendor/bin/phpunit $verbalflag --configuration $configfile $featuretestclass $unittestclass $apitestclass $testsuite
+
 fi
 
-echo "./vendor/bin/phpunit $verbalflag --configuration $configfile $featuretestclass $unittestclass $apitestclass $testsuite"
-./vendor/bin/phpunit $verbalflag --configuration $configfile $featuretestclass $unittestclass $apitestclass $testsuite
 
 # restore current config:
 if [ -f $BACKUPENV ]; then

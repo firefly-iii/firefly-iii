@@ -83,7 +83,7 @@ class Login extends SpectreObject
         $this->customerId              = $data['customer_id'];
         $this->dailyRefresh            = $data['daily_refresh'];
         $this->holderInfo              = new Holder($data['holder_info']);
-        $this->id                      = $data['id'];
+        $this->id                      = (int)$data['id'];
         $this->lastAttempt             = new Attempt($data['last_attempt']);
         $this->lastSuccessAt           = new Carbon($data['last_success_at']);
         $this->nextRefreshPossibleAt   = new Carbon($data['next_refresh_possible_at']);

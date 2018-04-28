@@ -61,7 +61,6 @@ class DeviceSessionRequest extends BunqRequest
         $this->userPerson      = $this->extractUserPerson($response);
         $this->userCompany     = $this->extractUserCompany($response);
 
-        return;
     }
 
     /**

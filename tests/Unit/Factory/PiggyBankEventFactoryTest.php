@@ -72,21 +72,22 @@ class PiggyBankEventFactoryTest extends TestCase
     }
 
     /**
+     * Test for withdrawal where piggy has no repetition.
+     *
      * @covers \FireflyIII\Factory\PiggyBankEventFactory
      */
-    public function testCreateNoRep()
+    public function testCreateNoRep(): void
     {
         /** @var TransactionJournal $transfer */
-        $transfer   = $this->user()->transactionJournals()->where('transaction_type_id', 3)->first();
-        $piggy      = $this->user()->piggyBanks()->first();
-        $repetition = new PiggyBankRepetition;
-        $repos      = $this->mock(PiggyBankRepositoryInterface::class);
+        $transfer = $this->user()->transactionJournals()->where('transaction_type_id', 3)->first();
+        $piggy    = $this->user()->piggyBanks()->first();
+        $repos    = $this->mock(PiggyBankRepositoryInterface::class);
         /** @var PiggyBankEventFactory $factory */
         $factory = app(PiggyBankEventFactory::class);
 
         // mock:
         $repos->shouldReceive('setUser');
-        $repos->shouldReceive('getRepetition')->andReturn($repetition);
+        $repos->shouldReceive('getRepetition')->andReturn(null);
         $repos->shouldReceive('getExactAmount')->andReturn('0');
 
         $this->assertNull($factory->create($transfer, $piggy));

@@ -27,6 +27,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use FireflyIII\User;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\BudgetLimit;
 
 /**
  * Class Budget.
@@ -105,7 +109,7 @@ class Budget extends Model
      */
     public function budgetlimits()
     {
-        return $this->hasMany('FireflyIII\Models\BudgetLimit');
+        return $this->hasMany(BudgetLimit::class);
     }
 
     /**
@@ -145,7 +149,7 @@ class Budget extends Model
      */
     public function transactionJournals()
     {
-        return $this->belongsToMany('FireflyIII\Models\TransactionJournal', 'budget_transaction_journal', 'budget_id');
+        return $this->belongsToMany(TransactionJournal::class, 'budget_transaction_journal', 'budget_id');
     }
 
     /**
@@ -154,7 +158,7 @@ class Budget extends Model
      */
     public function transactions()
     {
-        return $this->belongsToMany('FireflyIII\Models\Transaction', 'budget_transaction', 'budget_id');
+        return $this->belongsToMany(Transaction::class, 'budget_transaction', 'budget_id');
     }
 
     /**
@@ -163,6 +167,6 @@ class Budget extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo('FireflyIII\User');
+        return $this->belongsTo(User::class);
     }
 }

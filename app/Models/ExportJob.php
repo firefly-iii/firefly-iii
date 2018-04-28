@@ -77,6 +77,6 @@ class ExportJob extends Model
      */
     public function user()
     {
-        return $this->belongsTo('FireflyIII\User');
+        return $this->belongsTo(User::class);
     }
 }

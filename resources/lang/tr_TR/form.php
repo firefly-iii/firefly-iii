@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * form.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -33,9 +34,12 @@ return [
     'amount_min'                     => 'Minimum tutar',
     'amount_max'                     => 'Minimum tutar',
     'match'                          => 'Eşleşti',
+    'strict'                         => 'Strict mode',
     'repeat_freq'                    => 'Tekrarlar',
     'journal_currency_id'            => 'Para birimi',
     'currency_id'                    => 'Para birimi',
+    'transaction_currency_id'        => 'Currency',
+    'external_ip'                    => 'Your server\'s external IP',
     'attachments'                    => 'Ekler',
     'journal_amount'                 => 'Tutar',
     'journal_source_account_name'    => 'Gelir hesabı (kaynak)',
@@ -90,6 +94,8 @@ return [
     'convert_Transfer'            => 'Aktarımı dönüştür',
 
     'amount'                     => 'Tutar',
+    'foreign_amount'             => 'Foreign amount',
+    'existing_attachments'       => 'Existing attachments',
     'date'                       => 'Tarih',
     'interest_date'              => 'Faiz tarihi',
     'book_date'                  => 'Kitap Tarihi',
@@ -196,6 +202,8 @@ return [
     'client_id'             => 'Müşteri Kimliği',
     'service_secret'        => 'Hizmet Sırrı',
     'app_secret'            => 'Uygulama Sırrı',
+    'app_id'                => 'App ID',
+    'secret'                => 'Secret',
     'public_key'            => 'Genel anahtar',
     'country_code'          => 'Ülke kodu',
     'provider_code'         => 'Banka ya da veri sağlayıcı',

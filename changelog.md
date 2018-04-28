@@ -2,6 +2,43 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.7.3] - 2018-04-29
+### Added
+- Currency added to API
+- Firfely III will also generate a cash wallet for new users.
+- Can now reset Spectre and bunq settings
+- Docker file has a time zone
+- Allow database connection to be configured in Docker file
+- Can now view and edit attachments in edit-screen
+- User can visit hidden `/attachments` page
+- [Issue 1356](https://github.com/firefly-iii/firefly-iii/issues/1356): Budgets will show the remaining amount per day
+- [Issue 1367](https://github.com/firefly-iii/firefly-iii/issues/1367): Rules now come in strict and non-strict mode.
+- Added a security.txt
+- More support for trusted proxies
+
+### Changed
+- Improved edit routine for split transactions.
+- Upgrade routine can handle `proc_close` being disabled.
+- Bills now use rules to match transactions, making it more flexible.
+- [Issue 1328](https://github.com/firefly-iii/firefly-iii/issues/1328): piggy banks no have a more useful chart.
+- Spectre API upgraded to v4
+- Move to MariaDB ([issue 1366](https://github.com/firefly-iii/firefly-iii/issues/1366))
+- Piggy banks take currency from parent account ([issue 1334](https://github.com/firefly-iii/firefly-iii/issues/1334))
+
+### Deprecated
+- [Issue 1341](https://github.com/firefly-iii/firefly-iii/issues/1341): Removed depricated command from dockerfile
+
+### Fixed
+- Several issues with docker image ([issue 1320](https://github.com/firefly-iii/firefly-iii/issues/1320), [issue 1382](https://github.com/firefly-iii/firefly-iii/issues/1382)).
+- Fix giant tags and division by zero ([issue 1325](https://github.com/firefly-iii/firefly-iii/issues/1325) and others)
+- Several issues with bunq import ([issue 1352](https://github.com/firefly-iii/firefly-iii/issues/1352), [issue 1330](https://github.com/firefly-iii/firefly-iii/issues/1330), [issue 1378](https://github.com/firefly-iii/firefly-iii/issues/1378), [issue 1380](https://github.com/firefly-iii/firefly-iii/issues/1380))
+- [Issue 1246](https://github.com/firefly-iii/firefly-iii/issues/1246): date picker is internationalised
+- [Issue 1327](https://github.com/firefly-iii/firefly-iii/issues/1327): fix formattting issues in piggy banks
+- [Issue 1348](https://github.com/firefly-iii/firefly-iii/issues/1348): 500 error in API
+- [Issue 1349](https://github.com/firefly-iii/firefly-iii/issues/1349): Errors in import routine
+- Several fixes for (multi-currency) reconciliation ([issue 1336](https://github.com/firefly-iii/firefly-iii/issues/1336), [issue 1363](https://github.com/firefly-iii/firefly-iii/issues/1363))
+- [Issue 1353](https://github.com/firefly-iii/firefly-iii/issues/1353): return NULL values in range-indicator
+
 ## [4.7.2.2] - 2018-04-04
 ### Fixed
 - Bug in split transaction edit routine

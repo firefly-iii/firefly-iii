@@ -59,7 +59,7 @@ class StatusController extends Controller
     public function index(ImportJob $job)
     {
         $statuses = ['configured', 'running', 'finished', 'error'];
-        if (!in_array($job->status, $statuses)) {
+        if (!\in_array($job->status, $statuses)) {
             return redirect(route('import.configure', [$job->key]));
         }
         $subTitle     = trans('import.status_sub_title');

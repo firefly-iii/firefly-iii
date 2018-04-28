@@ -168,7 +168,6 @@ class TransactionRequest extends Request
      * @param  Validator $validator
      *
      * @return void
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function withValidator(Validator $validator): void
     {
@@ -202,7 +201,7 @@ class TransactionRequest extends Request
         $accountId   = (int)$accountId;
         $accountName = (string)$accountName;
         // both empty? hard exit.
-        if ($accountId < 1 && strlen($accountName) === 0) {
+        if ($accountId < 1 && \strlen($accountName) === 0) {
             $validator->errors()->add($idField, trans('validation.filled', ['attribute' => $idField]));
 
             return null;
@@ -225,7 +224,7 @@ class TransactionRequest extends Request
             return $first;
         }
 
-        $account = $repository->findByNameNull($accountName, [AccountType::ASSET]);
+        $account = $repository->findByName($accountName, [AccountType::ASSET]);
         if (null === $account) {
             $validator->errors()->add($nameField, trans('validation.belongs_user'));
 
@@ -245,7 +244,7 @@ class TransactionRequest extends Request
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
         // need at least one transaction
-        if (count($transactions) === 0) {
+        if (\count($transactions) === 0) {
             $validator->errors()->add('description', trans('validation.at_least_one_transaction'));
         }
     }
@@ -263,13 +262,13 @@ class TransactionRequest extends Request
         $journalDescription = (string)($data['description'] ?? '');
         $validDescriptions  = 0;
         foreach ($transactions as $index => $transaction) {
-            if (strlen((string)($transaction['description'] ?? '')) > 0) {
+            if (\strlen((string)($transaction['description'] ?? '')) > 0) {
                 $validDescriptions++;
             }
         }
 
         // no valid descriptions and empty journal description? error.
-        if ($validDescriptions === 0 && strlen($journalDescription) === 0) {
+        if ($validDescriptions === 0 && \strlen($journalDescription) === 0) {
             $validator->errors()->add('description', trans('validation.filled', ['attribute' => trans('validation.attributes.description')]));
         }
 
@@ -288,7 +287,7 @@ class TransactionRequest extends Request
         foreach ($transactions as $index => $transaction) {
             $description = (string)($transaction['description'] ?? '');
             // filled description is mandatory for split transactions.
-            if (count($transactions) > 1 && strlen($description) === 0) {
+            if (\count($transactions) > 1 && \strlen($description) === 0) {
                 $validator->errors()->add(
                     'transactions.' . $index . '.description',
                     trans('validation.filled', ['attribute' => trans('validation.attributes.transaction_description')])
@@ -355,7 +354,7 @@ class TransactionRequest extends Request
         $accountId   = (int)$accountId;
         $accountName = (string)$accountName;
         // both empty? done!
-        if ($accountId < 1 && strlen($accountName) === 0) {
+        if ($accountId < 1 && \strlen($accountName) === 0) {
             return null;
         }
         if ($accountId !== 0) {
@@ -457,7 +456,7 @@ class TransactionRequest extends Request
     protected function validateSplitAccounts(Validator $validator)
     {
         $data  = $validator->getData();
-        $count = isset($data['transactions']) ? count($data['transactions']) : 0;
+        $count = isset($data['transactions']) ? \count($data['transactions']) : 0;
         if ($count < 2) {
             return;
         }
@@ -487,17 +486,17 @@ class TransactionRequest extends Request
         // switch on type:
         switch ($data['type']) {
             case 'withdrawal':
-                if (count($sources) > 1) {
+                if (\count($sources) > 1) {
                     $validator->errors()->add('transactions.0.source_id', trans('validation.all_accounts_equal'));
                 }
                 break;
             case 'deposit':
-                if (count($destinations) > 1) {
+                if (\count($destinations) > 1) {
                     $validator->errors()->add('transactions.0.destination_id', trans('validation.all_accounts_equal'));
                 }
                 break;
             case 'transfer':
-                if (count($sources) > 1 || count($destinations) > 1) {
+                if (\count($sources) > 1 || \count($destinations) > 1) {
                     $validator->errors()->add('transactions.0.source_id', trans('validation.all_accounts_equal'));
                     $validator->errors()->add('transactions.0.destination_id', trans('validation.all_accounts_equal'));
                 }

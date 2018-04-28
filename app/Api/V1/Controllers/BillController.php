@@ -27,6 +27,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Transformers\BillTransformer;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use League\Fractal\Manager;
@@ -47,7 +48,7 @@ class BillController extends Controller
     /**
      * BillController constructor.
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function __construct()
     {
@@ -66,11 +67,11 @@ class BillController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \FireflyIII\Models\Bill $bill
+     * @param  Bill $bill
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function delete(Bill $bill)
+    public function delete(Bill $bill): JsonResponse
     {
         $this->repository->destroy($bill);
 
@@ -82,9 +83,9 @@ class BillController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         $pageSize  = (int)Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data;
         $paginator = $this->repository->getPaginator($pageSize);
@@ -106,9 +107,9 @@ class BillController extends Controller
      * @param Request $request
      * @param Bill    $bill
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function show(Request $request, Bill $bill)
+    public function show(Request $request, Bill $bill): JsonResponse
     {
         $manager = new Manager();
         // add include parameter:
@@ -126,22 +127,22 @@ class BillController extends Controller
     /**
      * @param BillRequest $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws FireflyException
      */
-    public function store(BillRequest $request)
+    public function store(BillRequest $request): JsonResponse
     {
-        $bill    = $this->repository->store($request->getAll());
-        if(null !== $bill) {
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $bill = $this->repository->store($request->getAll());
+        if (null !== $bill) {
+            $manager = new Manager();
+            $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+            $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
+            $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+            return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
         }
-        throw new FireflyException('Could not store new bill.');
+        throw new FireflyException('Could not store new bill.'); // @codeCoverageIgnore
 
     }
 
@@ -150,9 +151,9 @@ class BillController extends Controller
      * @param BillRequest $request
      * @param Bill        $bill
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function update(BillRequest $request, Bill $bill)
+    public function update(BillRequest $request, Bill $bill): JsonResponse
     {
         $data    = $request->getAll();
         $bill    = $this->repository->update($bill, $data);

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Object;
 
-
 /**
  * Class Image
  */
@@ -56,7 +55,12 @@ class Image extends BunqObject
      */
     public function toArray(): array
     {
-        die(sprintf('Cannot convert %s to array.', get_class($this)));
+        return [
+            'attachment_public_uuid' => $this->attachmentPublicUuid,
+            'height'                 => $this->height,
+            'width'                  => $this->width,
+            'content_type'           => $this->contentType,
+        ];
     }
 
 }

@@ -55,21 +55,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="match_bills_label" class="col-sm-4 control-label">
-                                        {{ trans('import.file_match_bills_title') }}
-                                    </label>
-
-                                    <div class="col-sm-8">
-                                        <div class="checkbox"><label>
-                                                {{ Form.checkbox('match_bills', '1',
-                                                    job.configuration['match-bills'] == true, {'id': 'match_bills_label'}) }}
-                                                {{ trans('import.file_match_bills_description') }}
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 {% for type, specific in data.specifics %}
                                     <div class="form-group">
                                         <label for="{{ type }}_label" class="col-sm-4 control-label">

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use FireflyIII\Models\Rule;
 
 /**
  * Class RuleAction.
@@ -43,12 +44,15 @@ class RuleAction extends Model
             'stop_processing' => 'boolean',
         ];
 
+    /** @var array */
+    protected $fillable = ['rule_id', 'action_type', 'action_value', 'order', 'active', 'stop_processing'];
+
     /**
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function rule()
     {
-        return $this->belongsTo('FireflyIII\Models\Rule');
+        return $this->belongsTo(Rule::class);
     }
 }

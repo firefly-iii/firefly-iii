@@ -50,7 +50,7 @@ abstract class TestCase extends BaseTestCase
     public function changeDateRange(User $user, $range)
     {
         $valid = ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'];
-        if (in_array($range, $valid)) {
+        if (\in_array($range, $valid)) {
             try {
                 Preference::where('user_id', $user->id)->where('name', 'viewRange')->delete();
             } catch (Exception $e) {
@@ -150,6 +150,6 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('first')->andReturn(new TransactionJournal);
+        $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
     }
 }

@@ -13,15 +13,15 @@
     </tr>
     </thead>
     <tbody>
-    {% for piggyBank in piggyBanks %}
-        <tr data-id="{{ piggyBank.id }}">
+    {% for piggy in piggyBanks %}
+        <tr data-id="{{ piggy.id }}">
             <td class="visible-xs visible-sm hidden-md hidden-lg">
                 &nbsp;
             </td>
             <td class="visible-xs visible-sm hidden-md hidden-lg">
                 <div class="btn-group btn-group-xs">
-                    <a href="{{ route('piggy-banks.remove-money-mobile', piggyBank.id) }}" class="btn btn-default btn-xs"><i class="fa fa-minus"></i></a>
-                    <a href="{{ route('piggy-banks.add-money-mobile', piggyBank.id) }}" class="btn btn-default btn-xs"><i class="fa fa-plus"></i></a>
+                    <a href="{{ route('piggy-banks.remove-money-mobile', piggy.id) }}" class="btn btn-default btn-xs"><i class="fa fa-minus"></i></a>
+                    <a href="{{ route('piggy-banks.add-money-mobile', piggy.id) }}" class="btn btn-default btn-xs"><i class="fa fa-plus"></i></a>
                 </div>
             </td>
             <td style="width:60px;" class="hidden-sm hidden-xs">
@@ -30,53 +30,53 @@
             </td>
             <td style="width:100px;" class="hidden-sm hidden-xs">
                 <div class="btn-group btn-group-xs">
-                    <a href="{{ route('piggy-banks.edit', piggyBank.id) }}" class="btn btn-default btn-xs"><i class="fa fa-pencil fa-fw"></i></a>
-                    <a href="{{ route('piggy-banks.delete', piggyBank.id) }}" class="btn btn-danger btn-xs"><i class="fa fa-trash fa-fw"></i></a>
+                    <a href="{{ route('piggy-banks.edit', piggy.id) }}" class="btn btn-default btn-xs"><i class="fa fa-pencil fa-fw"></i></a>
+                    <a href="{{ route('piggy-banks.delete', piggy.id) }}" class="btn btn-danger btn-xs"><i class="fa fa-trash fa-fw"></i></a>
                 </div>
             </td>
             <td>
-                <a href="{{ route('piggy-banks.show', piggyBank.id) }}" title="{{ piggyBank.account.name }}">{{ piggyBank.name }}</a>
+                <a href="{{ route('piggy-banks.show', piggy.id) }}" title="{{ piggy.account_name }}">{{ piggy.name }}</a>
             </td>
             <td style="text-align: right;" class="piggySaved">
-                <span title="Saved so far" style="text-align:right;">{{ piggyBank.savedSoFar|formatAmount }}</span>
+                <span title="Saved so far" style="text-align:right;">{{ formatAmountBySymbol(piggy.current_amount,piggy.currency_symbol,piggy.currency_dp) }}</span>
             </td>
             <td class="hidden-sm hidden-xs" style="text-align:right;width:40px;">
-                {% if piggyBank.savedSoFar > 0 %}
-                    <a href="{{ route('piggy-banks.remove-money', piggyBank.id) }}" class="btn btn-default btn-xs removeMoney" data-id="{{ piggyBank.id }}">
-                        <i data-id="{{ piggyBank.id }}" class="fa fa-minus"></i></a>
+                {% if piggy.current_amount > 0 %}
+                    <a href="{{ route('piggy-banks.remove-money', piggy.id) }}" class="btn btn-default btn-xs removeMoney" data-id="{{ piggy.id }}">
+                        <i data-id="{{ piggy.id }}" class="fa fa-minus"></i></a>
                 {% endif %}
             </td>
 
             <td class="hidden-sm hidden-xs piggyBar">
                 <div class="progress progress" style="margin-bottom:0;">
                     <div
-                            {% if piggyBank.percentage == 100 %}
+                            {% if piggy.percentage == 100 %}
                                 class="progress-bar progress-bar-success"
-                            {% elseif piggyBank.percentage == 0 %}
+                            {% elseif piggy.percentage == 0 %}
                                 class="progress-bar progress-bar-warning"
                             {% else %}
                                 class="progress-bar progress-bar-info"
                             {% endif %}
-                            role="progressbar" aria-valuenow="{{ piggyBank.percentage }}" aria-valuemin="0" aria-valuemax="100"
-                            style="min-width: 30px;width: {{ piggyBank.percentage }}%;">
-                        {{ piggyBank.percentage }}%
+                            role="progressbar" aria-valuenow="{{ piggy.percentage }}" aria-valuemin="0" aria-valuemax="100"
+                            style="min-width: 30px;width: {{ piggy.percentage }}%;">
+                        {{ piggy.percentage }}%
                     </div>
                 </div>
             </td>
 
 
             <td class="hidden-sm hidden-xs" style="width:40px;">
-                {% if piggyBank.leftToSave > 0 %}
-                    <a href="{{ route('piggy-banks.add-money', piggyBank.id) }}" class="btn btn-default btn-xs addMoney" data-id="{{ piggyBank.id }}">
-                        <i data-id="{{ piggyBank.id }}" class="fa fa-plus"></i></a>
+                {% if piggy.left_to_save > 0 %}
+                    <a href="{{ route('piggy-banks.add-money', piggy.id) }}" class="btn btn-default btn-xs addMoney" data-id="{{ piggy.id }}">
+                        <i data-id="{{ piggy.id }}" class="fa fa-plus"></i></a>
                 {% endif %}
             </td>
-            <td class="hidden-sm hidden-xs" style="width:200px;text-align:right;">
-                <span title="{{ 'target_amount'|_ }}">{{ piggyBank.targetamount|formatAmount }}</span>
+            <td class="hidden-sm hidden-xs" style="text-align:right;">
+                <span title="{{ 'target_amount'|_ }}">{{ formatAmountBySymbol(piggy.target_amount,piggy.currency_symbol,piggy.currency_dp) }}</span>
             </td>
-            <td class="hidden-sm hidden-xs" style="width:200px;text-align:right;">
-                {% if piggyBank.leftToSave > 0 %}
-                    <span title="{{ 'left_to_save'|_ }}">{{ piggyBank.leftToSave|formatAmount }}</span>
+            <td class="hidden-sm hidden-xs" style="text-align:right;">
+                {% if piggy.left_to_save > 0 %}
+                    <span title="{{ 'left_to_save'|_ }}">{{ formatAmountBySymbol(piggy.left_to_save,piggy.currency_symbol,piggy.currency_dp) }}</span>
                 {% endif %}
             </td>
         </tr>

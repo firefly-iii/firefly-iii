@@ -57,7 +57,6 @@ class ListMonetaryAccountRequest extends BunqRequest
             $this->monetaryAccounts->push($account);
         }
 
-        return;
     }
 
     /**

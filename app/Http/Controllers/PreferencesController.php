@@ -27,7 +27,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Preferences;
-use Session;
 use View;
 
 /**
@@ -95,7 +94,7 @@ class PreferencesController extends Controller
     {
         // front page accounts
         $frontPageAccounts = [];
-        if (is_array($request->get('frontPageAccounts'))) {
+        if (\is_array($request->get('frontPageAccounts'))) {
             foreach ($request->get('frontPageAccounts') as $id) {
                 $frontPageAccounts[] = (int)$id;
             }
@@ -105,9 +104,9 @@ class PreferencesController extends Controller
         // view range:
         Preferences::set('viewRange', $request->get('viewRange'));
         // forget session values:
-        Session::forget('start');
-        Session::forget('end');
-        Session::forget('range');
+        session()->forget('start');
+        session()->forget('end');
+        session()->forget('range');
 
         // custom fiscal year
         $customFiscalYear = 1 === (int)$request->get('customFiscalYear');
@@ -143,7 +142,7 @@ class PreferencesController extends Controller
         ];
         Preferences::set('transaction_journal_optional_fields', $optionalTj);
 
-        Session::flash('success', (string)trans('firefly.saved_preferences'));
+        session()->flash('success', (string)trans('firefly.saved_preferences'));
         Preferences::mark();
 
         return redirect(route('preferences.index'));

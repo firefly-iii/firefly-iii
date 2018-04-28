@@ -51,8 +51,7 @@ class ClearNotes implements ActionInterface
      * @param TransactionJournal $journal
      *
      * @return bool
-     *
-
+     * @throws \Exception
      */
     public function act(TransactionJournal $journal): bool
     {

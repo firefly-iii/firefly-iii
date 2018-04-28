@@ -52,7 +52,6 @@ class MonetaryAccountProfile extends BunqObject
         $this->profileActionRequired = $data['profile_action_required'];
         $this->profileAmountRequired = new Amount($data['profile_amount_required']);
 
-        return;
     }
 
     /**

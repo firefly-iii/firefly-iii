@@ -139,6 +139,8 @@ class BillTransformer extends TransformerAbstract
             'updated_at'          => $bill->updated_at->toAtomString(),
             'created_at'          => $bill->created_at->toAtomString(),
             'name'                => $bill->name,
+            'currency_id'         => $bill->transaction_currency_id,
+            'currency_code'       => $bill->transactionCurrency->code,
             'match'               => explode(',', $bill->match),
             'amount_min'          => round($bill->amount_min, 2),
             'amount_max'          => round($bill->amount_max, 2),

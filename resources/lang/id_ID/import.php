@@ -164,6 +164,7 @@ return [
     // bunq
     'bunq_prerequisites_title'             => 'Prasyarat untuk impor dari bunq',
     'bunq_prerequisites_text'              => 'In order to import from bunq, you need to obtain an API key. You can do this through the app. Please note that the import function for bunq is in BETA. It has only been tested against the sandbox API.',
+    'bunq_prerequisites_text_ip'           => 'Bunq requires your externally facing IP address. Firefly III has tried to fill this in using <a href="https://www.ipify.org/">the ipify service</a>. Make sure this IP address is correct, or the import will fail.',
     'bunq_do_import'                       => 'Yes, import from this account',
     'bunq_accounts_title'                  => 'Bunq accounts',
     'bunq_accounts_text'                   => 'These are the accounts associated with your bunq account. Please select the accounts from which you want to import, and in which account the transactions must be imported.',
@@ -171,11 +172,12 @@ return [
     // Spectre
     'spectre_title'                        => 'Impor menggunakan momok',
     'spectre_prerequisites_title'          => 'Prasyarat untuk impor menggunakan momok',
-    'spectre_prerequisites_text'           => 'In order to import data using the Spectre API, you must provide Firefly III with two secret values. They can be found on the <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
-    'spectre_enter_pub_key'                => 'Impor hanya akan berfungsi saat Anda memasukkan kunci publik ini di <a href="https://www.saltedge.com/clients/security/edit">halaman keamanan</a> Anda.',
+    'spectre_prerequisites_text'           => 'In order to import data using the Spectre API (v4), you must provide Firefly III with two secret values. They can be found on the <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
+    'spectre_enter_pub_key'                => 'The import will only work when you enter this public key on your <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
     'spectre_accounts_title'               => 'Select accounts to import from',
     'spectre_accounts_text'                => 'Each account on the left below has been found by Spectre and can be imported into Firefly III. Please select the asset account that should hold any given transactions. If you do not wish to import from any particular account, remove the check from the checkbox.',
     'spectre_do_import'                    => 'Yes, import from this account',
+    'spectre_no_supported_accounts'        => 'You cannot import from this account due to a currency mismatch.',
 
     // keys from "extra" array:
     'spectre_extra_key_iban'               => 'IBAN',

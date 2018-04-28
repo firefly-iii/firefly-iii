@@ -114,7 +114,7 @@ class ConfigurationController extends Controller
         // get possible warning from configurator:
         $warning = $configurator->getWarningMessage();
 
-        if (strlen($warning) > 0) {
+        if (\strlen($warning) > 0) {
             $request->session()->flash('warning', $warning);
         }
 

@@ -123,7 +123,6 @@ class UploadConfig implements ConfigurationInterface
         $config['date-format'] = (string)$data['date_format'];
         $config['delimiter']   = 'tab' === $delimiter ? "\t" : $delimiter;
         $config['apply-rules'] = (int)($data['apply_rules'] ?? 0.0) === 1;
-        $config['match-bills'] = (int)($data['match_bills'] ?? 0.0) === 1;
 
         Log::debug('Entered import account.', ['id' => $importId]);
 
@@ -174,7 +173,7 @@ class UploadConfig implements ConfigurationInterface
     private function storeSpecifics(array $data, array $config): array
     {
         // loop specifics.
-        if (isset($data['specifics']) && is_array($data['specifics'])) {
+        if (isset($data['specifics']) && \is_array($data['specifics'])) {
             $names = array_keys($data['specifics']);
             foreach ($names as $name) {
                 // verify their content.

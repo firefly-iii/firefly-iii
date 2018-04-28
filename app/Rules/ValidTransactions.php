@@ -64,7 +64,7 @@ class ValidTransactions implements Rule
     public function passes($attribute, $value)
     {
         Log::debug('In ValidTransactions::passes');
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             return true;
         }
         $userId = auth()->user()->id;

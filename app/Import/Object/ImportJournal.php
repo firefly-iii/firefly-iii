@@ -224,7 +224,7 @@ class ImportJournal
      */
     public function getMetaString(string $field): ?string
     {
-        if (isset($this->metaFields[$field]) && strlen($this->metaFields[$field]) > 0) {
+        if (isset($this->metaFields[$field]) && \strlen($this->metaFields[$field]) > 0) {
             return (string)$this->metaFields[$field];
         }
 
@@ -278,7 +278,7 @@ class ImportJournal
             case 'sepa-ep':
             case 'sepa-ci':
                 $value = trim((string)$array['value']);
-                if (strlen($value) > 0) {
+                if (\strlen($value) > 0) {
                     $this->metaFields[$array['role']] = $value;
                 }
                 break;
@@ -411,11 +411,11 @@ class ImportJournal
 
         $info = $this->selectAmountInput();
 
-        if (0 === count($info)) {
+        if (0 === \count($info)) {
             throw new FireflyException('No amount information for this row.');
         }
         $class = $info['class'] ?? '';
-        if (0 === strlen($class)) {
+        if (0 === \strlen($class)) {
             throw new FireflyException('No amount information (conversion class) for this row.');
         }
 

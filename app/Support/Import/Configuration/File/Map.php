@@ -82,10 +82,10 @@ class Map implements ConfigurationInterface
                     continue;
                 }
                 $value = trim($row[$index]);
-                if (strlen($value) > 0) {
+                if (\strlen($value) > 0) {
                     // we can do some preprocessing here,
                     // which is exclusively to fix the tags:
-                    if (null !== $this->data[$index]['preProcessMap'] && strlen($this->data[$index]['preProcessMap']) > 0) {
+                    if (null !== $this->data[$index]['preProcessMap'] && \strlen($this->data[$index]['preProcessMap']) > 0) {
                         /** @var PreProcessorInterface $preProcessor */
                         $preProcessor                 = app($this->data[$index]['preProcessMap']);
                         $result                       = $preProcessor->run($value);
@@ -107,7 +107,7 @@ class Map implements ConfigurationInterface
             $this->data[$index]['values'] = array_unique($this->data[$index]['values']);
             asort($this->data[$index]['values']);
             // if the count of this array is zero, there is nothing to map.
-            if (count($this->data[$index]['values']) === 0) {
+            if (\count($this->data[$index]['values']) === 0) {
                 unset($this->data[$index]);
             }
         }
@@ -263,7 +263,7 @@ class Map implements ConfigurationInterface
         $specifics = $config['specifics'] ?? [];
         $names     = array_keys($specifics);
         foreach ($names as $name) {
-            if (!in_array($name, $this->validSpecifics)) {
+            if (!\in_array($name, $this->validSpecifics)) {
                 throw new FireflyException(sprintf('"%s" is not a valid class name', $name));
             }
             $class = config('csv.import_specifics.' . $name);
@@ -309,7 +309,7 @@ class Map implements ConfigurationInterface
     {
         // is valid column?
         $validColumns = array_keys(config('csv.import_roles'));
-        if (!in_array($column, $validColumns)) {
+        if (!\in_array($column, $validColumns)) {
             throw new FireflyException(sprintf('"%s" is not a valid column.', $column));
         }
 

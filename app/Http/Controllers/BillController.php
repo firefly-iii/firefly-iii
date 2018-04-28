@@ -22,13 +22,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use ExpandedForm;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\BillTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -72,17 +75,21 @@ class BillController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param Request                     $request
+     *
+     * @param CurrencyRepositoryInterface $repository
      *
      * @return View
      */
-    public function create(Request $request)
+    public function create(Request $request, CurrencyRepositoryInterface $repository)
     {
         $periods = [];
         foreach (config('firefly.bill_periods') as $current) {
-            $periods[$current] = trans('firefly.' . $current);
+            $periods[$current] = strtolower((string)trans('firefly.repeat_freq_' . $current));
         }
-        $subTitle = trans('firefly.create_new_bill');
+        $subTitle        = trans('firefly.create_new_bill');
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $currencies      = ExpandedForm::makeSelectList($repository->get());
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('bills.create.fromStore')) {
@@ -90,7 +97,7 @@ class BillController extends Controller
         }
         $request->session()->forget('bills.create.fromStore');
 
-        return view('bills.create', compact('periods', 'subTitle'));
+        return view('bills.create', compact('periods', 'subTitle', 'currencies', 'defaultCurrency'));
     }
 
     /**
@@ -126,12 +133,13 @@ class BillController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param Bill    $bill
+     * @param Request                     $request
+     * @param CurrencyRepositoryInterface $repository
+     * @param Bill                        $bill
      *
      * @return View
      */
-    public function edit(Request $request, Bill $bill)
+    public function edit(Request $request, CurrencyRepositoryInterface $repository, Bill $bill)
     {
         $periods = [];
         foreach (config('firefly.bill_periods') as $current) {
@@ -147,6 +155,8 @@ class BillController extends Controller
         $currency         = app('amount')->getDefaultCurrency();
         $bill->amount_min = round($bill->amount_min, $currency->decimal_places);
         $bill->amount_max = round($bill->amount_max, $currency->decimal_places);
+        $defaultCurrency  = app('amount')->getDefaultCurrency();
+        $currencies       = ExpandedForm::makeSelectList($repository->get());
 
         $preFilled = [
             'notes' => '',
@@ -162,7 +172,7 @@ class BillController extends Controller
 
         $request->session()->forget('bills.edit.fromUpdate');
 
-        return view('bills.edit', compact('subTitle', 'periods', 'bill'));
+        return view('bills.edit', compact('subTitle', 'periods', 'bill', 'defaultCurrency', 'currencies'));
     }
 
     /**
@@ -186,6 +196,21 @@ class BillController extends Controller
                 return $transformer->transform($bill);
             }
         );
+        $bills = $bills->sortBy(
+            function (array $bill) {
+                return (int)!$bill['active'] . strtolower($bill['name']);
+            }
+        );
+
+        // add info about rules:
+        $rules = $repository->getRulesForBills($paginator->getCollection());
+        $bills = $bills->map(
+            function (array $bill) use ($rules) {
+                $bill['rules'] = $rules[$bill['id']] ?? [];
+
+                return $bill;
+            }
+        );
 
         $paginator->setPath(route('bills.index'));
 
@@ -198,6 +223,7 @@ class BillController extends Controller
      * @param Bill                    $bill
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function rescan(Request $request, BillRepositoryInterface $repository, Bill $bill)
     {
@@ -206,14 +232,22 @@ class BillController extends Controller
 
             return redirect(URL::previous());
         }
-
-        $journals = $repository->getPossiblyRelatedJournals($bill);
-        /** @var TransactionJournal $journal */
-        foreach ($journals as $journal) {
-            $repository->scan($bill, $journal);
+        $set   = $repository->getRulesForBill($bill);
+        $total = 0;
+        foreach ($set as $rule) {
+            // simply fire off all rules?
+            /** @var TransactionMatcher $matcher */
+            $matcher = app(TransactionMatcher::class);
+            $matcher->setLimit(100000); // large upper limit
+            $matcher->setRange(100000); // large upper limit
+            $matcher->setRule($rule);
+            $matchingTransactions = $matcher->findTransactionsByRule();
+            $total                += $matchingTransactions->count();
+            $repository->linkCollectionToBill($bill, $matchingTransactions);
         }
 
-        $request->session()->flash('success', (string)trans('firefly.rescanned_bill'));
+
+        $request->session()->flash('success', (string)trans('firefly.rescanned_bill', ['total' => $total]));
         Preferences::mark();
 
         return redirect(URL::previous());
@@ -228,6 +262,8 @@ class BillController extends Controller
      */
     public function show(Request $request, BillRepositoryInterface $repository, Bill $bill)
     {
+        // add info about rules:
+        $rules          = $repository->getRulesForBill($bill);
         $subTitle       = $bill->name;
         $start          = session('start');
         $end            = session('end');
@@ -238,7 +274,7 @@ class BillController extends Controller
         $overallAverage = $repository->getOverallAverage($bill);
         $manager        = new Manager();
         $manager->setSerializer(new DataArraySerializer());
-        $manager->parseIncludes(['attachments','notes']);
+        $manager->parseIncludes(['attachments', 'notes']);
 
         // Make a resource out of the data and
         $parameters = new ParameterBag();
@@ -256,16 +292,17 @@ class BillController extends Controller
         $transactions->setPath(route('bills.show', [$bill->id]));
 
 
-        return view('bills.show', compact('transactions', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
+        return view('bills.show', compact('transactions', 'rules', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
     }
 
     /**
-     * @param BillFormRequest         $request
-     * @param BillRepositoryInterface $repository
+     * @param BillFormRequest              $request
+     * @param BillRepositoryInterface      $repository
      *
+     * @param RuleGroupRepositoryInterface $ruleGroupRepository
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(BillFormRequest $request, BillRepositoryInterface $repository)
+    public function store(BillFormRequest $request, BillRepositoryInterface $repository, RuleGroupRepositoryInterface $ruleGroupRepository)
     {
         $billData = $request->getBillData();
         $bill     = $repository->store($billData);
@@ -282,20 +319,33 @@ class BillController extends Controller
         $this->attachments->saveAttachmentsForModel($bill, $files);
 
         // flash messages
-        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+        if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
+        // do return to original bill form?
+        $return = 'false';
         if (1 === (int)$request->get('create_another')) {
-            // @codeCoverageIgnoreStart
-            $request->session()->put('bills.create.fromStore', true);
-
-            return redirect(route('bills.create'))->withInput();
-            // @codeCoverageIgnoreEnd
+            $return = 'true';
         }
 
-        // redirect to previous URL.
-        return redirect($this->getPreviousUri('bills.create.uri'));
+        // find first rule group, or create one:
+        $count = $ruleGroupRepository->count();
+        if ($count === 0) {
+            $data  = [
+                'title'       => (string)trans('firefly.rulegroup_for_bills_title'),
+                'description' => (string)trans('firefly.rulegroup_for_bills_description'),
+            ];
+            $group = $ruleGroupRepository->store($data);
+        }
+        if ($count > 0) {
+            $group = $ruleGroupRepository->getActiveGroups(auth()->user())->first();
+        }
+
+        // redirect to page that will create a new rule.
+        $params = http_build_query(['fromBill' => $bill->id, 'return' => $return]);
+
+        return redirect(route('rules.create', [$group->id]) . '?' . $params);
     }
 
     /**
@@ -318,7 +368,7 @@ class BillController extends Controller
         $this->attachments->saveAttachmentsForModel($bill, $files);
 
         // flash messages
-        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+        if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 

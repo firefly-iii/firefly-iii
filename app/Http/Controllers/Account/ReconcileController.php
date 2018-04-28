@@ -41,7 +41,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Session;
 
 /**
  * Class ReconcileController.
@@ -100,13 +99,13 @@ class ReconcileController extends Controller
             'amount'   => $pTransaction->amount,
         ];
 
-        Session::flash('preFilled', $preFilled);
+        session()->flash('preFilled', $preFilled);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('reconcile.edit.fromUpdate')) {
             $this->rememberPreviousUri('reconcile.edit.uri');
         }
-        Session::forget('reconcile.edit.fromUpdate');
+        session()->forget('reconcile.edit.fromUpdate');
 
         return view(
             'accounts.reconcile.edit',
@@ -123,6 +122,7 @@ class ReconcileController extends Controller
      * @return \Illuminate\Http\JsonResponse
      *
      * @throws FireflyException
+     * @throws \Throwable
      */
     public function overview(Request $request, Account $account, Carbon $start, Carbon $end)
     {
@@ -184,13 +184,13 @@ class ReconcileController extends Controller
             return $this->redirectToOriginalAccount($account);
         }
         if (AccountType::ASSET !== $account->accountType->type) {
-            Session::flash('error', trans('firefly.must_be_asset_account'));
+            session()->flash('error', trans('firefly.must_be_asset_account'));
 
             return redirect(route('accounts.index', [config('firefly.shortNamesByFullName.' . $account->accountType->type)]));
         }
         $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
         $currency   = $this->currencyRepos->findNull($currencyId);
-        if (0 === $currencyId) {
+        if (null === $currency) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
 
@@ -321,11 +321,13 @@ class ReconcileController extends Controller
                 'notes'           => implode(', ', $data['transactions']),
             ];
 
-            $journal = $repository->store($journalData);
+            $repository->store($journalData);
         }
         Log::debug('End of routine.');
 
-        Session::flash('success', trans('firefly.reconciliation_stored'));
+        Preferences::mark();
+
+        session()->flash('success', trans('firefly.reconciliation_stored'));
 
         return redirect(route('accounts.show', [$account->id]));
     }
@@ -338,6 +340,7 @@ class ReconcileController extends Controller
      * @return mixed
      *
      * @throws FireflyException
+     * @throws \Throwable
      */
     public function transactions(Account $account, Carbon $start, Carbon $end)
     {
@@ -350,7 +353,7 @@ class ReconcileController extends Controller
 
         $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
         $currency   = $this->currencyRepos->findNull($currencyId);
-        if (0 === $currencyId) {
+        if (0 === $currency) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
 
@@ -369,7 +372,9 @@ class ReconcileController extends Controller
         $collector->setAccounts(new Collection([$account]))
                   ->setRange($selectionStart, $selectionEnd)->withBudgetInformation()->withOpposingAccount()->withCategoryInformation();
         $transactions = $collector->getJournals();
-        $html         = view('accounts.reconcile.transactions', compact('account', 'transactions', 'start', 'end', 'selectionStart', 'selectionEnd'))->render();
+        $html         = view(
+            'accounts.reconcile.transactions', compact('account', 'transactions', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
+        )->render();
 
         return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
     }
@@ -386,7 +391,7 @@ class ReconcileController extends Controller
             return redirect(route('transactions.show', [$journal->id]));
         }
         if (0 === bccomp('0', $request->get('amount'))) {
-            Session::flash('error', trans('firefly.amount_cannot_be_zero'));
+            session()->flash('error', trans('firefly.amount_cannot_be_zero'));
 
             return redirect(route('accounts.reconcile.edit', [$journal->id]))->withInput();
         }
@@ -439,9 +444,10 @@ class ReconcileController extends Controller
 
         $this->repository->update($journal, $data);
 
+
         // @codeCoverageIgnoreStart
         if (1 === (int)$request->get('return_to_edit')) {
-            Session::put('reconcile.edit.fromUpdate', true);
+            session()->put('reconcile.edit.fromUpdate', true);
 
             return redirect(route('accounts.reconcile.edit', [$journal->id]))->withInput(['return_to_edit' => 1]);
         }

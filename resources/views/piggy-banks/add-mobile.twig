@@ -16,11 +16,11 @@
                     <div class="box-body">
                         {% if maxAmount > 0 %}
                             <p>
-                                {{ 'max_amount_add'|_ }}: {{ maxAmount|formatAmount }}.
+                                {{ 'max_amount_add'|_ }}: {{ formatAmountByCurrency(currency,maxAmount) }}.
                             </p>
 
                             <div class="input-group">
-                                <div class="input-group-addon">{{ getCurrencySymbol()|raw }}</div>
+                                <div class="input-group-addon">{{ currency.symbol|raw }}</div>
                                 <input step="any" class="form-control" id="amount" autocomplete="off" name="amount" max="{{ maxAmount|round(2) }}"
                                        type="number"/>
                             </div>

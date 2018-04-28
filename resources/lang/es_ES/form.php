@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * form.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -33,9 +34,12 @@ return [
     'amount_min'                     => 'Importe mínimo',
     'amount_max'                     => 'Importe máximo',
     'match'                          => 'Encuentros en',
+    'strict'                         => 'Strict mode',
     'repeat_freq'                    => 'Repetición',
     'journal_currency_id'            => 'Divisa',
     'currency_id'                    => 'Divisa',
+    'transaction_currency_id'        => 'Currency',
+    'external_ip'                    => 'Your server\'s external IP',
     'attachments'                    => 'Adjuntos',
     'journal_amount'                 => 'Importe',
     'journal_source_account_name'    => 'Cuenta de ingresos (origen)',
@@ -90,6 +94,8 @@ return [
     'convert_Transfer'            => 'Convertir transferencia',
 
     'amount'                     => 'Importe',
+    'foreign_amount'             => 'Foreign amount',
+    'existing_attachments'       => 'Existing attachments',
     'date'                       => 'Fecha',
     'interest_date'              => 'Fecha de interés',
     'book_date'                  => 'Fecha de registro',
@@ -196,6 +202,8 @@ return [
     'client_id'             => 'Identificación del cliente',
     'service_secret'        => 'Servicio secreto',
     'app_secret'            => 'Secreto de aplicación',
+    'app_id'                => 'App ID',
+    'secret'                => 'Secret',
     'public_key'            => 'Llave pública',
     'country_code'          => 'Código del país',
     'provider_code'         => 'Banco o proveedor de datos',

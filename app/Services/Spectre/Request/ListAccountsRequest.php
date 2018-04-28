@@ -40,7 +40,6 @@ class ListAccountsRequest extends SpectreRequest
     private $login;
 
     /**
-     * @throws SpectreException
      * @throws FireflyException
      */
     public function call(): void
@@ -50,11 +49,11 @@ class ListAccountsRequest extends SpectreRequest
         while ($hasNextPage) {
             Log::debug(sprintf('Now calling ListAccountsRequest for next_id %d', $nextId));
             $parameters = ['from_id' => $nextId, 'login_id' => $this->login->getId()];
-            $uri        = '/api/v3/accounts?' . http_build_query($parameters);
+            $uri        = '/api/v4/accounts?' . http_build_query($parameters);
             $response   = $this->sendSignedSpectreGet($uri, []);
 
             // count entries:
-            Log::debug(sprintf('Found %d entries in data-array', count($response['data'])));
+            Log::debug(sprintf('Found %d entries in data-array', \count($response['data'])));
 
             // extract next ID
             $hasNextPage = false;

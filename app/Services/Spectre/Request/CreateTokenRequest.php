@@ -44,7 +44,6 @@ class CreateTokenRequest extends SpectreRequest
     /**
      *
      * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
      */
     public function call(): void
     {
@@ -52,7 +51,7 @@ class CreateTokenRequest extends SpectreRequest
         $data        = [
             'data' => [
                 'customer_id'               => $this->customer->getId(),
-                'fetch_type'                => 'recent',
+                'fetch_scopes'              => ['accounts',  'transactions'],
                 'daily_refresh'             => true,
                 'include_fake_providers'    => true,
                 'show_consent_confirmation' => true,
@@ -60,11 +59,9 @@ class CreateTokenRequest extends SpectreRequest
                 'return_to'                 => $this->uri,
             ],
         ];
-        $uri         = '/api/v3/tokens/create';
+        $uri         = '/api/v4/tokens/create';
         $response    = $this->sendSignedSpectrePost($uri, $data);
         $this->token = new Token($response['data']);
-
-        return;
     }
 
     /**

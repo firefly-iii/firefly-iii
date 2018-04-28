@@ -34,6 +34,24 @@
                         {{ ExpandedForm.number('savings_balance',0) }}
 
                         <p>
+                            {{ 'set_preferred_language'|_ }}
+                        </p>
+                        <div id="language_holder" class="form-group">
+                            <label for="language_holder_select" class="col-sm-4 control-label">{{ 'language'|_ }}</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="lang_holder" name="language">
+                                    {% for key, lang in Config.get('firefly.languages') %}
+                                        <option {% if language == key %}
+                                            selected
+                                        {% endif %} value="{{ key }}">{{ lang.name_locale }} ({{ lang.name_english }})</option>
+
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <p>
                             {{ 'finish_up_new_user'|_ }}
                         </p>
 

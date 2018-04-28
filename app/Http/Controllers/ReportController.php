@@ -36,7 +36,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Session;
 use View;
 
 /**
@@ -325,25 +324,25 @@ class ReportController extends Controller
 
         if (0 === $request->getAccountList()->count()) {
             Log::debug('Account count is zero');
-            Session::flash('error', trans('firefly.select_more_than_one_account'));
+            session()->flash('error', trans('firefly.select_more_than_one_account'));
 
             return redirect(route('reports.index'));
         }
 
         if (0 === $request->getCategoryList()->count() && 'category' === $reportType) {
-            Session::flash('error', trans('firefly.select_more_than_one_category'));
+            session()->flash('error', trans('firefly.select_more_than_one_category'));
 
             return redirect(route('reports.index'));
         }
 
         if (0 === $request->getBudgetList()->count() && 'budget' === $reportType) {
-            Session::flash('error', trans('firefly.select_more_than_one_budget'));
+            session()->flash('error', trans('firefly.select_more_than_one_budget'));
 
             return redirect(route('reports.index'));
         }
 
         if (0 === $request->getTagList()->count() && 'tag' === $reportType) {
-            Session::flash('error', trans('firefly.select_more_than_one_tag'));
+            session()->flash('error', trans('firefly.select_more_than_one_tag'));
 
             return redirect(route('reports.index'));
         }
@@ -416,8 +415,7 @@ class ReportController extends Controller
 
     /**
      * @return string
-     *
-
+     * @throws \Throwable
      */
     private function accountReportOptions(): string
     {
@@ -428,7 +426,7 @@ class ReportController extends Controller
         $set        = new Collection;
         $names      = $revenue->pluck('name')->toArray();
         foreach ($expense as $exp) {
-            if (in_array($exp->name, $names)) {
+            if (\in_array($exp->name, $names)) {
                 $set->push($exp);
             }
         }
@@ -438,8 +436,7 @@ class ReportController extends Controller
 
     /**
      * @return string
-     *
-
+     * @throws \Throwable
      */
     private function budgetReportOptions(): string
     {
@@ -452,8 +449,7 @@ class ReportController extends Controller
 
     /**
      * @return string
-     *
-
+     * @throws \Throwable
      */
     private function categoryReportOptions(): string
     {
@@ -466,8 +462,7 @@ class ReportController extends Controller
 
     /**
      * @return string
-     *
-
+     * @throws \Throwable
      */
     private function noReportOptions(): string
     {
@@ -476,8 +471,7 @@ class ReportController extends Controller
 
     /**
      * @return string
-     *
-
+     * @throws \Throwable
      */
     private function tagReportOptions(): string
     {

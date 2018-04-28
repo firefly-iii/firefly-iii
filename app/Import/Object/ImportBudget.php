@@ -94,7 +94,7 @@ class ImportBudget
      */
     private function findById(): ?Budget
     {
-        if (3 === count($this->id)) {
+        if (3 === \count($this->id)) {
             Log::debug(sprintf('Finding budget with ID #%d', $this->id['value']));
             /** @var Budget $budget */
             $budget = $this->repository->findNull((int)$this->id['value']);
@@ -114,7 +114,7 @@ class ImportBudget
      */
     private function findByName(): ?Budget
     {
-        if (3 === count($this->name)) {
+        if (3 === \count($this->name)) {
             $budgets = $this->repository->getBudgets();
             $name    = $this->name['value'];
             Log::debug(sprintf('Finding budget with name %s', $name));
@@ -190,7 +190,7 @@ class ImportBudget
     private function getMappedObject(array $array): ?Budget
     {
         Log::debug('In getMappedObject() for Budget');
-        if (0 === count($array)) {
+        if (0 === \count($array)) {
             Log::debug('Array is empty, nothing will come of this.');
 
             return null;
@@ -239,7 +239,7 @@ class ImportBudget
         }
         $name = $this->name['value'] ?? '';
 
-        if (0 === strlen($name)) {
+        if (0 === \strlen($name)) {
             return true;
         }
 

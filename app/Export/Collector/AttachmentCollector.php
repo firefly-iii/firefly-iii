@@ -97,14 +97,16 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
         $file = $attachment->fileName();
         if ($this->uploadDisk->exists($file)) {
             try {
-                $decrypted  = Crypt::decrypt($this->uploadDisk->get($file));
-                $exportFile = $this->exportFileName($attachment);
-                $this->exportDisk->put($exportFile, $decrypted);
-                $this->getEntries()->push($exportFile);
+                $decrypted = Crypt::decrypt($this->uploadDisk->get($file));
             } catch (DecryptException $e) {
                 Log::error('Catchable error: could not decrypt attachment #' . $attachment->id . ' because: ' . $e->getMessage());
+
+                return false;
             }
         }
+        $exportFile = $this->exportFileName($attachment);
+        $this->exportDisk->put($exportFile, $decrypted);
+        $this->getEntries()->push($exportFile);
 
         return true;
     }

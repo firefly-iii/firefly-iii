@@ -53,7 +53,7 @@ class TagReportControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', get_class($this)));
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**

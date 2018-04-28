@@ -128,7 +128,7 @@ trait TransactionServiceTrait
                     // must be able to find it based on ID. Validator should catch invalid ID's.
                     return $repository->findNull($accountId);
                 }
-                if (strlen($accountName) > 0) {
+                if (\strlen($accountName) > 0) {
                     /** @var AccountFactory $factory */
                     $factory = app(AccountFactory::class);
                     $factory->setUser($this->user);
@@ -144,7 +144,7 @@ trait TransactionServiceTrait
                     // must be able to find it based on ID. Validator should catch invalid ID's.
                     return $repository->findNull($accountId);
                 }
-                if (strlen($accountName) > 0) {
+                if (\strlen($accountName) > 0) {
                     // alternatively, return by name.
                     /** @var AccountFactory $factory */
                     $factory = app(AccountFactory::class);
@@ -222,7 +222,6 @@ trait TransactionServiceTrait
         }
         $transaction->budgets()->sync([$budget->id]);
 
-        return;
     }
 
 
@@ -239,7 +238,6 @@ trait TransactionServiceTrait
         }
         $transaction->categories()->sync([$category->id]);
 
-        return;
     }
 
 
@@ -269,7 +267,6 @@ trait TransactionServiceTrait
         $transaction->foreign_currency_id = $currency->id;
         $transaction->save();
 
-        return;
     }
 
 

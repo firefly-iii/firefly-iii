@@ -47,7 +47,7 @@ class JournalList implements BinderInterface
                 $list[] = (int)$entry;
             }
             $list = array_unique($list);
-            if (count($list) === 0) {
+            if (\count($list) === 0) {
                 throw new NotFoundHttpException; // @codeCoverageIgnore
             }
 

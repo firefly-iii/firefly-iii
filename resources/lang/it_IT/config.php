@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * config.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -27,14 +28,14 @@ return [
     'month_and_day'    => '%e %B %Y',
     'date_time'        => '%e %B %Y, @ %T',
     'specific_day'     => '%e %B %Y',
-    'week_in_year'     => 'Week %W, %Y',
+    'week_in_year'     => 'Settimana %W, %Y',
     'year'             => '%Y',
     'half_year'        => '%B %Y',
-    'month_js'         => 'MMMM YYYY',
+    'month_js'         => 'MMMM AAAA',
     'month_and_day_js' => 'Do MMMM YYYY',
     'date_time_js'     => 'Do MMMM YYYY, @ HH:mm:ss',
-    'specific_day_js'  => 'D MMMM YYYY',
-    'week_in_year_js'  => '[Week] w, YYYY',
-    'year_js'          => 'YYYY',
-    'half_year_js'     => 'Q YYYY',
+    'specific_day_js'  => 'G MMMM AAAA',
+    'week_in_year_js'  => '[Week] s, AAAA',
+    'year_js'          => 'AAAA',
+    'half_year_js'     => 'T AAAA',
 ];

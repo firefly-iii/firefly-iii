@@ -25,9 +25,9 @@
                     &nbsp;
                 </td>
                 <td colspan="3">
-                                        <span class="label label-default">
-                                            {{ trans('firefly.start_of_reconcile_period', {period: start.formatLocalized(monthAndDayFormat) }) }}
-                                        </span>
+                    <span class="label label-default">
+                        {{ trans('firefly.start_of_reconcile_period', {period: start.formatLocalized(monthAndDayFormat) }) }}
+                    </span>
                 </td>
                 <td colspan="2">
                     &nbsp;
@@ -43,9 +43,9 @@
                     &nbsp;
                 </td>
                 <td colspan="3">
-                                        <span class="label label-default">
-                                            {{ trans('firefly.end_of_reconcile_period', {period: end.formatLocalized(monthAndDayFormat) }) }}
-                                        </span>
+                    <span class="label label-default">
+                        {{ trans('firefly.end_of_reconcile_period', {period: end.formatLocalized(monthAndDayFormat) }) }}
+                    </span>
                 </td>
                 <td colspan="2">
                     &nbsp;
@@ -82,14 +82,20 @@
             </td>
             <td style="text-align: right;"><span style="margin-right:5px;">{{ transaction|transactionAmount }}</span></td>
             <td>
+                {% if currency.id == transaction.transaction_currency_id %}
+                    {% set transactionAmount = transaction.transaction_amount %}
+                {% else %}
+                    {% set transactionAmount = transaction.transaction_foreign_amount %}
+                {% endif %}
+
                 {% if transaction.reconciled %}
                     {{ transaction|transactionReconciled }}
-                    <input type="hidden" name="cleared[]" data-younger="{% if transaction.date > end %}true{% else %}false{% endif %}"
-                           class="cleared" data-id="{{ transaction.id }}" value="{{ transaction.transaction_amount }}">
+                    <input type="hidden" name="cleared[]" data-younger="{% if transaction.date < start %}true{% else %}false{% endif %}"
+                           class="cleared" data-id="{{ transaction.id }}" value="{{ transactionAmount }}">
                 {% else %}
                     <input type="checkbox" name="reconciled[]"
-                           data-younger="{% if transaction.date > end %}true{% else %}false{% endif %}"
-                           value="{{ transaction.transaction_amount }}" data-id="{{ transaction.id }}" disabled class="reconcile_checkbox">
+                           data-younger="{% if transaction.date < start %}true{% else %}false{% endif %}"
+                           value="{{ transactionAmount }}" data-id="{{ transaction.id }}" disabled class="reconcile_checkbox">
                 {% endif %}
             </td>
             <td class="hidden-sm hidden-xs">
@@ -119,9 +125,9 @@
                 &nbsp;
             </td>
             <td colspan="3">
-                                        <span class="label label-default">
-                                            {{ trans('firefly.start_of_reconcile_period', {period: start.formatLocalized(monthAndDayFormat) }) }}
-                                        </span>
+                <span class="label label-default">
+                    {{ trans('firefly.start_of_reconcile_period', {period: start.formatLocalized(monthAndDayFormat) }) }}
+                </span>
             </td>
             <td colspan="2">
                 &nbsp;

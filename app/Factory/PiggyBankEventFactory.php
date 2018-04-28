@@ -62,8 +62,8 @@ class PiggyBankEventFactory
         $piggyRepos->setUser($journal->user);
 
         // repetition exists?
-        $repetition = $piggyRepos->getRepetition($piggyBank, $journal->date);
-        if (null === $repetition->id) {
+        $repetition = $piggyRepos->getRepetition($piggyBank);
+        if (null === $repetition) {
             Log::error(sprintf('No piggy bank repetition on %s!', $journal->date->format('Y-m-d')));
 
             return null;

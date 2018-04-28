@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * intro.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -91,6 +92,7 @@ return [
     'piggy-banks_show_piggyEvents'                            => 'Cualquier adición o eliminación también se ponen en lista aquí.',
 
     // bill index
+    'bills_index_rules'                                       => 'Here you see which rules will check if this bill is hit',
     'bills_index_paid_in_period'                              => 'Este campo indica cuando la factura fue pagada por última vez.',
     'bills_index_expected_in_period'                          => 'Este campo indica para cada factura si se espera que llegue la próxima factura.',
 
@@ -100,11 +102,12 @@ return [
     'bills_show_billChart'                                    => 'Este gráfico muestra las transacciones vinculadas con esta factura.',
 
     // create bill
+    'bills_create_intro'                                      => 'Use bills to track the amount of money you\'re due every period. Think about expenses like rent, insurance or mortgage payments.',
     'bills_create_name'                                       => 'Use un nombre descriptivo como "alquiler" o "seguro de salud".',
-    'bills_create_match'                                      => 'Para hacer coincidir transacciones, use términos de esas transacciones o de la cuenta de gastos involucrada. Todas las palabras deben coincidir.',
+    //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
     'bills_create_amount_min_holder'                          => 'Seleccione un monto mínimo y uno máximo para esta factura.',
     'bills_create_repeat_freq_holder'                         => 'Muchas facturas se repiten mensualmente, pero usted puede establecer otra frecuencia aquí.',
-    'bills_create_skip_holder'                                => 'Si una factura se repite cada 2 semanas por ejemplo, el campo "omitir" debe establecerse en "1" para omitir cada otra semana.',
+    'bills_create_skip_holder'                                => 'If a bill repeats every 2 weeks, the "skip"-field should be set to "1" to skip every other week.',
 
     // rules index
     'rules_index_intro'                                       => 'Firefly III le permite administrar reglas, que automáticamente se aplicaran para cualquier transacción que cree o edite.',

@@ -148,16 +148,18 @@ class AccountTransformer extends TransformerAbstract
 
         $type = $account->accountType->type;
         $role = $this->repository->getMetaValue($account, 'accountRole');
-        if (strlen($role) === 0 || $type !== AccountType::ASSET) {
+        if ($type !== AccountType::ASSET || (string)$role === '') {
             $role = null;
         }
-        $currencyId    = (int)$this->repository->getMetaValue($account, 'currency_id');
-        $currencyCode  = null;
-        $decimalPlaces = 2;
+        $currencyId     = (int)$this->repository->getMetaValue($account, 'currency_id');
+        $currencyCode   = null;
+        $currencySymbol = 'x';
+        $decimalPlaces  = 2;
         if ($currencyId > 0) {
-            $currency      = TransactionCurrency::find($currencyId);
-            $currencyCode  = $currency->code;
-            $decimalPlaces = $currency->decimal_places;
+            $currency       = TransactionCurrency::find($currencyId);
+            $currencyCode   = $currency->code;
+            $decimalPlaces  = $currency->decimal_places;
+            $currencySymbol = $currency->symbol;
         }
 
         $date = new Carbon;
@@ -196,6 +198,8 @@ class AccountTransformer extends TransformerAbstract
             'type'                 => $type,
             'currency_id'          => $currencyId,
             'currency_code'        => $currencyCode,
+            'currency_symbol'      => $currencySymbol,
+            'currency_dp'          => $decimalPlaces,
             'current_balance'      => round(app('steam')->balance($account, $date), $decimalPlaces),
             'current_balance_date' => $date->format('Y-m-d'),
             'notes'                => $this->repository->getNoteText($account),

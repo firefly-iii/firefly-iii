@@ -49,6 +49,8 @@ final class Processor
     public $triggers;
     /** @var int Found triggers */
     private $foundTriggers = 0;
+    /** @var bool */
+    private $strict = true;
 
     /**
      * Processor constructor.
@@ -72,9 +74,11 @@ final class Processor
     public static function make(Rule $rule, $includeActions = true)
     {
         Log::debug(sprintf('Making new rule from Rule %d', $rule->id));
-        $self       = new self;
-        $self->rule = $rule;
-        $triggerSet = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
+        Log::debug(sprintf('Rule is strict: %s', var_export($rule->strict, true)));
+        $self         = new self;
+        $self->rule   = $rule;
+        $self->strict = $rule->strict;
+        $triggerSet   = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
         /** @var RuleTrigger $trigger */
         foreach ($triggerSet as $trigger) {
             Log::debug(sprintf('Push trigger %d', $trigger->id));
@@ -243,7 +247,7 @@ final class Processor
         foreach ($this->actions as $action) {
             /** @var ActionInterface $actionClass */
             $actionClass = ActionFactory::getAction($action);
-            Log::debug(sprintf('Fire action %s on journal #%d', get_class($actionClass), $this->journal->id));
+            Log::debug(sprintf('Fire action %s on journal #%d', \get_class($actionClass), $this->journal->id));
             $actionClass->act($this->journal);
             if ($action->stop_processing) {
                 Log::debug('Stop processing now and break.');
@@ -269,11 +273,17 @@ final class Processor
         /** @var AbstractTrigger $trigger */
         foreach ($this->triggers as $trigger) {
             ++$foundTriggers;
-            Log::debug(sprintf('Now checking trigger %s with value %s', get_class($trigger), $trigger->getTriggerValue()));
+            Log::debug(sprintf('Now checking trigger %s with value %s', \get_class($trigger), $trigger->getTriggerValue()));
             /** @var AbstractTrigger $trigger */
             if ($trigger->triggered($this->journal)) {
                 Log::debug('Is a match!');
                 ++$hitTriggers;
+                // is non-strict? then return true!
+                if (!$this->strict) {
+                    Log::debug('Rule is set as non-strict, return true!');
+
+                    return true;
+                }
             }
             if ($trigger->stopProcessing) {
                 Log::debug('Stop processing this trigger and break.');

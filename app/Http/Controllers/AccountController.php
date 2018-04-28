@@ -87,12 +87,10 @@ class AccountController extends Controller
      */
     public function create(Request $request, string $what = 'asset')
     {
-        $allCurrencies      = $this->currencyRepos->get();
-        $currencySelectList = ExpandedForm::makeSelectList($allCurrencies);
-        $defaultCurrency    = app('amount')->getDefaultCurrency();
-        $subTitleIcon       = config('firefly.subIconsByIdentifier.' . $what);
-        $subTitle           = trans('firefly.make_new_' . $what . '_account');
-        $roles              = [];
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $subTitleIcon    = config('firefly.subIconsByIdentifier.' . $what);
+        $subTitle        = trans('firefly.make_new_' . $what . '_account');
+        $roles           = [];
         foreach (config('firefly.accountRoles') as $role) {
             $roles[$role] = (string)trans('firefly.account_role_' . $role);
         }
@@ -106,7 +104,7 @@ class AccountController extends Controller
         }
         $request->session()->forget('accounts.create.fromStore');
 
-        return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'currencySelectList', 'allCurrencies', 'roles'));
+        return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'roles'));
     }
 
     /**
@@ -165,12 +163,10 @@ class AccountController extends Controller
      */
     public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
     {
-        $what               = config('firefly.shortNamesByFullName')[$account->accountType->type];
-        $subTitle           = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
-        $subTitleIcon       = config('firefly.subIconsByIdentifier.' . $what);
-        $allCurrencies      = $this->currencyRepos->get();
-        $currencySelectList = ExpandedForm::makeSelectList($allCurrencies);
-        $roles              = [];
+        $what         = config('firefly.shortNamesByFullName')[$account->accountType->type];
+        $subTitle     = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
+        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
+        $roles        = [];
         foreach (config('firefly.accountRoles') as $role) {
             $roles[$role] = (string)trans('firefly.account_role_' . $role);
         }
@@ -217,8 +213,6 @@ class AccountController extends Controller
         return view(
             'accounts.edit',
             compact(
-                'allCurrencies',
-                'currencySelectList',
                 'account',
                 'currency',
                 'subTitle',
@@ -386,7 +380,7 @@ class AccountController extends Controller
 
         // update preferences if necessary:
         $frontPage = Preferences::get('frontPageAccounts', [])->data;
-        if (count($frontPage) > 0 && AccountType::ASSET === $account->accountType->type) {
+        if (AccountType::ASSET === $account->accountType->type && \count($frontPage) > 0) {
             // @codeCoverageIgnoreStart
             $frontPage[] = $account->id;
             Preferences::set('frontPageAccounts', $frontPage);

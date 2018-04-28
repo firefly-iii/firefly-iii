@@ -48,6 +48,8 @@ use FireflyIII\Repositories\User\UserRepository;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Currency\ExchangeRateInterface;
 use FireflyIII\Services\Currency\FixerIOv2;
+use FireflyIII\Services\IP\IpifyOrg;
+use FireflyIII\Services\IP\IPRetrievalInterface;
 use FireflyIII\Services\Password\PwndVerifierV2;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\Amount;
@@ -59,6 +61,7 @@ use FireflyIII\Support\Steam;
 use FireflyIII\Support\Twig\AmountFormat;
 use FireflyIII\Support\Twig\General;
 use FireflyIII\Support\Twig\Journal;
+use FireflyIII\Support\Twig\Loader\AccountLoader;
 use FireflyIII\Support\Twig\Loader\TransactionJournalLoader;
 use FireflyIII\Support\Twig\Loader\TransactionLoader;
 use FireflyIII\Support\Twig\PiggyBank;
@@ -91,6 +94,7 @@ class FireflyServiceProvider extends ServiceProvider
         $config = app('config');
         Twig::addExtension(new Functions($config));
         Twig::addRuntimeLoader(new TransactionLoader);
+        Twig::addRuntimeLoader(new AccountLoader);
         Twig::addRuntimeLoader(new TransactionJournalLoader);
         Twig::addExtension(new PiggyBank);
         Twig::addExtension(new General);
@@ -180,5 +184,8 @@ class FireflyServiceProvider extends ServiceProvider
 
         // password verifier thing
         $this->app->bind(Verifier::class, PwndVerifierV2::class);
+
+        // IP thing:
+        $this->app->bind(IPRetrievalInterface::class, IpifyOrg::class);
     }
 }

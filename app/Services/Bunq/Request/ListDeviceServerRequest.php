@@ -58,7 +58,7 @@ class ListDeviceServerRequest extends BunqRequest
         Log::debug('Returned from sending device-server list request!');
         // create device server objects:
         $raw = $this->getArrayFromResponse('DeviceServer', $response);
-        Log::debug(sprintf('Count %d entries in response array.', count($raw)));
+        Log::debug(sprintf('Count %d entries in response array.', \count($raw)));
         Log::debug('Full response', $response);
         /** @var array $entry */
         foreach ($raw as $entry) {
@@ -67,7 +67,6 @@ class ListDeviceServerRequest extends BunqRequest
             $this->devices->push($server);
         }
 
-        return;
     }
 
     /**

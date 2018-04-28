@@ -50,7 +50,7 @@ class ReconcileControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', get_class($this)));
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -61,7 +61,7 @@ class ReconcileControllerTest extends TestCase
         $repository  = $this->mock(JournalRepositoryInterface::class);
         $journal     = $this->user()->transactionJournals()->where('transaction_type_id', 5)->first();
         $transaction = $journal->transactions()->where('amount', '>', 0)->first();
-        $repository->shouldReceive('first')->andReturn($journal);
+        $repository->shouldReceive('firstNull')->andReturn($journal);
         $repository->shouldReceive('getFirstPosTransaction')->andReturn($transaction);
         $repository->shouldReceive('getJournalDate')->andReturn('2018-01-01');
         $repository->shouldReceive('getJournalCategoryName')->andReturn('');
@@ -94,7 +94,7 @@ class ReconcileControllerTest extends TestCase
     {
         $transactions = $this->user()->transactions()->inRandomOrder()->take(3)->get();
         $repository   = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('first')->andReturn(new TransactionJournal);
+        $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $repository->shouldReceive('getTransactionsById')->andReturn($transactions)->twice();
 
         $parameters = [
@@ -213,7 +213,7 @@ class ReconcileControllerTest extends TestCase
     {
         $journal    = $this->user()->transactionJournals()->where('transaction_type_id', 5)->first();
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('first')->andReturn(new TransactionJournal);
+        $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $repository->shouldReceive('getAssetTransaction')->once()->andReturn($journal->transactions()->first());
 
         $this->be($this->user());
@@ -244,7 +244,7 @@ class ReconcileControllerTest extends TestCase
     {
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('reconcileById')->andReturn(true);
         $journalRepos->shouldReceive('store')->andReturn(new TransactionJournal);
         $repository->shouldReceive('getReconciliation')->andReturn(new Account);
@@ -297,7 +297,7 @@ class ReconcileControllerTest extends TestCase
     public function testUpdate()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([new Account]));
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([new Account]));
         $journalRepos->shouldReceive('getNoteText')->andReturn('');

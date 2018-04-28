@@ -144,8 +144,7 @@ class UserRepository implements UserRepositoryInterface
      * @param User $user
      *
      * @return bool
-     *
-
+     * @throws \Exception
      */
     public function destroy(User $user): bool
     {
@@ -294,7 +293,6 @@ class UserRepository implements UserRepositoryInterface
         $user->blocked_code = '';
         $user->save();
 
-        return;
     }
 
     /**

@@ -201,7 +201,7 @@ class ImportCurrency
     private function getMappedObject(array $array): ?TransactionCurrency
     {
         Log::debug('In getMappedObject()');
-        if (0 === count($array)) {
+        if (0 === \count($array)) {
             Log::debug('Array is empty, nothing will come of this.');
 
             return null;

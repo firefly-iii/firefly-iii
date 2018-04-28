@@ -5,13 +5,11 @@
     <thead>
     <tr>
         <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
-        <th>{{ trans('list.name') }}</th>
-        <th data-defaultsign="az" class="hidden-sm hidden-md hidden-xs">{{ trans('list.matchesOn') }}</th>
-        <th data-defaultsign="_19" colspan="2">{{ trans('list.matchingAmount') }}</th>
+        <th data-defaultsign="az">{{ trans('list.name') }}</th>
+        <th data-defaultsort="disabled" class="hidden-sm hidden-md hidden-xs">{{ trans('list.linked_to_rules') }}</th>
+        <th data-defaultsign="_19" style="text-align: right;">{{ trans('list.matchingAmount') }}</th>
         <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ trans('list.paid_current_period') }}</th>
         <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ trans('list.next_expected_match') }}</th>
-        <th class="hidden-sm hidden-xs hidden-md">{{ trans('list.active') }}</th>
-        <th class="hidden-sm hidden-xs hidden-md">{{ trans('list.automatch') }}</th>
         <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('list.repeat_freq') }}</th>
     </tr>
     </thead>
@@ -23,8 +21,8 @@
     {% for entry in bills %}
         {% if entry.active %}
             {% set count = count + 1 %}
-            {%  set sum_min = sum_min + entry.amount_min %}
-            {%  set sum_max = sum_min + entry.amount_max %}
+            {% set sum_min = sum_min + entry.amount_min %}
+            {% set sum_max = sum_min + entry.amount_max %}
             {% set expected_total = expected_total + ((entry.amount_min + entry.amount_max) / 2) %}
         {% endif %}
         <tr>
@@ -34,6 +32,9 @@
                                 class="fa fa-fw fa-trash-o"></i></a></div>
             </td>
             <td data-value="{{ entry.name }}">
+                {% if not entry.active %}
+                    <i class="fa fa-fw fa-ban"></i>
+                {% endif %}
                 <a href="{{ route('bills.show',entry.id) }}" title="{{ entry.name }}">{{ entry.name }}</a>
                 {# count attachments #}
                 {% if entry.attachments_count > 0 %}
@@ -41,19 +42,18 @@
                 {% endif %}
 
             </td>
-            <td class="hidden-sm hidden-md hidden-xs" data-value="{{ entry.match|join(',') }}">
-                {% for match in entry.match %}
-                    <span class="label label-info">{{ match }}</span>
-                {% endfor %}
+            <td class="hidden-sm hidden-md hidden-xs rules">
+                {% if entry.rules|length > 0 %}
+                    <ul class="list-unstyled">
+                    {% for rule in entry.rules %}
+                        <li><a href="{{ route('rules.edit', [rule.id]) }}">{{ rule.title }}</a></li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
             </td>
             <td data-value="{{ entry.amount_min }}" style="text-align: right;">
-                <span style="margin-right:5px;">
-                {{ entry.amount_min|formatAmount }}
-                </span>
-            </td>
-            <td data-value="{{ entry.amount_max }}" style="text-align: right;">
-                <span style="margin-right:5px;">
-                {{ entry.amount_max|formatAmount }}
+                <span style="margin-right:5px;" title="{{ entry.amount_min|formatAmountPlain }} - {{ entry.amount_max|formatAmountPlain }}">
+                    ~ {{ ((entry.amount_max+ entry.amount_min)/2)|formatAmount }}
                 </span>
             </td>
 
@@ -108,22 +108,8 @@
                     ~
                 </td>
             {% endif %}
-            <td class="hidden-sm hidden-xs hidden-md" data-value="{{ entry.active }}">
-                {% if entry.active %}
-                    <i class="fa fa-fw fa-check"></i>
-                {% else %}
-                    <i class="fa fa-fw fa-ban"></i>
-                {% endif %}
-            </td>
-            <td class="hidden-sm hidden-xs hidden-md" data-value="{{ entry.automatch }}">
-                {% if entry.automatch %}
-                    <i class="fa fa-fw fa-check"></i>
-                {% else %}
-                    <i class="fa fa-fw fa-ban"></i>
-                {% endif %}
-            </td>
             <td class="hidden-sm hidden-xs" data-value="{{ entry.repeat_freq }}{{ entry.skip }}">
-                {{ entry.repeat_freq|_ }}
+                {{ ('repeat_freq_'~entry.repeat_freq)|_ }}
                 {% if entry.skip > 0 %}
                     {{ 'skips_over'|_ }} {{ entry.skip }}
                 {% endif %}
@@ -147,7 +133,7 @@
         <td colspan="5">&nbsp;</td>
     </tr>
 
-        {# calculate total#}
+    {# calculate total#}
     {% if count > 0 %}
         {% set avg_min = (sum_min / count) %}
         {% set avg_max = (sum_max / count) %}
@@ -174,7 +160,7 @@
         <td style="text-align:right;" colspan="3">{{ 'expected_total'|_ }} ({{ 'active_bills_only'|_ }})</td>
         <td style="text-align:right;" colspan="1">
             <span style="margin-right:5px;">
-                {{ expected_total|formatAmount }}
+                ~ {{ expected_total|formatAmount }}
             </span>
         </td>
         <td colspan="6">&nbsp;</td>

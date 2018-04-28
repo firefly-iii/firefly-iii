@@ -35,8 +35,7 @@ class FrontpageController extends Controller
      * @param PiggyBankRepositoryInterface $repository
      *
      * @return \Illuminate\Http\JsonResponse
-     *
-
+     * @throws \Throwable
      */
     public function piggyBanks(PiggyBankRepositoryInterface $repository)
     {
@@ -61,7 +60,7 @@ class FrontpageController extends Controller
             }
         }
         $html = '';
-        if (count($info) > 0) {
+        if (\count($info) > 0) {
             $html = view('json.piggy-banks', compact('info'))->render();
         }
 

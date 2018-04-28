@@ -32,7 +32,6 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Preferences;
-use Session;
 use View;
 
 /**
@@ -86,7 +85,7 @@ class TagController extends Controller
         if (true !== session('tags.create.fromStore')) {
             $this->rememberPreviousUri('tags.create.uri');
         }
-        Session::forget('tags.create.fromStore');
+        session()->forget('tags.create.fromStore');
 
         return view('tags.create', compact('subTitle', 'subTitleIcon', 'apiKey'));
     }
@@ -118,7 +117,7 @@ class TagController extends Controller
         $tagName = $tag->tag;
         $this->repository->destroy($tag);
 
-        Session::flash('success', (string)trans('firefly.deleted_tag', ['tag' => $tagName]));
+        session()->flash('success', (string)trans('firefly.deleted_tag', ['tag' => $tagName]));
         Preferences::mark();
 
         return redirect($this->getPreviousUri('tags.delete.uri'));
@@ -141,7 +140,7 @@ class TagController extends Controller
         if (true !== session('tags.edit.fromUpdate')) {
             $this->rememberPreviousUri('tags.edit.uri');
         }
-        Session::forget('tags.edit.fromUpdate');
+        session()->forget('tags.edit.fromUpdate');
 
         return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon', 'apiKey'));
     }
@@ -171,6 +170,7 @@ class TagController extends Controller
         $now               = new Carbon;
         $clouds            = [];
         $clouds['no-date'] = $repository->tagCloud(null);
+
         while ($now > $start) {
             $year          = $now->year;
             $clouds[$year] = $repository->tagCloud($year);
@@ -213,7 +213,7 @@ class TagController extends Controller
         }
 
         // prep for "specific date" view.
-        if (strlen($moment) > 0 && 'all' !== $moment) {
+        if (\strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
             $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
@@ -226,7 +226,7 @@ class TagController extends Controller
         }
 
         // prep for current period
-        if (0 === strlen($moment)) {
+        if (0 === \strlen($moment)) {
             /** @var Carbon $start */
             $start = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
             /** @var Carbon $end */
@@ -260,12 +260,12 @@ class TagController extends Controller
         $data = $request->collectTagData();
         $this->repository->store($data);
 
-        Session::flash('success', (string)trans('firefly.created_tag', ['tag' => $data['tag']]));
+        session()->flash('success', (string)trans('firefly.created_tag', ['tag' => $data['tag']]));
         Preferences::mark();
 
         if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
-            Session::put('tags.create.fromStore', true);
+            session()->put('tags.create.fromStore', true);
 
             return redirect(route('tags.create'))->withInput();
             // @codeCoverageIgnoreEnd
@@ -285,12 +285,12 @@ class TagController extends Controller
         $data = $request->collectTagData();
         $this->repository->update($tag, $data);
 
-        Session::flash('success', (string)trans('firefly.updated_tag', ['tag' => $data['tag']]));
+        session()->flash('success', (string)trans('firefly.updated_tag', ['tag' => $data['tag']]));
         Preferences::mark();
 
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
-            Session::put('tags.edit.fromUpdate', true);
+            session()->put('tags.edit.fromUpdate', true);
 
             return redirect(route('tags.edit', [$tag->id]))->withInput(['return_to_edit' => 1]);
             // @codeCoverageIgnoreEnd

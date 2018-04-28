@@ -56,7 +56,7 @@ class Account extends SpectreObject
      */
     public function __construct(array $data)
     {
-        $this->id           = $data['id'];
+        $this->id           = (int)$data['id'];
         $this->loginId      = $data['login_id'];
         $this->currencyCode = $data['currency_code'];
         $this->balance      = $data['balance'];

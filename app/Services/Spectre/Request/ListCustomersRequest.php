@@ -38,7 +38,6 @@ class ListCustomersRequest extends SpectreRequest
     /**
      *
      * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
      */
     public function call(): void
     {
@@ -47,11 +46,11 @@ class ListCustomersRequest extends SpectreRequest
         while ($hasNextPage) {
             Log::debug(sprintf('Now calling ListCustomersRequest for next_id %d', $nextId));
             $parameters = ['from_id' => $nextId];
-            $uri        = '/api/v3/customers/?' . http_build_query($parameters);
+            $uri        = '/api/v4/customers/?' . http_build_query($parameters);
             $response   = $this->sendSignedSpectreGet($uri, []);
 
             // count entries:
-            Log::debug(sprintf('Found %d entries in data-array', count($response['data'])));
+            Log::debug(sprintf('Found %d entries in data-array', \count($response['data'])));
 
             // extract next ID
             $hasNextPage = false;

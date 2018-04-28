@@ -73,6 +73,7 @@ class HasAnyCategoryTest extends TestCase
      */
     public function testTriggeredTransactions()
     {
+        /** @var TransactionJournal $journal */
         $journal  = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $category = $journal->user->categories()->first();
         $journal->categories()->detach();
@@ -81,6 +82,7 @@ class HasAnyCategoryTest extends TestCase
         // append to transaction, not to journal.
         foreach ($journal->transactions()->get() as $index => $transaction) {
             $transaction->categories()->sync([$category->id]);
+            $this->assertEquals(1, $transaction->categories()->count());
         }
         $this->assertEquals(0, $journal->categories()->count());
 

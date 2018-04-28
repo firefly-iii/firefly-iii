@@ -71,7 +71,7 @@ class TagFactory
 
         /** @var Tag $object */
         foreach ($this->tags as $object) {
-            if ($object->tag === $tag) {
+            if (strtolower($object->tag) === strtolower($tag)) {
                 return $object;
             }
         }

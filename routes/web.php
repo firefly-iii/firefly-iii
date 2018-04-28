@@ -140,6 +140,7 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'attachments', 'as' => 'attachments.'], function () {
+    Route::get('', ['uses' => 'AttachmentController@index', 'as' => 'index']);
     Route::get('edit/{attachment}', ['uses' => 'AttachmentController@edit', 'as' => 'edit']);
     Route::get('delete/{attachment}', ['uses' => 'AttachmentController@delete', 'as' => 'delete']);
     Route::get('download/{attachment}', ['uses' => 'AttachmentController@download', 'as' => 'download']);
@@ -446,6 +447,7 @@ Route::group(
     // import method prerequisites:
     Route::get('prerequisites/{bank}', ['uses' => 'Import\PrerequisitesController@index', 'as' => 'prerequisites']);
     Route::post('prerequisites/{bank}', ['uses' => 'Import\PrerequisitesController@post', 'as' => 'prerequisites.post']);
+    Route::get('reset/{bank}', ['uses' => 'Import\IndexController@reset', 'as' => 'reset']);
 
     // create the job:
     Route::get('create/{bank}', ['uses' => 'Import\IndexController@create', 'as' => 'create-job']);
@@ -492,22 +494,28 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'json', 'as' => 'json.'], function () {
+
+        // for auto complete
     Route::get('expense-accounts', ['uses' => 'Json\AutoCompleteController@expenseAccounts', 'as' => 'expense-accounts']);
     Route::get('all-accounts', ['uses' => 'Json\AutoCompleteController@allAccounts', 'as' => 'all-accounts']);
     Route::get('revenue-accounts', ['uses' => 'Json\AutoCompleteController@revenueAccounts', 'as' => 'revenue-accounts']);
-    Route::get('categories', ['uses' => 'JsonController@categories', 'as' => 'categories']);
-    Route::get('budgets', ['uses' => 'JsonController@budgets', 'as' => 'budgets']);
-    Route::get('tags', ['uses' => 'JsonController@tags', 'as' => 'tags']);
+    Route::get('categories', ['uses' => 'Json\AutoCompleteController@categories', 'as' => 'categories']);
+    Route::get('budgets', ['uses' => 'Json\AutoCompleteController@budgets', 'as' => 'budgets']);
+    Route::get('tags', ['uses' => 'Json\AutoCompleteController@tags', 'as' => 'tags']);
+    Route::get('bills', ['uses' => 'Json\AutoCompleteController@bills', 'as' => 'bills']);
+    Route::get('currency-names', ['uses' => 'Json\AutoCompleteController@currencyNames', 'as' => 'currency-names']);
+    Route::get('transaction-journals/all', ['uses' => 'Json\AutoCompleteController@allTransactionJournals', 'as' => 'all-transaction-journals']);
+    Route::get('transaction-journals/with-id/{tj}', ['uses' => 'Json\AutoCompleteController@journalsWithId', 'as' => 'journals-with-id']);
+    Route::get('transaction-journals/{what}', ['uses' => 'Json\AutoCompleteController@transactionJournals', 'as' => 'transaction-journals']);
+    Route::get('transaction-types', ['uses' => 'Json\AutoCompleteController@transactionTypes', 'as' => 'transaction-types']);
 
+    // boxes
     Route::get('box/balance', ['uses' => 'Json\BoxController@balance', 'as' => 'box.balance']);
     Route::get('box/bills', ['uses' => 'Json\BoxController@bills', 'as' => 'box.bills']);
     Route::get('box/available', ['uses' => 'Json\BoxController@available', 'as' => 'box.available']);
     Route::get('box/net-worth', ['uses' => 'Json\BoxController@netWorth', 'as' => 'box.net-worth']);
 
-    Route::get('transaction-journals/all', ['uses' => 'Json\AutoCompleteController@allTransactionJournals', 'as' => 'all-transaction-journals']);
-    Route::get('transaction-journals/with-id/{tj}', ['uses' => 'Json\AutoCompleteController@journalsWithId', 'as' => 'journals-with-id']);
-    Route::get('transaction-journals/{what}', ['uses' => 'Json\AutoCompleteController@transactionJournals', 'as' => 'transaction-journals']);
-    Route::get('transaction-types', ['uses' => 'JsonController@transactionTypes', 'as' => 'transaction-types']);
+    // rules
     Route::get('trigger', ['uses' => 'JsonController@trigger', 'as' => 'trigger']);
     Route::get('action', ['uses' => 'JsonController@action', 'as' => 'action']);
 
@@ -707,7 +715,7 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'rules', 'as' => 'rules.'], function () {
 
     Route::get('', ['uses' => 'RuleController@index', 'as' => 'index']);
-    Route::get('create/{ruleGroup}', ['uses' => 'RuleController@create', 'as' => 'create']);
+    Route::get('create/{ruleGroup?}', ['uses' => 'RuleController@create', 'as' => 'create']);
     Route::get('up/{rule}', ['uses' => 'RuleController@up', 'as' => 'up']);
     Route::get('down/{rule}', ['uses' => 'RuleController@down', 'as' => 'down']);
     Route::get('edit/{rule}', ['uses' => 'RuleController@edit', 'as' => 'edit']);
@@ -718,7 +726,7 @@ Route::group(
 
     Route::post('trigger/order/{rule}', ['uses' => 'RuleController@reorderRuleTriggers', 'as' => 'reorder-triggers']);
     Route::post('action/order/{rule}', ['uses' => 'RuleController@reorderRuleActions', 'as' => 'reorder-actions']);
-    Route::post('store/{ruleGroup}', ['uses' => 'RuleController@store', 'as' => 'store']);
+    Route::post('store', ['uses' => 'RuleController@store', 'as' => 'store']);
     Route::post('update/{rule}', ['uses' => 'RuleController@update', 'as' => 'update']);
     Route::post('destroy/{rule}', ['uses' => 'RuleController@destroy', 'as' => 'destroy']);
     Route::post('execute/{rule}', ['uses' => 'RuleController@execute', 'as' => 'execute']);
@@ -815,7 +823,7 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/mass', 'as' => 'transactions.mass.'],
     function () {
-        Route::get('edit/{journalList}', ['uses' => 'MassController@edit', 'as' => 'edit']);
+        Route::get('edit/{simpleJournalList}', ['uses' => 'MassController@edit', 'as' => 'edit']);
         Route::get('delete/{journalList}', ['uses' => 'MassController@delete', 'as' => 'delete']);
         Route::post('update', ['uses' => 'MassController@update', 'as' => 'update']);
         Route::post('destroy', ['uses' => 'MassController@destroy', 'as' => 'destroy']);
@@ -828,7 +836,7 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/bulk', 'as' => 'transactions.bulk.'],
     function () {
-        Route::get('edit/{journalList}', ['uses' => 'BulkController@edit', 'as' => 'edit']);
+        Route::get('edit/{simpleJournalList}', ['uses' => 'BulkController@edit', 'as' => 'edit']);
         Route::post('update', ['uses' => 'BulkController@update', 'as' => 'update']);
     }
 );

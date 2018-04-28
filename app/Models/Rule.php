@@ -25,6 +25,10 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use FireflyIII\User;
+use FireflyIII\Models\RuleTrigger;
+use FireflyIII\Models\RuleGroup;
+use FireflyIII\Models\RuleAction;
 
 /**
  * Class Rule.
@@ -46,7 +50,10 @@ class Rule extends Model
             'active'          => 'boolean',
             'order'           => 'int',
             'stop_processing' => 'boolean',
+            'strict'          => 'boolean',
         ];
+    /** @var array */
+    protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id','strict'];
 
     /**
      * @param string $value
@@ -72,7 +79,7 @@ class Rule extends Model
      */
     public function ruleActions()
     {
-        return $this->hasMany('FireflyIII\Models\RuleAction');
+        return $this->hasMany(RuleAction::class);
     }
 
     /**
@@ -81,7 +88,7 @@ class Rule extends Model
      */
     public function ruleGroup()
     {
-        return $this->belongsTo('FireflyIII\Models\RuleGroup');
+        return $this->belongsTo(RuleGroup::class);
     }
 
     /**
@@ -90,7 +97,7 @@ class Rule extends Model
      */
     public function ruleTriggers()
     {
-        return $this->hasMany('FireflyIII\Models\RuleTrigger');
+        return $this->hasMany(RuleTrigger::class);
     }
 
     /**
@@ -107,6 +114,6 @@ class Rule extends Model
      */
     public function user()
     {
-        return $this->belongsTo('FireflyIII\User');
+        return $this->belongsTo(User::class);
     }
 }

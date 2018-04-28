@@ -61,7 +61,10 @@ class BudgetRepository implements BudgetRepositoryInterface
         $total = '0';
         $count = 0;
         foreach ($budget->budgetlimits as $limit) {
-            $diff   = (string)$limit->start_date->diffInDays($limit->end_date);
+            $diff = (string)$limit->start_date->diffInDays($limit->end_date);
+            if (bccomp('0', $diff) === 0) {
+                $diff = '1';
+            }
             $amount = (string)$limit->amount;
             $perDay = bcdiv($amount, $diff);
             $total  = bcadd($total, $perDay);
@@ -153,8 +156,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Budget $budget
      *
      * @return bool
-     *
-
+     * @throws \Exception
      */
     public function destroy(Budget $budget): bool
     {
@@ -566,7 +568,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         $set = $collector->getJournals();
 
-        return strval($set->sum('transaction_amount'));
+        return (string)$set->sum('transaction_amount');
     }
 
     /**
@@ -601,7 +603,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             }
         );
 
-        return strval($set->sum('transaction_amount'));
+        return (string)$set->sum('transaction_amount');
     }
 
     /**
@@ -645,8 +647,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param string $amount
      *
      * @return BudgetLimit
-     *
-
+     * @throws \Exception
      */
     public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): BudgetLimit
     {

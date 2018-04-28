@@ -171,7 +171,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     public function getConfiguration(ImportJob $job): array
     {
         $config = $job->configuration;
-        if (is_array($config)) {
+        if (\is_array($config)) {
             return $config;
         }
 
@@ -188,7 +188,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     public function getExtendedStatus(ImportJob $job): array
     {
         $status = $job->extended_status;
-        if (is_array($status)) {
+        if (\is_array($status)) {
             return $status;
         }
 
@@ -226,7 +226,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
             $configRaw        = $configFileObject->fread($configFileObject->getSize());
             $configuration    = json_decode($configRaw, true);
             Log::debug(sprintf('Raw configuration is %s', $configRaw));
-            if (null !== $configuration && is_array($configuration)) {
+            if (null !== $configuration && \is_array($configuration)) {
                 Log::debug('Found configuration', $configuration);
                 $this->setConfiguration($job, $configuration);
             }

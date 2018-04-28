@@ -66,10 +66,10 @@ class ChartJsGenerator implements GeneratorInterface
     {
         reset($data);
         $first  = current($data);
-        $labels = is_array($first['entries']) ? array_keys($first['entries']) : [];
+        $labels = \is_array($first['entries']) ? array_keys($first['entries']) : [];
 
         $chartData = [
-            'count'    => count($data),
+            'count'    => \count($data),
             'labels'   => $labels, // take ALL labels from the first set.
             'datasets' => [],
         ];
@@ -119,7 +119,7 @@ class ChartJsGenerator implements GeneratorInterface
         // different sort when values are positive and when they're negative.
         asort($data);
         $next = next($data);
-        if (!is_bool($next) && 1 === bccomp($next, '0')) {
+        if (!\is_bool($next) && 1 === bccomp($next, '0')) {
             // next is positive, sort other way around.
             arsort($data);
         }

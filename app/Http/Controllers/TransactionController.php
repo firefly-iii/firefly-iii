@@ -128,8 +128,8 @@ class TransactionController extends Controller
         $page         = (int)$request->get('page');
         $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
         $path         = route('transactions.index.all', [$what]);
-        $first        = $this->repository->first();
-        $start        = $first->date ?? new Carbon;
+        $first        = $this->repository->firstNull();
+        $start        = null === $first ? new Carbon : $first->date;
         $end          = new Carbon;
         $subTitle     = trans('firefly.all_' . $what);
 
@@ -175,7 +175,7 @@ class TransactionController extends Controller
     {
         $ids  = $request->get('items');
         $date = new Carbon($request->get('date'));
-        if (count($ids) > 0) {
+        if (\count($ids) > 0) {
             $order = 0;
             $ids   = array_unique($ids);
             foreach ($ids as $id) {

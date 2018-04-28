@@ -53,7 +53,6 @@ class FileConfigurator implements ConfiguratorInterface
             'file-type'             => 'csv', // assume
             'has-config-file'       => true,
             'apply-rules'           => true,
-            'match-bills'           => false,
             'auto-start'            => false,
         ];
     /** @var ImportJob */
@@ -238,7 +237,7 @@ class FileConfigurator implements ConfiguratorInterface
                 break;
         }
 
-        if (false === $class || 0 === strlen($class)) {
+        if (false === $class || 0 === \strlen($class)) {
             throw new FireflyException(sprintf('Cannot handle job stage "%s" in getConfigurationClass().', $stage));
         }
         if (!class_exists($class)) {
@@ -272,6 +271,5 @@ class FileConfigurator implements ConfiguratorInterface
     {
         $this->repository->setExtendedStatus($this->job, $extended);
 
-        return;
     }
 }

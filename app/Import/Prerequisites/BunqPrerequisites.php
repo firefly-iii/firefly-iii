@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Prerequisites;
 
+use FireflyIII\Services\IP\IPRetrievalInterface;
 use FireflyIII\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
@@ -56,13 +57,23 @@ class BunqPrerequisites implements PrerequisitesInterface
     public function getViewParameters(): array
     {
         Log::debug('Now in BunqPrerequisites::getViewParameters()');
-        $apiKey = Preferences::getForUser($this->user, 'bunq_api_key', null);
-        $string = '';
-        if (null !== $apiKey) {
-            $string = $apiKey->data;
+        $key      = '';
+        $serverIP = '';
+        if ($this->hasApiKey()) {
+            $key = Preferences::getForUser($this->user, 'bunq_api_key', null)->data;
+        }
+        if ($this->hasServerIP()) {
+            $serverIP = Preferences::getForUser($this->user, 'external_ip', null)->data;
+        }
+        if (!$this->hasServerIP()) {
+            /** @var IPRetrievalInterface $service */
+            $service  = app(IPRetrievalInterface::class);
+            $serverIP = (string)$service->getIP();
         }
 
-        return ['key' => $string];
+
+        // get IP address
+        return ['key' => $key, 'ip' => $serverIP];
     }
 
     /**
@@ -74,15 +85,10 @@ class BunqPrerequisites implements PrerequisitesInterface
      */
     public function hasPrerequisites(): bool
     {
-        Log::debug('Now in BunqPrerequisites::hasPrerequisites()');
-        $apiKey = Preferences::getForUser($this->user, 'bunq_api_key', false);
-        $result = (false === $apiKey->data || null === $apiKey->data);
+        $hasApiKey   = $this->hasApiKey();
+        $hasServerIP = $this->hasServerIP();
 
-        Log::debug(sprintf('Is apiKey->data false? %s', var_export(false === $apiKey->data, true)));
-        Log::debug(sprintf('Is apiKey->data NULL? %s', var_export(null === $apiKey->data, true)));
-        Log::debug(sprintf('Result is: %s', var_export($result, true)));
-
-        return $result;
+        return !$hasApiKey || !$hasServerIP;
     }
 
     /**
@@ -94,8 +100,6 @@ class BunqPrerequisites implements PrerequisitesInterface
     {
         Log::debug(sprintf('Now in setUser(#%d)', $user->id));
         $this->user = $user;
-
-        return;
     }
 
     /**
@@ -108,10 +112,50 @@ class BunqPrerequisites implements PrerequisitesInterface
      */
     public function storePrerequisites(Request $request): MessageBag
     {
-        $apiKey = $request->get('api_key');
+        $apiKey   = $request->get('api_key');
+        $serverIP = $request->get('external_ip');
         Log::debug('Storing bunq API key');
         Preferences::setForUser($this->user, 'bunq_api_key', $apiKey);
+        Preferences::setForUser($this->user, 'external_ip', $serverIP);
 
         return new MessageBag;
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasApiKey(): bool
+    {
+        $apiKey = Preferences::getForUser($this->user, 'bunq_api_key', false);
+        if (null === $apiKey) {
+            return false;
+        }
+        if (null === $apiKey->data) {
+            return false;
+        }
+        if (\strlen((string)$apiKey->data) === 64) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasServerIP(): bool
+    {
+        $serverIP = Preferences::getForUser($this->user, 'external_ip', false);
+        if (null === $serverIP) {
+            return false;
+        }
+        if (null === $serverIP->data) {
+            return false;
+        }
+        if (\strlen((string)$serverIP->data) > 6) {
+            return true;
+        }
+
+        return false;
     }
 }

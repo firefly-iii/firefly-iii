@@ -23,11 +23,13 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Crypt;
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use FireflyIII\Models\Attachment;
 
 /**
  * Class Bill.
@@ -57,7 +59,7 @@ class Bill extends Model
      */
     protected $fillable
         = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip',
-           'automatch', 'active',];
+           'automatch', 'active', 'transaction_currency_id'];
     /**
      * @var array
      */
@@ -87,7 +89,7 @@ class Bill extends Model
      */
     public function attachments()
     {
-        return $this->morphMany('FireflyIII\Models\Attachment', 'attachable');
+        return $this->morphMany(Attachment::class, 'attachable');
     }
 
     /**
@@ -181,11 +183,20 @@ class Bill extends Model
 
     /**
      * @codeCoverageIgnore
+     * @return BelongsTo
+     */
+    public function transactionCurrency(): BelongsTo
+    {
+        return $this->belongsTo(TransactionCurrency::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
      * @return HasMany
      */
     public function transactionJournals(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\TransactionJournal');
+        return $this->hasMany(TransactionJournal::class);
     }
 
     /**
@@ -194,6 +205,6 @@ class Bill extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo('FireflyIII\User');
+        return $this->belongsTo(User::class);
     }
 }

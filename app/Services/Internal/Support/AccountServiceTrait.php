@@ -90,7 +90,7 @@ trait AccountServiceTrait
         $rules     = ['iban' => 'required|iban'];
         $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
-            Log::error(sprintf('Detected invalid IBAN ("%s"). Return NULL instead.', $iban));
+            Log::info(sprintf('Detected invalid IBAN ("%s"). Return NULL instead.', $iban));
 
             return null;
         }
@@ -127,6 +127,7 @@ trait AccountServiceTrait
      * @param array   $data
      *
      * @return TransactionJournal|null
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function storeIBJournal(Account $account, array $data): ?TransactionJournal
     {
@@ -329,18 +330,22 @@ trait AccountServiceTrait
             /** @var AccountMeta $entry */
             $entry = $account->accountMeta()->where('name', $field)->first();
 
-            // if $data has field and $entry is null, create new one:
-            if (isset($data[$field]) && null === $entry) {
-                Log::debug(sprintf('Created meta-field "%s":"%s" for account #%d ("%s") ', $field, $data[$field], $account->id, $account->name));
-                $factory->create(['account_id' => $account->id, 'name' => $field, 'data' => $data[$field],]);
-            }
+            // must not be an empty string:
+            if (isset($data[$field]) && \strlen((string)$data[$field]) > 0) {
 
-            // if $data has field and $entry is not null, update $entry:
-            // let's not bother with a service.
-            if (isset($data[$field]) && null !== $entry) {
-                $entry->data = $data[$field];
-                $entry->save();
-                Log::debug(sprintf('Updated meta-field "%s":"%s" for #%d ("%s") ', $field, $data[$field], $account->id, $account->name));
+                // if $data has field and $entry is null, create new one:
+                if (null === $entry) {
+                    Log::debug(sprintf('Created meta-field "%s":"%s" for account #%d ("%s") ', $field, $data[$field], $account->id, $account->name));
+                    $factory->create(['account_id' => $account->id, 'name' => $field, 'data' => $data[$field],]);
+                }
+
+                // if $data has field and $entry is not null, update $entry:
+                // let's not bother with a service.
+                if (null !== $entry) {
+                    $entry->data = $data[$field];
+                    $entry->save();
+                    Log::debug(sprintf('Updated meta-field "%s":"%s" for #%d ("%s") ', $field, $data[$field], $account->id, $account->name));
+                }
             }
         }
     }
@@ -353,7 +358,7 @@ trait AccountServiceTrait
      */
     public function updateNote(Account $account, string $note): bool
     {
-        if (0 === strlen($note)) {
+        if (0 === \strlen($note)) {
             $dbNote = $account->notes()->first();
             if (null !== $dbNote) {
                 $dbNote->delete();

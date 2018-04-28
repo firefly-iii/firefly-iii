@@ -39,6 +39,7 @@ use Illuminate\Support\Collection;
 use Log;
 use Storage;
 use ZipArchive;
+use FireflyIII\Models\TransactionJournal;
 
 /**
  * Class ExpandedProcessor.
@@ -310,13 +311,13 @@ class ExpandedProcessor implements ProcessorInterface
     private function getNotes(array $array): array
     {
         $array  = array_unique($array);
-        $notes  = Note::where('notes.noteable_type', 'FireflyIII\\Models\\TransactionJournal')
+        $notes  = Note::where('notes.noteable_type', TransactionJournal::class)
                       ->whereIn('notes.noteable_id', $array)
                       ->get(['notes.*']);
         $return = [];
         /** @var Note $note */
         foreach ($notes as $note) {
-            if (strlen(trim((string)$note->text)) > 0) {
+            if (\strlen(trim((string)$note->text)) > 0) {
                 $id          = (int)$note->noteable_id;
                 $return[$id] = $note->text;
             }

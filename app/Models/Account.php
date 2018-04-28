@@ -32,6 +32,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\JoinClause;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Log;
+use FireflyIII\Models\AccountType;
+use FireflyIII\Models\AccountMeta;
+use FireflyIII\User;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\PiggyBank;
 
 /**
  * Class Account.
@@ -126,7 +132,7 @@ class Account extends Model
      */
     public function accountMeta(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\AccountMeta');
+        return $this->hasMany(AccountMeta::class);
     }
 
     /**
@@ -135,7 +141,7 @@ class Account extends Model
      */
     public function accountType(): BelongsTo
     {
-        return $this->belongsTo('FireflyIII\Models\AccountType');
+        return $this->belongsTo(AccountType::class);
     }
 
     /**
@@ -162,12 +168,14 @@ class Account extends Model
      */
     public function getIbanAttribute($value): string
     {
-        if (null === $value || 0 === strlen((string)$value)) {
+        if (null === $value || '' === (string)$value) {
             return '';
         }
         try {
             $result = Crypt::decrypt($value);
         } catch (DecryptException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             throw new FireflyException('Cannot decrypt value "' . $value . '" for account #' . $this->id);
         }
         if (null === $result) {
@@ -246,7 +254,7 @@ class Account extends Model
      */
     public function piggyBanks(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\PiggyBank');
+        return $this->hasMany(PiggyBank::class);
     }
 
     /**
@@ -330,7 +338,7 @@ class Account extends Model
      */
     public function transactions(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\Transaction');
+        return $this->hasMany(Transaction::class);
     }
 
     /**
@@ -339,6 +347,6 @@ class Account extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo('FireflyIII\User');
+        return $this->belongsTo(User::class);
     }
 }

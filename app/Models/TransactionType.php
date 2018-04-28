@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use FireflyIII\Models\TransactionJournal;
 
 /**
  * Class TransactionType.
@@ -127,6 +128,6 @@ class TransactionType extends Model
      */
     public function transactionJournals()
     {
-        return $this->hasMany('FireflyIII\Models\TransactionJournal');
+        return $this->hasMany(TransactionJournal::class);
     }
 }

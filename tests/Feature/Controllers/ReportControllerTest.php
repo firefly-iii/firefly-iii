@@ -59,7 +59,7 @@ class ReportControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', get_class($this)));
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -73,7 +73,7 @@ class ReportControllerTest extends TestCase
 
         $generator    = $this->mock(AcYRG::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
 
         $generator->shouldReceive('setStartDate')->once();
@@ -97,7 +97,7 @@ class ReportControllerTest extends TestCase
 
         $generator    = $this->mock(AYRG::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $generator->shouldReceive('setStartDate')->once();
         $generator->shouldReceive('setEndDate')->once();
@@ -119,7 +119,7 @@ class ReportControllerTest extends TestCase
 
         $generator    = $this->mock(BYRG::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $generator->shouldReceive('setStartDate')->once();
         $generator->shouldReceive('setEndDate')->once();
         $generator->shouldReceive('setAccounts')->once();
@@ -141,7 +141,7 @@ class ReportControllerTest extends TestCase
 
         $generator    = $this->mock(CYRG::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $generator->shouldReceive('setStartDate')->once();
         $generator->shouldReceive('setEndDate')->once();
         $generator->shouldReceive('setAccounts')->once();
@@ -163,7 +163,7 @@ class ReportControllerTest extends TestCase
 
         $generator    = $this->mock(SYRG::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $generator->shouldReceive('setStartDate')->once();
         $generator->shouldReceive('setEndDate')->once();
         $generator->shouldReceive('setAccounts')->once();
@@ -183,7 +183,7 @@ class ReportControllerTest extends TestCase
         $budgetRepository->shouldReceive('cleanupBudgets');
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('reports.report.default', [1, '20160101', '20150131']));
@@ -203,7 +203,7 @@ class ReportControllerTest extends TestCase
         $helper       = $this->mock(ReportHelperInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $helper->shouldReceive('listOfMonths')->andReturn([]);
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection)->once();
 
@@ -222,7 +222,7 @@ class ReportControllerTest extends TestCase
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('reports.options', ['default']));
@@ -243,7 +243,7 @@ class ReportControllerTest extends TestCase
         $collection    = new Collection([$account]);
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::EXPENSE]])->once()->andReturn($collection);
         $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::REVENUE]])->once()->andReturn($collection);
@@ -262,7 +262,7 @@ class ReportControllerTest extends TestCase
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
         $budget      = factory(Budget::class)->make();
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection([$budget]));
@@ -282,7 +282,7 @@ class ReportControllerTest extends TestCase
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $category      = factory(Category::class)->make();
         $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]));
@@ -301,7 +301,7 @@ class ReportControllerTest extends TestCase
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $tag      = factory(Tag::class)->make();
         $tagRepos = $this->mock(TagRepositoryInterface::class);
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
@@ -323,7 +323,7 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->times(3);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $data = [
             'accounts'    => ['1'],
@@ -349,7 +349,7 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
 
         $data = [
@@ -376,7 +376,7 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
 
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
 
         $data = [
@@ -405,7 +405,7 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
 
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
         $budgetRepository->shouldReceive('findNull')->andReturn($this->user()->budgets()->find(1))->twice();
 
@@ -434,7 +434,7 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
 
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
 
         $data = [
@@ -462,7 +462,7 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $categoryRepos->shouldReceive('findNull')->andReturn($this->user()->categories()->find(1))->twice();
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
 
@@ -490,7 +490,7 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
 
         $data = [
@@ -516,7 +516,7 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
 
         $data = [
@@ -542,7 +542,7 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
 
         $data = [
@@ -571,7 +571,7 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
         $tag              = $this->user()->tags()->find(1);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
         $tagRepos->shouldReceive('findByTag')->andReturn($tag)->twice();
 
@@ -599,7 +599,7 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $data = [
             'accounts'    => [],
@@ -631,7 +631,7 @@ class ReportControllerTest extends TestCase
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
         $budgetRepository->shouldReceive('cleanupBudgets');
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $generator->shouldReceive('setStartDate')->once();
         $generator->shouldReceive('setEndDate')->once();
         $generator->shouldReceive('setAccounts')->once();

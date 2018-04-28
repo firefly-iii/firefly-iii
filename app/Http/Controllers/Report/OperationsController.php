@@ -40,8 +40,7 @@ class OperationsController extends Controller
      * @param Carbon                 $end
      *
      * @return mixed|string
-     *
-
+     * @throws \Throwable
      */
     public function expenses(AccountTaskerInterface $tasker, Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -69,8 +68,7 @@ class OperationsController extends Controller
      * @param Carbon                 $end
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function income(AccountTaskerInterface $tasker, Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -99,8 +97,7 @@ class OperationsController extends Controller
      * @param Carbon                 $end
      *
      * @return mixed|string
-     *
-
+     * @throws \Throwable
      */
     public function operations(AccountTaskerInterface $tasker, Collection $accounts, Carbon $start, Carbon $end)
     {

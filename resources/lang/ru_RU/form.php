@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * form.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -33,9 +34,12 @@ return [
     'amount_min'                     => 'Минимальная сумма',
     'amount_max'                     => 'Максимальная сумма',
     'match'                          => 'Ключи для связи',
+    'strict'                         => 'Строгий режим',
     'repeat_freq'                    => 'Повторы',
     'journal_currency_id'            => 'Валюта',
     'currency_id'                    => 'Валюта',
+    'transaction_currency_id'        => 'Валюта',
+    'external_ip'                    => 'Внешний IP-адрес вашего сервера',
     'attachments'                    => 'Вложения',
     'journal_amount'                 => 'Сумма',
     'journal_source_account_name'    => 'Доходный счет (источник)',
@@ -90,6 +94,8 @@ return [
     'convert_Transfer'            => 'Конвертировать перевод',
 
     'amount'                     => 'Сумма',
+    'foreign_amount'             => 'Сумму в иностранной валюте',
+    'existing_attachments'       => 'Существующие вложения',
     'date'                       => 'Дата',
     'interest_date'              => 'Дата выплаты',
     'book_date'                  => 'Дата бронирования',
@@ -196,6 +202,8 @@ return [
     'client_id'             => 'ID клиента',
     'service_secret'        => 'Service secret',
     'app_secret'            => 'App secret',
+    'app_id'                => 'ID приложения',
+    'secret'                => 'Секретный ключ',
     'public_key'            => 'Открытый ключ',
     'country_code'          => 'Код страны',
     'provider_code'         => 'Банк или поставщик данных',

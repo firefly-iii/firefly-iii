@@ -33,7 +33,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Illuminate\Http\Request;
 use Preferences;
-use Session;
 use View;
 
 /**
@@ -70,7 +69,7 @@ class RuleGroupController extends Controller
         if (true !== session('rule-groups.create.fromStore')) {
             $this->rememberPreviousUri('rule-groups.create.uri');
         }
-        Session::forget('rule-groups.create.fromStore');
+        session()->forget('rule-groups.create.fromStore');
 
         return view('rules.rule-group.create', compact('subTitleIcon', 'subTitle'));
     }
@@ -108,7 +107,7 @@ class RuleGroupController extends Controller
 
         $repository->destroy($ruleGroup, $moveTo);
 
-        Session::flash('success', (string)trans('firefly.deleted_rule_group', ['title' => $title]));
+        session()->flash('success', (string)trans('firefly.deleted_rule_group', ['title' => $title]));
         Preferences::mark();
 
         return redirect($this->getPreviousUri('rule-groups.delete.uri'));
@@ -140,7 +139,7 @@ class RuleGroupController extends Controller
         if (true !== session('rule-groups.edit.fromUpdate')) {
             $this->rememberPreviousUri('rule-groups.edit.uri');
         }
-        Session::forget('rule-groups.edit.fromUpdate');
+        session()->forget('rule-groups.edit.fromUpdate');
 
         return view('rules.rule-group.edit', compact('ruleGroup', 'subTitle'));
     }
@@ -174,7 +173,7 @@ class RuleGroupController extends Controller
         $this->dispatch($job);
 
         // Tell the user that the job is queued
-        Session::flash('success', (string)trans('firefly.applied_rule_group_selection', ['title' => $ruleGroup->title]));
+        session()->flash('success', (string)trans('firefly.applied_rule_group_selection', ['title' => $ruleGroup->title]));
 
         return redirect()->route('rules.index');
     }
@@ -209,12 +208,12 @@ class RuleGroupController extends Controller
         $data      = $request->getRuleGroupData();
         $ruleGroup = $repository->store($data);
 
-        Session::flash('success', (string)trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title]));
+        session()->flash('success', (string)trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title]));
         Preferences::mark();
 
         if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
-            Session::put('rule-groups.create.fromStore', true);
+            session()->put('rule-groups.create.fromStore', true);
 
             return redirect(route('rule-groups.create'))->withInput();
             // @codeCoverageIgnoreEnd
@@ -253,12 +252,12 @@ class RuleGroupController extends Controller
 
         $repository->update($ruleGroup, $data);
 
-        Session::flash('success', (string)trans('firefly.updated_rule_group', ['title' => $ruleGroup->title]));
+        session()->flash('success', (string)trans('firefly.updated_rule_group', ['title' => $ruleGroup->title]));
         Preferences::mark();
 
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
-            Session::put('rule-groups.edit.fromUpdate', true);
+            session()->put('rule-groups.edit.fromUpdate', true);
 
             return redirect(route('rule-groups.edit', [$ruleGroup->id]))->withInput(['return_to_edit' => 1]);
             // @codeCoverageIgnoreEnd

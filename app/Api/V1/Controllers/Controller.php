@@ -48,18 +48,9 @@ class Controller extends BaseController
     /**
      * Controller constructor.
      *
-     * @throws FireflyException
      */
     public function __construct()
     {
-        // is site a demo site?
-        $isDemoSite = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
-
-        // do not expose API on demo site:
-        if (true === $isDemoSite) {
-            throw new FireflyException('The API is not available on the demo site.');
-        }
-
         // get global parameters
         $this->parameters = $this->getParameters();
     }
@@ -83,7 +74,7 @@ class Controller extends BaseController
             }
         }
         $return .= http_build_query($params);
-        if (strlen($return) === 1) {
+        if (\strlen($return) === 1) {
             return '';
         }
 

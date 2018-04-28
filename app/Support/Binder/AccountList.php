@@ -50,7 +50,7 @@ class AccountList implements BinderInterface
                 $list[] = (int)$entry;
             }
             $list = array_unique($list);
-            if (count($list) === 0) {
+            if (\count($list) === 0) {
                 Log::error('Account list is empty.');
                 throw new NotFoundHttpException; // @codeCoverageIgnore
             }

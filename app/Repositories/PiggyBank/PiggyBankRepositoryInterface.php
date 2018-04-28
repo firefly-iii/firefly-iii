@@ -163,11 +163,20 @@ interface PiggyBankRepositoryInterface
 
     /**
      * @param PiggyBank $piggyBank
+     *
+     * @return PiggyBankRepetition|null
+     */
+    public function getRepetition(PiggyBank $piggyBank): ?PiggyBankRepetition;
+
+    /**
+     * Get for piggy account what is left to put in piggies.
+     *
+     * @param PiggyBank $piggyBank
      * @param Carbon    $date
      *
-     * @return PiggyBankRepetition
+     * @return string
      */
-    public function getRepetition(PiggyBank $piggyBank, Carbon $date): PiggyBankRepetition;
+    public function leftOnAccount(PiggyBank $piggyBank, Carbon $date): string;
 
     /**
      * @param PiggyBank $piggyBank

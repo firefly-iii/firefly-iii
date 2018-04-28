@@ -33,6 +33,7 @@ return [
     'name'                    => 'Имя',
     'role'                    => 'Роль',
     'currentBalance'          => 'Текущий баланс',
+    'linked_to_rules'         => 'Подходящие правила',
     'active'                  => 'Активен?',
     'lastActivity'            => 'Последняя активность',
     'balanceDiff'             => 'Разность баланса',
@@ -111,4 +112,9 @@ return [
     'sepa-ep'                 => 'Внешняя цель SEPA',
     'sepa-ci'                 => 'Идентификатор кредитора SEPA',
     'account_at_bunq'         => 'Счёт с bunq',
+    'file_name'               => 'Имя файла',
+    'file_size'               => 'Размер файла',
+    'file_type'               => 'Тип файла',
+    'attached_to'             => 'Прикреплено к',
+    'file_exists'             => 'Файл существует',
 ];

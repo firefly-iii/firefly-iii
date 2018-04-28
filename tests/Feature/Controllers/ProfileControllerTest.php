@@ -48,7 +48,7 @@ class ProfileControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', get_class($this)));
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -69,7 +69,7 @@ class ProfileControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('profile.change-password'));
@@ -85,7 +85,7 @@ class ProfileControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         Google2FA::shouldReceive('generateSecretKey')->andReturn('secret');
         Google2FA::shouldReceive('getQRCodeInline')->andReturn('long-data-url');
 
@@ -132,7 +132,7 @@ class ProfileControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('profile.delete-account'));
@@ -147,7 +147,7 @@ class ProfileControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('profile.delete-code'));
@@ -167,7 +167,7 @@ class ProfileControllerTest extends TestCase
         Preference::where('user_id', $this->user()->id)->where('name', 'access_token')->delete();
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('profile.index'));
@@ -237,7 +237,7 @@ class ProfileControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('changePassword');
 
@@ -260,7 +260,7 @@ class ProfileControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('changePassword');
 
@@ -283,7 +283,7 @@ class ProfileControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('changePassword');
 
@@ -332,7 +332,7 @@ class ProfileControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('destroy')->once();
         $data = [
@@ -352,7 +352,7 @@ class ProfileControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(UserRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $data = [
             'password' => 'james2',
         ];

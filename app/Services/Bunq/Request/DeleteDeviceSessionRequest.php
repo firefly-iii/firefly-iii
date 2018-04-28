@@ -43,7 +43,6 @@ class DeleteDeviceSessionRequest extends BunqRequest
         $headers['X-Bunq-Client-Authentication'] = $this->sessionToken->getToken();
         $this->sendSignedBunqDelete($uri, $headers);
 
-        return;
     }
 
     /**

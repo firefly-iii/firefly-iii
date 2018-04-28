@@ -6,10 +6,29 @@
 
 {% block content %}
 
-    <form method="POST" action="{{ route('rules.store', ruleGroup.id) }}" accept-charset="UTF-8" class="form-horizontal" id="store">
+    <form method="POST" action="{{ route('rules.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <input type="hidden" name="rule_group_id" value="{{ ruleGroup.id }}"/>
+        <input type="hidden" name="return_to_bill" value="{% if returnToBill %}true{% else %}false{% endif %}"/>
+        <input type="hidden" name="bill_id" value="{% if bill %}{{ bill.id }}{% else %}0{% endif %}"/>
+
         <input type="hidden" name="active" value="1"/>
+        {% if bill %}
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="box box-success" id="mandatory">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ trans('firefly.create_rule_for_bill', {name: bill.name}) }}</h3>
+                        </div>
+                        <div class="box-body">
+                            <p class="text-info">
+                                {{ trans('firefly.create_rule_for_bill_txt', {name: bill.name}) }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12">
                 <div class="box box-primary" id="mandatory">
@@ -19,7 +38,9 @@
                     <div class="box-body">
                         {{ ExpandedForm.text('title') }}
                         {{ ExpandedForm.select('trigger',allJournalTriggers()) }}
+                        {{ ExpandedForm.select('rule_group_id',groups, ruleGroup.id) }}
                         {{ ExpandedForm.checkbox('stop_processing',1,null, {helpText: trans('firefly.rule_help_stop_processing')}) }}
+                        {{ ExpandedForm.checkbox('strict',1, null,{helpText: trans('firefly.rule_help_strict')}) }}
                     </div>
                 </div>
             </div>
@@ -62,7 +83,7 @@
                         <p>
                             <br/>
                             <button type="button" class="btn btn-default add_rule_trigger">{{ 'add_rule_trigger'|_ }}</button>
-                            <a href="#" class="btn btn-default test_rule_triggers">{{ 'test_rule_triggers'|_ }}</a>
+                            <a href="#" class="btn btn-default test_rule_triggers"><i class="fa fa-flask"></i> {{ 'test_rule_triggers'|_ }}</a>
                         </p>
                     </div>
                 </div>
@@ -128,6 +149,7 @@
     <script type="text/javascript">
         var triggerCount = {{ triggerCount }};
         var actionCount = {{ actionCount }};
+        var testRuleTriggersText = '{{ 'test_rule_triggers'|_|escape('js') }}';
     </script>
     <script type="text/javascript" src="js/ff/rules/create-edit.js?v={{ FF_VERSION }}"></script>
 

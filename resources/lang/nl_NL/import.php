@@ -164,6 +164,7 @@ return [
     // bunq
     'bunq_prerequisites_title'             => 'Voorwaarden voor een import van bunq',
     'bunq_prerequisites_text'              => 'Om te importeren vanaf bunq moet je een API key hebben. Deze kan je aanvragen in de app. Denk er aan dat deze functie in BETA is. De code is alleen getest op de sandbox API.',
+    'bunq_prerequisites_text_ip'           => 'Bunq wilt graag je externe IP-adres weten. Firefly III heeft geprobeerd dit in te vullen met behulp van de <a href="https://www.ipify.org/">ipify-dienst</a>. Zorg dat je zeker weet dat dit IP-adres klopt, want anders zal de import niet werken.',
     'bunq_do_import'                       => 'Ja, importeer van deze rekening',
     'bunq_accounts_title'                  => 'Bunq rekeningen',
     'bunq_accounts_text'                   => 'Dit zijn de rekeningen uit je bunq-account. Selecteer de rekeningen waaruit je wilt importeren, en welke betaalrekeningen deze transacties op terecht moeten komen.',
@@ -171,11 +172,12 @@ return [
     // Spectre
     'spectre_title'                        => 'Importeer via Spectre',
     'spectre_prerequisites_title'          => 'Voorwaarden voor een import via Spectre',
-    'spectre_prerequisites_text'           => 'Als je gegevens wilt importeren via de Spectre API, moet je een aantal geheime codes bezitten. Ze zijn te vinden op <a href="https://www.saltedge.com/clients/profile/secrets">de secrets pagina</a>.',
-    'spectre_enter_pub_key'                => 'Het importeren werkt alleen als je deze publieke sleutel op uw <a href="https://www.saltedge.com/clients/security/edit">security pagina</a> invoert.',
+    'spectre_prerequisites_text'           => 'Als je gegevens wilt importeren via de Spectre API (v4), moet je een aantal geheime codes bezitten. Ze zijn te vinden op <a href="https://www.saltedge.com/clients/profile/secrets">de secrets pagina</a>.',
+    'spectre_enter_pub_key'                => 'Het importeren werkt alleen als je deze publieke sleutel op je <a href="https://www.saltedge.com/clients/profile/secrets">secrets-pagina</a> invoert.',
     'spectre_accounts_title'               => 'Selecteer de accounts waaruit je wilt importeren',
     'spectre_accounts_text'                => 'Links staan de rekeningen die zijn gevonden door Spectre. Ze kunnen worden geïmporteerd in Firefly III. Selecteer er de juiste betaalrekening bij. Verwijder het vinkje als je toch niet van een bepaalde rekening wilt importeren.',
     'spectre_do_import'                    => 'Ja, importeer van deze rekening',
+    'spectre_no_supported_accounts'        => 'Je kan helaas niet vanaf deze rekening importeren omdat de valuta niet overeenkomt.',
 
     // keys from "extra" array:
     'spectre_extra_key_iban'               => 'IBAN',

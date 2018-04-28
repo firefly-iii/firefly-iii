@@ -206,7 +206,6 @@ class SpectreConfigurator implements ConfiguratorInterface
             'accounts-mapped' => '',
             'auto-start'      => true,
             'apply-rules'     => true,
-            'match-bills'     => false,
         ];
         $currentConfig = $this->repository->getConfiguration($job);
         $finalConfig   = array_merge($defaultConfig, $currentConfig);
@@ -220,7 +219,6 @@ class SpectreConfigurator implements ConfiguratorInterface
         $job       = $this->repository->setExtendedStatus($job, $extendedStatus);
         $this->job = $job;
 
-        return;
     }
 
     /**

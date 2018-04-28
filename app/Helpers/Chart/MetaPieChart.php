@@ -298,7 +298,7 @@ class MetaPieChart implements MetaPieChartInterface
      */
     protected function groupByFields(Collection $set, array $fields): array
     {
-        if (0 === count($fields) && $this->tags->count() > 0) {
+        if (0 === \count($fields) && $this->tags->count() > 0) {
             // do a special group on tags:
             return $this->groupByTag($set); // @codeCoverageIgnore
         }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Spectre\Request;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Services\Spectre\Object\Customer;
 use FireflyIII\Services\Spectre\Object\Login;
 use Log;
@@ -39,9 +40,7 @@ class ListLoginsRequest extends SpectreRequest
     private $logins = [];
 
     /**
-     *
-     * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function call(): void
     {
@@ -50,11 +49,11 @@ class ListLoginsRequest extends SpectreRequest
         while ($hasNextPage) {
             Log::debug(sprintf('Now calling ListLoginsRequest for next_id %d', $nextId));
             $parameters = ['from_id' => $nextId, 'customer_id' => $this->customer->getId()];
-            $uri        = '/api/v3/logins/?' . http_build_query($parameters);
+            $uri        = '/api/v4/logins/?' . http_build_query($parameters);
             $response   = $this->sendSignedSpectreGet($uri, []);
 
             // count entries:
-            Log::debug(sprintf('Found %d entries in data-array', count($response['data'])));
+            Log::debug(sprintf('Found %d entries in data-array', \count($response['data'])));
 
             // extract next ID
             $hasNextPage = false;

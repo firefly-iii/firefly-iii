@@ -48,7 +48,7 @@ class TagControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', get_class($this)));
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -60,7 +60,7 @@ class TagControllerTest extends TestCase
         // mock stuff
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('tags.create'));
@@ -76,7 +76,7 @@ class TagControllerTest extends TestCase
         // mock stuff
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('tags.delete', [1]));
@@ -92,7 +92,7 @@ class TagControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('destroy');
 
         $this->be($this->user());
@@ -109,7 +109,7 @@ class TagControllerTest extends TestCase
         // mock stuff
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('tags.edit', [1]));
@@ -126,7 +126,7 @@ class TagControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('count')->andReturn(0);
         $repository->shouldReceive('tagCloud')->andReturn([]);
         $repository->shouldReceive('oldestTag')->andReturn(null)->once();
@@ -153,7 +153,7 @@ class TagControllerTest extends TestCase
         $repository   = $this->mock(TagRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('spentInPeriod')->andReturn('-1')->once();
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('lastUseDate')->andReturn(new Carbon)->once();
@@ -186,7 +186,7 @@ class TagControllerTest extends TestCase
         $repository   = $this->mock(TagRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
 
         $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
@@ -222,7 +222,7 @@ class TagControllerTest extends TestCase
         $repository   = $this->mock(TagRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('spentInPeriod')->andReturn('-1')->once();
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('lastUseDate')->andReturn(new Carbon)->once();
@@ -261,7 +261,7 @@ class TagControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('find')->andReturn(new Tag);
         $repository->shouldReceive('store')->andReturn(new Tag);
 
@@ -287,7 +287,7 @@ class TagControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->session(['tags.edit.uri' => 'http://localhost']);
         $data = [

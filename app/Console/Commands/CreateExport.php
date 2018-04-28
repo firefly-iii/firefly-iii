@@ -89,9 +89,9 @@ class CreateExport extends Command
         $accountRepository->setUser($user);
 
         // first date
-        $firstJournal = $journalRepository->first();
+        $firstJournal = $journalRepository->firstNull();
         $first        = new Carbon;
-        if (null !== $firstJournal->id) {
+        if (null !== $firstJournal) {
             $first = $firstJournal->date;
         }
 

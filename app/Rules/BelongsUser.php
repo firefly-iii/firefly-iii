@@ -159,10 +159,10 @@ class BelongsUser implements Rule
     private function parseAttribute(string $attribute): string
     {
         $parts = explode('.', $attribute);
-        if (count($parts) === 1) {
+        if (\count($parts) === 1) {
             return $attribute;
         }
-        if (count($parts) === 3) {
+        if (\count($parts) === 3) {
             return $parts[2];
         }
 

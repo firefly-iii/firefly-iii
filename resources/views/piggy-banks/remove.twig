@@ -11,12 +11,12 @@
 
             <div class="modal-body">
                 <p>
-                    {{ 'max_amount_remove'|_ }}: {{ currentRelevantRepAmount(piggyBank)|formatAmount }}.
+                    {{ 'max_amount_remove'|_ }}: {{ formatAmountByCurrency(currency, repetition.currentamount) }}.
                 </p>
 
                 <div class="input-group">
-                    <div class="input-group-addon">{{ getCurrencySymbol()|raw }}</div>
-                    <input step="any" class="form-control" id="amount" autocomplete="off" name="amount" max="{{ currentRelevantRepAmount(piggyBank)|round(2) }}"
+                    <div class="input-group-addon">{{ currency.symbol|raw }}</div>
+                    <input step="any" class="form-control" id="amount" autocomplete="off" name="amount" max="{{ repetition.currentamount }}"
                            type="number">
                 </div>
             </div>

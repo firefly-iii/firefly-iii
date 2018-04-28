@@ -68,10 +68,20 @@ interface JournalRepositoryInterface
      * Find a specific journal.
      *
      * @param int $journalId
+     * @deprecated
      *
      * @return TransactionJournal
      */
     public function find(int $journalId): TransactionJournal;
+
+    /**
+     * Find a specific journal.
+     *
+     * @param int $journalId
+     *
+     * @return TransactionJournal|null
+     */
+    public function findNull(int $journalId): ?TransactionJournal;
 
     /**
      * @param Transaction $transaction

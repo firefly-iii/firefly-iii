@@ -262,8 +262,6 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array $data
      *
      * @return Account
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function store(array $data): Account
     {
@@ -279,8 +277,6 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array   $data
      *
      * @return Account
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function update(Account $account, array $data): Account
     {

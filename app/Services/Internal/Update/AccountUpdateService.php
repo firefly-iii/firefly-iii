@@ -51,6 +51,10 @@ class AccountUpdateService
         $account->iban            = $data['iban'];
         $account->save();
 
+        if(isset($data['currency_id']) && $data['currency_id'] === 0) {
+            unset($data['currency_id']);
+        }
+
         // update all meta data:
         $this->updateMetaData($account, $data);
 
@@ -66,7 +70,7 @@ class AccountUpdateService
         }
 
         // update note:
-        if (isset($data['notes']) && null !== $data['notes']) {
+        if (isset($data['notes'])) {
             $this->updateNote($account, (string)$data['notes']);
         }
 

@@ -47,11 +47,11 @@ trait JournalServiceTrait
         $factory = app(TagFactory::class);
         $factory->setUser($journal->user);
         $set = [];
-        if (!is_array($data['tags'])) {
+        if (!\is_array($data['tags'])) {
             return; // @codeCoverageIgnore
         }
         foreach ($data['tags'] as $string) {
-            if (strlen($string) > 0) {
+            if (\strlen($string) > 0) {
                 $tag   = $factory->findOrCreate($string);
                 $set[] = $tag->id;
             }
@@ -81,7 +81,6 @@ trait JournalServiceTrait
         $journal->bill_id = null;
         $journal->save();
 
-        return;
     }
 
     /**
@@ -111,7 +110,7 @@ trait JournalServiceTrait
     protected function storeNote(TransactionJournal $journal, ?string $notes): void
     {
         $notes = (string)$notes;
-        if (strlen($notes) > 0) {
+        if (\strlen($notes) > 0) {
             $note = $journal->notes()->first();
             if (null === $note) {
                 $note = new Note;
@@ -127,7 +126,6 @@ trait JournalServiceTrait
             $note->delete();
         }
 
-        return;
 
     }
 }

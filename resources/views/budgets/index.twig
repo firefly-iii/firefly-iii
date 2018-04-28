@@ -146,8 +146,8 @@
                             <th data-defaultsort="disabled" class="hidden-sm hidden-xs" style="width:10%;">&nbsp;</th>
                             <th data-defaultsign="az">{{ 'budget'|_ }}</th>
                             <th data-defaultsign="_19" style="width:25%;">{{ 'budgeted'|_ }}</th>
-                            <th data-defaultsign="_19" class="hidden-sm hidden-xs">{{ 'spent'|_ }}</th>
-                            <th data-defaultsign="_19">{{ 'left'|_ }}</th>
+                            <th data-defaultsign="_19" class="hidden-sm hidden-xs">{{ 'spent'|_ }} ({{ 'per_day'|_|lower }})</th>
+                            <th data-defaultsign="_19">{{ 'left'|_ }} ({{ 'per_day'|_|lower }})</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -188,10 +188,14 @@
                             <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}" data-spent="{{ budgetInformation[budget.id]['spent'] }}"
                                 data-value="{{ budgetInformation[budget.id]['spent'] }}">
                                 {{ budgetInformation[budget.id]['spent']|formatAmount }}
+                                ({{ (budgetInformation[budget.id]['spent'] / days)|formatAmount }})
                             </td>
                             <td class="left" data-id="{{ budget.id }}"
                                 data-value="{{ (repAmount + budgetInformation[budget.id]['spent']) }}">
                                 {{ (repAmount + budgetInformation[budget.id]['spent'])|formatAmount }}
+                                {% if repAmount + budgetInformation[budget.id]['spent'] > 0 %}
+                                ({{ ((repAmount + budgetInformation[budget.id]['spent']) / days)|formatAmount }})
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}

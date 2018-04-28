@@ -33,6 +33,7 @@ return [
     'name'                    => 'Name',
     'role'                    => 'Role',
     'currentBalance'          => 'Current balance',
+    'linked_to_rules'         => 'Relevant rules',
     'active'                  => 'Is active?',
     'lastActivity'            => 'Last activity',
     'balanceDiff'             => 'Balance difference',
@@ -111,4 +112,9 @@ return [
     'sepa-ep'                 => 'SEPA External Purpose',
     'sepa-ci'                 => 'SEPA Creditor Identifier',
     'account_at_bunq'         => 'Account with bunq',
+    'file_name'               => 'File name',
+    'file_size'               => 'File size',
+    'file_type'               => 'File type',
+    'attached_to'             => 'Attached to',
+    'file_exists'             => 'File exists',
 ];

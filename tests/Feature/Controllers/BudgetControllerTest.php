@@ -50,7 +50,7 @@ class BudgetControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', get_class($this)));
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -62,7 +62,7 @@ class BudgetControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
         $repository->shouldReceive('spentInPeriod')->andReturn('0');
         $repository->shouldReceive('budgetedPerDay')->andReturn('10');
@@ -82,7 +82,7 @@ class BudgetControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
         $repository->shouldReceive('spentInPeriod')->andReturn('0');
         $repository->shouldReceive('budgetedPerDay')->andReturn('10');
@@ -101,7 +101,7 @@ class BudgetControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('budgets.create'));
@@ -118,7 +118,7 @@ class BudgetControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('budgets.delete', [1]));
@@ -135,7 +135,7 @@ class BudgetControllerTest extends TestCase
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $repository->shouldReceive('destroy')->andReturn(true);
 
@@ -154,7 +154,7 @@ class BudgetControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('budgets.edit', [1]));
@@ -190,7 +190,7 @@ class BudgetControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
 
         $repository->shouldReceive('cleanupBudgets');
@@ -236,7 +236,7 @@ class BudgetControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
 
         $repository->shouldReceive('cleanupBudgets');
@@ -282,7 +282,7 @@ class BudgetControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
 
         $repository->shouldReceive('cleanupBudgets');
@@ -354,7 +354,7 @@ class BudgetControllerTest extends TestCase
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(TransactionJournal::first());
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -389,7 +389,7 @@ class BudgetControllerTest extends TestCase
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(TransactionJournal::first());
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -426,7 +426,7 @@ class BudgetControllerTest extends TestCase
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(TransactionJournal::first());
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -457,7 +457,7 @@ class BudgetControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('setAvailableBudget');
         $repository->shouldReceive('cleanupBudgets');
 
@@ -481,7 +481,7 @@ class BudgetControllerTest extends TestCase
         $budgetLimit = factory(BudgetLimit::class)->make();
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
         $collector = $this->mock(JournalCollectorInterface::class);
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
@@ -519,7 +519,7 @@ class BudgetControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('budgets.show.limit', [1, 8]));
@@ -536,7 +536,7 @@ class BudgetControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         // mock account repository
         $accountRepository = $this->mock(AccountRepositoryInterface::class);
@@ -574,7 +574,7 @@ class BudgetControllerTest extends TestCase
         $budget       = factory(Budget::class)->make();
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('findNull')->andReturn($budget);
         $repository->shouldReceive('store')->andReturn($budget);
         $repository->shouldReceive('cleanupBudgets');
@@ -599,7 +599,7 @@ class BudgetControllerTest extends TestCase
         $budget       = factory(Budget::class)->make();
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('findNull')->andReturn($budget);
         $repository->shouldReceive('update');
         $repository->shouldReceive('cleanupBudgets');
@@ -627,7 +627,7 @@ class BudgetControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getAvailableBudget')->andReturn('1');
         $repository->shouldReceive('cleanupBudgets');
 

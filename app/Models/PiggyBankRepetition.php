@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
+use FireflyIII\Models\PiggyBank;
 
 /**
  * Class PiggyBankRepetition.
@@ -55,7 +56,7 @@ class PiggyBankRepetition extends Model
      */
     public function piggyBank()
     {
-        return $this->belongsTo('FireflyIII\Models\PiggyBank');
+        return $this->belongsTo(PiggyBank::class);
     }
 
     /**

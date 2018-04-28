@@ -29,7 +29,6 @@ use FireflyIII\Http\Requests\ConfigurationRequest;
 use FireflyIII\Support\Facades\FireflyConfig;
 use Preferences;
 use Redirect;
-use Session;
 use View;
 
 /**
@@ -91,7 +90,7 @@ class ConfigurationController extends Controller
         FireflyConfig::set('is_demo_site', $data['is_demo_site']);
 
         // flash message
-        Session::flash('success', (string)trans('firefly.configuration_updated'));
+        session()->flash('success', (string)trans('firefly.configuration_updated'));
         Preferences::mark();
 
         return Redirect::route('admin.configuration.index');

@@ -33,6 +33,7 @@ return [
     'name'                    => 'Naam',
     'role'                    => 'Rol',
     'currentBalance'          => 'Huidig saldo',
+    'linked_to_rules'         => 'Relevante regels',
     'active'                  => 'Actief?',
     'lastActivity'            => 'Laatste activiteit',
     'balanceDiff'             => 'Saldoverschil',
@@ -111,4 +112,9 @@ return [
     'sepa-ep'                 => 'SEPA transactiedoeleinde',
     'sepa-ci'                 => 'SEPA crediteuridentificatie',
     'account_at_bunq'         => 'Bunq-account',
+    'file_name'               => 'Bestandsnaam',
+    'file_size'               => 'Bestandsgrootte',
+    'file_type'               => 'Bestandstype',
+    'attached_to'             => 'Bijlage van',
+    'file_exists'             => 'Bestand bestaat',
 ];

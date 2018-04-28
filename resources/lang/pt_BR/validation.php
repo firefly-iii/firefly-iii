@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * validation.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -32,11 +33,11 @@ return [
     'file_attached'                  => 'Arquivo carregado com sucesso ":name".',
     'must_exist'                     => 'O ID no campo :attribute não existe no banco de dados.',
     'all_accounts_equal'             => 'Todas as contas neste campo devem ser iguais.',
-    'invalid_selection'              => 'Your selection is invalid',
+    'invalid_selection'              => 'Sua seleção é inválida',
     'belongs_user'                   => 'Esse valor é inválido para este campo.',
     'at_least_one_transaction'       => 'Precisa de ao menos uma transação.',
     'require_currency_info'          => 'O conteúdo deste campo é inválido sem informações de moeda.',
-    'equal_description'              => 'Transaction description should not equal global description.',
+    'equal_description'              => 'A descrição da transação não pode ser igual à descrição global.',
     'file_invalid_mime'              => 'Arquivo ":name" é do tipo ":mime" que não é aceito como um novo upload.',
     'file_too_large'                 => 'Arquivo ":name" é muito grande.',
     'belongs_to_user'                => 'O valor de :attribute é desconhecido',

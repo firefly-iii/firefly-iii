@@ -1,7 +1,7 @@
 <?php
 /**
- * BillScanner.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Account.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,28 +20,32 @@
  */
 declare(strict_types=1);
 
-namespace FireflyIII\Support\Events;
+namespace FireflyIII\Support\Twig\Extension;
 
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Models\Account as AccountModel;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Twig_Extension;
 
 /**
- * Class BillScanner.
+ * Class Account.
  */
-class BillScanner
+class Account extends Twig_Extension
 {
     /**
-     * @param TransactionJournal $journal
+     * @param AccountModel $account
+     * @param string       $field
+     *
+     * @return string
      */
-    public static function scan(TransactionJournal $journal)
+    public function getMetaField(AccountModel $account, string $field): string
     {
-        /** @var BillRepositoryInterface $repository */
-        $repository = app(BillRepositoryInterface::class);
-        $list       = $journal->user->bills()->where('active', 1)->where('automatch', 1)->get();
-
-        /** @var \FireflyIII\Models\Bill $bill */
-        foreach ($list as $bill) {
-            $repository->scan($bill, $journal);
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $result     = $repository->getMetaValue($account, $field);
+        if (null === $result) {
+            return '';
         }
+
+        return $result;
     }
 }

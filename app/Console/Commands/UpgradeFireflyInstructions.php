@@ -92,7 +92,7 @@ class UpgradeFireflyInstructions extends Command
         $text    = '';
         foreach (array_keys($config) as $compare) {
             // if string starts with:
-            $len = strlen($compare);
+            $len = \strlen($compare);
             if (substr($version, 0, $len) === $compare) {
                 $text = $config[$compare];
             }
@@ -139,7 +139,7 @@ class UpgradeFireflyInstructions extends Command
         $text    = '';
         foreach (array_keys($config) as $compare) {
             // if string starts with:
-            $len = strlen($compare);
+            $len = \strlen($compare);
             if (substr($version, 0, $len) === $compare) {
                 $text = $config[$compare];
             }

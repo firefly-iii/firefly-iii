@@ -56,6 +56,7 @@ class RuleFormRequest extends Request
             'rule-action-values'  => $this->get('rule-action-value'),
             'rule-action-stop'    => $this->get('rule-action-stop'),
             'stop_processing'     => $this->boolean('stop_processing'),
+            'strict'              => $this->boolean('strict'),
         ];
     }
 
@@ -85,6 +86,7 @@ class RuleFormRequest extends Request
             'rule-trigger.*'       => 'required|in:' . implode(',', $validTriggers),
             'rule-trigger-value.*' => 'required|min:1|ruleTriggerValue',
             'rule-action.*'        => 'required|in:' . implode(',', $validActions),
+            'strict'               => 'in:0,1',
         ];
         // since Laravel does not support this stuff yet, here's a trick.
         for ($i = 0; $i < 10; ++$i) {

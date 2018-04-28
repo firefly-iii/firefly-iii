@@ -34,7 +34,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Log;
 use Route;
-use Session;
 use URL;
 use View;
 
@@ -93,11 +92,15 @@ class Controller extends BaseController
                     $shownDemo    = true;
 
                     // either must be array and either must be > 0
-                    if ((is_array($intro) || is_array($specialIntro)) && (count($intro) > 0 || count($specialIntro) > 0)) {
+                    if ((\is_array($intro) || \is_array($specialIntro)) && (\count($intro) > 0 || \count($specialIntro) > 0)) {
                         $shownDemo = Preferences::get($key, false)->data;
                         Log::debug(sprintf('Check if user has already seen intro with key "%s". Result is %d', $key, $shownDemo));
                     }
 
+                    // share language
+                    $language = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
+
+                    View::share('language', $language);
                     View::share('shownDemo', $shownDemo);
                     View::share('current_route_name', $page);
                     View::share('original_route_name', Route::currentRouteName());
@@ -154,12 +157,12 @@ class Controller extends BaseController
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             $account = $transaction->account;
-            if (in_array($account->accountType->type, $valid)) {
+            if (\in_array($account->accountType->type, $valid)) {
                 return redirect(route('accounts.show', [$account->id]));
             }
         }
         // @codeCoverageIgnoreStart
-        Session::flash('error', (string)trans('firefly.cannot_redirect_to_account'));
+        session()->flash('error', (string)trans('firefly.cannot_redirect_to_account'));
 
         return redirect(route('index'));
         // @codeCoverageIgnoreEnd
@@ -170,6 +173,6 @@ class Controller extends BaseController
      */
     protected function rememberPreviousUri(string $identifier)
     {
-        Session::put($identifier, URL::previous());
+        session()->put($identifier, URL::previous());
     }
 }

@@ -30,7 +30,6 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Log;
 use Preferences;
-use Session;
 use View;
 
 /**
@@ -78,7 +77,7 @@ class UserController extends Controller
     public function destroy(User $user, UserRepositoryInterface $repository)
     {
         $repository->destroy($user);
-        Session::flash('success', (string)trans('firefly.user_deleted'));
+        session()->flash('success', (string)trans('firefly.user_deleted'));
 
         return redirect(route('admin.users'));
     }
@@ -94,7 +93,7 @@ class UserController extends Controller
         if (true !== session('users.edit.fromUpdate')) {
             $this->rememberPreviousUri('users.edit.uri');
         }
-        Session::forget('users.edit.fromUpdate');
+        session()->forget('users.edit.fromUpdate');
 
         $subTitle     = (string)trans('firefly.edit_user', ['email' => $user->email]);
         $subTitleIcon = 'fa-user-o';
@@ -175,19 +174,19 @@ class UserController extends Controller
         $data = $request->getUserData();
 
         // update password
-        if (strlen($data['password']) > 0) {
+        if (\strlen($data['password']) > 0) {
             $repository->changePassword($user, $data['password']);
         }
 
         $repository->changeStatus($user, $data['blocked'], $data['blocked_code']);
         $repository->updateEmail($user, $data['email']);
 
-        Session::flash('success', (string)trans('firefly.updated_user', ['email' => $user->email]));
+        session()->flash('success', (string)trans('firefly.updated_user', ['email' => $user->email]));
         Preferences::mark();
 
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
-            Session::put('users.edit.fromUpdate', true);
+            session()->put('users.edit.fromUpdate', true);
 
             return redirect(route('admin.users.edit', [$user->id]))->withInput(['return_to_edit' => 1]);
             // @codeCoverageIgnoreEnd

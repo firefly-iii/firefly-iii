@@ -75,7 +75,7 @@ class ImportJob extends Model
             $importJob = auth()->user()->importJobs()->where('key', $key)->first();
             if (null !== $importJob) {
                 // must have valid status:
-                if (!in_array($importJob->status, $importJob->validStatus)) {
+                if (!\in_array($importJob->status, $importJob->validStatus)) {
                     throw new FireflyException(sprintf('ImportJob with key "%s" has invalid status "%s"', $importJob->key, $importJob->status));
                 }
 
@@ -104,7 +104,7 @@ class ImportJob extends Model
      */
     public function change(string $status): void
     {
-        if (in_array($status, $this->validStatus)) {
+        if (\in_array($status, $this->validStatus)) {
             Log::debug(sprintf('Job status set (in model) to "%s"', $status));
             $this->status = $status;
             $this->save();
@@ -125,7 +125,7 @@ class ImportJob extends Model
         if (null === $value) {
             return [];
         }
-        if (0 === strlen($value)) {
+        if (0 === \strlen($value)) {
             return [];
         }
 
@@ -139,7 +139,7 @@ class ImportJob extends Model
      */
     public function getExtendedStatusAttribute($value)
     {
-        if (0 === strlen((string)$value)) {
+        if (0 === \strlen((string)$value)) {
             return [];
         }
 
@@ -171,7 +171,7 @@ class ImportJob extends Model
      */
     public function setStatusAttribute(string $value)
     {
-        if (in_array($value, $this->validStatus)) {
+        if (\in_array($value, $this->validStatus)) {
             $this->attributes['status'] = $value;
         }
     }
@@ -189,7 +189,7 @@ class ImportJob extends Model
         $encryptedContent = $disk->get($fileName);
         $content          = Crypt::decrypt($encryptedContent);
         $content          = trim($content);
-        Log::debug(sprintf('Content size is %d bytes.', strlen($content)));
+        Log::debug(sprintf('Content size is %d bytes.', \strlen($content)));
 
         return $content;
     }
@@ -200,6 +200,6 @@ class ImportJob extends Model
      */
     public function user()
     {
-        return $this->belongsTo('FireflyIII\User');
+        return $this->belongsTo(User::class);
     }
 }

@@ -28,13 +28,20 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Attachment;
+use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\Preference;
+use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\RuleGroup;
+use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
@@ -79,9 +86,128 @@ class UpgradeDatabase extends Command
         $this->line('Done updating currency information..');
         $this->migrateNotes();
         $this->migrateAttachmentData();
-        $this->info('Firefly III database is up to date.');
+        $this->migrateBillsToRules();
 
-        return;
+        $this->info('Firefly III database is up to date.');
+    }
+
+    public function migrateBillsToRules()
+    {
+        foreach (User::get() as $user) {
+            /** @var Preference $lang */
+            $lang               = Preferences::getForUser($user, 'language', 'en_US');
+            $groupName          = (string)trans('firefly.rulegroup_for_bills_title', [], $lang->data);
+            $ruleGroup          = $user->ruleGroups()->where('title', $groupName)->first();
+            $currencyPreference = Preferences::getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
+            $currency           = TransactionCurrency::where('code', $currencyPreference->data)->first();
+            if (null === $currency) {
+                $currency = app('amount')->getDefaultCurrency();
+            }
+
+            if ($ruleGroup === null) {
+                $array     = RuleGroup::get(['order'])->pluck('order')->toArray();
+                $order     = \count($array) > 0 ? max($array) + 1 : 1;
+                $ruleGroup = RuleGroup::create(
+                    [
+                        'user_id'     => $user->id,
+                        'title'       => (string)trans('firefly.rulegroup_for_bills_title', [], $lang->data),
+                        'description' => (string)trans('firefly.rulegroup_for_bills_description', [], $lang->data),
+                        'order'       => $order,
+                        'active'      => 1,
+                    ]
+                );
+            }
+
+            // loop bills.
+            $order = 1;
+            /** @var Collection $collection */
+            $collection = $user->bills()->get();
+            /** @var Bill $bill */
+            foreach ($collection as $bill) {
+                if ($bill->match !== 'MIGRATED_TO_RULES') {
+                    $rule = Rule::create(
+                        [
+                            'user_id'         => $user->id,
+                            'rule_group_id'   => $ruleGroup->id,
+                            'title'           => (string)trans('firefly.rule_for_bill_title', ['name' => $bill->name], $lang->data),
+                            'description'     => (string)trans('firefly.rule_for_bill_description', ['name' => $bill->name], $lang->data),
+                            'order'           => $order,
+                            'active'          => $bill->active,
+                            'stop_processing' => 1,
+                        ]
+                    );
+                    // add default trigger
+                    RuleTrigger::create(
+                        [
+                            'rule_id'         => $rule->id,
+                            'trigger_type'    => 'user_action',
+                            'trigger_value'   => 'store-journal',
+                            'active'          => 1,
+                            'stop_processing' => 0,
+                            'order'           => 1,
+                        ]
+                    );
+                    // add trigger for description
+                    $match = implode(' ', explode(',', $bill->match));
+                    RuleTrigger::create(
+                        [
+                            'rule_id'         => $rule->id,
+                            'trigger_type'    => 'description_contains',
+                            'trigger_value'   => $match,
+                            'active'          => 1,
+                            'stop_processing' => 0,
+                            'order'           => 2,
+                        ]
+                    );
+
+                    // add triggers for amounts:
+                    RuleTrigger::create(
+                        [
+                            'rule_id'         => $rule->id,
+                            'trigger_type'    => 'amount_less',
+                            'trigger_value'   => round($bill->amount_max, $currency->decimal_places),
+                            'active'          => 1,
+                            'stop_processing' => 0,
+                            'order'           => 3,
+                        ]
+                    );
+                    RuleTrigger::create(
+                        [
+                            'rule_id'         => $rule->id,
+                            'trigger_type'    => 'amount_more',
+                            'trigger_value'   => round($bill->amount_min, $currency->decimal_places),
+                            'active'          => 1,
+                            'stop_processing' => 0,
+                            'order'           => 4,
+                        ]
+                    );
+
+                    // create action
+                    RuleAction::create(
+                        [
+                            'rule_id'         => $rule->id,
+                            'action_type'     => 'link_to_bill',
+                            'action_value'    => $bill->name,
+                            'order'           => 1,
+                            'active'          => 1,
+                            'stop_processing' => 0,
+                        ]
+                    );
+
+                    $order++;
+                    $bill->match = 'MIGRATED_TO_RULES';
+                    $bill->save();
+                    $this->line(sprintf('Updated bill #%d ("%s") so it will use rules.', $bill->id, $bill->name));
+                }
+
+                // give bills a currency when they dont have one.
+                if (null === $bill->transaction_currency_id) {
+                    $this->line(sprintf('Gave bill #%d ("%s") a currency (%s).', $bill->id, $bill->name, $currency->name));
+                    $bill->transactionCurrency()->associate($currency);
+                    $bill->save();
+                }
+            }
+        }
     }
 
     /**
@@ -114,7 +240,6 @@ class UpgradeDatabase extends Command
             $this->updateJournalidentifiers((int)$journalId);
         }
 
-        return;
     }
 
     /**
@@ -168,7 +293,6 @@ class UpgradeDatabase extends Command
             }
         );
 
-        return;
     }
 
     /**
@@ -226,7 +350,6 @@ class UpgradeDatabase extends Command
             }
         );
 
-        return;
     }
 
     /**
@@ -287,7 +410,7 @@ class UpgradeDatabase extends Command
 
             // move description:
             $description = (string)$att->description;
-            if (strlen($description) > 0) {
+            if (\strlen($description) > 0) {
                 // find or create note:
                 $note = $att->notes()->first();
                 if (null === $note) {
@@ -358,7 +481,6 @@ class UpgradeDatabase extends Command
             $journal->save();
         }
 
-        return;
     }
 
     /**
@@ -404,7 +526,6 @@ class UpgradeDatabase extends Command
             ++$identifier;
         }
 
-        return;
     }
 
     /**
@@ -425,7 +546,13 @@ class UpgradeDatabase extends Command
     {
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app(CurrencyRepositoryInterface::class);
-        $currency   = $repository->find((int)$transaction->account->getMeta('currency_id'));
+        $currency   = $repository->findNull((int)$transaction->account->getMeta('currency_id'));
+
+        if (null === $currency) {
+            Log::error(sprintf('Account #%d ("%s") must have currency preference but has none.', $transaction->account->id, $transaction->account->name));
+
+            return;
+        }
 
         // has no currency ID? Must have, so fill in using account preference:
         if (null === $transaction->transaction_currency_id) {
@@ -455,9 +582,9 @@ class UpgradeDatabase extends Command
         $journal = $transaction->transactionJournal;
         /** @var Transaction $opposing */
         $opposing         = $journal->transactions()->where('amount', '>', 0)->where('identifier', $transaction->identifier)->first();
-        $opposingCurrency = $repository->find((int)$opposing->account->getMeta('currency_id'));
+        $opposingCurrency = $repository->findNull((int)$opposing->account->getMeta('currency_id'));
 
-        if (null === $opposingCurrency->id) {
+        if (null === $opposingCurrency) {
             Log::error(sprintf('Account #%d ("%s") must have currency preference but has none.', $opposing->account->id, $opposing->account->name));
 
             return;
@@ -473,7 +600,12 @@ class UpgradeDatabase extends Command
             $opposing->transaction_currency_id = $currency->id;
             $transaction->save();
             $opposing->save();
-            Log::debug(sprintf('Cleaned up transaction #%d and #%d', $transaction->id, $opposing->id));
+            Log::debug(sprintf('Currency for account "%s" is %s, and currency for account "%s" is also
+             %s, so %s #%d (#%d and #%d) has been verified to be to %s exclusively.',
+                               $opposing->account->name, $opposingCurrency->code,
+                               $transaction->account->name, $transaction->transactionCurrency->code,
+                               $journal->transactionType->type, $journal->id,
+                               $transaction->id, $opposing->id, $currency->code));
 
             return;
         }
@@ -526,7 +658,6 @@ class UpgradeDatabase extends Command
             $opposing->save();
         }
 
-        return;
     }
 
 }

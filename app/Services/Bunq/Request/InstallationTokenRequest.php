@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Request;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Services\Bunq\Id\InstallationId;
 use FireflyIII\Services\Bunq\Object\ServerPublicKey;
 use FireflyIII\Services\Bunq\Token\InstallationToken;
@@ -58,8 +59,6 @@ class InstallationTokenRequest extends BunqRequest
         Log::debug(sprintf('Installation ID: %s', $this->installationId->getId()));
         Log::debug(sprintf('Installation token: %s', $this->installationToken->getToken()));
         Log::debug('Server public key: (not included)');
-
-        return;
     }
 
     /**
@@ -98,12 +97,19 @@ class InstallationTokenRequest extends BunqRequest
      * @param array $response
      *
      * @return InstallationId
+     * @throws FireflyException
      */
     private function extractInstallationId(array $response): InstallationId
     {
         $installationId = new InstallationId;
         $data           = $this->getKeyFromResponse('Id', $response);
-        $installationId->setId((int)$data['id']);
+
+        if (!isset($data['id'])) {
+            Log::error('No installation token in bunq response.', $response);
+            throw new FireflyException('There is no installation token in the bunq response. Sorry, I cannot continue.');
+        }
+
+        $installationId->setId($data['id']);
 
         return $installationId;
     }

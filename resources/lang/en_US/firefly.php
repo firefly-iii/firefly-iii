@@ -267,7 +267,10 @@ return [
     'move_rule_group_down'                       => 'Move rule group down',
     'save_rules_by_moving'                       => 'Save these rule(s) by moving them to another rule group:',
     'make_new_rule'                              => 'Make new rule in rule group ":title"',
+    'rule_is_strict'                             => 'strict rule',
+    'rule_is_not_strict'                         => 'non-strict rule',
     'rule_help_stop_processing'                  => 'When you check this box, later rules in this group will not be executed.',
+    'rule_help_strict'                           => 'In strict rules ALL triggers must fire for the action(s) to be executed. In non-strict rules, ANY trigger is enough for the action(s) to be executed.',
     'rule_help_active'                           => 'Inactive rules will never fire.',
     'stored_new_rule'                            => 'Stored new rule with title ":title"',
     'deleted_rule'                               => 'Deleted rule with title ":title"',
@@ -345,6 +348,8 @@ return [
     'rule_trigger_budget_is'                     => 'Budget is ":trigger_value"',
     'rule_trigger_tag_is_choice'                 => '(A) tag is..',
     'rule_trigger_tag_is'                        => 'A tag is ":trigger_value"',
+    'rule_trigger_currency_is_choice'            => 'Transaction currency is..',
+    'rule_trigger_currency_is'                   => 'Transaction currency is ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Has at least this many attachments',
     'rule_trigger_has_attachments'               => 'Has at least :trigger_value attachment(s)',
     'rule_trigger_store_journal'                 => 'When a transaction is created',
@@ -404,10 +409,20 @@ return [
     'rule_action_clear_notes_choice'             => 'Remove any notes',
     'rule_action_clear_notes'                    => 'Remove any notes',
     'rule_action_set_notes_choice'               => 'Set notes to..',
+    'rule_action_link_to_bill_choice'            => 'Link to a bill..',
+    'rule_action_link_to_bill'                   => 'Link to bill ":action_value"',
     'rule_action_set_notes'                      => 'Set notes to ":action_value"',
 
     'rules_have_read_warning'                 => 'Have you read the warning?',
     'apply_rule_warning'                      => 'Warning: running a rule(group) on a large selection of transactions could take ages, and it could time-out. If it does, the rule(group) will only be applied to an unknown subset of your transactions. This might leave your financial administration in tatters. Please be careful.',
+    'rulegroup_for_bills_title'               => 'Rule group for bills',
+    'rulegroup_for_bills_description'         => 'A special rule group for all the rules that involve bills.',
+    'rule_for_bill_title'                     => 'Auto-generated rule for bill ":name"',
+    'rule_for_bill_description'               => 'This rule is auto-generated to try to match bill ":name".',
+    'create_rule_for_bill'                    => 'Create a new rule for bill ":name"',
+    'create_rule_for_bill_txt'                => 'You have just created a new bill called ":name", congratulations! Firefly III can automagically match new withdrawals to this bill. For example, whenever you pay your rent, the bill "rent" will be linked to the expense. This way, Firefly III can accurately show you which bills are due and which ones aren\'t. In order to do so, a new rule must be created. Firefly III has filled in some sensible defaults for you. Please make sure these are correct. If these values are correct, Firefly III will automatically link the correct withdrawal to the correct bill. Please check out the triggers to see if they are correct, and add some if they\'re wrong.',
+    'new_rule_for_bill_title'                 => 'Rule for bill ":name"',
+    'new_rule_for_bill_description'           => 'This rule marks transactions for bill ":name".',
 
     // tags
     'store_new_tag'                           => 'Store new tag',
@@ -526,6 +541,7 @@ return [
     'attachment_deleted'                      => 'Deleted attachment ":name"',
     'attachment_updated'                      => 'Updated attachment ":name"',
     'upload_max_file_size'                    => 'Maximum file size: :size',
+    'list_all_attachments'                    => 'List of all attachments',
 
     // transaction index
     'title_expenses'                          => 'Expenses',
@@ -568,6 +584,7 @@ return [
     'converted_to_Deposit'                    => 'The transaction has been converted to a deposit',
     'converted_to_Transfer'                   => 'The transaction has been converted to a transfer',
     'invalid_convert_selection'               => 'The account you have selected is already used in this transaction or does not exist.',
+    'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Create new withdrawal',
@@ -624,8 +641,8 @@ return [
     'over_budget_warn'                        => '<i class="fa fa-money"></i> Normally you budget about :amount per day. This is :over_amount per day.',
 
     // bills:
-    'matching_on'                             => 'Matching on',
-    'between_amounts'                         => 'between :low and :high.',
+    'match_between_amounts'                   => 'Bill matches transactions between :low and :high.',
+    'bill_related_rules'                      => 'Rules related to this bill',
     'repeats'                                 => 'Repeats',
     'connected_journals'                      => 'Connected transactions',
     'auto_match_on'                           => 'Automatically matched by Firefly III',
@@ -635,13 +652,13 @@ return [
     'deleted_bill'                            => 'Deleted bill ":name"',
     'edit_bill'                               => 'Edit bill ":name"',
     'more'                                    => 'More',
-    'rescan_old'                              => 'Rescan old transactions',
+    'rescan_old'                              => 'Run rules again, on all transactions',
     'update_bill'                             => 'Update bill',
     'updated_bill'                            => 'Updated bill ":name"',
     'store_new_bill'                          => 'Store new bill',
     'stored_new_bill'                         => 'Stored new bill ":name"',
     'cannot_scan_inactive_bill'               => 'Inactive bills cannot be scanned.',
-    'rescanned_bill'                          => 'Rescanned everything.',
+    'rescanned_bill'                          => 'Rescanned everything, and linked :total transaction(s) to the bill.',
     'average_bill_amount_year'                => 'Average bill amount (:year)',
     'average_bill_amount_overall'             => 'Average bill amount (overall)',
     'bill_is_active'                          => 'Bill is active',
@@ -795,6 +812,10 @@ return [
     'savings_balance_text'                    => 'Firefly III will automatically create a savings account for you. By default, there will be no money in your savings account, but if you tell Firefly III the balance it will be stored as such.',
     'finish_up_new_user'                      => 'That\'s it! You can continue by pressing <strong>Submit</strong>. You will be taken to the index of Firefly III.',
     'stored_new_accounts_new_user'            => 'Yay! Your new accounts have been stored.',
+    'set_preferred_language'                  => 'If you prefer to use Firefly III in another language, please indicate so here.',
+    'language'                                => 'Language',
+    'new_savings_account'                     => ':bank_name savings account',
+    'cash_wallet'                             => 'Cash wallet',
 
     // home page:
     'yourAccounts'                            => 'Your accounts',
@@ -943,6 +964,7 @@ return [
     'account_role_sharedAsset'                => 'Shared asset account',
     'account_role_savingAsset'                => 'Savings account',
     'account_role_ccAsset'                    => 'Credit card',
+    'account_role_cashWalletAsset'            => 'Cash wallet',
     'budget_chart_click'                      => 'Please click on a budget name in the table above to see a chart.',
     'category_chart_click'                    => 'Please click on a category name in the table above to see a chart.',
     'in_out_accounts'                         => 'Earned and spent per combination',
@@ -1002,6 +1024,7 @@ return [
     'events'                    => 'Events',
     'target_amount'             => 'Target amount',
     'start_date'                => 'Start date',
+    'no_start_date'             => 'No start date',
     'target_date'               => 'Target date',
     'no_target_date'            => 'No target date',
     'table'                     => 'Table',
@@ -1139,6 +1162,13 @@ return [
     'import_index_sub_title'                => 'Index',
     'import_general_index_intro'            => 'Welcome to Firefly III\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
     'upload_error'                          => 'The file you have uploaded could not be processed. Possibly it is of an invalid file type or encoding. The log files will have more information.',
+    'reset_import_settings_title'           => 'Reset import configuration',
+    'reset_import_settings_text'            => 'You can use these links to reset your import settings for specific providers. This is useful when bad settings stop you from importing data.',
+    'reset_settings_bunq'                   => 'Remove bunq API key, local external IP address and bunq related RSA keys.',
+    'reset_settings_spectre'                => 'Remove Spectre secrets and ID\'s. This will also remove your Spectre keypair. Remember to update the new one.',
+    'settings_reset_for_bunq'               => 'Bunq settings reset.',
+    'settings_reset_for_spectre'            => 'Spectre settings reset.',
+
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',

@@ -53,12 +53,12 @@ class RabobankDescription implements SpecificInterface
     public function run(array $row): array
     {
         $row = array_values($row);
-        Log::debug(sprintf('Now in RabobankSpecific::run(). Row has %d columns', count($row)));
+        Log::debug(sprintf('Now in RabobankSpecific::run(). Row has %d columns', \count($row)));
         $oppositeAccount = isset($row[5]) ? trim($row[5]) : '';
         $oppositeName    = isset($row[6]) ? trim($row[6]) : '';
         $alternateName   = isset($row[10]) ? trim($row[10]) : '';
 
-        if (strlen($oppositeAccount) < 1 && strlen($oppositeName) < 1) {
+        if (\strlen($oppositeAccount) < 1 && \strlen($oppositeName) < 1) {
             Log::debug(
                 sprintf(
                     'Rabobank specific: Opposite account and opposite name are' .
@@ -69,7 +69,7 @@ class RabobankDescription implements SpecificInterface
             $row[6]  = $alternateName;
             $row[10] = '';
         }
-        if (!(strlen($oppositeAccount) < 1 && strlen($oppositeName) < 1)) {
+        if (!(\strlen($oppositeAccount) < 1 && \strlen($oppositeName) < 1)) {
             Log::debug('Rabobank specific: either opposite account or name are filled.');
         }
 

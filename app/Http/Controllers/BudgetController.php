@@ -87,16 +87,31 @@ class BudgetController extends Controller
         $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
         $largeDiff   = false;
         $warnText    = '';
-        $average     = '0';
-        $current     = '0';
         if (0 === bccomp($amount, '0')) {
             $budgetLimit = null;
         }
 
+        // if today is between start and end, use the diff in days between end and today (days left)
+        // otherwise, use diff between start and end.
+        $today = new Carbon;
+        if ($today->gte($start) && $today->lte($end)) {
+            $days = $end->diffInDays($today);
+        }
+        if ($today->lte($start) || $today->gte($end)) {
+            $days = $start->diffInDays($end);
+        }
+        $days = $days === 0 ? 1 : $days;
+
         // calculate left in budget:
-        $spent    = $repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
-        $currency = app('amount')->getDefaultCurrency();
-        $left     = app('amount')->formatAnything($currency, bcadd($amount, $spent), true);
+        $spent      = $repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
+        $currency   = app('amount')->getDefaultCurrency();
+        $left       = app('amount')->formatAnything($currency, bcadd($amount, $spent), true);
+        $leftPerDay = 'none';
+
+        // is user has money left, calculate.
+        if (1 === bccomp(bcadd($amount, $spent), '0')) {
+            $leftPerDay = app('amount')->formatAnything($currency, bcdiv(bcadd($amount, $spent), (string)$days), true);
+        }
 
 
         // over or under budgeting, compared to previous budgets?
@@ -122,14 +137,15 @@ class BudgetController extends Controller
 
         return response()->json(
             [
-                'left'       => $left,
-                'name'       => $budget->name,
-                'limit'      => $budgetLimit ? $budgetLimit->id : 0,
-                'amount'     => $amount,
-                'current'    => $current,
-                'average'    => $average,
-                'large_diff' => $largeDiff,
-                'warn_text'  => $warnText,
+                'left'         => $left,
+                'name'         => $budget->name,
+                'limit'        => $budgetLimit ? $budgetLimit->id : 0,
+                'amount'       => $amount,
+                'current'      => $current,
+                'average'      => $average,
+                'large_diff'   => $largeDiff,
+                'left_per_day' => $leftPerDay,
+                'warn_text'    => $warnText,
 
             ]
         );
@@ -219,6 +235,17 @@ class BudgetController extends Controller
         $page     = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
         $pageSize = (int)Preferences::get('listPageSize', 50)->data;
 
+        // if today is between start and end, use the diff in days between end and today (days left)
+        // otherwise, use diff between start and end.
+        $today = new Carbon;
+        if ($today->gte($start) && $today->lte($end)) {
+            $days = $end->diffInDays($today);
+        }
+        if ($today->lte($start) || $today->gte($end)) {
+            $days = $start->diffInDays($end);
+        }
+        $days = $days === 0 ? 1 : $days;
+
         // make date if present:
         if (null !== $moment || '' !== (string)$moment) {
             try {
@@ -283,27 +310,11 @@ class BudgetController extends Controller
         $prevText     = app('navigation')->periodShow($prev, $range);
 
         return view(
-            'budgets.index',
-            compact(
-                'available',
-                'currentMonth',
-                'next',
-                'nextText',
-                'prev', 'allBudgets',
-                'prevText',
-                'periodStart',
-                'periodEnd',
-                'page',
-                'budgetInformation',
-                'inactive',
-                'budgets',
-                'spent',
-                'budgeted',
-                'previousLoop',
-                'nextLoop',
-                'start',
-                'end'
-            )
+            'budgets.index', compact(
+                               'available', 'currentMonth', 'next', 'nextText', 'prev', 'allBudgets', 'prevText', 'periodStart', 'periodEnd', 'days', 'page',
+                               'budgetInformation',
+                               'inactive', 'budgets', 'spent', 'budgeted', 'previousLoop', 'nextLoop', 'start', 'end'
+                           )
         );
     }
 
@@ -406,13 +417,13 @@ class BudgetController extends Controller
         // prep for "all" view.
         if ('all' === $moment) {
             $subTitle = trans('firefly.all_journals_without_budget');
-            $first    = $repository->first();
-            $start    = $first->date ?? new Carbon;
+            $first    = $repository->firstNull();
+            $start    = null === $first ? new Carbon : $first->date;
             $end      = new Carbon;
         }
 
         // prep for "specific date" view.
-        if (strlen($moment) > 0 && 'all' !== $moment) {
+        if ('all' !== $moment && \strlen($moment) > 0) {
             $start    = new Carbon($moment);
             $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
@@ -423,7 +434,7 @@ class BudgetController extends Controller
         }
 
         // prep for current period
-        if (0 === strlen($moment)) {
+        if ('' === $moment) {
             $start    = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
             $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
             $periods  = $this->getPeriodOverview();
@@ -638,9 +649,10 @@ class BudgetController extends Controller
      */
     private function getPeriodOverview(): Collection
     {
+        /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
-        $first      = $repository->first();
-        $start      = $first->date ?? new Carbon;
+        $first      = $repository->firstNull();
+        $start      = null === $first ? new Carbon : $first->date;
         $range      = Preferences::get('viewRange', '1M')->data;
         $start      = app('navigation')->startOfPeriod($start, $range);
         $end        = app('navigation')->endOfX(new Carbon, $range, null);

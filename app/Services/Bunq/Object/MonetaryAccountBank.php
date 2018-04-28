@@ -93,9 +93,9 @@ class MonetaryAccountBank extends BunqObject
         $this->monetaryAccountProfile = new MonetaryAccountProfile($data['monetary_account_profile']);
         $this->setting                = new MonetaryAccountSetting($data['setting']);
         $this->overdraftLimit         = new Amount($data['overdraft_limit']);
-        $this->avatar                 = new Avatar($data['avatar']);
-        $this->reason                 = $data['reason'];
-        $this->reasonDescription      = $data['reason_description'];
+        $this->avatar                 = isset($data['avatar']) ? new Avatar($data['avatar']) : null;
+        $this->reason                 = $data['reason'] ?? '';
+        $this->reasonDescription      = $data['reason_description'] ?? '';
 
         // create aliases:
         foreach ($data['alias'] as $alias) {
@@ -176,7 +176,7 @@ class MonetaryAccountBank extends BunqObject
             'monetary_account_profile' => $this->monetaryAccountProfile->toArray(),
             'setting'                  => $this->setting->toArray(),
             'overdraft_limit'          => $this->overdraftLimit->toArray(),
-            'avatar'                   => $this->avatar->toArray(),
+            'avatar'                   => null === $this->avatar ? null : $this->avatar->toArray(),
             'reason'                   => $this->reason,
             'reason_description'       => $this->reasonDescription,
             'alias'                    => [],

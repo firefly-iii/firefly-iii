@@ -44,8 +44,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      * @param Attachment $attachment
      *
      * @return bool
-     *
-
+     * @throws \Exception
      */
     public function destroy(Attachment $attachment): bool
     {
@@ -146,7 +145,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         if ($disk->exists($file)) {
             $content = Crypt::decrypt($disk->get($file));
         }
-        if (is_bool($content)) {
+        if (\is_bool($content)) {
             Log::error(sprintf('Attachment #%d may be corrupted: the content could not be decrypted.', $attachment->id));
 
             return '';
@@ -203,7 +202,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      */
     public function updateNote(Attachment $attachment, string $note): bool
     {
-        if (0 === strlen($note)) {
+        if (0 === \strlen($note)) {
             $dbNote = $attachment->notes()->first();
             if (null !== $dbNote) {
                 $dbNote->delete();

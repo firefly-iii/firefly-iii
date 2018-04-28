@@ -54,7 +54,7 @@
                             <td>{{ 'start_date'|_ }}</td>
                             <td>
                                 {% if piggyBank.startdate %}
-                                    {{ piggyBank.startdate.format('jS F Y') }}
+                                    {{ piggyBank.startdate.formatLocalized(monthAndDayFormat) }}
                                 {% else %}
                                     <em>{{ 'no_start_date'|_ }}</em>
                                 {% endif %}
@@ -64,7 +64,7 @@
                             <td>{{ 'target_date'|_ }}</td>
                             <td>
                                 {% if piggyBank.targetdate %}
-                                    {{ piggyBank.targetdate.format('jS F Y') }}
+                                    {{ piggyBank.targetdate.formatLocalized(monthAndDayFormat) }}
                                 {% else %}
                                     <em>{{ 'no_target_date'|_ }}</em>
                                 {% endif %}

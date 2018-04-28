@@ -27,6 +27,7 @@ use Crypt;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 
@@ -51,7 +52,11 @@ class Steam
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        $currencyId = (int)$account->getMeta('currency_id');
+        //
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $currencyId  = (int)$repository->getMetaValue($account, 'currency_id');
+
         // use system default currency:
         if (0 === $currencyId) {
             $currency   = app('amount')->getDefaultCurrencyByUser($account->user);
@@ -71,6 +76,7 @@ class Steam
                                           ->where('transactions.foreign_currency_id', $currencyId)
                                           ->where('transactions.transaction_currency_id', '!=', $currencyId)
                                           ->sum('transactions.foreign_amount');
+
         $balance        = bcadd($nativeBalance, $foreignBalance);
         $virtual        = null === $account->virtual_balance ? '0' : (string)$account->virtual_balance;
         $balance        = bcadd($balance, $virtual);

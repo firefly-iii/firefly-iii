@@ -176,7 +176,7 @@ class CsvProcessor implements FileProcessorInterface
         $mapped = $config['column-mapping-config'][$index][$value] ?? null;
 
         // throw error when not a valid converter.
-        if (!in_array($role, $this->validConverters)) {
+        if (!\in_array($role, $this->validConverters)) {
             throw new FireflyException(sprintf('"%s" is not a valid role.', $role));
         }
 
@@ -313,7 +313,7 @@ class CsvProcessor implements FileProcessorInterface
          */
         foreach ($row as $rowIndex => $value) {
             $value = trim((string)$value);
-            if (strlen($value) > 0) {
+            if (\strlen($value) > 0) {
                 $annotated = $this->annotateValue($rowIndex, $value);
                 Log::debug('Annotated value', $annotated);
                 $journal->setValue($annotated);
@@ -339,6 +339,7 @@ class CsvProcessor implements FileProcessorInterface
     {
         $hash  = $this->getRowHash($array);
         $count = $this->repository->countByHash($hash);
+        Log::debug(sprintf('Hash is %s and count is %d', $hash, $count));
 
         return $count > 0;
     }
@@ -357,7 +358,7 @@ class CsvProcessor implements FileProcessorInterface
         $config = $this->getConfig();
         $names  = array_keys($config['specifics'] ?? []);
         foreach ($names as $name) {
-            if (!in_array($name, $this->validSpecifics)) {
+            if (!\in_array($name, $this->validSpecifics)) {
                 throw new FireflyException(sprintf('"%s" is not a valid class name', $name));
             }
 

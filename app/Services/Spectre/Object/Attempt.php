@@ -58,8 +58,6 @@ class Attempt extends SpectreObject
     private $failErrorClass;
     /** @var string */
     private $failMessage;
-    /** @var string */
-    private $fetchType;
     /** @var bool */
     private $finished;
     /** @var bool */
@@ -90,6 +88,8 @@ class Attempt extends SpectreObject
     private $updatedAt;
     /** @var string */
     private $userAgent; // undocumented
+    /** @var array  */
+    private $fetchScopes = [];
 
     /**
      * Attempt constructor.
@@ -114,7 +114,7 @@ class Attempt extends SpectreObject
         $this->failAt                 = new Carbon($data['fail_at']);
         $this->failErrorClass         = $data['fail_error_class'];
         $this->failMessage            = $data['fail_message'];
-        $this->fetchType              = $data['fetch_type'];
+        $this->fetchScopes              = $data['fetch_scopes'];
         $this->finished               = $data['finished'];
         $this->finishedRecent         = $data['finished_recent'];
         $this->fromDate               = new Carbon($data['from_date']);
@@ -185,7 +185,7 @@ class Attempt extends SpectreObject
             'fail_at'                   => $this->failAt->toIso8601String(),
             'fail_error_class'          => $this->failErrorClass,
             'fail_message'              => $this->failMessage,
-            'fetch_type'                => $this->fetchType,
+            'fetch_scopes'                => $this->fetchScopes,
             'finished'                  => $this->finished,
             'finished_recent'           => $this->finishedRecent,
             'from_date'                 => $this->fromDate->toIso8601String(),

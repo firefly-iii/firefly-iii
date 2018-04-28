@@ -66,18 +66,18 @@
             <td class="hide-date">{{ transaction.date.formatLocalized(monthAndDayFormat) }}</td>
             <td class="hide-book_date">
                 {% if transaction.transactionJournal.hasMeta('book_date') %}
-                    {{ getMetaDate(transaction.transactionJournal, 'book_date').formatLocalized(monthAndDayFormat) }}
+                    {{ journalGetMetaDate(transaction.transactionJournal, 'book_date').formatLocalized(monthAndDayFormat) }}
                 {% endif %}
             </td>
             <td class="hide-process_date">
                 {% if transaction.transactionJournal.hasMeta('process_date') %}
-                    {{ getMetaDate(transaction.transactionJournal, 'process_date').formatLocalized(monthAndDayFormat) }}
+                    {{ journalGetMetaDate(transaction.transactionJournal, 'process_date').formatLocalized(monthAndDayFormat) }}
                 {% endif %}
 
             </td>
             <td class="hide-interest_date">
                 {% if transaction.transactionJournal.hasMeta('interest_date') %}
-                    {{ getMetaDate(transaction.transactionJournal, 'interest_date').formatLocalized(monthAndDayFormat) }}
+                    {{ journalGetMetaDate(transaction.transactionJournal, 'interest_date').formatLocalized(monthAndDayFormat) }}
                 {% endif %}
 
             </td>
@@ -85,19 +85,19 @@
             {# new optional fields (3x) #}
             <td class="hide-due_date">
                 {% if transaction.transactionJournal.hasMeta('due_date') %}
-                    {{ getMetaDate(transaction.transactionJournal, 'due_date').formatLocalized(monthAndDayFormat) }}
+                    {{ journalGetMetaDate(transaction.transactionJournal, 'due_date').formatLocalized(monthAndDayFormat) }}
                 {% endif %}
 
             </td>
             <td class="hide-payment_date">
                 {% if transaction.transactionJournal.hasMeta('payment_date') %}
-                    {{ getMetaDate(transaction.transactionJournal, 'payment_date').formatLocalized(monthAndDayFormat) }}
+                    {{ journalGetMetaDate(transaction.transactionJournal, 'payment_date').formatLocalized(monthAndDayFormat) }}
                 {% endif %}
 
             </td>
             <td class="hide-invoice_date">
                 {% if transaction.transactionJournal.hasMeta('invoice_date') %}
-                    {{ getMetaDate(transaction.transactionJournal, 'invoice_date').formatLocalized(monthAndDayFormat) }}
+                    {{ journalGetMetaDate(transaction.transactionJournal, 'invoice_date').formatLocalized(monthAndDayFormat) }}
                 {% endif %}
 
             </td>

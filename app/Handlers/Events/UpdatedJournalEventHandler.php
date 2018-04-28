@@ -26,7 +26,6 @@ use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
-use FireflyIII\Support\Events\BillScanner;
 use FireflyIII\TransactionRules\Processor;
 
 /**
@@ -80,18 +79,4 @@ class UpdatedJournalEventHandler
         return true;
     }
 
-    /**
-     * This method calls a special bill scanner that will check if the updated journal is part of a bill.
-     *
-     * @param UpdatedTransactionJournal $updatedJournalEvent
-     *
-     * @return bool
-     */
-    public function scanBills(UpdatedTransactionJournal $updatedJournalEvent): bool
-    {
-        $journal = $updatedJournalEvent->journal;
-        BillScanner::scan($journal);
-
-        return true;
-    }
 }

@@ -29,7 +29,6 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Session;
 
 /**
  * @codeCoverageIgnore
@@ -83,7 +82,7 @@ class RegisterController extends Controller
 
         $this->guard()->login($user);
 
-        Session::flash('success', (string)trans('firefly.registered'));
+        session()->flash('success', (string)trans('firefly.registered'));
 
         return $this->registered($request, $user)
             ?: redirect($this->redirectPath());

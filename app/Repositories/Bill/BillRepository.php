@@ -28,7 +28,6 @@ use FireflyIII\Factory\BillFactory;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\BillDestroyService;
 use FireflyIII\Services\Internal\Update\BillUpdateService;
@@ -345,26 +344,48 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * Return all rules for one bill
+     *
      * @param Bill $bill
      *
      * @return Collection
      */
-    public function getPossiblyRelatedJournals(Bill $bill): Collection
+    public function getRulesForBill(Bill $bill): Collection
     {
-        $set = new Collection(
-            DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $bill->amount_min)->where('amount', '<=', $bill->amount_max)
-              ->get(['transaction_journal_id'])
-        );
-        $ids = $set->pluck('transaction_journal_id')->toArray();
+        return $this->user->rules()
+                          ->leftJoin('rule_actions', 'rule_actions.rule_id', '=', 'rules.id')
+                          ->where('rule_actions.action_type', 'link_to_bill')
+                          ->where('rule_actions.action_value', $bill->name)
+                          ->get(['rules.*']);
+    }
 
-        $journals = new Collection;
-        if (count($ids) > 0) {
-            $journals = $this->user->transactionJournals()->transactionTypes([TransactionType::WITHDRAWAL])->whereIn('transaction_journals.id', $ids)->get(
-                ['transaction_journals.*']
-            );
+    /**
+     * Return all rules related to the bills in the collection, in an associative array:
+     * 5= billid
+     *
+     * 5 => [['id' => 1, 'title' => 'Some rule'],['id' => 2, 'title' => 'Some other rule']]
+     *
+     * @param Collection $collection
+     *
+     * @return array
+     */
+    public function getRulesForBills(Collection $collection): array
+    {
+        $rules = $this->user->rules()
+                            ->leftJoin('rule_actions', 'rule_actions.rule_id', '=', 'rules.id')
+                            ->where('rule_actions.action_type', 'link_to_bill')
+                            ->get(['rules.id', 'rules.title', 'rule_actions.action_value']);
+        $array = [];
+        foreach ($rules as $rule) {
+            $array[$rule->action_value]   = $array[$rule->action_value] ?? [];
+            $array[$rule->action_value][] = ['id' => $rule->id, 'title' => $rule->title];
+        }
+        $return = [];
+        foreach ($collection as $bill) {
+            $return[$bill->id] = $array[$bill->name] ?? [];
         }
 
-        return $journals;
+        return $return;
     }
 
     /**
@@ -395,6 +416,23 @@ class BillRepository implements BillRepositoryInterface
         }
 
         return $avg;
+    }
+
+    /**
+     * Link a set of journals to a bill.
+     *
+     * @param Bill       $bill
+     * @param Collection $transactions
+     */
+    public function linkCollectionToBill(Bill $bill, Collection $transactions): void
+    {
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $journal          = $transaction->transactionJournal;
+            $journal->bill_id = $bill->id;
+            $journal->save();
+            Log::debug(sprintf('Linked journal #%d to bill #%d', $journal->id, $bill->id));
+        }
     }
 
     /**
@@ -482,52 +520,6 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * @param Bill               $bill
-     * @param TransactionJournal $journal
-     *
-     * @deprecated
-     * @return bool
-     */
-    public function scan(Bill $bill, TransactionJournal $journal): bool
-    {
-        // Can only support withdrawals.
-        if (false === $journal->isWithdrawal()) {
-            return false;
-        }
-
-        /** @var JournalRepositoryInterface $repos */
-        $repos = app(JournalRepositoryInterface::class);
-        $repos->setUser($this->user);
-
-        $destinationAccounts = $repos->getJournalDestinationAccounts($journal);
-        $sourceAccounts      = $repos->getJournalDestinationAccounts($journal);
-        $matches             = explode(',', $bill->match);
-        $description         = strtolower($journal->description) . ' ';
-        $description         .= strtolower(implode(' ', $destinationAccounts->pluck('name')->toArray()));
-        $description         .= strtolower(implode(' ', $sourceAccounts->pluck('name')->toArray()));
-
-        $wordMatch   = $this->doWordMatch($matches, $description);
-        $amountMatch = $this->doAmountMatch($repos->getJournalTotal($journal), $bill->amount_min, $bill->amount_max);
-
-        // when both, update!
-        if ($wordMatch && $amountMatch) {
-            $journal->bill()->associate($bill);
-            $journal->save();
-
-            return true;
-        }
-        if ($bill->id === $journal->bill_id) {
-            // if no match, but bill used to match, remove it:
-            $journal->bill_id = null;
-            $journal->save();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * @param User $user
      */
     public function setUser(User $user)
@@ -563,37 +555,4 @@ class BillRepository implements BillRepositoryInterface
         return $service->update($bill, $data);
     }
 
-    /**
-     * @param float $amount
-     * @param float $min
-     * @param float $max
-     *
-     * @return bool
-     */
-    protected function doAmountMatch($amount, $min, $max): bool
-    {
-        return $amount >= $min && $amount <= $max;
-    }
-
-    /**
-     * @param array $matches
-     * @param       $description
-     *
-     * @return bool
-     */
-    protected function doWordMatch(array $matches, $description): bool
-    {
-        $wordMatch = false;
-        $count     = 0;
-        foreach ($matches as $word) {
-            if (!(false === strpos($description, strtolower($word)))) {
-                ++$count;
-            }
-        }
-        if ($count >= count($matches)) {
-            $wordMatch = true;
-        }
-
-        return $wordMatch;
-    }
 }

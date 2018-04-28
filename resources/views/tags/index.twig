@@ -28,8 +28,8 @@
                             <div class="box-body">
                                 <p class="tagcloud">
                                     {% for tagInfo in entries %}
-                                        <a style="font-size:{{ tagInfo.scale }}px;" class="label label-success"
-                                           href="{{ route('tags.show',tagInfo.tag.id) }}"><i class="fa fa-fw fa-tag"></i> {{ tagInfo.tag.tag }}</a>
+                                        <a style="font-size:{{ tagInfo.size }}px;" class="label label-success"
+                                           href="{{ route('tags.show',tagInfo.id) }}"><i class="fa fa-fw fa-tag"></i> {{ tagInfo.tag }}</a>
                                     {% endfor %}
                                 </p>
                             </div>

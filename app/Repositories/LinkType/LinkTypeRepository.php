@@ -54,8 +54,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      * @param LinkType $moveTo
      *
      * @return bool
-     *
-
+     * @throws \Exception
      */
     public function destroy(LinkType $linkType, LinkType $moveTo): bool
     {
@@ -71,8 +70,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      * @param TransactionJournalLink $link
      *
      * @return bool
-     *
-
+     * @throws \Exception
      */
     public function destroyLink(TransactionJournalLink $link): bool
     {
@@ -199,7 +197,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $link->save();
 
         // make note in noteable:
-        if (strlen($information['notes']) > 0) {
+        if (\strlen($information['notes']) > 0) {
             $dbNote = $link->notes()->first();
             if (null === $dbNote) {
                 $dbNote = new Note();

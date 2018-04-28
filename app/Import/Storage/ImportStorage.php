@@ -28,7 +28,6 @@ use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Import\Object\ImportJournal;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -56,10 +55,6 @@ class ImportStorage
     public $errors;
     /** @var Collection */
     public $journals;
-    /** @var BillRepositoryInterface */
-    protected $billRepository;
-    /** @var Collection */
-    protected $bills;
     /** @var int */
     protected $defaultCurrencyId = 1;
     /** @var ImportJob */
@@ -76,8 +71,6 @@ class ImportStorage
     private $dateFormat = 'Ymd';
     /** @var TransactionJournalFactory */
     private $factory;
-    /** @var bool */
-    private $matchBills = false;
     /** @var Collection */
     private $objects;
     /** @var int */
@@ -122,20 +115,13 @@ class ImportStorage
         $this->job               = $job;
         $this->transfers         = $this->getTransfers();
         $this->applyRules        = $config['apply-rules'] ?? false;
-        $this->matchBills        = $config['match-bills'] ?? false;
 
         if (true === $this->applyRules) {
             Log::debug('applyRules seems to be true, get the rules.');
             $this->rules = $this->getRules();
         }
-        if (true === $this->matchBills) {
-            Log::debug('matchBills seems to be true, get the bills');
-            $this->bills          = $this->getBills();
-            $this->billRepository = app(BillRepositoryInterface::class);
-            $this->billRepository->setUser($job->user);
-        }
+
         Log::debug(sprintf('Value of apply rules is %s', var_export($this->applyRules, true)));
-        Log::debug(sprintf('Value of match bills is %s', var_export($this->matchBills, true)));
     }
 
     /**
@@ -224,9 +210,14 @@ class ImportStorage
             $source      = $assetAccount;
             $destination = $opposingAccount;
 
+            // switch account arounds when the transaction type is a deposit.
             if ($transactionType === TransactionType::DEPOSIT) {
-                $destination = $assetAccount;
-                $source      = $opposingAccount;
+                [$destination, $source] = [$source, $destination];
+            }
+            // switch accounts around when the amount is negative and it's a transfer.
+            // credits to @NyKoF
+            if($transactionType === TransactionType::TRANSFER && -1 === bccomp($amount, '0')) {
+                [$destination, $source] = [$source, $destination];
             }
             Log::debug(
                 sprintf('Will make #%s (%s) the source and #%s (%s) the destination.', $source->id, $source->name, $destination->id, $destination->name)
@@ -256,12 +247,13 @@ class ImportStorage
                 'sepa-country'       => $importJournal->getMetaString('sepa-country'),
                 'sepa-ep'            => $importJournal->getMetaString('sepa-ep'),
                 'sepa-ci'            => $importJournal->getMetaString('sepa-ci'),
+                'importHash'         => $importJournal->hash,
                 'transactions'       => [
                     // single transaction:
                     [
                         'description'           => null,
                         'amount'                => $amount,
-                        'currency_id'           => (int)$currencyId,
+                        'currency_id'           => $currencyId,
                         'currency_code'         => null,
                         'foreign_amount'        => $foreignAmount,
                         'foreign_currency_id'   => $foreignCurrencyId,
@@ -300,16 +292,6 @@ class ImportStorage
             Log::info('Will NOT apply rules to this journal.');
         }
         $this->addStep();
-
-        // match bills if config calls for it.
-        if (true === $this->matchBills) {
-            Log::info('Will match bills.');
-            $this->matchBills($factoryJournal);
-        }
-
-        if (!(true === $this->matchBills)) {
-            Log::info('Cannot match bills (yet), but do not have to.');
-        }
         $this->addStep();
 
         Log::info(

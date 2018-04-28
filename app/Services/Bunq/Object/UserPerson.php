@@ -120,7 +120,7 @@ class UserPerson extends BunqObject
      */
     public function __construct(array $data)
     {
-        if (0 === count($data)) {
+        if (0 === \count($data)) {
             $this->created     = new Carbon;
             $this->updated     = new Carbon;
             $this->dateOfBirth = new Carbon;

@@ -150,7 +150,7 @@ class Modifier
      */
     public static function stringCompare(string $haystack, string $needle): bool
     {
-        $res = !(false === strpos(strtolower($haystack), strtolower($needle)));
+        $res = !(false === stripos($haystack, $needle));
         Log::debug(sprintf('"%s" is in "%s"? %s', $needle, $haystack, var_export($res, true)));
 
         return $res;

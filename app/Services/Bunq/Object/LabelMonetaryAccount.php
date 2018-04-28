@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Object;
 
+use FireflyIII\Exceptions\FireflyException;
 
 /**
  * Class LabelMonetaryAccount
@@ -49,15 +50,15 @@ class LabelMonetaryAccount extends BunqObject
     {
         $this->iban      = $data['iban'];
         $this->isLight   = $data['is_light'];
-        $this->avatar    = new Avatar($data['avatar']);
+        $this->avatar    = isset($data['avatar']) ? new Avatar($data['avatar']) : null;
         $this->labelUser = new LabelUser($data['label_user']);
         $this->country   = $data['country'];
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getIban(): string
+    public function getIban(): ?string
     {
         return $this->iban;
     }
@@ -72,10 +73,11 @@ class LabelMonetaryAccount extends BunqObject
 
     /**
      * @return array
+     * @throws FireflyException
      */
     public function toArray(): array
     {
-        die(sprintf('Cannot convert %s to array.', get_class($this)));
+        throw new FireflyException(sprintf('Cannot convert %s to array.', \get_class($this)));
     }
 
 }

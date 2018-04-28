@@ -52,10 +52,10 @@ class OpposingAccountIbans implements MapperInterface
         foreach ($set as $account) {
             $iban      = $account->iban ?? '';
             $accountId = (int)$account->id;
-            if (strlen($iban) > 0) {
+            if (\strlen($iban) > 0) {
                 $topList[$accountId] = $account->iban . ' (' . $account->name . ')';
             }
-            if (0 === strlen($iban)) {
+            if (0 === \strlen($iban)) {
                 $list[$accountId] = $account->name;
             }
         }

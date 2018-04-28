@@ -85,7 +85,7 @@ class Handler extends ExceptionHandler
                 return response()->json(
                     [
                         'message'   => $exception->getMessage(),
-                        'exception' => get_class($exception),
+                        'exception' => \get_class($exception),
                         'line'      => $exception->getLine(),
                         'file'      => $exception->getFile(),
                         'trace'     => $exception->getTrace(),
@@ -93,7 +93,7 @@ class Handler extends ExceptionHandler
                 );
             }
 
-            return response()->json(['message' => 'Internal Firefly III Exception. See log files.', 'exception' => get_class($exception)], 500);
+            return response()->json(['message' => 'Internal Firefly III Exception. See log files.', 'exception' => \get_class($exception)], 500);
         }
 
         if ($exception instanceof FireflyException || $exception instanceof ErrorException) {
@@ -131,7 +131,7 @@ class Handler extends ExceptionHandler
                 $userData['email'] = auth()->user()->email;
             }
             $data = [
-                'class'        => get_class($exception),
+                'class'        => \get_class($exception),
                 'errorMessage' => $exception->getMessage(),
                 'time'         => date('r'),
                 'stackTrace'   => $exception->getTraceAsString(),

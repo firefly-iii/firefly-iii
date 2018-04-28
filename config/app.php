@@ -23,17 +23,17 @@ declare(strict_types=1);
 
 
 return [
-    'name'            => env('APP_NAME', 'Firefly III'),
-    'env'             => env('APP_ENV', 'production'),
+    'name'            => envNonEmpty('APP_NAME', 'Firefly III'),
+    'env'             => envNonEmpty('APP_ENV', 'production'),
     'debug'           => env('APP_DEBUG', false),
-    'url'             => env('APP_URL', 'http://localhost'),
-    'timezone'        => env('TZ', 'UTC'),
+    'url'             => envNonEmpty('APP_URL', 'http://localhost'),
+    'timezone'        => envNonEmpty('TZ', 'UTC'),
     'locale'          => 'en_US',
     'fallback_locale' => 'en_US',
     'key'             => env('APP_KEY'),
     'cipher'          => 'AES-256-CBC',
-    'log'             => env('APP_LOG', 'errorlog'),
-    'log_level'       => env('APP_LOG_LEVEL', 'info'),
+    'log'             => envNonEmpty('APP_LOG', 'errorlog'),
+    'log_level'       => envNonEmpty('APP_LOG_LEVEL', 'info'),
     'providers'       => [
 
         /*

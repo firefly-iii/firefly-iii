@@ -27,6 +27,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use FireflyIII\User;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 
 /**
  * Class Category.
@@ -135,7 +138,7 @@ class Category extends Model
      */
     public function transactionJournals()
     {
-        return $this->belongsToMany('FireflyIII\Models\TransactionJournal', 'category_transaction_journal', 'category_id');
+        return $this->belongsToMany(TransactionJournal::class, 'category_transaction_journal', 'category_id');
     }
 
     /**
@@ -144,7 +147,7 @@ class Category extends Model
      */
     public function transactions()
     {
-        return $this->belongsToMany('FireflyIII\Models\Transaction', 'category_transaction', 'category_id');
+        return $this->belongsToMany(Transaction::class, 'category_transaction', 'category_id');
     }
 
     /**
@@ -153,6 +156,6 @@ class Category extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo('FireflyIII\User');
+        return $this->belongsTo(User::class);
     }
 }

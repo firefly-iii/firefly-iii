@@ -27,6 +27,11 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\Category;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Account;
 
 /**
  * Class Transaction.
@@ -149,7 +154,7 @@ class Transaction extends Model
      */
     public function account()
     {
-        return $this->belongsTo('FireflyIII\Models\Account');
+        return $this->belongsTo(Account::class);
     }
 
     /**
@@ -158,7 +163,7 @@ class Transaction extends Model
      */
     public function budgets()
     {
-        return $this->belongsToMany('FireflyIII\Models\Budget');
+        return $this->belongsToMany(Budget::class);
     }
 
     /**
@@ -167,7 +172,7 @@ class Transaction extends Model
      */
     public function categories()
     {
-        return $this->belongsToMany('FireflyIII\Models\Category');
+        return $this->belongsToMany(Category::class);
     }
 
     /**
@@ -176,7 +181,7 @@ class Transaction extends Model
      */
     public function foreignCurrency()
     {
-        return $this->belongsTo('FireflyIII\Models\TransactionCurrency', 'foreign_currency_id');
+        return $this->belongsTo(TransactionCurrency::class, 'foreign_currency_id');
     }
 
     /**
@@ -253,7 +258,7 @@ class Transaction extends Model
      */
     public function transactionCurrency()
     {
-        return $this->belongsTo('FireflyIII\Models\TransactionCurrency');
+        return $this->belongsTo(TransactionCurrency::class);
     }
 
     /**
@@ -262,6 +267,6 @@ class Transaction extends Model
      */
     public function transactionJournal()
     {
-        return $this->belongsTo('FireflyIII\Models\TransactionJournal');
+        return $this->belongsTo(TransactionJournal::class);
     }
 }

@@ -117,7 +117,7 @@ class AttachmentController extends Controller
                 ->header('Expires', '0')
                 ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
                 ->header('Pragma', 'public')
-                ->header('Content-Length', strlen($content));
+                ->header('Content-Length', \strlen($content));
 
             return $response;
         }
@@ -145,6 +145,24 @@ class AttachmentController extends Controller
         $request->session()->flash('preFilled', $preFilled);
 
         return view('attachments.edit', compact('attachment', 'subTitleIcon', 'subTitle'));
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index()
+    {
+        $set = $this->repository->get()->reverse();
+        $set = $set->each(
+            function (Attachment $attachment) {
+                $attachment->file_exists = $this->repository->exists($attachment);
+
+                return $attachment;
+            }
+        );
+
+
+        return view('attachments.index', compact('set'));
     }
 
     /**

@@ -26,6 +26,20 @@
                                 {{ ExpandedForm.text('api_key', key) }}
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <p>
+                                    {{ trans('import.bunq_prerequisites_text_ip')|raw }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-8">
+                                {{ ExpandedForm.text('external_ip', ip) }}
+                            </div>
+                        </div>
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="btn pull-right btn-success">

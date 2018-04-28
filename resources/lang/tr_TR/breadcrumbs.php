@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * breadcrumbs.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com

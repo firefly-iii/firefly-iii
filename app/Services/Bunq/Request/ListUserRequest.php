@@ -59,7 +59,6 @@ class ListUserRequest extends BunqRequest
         $this->userCompany = new UserCompany($company);
         $this->userPerson  = new UserPerson($person);
 
-        return;
     }
 
     /**

@@ -41,7 +41,6 @@ class ListTransactionsRequest extends SpectreRequest
 
     /**
      * @throws FireflyException
-     * @throws SpectreException
      */
     public function call(): void
     {
@@ -50,11 +49,11 @@ class ListTransactionsRequest extends SpectreRequest
         while ($hasNextPage) {
             Log::debug(sprintf('Now calling ListTransactionsRequest for next_id %d', $nextId));
             $parameters = ['from_id' => $nextId, 'account_id' => $this->account->getId()];
-            $uri        = '/api/v3/transactions?' . http_build_query($parameters);
+            $uri        = '/api/v4/transactions?' . http_build_query($parameters);
             $response   = $this->sendSignedSpectreGet($uri, []);
 
             // count entries:
-            Log::debug(sprintf('Found %d entries in data-array', count($response['data'])));
+            Log::debug(sprintf('Found %d entries in data-array', \count($response['data'])));
 
             // extract next ID
             $hasNextPage = false;

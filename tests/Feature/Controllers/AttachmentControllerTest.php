@@ -43,7 +43,7 @@ class AttachmentControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', get_class($this)));
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -55,7 +55,7 @@ class AttachmentControllerTest extends TestCase
         // mock stuff
         $attachRepository = $this->mock(AttachmentRepositoryInterface::class);
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $this->be($this->user());
         $response = $this->get(route('attachments.delete', [1]));
         $response->assertStatus(200);
@@ -72,7 +72,7 @@ class AttachmentControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AttachmentRepositoryInterface::class);
         $repository->shouldReceive('destroy')->andReturn(true);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->session(['attachments.delete.uri' => 'http://localhost']);
         $this->be($this->user());
@@ -91,7 +91,7 @@ class AttachmentControllerTest extends TestCase
         $repository   = $this->mock(AttachmentRepositoryInterface::class);
         $repository->shouldReceive('exists')->once()->andReturn(true);
         $repository->shouldReceive('getContent')->once()->andReturn('This is attachment number one.');
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('attachments.download', [1]));
@@ -110,7 +110,7 @@ class AttachmentControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AttachmentRepositoryInterface::class);
         $repository->shouldReceive('exists')->once()->andReturn(false);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('attachments.download', [1]));
@@ -125,7 +125,7 @@ class AttachmentControllerTest extends TestCase
         $attachRepository = $this->mock(AttachmentRepositoryInterface::class);
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $attachRepository->shouldReceive('getNoteText')->andReturn('OK');
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $this->be($this->user());
         $response = $this->get(route('attachments.edit', [1]));
         $response->assertStatus(200);
@@ -142,7 +142,7 @@ class AttachmentControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AttachmentRepositoryInterface::class);
         $repository->shouldReceive('update')->once();
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->session(['attachments.edit.uri' => 'http://localhost']);
         $data = [
@@ -168,7 +168,7 @@ class AttachmentControllerTest extends TestCase
         $repository->shouldReceive('getContent')->once()->andReturn('This is attachment number one.');
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $this->be($this->user());
         $response = $this->get(route('attachments.view', [3]));
         $response->assertStatus(200);
@@ -184,7 +184,7 @@ class AttachmentControllerTest extends TestCase
         $repository->shouldReceive('exists')->once()->andReturn(false);
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $this->be($this->user());
         $response = $this->get(route('attachments.view', [1]));
         $response->assertStatus(500);

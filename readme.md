@@ -37,8 +37,7 @@
 [![Overview of all budgets](https://firefly-iii.org/static/screenshots/4.7.0/tiny/budget.png)](https://firefly-iii.org/static/screenshots/4.7.0/budget.png) [![Overview of a category](https://firefly-iii.org/static/screenshots/4.7.0/tiny/category.png)](https://firefly-iii.org/static/screenshots/4.7.0/category.png)
 
 ### Purpose
-Personal financial management is pretty difficult, and everybody has their own approach to it. Some people make budgets, other people limit their cashflow by throwing away their credit cards, 
-others try to increase their current cashflow. There are tons of ways to save and earn money. Firefly III works on the principle that if you know where you're money is going, you can stop it from going there.
+Personal financial management is pretty difficult, and everybody has their own approach to it. Some people make budgets, other people limit their cashflow by throwing away their credit cards,  others try to increase their current cashflow. There are tons of ways to save and earn money. Firefly III works on the principle that if you know where you're money is going, you can stop it from going there.
 
 By keeping track of your expenses and your income you can budget accordingly and save money. Stop living from paycheck to paycheck but give yourself the financial wiggle room you need.
 
@@ -109,6 +108,8 @@ Of course there are some [contributing guidelines](https://github.com/firefly-ii
 
 I can always use your help [squashing bugs](http://firefly-iii.readthedocs.io/en/latest/support/contribute.html#bugs), thinking about [new features](http://firefly-iii.readthedocs.io/en/latest/support/contribute.html#feature-requests) or [translating Firefly III](http://firefly-iii.readthedocs.io/en/latest/support/contribute.html#translations) into other languages.
 
+For all other contributions, see below.
+
 ## The goal
 Firefly III should give you **insight** into and **control** over your finances. Money should be useful, not scary. You should be able to *see* where it is going, to *feel* your expenses and to... wow, I'm going overboard with this aren't I?
 
@@ -127,7 +128,9 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 This work [is licensed](https://github.com/firefly-iii/firefly-iii/blob/master/LICENSE) under the [GPL v3](https://www.gnu.org/licenses/gpl.html).
 
 ### Donate
-If you like Firefly III and if it helps you save lots of money, why not send me [a dime for every dollar saved](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) (this is a joke, although the Paypal form works just fine, try it!)
+If you like Firefly III and if it helps you save lots of money, why not send me a dime for every dollar saved!
+
+OK that was a joke. Thank you for considering donating to Firefly III! Please checkout [my Patreon page](https://www.patreon.com/jc5) or visit [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA).
 
 ### Alternatives
 If you are looking for alternatives, check out [Kickball's Awesome-Selfhosted list](https://github.com/Kickball/awesome-selfhosted) which features not only Firefly III but also noteworthy alternatives such as [Silverstrike](https://github.com/agstrike/silverstrike).

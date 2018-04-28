@@ -185,13 +185,13 @@ class CategoryController extends Controller
         // prep for "all" view.
         if ('all' === $moment) {
             $subTitle = trans('firefly.all_journals_without_category');
-            $first    = $this->journalRepos->first();
-            $start    = $first->date ?? new Carbon;
+            $first    = $this->journalRepos->firstNull();
+            $start    = null === $first ? new Carbon : $first->date;
             $end      = new Carbon;
         }
 
         // prep for "specific date" view.
-        if (strlen($moment) > 0 && 'all' !== $moment) {
+        if ('all' !== $moment && \strlen($moment) > 0) {
             $start    = app('navigation')->startOfPeriod(new Carbon($moment), $range);
             $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
@@ -202,7 +202,7 @@ class CategoryController extends Controller
         }
 
         // prep for current period
-        if (0 === strlen($moment)) {
+        if ('' === $moment) {
             $start    = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
             $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
             $periods  = $this->getNoCategoryPeriodOverview($start);
@@ -255,7 +255,7 @@ class CategoryController extends Controller
         }
 
         // prep for "specific date" view.
-        if (strlen($moment) > 0 && 'all' !== $moment) {
+        if (\strlen($moment) > 0 && 'all' !== $moment) {
             $start    = app('navigation')->startOfPeriod(new Carbon($moment), $range);
             $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
@@ -268,7 +268,7 @@ class CategoryController extends Controller
         }
 
         // prep for current period
-        if (0 === strlen($moment)) {
+        if (0 === \strlen($moment)) {
             /** @var Carbon $start */
             $start = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
             /** @var Carbon $end */
@@ -351,8 +351,8 @@ class CategoryController extends Controller
     private function getNoCategoryPeriodOverview(Carbon $theDate): Collection
     {
         $range = Preferences::get('viewRange', '1M')->data;
-        $first = $this->journalRepos->first();
-        $start = $first->date ?? new Carbon;
+        $first = $this->journalRepos->firstNull();
+        $start = null === $first ? new Carbon : $first->date;
         $end   = $theDate ?? new Carbon;
 
         // properties for cache
@@ -431,8 +431,8 @@ class CategoryController extends Controller
     private function getPeriodOverview(Category $category, Carbon $date): Collection
     {
         $range    = Preferences::get('viewRange', '1M')->data;
-        $first    = $this->journalRepos->first();
-        $start    = $first->date ?? new Carbon;
+        $first    = $this->journalRepos->firstNull();
+        $start    = null === $first ? new Carbon : $first->date;
         $end      = $date ?? new Carbon;
         $accounts = $this->accountRepos->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
 

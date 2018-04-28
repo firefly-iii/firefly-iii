@@ -17,9 +17,8 @@
                 </div>
                 <div class="box-body">
                     {{ ExpandedForm.text('name') }}
-                    {% if account.accounttype.type == 'Default account' or account.accounttype.type == 'Asset account' %}
-                        {# Not really mandatory but OK #}
-                        {{ ExpandedForm.select('currency_id', currencySelectList) }}
+                    {% if account.accountType.type == 'Default account' or account.accountType.type == 'Asset account' %}
+                        {{ ExpandedForm.currencyList('currency_id', null, {helpText:'account_default_currency'|_}) }}
                     {% endif %}
                 </div>
             </div>
@@ -42,10 +41,10 @@
                     {% if account.accounttype.type == 'Default account' or account.accounttype.type == 'Asset account' %}
 
                         {# get opening balance entry for this thing! #}
-                        {{ ExpandedForm.nonSelectableBalance('openingBalance',null, {'currency' : currency }) }}
+                        {{ ExpandedForm.amountNoCurrency('openingBalance',null) }}
                         {{ ExpandedForm.date('openingBalanceDate') }}
                         {{ ExpandedForm.select('accountRole', roles) }}
-                        {{ ExpandedForm.nonSelectableBalance('virtualBalance',null, {'currency' : currency }) }}
+                        {{ ExpandedForm.amountNoCurrency('virtualBalance',null) }}
 
                     {% endif %}
                     {{ ExpandedForm.textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
@@ -87,15 +86,6 @@
 {% block scripts %}
     <script type="text/javascript" src="js/lib/modernizr-custom.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="js/lib/jquery-ui.min.js?v={{ FF_VERSION }}"></script>
-
-    {# JS currency list for update thing #}
-    <script type="text/javascript">
-        var currencies = [];
-        {% for currency in allCurrencies %}
-        currencies[{{ currency.id }}] = "{{ currency.symbol }}";
-        {% endfor %}
-    </script>
-
     <script type="text/javascript" src="js/ff/accounts/edit.js?v={{ FF_VERSION }}"></script>
 {% endblock %}
 

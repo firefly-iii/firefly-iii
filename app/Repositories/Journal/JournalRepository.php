@@ -60,19 +60,30 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function convert(TransactionJournal $journal, TransactionType $type, Account $source, Account $destination): MessageBag
     {
-        // default message bag that shows errors for everything.
-        $messages = new MessageBag;
-        $messages->add('source_account_revenue', trans('firefly.invalid_convert_selection'));
-        $messages->add('destination_account_asset', trans('firefly.invalid_convert_selection'));
-        $messages->add('destination_account_expense', trans('firefly.invalid_convert_selection'));
-        $messages->add('source_account_asset', trans('firefly.invalid_convert_selection'));
-
         if ($source->id === $destination->id || null === $source->id || null === $destination->id) {
+            // default message bag that shows errors for everything.
+            $messages = new MessageBag;
+            $messages->add('source_account_revenue', trans('firefly.invalid_convert_selection'));
+            $messages->add('destination_account_asset', trans('firefly.invalid_convert_selection'));
+            $messages->add('destination_account_expense', trans('firefly.invalid_convert_selection'));
+            $messages->add('source_account_asset', trans('firefly.invalid_convert_selection'));
+
             return $messages;
         }
 
-        $sourceTransaction             = $journal->transactions()->where('amount', '<', 0)->first();
-        $destinationTransaction        = $journal->transactions()->where('amount', '>', 0)->first();
+        $sourceTransaction      = $journal->transactions()->where('amount', '<', 0)->first();
+        $destinationTransaction = $journal->transactions()->where('amount', '>', 0)->first();
+        if (null === $sourceTransaction || null === $destinationTransaction) {
+            // default message bag that shows errors for everything.
+
+            $messages = new MessageBag;
+            $messages->add('source_account_revenue', trans('firefly.source_or_dest_invalid'));
+            $messages->add('destination_account_asset', trans('firefly.source_or_dest_invalid'));
+            $messages->add('destination_account_expense', trans('firefly.source_or_dest_invalid'));
+            $messages->add('source_account_asset', trans('firefly.source_or_dest_invalid'));
+
+            return $messages;
+        }
         $sourceTransaction->account_id = $source->id;
         $sourceTransaction->save();
         $destinationTransaction->account_id = $destination->id;
@@ -83,6 +94,10 @@ class JournalRepository implements JournalRepositoryInterface
         // if journal is a transfer now, remove budget:
         if (TransactionType::TRANSFER === $type->type) {
             $journal->budgets()->detach();
+            // also from transactions:
+            foreach ($journal->transactions as $transaction) {
+                $transaction->budgets()->detach();
+            }
         }
 
         Preferences::mark();
@@ -130,6 +145,18 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         return $journal;
+    }
+
+    /**
+     * Find a specific journal.
+     *
+     * @param int $journalId
+     *
+     * @return TransactionJournal|null
+     */
+    public function findNull(int $journalId): ?TransactionJournal
+    {
+        return $this->user->transactionJournals()->where('id', $journalId)->first();
     }
 
     /**
@@ -440,7 +467,7 @@ class JournalRepository implements JournalRepositoryInterface
         $value = $entry->data;
 
         // return when array:
-        if (is_array($value)) {
+        if (\is_array($value)) {
             $return = implode(',', $value);
             $cache->store($return);
 
@@ -634,7 +661,6 @@ class JournalRepository implements JournalRepositoryInterface
             ]
         );
 
-        return;
     }
 
     /**
@@ -656,7 +682,6 @@ class JournalRepository implements JournalRepositoryInterface
             ]
         );
 
-        return;
     }
 
     /**

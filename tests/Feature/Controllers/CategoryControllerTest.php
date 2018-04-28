@@ -52,7 +52,7 @@ class CategoryControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', get_class($this)));
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -64,7 +64,7 @@ class CategoryControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
 
         $this->be($this->user());
         $response = $this->get(route('categories.create'));
@@ -82,7 +82,7 @@ class CategoryControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
 
         $this->be($this->user());
         $response = $this->get(route('categories.delete', [1]));
@@ -100,7 +100,7 @@ class CategoryControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
 
         $categoryRepos->shouldReceive('destroy')->andReturn(true);
 
@@ -120,7 +120,7 @@ class CategoryControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
 
         $this->be($this->user());
         $response = $this->get(route('categories.edit', [1]));
@@ -140,7 +140,7 @@ class CategoryControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
         $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]))->once();
         $categoryRepos->shouldReceive('lastUseDate')->andReturn(new Carbon)->once();
 
@@ -165,7 +165,7 @@ class CategoryControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->twice()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->twice()->andReturn(TransactionJournal::first());
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setTypes')->andReturnSelf();
@@ -202,7 +202,7 @@ class CategoryControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->twice()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->twice()->andReturn(TransactionJournal::first());
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setTypes')->andReturnSelf();
@@ -238,7 +238,7 @@ class CategoryControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->twice()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->twice()->andReturn(TransactionJournal::first());
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setTypes')->andReturnSelf();
@@ -281,7 +281,7 @@ class CategoryControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->twice()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->twice()->andReturn(TransactionJournal::first());
 
         // mock stuff
         $categoryRepos->shouldReceive('spentInPeriod')->andReturn('0');
@@ -345,7 +345,7 @@ class CategoryControllerTest extends TestCase
         $collector->shouldReceive('setCategory')->andReturnSelf()->once();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10))->once();
 
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon);
 
         $this->be($this->user());
@@ -370,7 +370,7 @@ class CategoryControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->twice()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->twice()->andReturn(TransactionJournal::first());
 
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
 
@@ -392,7 +392,9 @@ class CategoryControllerTest extends TestCase
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('categories.show', [1, '2015-01-01']));
+        $today = new Carbon();
+        $today->subDay();
+        $response = $this->get(route('categories.show', [1, $today->format('Y-m-d')]));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
     }
@@ -408,7 +410,7 @@ class CategoryControllerTest extends TestCase
     public function testShowEmpty(string $range)
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->twice()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->twice()->andReturn(TransactionJournal::first());
 
         // mock stuff
         $repository = $this->mock(CategoryRepositoryInterface::class);
@@ -449,7 +451,7 @@ class CategoryControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
         $repository->shouldReceive('findNull')->andReturn(new Category);
         $repository->shouldReceive('store')->andReturn(new Category);
 
@@ -474,7 +476,7 @@ class CategoryControllerTest extends TestCase
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
         $repository->shouldReceive('update');
         $repository->shouldReceive('findNull')->andReturn($category);
 

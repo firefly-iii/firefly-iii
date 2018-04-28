@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * breadcrumbs.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -29,7 +30,7 @@ return [
     'preferences'         => 'Einstellungen',
     'profile'             => 'Profil',
     'changePassword'      => 'Passwort ändern',
-    'change_email'        => 'E-Mail Adresse ändern',
+    'change_email'        => 'E-Mail-Adresse ändern',
     'bills'               => 'Rechnungen',
     'newBill'             => 'Neue Rechnung',
     'edit_bill'           => 'Rechnung „:name” bearbeiten',
@@ -45,7 +46,7 @@ return [
     'create_deposit'      => 'Neue Einnahme erstellen',
     'create_transfer'     => 'Umbuchung erstellen',
     'edit_journal'        => 'Transaktion ":description" bearbeiten',
-    'edit_reconciliation' => '":description" bearbeiten',
+    'edit_reconciliation' => '„:description” bearbeiten',
     'delete_journal'      => 'Transaktion ":description" löschen',
     'tags'                => 'Schlagwörter',
     'createTag'           => 'Neues Schlagwort erstellen',

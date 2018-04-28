@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\PiggyBank;
 
 /**
  * Class PiggyBankEvent.
@@ -59,7 +61,7 @@ class PiggyBankEvent extends Model
      */
     public function piggyBank()
     {
-        return $this->belongsTo('FireflyIII\Models\PiggyBank');
+        return $this->belongsTo(PiggyBank::class);
     }
 
     /**
@@ -78,6 +80,6 @@ class PiggyBankEvent extends Model
      */
     public function transactionJournal()
     {
-        return $this->belongsTo('FireflyIII\Models\TransactionJournal');
+        return $this->belongsTo(TransactionJournal::class);
     }
 }

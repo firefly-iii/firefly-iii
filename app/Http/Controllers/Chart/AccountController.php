@@ -228,7 +228,7 @@ class AccountController extends Controller
         Log::debug('Default set is ', $defaultSet);
         $frontPage = Preferences::get('frontPageAccounts', $defaultSet);
         Log::debug('Frontpage preference set is ', $frontPage->data);
-        if (0 === count($frontPage->data)) {
+        if (0 === \count($frontPage->data)) {
             $frontPage->data = $defaultSet;
             Log::debug('frontpage set is empty!');
             $frontPage->save();
@@ -349,7 +349,7 @@ class AccountController extends Controller
                     $balance           = (float)app('steam')->balance($account, $current);
                     $label             = app('navigation')->periodShow($current, $step);
                     $chartData[$label] = $balance;
-                    $current           = app('navigation')->addPeriod($current, $step, 1);
+                    $current           = app('navigation')->addPeriod($current, $step, 0);
                 }
                 break;
             // @codeCoverageIgnoreEnd
@@ -439,15 +439,19 @@ class AccountController extends Controller
 
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app(CurrencyRepositoryInterface::class);
-
-        $chartData = [];
+        $default    = app('amount')->getDefaultCurrency();
+        $chartData  = [];
         foreach ($accounts as $account) {
-            $currency     = $repository->findNull((int)$account->getMeta('currency_id'));
-            $currentSet   = [
+            $currency = $repository->findNull((int)$account->getMeta('currency_id'));
+            if (null === $currency) {
+                $currency = $default;
+            }
+            $currentSet = [
                 'label'           => $account->name,
                 'currency_symbol' => $currency->symbol,
                 'entries'         => [],
             ];
+
             $currentStart = clone $start;
             $range        = app('steam')->balanceInRange($account, $start, clone $end);
             $previous     = array_values($range)[0];

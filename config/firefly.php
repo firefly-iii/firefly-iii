@@ -9,6 +9,7 @@ use FireflyIII\TransactionRules\Actions\AppendNotes;
 use FireflyIII\TransactionRules\Actions\ClearBudget;
 use FireflyIII\TransactionRules\Actions\ClearCategory;
 use FireflyIII\TransactionRules\Actions\ClearNotes;
+use FireflyIII\TransactionRules\Actions\LinkToBill;
 use FireflyIII\TransactionRules\Actions\PrependDescription;
 use FireflyIII\TransactionRules\Actions\PrependNotes;
 use FireflyIII\TransactionRules\Actions\RemoveAllTags;
@@ -24,6 +25,7 @@ use FireflyIII\TransactionRules\Triggers\AmountLess;
 use FireflyIII\TransactionRules\Triggers\AmountMore;
 use FireflyIII\TransactionRules\Triggers\BudgetIs;
 use FireflyIII\TransactionRules\Triggers\CategoryIs;
+use FireflyIII\TransactionRules\Triggers\CurrencyIs;
 use FireflyIII\TransactionRules\Triggers\DescriptionContains;
 use FireflyIII\TransactionRules\Triggers\DescriptionEnds;
 use FireflyIII\TransactionRules\Triggers\DescriptionIs;
@@ -86,9 +88,9 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'     => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
-    'version'        => '4.7.2.2',
-    'api_version'    => '0.1',
-    'db_version'     => 2,
+    'version'        => '4.7.3',
+    'api_version'    => '0.3',
+    'db_version'     => 3,
     'maxUploadSize'  => 15242880,
     'allowedMimes'   => [
         /* plain files */
@@ -163,7 +165,7 @@ return [
     'default_export_format'    => 'csv',
     'default_import_format'    => 'csv',
     'bill_periods'             => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
-    'accountRoles'             => ['defaultAsset', 'sharedAsset', 'savingAsset', 'ccAsset',],
+    'accountRoles'             => ['defaultAsset', 'sharedAsset', 'savingAsset', 'ccAsset', 'cashWalletAsset'],
     'ccTypes'                  => [
         'monthlyFull' => 'Full payment every month',
     ],
@@ -294,6 +296,7 @@ return [
         'journalList'       => \FireflyIII\Support\Binder\JournalList::class,
         'categoryList'      => \FireflyIII\Support\Binder\CategoryList::class,
         'tagList'           => \FireflyIII\Support\Binder\TagList::class,
+        'simpleJournalList' => \FireflyIII\Support\Binder\SimpleJournalList::class,
 
         // others
         'fromCurrencyCode'  => \FireflyIII\Support\Binder\CurrencyCode::class,
@@ -323,6 +326,7 @@ return [
         'category_is'           => CategoryIs::class,
         'budget_is'             => BudgetIs::class,
         'tag_is'                => TagIs::class,
+        'currency_is'           => CurrencyIs::class,
         'has_attachments'       => HasAttachment::class,
         'has_no_category'       => HasNoCategory::class,
         'has_any_category'      => HasAnyCategory::class,
@@ -354,12 +358,14 @@ return [
         'append_notes'            => AppendNotes::class,
         'prepend_notes'           => PrependNotes::class,
         'clear_notes'             => ClearNotes::class,
+        'link_to_bill'            => LinkToBill::class,
     ],
     'rule-actions-text'        => [
         'set_category',
         'set_budget',
         'add_tag',
         'remove_tag',
+        'link_to_bill',
         'set_description',
         'append_description',
         'prepend_description',

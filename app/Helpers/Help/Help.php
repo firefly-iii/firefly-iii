@@ -80,7 +80,7 @@ class Help implements HelpInterface
             $content = trim($result->body);
         }
 
-        if (strlen($content) > 0) {
+        if (\strlen($content) > 0) {
             Log::debug('Content is longer than zero. Expect something.');
             $converter = new CommonMarkConverter();
             $content   = $converter->convertToHtml($content);
@@ -127,7 +127,7 @@ class Help implements HelpInterface
     public function putInCache(string $route, string $language, string $content)
     {
         $key = sprintf(self::CACHEKEY, $route, $language);
-        if (strlen($content) > 0) {
+        if (\strlen($content) > 0) {
             Log::debug(sprintf('Will store entry in cache: %s', $key));
             Cache::put($key, $content, 10080); // a week.
 

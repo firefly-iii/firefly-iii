@@ -139,10 +139,10 @@ class Preferences
             } catch (Exception $e) {
                 Log::debug(sprintf('Could not delete preference #%d', $preference->id));
             }
-            $preference = false;
+            $preference = null;
         }
 
-        if ($preference) {
+        if (null !== $preference) {
             Cache::forever($fullName, $preference);
 
             return $preference;
@@ -208,7 +208,7 @@ class Preferences
     /**
      * @param \FireflyIII\User $user
      * @param                  $name
-     * @param string           $value
+     * @param mixed           $value
      *
      * @return Preference
      */

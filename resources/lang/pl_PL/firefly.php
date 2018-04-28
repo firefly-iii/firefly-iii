@@ -267,7 +267,10 @@ return [
     'move_rule_group_down'                       => 'Przenieś grupę reguł w dół',
     'save_rules_by_moving'                       => 'Zapisz te reguły, przenosząc je do innej grupy reguł:',
     'make_new_rule'                              => 'Utwórz nową regułę w grupie reguł ":title"',
+    'rule_is_strict'                             => 'ścisła reguła',
+    'rule_is_not_strict'                         => 'swobodna reguła',
     'rule_help_stop_processing'                  => 'Gdy zaznaczysz to pole, kolejne reguły w tej grupie nie będą wykonywane.',
+    'rule_help_strict'                           => 'W ścisłych regułach WSZYSTKIE wyzwalacze muszą się aktywować aby akcje zostały wykonane. W swobodnych regułach DOWOLNY wyzwalacz wystarcza do wykonania akcji.',
     'rule_help_active'                           => 'Nieaktywne reguły nigdy nie zostaną uruchomione.',
     'stored_new_rule'                            => 'Zapisano regułę o nazwie ":title"',
     'deleted_rule'                               => 'Usunięto regułę o nazwie ":title"',
@@ -345,6 +348,8 @@ return [
     'rule_trigger_budget_is'                     => 'Budżet to ":trigger_value"',
     'rule_trigger_tag_is_choice'                 => 'Tag to..',
     'rule_trigger_tag_is'                        => 'Tag to ":trigger_value"',
+    'rule_trigger_currency_is_choice'            => 'Waluta transakcji to..',
+    'rule_trigger_currency_is'                   => 'Waluta transakcji to ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Ma co najmniej podaną liczbę załączników',
     'rule_trigger_has_attachments'               => 'Ma co najmniej :trigger_value załącznik(ów)',
     'rule_trigger_store_journal'                 => 'Po utworzeniu transakcji',
@@ -404,10 +409,20 @@ return [
     'rule_action_clear_notes_choice'             => 'Usuń wszystkie notatki',
     'rule_action_clear_notes'                    => 'Usuń wszystkie notatki',
     'rule_action_set_notes_choice'               => 'Ustaw notatki na..',
+    'rule_action_link_to_bill_choice'            => 'Powiąż z rachunkiem..',
+    'rule_action_link_to_bill'                   => 'Powiąż z rachunkiem ":action_value"',
     'rule_action_set_notes'                      => 'Ustaw notatki na ":action_value"',
 
     'rules_have_read_warning'                 => 'Czy przeczytałeś ostrzeżenie?',
     'apply_rule_warning'                      => 'Ostrzeżenie: uruchomienie reguły (lub grupy reguł) na dużej liczbie transakcji może potrwać wieki i może przekroczyć limit czasu. W takiej sytuacji reguła (lub grupa reguł) zostanie zastosowana do nieznanego podzbioru Twoich transakcji. To może zostawić Twoją administrację finansową w strzępach. Proszę, bądź ostrożny.',
+    'rulegroup_for_bills_title'               => 'Grupa reguł dla rachunków',
+    'rulegroup_for_bills_description'         => 'Specjalna grupa reguł dla wszystkich reguł dotyczących rachunków.',
+    'rule_for_bill_title'                     => 'Automatycznie wygenerowana reguła dla rachunku ":name"',
+    'rule_for_bill_description'               => 'Ta reguła została automatycznie wygenerowana, aby spróbować dopasować rachunek ":name".',
+    'create_rule_for_bill'                    => 'Utwórz nową regułę dla rachunku ":name"',
+    'create_rule_for_bill_txt'                => 'Właśnie utworzyłeś nowy rachunek o nazwie ":name". Gratulacje! Firefly III może automagicznie dopasować nowe wypłaty do tego rachunku. Na przykład za każdym razem, gdy płacisz czynsz, rachunek "czynsz" zostanie powiązany z wydatkiem. W ten sposób Firefly III może dokładnie pokazać, które rachunki są jeszcze do zapłacenia, a które nie. W tym celu należy utworzyć nową regułę. Firefly III wypełnił dla Ciebie pewne rozsądne domyślne ustawienia. Upewnij się, że są poprawne. Jeśli są, Firefly III automatycznie połączy pasującą wypłatę z prawidłowym rachunkiem. Sprawdź wyzwalacze czy są poprawne i dodaj kolejne jeśli są błędne.',
+    'new_rule_for_bill_title'                 => 'Reguła dla rachunku ":name"',
+    'new_rule_for_bill_description'           => 'Ta reguła oznacza transakcje jako powiązane z rachunkiem ":name".',
 
     // tags
     'store_new_tag'                           => 'Zachowaj nowy tag',
@@ -440,7 +455,7 @@ return [
     'pref_custom_fiscal_year_help'            => 'W krajach, w których rok podatkowy nie zaczyna się 1 stycznia i nie kończy 31 grudnia, możesz włączyć tą opcję oraz podać początek / koniec roku podatkowego',
     'pref_fiscal_year_start_label'            => 'Początek roku podatkowego',
     'pref_two_factor_auth'                    => 'Weryfikacja dwuetapowa',
-    'pref_two_factor_auth_help'               => 'Po włączeniu weryfikacji dwuetapowej (znanej również jako uwierzytelnianie dwuskładnikowe) dodajesz dodatkową warstwę zabezpieczeń do swojego konta. Logujesz się czymś, co znasz (hasło) i czymś masz coś (kod weryfikacyjny). Kody weryfikacyjne generowane są przez aplikację w telefonie, na przykład Authy lub Google Authenticator.',
+    'pref_two_factor_auth_help'               => 'Po włączeniu weryfikacji dwuetapowej (znanej również jako uwierzytelnianie dwuskładnikowe) dodajesz dodatkową warstwę zabezpieczeń do swojego konta. Logujesz się czymś, co znasz (hasło) i czymś co masz (kod weryfikacyjny). Kody weryfikacyjne generowane są przez aplikację w telefonie, na przykład Authy lub Google Authenticator.',
     'pref_enable_two_factor_auth'             => 'Włącz weryfikację dwuetapową',
     'pref_two_factor_auth_disabled'           => 'Kod weryfikacji dwuetapowej został usunięty i wyłączony',
     'pref_two_factor_auth_remove_it'          => 'Nie zapomnij usunąć konta z aplikacji uwierzytelniajcej!',
@@ -526,6 +541,7 @@ return [
     'attachment_deleted'                      => 'Usunięto załącznik ":name"',
     'attachment_updated'                      => 'Zmodyfikowano załącznik ":name"',
     'upload_max_file_size'                    => 'Maksymalny rozmiar pliku to: :size',
+    'list_all_attachments'                    => 'Lista wszystkich załączników',
 
     // transaction index
     'title_expenses'                          => 'Wydatki',
@@ -568,6 +584,7 @@ return [
     'converted_to_Deposit'                    => 'Transakcja została przekonwertowana do wpłaty',
     'converted_to_Transfer'                   => 'Transakcja została przekonwertowana do transferu',
     'invalid_convert_selection'               => 'Wybrane konto jest już używane w tej transakcji lub nie istnieje.',
+    'source_or_dest_invalid'                  => 'Nie można znaleźć poprawnych szczegółów transakcji. Konwersja nie jest możliwa.',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Utwórz nową wypłatę',
@@ -624,8 +641,8 @@ return [
     'over_budget_warn'                        => '<i class="fa fa-money"></i> Zwykle budżetujesz około :amount dziennie. Obecna wartość to :over_amount dziennie.',
 
     // bills:
-    'matching_on'                             => 'Pasuje do',
-    'between_amounts'                         => 'między :low i :high.',
+    'match_between_amounts'                   => 'Rachunek pasuje do transakcji między :low a :high.',
+    'bill_related_rules'                      => 'Reguły powiązane z tym rachunkiem',
     'repeats'                                 => 'Powtarza się',
     'connected_journals'                      => 'Powiązane transakcje',
     'auto_match_on'                           => 'Automatycznie dopasowane przez Firefly III',
@@ -635,19 +652,20 @@ return [
     'deleted_bill'                            => 'Usunięto rachunek ":name"',
     'edit_bill'                               => 'Modyfikuj rachunek ":name"',
     'more'                                    => 'Więcej',
-    'rescan_old'                              => 'Przeskanuj stare transakcje',
+    'rescan_old'                              => 'Uruchom ponownie reguły na wszystkich transakcjach',
     'update_bill'                             => 'Aktualizuj rachunek',
     'updated_bill'                            => 'Zaktualizowano rachunek ":name"',
     'store_new_bill'                          => 'Zapisz nowy rachunek',
     'stored_new_bill'                         => 'Zapisano nowy rachunek ":name"',
     'cannot_scan_inactive_bill'               => 'Nieaktywne rachunki nie mogą być zeskanowane.',
-    'rescanned_bill'                          => 'Zeskanowano wszystko.',
+    'rescanned_bill'                          => 'Przeskanowano wszystko ponownie i powiązano nowe transakcje (:total) z rachunkiem.',
     'average_bill_amount_year'                => 'Średnia kwota rachunku (:year)',
     'average_bill_amount_overall'             => 'Średnia kwota rachunku (ogólnie)',
     'bill_is_active'                          => 'Rachunek jest aktywny',
     'bill_expected_between'                   => 'Oczekiwano między :start a :end',
     'bill_will_automatch'                     => 'Rachunek będzie automatycznie powiązany z pasującymi transakcjami',
     'skips_over'                              => 'pomija',
+    'bill_store_error'                        => 'Wystąpił nieoczekiwany błąd podczas zapisywania nowego rachunku. Sprawdź pliki dziennika',
 
     // accounts:
     'details_for_asset'                       => 'Szczegóły konta aktywów ":name"',
@@ -784,6 +802,7 @@ return [
     'opt_group_sharedAsset'                   => 'Współdzielone konta aktywów',
     'opt_group_ccAsset'                       => 'Karty kredytowe',
     'notes'                                   => 'Notatki',
+    'unknown_journal_error'                   => 'Nie można zapisać transakcji. Sprawdź pliki dziennika.',
 
     // new user:
     'welcome'                                 => 'Witaj w Firefly III!',
@@ -793,6 +812,10 @@ return [
     'savings_balance_text'                    => 'Firefly III automatycznie utworzy dla ciebie konto oszczędnościowe. Domyślnie na twoim koncie oszczędnościowym nie ma pieniędzy, ale jeśli chcesz, Firefly III może je tam przechowywać.',
     'finish_up_new_user'                      => 'To wszystko! Możesz kontynuować, naciskając <strong>Zatwierdź</strong>. Zostaniesz przeniesiony do strony głównej Firefly III.',
     'stored_new_accounts_new_user'            => 'Yay! Twoje nowe konta zostały zapisane.',
+    'set_preferred_language'                  => 'Jeśli wolisz używać Firefly III w innym języku, wskaż to tutaj.',
+    'language'                                => 'Język',
+    'new_savings_account'                     => 'Konto oszczędnościowe :bank_name',
+    'cash_wallet'                             => 'Portfel gotówkowy',
 
     // home page:
     'yourAccounts'                            => 'Twoje konta',
@@ -941,6 +964,7 @@ return [
     'account_role_sharedAsset'                => 'Współdzielone konto aktywów',
     'account_role_savingAsset'                => 'Konto oszczędnościowe',
     'account_role_ccAsset'                    => 'Karta kredytowa',
+    'account_role_cashWalletAsset'            => 'Portfel gotówkowy',
     'budget_chart_click'                      => 'Kliknij na nazwę budżetu w tabeli powyżej, aby zobaczyć wykres.',
     'category_chart_click'                    => 'Kliknij na nazwę kategorii w tabeli powyżej, aby zobaczyć wykres.',
     'in_out_accounts'                         => 'Zarobione oraz wydane wg kombinacji',
@@ -1000,6 +1024,7 @@ return [
     'events'                    => 'Zdarzenia',
     'target_amount'             => 'Kwota docelowa',
     'start_date'                => 'Data rozpoczęcia',
+    'no_start_date'             => 'Brak daty rozpoczęcia',
     'target_date'               => 'Data docelowa',
     'no_target_date'            => 'Brak daty docelowej',
     'table'                     => 'Tabela',
@@ -1136,6 +1161,14 @@ return [
     'import_index_title'                    => 'Importuj dane do Firefly III',
     'import_index_sub_title'                => 'Indeks',
     'import_general_index_intro'            => 'Witamy w procedurze importu Firefly III. Istnieje kilka sposobów importowania danych do Firefly III.',
+    'upload_error'                          => 'Przesłany plik nie może zostać przetworzony. Prawdopodobnie typ pliku lub kodowanie jest błędne. Pliki dziennika zawierają więcej informacji.',
+    'reset_import_settings_title'           => 'Zresetuj konfigurację importu',
+    'reset_import_settings_text'            => 'Możesz użyć tych linków, aby zresetować ustawienia importu dla konkretnych dostawców. Jest to przydatne, gdy złe ustawienia uniemożliwiają importowanie danych.',
+    'reset_settings_bunq'                   => 'Usuń klucz API, lokalny zewnętrzny adres IP oraz klucze RSA związane z Bunq.',
+    'reset_settings_spectre'                => 'Usuń identyfikatory i sekrety Spectre. Spowoduje to również usunięcie Twojego klucza Spectre. Pamiętaj, aby zaktualizować nowy.',
+    'settings_reset_for_bunq'               => 'Resetowanie ustawień Bunq.',
+    'settings_reset_for_spectre'            => 'Resetowanie ustawień Spectre.',
+
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Ta funkcja nie jest dostępna, gdy używasz Firefly III w środowisku Sandstorm.io.',

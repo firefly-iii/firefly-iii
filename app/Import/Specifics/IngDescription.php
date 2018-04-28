@@ -61,7 +61,7 @@ class IngDescription implements SpecificInterface
     public function run(array $row): array
     {
         $this->row = array_values($row);
-        if (count($this->row) >= 8) {                    // check if the array is correct
+        if (\count($this->row) >= 8) {                    // check if the array is correct
             switch ($this->row[4]) {                     // Get value for the mutation type
                 case 'GT':                               // InternetBankieren
                 case 'OV':                               // Overschrijving
@@ -127,7 +127,7 @@ class IngDescription implements SpecificInterface
     private function copyDescriptionToOpposite(): void
     {
         $search = ['Naar Oranje Spaarrekening ', 'Afschrijvingen'];
-        if (0 === strlen($this->row[3])) {
+        if (0 === \strlen($this->row[3])) {
             $this->row[3] = trim(str_ireplace($search, '', $this->row[8]));
         }
     }

@@ -40,8 +40,6 @@ class YearReportGenerator implements ReportGeneratorInterface
 
     /**
      * @return string
-     *
-
      */
     public function generate(): string
     {

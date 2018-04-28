@@ -124,12 +124,14 @@ return [
 
     // bills: index, create, show
     'bills_index'                    => [
+        'rules'              => ['element' => '.rules'],
         'paid_in_period'     => ['element' => '.paid_in_period'],
         'expected_in_period' => ['element' => '.expected_in_period'],
     ],
     'bills_create'                   => [
+        'intro'              => [],
         'name'               => ['element' => '#name_holder'],
-        'match'              => ['element' => '#match_holder'],
+        //'match'              => ['element' => '#match_holder'],
         'amount_min_holder'  => ['element' => '#amount_min_holder'],
         'repeat_freq_holder' => ['element' => '#repeat_freq_holder'],
         'skip_holder'        => ['element' => '#skip_holder'],

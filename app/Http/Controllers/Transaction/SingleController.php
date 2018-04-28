@@ -40,7 +40,6 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Http\Request;
 use Log;
 use Preferences;
-use Session;
 use View;
 
 /**
@@ -140,7 +139,7 @@ class SingleController extends Controller
             $preFilled['notes'] = $note->text;
         }
 
-        Session::flash('preFilled', $preFilled);
+        session()->flash('preFilled', $preFilled);
 
         return redirect(route('transactions.create', [strtolower($journal->transactionType->type)]));
     }
@@ -158,7 +157,7 @@ class SingleController extends Controller
         $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $piggyBanks     = $this->piggyBanks->getPiggyBanksWithAmount();
         $piggies        = ExpandedForm::makeSelectListWithEmpty($piggyBanks);
-        $preFilled      = Session::has('preFilled') ? session('preFilled') : [];
+        $preFilled      = session()->has('preFilled') ? session('preFilled') : [];
         $subTitle       = trans('form.add_new_' . $what);
         $subTitleIcon   = 'fa-plus';
         $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
@@ -171,13 +170,13 @@ class SingleController extends Controller
             $preFilled['destination_account_id'] = $source;
         }
 
-        Session::put('preFilled', $preFilled);
+        session()->put('preFilled', $preFilled);
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('transactions.create.fromStore')) {
             $this->rememberPreviousUri('transactions.create.uri');
         }
-        Session::forget('transactions.create.fromStore');
+        session()->forget('transactions.create.fromStore');
 
         asort($piggies);
 
@@ -226,8 +225,8 @@ class SingleController extends Controller
             return $this->redirectToAccount($transactionJournal);
         }
         // @codeCoverageIgnoreEnd
-        $type = $transactionJournal->transactionTypeStr();
-        Session::flash('success', (string)trans('firefly.deleted_' . strtolower($type), ['description' => $transactionJournal->description]));
+        $type = $this->repository->getTransactionType($transactionJournal);
+        session()->flash('success', (string)trans('firefly.deleted_' . strtolower($type), ['description' => $transactionJournal->description]));
 
         $this->repository->destroy($transactionJournal);
 
@@ -312,13 +311,13 @@ class SingleController extends Controller
             $preFilled['currency'] = $pTransaction->foreignCurrency;
         }
 
-        Session::flash('preFilled', $preFilled);
+        session()->flash('preFilled', $preFilled);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('transactions.edit.fromUpdate')) {
             $this->rememberPreviousUri('transactions.edit.uri');
         }
-        Session::forget('transactions.edit.fromUpdate');
+        session()->forget('transactions.edit.fromUpdate');
 
         return view(
             'transactions.single.edit',
@@ -343,7 +342,7 @@ class SingleController extends Controller
         if (null === $journal->id) {
             // error!
             Log::error('Could not store transaction journal.');
-            Session::flash('error', (string)trans('firefly.unknown_journal_error'));
+            session()->flash('error', (string)trans('firefly.unknown_journal_error'));
 
             return redirect(route('transactions.create', [$request->input('what')]))->withInput();
         }
@@ -355,21 +354,21 @@ class SingleController extends Controller
         // store the journal only, flash the rest.
         Log::debug(sprintf('Count of error messages is %d', $this->attachments->getErrors()->count()));
         if (\count($this->attachments->getErrors()->get('attachments')) > 0) {
-            Session::flash('error', $this->attachments->getErrors()->get('attachments'));
+            session()->flash('error', $this->attachments->getErrors()->get('attachments'));
         }
         // flash messages
         if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
-            Session::flash('info', $this->attachments->getMessages()->get('attachments'));
+            session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
         event(new StoredTransactionJournal($journal, $data['piggy_bank_id']));
 
-        Session::flash('success', (string)trans('firefly.stored_journal', ['description' => $journal->description]));
+        session()->flash('success', (string)trans('firefly.stored_journal', ['description' => $journal->description]));
         Preferences::mark();
 
         // @codeCoverageIgnoreStart
         if (true === $createAnother) {
-            Session::put('transactions.create.fromStore', true);
+            session()->put('transactions.create.fromStore', true);
 
             return redirect(route('transactions.create', [$request->input('what')]))->withInput();
         }
@@ -398,18 +397,22 @@ class SingleController extends Controller
         }
         // @codeCoverageIgnoreEnd
 
-        $data    = $request->getJournalData();
+        $data = $request->getJournalData();
+
+        // keep current bill:
+        $data['bill_id'] = $journal->bill_id;
+
         $journal = $repository->update($journal, $data);
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         $this->attachments->saveAttachmentsForModel($journal, $files);
 
         // @codeCoverageIgnoreStart
-        if (count($this->attachments->getErrors()->get('attachments')) > 0) {
-            Session::flash('error', $this->attachments->getErrors()->get('attachments'));
+        if (\count($this->attachments->getErrors()->get('attachments')) > 0) {
+            session()->flash('error', $this->attachments->getErrors()->get('attachments'));
         }
-        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            Session::flash('info', $this->attachments->getMessages()->get('attachments'));
+        if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
+            session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
         // @codeCoverageIgnoreEnd
 
@@ -417,12 +420,12 @@ class SingleController extends Controller
         // update, get events by date and sort DESC
 
         $type = strtolower($this->repository->getTransactionType($journal));
-        Session::flash('success', (string)trans('firefly.updated_' . $type, ['description' => $data['description']]));
+        session()->flash('success', (string)trans('firefly.updated_' . $type, ['description' => $data['description']]));
         Preferences::mark();
 
         // @codeCoverageIgnoreStart
         if (1 === (int)$request->get('return_to_edit')) {
-            Session::put('transactions.edit.fromUpdate', true);
+            session()->put('transactions.edit.fromUpdate', true);
 
             return redirect(route('transactions.edit', [$journal->id]))->withInput(['return_to_edit' => 1]);
         }

@@ -100,6 +100,5 @@ class DecryptAttachment extends Command
         }
         $this->info(sprintf('%d bytes written. Exiting now..', $result));
 
-        return;
     }
 }

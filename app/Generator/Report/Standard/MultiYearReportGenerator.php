@@ -40,8 +40,6 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
 
     /**
      * @return string
-     *
-
      */
     public function generate(): string
     {

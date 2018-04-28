@@ -134,7 +134,7 @@
                                                         {% endif %}
                                                 ><br/>{{ rule.description|markdown }}</small>
                                             {% endif %}
-
+                                            <small><br />{% if rule.strict %}<span class="text-danger">{{ 'rule_is_strict'|_ }}</span>{% else %}<span class="text-success">{{ 'rule_is_not_strict'|_ }}</span>{% endif %}</small>
                                         </td>
                                         <td class="hidden-xs">
                                             {% if rule.ruleTriggers.count > 0 %}
