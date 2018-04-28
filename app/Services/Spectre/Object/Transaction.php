@@ -64,7 +64,7 @@ class Transaction extends SpectreObject
      */
     public function __construct(array $data)
     {
-        $this->id           = $data['id'];
+        $this->id           = (int)$data['id'];
         $this->mode         = $data['mode'];
         $this->status       = $data['status'];
         $this->madeOn       = new Carbon($data['made_on']);

@@ -160,6 +160,8 @@ class IndexController extends Controller
             Preferences::delete('spectre_client_id');
             Preferences::delete('spectre_app_secret');
             Preferences::delete('spectre_service_secret');
+            Preferences::delete('spectre_app_id');
+            Preferences::delete('spectre_secret');
             Preferences::delete('spectre_private_key');
             Preferences::delete('spectre_public_key');
             Preferences::delete('spectre_customer');

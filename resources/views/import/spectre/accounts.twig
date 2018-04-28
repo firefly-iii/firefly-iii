@@ -47,20 +47,27 @@
                                                 {% endfor %}
                                             </td>
                                             <td>
+                                                {% if account.options|length > 0 %}
                                                 <select class="form-control" name="import[{{ account.id }}]">
                                                     {% for id,name in account.options %}
                                                         <option value="{{ id }}" label="{{ name }}">{{ name }}</option>
                                                     {% endfor %}
                                                 </select>
+                                                {% else %}
+                                                    <em>
+                                                        {{ trans('import.spectre_no_supported_accounts') }}
+                                                    </em>
+                                                    {% endif %}
                                             </td>
                                             <td>
+                                                {% if account.options|length > 0 %}
                                                 <div class="checkbox">
                                                     <label>
                                                         <input type="checkbox" value="1" name="do_import[{{ account.id }}]" checked>
                                                         {{ trans('import.spectre_do_import') }}
                                                     </label>
                                                 </div>
-
+                                                {% endif %}
                                             </td>
                                         </tr>
 

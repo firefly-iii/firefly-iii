@@ -52,7 +52,7 @@ class CreateTokenRequest extends SpectreRequest
         $data        = [
             'data' => [
                 'customer_id'               => $this->customer->getId(),
-                'fetch_type'                => 'recent',
+                'fetch_scopes'              => ['accounts',  'transactions'],
                 'daily_refresh'             => true,
                 'include_fake_providers'    => true,
                 'show_consent_confirmation' => true,
