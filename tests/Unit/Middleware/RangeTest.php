@@ -41,7 +41,7 @@ class RangeTest extends TestCase
     public function testMiddlewareAuthenticated()
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('first')->andReturn(TransactionJournal::first());
+        $repository->shouldReceive('firstNull')->andReturn(TransactionJournal::first());
         $this->withoutExceptionHandling();
         $this->be($this->user());
         $response = $this->get('/_test/range');

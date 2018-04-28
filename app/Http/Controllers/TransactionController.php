@@ -128,8 +128,8 @@ class TransactionController extends Controller
         $page         = (int)$request->get('page');
         $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
         $path         = route('transactions.index.all', [$what]);
-        $first        = $this->repository->first();
-        $start        = $first->date ?? new Carbon;
+        $first        = $this->repository->firstNull();
+        $start        = null === $first ? new Carbon : $first->date;
         $end          = new Carbon;
         $subTitle     = trans('firefly.all_' . $what);
 

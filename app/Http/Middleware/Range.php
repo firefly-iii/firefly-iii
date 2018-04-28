@@ -140,7 +140,7 @@ class Range
             $first      = Carbon::now()->startOfYear();
 
             if (null !== $journal) {
-                $first = $journal->date;
+                $first = $journal->date ?? $first;
             }
             Session::put('first', $first);
         }

@@ -62,7 +62,7 @@ class SingleControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', get_class($this)));
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -77,7 +77,7 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $account = $this->user()->accounts()->first();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]));
@@ -110,7 +110,7 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         Steam::shouldReceive('phpBytes')->andReturn(2048);
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection)->once();
@@ -136,7 +136,7 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         Steam::shouldReceive('phpBytes')->andReturn(2048);
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection)->once();
@@ -161,7 +161,7 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         Steam::shouldReceive('phpBytes')->andReturn(2048);
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection)->once();
@@ -185,7 +185,7 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)->whereNull('deleted_at')->where('user_id', $this->user()->id)->first();
@@ -207,7 +207,7 @@ class SingleControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
 
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('destroy')->once();
         $journalRepos->shouldReceive('getTransactionType')->once()->andReturn('Withdrawal');
 
@@ -232,11 +232,11 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $account = $this->user()->accounts()->first();
 
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('countTransactions')->andReturn(2)->once();
         $journalRepos->shouldReceive('getTransactionType')->andReturn('Withdrawal')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]))->once();
@@ -274,7 +274,7 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
 
@@ -320,7 +320,7 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
 
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
@@ -367,7 +367,7 @@ class SingleControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('getTransactionType')->andReturn('Reconciliation')->once();
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $reconcile = TransactionJournal::where('transaction_type_id', 5)
@@ -392,7 +392,7 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)
@@ -421,7 +421,7 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $journalRepos->shouldReceive('getTransactionType')->andReturn('Opening balance');
@@ -441,7 +441,7 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
 
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
@@ -489,7 +489,7 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $account = $this->user()->accounts()->first();
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
@@ -498,7 +498,7 @@ class SingleControllerTest extends TestCase
         $transaction->foreign_amount      = '1';
         $transaction->foreign_currency_id = 2;
 
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('countTransactions')->andReturn(2)->once();
         $journalRepos->shouldReceive('getTransactionType')->andReturn('Withdrawal')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]))->once();
@@ -530,7 +530,7 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
 
@@ -579,7 +579,7 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
         // mock results:
         $journal              = new TransactionJournal();
@@ -615,7 +615,7 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
         // mock results:
         $journal              = new TransactionJournal();
@@ -667,7 +667,7 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
         // mock results:
         $journal              = new TransactionJournal();
@@ -719,7 +719,7 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
         // mock results:
         $journal              = new TransactionJournal();
@@ -771,7 +771,7 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
         // mock results:
         $journal              = new TransactionJournal();
@@ -826,7 +826,7 @@ class SingleControllerTest extends TestCase
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $linkRepos     = $this->mock(LinkTypeRepositoryInterface::class);
 
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getTransactionType')->andReturn('Withdrawal');
         $journalRepos->shouldReceive('getPiggyBankEvents')->andReturn(new Collection);
         $journalRepos->shouldReceive('getMetaField')->andReturn('');

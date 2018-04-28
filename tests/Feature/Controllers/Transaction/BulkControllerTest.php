@@ -45,7 +45,7 @@ class BulkControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', get_class($this)));
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -61,7 +61,7 @@ class BulkControllerTest extends TestCase
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection);
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection);
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getTransactionType')->andReturn('Transfer');
         $journalRepos->shouldReceive('isJournalReconciled')->andReturn(false);
 
@@ -84,7 +84,7 @@ class BulkControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalSourceAccounts')
                      ->andReturn(new Collection([1, 2, 3]), new Collection, new Collection, new Collection, new Collection([1]));
         $journalRepos->shouldReceive('getJournalDestinationAccounts')
@@ -128,7 +128,7 @@ class BulkControllerTest extends TestCase
         ];
 
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('findNull')->times(4)->andReturn(new TransactionJournal);
 
         $repository->shouldReceive('updateCategory')->times(4)->andReturn(new TransactionJournal())

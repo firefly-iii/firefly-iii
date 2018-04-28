@@ -54,7 +54,7 @@ class SplitControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', get_class($this)));
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -85,7 +85,7 @@ class SplitControllerTest extends TestCase
         $array                = $transactions->toArray();
         $array[0]['category'] = '';
 
-        $journalRepos->shouldReceive('first')->once()->andReturn($deposit);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn($deposit);
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('getTransactionType')->once()->andReturn('Deposit');
@@ -143,7 +143,7 @@ class SplitControllerTest extends TestCase
                      ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->twice();
 
 
-        $journalRepos->shouldReceive('first')->once()->andReturn($deposit);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn($deposit);
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('getTransactionType')->once()->andReturn('Deposit');
@@ -227,7 +227,7 @@ class SplitControllerTest extends TestCase
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
 
         $opening = TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first();
-        $journalRepos->shouldReceive('first')->once()->andReturn($opening);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn($opening);
         $this->be($this->user());
         $response = $this->get(route('transactions.split.edit', [$opening->id]));
         $response->assertStatus(302);
@@ -257,7 +257,7 @@ class SplitControllerTest extends TestCase
         $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
 
 
-        $journalRepos->shouldReceive('first')->once()->andReturn($deposit);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn($deposit);
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('getTransactionType')->once()->andReturn('Deposit');
@@ -323,7 +323,7 @@ class SplitControllerTest extends TestCase
 
         // mock stuff
         $journalRepos->shouldReceive('update')->andReturn($deposit);
-        $journalRepos->shouldReceive('first')->andReturn($deposit);
+        $journalRepos->shouldReceive('firstNull')->andReturn($deposit);
         $journalRepos->shouldReceive('getTransactionType')->andReturn('Deposit');
 
         $attHelper->shouldReceive('saveAttachmentsForModel');
@@ -371,7 +371,7 @@ class SplitControllerTest extends TestCase
             ],
         ];
 
-        $journalRepos->shouldReceive('first')->once()->andReturn($opening);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn($opening);
 
         $this->be($this->user());
         $response = $this->post(route('transactions.split.update', [$opening->id]), $data);
@@ -422,7 +422,7 @@ class SplitControllerTest extends TestCase
 
         // mock stuff
         $journalRepos->shouldReceive('update')->andReturn($transfer);
-        $journalRepos->shouldReceive('first')->andReturn($transfer);
+        $journalRepos->shouldReceive('firstNull')->andReturn($transfer);
         $journalRepos->shouldReceive('getTransactionType')->andReturn('Withdrawal');
 
         $attHelper->shouldReceive('saveAttachmentsForModel');
@@ -478,7 +478,7 @@ class SplitControllerTest extends TestCase
 
         // mock stuff
         $journalRepos->shouldReceive('update')->andReturn($withdrawal);
-        $journalRepos->shouldReceive('first')->andReturn($withdrawal);
+        $journalRepos->shouldReceive('firstNull')->andReturn($withdrawal);
         $journalRepos->shouldReceive('getTransactionType')->andReturn('Withdrawal');
 
         $attHelper->shouldReceive('saveAttachmentsForModel');

@@ -41,7 +41,7 @@ class LinkControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', get_class($this)));
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -53,7 +53,7 @@ class LinkControllerTest extends TestCase
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $linkRepos    = $this->mock(LinkTypeRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('transactions.link.delete', [1]));
@@ -69,7 +69,7 @@ class LinkControllerTest extends TestCase
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
 
         $repository->shouldReceive('destroyLink');
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
 
@@ -94,7 +94,7 @@ class LinkControllerTest extends TestCase
             'link_type'  => '1_inward',
         ];
 
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('find')->andReturn(new TransactionJournal);
         $repository->shouldReceive('findLink')->andReturn(false);
         $repository->shouldReceive('storeLink')->andReturn(new TransactionJournalLink);
@@ -120,7 +120,7 @@ class LinkControllerTest extends TestCase
             'link_type'  => '1_inward',
         ];
 
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('find')->andReturn(new TransactionJournal);
         $repository->shouldReceive('findLink')->andReturn(true);
 
@@ -145,7 +145,7 @@ class LinkControllerTest extends TestCase
             'link_type'  => '1_inward',
         ];
 
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->post(route('transactions.link.store', [1]), $data);
@@ -161,7 +161,7 @@ class LinkControllerTest extends TestCase
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('switchLink')->andReturn(false);
         $this->be($this->user());
         $response = $this->get(route('transactions.link.switch', [1]));

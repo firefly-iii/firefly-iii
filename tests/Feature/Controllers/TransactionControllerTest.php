@@ -49,7 +49,7 @@ class TransactionControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', get_class($this)));
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -68,8 +68,7 @@ class TransactionControllerTest extends TestCase
         $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(JournalCollectorInterface::class);
-        $repository->shouldReceive('first')->once()->andReturn($transfer);
-        $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
+        $repository->shouldReceive('firstNull')->twice()->andReturn($transfer);
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
@@ -103,7 +102,7 @@ class TransactionControllerTest extends TestCase
         $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(JournalCollectorInterface::class);
-        $repository->shouldReceive('first')->twice()->andReturn($transfer);
+        $repository->shouldReceive('firstNull')->twice()->andReturn($transfer);
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
@@ -146,7 +145,7 @@ class TransactionControllerTest extends TestCase
         $collector  = $this->mock(JournalCollectorInterface::class);
         $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
         $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
-        $repository->shouldReceive('first')->once()->andReturn($transfer);
+        $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
@@ -188,7 +187,7 @@ class TransactionControllerTest extends TestCase
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(JournalCollectorInterface::class);
         $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
-        $repository->shouldReceive('first')->once()->andReturn($transfer);
+        $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
         $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
@@ -232,7 +231,7 @@ class TransactionControllerTest extends TestCase
         $collector  = $this->mock(JournalCollectorInterface::class);
         $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
         $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
-        $repository->shouldReceive('first')->once()->andReturn($transfer);
+        $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
@@ -261,7 +260,7 @@ class TransactionControllerTest extends TestCase
     {
         $data       = ['transactions' => [1, 2]];
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('first')->times(1)->andReturn(new TransactionJournal);
+        $repository->shouldReceive('firstNull')->times(1)->andReturn(new TransactionJournal);
 
         $repository->shouldReceive('findTransaction')->andReturn(new Transaction)->twice();
         $repository->shouldReceive('reconcile')->twice();
@@ -280,7 +279,7 @@ class TransactionControllerTest extends TestCase
         $journal       = factory(TransactionJournal::class)->make();
         $journal->date = new Carbon('2016-01-01');
         $repository    = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('find')->once()->andReturn($journal);
         $repository->shouldReceive('setOrder')->once()->andReturn(true);
 
@@ -307,7 +306,7 @@ class TransactionControllerTest extends TestCase
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('getPiggyBankEvents')->andReturn(new Collection);
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getMetaField')->andReturn('');
 
         $this->be($this->user());

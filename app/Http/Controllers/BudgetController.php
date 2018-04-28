@@ -649,9 +649,10 @@ class BudgetController extends Controller
      */
     private function getPeriodOverview(): Collection
     {
+        /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
-        $first      = $repository->first();
-        $start      = $first->date ?? new Carbon;
+        $first      = $repository->firstNull();
+        $start      = null === $first ? new Carbon : $first->date;
         $range      = Preferences::get('viewRange', '1M')->data;
         $start      = app('navigation')->startOfPeriod($start, $range);
         $end        = app('navigation')->endOfX(new Carbon, $range, null);

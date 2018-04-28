@@ -50,7 +50,7 @@ class BillControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', get_class($this)));
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -62,7 +62,7 @@ class BillControllerTest extends TestCase
         // mock stuff
         $attachHelper = $this->mock(AttachmentHelperInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('bills.create'));
@@ -79,7 +79,7 @@ class BillControllerTest extends TestCase
         // mock stuff
         $attachHelper = $this->mock(AttachmentHelperInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('bills.delete', [1]));
@@ -98,7 +98,7 @@ class BillControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(BillRepositoryInterface::class);
         $repository->shouldReceive('destroy')->andReturn(true);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->session(['bills.delete.uri' => 'http://localhost']);
         $this->be($this->user());
@@ -115,7 +115,7 @@ class BillControllerTest extends TestCase
         // mock stuff
         $attachHelper = $this->mock(AttachmentHelperInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('bills.edit', [1]));
@@ -135,7 +135,7 @@ class BillControllerTest extends TestCase
         $bill         = factory(Bill::class)->make();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(BillRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $collection = new Collection([$bill]);
         $repository->shouldReceive('getPaginator')->andReturn(new LengthAwarePaginator($collection, 1, 50))->once();
         $repository->shouldReceive('setUser');
@@ -160,7 +160,7 @@ class BillControllerTest extends TestCase
         $journal      = factory(TransactionJournal::class)->make();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(BillRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getRulesForBill')->andReturn(new Collection);
         $this->be($this->user());
         $response = $this->get(route('bills.rescan', [1]));
@@ -177,7 +177,7 @@ class BillControllerTest extends TestCase
         $attachHelper = $this->mock(AttachmentHelperInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(BillRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('bills.rescan', [3]));
@@ -199,7 +199,7 @@ class BillControllerTest extends TestCase
         $repository->shouldReceive('getOverallAverage')->andReturn('0');
         $repository->shouldReceive('nextExpectedMatch')->andReturn(new Carbon);
         $repository->shouldReceive('getRulesForBill')->andReturn(new Collection);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setBills')->andReturnSelf();
@@ -229,7 +229,7 @@ class BillControllerTest extends TestCase
         $attachHelper = $this->mock(AttachmentHelperInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(BillRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('store')->andReturn(new Bill);
         $attachHelper->shouldReceive('saveAttachmentsForModel');
         $attachHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
@@ -262,7 +262,7 @@ class BillControllerTest extends TestCase
         $attachHelper = $this->mock(AttachmentHelperInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(BillRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('update')->andReturn(new Bill);
         $attachHelper->shouldReceive('saveAttachmentsForModel');
         $attachHelper->shouldReceive('getMessages')->andReturn(new MessageBag);

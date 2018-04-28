@@ -46,7 +46,7 @@ class MassControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', get_class($this)));
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -57,7 +57,7 @@ class MassControllerTest extends TestCase
     public function testDelete()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
 
         $withdrawals = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->take(2)->get()->pluck('id')->toArray();
@@ -80,7 +80,7 @@ class MassControllerTest extends TestCase
 
         // mock deletion:
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('findNull')->andReturnValues([$deposits[0], $deposits[1]])->times(2);
         $repository->shouldReceive('destroy')->times(2);
 
@@ -106,7 +106,7 @@ class MassControllerTest extends TestCase
         $transfersArray = $transfers->pluck('id')->toArray();
         $source         = $this->user()->accounts()->first();
 
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         // mock data for edit page:
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]));
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$source]));
@@ -141,14 +141,14 @@ class MassControllerTest extends TestCase
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
 
         // mock stuff:
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
 
-        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalSourceAccounts')
                      ->andReturn(new Collection([1, 2, 3]), new Collection, new Collection, new Collection, new Collection([1]));
         $journalRepos->shouldReceive('getJournalDestinationAccounts')
@@ -186,7 +186,7 @@ class MassControllerTest extends TestCase
 
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('update')->once();
         $repository->shouldReceive('find')->once()->andReturn($deposit);
         $repository->shouldReceive('getTransactionType')->andReturn('Deposit');

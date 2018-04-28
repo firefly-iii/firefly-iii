@@ -26,6 +26,7 @@ namespace Tests\Unit\Factory;
 
 use Carbon\Carbon;
 use FireflyIII\Factory\AccountFactory;
+use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use Tests\TestCase;
 
@@ -65,7 +66,12 @@ class AccountFactoryTest extends TestCase
         $this->assertEquals('', $account->iban);
         $this->assertTrue($account->active);
         $this->assertEquals('0', $account->virtual_balance);
-        $this->assertEquals('defaultAsset', $account->getMeta('accountRole'));
+
+        // get the role:
+        /** @var AccountMeta $meta */
+        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $this->assertNotNull($meta);
+        $this->assertEquals('defaultAsset', $meta->data);
     }
 
     /**
@@ -99,7 +105,12 @@ class AccountFactoryTest extends TestCase
         $this->assertEquals('', $account->iban);
         $this->assertTrue($account->active);
         $this->assertEquals('0', $account->virtual_balance);
-        $this->assertEquals('defaultAsset', $account->getMeta('accountRole'));
+
+        // get the role:
+        /** @var AccountMeta $meta */
+        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $this->assertNotNull($meta);
+        $this->assertEquals('defaultAsset', $meta->data);
     }
 
     /**
@@ -134,8 +145,18 @@ class AccountFactoryTest extends TestCase
         $this->assertEquals('', $account->iban);
         $this->assertTrue($account->active);
         $this->assertEquals('0', $account->virtual_balance);
-        $this->assertEquals('ccAsset', $account->getMeta('accountRole'));
-        $this->assertEquals('2018-01-01', $account->getMeta('ccMonthlyPaymentDate'));
+
+        // get the role:
+        /** @var AccountMeta $meta */
+        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $this->assertNotNull($meta);
+        $this->assertEquals('ccAsset', $meta->data);
+
+        // get the date:
+        /** @var AccountMeta $meta */
+        $meta = $account->accountMeta()->where('name','ccMonthlyPaymentDate')->first();
+        $this->assertNotNull($meta);
+        $this->assertEquals('2018-01-01', $meta->data);
     }
 
     /**
@@ -170,7 +191,11 @@ class AccountFactoryTest extends TestCase
         $this->assertEquals('', $account->iban);
         $this->assertTrue($account->active);
         $this->assertEquals('0', $account->virtual_balance);
-        $this->assertEquals('', $account->getMeta('accountRole'));
+
+        // get the role:
+        /** @var AccountMeta $meta */
+        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $this->assertNull($meta);
     }
 
     /**
@@ -205,7 +230,11 @@ class AccountFactoryTest extends TestCase
         $this->assertEquals('', $account->iban);
         $this->assertTrue($account->active);
         $this->assertEquals('0', $account->virtual_balance);
-        $this->assertEquals('', $account->getMeta('accountRole'));
+
+        // get the role:
+        /** @var AccountMeta $meta */
+        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $this->assertNull($meta);
     }
 
     /**
@@ -242,7 +271,12 @@ class AccountFactoryTest extends TestCase
         $this->assertEquals('', $account->iban);
         $this->assertTrue($account->active);
         $this->assertEquals('0', $account->virtual_balance);
-        $this->assertEquals('defaultAsset', $account->getMeta('accountRole'));
+
+        // get the role:
+        /** @var AccountMeta $meta */
+        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $this->assertNotNull($meta);
+        $this->assertEquals('defaultAsset', $meta->data);
 
         // find opening balance:
         $this->assertEquals(1, $account->transactions()->count());
@@ -283,7 +317,12 @@ class AccountFactoryTest extends TestCase
         $this->assertEquals('', $account->iban);
         $this->assertTrue($account->active);
         $this->assertEquals('0', $account->virtual_balance);
-        $this->assertEquals('defaultAsset', $account->getMeta('accountRole'));
+
+        // get the role:
+        /** @var AccountMeta $meta */
+        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $this->assertNotNull($meta);
+        $this->assertEquals('defaultAsset', $meta->data);
 
         // find opening balance:
         $this->assertEquals(0, $account->transactions()->count());
@@ -320,7 +359,12 @@ class AccountFactoryTest extends TestCase
         $this->assertEquals('NL18RABO0326747238', $account->iban);
         $this->assertTrue($account->active);
         $this->assertEquals('0', $account->virtual_balance);
-        $this->assertEquals('defaultAsset', $account->getMeta('accountRole'));
+
+        // get the role:
+        /** @var AccountMeta $meta */
+        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $this->assertNotNull($meta);
+        $this->assertEquals('defaultAsset', $meta->data);
     }
 
     /**
@@ -354,7 +398,12 @@ class AccountFactoryTest extends TestCase
         $this->assertEquals('', $account->iban);
         $this->assertTrue($account->active);
         $this->assertEquals('0', $account->virtual_balance);
-        $this->assertEquals('defaultAsset', $account->getMeta('accountRole'));
+
+        // get the role:
+        /** @var AccountMeta $meta */
+        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $this->assertNotNull($meta);
+        $this->assertEquals('defaultAsset', $meta->data);
     }
 
     /**
@@ -391,7 +440,12 @@ class AccountFactoryTest extends TestCase
         $this->assertEquals('', $account->iban);
         $this->assertTrue($account->active);
         $this->assertEquals('0', $account->virtual_balance);
-        $this->assertEquals('defaultAsset', $account->getMeta('accountRole'));
+
+        // get the role:
+        /** @var AccountMeta $meta */
+        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $this->assertNotNull($meta);
+        $this->assertEquals('defaultAsset', $meta->data);
 
         // find opening balance:
         $this->assertEquals(1, $account->transactions()->count());
@@ -430,7 +484,13 @@ class AccountFactoryTest extends TestCase
         $this->assertEquals('', $account->iban);
         $this->assertTrue($account->active);
         $this->assertEquals('0', $account->virtual_balance);
-        $this->assertEquals('defaultAsset', $account->getMeta('accountRole'));
+
+        // get the role:
+        /** @var AccountMeta $meta */
+        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $this->assertNotNull($meta);
+        $this->assertEquals('defaultAsset', $meta->data);
+
         $note = $account->notes()->first();
         $this->assertEquals('Hello!', $note->text);
     }

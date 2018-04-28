@@ -38,7 +38,7 @@ class SandstormTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\Sandstorm::handle
      */
-    public function testMiddlewareAnonEmpty()
+    public function testMiddlewareAnonEmpty(): void
     {
         putenv('SANDSTORM=1');
 
@@ -55,7 +55,7 @@ class SandstormTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\Sandstorm::handle
      */
-    public function testMiddlewareAnonLoggedIn()
+    public function testMiddlewareAnonLoggedIn(): void
     {
         putenv('SANDSTORM=1');
 
@@ -70,7 +70,7 @@ class SandstormTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\Sandstorm::handle
      */
-    public function testMiddlewareAnonUser()
+    public function testMiddlewareAnonUser(): void
     {
         putenv('SANDSTORM=1');
 
@@ -87,7 +87,7 @@ class SandstormTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\Sandstorm::handle
      */
-    public function testMiddlewareLoggedIn()
+    public function testMiddlewareLoggedIn(): void
     {
         putenv('SANDSTORM=1');
 
@@ -102,7 +102,7 @@ class SandstormTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\Sandstorm::handle
      */
-    public function testMiddlewareMultiUser()
+    public function testMiddlewareMultiUser(): void
     {
         putenv('SANDSTORM=1');
 
@@ -119,7 +119,7 @@ class SandstormTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\Sandstorm::handle
      */
-    public function testMiddlewareNoUser()
+    public function testMiddlewareNoUser(): void
     {
         putenv('SANDSTORM=1');
 
@@ -139,7 +139,7 @@ class SandstormTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\Sandstorm::handle
      */
-    public function testMiddlewareNotSandstorm()
+    public function testMiddlewareNotSandstorm(): void
     {
         $this->withoutExceptionHandling();
         $response = $this->get('/_test/sandstorm');
@@ -149,7 +149,7 @@ class SandstormTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\Sandstorm::handle
      */
-    public function testMiddlewareOneUser()
+    public function testMiddlewareOneUser(): void
     {
         putenv('SANDSTORM=1');
 
@@ -167,7 +167,7 @@ class SandstormTest extends TestCase
     /**
      * Set up test
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

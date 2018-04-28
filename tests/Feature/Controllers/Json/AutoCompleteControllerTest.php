@@ -51,7 +51,7 @@ class AutoCompleteControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', get_class($this)));
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -98,7 +98,7 @@ class AutoCompleteControllerTest extends TestCase
         $budget        = factory(Budget::class)->make();
         $categoryRepos = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $categoryRepos->shouldReceive('getBudgets')->andReturn(new Collection([$budget]));
         $this->be($this->user());
         $response = $this->get(route('json.budgets'));
@@ -115,7 +115,7 @@ class AutoCompleteControllerTest extends TestCase
         $category      = factory(Category::class)->make();
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]));
         $this->be($this->user());
         $response = $this->get(route('json.categories'));
@@ -136,7 +136,7 @@ class AutoCompleteControllerTest extends TestCase
         $collection       = new Collection([$accountA, $accountB]);
         $accountRepos     = $this->mock(AccountRepositoryInterface::class);
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::EXPENSE, AccountType::BENEFICIARY]])->once()->andReturn($collection);
 
         $this->be($this->user());
@@ -177,7 +177,7 @@ class AutoCompleteControllerTest extends TestCase
         $collection       = new Collection([$accountA, $accountB]);
         $accountRepos     = $this->mock(AccountRepositoryInterface::class);
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::REVENUE]])->once()->andReturn($collection);
 
         $this->be($this->user());
@@ -195,7 +195,7 @@ class AutoCompleteControllerTest extends TestCase
         $tag          = factory(Tag::class)->make();
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]))->once();
 
         $this->be($this->user());
@@ -212,7 +212,7 @@ class AutoCompleteControllerTest extends TestCase
         // mock stuff
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
@@ -231,7 +231,7 @@ class AutoCompleteControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getTransactionTypes')->once()->andReturn(new Collection);
 
         $this->be($this->user());
