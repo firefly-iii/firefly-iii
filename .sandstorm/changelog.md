@@ -1,3 +1,42 @@
+# 4.7.3
+- Currency added to API
+- Firfely III will also generate a cash wallet for new users.
+- Can now reset Spectre and bunq settings
+- Docker file has a time zone
+- Allow database connection to be configured in Docker file
+- Can now view and edit attachments in edit-screen
+- User can visit hidden `/attachments` page
+- [Issue 1356](https://github.com/firefly-iii/firefly-iii/issues/1356): Budgets will show the remaining amount per day
+- [Issue 1367](https://github.com/firefly-iii/firefly-iii/issues/1367): Rules now come in strict and non-strict mode.
+- Added a security.txt
+- More support for trusted proxies
+- Improved edit routine for split transactions.
+- Upgrade routine can handle `proc_close` being disabled.
+- Bills now use rules to match transactions, making it more flexible.
+- [Issue 1328](https://github.com/firefly-iii/firefly-iii/issues/1328): piggy banks no have a more useful chart.
+- Spectre API upgraded to v4
+- Move to MariaDB ([issue 1366](https://github.com/firefly-iii/firefly-iii/issues/1366))
+- Piggy banks take currency from parent account ([issue 1334](https://github.com/firefly-iii/firefly-iii/issues/1334))
+- [Issue 1341](https://github.com/firefly-iii/firefly-iii/issues/1341): Removed depricated command from dockerfile
+- Several issues with docker image ([issue 1320](https://github.com/firefly-iii/firefly-iii/issues/1320), [issue 1382](https://github.com/firefly-iii/firefly-iii/issues/1382)).
+- Fix giant tags and division by zero ([issue 1325](https://github.com/firefly-iii/firefly-iii/issues/1325) and others)
+- Several issues with bunq import ([issue 1352](https://github.com/firefly-iii/firefly-iii/issues/1352), [issue 1330](https://github.com/firefly-iii/firefly-iii/issues/1330), [issue 1378](https://github.com/firefly-iii/firefly-iii/issues/1378), [issue 1380](https://github.com/firefly-iii/firefly-iii/issues/1380))
+- [Issue 1246](https://github.com/firefly-iii/firefly-iii/issues/1246): date picker is internationalised
+- [Issue 1327](https://github.com/firefly-iii/firefly-iii/issues/1327): fix formattting issues in piggy banks
+- [Issue 1348](https://github.com/firefly-iii/firefly-iii/issues/1348): 500 error in API
+- [Issue 1349](https://github.com/firefly-iii/firefly-iii/issues/1349): Errors in import routine
+- Several fixes for (multi-currency) reconciliation ([issue 1336](https://github.com/firefly-iii/firefly-iii/issues/1336), [issue 1363](https://github.com/firefly-iii/firefly-iii/issues/1363))
+- [Issue 1353](https://github.com/firefly-iii/firefly-iii/issues/1353): return NULL values in range-indicator
+- Bug in split transaction edit routine
+- Piggy bank percentage was very specific.
+- Logging in Slack is easier to config.
+- [Issue 1312](https://github.com/firefly-iii/firefly-iii/issues/1312) Import broken for ING accounts
+- [Issue 1313](https://github.com/firefly-iii/firefly-iii/issues/1313) Error when creating new asset account
+- [Issue 1317](https://github.com/firefly-iii/firefly-iii/issues/1317) Forgot an include :(
+- Null pointer exception in transaction overview.
+- Installations running in subdirs were incapable of creating OAuth tokens.
+- OAuth keys were not created in all cases.
+
 # 4.7.2
 - [Issue 1123](https://github.com/firefly-iii/firefly-iii/issues/1123) First browser based update routine.
 - Add support for Italian.
@@ -40,8 +79,6 @@
 - [Issue 1297](https://github.com/firefly-iii/firefly-iii/issues/1297) Could not convert to withdrawal 
 - [Issue 1226](https://github.com/firefly-iii/firefly-iii/issues/1226) Category overview in default report shows no income. 
 - Various other bugs and problems ([issue 1198](https://github.com/firefly-iii/firefly-iii/issues/1198), [issue 1213](https://github.com/firefly-iii/firefly-iii/issues/1213), [issue 1237](https://github.com/firefly-iii/firefly-iii/issues/1237), [issue 1238](https://github.com/firefly-iii/firefly-iii/issues/1238), [issue 1199](https://github.com/firefly-iii/firefly-iii/issues/1199), [issue 1200](https://github.com/firefly-iii/firefly-iii/issues/1200))
-
-### Security
 - Fixed an issue with token validation on the command line.
 
 # 4.7.1

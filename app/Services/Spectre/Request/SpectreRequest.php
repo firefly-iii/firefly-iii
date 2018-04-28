@@ -58,7 +58,7 @@ abstract class SpectreRequest
     public function __construct(User $user)
     {
         $this->user       = $user;
-        $this->server     = config('firefly.spectre.server');
+        $this->server     = 'https://' . config('import.options.spectre.server');
         $this->expiresAt  = time() + 180;
         $privateKey       = app('preferences')->get('spectre_private_key', null);
         $this->privateKey = $privateKey->data;

@@ -69,8 +69,11 @@ return [
             ],
         ],
         'bunq' => [
-            'server'  => 'sandbox.public.api.bunq.com', // sandbox.public.api.bunq.com - api.bunq.com
+            'server'  => 'api.bunq.com', // sandbox.public.api.bunq.com - api.bunq.com
             'version' => 'v1',
+        ],
+        'spectre' => [
+            'server' => 'www.saltedge.com',
         ],
     ],
     'default_config' => [
