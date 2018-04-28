@@ -173,7 +173,7 @@ class UploadConfig implements ConfigurationInterface
     private function storeSpecifics(array $data, array $config): array
     {
         // loop specifics.
-        if (isset($data['specifics']) && is_array($data['specifics'])) {
+        if (isset($data['specifics']) && \is_array($data['specifics'])) {
             $names = array_keys($data['specifics']);
             foreach ($names as $name) {
                 // verify their content.

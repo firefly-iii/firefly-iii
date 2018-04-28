@@ -93,7 +93,6 @@ class Import extends Command
             sprintf('The import has finished. %d transactions have been imported out of %d records.', $routine->getJournals()->count(), $routine->getLines())
         );
 
-        return;
     }
 
     /**

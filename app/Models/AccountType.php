@@ -24,6 +24,7 @@ namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use FireflyIII\Models\Account;
 
 /**
  * Class AccountType.
@@ -89,6 +90,6 @@ class AccountType extends Model
      */
     public function accounts(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\Account');
+        return $this->hasMany(Account::class);
     }
 }

@@ -65,8 +65,6 @@ class AccountDestroyService
         } catch (Exception $e) { // @codeCoverageIgnore
             Log::error(sprintf('Could not delete account: %s', $e->getMessage())); // @codeCoverageIgnore
         }
-
-        return;
     }
 
 }

@@ -92,7 +92,7 @@ class Controller extends BaseController
                     $shownDemo    = true;
 
                     // either must be array and either must be > 0
-                    if ((is_array($intro) || is_array($specialIntro)) && (count($intro) > 0 || count($specialIntro) > 0)) {
+                    if ((\is_array($intro) || \is_array($specialIntro)) && (\count($intro) > 0 || \count($specialIntro) > 0)) {
                         $shownDemo = Preferences::get($key, false)->data;
                         Log::debug(sprintf('Check if user has already seen intro with key "%s". Result is %d', $key, $shownDemo));
                     }
@@ -157,7 +157,7 @@ class Controller extends BaseController
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             $account = $transaction->account;
-            if (in_array($account->accountType->type, $valid)) {
+            if (\in_array($account->accountType->type, $valid)) {
                 return redirect(route('accounts.show', [$account->id]));
             }
         }

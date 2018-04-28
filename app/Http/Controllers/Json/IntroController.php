@@ -43,7 +43,7 @@ class IntroController
         Log::debug(sprintf('getIntroSteps for route "%s" and page "%s"', $route, $specificPage));
         $steps         = $this->getBasicSteps($route);
         $specificSteps = $this->getSpecificSteps($route, $specificPage);
-        if (0 === count($specificSteps)) {
+        if (0 === \count($specificSteps)) {
             Log::debug(sprintf('No specific steps for route "%s" and page "%s"', $route, $specificPage));
 
             return response()->json($steps);
@@ -51,7 +51,7 @@ class IntroController
         if ($this->hasOutroStep($route)) {
             // @codeCoverageIgnoreStart
             // save last step:
-            $lastStep = $steps[count($steps) - 1];
+            $lastStep = $steps[\count($steps) - 1];
             // remove last step:
             array_pop($steps);
             // merge arrays and add last step again
@@ -136,7 +136,7 @@ class IntroController
         $routeKey = str_replace('.', '_', $route);
         $elements = config(sprintf('intro.%s', $routeKey));
         $steps    = [];
-        if (is_array($elements) && count($elements) > 0) {
+        if (\is_array($elements) && \count($elements) > 0) {
             foreach ($elements as $key => $options) {
                 $currentStep = $options;
 
@@ -147,7 +147,7 @@ class IntroController
                 $steps[] = $currentStep;
             }
         }
-        Log::debug(sprintf('Total basic steps for %s is %d', $routeKey, count($steps)));
+        Log::debug(sprintf('Total basic steps for %s is %d', $routeKey, \count($steps)));
 
         return $steps;
     }
@@ -164,10 +164,10 @@ class IntroController
         $routeKey = '';
 
         // user is on page with specific instructions:
-        if (strlen($specificPage) > 0) {
+        if (\strlen($specificPage) > 0) {
             $routeKey = str_replace('.', '_', $route);
             $elements = config(sprintf('intro.%s', $routeKey . '_' . $specificPage));
-            if (is_array($elements) && count($elements) > 0) {
+            if (\is_array($elements) && \count($elements) > 0) {
                 foreach ($elements as $key => $options) {
                     $currentStep = $options;
 
@@ -179,7 +179,7 @@ class IntroController
                 }
             }
         }
-        Log::debug(sprintf('Total specific steps for route "%s" and page "%s" (routeKey is "%s") is %d', $route, $specificPage, $routeKey, count($steps)));
+        Log::debug(sprintf('Total specific steps for route "%s" and page "%s" (routeKey is "%s") is %d', $route, $specificPage, $routeKey, \count($steps)));
 
         return $steps;
     }

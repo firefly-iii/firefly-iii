@@ -41,23 +41,18 @@ use Log;
 
 /**
  * Trait ImportSupport.
+ *
+ * @property int $defaultCurrencyId
+ * @property ImportJob $job
+ * @property JournalRepositoryInterface $journalRepository;
+ * @property Collection $rules
  */
 trait ImportSupport
 {
-    /** @var int */
-    protected $defaultCurrencyId = 1;
-    /** @var ImportJob */
-    protected $job;
-    /** @var JournalRepositoryInterface */
-    protected $journalRepository;
-    /** @var Collection */
-    protected $rules;
-
     /**
      * @param TransactionJournal $journal
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     protected function applyRules(TransactionJournal $journal): bool
     {

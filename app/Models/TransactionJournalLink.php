@@ -113,7 +113,7 @@ class TransactionJournalLink extends Model
      */
     public function setCommentAttribute($value): void
     {
-        if (null !== $value && strlen($value) > 0) {
+        if (null !== $value && \strlen($value) > 0) {
             $this->attributes['comment'] = Crypt::encrypt($value);
 
             return;

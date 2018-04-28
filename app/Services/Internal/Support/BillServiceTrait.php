@@ -68,7 +68,7 @@ trait BillServiceTrait
      */
     public function updateNote(Bill $bill, string $note): bool
     {
-        if (0 === strlen($note)) {
+        if (0 === \strlen($note)) {
             $dbNote = $bill->notes()->first();
             if (null !== $dbNote) {
                 $dbNote->delete(); // @codeCoverageIgnore

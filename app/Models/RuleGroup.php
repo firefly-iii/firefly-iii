@@ -25,6 +25,8 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use FireflyIII\User;
+use FireflyIII\Models\Rule;
 
 /**
  * Class RuleGroup.
@@ -75,7 +77,7 @@ class RuleGroup extends Model
      */
     public function rules()
     {
-        return $this->hasMany('FireflyIII\Models\Rule');
+        return $this->hasMany(Rule::class);
     }
 
     /**
@@ -84,6 +86,6 @@ class RuleGroup extends Model
      */
     public function user()
     {
-        return $this->belongsTo('FireflyIII\User');
+        return $this->belongsTo(User::class);
     }
 }

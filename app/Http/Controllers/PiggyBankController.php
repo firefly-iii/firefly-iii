@@ -273,7 +273,7 @@ class PiggyBankController extends Controller
         // set all users piggy banks to zero:
         $this->piggyRepos->reset();
 
-        if (is_array($data)) {
+        if (\is_array($data)) {
             foreach ($data as $order => $id) {
                 $this->piggyRepos->setOrder((int)$id, $order + 1);
             }

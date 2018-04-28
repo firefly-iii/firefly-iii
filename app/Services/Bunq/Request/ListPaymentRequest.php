@@ -70,7 +70,6 @@ class ListPaymentRequest extends BunqRequest
             }
         }
 
-        return;
     }
 
     /**

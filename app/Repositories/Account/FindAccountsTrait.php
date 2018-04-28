@@ -70,7 +70,7 @@ trait FindAccountsTrait
                             ->where('account_meta.name', 'accountNumber')
                             ->where('account_meta.data', json_encode($number));
 
-        if (count($types) > 0) {
+        if (\count($types) > 0) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
@@ -95,7 +95,7 @@ trait FindAccountsTrait
     {
         $query = $this->user->accounts()->where('iban', '!=', '')->whereNotNull('iban');
 
-        if (count($types) > 0) {
+        if (\count($types) > 0) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
@@ -121,7 +121,7 @@ trait FindAccountsTrait
     {
         $query = $this->user->accounts()->where('iban', '!=', '')->whereNotNull('iban');
 
-        if (count($types) > 0) {
+        if (\count($types) > 0) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
@@ -147,7 +147,7 @@ trait FindAccountsTrait
     {
         $query = $this->user->accounts();
 
-        if (count($types) > 0) {
+        if (\count($types) > 0) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
@@ -177,7 +177,7 @@ trait FindAccountsTrait
         /** @var Collection $result */
         $query = $this->user->accounts();
 
-        if (count($accountIds) > 0) {
+        if (\count($accountIds) > 0) {
             $query->whereIn('accounts.id', $accountIds);
         }
 
@@ -200,7 +200,7 @@ trait FindAccountsTrait
     {
         /** @var Collection $result */
         $query = $this->user->accounts();
-        if (count($types) > 0) {
+        if (\count($types) > 0) {
             $query->accountTypeIn($types);
         }
 
@@ -227,7 +227,7 @@ trait FindAccountsTrait
                 $query->where('name', 'accountRole');
             }]
         );
-        if (count($types) > 0) {
+        if (\count($types) > 0) {
             $query->accountTypeIn($types);
         }
         $query->where('active', 1);

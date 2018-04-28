@@ -54,7 +54,6 @@ abstract class SpectreRequest
      *
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Illuminate\Container\EntryNotFoundException
      */
     public function __construct(User $user)
     {

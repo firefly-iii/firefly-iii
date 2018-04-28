@@ -53,7 +53,7 @@ class PresidentsChoice implements SpecificInterface
         $row = array_values($row);
         // first, if column 2 is empty and 3 is not, do nothing.
         // if column 3 is empty and column 2 is not, move amount to column 3, *-1
-        if (isset($row[3]) && 0 === strlen($row[3])) {
+        if (isset($row[3]) && 0 === \strlen($row[3])) {
             $row[3] = bcmul($row[2], '-1');
         }
         if (isset($row[1])) {

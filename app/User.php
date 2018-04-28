@@ -34,6 +34,22 @@ use Laravel\Passport\HasApiTokens;
 use Log;
 use Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\Tag;
+use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleGroup;
+use FireflyIII\Models\Role;
+use FireflyIII\Models\Preference;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\ExportJob;
+use FireflyIII\Models\Category;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Bill;
+use FireflyIII\Models\AvailableBudget;
+use FireflyIII\Models\Attachment;
 
 /**
  * Class User.
@@ -98,7 +114,7 @@ class User extends Authenticatable
      */
     public function accounts(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\Account');
+        return $this->hasMany(Account::class);
     }
 
     /**
@@ -110,11 +126,11 @@ class User extends Authenticatable
      */
     public function attachRole($role)
     {
-        if (is_object($role)) {
+        if (\is_object($role)) {
             $role = $role->getKey();
         }
 
-        if (is_array($role)) {
+        if (\is_array($role)) {
             $role = $role['id'];
         }
         try {
@@ -133,7 +149,7 @@ class User extends Authenticatable
      */
     public function attachments(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\Attachment');
+        return $this->hasMany(Attachment::class);
     }
 
     /**
@@ -144,7 +160,7 @@ class User extends Authenticatable
      */
     public function availableBudgets(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\AvailableBudget');
+        return $this->hasMany(AvailableBudget::class);
     }
 
     /**
@@ -155,7 +171,7 @@ class User extends Authenticatable
      */
     public function bills(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\Bill');
+        return $this->hasMany(Bill::class);
     }
 
     /**
@@ -166,7 +182,7 @@ class User extends Authenticatable
      */
     public function budgets(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\Budget');
+        return $this->hasMany(Budget::class);
     }
 
     /**
@@ -177,7 +193,7 @@ class User extends Authenticatable
      */
     public function categories(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\Category');
+        return $this->hasMany(Category::class);
     }
 
     /**
@@ -199,7 +215,7 @@ class User extends Authenticatable
      */
     public function exportJobs(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\ExportJob');
+        return $this->hasMany(ExportJob::class);
     }
 
     /**
@@ -245,7 +261,7 @@ class User extends Authenticatable
      */
     public function importJobs(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\ImportJob');
+        return $this->hasMany(ImportJob::class);
     }
 
     /**
@@ -256,7 +272,7 @@ class User extends Authenticatable
      */
     public function piggyBanks(): HasManyThrough
     {
-        return $this->hasManyThrough('FireflyIII\Models\PiggyBank', 'FireflyIII\Models\Account');
+        return $this->hasManyThrough(PiggyBank::class, Account::class);
     }
 
     /**
@@ -267,7 +283,7 @@ class User extends Authenticatable
      */
     public function preferences(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\Preference');
+        return $this->hasMany(Preference::class);
     }
 
     /**
@@ -278,7 +294,7 @@ class User extends Authenticatable
      */
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany('FireflyIII\Models\Role');
+        return $this->belongsToMany(Role::class);
     }
 
     /**
@@ -289,7 +305,7 @@ class User extends Authenticatable
      */
     public function ruleGroups(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\RuleGroup');
+        return $this->hasMany(RuleGroup::class);
     }
 
     /**
@@ -300,7 +316,7 @@ class User extends Authenticatable
      */
     public function rules(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\Rule');
+        return $this->hasMany(Rule::class);
     }
 
     /**
@@ -324,7 +340,7 @@ class User extends Authenticatable
      */
     public function tags(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\Tag');
+        return $this->hasMany(Tag::class);
     }
 
     /**
@@ -335,7 +351,7 @@ class User extends Authenticatable
      */
     public function transactionJournals(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\TransactionJournal');
+        return $this->hasMany(TransactionJournal::class);
     }
 
     /**
@@ -346,6 +362,6 @@ class User extends Authenticatable
      */
     public function transactions(): HasManyThrough
     {
-        return $this->hasManyThrough('FireflyIII\Models\Transaction', 'FireflyIII\Models\TransactionJournal');
+        return $this->hasManyThrough(Transaction::class, TransactionJournal::class);
     }
 }

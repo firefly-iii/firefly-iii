@@ -415,8 +415,7 @@ class ReportController extends Controller
 
     /**
      * @return string
-     *
-
+     * @throws \Throwable
      */
     private function accountReportOptions(): string
     {
@@ -427,7 +426,7 @@ class ReportController extends Controller
         $set        = new Collection;
         $names      = $revenue->pluck('name')->toArray();
         foreach ($expense as $exp) {
-            if (in_array($exp->name, $names)) {
+            if (\in_array($exp->name, $names)) {
                 $set->push($exp);
             }
         }
@@ -437,8 +436,7 @@ class ReportController extends Controller
 
     /**
      * @return string
-     *
-
+     * @throws \Throwable
      */
     private function budgetReportOptions(): string
     {
@@ -451,8 +449,7 @@ class ReportController extends Controller
 
     /**
      * @return string
-     *
-
+     * @throws \Throwable
      */
     private function categoryReportOptions(): string
     {
@@ -465,8 +462,7 @@ class ReportController extends Controller
 
     /**
      * @return string
-     *
-
+     * @throws \Throwable
      */
     private function noReportOptions(): string
     {
@@ -475,8 +471,7 @@ class ReportController extends Controller
 
     /**
      * @return string
-     *
-
+     * @throws \Throwable
      */
     private function tagReportOptions(): string
     {

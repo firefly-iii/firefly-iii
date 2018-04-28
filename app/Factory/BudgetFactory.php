@@ -47,7 +47,7 @@ class BudgetFactory
         $budgetId   = (int)$budgetId;
         $budgetName = (string)$budgetName;
 
-        if (strlen($budgetName) === 0 && $budgetId === 0) {
+        if (\strlen($budgetName) === 0 && $budgetId === 0) {
             return null;
         }
 
@@ -60,7 +60,7 @@ class BudgetFactory
             }
         }
 
-        if (strlen($budgetName) > 0) {
+        if (\strlen($budgetName) > 0) {
             $budget = $this->findByName($budgetName);
             if (null !== $budget) {
                 return $budget;

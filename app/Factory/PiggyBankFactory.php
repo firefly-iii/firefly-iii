@@ -45,7 +45,7 @@ class PiggyBankFactory
     {
         $piggyBankId   = (int)$piggyBankId;
         $piggyBankName = (string)$piggyBankName;
-        if (strlen($piggyBankName) === 0 && $piggyBankId === 0) {
+        if (\strlen($piggyBankName) === 0 && $piggyBankId === 0) {
             return null;
         }
         // first find by ID:
@@ -58,7 +58,7 @@ class PiggyBankFactory
         }
 
         // then find by name:
-        if (strlen($piggyBankName) > 0) {
+        if (\strlen($piggyBankName) > 0) {
             /** @var PiggyBank $piggyBank */
             $piggyBank = $this->findByName($piggyBankName);
             if (null !== $piggyBank) {

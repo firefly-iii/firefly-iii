@@ -94,7 +94,7 @@ class PreferencesController extends Controller
     {
         // front page accounts
         $frontPageAccounts = [];
-        if (is_array($request->get('frontPageAccounts'))) {
+        if (\is_array($request->get('frontPageAccounts'))) {
             foreach ($request->get('frontPageAccounts') as $id) {
                 $frontPageAccounts[] = (int)$id;
             }

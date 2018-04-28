@@ -120,7 +120,7 @@ class MassController extends Controller
     /**
      * @param Collection $journals
      *
-     * @return View
+     * @return IlluminateView
      */
     public function edit(Collection $journals): IlluminateView
     {
@@ -173,7 +173,7 @@ class MassController extends Controller
     {
         $journalIds = $request->get('journals');
         $count      = 0;
-        if (is_array($journalIds)) {
+        if (\is_array($journalIds)) {
             foreach ($journalIds as $journalId) {
                 $journal = $repository->find((int)$journalId);
                 if (null !== $journal) {

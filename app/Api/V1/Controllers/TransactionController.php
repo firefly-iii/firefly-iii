@@ -111,7 +111,7 @@ class TransactionController extends Controller
         $collector->setAllAssetAccounts();
 
         // remove internal transfer filter:
-        if (in_array(TransactionType::TRANSFER, $types)) {
+        if (\in_array(TransactionType::TRANSFER, $types)) {
             $collector->removeFilter(InternalTransferFilter::class);
         }
 

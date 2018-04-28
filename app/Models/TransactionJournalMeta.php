@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use FireflyIII\Models\TransactionJournal;
 
 /**
  * Class TransactionJournalMeta.
@@ -78,6 +79,6 @@ class TransactionJournalMeta extends Model
      */
     public function transactionJournal(): BelongsTo
     {
-        return $this->belongsTo('FireflyIII\Models\TransactionJournal');
+        return $this->belongsTo(TransactionJournal::class);
     }
 }

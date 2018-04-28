@@ -59,7 +59,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \FireflyIII\Exceptions\FireflyException
      * @throws \Throwable
      */
     public function amountNoCurrency(string $name, $value = null, array $options = []): string
@@ -129,7 +128,7 @@ class ExpandedForm
             $currencyId = (int)$account->getMeta('currency_id');
             $currency   = $currencyRepos->findNull($currencyId);
             $role       = $account->getMeta('accountRole');
-            if (0 === strlen($role)) {
+            if (0 === \strlen($role)) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
             if (null === $currency) {
@@ -159,14 +158,13 @@ class ExpandedForm
     }
 
     /**
-     * @param       $name
-     * @param int   $value
-     * @param null  $checked
-     * @param array $options
+     * @param string $name
+     * @param int    $value
+     * @param null   $checked
+     * @param array  $options
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function checkbox(string $name, $value = 1, $checked = null, $options = []): string
     {
@@ -225,13 +223,12 @@ class ExpandedForm
     }
 
     /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function date(string $name, $value = null, array $options = []): string
     {
@@ -246,12 +243,11 @@ class ExpandedForm
     }
 
     /**
-     * @param       $name
-     * @param array $options
+     * @param string $name
+     * @param array  $options
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function file(string $name, array $options = []): string
     {
@@ -264,13 +260,12 @@ class ExpandedForm
     }
 
     /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function integer(string $name, $value = null, array $options = []): string
     {
@@ -285,13 +280,12 @@ class ExpandedForm
     }
 
     /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function location(string $name, $value = null, array $options = []): string
     {
@@ -358,14 +352,13 @@ class ExpandedForm
     }
 
     /**
-     * @param       $name
-     * @param array $list
-     * @param null  $selected
-     * @param array $options
+     * @param string $name
+     * @param array  $list
+     * @param null   $selected
+     * @param array  $options
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function multiCheckbox(string $name, array $list = [], $selected = null, array $options = []): string
     {
@@ -381,14 +374,13 @@ class ExpandedForm
     }
 
     /**
-     * @param       $name
-     * @param array $list
-     * @param null  $selected
-     * @param array $options
+     * @param string $name
+     * @param array  $list
+     * @param null   $selected
+     * @param array  $options
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function multiRadio(string $name, array $list = [], $selected = null, array $options = []): string
     {
@@ -409,8 +401,8 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     *
-
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Throwable
      */
     public function nonSelectableAmount(string $name, $value = null, array $options = []): string
     {
@@ -438,8 +430,8 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     *
-
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Throwable
      */
     public function nonSelectableBalance(string $name, $value = null, array $options = []): string
     {
@@ -468,8 +460,7 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function number(string $name, $value = null, array $options = []): string
     {
@@ -486,12 +477,11 @@ class ExpandedForm
     }
 
     /**
-     * @param $type
-     * @param $name
+     * @param string $type
+     * @param string $name
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function optionsList(string $type, string $name): string
     {
@@ -510,12 +500,11 @@ class ExpandedForm
     }
 
     /**
-     * @param       $name
-     * @param array $options
+     * @param string $name
+     * @param array  $options
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function password(string $name, array $options = []): string
     {
@@ -528,14 +517,13 @@ class ExpandedForm
     }
 
     /**
-     * @param       $name
-     * @param array $list
-     * @param null  $selected
-     * @param array $options
+     * @param string $name
+     * @param array  $list
+     * @param null   $selected
+     * @param array  $options
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function select(string $name, array $list = [], $selected = null, array $options = []): string
     {
@@ -550,13 +538,12 @@ class ExpandedForm
     }
 
     /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function staticText(string $name, $value, array $options = []): string
     {
@@ -569,13 +556,12 @@ class ExpandedForm
     }
 
     /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function tags(string $name, $value = null, array $options = []): string
     {
@@ -590,13 +576,12 @@ class ExpandedForm
     }
 
     /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function text(string $name, $value = null, array $options = []): string
     {
@@ -610,13 +595,12 @@ class ExpandedForm
     }
 
     /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function textarea(string $name, $value = null, array $options = []): string
     {
@@ -718,6 +702,7 @@ class ExpandedForm
      * @return string
      *
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Throwable
      */
     private function currencyField(string $name, string $view, $value = null, array $options = []): string
     {

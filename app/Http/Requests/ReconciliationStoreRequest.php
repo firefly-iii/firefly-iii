@@ -46,7 +46,7 @@ class ReconciliationStoreRequest extends Request
     public function getAll(): array
     {
         $transactions = $this->get('transactions');
-        if (!is_array($transactions)) {
+        if (!\is_array($transactions)) {
             $transactions = []; // @codeCoverageIgnore
         }
         $data = [

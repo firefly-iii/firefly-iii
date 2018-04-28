@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use FireflyIII\Models\Rule;
 
 /**
  * Class RuleTrigger.
@@ -52,6 +53,6 @@ class RuleTrigger extends Model
      */
     public function rule()
     {
-        return $this->belongsTo('FireflyIII\Models\Rule');
+        return $this->belongsTo(Rule::class);
     }
 }

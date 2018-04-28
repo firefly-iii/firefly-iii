@@ -24,6 +24,7 @@ namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use FireflyIII\User;
 
 /**
  * Class Role.
@@ -52,6 +53,6 @@ class Role extends Model
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany('FireflyIII\User');
+        return $this->belongsToMany(User::class);
     }
 }

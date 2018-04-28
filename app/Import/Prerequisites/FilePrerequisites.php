@@ -84,7 +84,6 @@ class FilePrerequisites implements PrerequisitesInterface
     {
         $this->user = $user;
 
-        return;
     }
 
     /**

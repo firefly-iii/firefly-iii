@@ -131,7 +131,6 @@ class BunqInformation implements InformationInterface
         $request->setSessionToken($sessionToken);
         $request->call();
 
-        return;
     }
 
     /**
@@ -139,8 +138,7 @@ class BunqInformation implements InformationInterface
      * @param int          $userId
      *
      * @return Collection
-     *
-
+     * @throws FireflyException
      */
     private function getMonetaryAccounts(SessionToken $sessionToken, int $userId): Collection
     {
@@ -191,8 +189,7 @@ class BunqInformation implements InformationInterface
 
     /**
      * @return SessionToken
-     *
-
+     * @throws FireflyException
      */
     private function startSession(): SessionToken
     {

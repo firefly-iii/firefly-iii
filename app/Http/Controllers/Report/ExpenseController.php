@@ -67,8 +67,7 @@ class ExpenseController extends Controller
      * @param Carbon     $end
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function budget(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
@@ -115,8 +114,7 @@ class ExpenseController extends Controller
      * @param Carbon     $end
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function category(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
@@ -173,8 +171,7 @@ class ExpenseController extends Controller
      * @param Carbon     $end
      *
      * @return array|mixed|string
-     *
-
+     * @throws \Throwable
      */
     public function spent(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
@@ -218,8 +215,7 @@ class ExpenseController extends Controller
      * @param Carbon     $end
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     public function topExpense(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
@@ -262,8 +258,7 @@ class ExpenseController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     *
-
+     * @throws \Throwable
      */
     public function topIncome(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {

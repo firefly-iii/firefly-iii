@@ -89,7 +89,7 @@ class Roles implements ConfigurationInterface
         foreach ($records as $row) {
             $row                 = array_values($row);
             $row                 = $this->processSpecifics($row);
-            $count               = count($row);
+            $count               = \count($row);
             $this->data['total'] = $count > $this->data['total'] ? $count : $this->data['total'];
             $this->processRow($row);
         }
@@ -246,7 +246,7 @@ class Roles implements ConfigurationInterface
             if ('_ignore' !== $role) {
                 ++$assigned;
             }
-            if (in_array($role, ['amount', 'amount_credit', 'amount_debit'])) {
+            if (\in_array($role, ['amount', 'amount_credit', 'amount_debit'])) {
                 $hasAmount = true;
             }
             if ($role === 'foreign-currency-code') {
@@ -313,7 +313,7 @@ class Roles implements ConfigurationInterface
     {
         foreach ($row as $index => $value) {
             $value = trim($value);
-            if (strlen($value) > 0) {
+            if (\strlen($value) > 0) {
                 $this->data['examples'][$index][] = $value;
             }
         }

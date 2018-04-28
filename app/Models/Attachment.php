@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use FireflyIII\User;
 
 /**
  * Class Attachment.
@@ -101,7 +102,7 @@ class Attachment extends Model
      */
     public function getDescriptionAttribute($value)
     {
-        if (null === $value || 0 === strlen($value)) {
+        if (null === $value || 0 === \strlen($value)) {
             return null;
         }
 
@@ -117,7 +118,7 @@ class Attachment extends Model
      */
     public function getFilenameAttribute($value)
     {
-        if (null === $value || 0 === strlen($value)) {
+        if (null === $value || 0 === \strlen($value)) {
             return null;
         }
 
@@ -133,7 +134,7 @@ class Attachment extends Model
      */
     public function getMimeAttribute($value)
     {
-        if (null === $value || 0 === strlen($value)) {
+        if (null === $value || 0 === \strlen($value)) {
             return null;
         }
 
@@ -149,7 +150,7 @@ class Attachment extends Model
      */
     public function getTitleAttribute($value)
     {
-        if (null === $value || 0 === strlen($value)) {
+        if (null === $value || 0 === \strlen($value)) {
             return null;
         }
 
@@ -219,6 +220,6 @@ class Attachment extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo('FireflyIII\User');
+        return $this->belongsTo(User::class);
     }
 }

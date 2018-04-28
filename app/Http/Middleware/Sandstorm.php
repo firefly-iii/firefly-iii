@@ -71,7 +71,7 @@ class Sandstorm
             // access the same data so we have no choice but to simply login
             // the new user to the same account and just forget about Bob and Alice
             // and any other differences there may be between these users.
-            if (1 === $count && strlen($userId) > 0) {
+            if (1 === $count && \strlen($userId) > 0) {
                 // login as first user user.
                 $user = $repository->first();
                 Auth::guard($guard)->login($user);
@@ -80,7 +80,7 @@ class Sandstorm
                 return $next($request);
             }
 
-            if (1 === $count && 0 === strlen($userId)) {
+            if (1 === $count && 0 === \strlen($userId)) {
                 // login but indicate anonymous
                 $user = User::first();
                 Auth::guard($guard)->login($user);
@@ -89,7 +89,7 @@ class Sandstorm
                 return $next($request);
             }
 
-            if (0 === $count && strlen($userId) > 0) {
+            if (0 === $count && \strlen($userId) > 0) {
                 // create new user.
                 $email = $userId . '@firefly';
                 /** @var User $user */
@@ -111,7 +111,7 @@ class Sandstorm
                 return $next($request);
             }
 
-            if (0 === $count && 0 === strlen($userId)) {
+            if (0 === $count && 0 === \strlen($userId)) {
                 throw new FireflyException('The first visit to a new Firefly III administration cannot be by a guest user.');
             }
 
@@ -121,7 +121,7 @@ class Sandstorm
         }
         // if in Sandstorm, user logged in, still must check if user is anon.
         $userId = (string)$request->header('X-Sandstorm-User-Id');
-        if (strlen($userId) === 0) {
+        if (\strlen($userId) === 0) {
             View::share('SANDSTORM_ANON', true);
 
             return $next($request);

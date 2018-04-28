@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Factory\TagFactory;
 use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use Log;
 
@@ -55,8 +55,16 @@ class AddTag implements ActionInterface
     public function act(TransactionJournal $journal): bool
     {
         // journal has this tag maybe?
-        $tag = Tag::firstOrCreateEncrypted(['tag' => $this->action->action_value, 'user_id' => $journal->user->id]);
+        /** @var TagFactory $factory */
+        $factory = app(TagFactory::class);
+        $factory->setUser($journal->user);
+        $tag = $factory->findOrCreate($this->action->action_value);
+        if (null === $tag) {
+            // could not find, could not create tag.
+            Log::error(sprintf('RuleAction AddTag. Could not find or create tag "%s"', $this->action->action_value));
 
+            return false;
+        }
         $count = $journal->tags()->where('tag_id', $tag->id)->count();
         if (0 === $count) {
             $journal->tags()->save($tag);

@@ -60,7 +60,7 @@ class FixerIOv2 implements ExchangeRateInterface
         $apiKey = env('FIXER_API_KEY', '');
 
         // if no API key, return unsaved exchange rate.
-        if (strlen($apiKey) === 0) {
+        if (\strlen($apiKey) === 0) {
             return $exchangeRate;
         }
 

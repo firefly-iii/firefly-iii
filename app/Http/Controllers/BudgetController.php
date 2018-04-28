@@ -417,13 +417,13 @@ class BudgetController extends Controller
         // prep for "all" view.
         if ('all' === $moment) {
             $subTitle = trans('firefly.all_journals_without_budget');
-            $first    = $repository->first();
-            $start    = $first->date ?? new Carbon;
+            $first    = $repository->firstNull();
+            $start    = null === $first ? new Carbon : $first->date;
             $end      = new Carbon;
         }
 
         // prep for "specific date" view.
-        if (strlen($moment) > 0 && 'all' !== $moment) {
+        if ('all' !== $moment && \strlen($moment) > 0) {
             $start    = new Carbon($moment);
             $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
@@ -434,7 +434,7 @@ class BudgetController extends Controller
         }
 
         // prep for current period
-        if (0 === strlen($moment)) {
+        if ('' === $moment) {
             $start    = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
             $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
             $periods  = $this->getPeriodOverview();

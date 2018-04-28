@@ -62,7 +62,6 @@ class UpdateController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Illuminate\Container\EntryNotFoundException
      */
     public function index()
     {

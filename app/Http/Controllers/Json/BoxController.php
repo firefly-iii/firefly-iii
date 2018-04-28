@@ -158,7 +158,7 @@ class BoxController extends Controller
             'incomes'  => $incomes,
             'expenses' => $expenses,
             'sums'     => $sums,
-            'size'     => count($sums),
+            'size'     => \count($sums),
         ];
 
         $cache->store($response);

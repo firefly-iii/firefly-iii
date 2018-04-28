@@ -25,6 +25,8 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use FireflyIII\User;
+use FireflyIII\Models\TransactionCurrency;
 
 /**
  * Class AvailableBudget.
@@ -54,7 +56,7 @@ class AvailableBudget extends Model
      */
     public function transactionCurrency()
     {
-        return $this->belongsTo('FireflyIII\Models\TransactionCurrency');
+        return $this->belongsTo(TransactionCurrency::class);
     }
 
     /**
@@ -63,6 +65,6 @@ class AvailableBudget extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo('FireflyIII\User');
+        return $this->belongsTo(User::class);
     }
 }

@@ -70,7 +70,7 @@ class AccountUpdateService
         }
 
         // update note:
-        if (isset($data['notes']) && null !== $data['notes']) {
+        if (isset($data['notes'])) {
             $this->updateNote($account, (string)$data['notes']);
         }
 

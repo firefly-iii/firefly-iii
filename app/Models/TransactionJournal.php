@@ -35,6 +35,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Log;
 use Preferences;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionType;
+use FireflyIII\Models\TransactionJournalMeta;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\Tag;
+use FireflyIII\Models\PiggyBankEvent;
+use FireflyIII\Models\Note;
+use FireflyIII\Models\Category;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Bill;
+use FireflyIII\Models\Attachment;
 
 /**
  * Class TransactionJournal.
@@ -99,7 +110,7 @@ class TransactionJournal extends Model
      */
     public function attachments()
     {
-        return $this->morphMany('FireflyIII\Models\Attachment', 'attachable');
+        return $this->morphMany(Attachment::class, 'attachable');
     }
 
     /**
@@ -108,7 +119,7 @@ class TransactionJournal extends Model
      */
     public function bill()
     {
-        return $this->belongsTo('FireflyIII\Models\Bill');
+        return $this->belongsTo(Bill::class);
     }
 
     /**
@@ -117,7 +128,7 @@ class TransactionJournal extends Model
      */
     public function budgets(): BelongsToMany
     {
-        return $this->belongsToMany('FireflyIII\Models\Budget');
+        return $this->belongsToMany(Budget::class);
     }
 
     /**
@@ -126,7 +137,7 @@ class TransactionJournal extends Model
      */
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany('FireflyIII\Models\Category');
+        return $this->belongsToMany(Category::class);
     }
 
     /**
@@ -279,7 +290,7 @@ class TransactionJournal extends Model
      */
     public function notes()
     {
-        return $this->morphMany('FireflyIII\Models\Note', 'noteable');
+        return $this->morphMany(Note::class, 'noteable');
     }
 
     /**
@@ -288,7 +299,7 @@ class TransactionJournal extends Model
      */
     public function piggyBankEvents(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\PiggyBankEvent');
+        return $this->hasMany(PiggyBankEvent::class);
     }
 
     /**
@@ -328,7 +339,7 @@ class TransactionJournal extends Model
         if (!self::isJoined($query, 'transaction_types')) {
             $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
         }
-        if (count($types) > 0) {
+        if (\count($types) > 0) {
             $query->whereIn('transaction_types.type', $types);
         }
     }
@@ -362,7 +373,7 @@ class TransactionJournal extends Model
 
             return new TransactionJournalMeta();
         }
-        if (is_string($value) && 0 === strlen($value)) {
+        if (\is_string($value) && 0 === \strlen($value)) {
             $this->deleteMeta($name);
 
             return new TransactionJournalMeta();
@@ -401,7 +412,7 @@ class TransactionJournal extends Model
      */
     public function tags()
     {
-        return $this->belongsToMany('FireflyIII\Models\Tag');
+        return $this->belongsToMany(Tag::class);
     }
 
     /**
@@ -410,7 +421,7 @@ class TransactionJournal extends Model
      */
     public function transactionCurrency()
     {
-        return $this->belongsTo('FireflyIII\Models\TransactionCurrency');
+        return $this->belongsTo(TransactionCurrency::class);
     }
 
     /**
@@ -419,7 +430,7 @@ class TransactionJournal extends Model
      */
     public function transactionJournalMeta(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\TransactionJournalMeta');
+        return $this->hasMany(TransactionJournalMeta::class);
     }
 
     /**
@@ -428,7 +439,7 @@ class TransactionJournal extends Model
      */
     public function transactionType()
     {
-        return $this->belongsTo('FireflyIII\Models\TransactionType');
+        return $this->belongsTo(TransactionType::class);
     }
 
     /**
@@ -437,7 +448,7 @@ class TransactionJournal extends Model
      */
     public function transactions(): HasMany
     {
-        return $this->hasMany('FireflyIII\Models\Transaction');
+        return $this->hasMany(Transaction::class);
     }
 
     /**
@@ -446,6 +457,6 @@ class TransactionJournal extends Model
      */
     public function user()
     {
-        return $this->belongsTo('FireflyIII\User');
+        return $this->belongsTo(User::class);
     }
 }

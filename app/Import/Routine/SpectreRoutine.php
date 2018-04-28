@@ -505,7 +505,7 @@ class SpectreRoutine implements RoutineInterface
         Log::debug('Looping journals...');
         $journalIds = $storage->journals->pluck('id')->toArray();
         $tagId      = $tag->id;
-        $this->addTotalSteps(count($journalIds));
+        $this->addTotalSteps(\count($journalIds));
 
         foreach ($journalIds as $journalId) {
             Log::debug(sprintf('Linking journal #%d to tag #%d...', $journalId, $tagId));
@@ -551,7 +551,7 @@ class SpectreRoutine implements RoutineInterface
                 'import_id'    => $importId,
                 'transactions' => $transactions,
             ];
-            $count                  += count($transactions);
+            $count                  += \count($transactions);
         }
         Log::debug(sprintf('Total number of transactions: %d', $count));
         $this->addStep();

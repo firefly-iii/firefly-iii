@@ -195,7 +195,7 @@ class ImportAccount
      */
     private function findByIBAN(AccountType $type): ?Account
     {
-        if (3 === count($this->accountIban)) {
+        if (3 === \count($this->accountIban)) {
             $accounts = $this->repository->getAccountsByType([$type->type]);
             $iban     = $this->accountIban['value'];
             Log::debug(sprintf('Finding account of type %d and IBAN %s', $type->id, $iban));
@@ -233,7 +233,7 @@ class ImportAccount
      */
     private function findById(AccountType $type): ?Account
     {
-        if (3 === count($this->accountId)) {
+        if (3 === \count($this->accountId)) {
             Log::debug(sprintf('Finding account of type %d and ID %d', $type->id, $this->accountId['value']));
             /** @var Account $account */
             $account = $this->user->accounts()
@@ -263,7 +263,7 @@ class ImportAccount
     private function findByName(AccountType $type): ?Account
     {
         // Three: find by name (and type):
-        if (3 === count($this->accountName)) {
+        if (3 === \count($this->accountName)) {
             $accounts = $this->repository->getAccountsByType([$type->type]);
             $name     = $this->accountName['value'];
             Log::debug(sprintf('Finding account of type %d and name %s', $type->id, $name));
@@ -351,7 +351,7 @@ class ImportAccount
     private function getMappedObject(array $array): ?Account
     {
         Log::debug('In getMappedObject() for Account');
-        if (0 === count($array)) {
+        if (0 === \count($array)) {
             Log::debug('Array is empty, nothing will come of this.');
 
             return null;

@@ -217,7 +217,6 @@ class TransactionMatcher
      * @param Processor $processor
      *
      * @return Collection
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function runProcessor(Processor $processor): Collection
     {
@@ -276,7 +275,7 @@ class TransactionMatcher
 
             // Update counters
             ++$page;
-            $processed += count($set);
+            $processed += \count($set);
 
             Log::debug(sprintf('Page is now %d, processed is %d', $page, $processed));
 

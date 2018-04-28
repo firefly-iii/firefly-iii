@@ -122,6 +122,7 @@ class ReconcileController extends Controller
      * @return \Illuminate\Http\JsonResponse
      *
      * @throws FireflyException
+     * @throws \Throwable
      */
     public function overview(Request $request, Account $account, Carbon $start, Carbon $end)
     {
@@ -339,6 +340,7 @@ class ReconcileController extends Controller
      * @return mixed
      *
      * @throws FireflyException
+     * @throws \Throwable
      */
     public function transactions(Account $account, Carbon $start, Carbon $end)
     {

@@ -62,7 +62,7 @@ class JournalUpdateService
         $factory = app(TransactionFactory::class);
         $factory->setUser($journal->user);
 
-        Log::debug(sprintf('Found %d rows in array (should result in %d transactions', count($data['transactions']), count($data['transactions']) * 2));
+        Log::debug(sprintf('Found %d rows in array (should result in %d transactions', \count($data['transactions']), \count($data['transactions']) * 2));
 
         /**
          * @var int   $identifier
@@ -97,7 +97,7 @@ class JournalUpdateService
                 $journal->transactions()->where('identifier', $transaction->identifier)->delete();
             }
         }
-        Log::debug(sprintf('New count is %d, transactions array held %d items', $journal->transactions()->count(), count($data['transactions'])));
+        Log::debug(sprintf('New count is %d, transactions array held %d items', $journal->transactions()->count(), \count($data['transactions'])));
 
         // connect bill:
         $this->connectBill($journal, $data);

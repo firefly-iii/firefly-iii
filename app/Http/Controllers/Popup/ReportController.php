@@ -114,11 +114,12 @@ class ReportController extends Controller
     }
 
     /**
-     * @param $attributes
+     * @param array $attributes
      *
      * @return string
      *
      * @throws FireflyException
+     * @throws \Throwable
      */
     private function balanceAmount(array $attributes): string
     {
@@ -155,8 +156,7 @@ class ReportController extends Controller
      * @param array $attributes
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     private function budgetSpentAmount(array $attributes): string
     {
@@ -173,8 +173,7 @@ class ReportController extends Controller
      * @param array $attributes
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     private function categoryEntry(array $attributes): string
     {
@@ -191,8 +190,7 @@ class ReportController extends Controller
      * @param array $attributes
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     private function expenseEntry(array $attributes): string
     {
@@ -209,8 +207,7 @@ class ReportController extends Controller
      * @param array $attributes
      *
      * @return string
-     *
-
+     * @throws \Throwable
      */
     private function incomeEntry(array $attributes): string
     {

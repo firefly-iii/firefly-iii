@@ -175,7 +175,7 @@ class TransactionController extends Controller
     {
         $ids  = $request->get('items');
         $date = new Carbon($request->get('date'));
-        if (count($ids) > 0) {
+        if (\count($ids) > 0) {
             $order = 0;
             $ids   = array_unique($ids);
             foreach ($ids as $id) {

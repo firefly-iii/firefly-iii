@@ -78,7 +78,7 @@ class General extends Twig_Extension
         return new Twig_SimpleFunction(
             'activeRoutePartial',
             function (): string {
-                $args  = func_get_args();
+                $args  = \func_get_args();
                 $route = $args[0]; // name of the route.
                 $name  = Route::getCurrentRoute()->getName() ?? '';
                 if (!(false === strpos($name, $route))) {
@@ -101,7 +101,7 @@ class General extends Twig_Extension
         return new Twig_SimpleFunction(
             'activeRoutePartialWhat',
             function ($context): string {
-                $args       = func_get_args();
+                $args       = \func_get_args();
                 $route      = $args[1]; // name of the route.
                 $what       = $args[2]; // name of the route.
                 $activeWhat = $context['what'] ?? false;
@@ -127,7 +127,7 @@ class General extends Twig_Extension
         return new Twig_SimpleFunction(
             'activeRouteStrict',
             function (): string {
-                $args  = func_get_args();
+                $args  = \func_get_args();
                 $route = $args[0]; // name of the route.
 
                 if (Route::getCurrentRoute()->getName() === $route) {

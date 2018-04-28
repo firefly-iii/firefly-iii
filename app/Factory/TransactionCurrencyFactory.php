@@ -68,7 +68,7 @@ class TransactionCurrencyFactory
         $currencyCode = (string)$currencyCode;
         $currencyId   = (int)$currencyId;
 
-        if (strlen($currencyCode) === 0 && (int)$currencyId === 0) {
+        if (\strlen($currencyCode) === 0 && (int)$currencyId === 0) {
             return null;
         }
 
@@ -80,7 +80,7 @@ class TransactionCurrencyFactory
             }
         }
         // then by code:
-        if (strlen($currencyCode) > 0) {
+        if (\strlen($currencyCode) > 0) {
             $currency = TransactionCurrency::whereCode($currencyCode)->first();
             if (null !== $currency) {
                 return $currency;

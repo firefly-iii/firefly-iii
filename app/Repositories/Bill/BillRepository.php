@@ -555,37 +555,4 @@ class BillRepository implements BillRepositoryInterface
         return $service->update($bill, $data);
     }
 
-    /**
-     * @param float $amount
-     * @param float $min
-     * @param float $max
-     *
-     * @return bool
-     */
-    protected function doAmountMatch($amount, $min, $max): bool
-    {
-        return $amount >= $min && $amount <= $max;
-    }
-
-    /**
-     * @param array $matches
-     * @param       $description
-     *
-     * @return bool
-     */
-    protected function doWordMatch(array $matches, $description): bool
-    {
-        $wordMatch = false;
-        $count     = 0;
-        foreach ($matches as $word) {
-            if (!(false === strpos($description, strtolower($word)))) {
-                ++$count;
-            }
-        }
-        if ($count >= count($matches)) {
-            $wordMatch = true;
-        }
-
-        return $wordMatch;
-    }
 }

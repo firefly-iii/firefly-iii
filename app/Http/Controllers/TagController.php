@@ -213,7 +213,7 @@ class TagController extends Controller
         }
 
         // prep for "specific date" view.
-        if (strlen($moment) > 0 && 'all' !== $moment) {
+        if (\strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
             $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
@@ -226,7 +226,7 @@ class TagController extends Controller
         }
 
         // prep for current period
-        if (0 === strlen($moment)) {
+        if (0 === \strlen($moment)) {
             /** @var Carbon $start */
             $start = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
             /** @var Carbon $end */

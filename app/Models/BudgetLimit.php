@@ -24,6 +24,7 @@ namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use FireflyIII\Models\Budget;
 
 /**
  * Class BudgetLimit.
@@ -71,7 +72,7 @@ class BudgetLimit extends Model
      */
     public function budget()
     {
-        return $this->belongsTo('FireflyIII\Models\Budget');
+        return $this->belongsTo(Budget::class);
     }
 
     /**

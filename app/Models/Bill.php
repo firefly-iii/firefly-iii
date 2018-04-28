@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use FireflyIII\Models\Attachment;
 
 /**
  * Class Bill.
@@ -88,7 +89,7 @@ class Bill extends Model
      */
     public function attachments()
     {
-        return $this->morphMany('FireflyIII\Models\Attachment', 'attachable');
+        return $this->morphMany(Attachment::class, 'attachable');
     }
 
     /**

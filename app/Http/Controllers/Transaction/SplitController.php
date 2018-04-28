@@ -157,7 +157,7 @@ class SplitController extends Controller
 
         // flash messages
         // @codeCoverageIgnoreStart
-        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+        if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
             session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
         // @codeCoverageIgnoreEnd
@@ -253,7 +253,7 @@ class SplitController extends Controller
                 $res = $transformer->transform($transaction);
             }
 
-            if (count($res) > 0) {
+            if (\count($res) > 0) {
                 $res['amount']         = app('steam')->positive((string)$res['amount']);
                 $res['foreign_amount'] = app('steam')->positive((string)$res['foreign_amount']);
                 $transactions[]        = $res;
@@ -271,7 +271,7 @@ class SplitController extends Controller
      */
     private function updateWithPrevious($array, $old): array
     {
-        if (0 === count($old) || !isset($old['transactions'])) {
+        if (0 === \count($old) || !isset($old['transactions'])) {
             return $array;
         }
         $old = $old['transactions'];

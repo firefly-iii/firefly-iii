@@ -211,7 +211,7 @@ class HomeController extends Controller
         /** @var Route $route */
         foreach ($set as $route) {
             $name = $route->getName();
-            if (null !== $name && in_array('GET', $route->methods()) && strlen($name) > 0) {
+            if (null !== $name && \in_array('GET', $route->methods()) && \strlen($name) > 0) {
 
                 $found = false;
                 foreach ($ignore as $string) {

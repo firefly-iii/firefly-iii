@@ -198,7 +198,6 @@ class BunqConfigurator implements ConfiguratorInterface
         $job       = $this->repository->setExtendedStatus($job, $extendedStatus);
         $this->job = $job;
 
-        return;
     }
 
     /**

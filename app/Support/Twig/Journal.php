@@ -192,7 +192,7 @@ class Journal extends Twig_Extension
                 foreach ($journal->categories as $category) {
                     $categories[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($category->name), route('categories.show', $category->id));
                 }
-                if (0 === count($categories)) {
+                if (0 === \count($categories)) {
                     $set = Category::distinct()->leftJoin('category_transaction', 'categories.id', '=', 'category_transaction.category_id')
                                    ->leftJoin('transactions', 'category_transaction.transaction_id', '=', 'transactions.id')
                                    ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')

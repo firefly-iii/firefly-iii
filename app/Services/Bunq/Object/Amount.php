@@ -42,7 +42,6 @@ class Amount extends BunqObject
         $this->currency = $data['currency'];
         $this->value    = $data['value'];
 
-        return;
     }
 
     /**

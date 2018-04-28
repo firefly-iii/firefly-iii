@@ -42,7 +42,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * @return string
-     *
      */
     public function generate(): string
     {

@@ -170,7 +170,6 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
      * Collects a list of rule processors, one for each rule within the rule group.
      *
      * @return array
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     protected function collectProcessors()
     {

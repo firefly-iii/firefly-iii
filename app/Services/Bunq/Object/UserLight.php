@@ -60,7 +60,7 @@ class UserLight extends BunqObject
      */
     public function __construct(array $data)
     {
-        if (0 === count($data)) {
+        if (0 === \count($data)) {
             return;
         }
         $this->id             = (int)$data['id'];
@@ -78,6 +78,7 @@ class UserLight extends BunqObject
 
     /**
      * @return array
+     * @throws FireflyException
      */
     public function toArray(): array
     {

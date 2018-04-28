@@ -46,7 +46,7 @@ class AssetAccounts implements MapperInterface
             $accountId = (int)$account->id;
             $name      = $account->name;
             $iban      = $account->iban ?? '';
-            if (strlen($iban) > 0) {
+            if (\strlen($iban) > 0) {
                 $name .= ' (' . $iban . ')';
             }
             $list[$accountId] = $name;

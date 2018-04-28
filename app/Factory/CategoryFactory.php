@@ -71,7 +71,7 @@ class CategoryFactory
 
         Log::debug(sprintf('Going to find category with ID %d and name "%s"', $categoryId, $categoryName));
 
-        if (strlen($categoryName) === 0 && $categoryId === 0) {
+        if (\strlen($categoryName) === 0 && $categoryId === 0) {
             return null;
         }
         // first by ID:
@@ -83,7 +83,7 @@ class CategoryFactory
             }
         }
 
-        if (strlen($categoryName) > 0) {
+        if (\strlen($categoryName) > 0) {
             $category = $this->findByName($categoryName);
             if (null !== $category) {
                 return $category;

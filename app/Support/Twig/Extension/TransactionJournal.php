@@ -83,7 +83,7 @@ class TransactionJournal extends Twig_Extension
         if (null === $result) {
             return false;
         }
-        if (strlen((string)$result) === 0) {
+        if (\strlen((string)$result) === 0) {
             return false;
         }
 
@@ -136,6 +136,6 @@ class TransactionJournal extends Twig_Extension
             $array[] = app('amount')->formatAnything($total['currency'], $total['amount']);
         }
 
-        return join(' / ', $array);
+        return implode(' / ', $array);
     }
 }

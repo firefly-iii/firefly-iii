@@ -75,7 +75,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($accounts)->setCategories($categories);
         $set = $collector->getJournals();
 
-        return strval($set->sum('transaction_amount'));
+        return (string)$set->sum('transaction_amount');
     }
 
     /**
@@ -400,7 +400,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         $set = $collector->getJournals();
 
-        return strval($set->sum('transaction_amount'));
+        return (string)$set->sum('transaction_amount');
     }
 
     /**
@@ -435,7 +435,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             }
         );
 
-        return strval($set->sum('transaction_amount'));
+        return (string)$set->sum('transaction_amount');
     }
 
     /**

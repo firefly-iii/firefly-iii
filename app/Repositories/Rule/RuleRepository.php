@@ -49,7 +49,7 @@ class RuleRepository implements RuleRepositoryInterface
      * @param Rule $rule
      *
      * @return bool
-     *
+     * @throws \Exception
      */
     public function destroy(Rule $rule): bool
     {
@@ -261,7 +261,7 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->strict          = $data['strict'] ?? false;
         $rule->stop_processing = 1 === (int)$data['stop_processing'];
         $rule->title           = $data['title'];
-        $rule->description     = strlen($data['description']) > 0 ? $data['description'] : null;
+        $rule->description     = \strlen($data['description']) > 0 ? $data['description'] : null;
 
         $rule->save();
 

@@ -34,7 +34,6 @@ class NewCustomerRequest extends SpectreRequest
 
     /**
      * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \FireflyIII\Services\Spectre\Exception\SpectreException
      */
     public function call(): void
     {

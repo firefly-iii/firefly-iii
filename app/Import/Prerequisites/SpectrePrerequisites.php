@@ -96,7 +96,6 @@ class SpectrePrerequisites implements PrerequisitesInterface
     {
         $this->user = $user;
 
-        return;
     }
 
     /**
@@ -144,7 +143,6 @@ class SpectrePrerequisites implements PrerequisitesInterface
         Preferences::setForUser($this->user, 'spectre_public_key', $pubKey['key']);
         Log::debug('Created key pair');
 
-        return;
     }
 
     /**

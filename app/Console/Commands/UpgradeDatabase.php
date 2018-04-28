@@ -106,7 +106,7 @@ class UpgradeDatabase extends Command
 
             if ($ruleGroup === null) {
                 $array     = RuleGroup::get(['order'])->pluck('order')->toArray();
-                $order     = count($array) > 0 ? max($array) + 1 : 1;
+                $order     = \count($array) > 0 ? max($array) + 1 : 1;
                 $ruleGroup = RuleGroup::create(
                     [
                         'user_id'     => $user->id,
@@ -240,7 +240,6 @@ class UpgradeDatabase extends Command
             $this->updateJournalidentifiers((int)$journalId);
         }
 
-        return;
     }
 
     /**
@@ -294,7 +293,6 @@ class UpgradeDatabase extends Command
             }
         );
 
-        return;
     }
 
     /**
@@ -352,7 +350,6 @@ class UpgradeDatabase extends Command
             }
         );
 
-        return;
     }
 
     /**
@@ -413,7 +410,7 @@ class UpgradeDatabase extends Command
 
             // move description:
             $description = (string)$att->description;
-            if (strlen($description) > 0) {
+            if (\strlen($description) > 0) {
                 // find or create note:
                 $note = $att->notes()->first();
                 if (null === $note) {
@@ -484,7 +481,6 @@ class UpgradeDatabase extends Command
             $journal->save();
         }
 
-        return;
     }
 
     /**
@@ -530,7 +526,6 @@ class UpgradeDatabase extends Command
             ++$identifier;
         }
 
-        return;
     }
 
     /**
@@ -663,7 +658,6 @@ class UpgradeDatabase extends Command
             $opposing->save();
         }
 
-        return;
     }
 
 }

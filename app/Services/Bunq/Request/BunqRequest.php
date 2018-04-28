@@ -119,7 +119,7 @@ abstract class BunqRequest
      */
     protected function generateSignature(string $method, string $uri, array $headers, string $data): string
     {
-        if (0 === strlen($this->privateKey)) {
+        if (0 === \strlen($this->privateKey)) {
             throw new FireflyException('No private key present.');
         }
         if ('get' === strtolower($method) || 'delete' === strtolower($method)) {
@@ -133,7 +133,7 @@ abstract class BunqRequest
         $headersToSign = ['Cache-Control', 'User-Agent'];
         ksort($headers);
         foreach ($headers as $name => $value) {
-            if (in_array($name, $headersToSign) || 'X-Bunq-' === substr($name, 0, 7)) {
+            if (\in_array($name, $headersToSign) || 'X-Bunq-' === substr($name, 0, 7)) {
                 $toSign .= sprintf("%s: %s\n", $name, $value);
             }
         }
@@ -217,7 +217,7 @@ abstract class BunqRequest
      */
     protected function sendSignedBunqDelete(string $uri, array $headers): array
     {
-        if (0 === strlen($this->server)) {
+        if (0 === \strlen($this->server)) {
             throw new FireflyException('No bunq server defined');
         }
 
@@ -263,7 +263,7 @@ abstract class BunqRequest
      */
     protected function sendSignedBunqGet(string $uri, array $data, array $headers): array
     {
-        if (0 === strlen($this->server)) {
+        if (0 === \strlen($this->server)) {
             throw new FireflyException('No bunq server defined');
         }
 
@@ -508,12 +508,12 @@ abstract class BunqRequest
         $dataToVerify .= "\n" . $body;
         $result       = openssl_verify($dataToVerify, base64_decode($signature), $this->serverPublicKey->getPublicKey(), OPENSSL_ALGO_SHA256);
 
-        if (is_int($result) && $result < 1) {
+        if (\is_int($result) && $result < 1) {
             Log::error(sprintf('Result of verification is %d, return false.', $result));
 
             return false;
         }
-        if (!is_int($result)) {
+        if (!\is_int($result)) {
             Log::error(sprintf('Result of verification is a boolean (%d), return false.', $result));
 
             return false;

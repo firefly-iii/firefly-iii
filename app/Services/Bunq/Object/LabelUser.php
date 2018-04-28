@@ -80,6 +80,7 @@ class LabelUser extends BunqObject
 
     /**
      * @return array
+     * @throws FireflyException
      */
     public function toArray(): array
     {

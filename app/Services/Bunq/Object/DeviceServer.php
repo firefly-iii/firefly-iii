@@ -81,6 +81,7 @@ class DeviceServer extends BunqObject
 
     /**
      * @return array
+     * @throws FireflyException
      */
     public function toArray(): array
     {

@@ -61,7 +61,7 @@ class HaveAccounts implements ConfigurationInterface
             $currency        = $currencyRepository->findNull($currencyId);
             $dbAccounts[$id] = [
                 'account'  => $dbAccount,
-                'currency' => null === $currency ? $defaultCurrency : $currency,
+                'currency' => $currency ?? $defaultCurrency,
             ];
         }
 

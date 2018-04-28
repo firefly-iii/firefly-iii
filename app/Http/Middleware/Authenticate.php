@@ -62,7 +62,8 @@ class Authenticate
      *
      * @return mixed
      *
-     * @throws \Illuminate\Auth\AuthenticationException
+     * @throws AuthenticationException
+     * @throws FireflyException
      */
     public function handle($request, Closure $next, ...$guards)
     {

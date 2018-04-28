@@ -314,8 +314,6 @@ class BunqRoutine implements RoutineInterface
      * @param string               $expectedType
      *
      * @return Account
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws FireflyException
      */
     private function convertToAccount(LabelMonetaryAccount $party, string $expectedType): Account
     {
@@ -541,7 +539,6 @@ class BunqRoutine implements RoutineInterface
      *
      * @return string
      *
-     * @throws FireflyException
      */
     private function getRemoteIp(): ?string
     {
@@ -602,7 +599,7 @@ class BunqRoutine implements RoutineInterface
         $journals = new Collection;
         $config   = $this->getConfig();
         foreach ($payments as $accountId => $data) {
-            Log::debug(sprintf('Now running for bunq account #%d with %d payment(s).', $accountId, count($data['payments'])));
+            Log::debug(sprintf('Now running for bunq account #%d with %d payment(s).', $accountId, \count($data['payments'])));
             /** @var Payment $payment */
             foreach ($data['payments'] as $index => $payment) {
                 Log::debug(sprintf('Now at payment #%d with ID #%d', $index, $payment->getId()));
@@ -808,7 +805,7 @@ class BunqRoutine implements RoutineInterface
             Log::debug(sprintf('Will try to get transactions for company #%d', $user->getId()));
         }
 
-        $this->addTotalSteps(count($config['accounts']) * 2);
+        $this->addTotalSteps(\count($config['accounts']) * 2);
 
         foreach ($config['accounts'] as $accountData) {
             $this->addStep();

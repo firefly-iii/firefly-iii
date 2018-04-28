@@ -53,8 +53,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
 
     /**
      * @return bool
-     *
-
+     * @throws \Exception
      */
     public function cleanup(): bool
     {
@@ -67,7 +66,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
         /** @var ExportJob $entry */
         foreach ($set as $entry) {
             $key   = $entry->key;
-            $len   = strlen($key);
+            $len   = \strlen($key);
             $files = scandir(storage_path('export'), SCANDIR_SORT_NONE);
             /** @var string $file */
             foreach ($files as $file) {

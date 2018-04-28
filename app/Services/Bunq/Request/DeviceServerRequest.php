@@ -55,8 +55,6 @@ class DeviceServerRequest extends BunqRequest
         $deviceServerId = new DeviceServerId;
         $deviceServerId->setId((int)$response['Response'][0]['Id']['id']);
         $this->deviceServerId = $deviceServerId;
-
-        return;
     }
 
     /**

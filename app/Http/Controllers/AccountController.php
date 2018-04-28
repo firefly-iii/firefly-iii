@@ -380,7 +380,7 @@ class AccountController extends Controller
 
         // update preferences if necessary:
         $frontPage = Preferences::get('frontPageAccounts', [])->data;
-        if (count($frontPage) > 0 && AccountType::ASSET === $account->accountType->type) {
+        if (AccountType::ASSET === $account->accountType->type && \count($frontPage) > 0) {
             // @codeCoverageIgnoreStart
             $frontPage[] = $account->id;
             Preferences::set('frontPageAccounts', $frontPage);

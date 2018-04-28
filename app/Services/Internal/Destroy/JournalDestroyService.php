@@ -59,7 +59,6 @@ class JournalDestroyService
             Log::error(sprintf('Could not delete bill: %s', $e->getMessage())); // @codeCoverageIgnore
         }
 
-        return;
     }
 
 }

@@ -199,7 +199,7 @@ final class Entry
         $entry->transaction_id = $transaction->id;
         $entry->date           = $transaction->date->format('Ymd');
         $entry->description    = $transaction->description;
-        if (strlen((string)$transaction->transaction_description) > 0) {
+        if (\strlen((string)$transaction->transaction_description) > 0) {
             $entry->description = $transaction->transaction_description . '(' . $transaction->description . ')';
         }
         $entry->currency_code = $transaction->transactionCurrency->code;

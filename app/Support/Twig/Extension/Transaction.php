@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionType;
 use Lang;
 use Log;
 use Twig_Extension;
+use FireflyIII\Models\TransactionJournal;
 
 /**
  * Class Transaction.
@@ -205,7 +206,7 @@ class Transaction extends Twig_Extension
     public function description(TransactionModel $transaction): string
     {
         $description = $transaction->description;
-        if (strlen((string)$transaction->transaction_description) > 0) {
+        if (\strlen((string)$transaction->transaction_description) > 0) {
             $description = $transaction->transaction_description . ' (' . $transaction->description . ')';
         }
 
@@ -278,7 +279,7 @@ class Transaction extends Twig_Extension
     public function hasAttachments(TransactionModel $transaction): string
     {
         $res = '';
-        if (is_int($transaction->attachmentCount) && $transaction->attachmentCount > 0) {
+        if (\is_int($transaction->attachmentCount) && $transaction->attachmentCount > 0) {
             $res = sprintf(
                 '<i class="fa fa-paperclip" title="%s"></i>', Lang::choice(
                 'firefly.nr_of_attachments',
@@ -289,7 +290,7 @@ class Transaction extends Twig_Extension
         if ($transaction->attachmentCount === null) {
             $journalId = (int)$transaction->journal_id;
             $count     = Attachment::whereNull('deleted_at')
-                                   ->where('attachable_type', 'FireflyIII\Models\TransactionJournal')
+                                   ->where('attachable_type', TransactionJournal::class)
                                    ->where('attachable_id', $journalId)
                                    ->count();
             if ($count > 0) {

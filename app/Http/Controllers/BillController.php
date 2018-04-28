@@ -75,7 +75,9 @@ class BillController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param Request                     $request
+     *
+     * @param CurrencyRepositoryInterface $repository
      *
      * @return View
      */
@@ -131,8 +133,9 @@ class BillController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param Bill    $bill
+     * @param Request                     $request
+     * @param CurrencyRepositoryInterface $repository
+     * @param Bill                        $bill
      *
      * @return View
      */
@@ -293,9 +296,10 @@ class BillController extends Controller
     }
 
     /**
-     * @param BillFormRequest         $request
-     * @param BillRepositoryInterface $repository
+     * @param BillFormRequest              $request
+     * @param BillRepositoryInterface      $repository
      *
+     * @param RuleGroupRepositoryInterface $ruleGroupRepository
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(BillFormRequest $request, BillRepositoryInterface $repository, RuleGroupRepositoryInterface $ruleGroupRepository)
@@ -315,7 +319,7 @@ class BillController extends Controller
         $this->attachments->saveAttachmentsForModel($bill, $files);
 
         // flash messages
-        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+        if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
@@ -364,7 +368,7 @@ class BillController extends Controller
         $this->attachments->saveAttachmentsForModel($bill, $files);
 
         // flash messages
-        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+        if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 

@@ -136,7 +136,7 @@ class JournalCollector implements JournalCollectorInterface
     public function addFilter(string $filter): JournalCollectorInterface
     {
         $interfaces = class_implements($filter);
-        if (in_array(FilterInterface::class, $interfaces) && !in_array($filter, $this->filters)) {
+        if (\in_array(FilterInterface::class, $interfaces) && !\in_array($filter, $this->filters)) {
             Log::debug(sprintf('Enabled filter %s', $filter));
             $this->filters[] = $filter;
         }
@@ -444,7 +444,7 @@ class JournalCollector implements JournalCollectorInterface
     public function setBudgets(Collection $budgets): JournalCollectorInterface
     {
         $budgetIds = $budgets->pluck('id')->toArray();
-        if (0 === count($budgetIds)) {
+        if (0 === \count($budgetIds)) {
             return $this;
         }
         $this->joinBudgetTables();
@@ -468,7 +468,7 @@ class JournalCollector implements JournalCollectorInterface
     public function setCategories(Collection $categories): JournalCollectorInterface
     {
         $categoryIds = $categories->pluck('id')->toArray();
-        if (0 === count($categoryIds)) {
+        if (0 === \count($categoryIds)) {
             return $this;
         }
         $this->joinCategoryTables();
@@ -643,7 +643,7 @@ class JournalCollector implements JournalCollectorInterface
      */
     public function setTypes(array $types): JournalCollectorInterface
     {
-        if (count($types) > 0) {
+        if (\count($types) > 0) {
             Log::debug('Set query collector types', $types);
             $this->query->whereIn('transaction_types.type', $types);
         }
@@ -769,7 +769,7 @@ class JournalCollector implements JournalCollectorInterface
             SplitIndicatorFilter::class   => new SplitIndicatorFilter,
             CountAttachmentsFilter::class => new CountAttachmentsFilter,
         ];
-        Log::debug(sprintf('Will run %d filters on the set.', count($this->filters)));
+        Log::debug(sprintf('Will run %d filters on the set.', \count($this->filters)));
         foreach ($this->filters as $enabled) {
             if (isset($filters[$enabled])) {
                 Log::debug(sprintf('Before filter %s: %d', $enabled, $set->count()));

@@ -143,8 +143,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * @param PiggyBank $piggyBank
      *
      * @return bool
-     *
-
+     * @throws \Exception
      */
     public function destroy(PiggyBank $piggyBank): bool
     {
@@ -238,7 +237,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         Log::debug(sprintf('Will add/remove %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
 
         // if piggy account matches source account, the amount is positive
-        if (in_array($piggyBank->account_id, $sources)) {
+        if (\in_array($piggyBank->account_id, $sources)) {
             $amount = bcmul($amount, '-1');
             Log::debug(sprintf('Account #%d is the source, so will remove amount from piggy bank.', $piggyBank->account_id));
         }
@@ -456,7 +455,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     private function updateNote(PiggyBank $piggyBank, string $note): bool
     {
-        if (0 === strlen($note)) {
+        if (0 === \strlen($note)) {
             $dbNote = $piggyBank->notes()->first();
             if (null !== $dbNote) {
                 $dbNote->delete();

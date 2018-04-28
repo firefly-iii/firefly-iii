@@ -108,8 +108,8 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function saveAttachmentsForModel(Model $model, ?array $files): bool
     {
-        Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', get_class($model)));
-        if (is_array($files)) {
+        Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', \get_class($model)));
+        if (\is_array($files)) {
             Log::debug('$files is an array.');
             /** @var UploadedFile $entry */
             foreach ($files as $entry) {
@@ -136,7 +136,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     {
         $md5   = md5_file($file->getRealPath());
         $name  = $file->getClientOriginalName();
-        $class = get_class($model);
+        $class = \get_class($model);
         $count = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
 
         if ($count > 0) {
@@ -180,8 +180,8 @@ class AttachmentHelper implements AttachmentHelperInterface
         $fileObject->rewind();
         $content   = $fileObject->fread($file->getSize());
         $encrypted = Crypt::encrypt($content);
-        Log::debug(sprintf('Full file length is %d and upload size is %d.', strlen($content), $file->getSize()));
-        Log::debug(sprintf('Encrypted content is %d', strlen($encrypted)));
+        Log::debug(sprintf('Full file length is %d and upload size is %d.', \strlen($content), $file->getSize()));
+        Log::debug(sprintf('Encrypted content is %d', \strlen($encrypted)));
 
         // store it:
         $this->uploadDisk->put($attachment->fileName(), $encrypted);
@@ -210,7 +210,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         Log::debug(sprintf('Name is %s, and mime is %s', $name, $mime));
         Log::debug('Valid mimes are', $this->allowedMimes);
 
-        if (!in_array($mime, $this->allowedMimes)) {
+        if (!\in_array($mime, $this->allowedMimes)) {
             $msg = (string)trans('validation.file_invalid_mime', ['name' => $name, 'mime' => $mime]);
             $this->errors->add('attachments', $msg);
             Log::error($msg);

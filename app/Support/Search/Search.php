@@ -63,8 +63,8 @@ class Search implements SearchInterface
     public function getWordsAsString(): string
     {
         $string = implode(' ', $this->words);
-        if (0 === strlen($string)) {
-            return is_string($this->originalQuery) ? $this->originalQuery : '';
+        if (0 === \strlen($string)) {
+            return \is_string($this->originalQuery) ? $this->originalQuery : '';
         }
 
         return $string;
@@ -94,7 +94,7 @@ class Search implements SearchInterface
             $filteredQuery = str_replace($match, '', $filteredQuery);
         }
         $filteredQuery = trim(str_replace(['"', "'"], '', $filteredQuery));
-        if (strlen($filteredQuery) > 0) {
+        if (\strlen($filteredQuery) > 0) {
             $this->words = array_map('trim', explode(' ', $filteredQuery));
         }
     }
@@ -147,7 +147,7 @@ class Search implements SearchInterface
 
             // Update counters
             ++$page;
-            $processed += count($set);
+            $processed += \count($set);
 
             Log::debug(sprintf('Page is now %d, processed is %d', $page, $processed));
 
@@ -245,10 +245,10 @@ class Search implements SearchInterface
     private function extractModifier(string $string)
     {
         $parts = explode(':', $string);
-        if (2 === count($parts) && strlen(trim((string)$parts[0])) > 0 && strlen(trim((string)$parts[1]))) {
+        if (2 === \count($parts) && \strlen(trim((string)$parts[0])) > 0 && \strlen(trim((string)$parts[1]))) {
             $type  = trim((string)$parts[0]);
             $value = trim((string)$parts[1]);
-            if (in_array($type, $this->validModifiers)) {
+            if (\in_array($type, $this->validModifiers)) {
                 // filter for valid type
                 $this->modifiers->push(['type' => $type, 'value' => $value]);
             }
@@ -266,7 +266,7 @@ class Search implements SearchInterface
         Log::debug(sprintf('Now at transaction #%d', $transaction->id));
         // first "modifier" is always the text of the search:
         // check descr of journal:
-        if (count($this->words) > 0
+        if (\count($this->words) > 0
             && !$this->strposArray(strtolower((string)$transaction->description), $this->words)
             && !$this->strposArray(strtolower((string)$transaction->transaction_description), $this->words)
         ) {
@@ -294,7 +294,7 @@ class Search implements SearchInterface
      */
     private function strposArray(string $haystack, array $needle)
     {
-        if (0 === strlen($haystack)) {
+        if (0 === \strlen($haystack)) {
             return false;
         }
         foreach ($needle as $what) {

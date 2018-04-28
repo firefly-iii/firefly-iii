@@ -55,7 +55,7 @@ class FireflyValidator extends Validator
      */
     public function validate2faCode($attribute, $value): bool
     {
-        if (!is_string($value) || null === $value || 6 != strlen($value)) {
+        if (!\is_string($value) || null === $value || 6 != \strlen($value)) {
             return false;
         }
 
@@ -117,7 +117,7 @@ class FireflyValidator extends Validator
      */
     public function validateIban($attribute, $value): bool
     {
-        if (!is_string($value) || null === $value || strlen($value) < 6) {
+        if (!\is_string($value) || null === $value || \strlen($value) < 6) {
             return false;
         }
         // strip spaces
@@ -197,9 +197,10 @@ class FireflyValidator extends Validator
      */
     public function validateMore($attribute, $value, $parameters): bool
     {
-        $compare = (string)$parameters[0] ?? '0';
+        /** @var mixed $compare */
+        $compare = $parameters[0] ?? '0';
 
-        return bccomp((string)$value, $compare) > 0;
+        return bccomp((string)$value, (string)$compare) > 0;
     }
 
     /**
@@ -232,11 +233,11 @@ class FireflyValidator extends Validator
     {
         // get the index from a string like "rule-action-value.2".
         $parts = explode('.', $attribute);
-        $index = $parts[count($parts) - 1];
+        $index = $parts[\count($parts) - 1];
         // loop all rule-actions.
         // check if rule-action-value matches the thing.
 
-        if (is_array($this->data['rule-action'])) {
+        if (\is_array($this->data['rule-action'])) {
             $name  = $this->data['rule-action'][$index] ?? 'invalid';
             $value = $this->data['rule-action-value'][$index] ?? false;
             switch ($name) {
@@ -278,7 +279,7 @@ class FireflyValidator extends Validator
     {
         // get the index from a string like "rule-trigger-value.2".
         $parts = explode('.', $attribute);
-        $index = $parts[count($parts) - 1];
+        $index = $parts[\count($parts) - 1];
 
         // loop all rule-triggers.
         // check if rule-value matches the thing.

@@ -64,8 +64,8 @@ class CommandHandler extends AbstractProcessingHandler
     {
         $level     = strtoupper($level);
         $reference = sprintf('\Monolog\Logger::%s', $level);
-        if (defined($reference)) {
-            $this->setLevel(constant($reference));
+        if (\defined($reference)) {
+            $this->setLevel(\constant($reference));
         }
     }
 }

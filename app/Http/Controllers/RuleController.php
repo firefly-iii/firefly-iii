@@ -310,9 +310,8 @@ class RuleController extends Controller
     }
 
     /**
-     * @param Request                 $request
-     * @param RuleRepositoryInterface $repository
-     * @param Rule                    $rule
+     * @param Request $request
+     * @param Rule    $rule
      *
      * @return JsonResponse
      */
@@ -452,7 +451,7 @@ class RuleController extends Controller
     {
         $triggers = $rule->ruleTriggers;
 
-        if (0 === count($triggers)) {
+        if (0 === \count($triggers)) {
             return response()->json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 
@@ -682,7 +681,7 @@ class RuleController extends Controller
         $newIndex = 0;
         $actions  = [];
         /** @var array $oldActions */
-        $oldActions = is_array($request->old('rule-action')) ? $request->old('rule-action') : [];
+        $oldActions = \is_array($request->old('rule-action')) ? $request->old('rule-action') : [];
         foreach ($oldActions as $index => $entry) {
             $count   = ($newIndex + 1);
             $checked = isset($request->old('rule-action-stop')[$index]) ? true : false;
@@ -718,7 +717,7 @@ class RuleController extends Controller
         $newIndex = 0;
         $triggers = [];
         /** @var array $oldTriggers */
-        $oldTriggers = is_array($request->old('rule-trigger')) ? $request->old('rule-trigger') : [];
+        $oldTriggers = \is_array($request->old('rule-trigger')) ? $request->old('rule-trigger') : [];
         foreach ($oldTriggers as $index => $entry) {
             $count      = ($newIndex + 1);
             $oldChecked = isset($request->old('rule-trigger-stop')[$index]) ? true : false;

@@ -29,6 +29,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Steam;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Models\PiggyBankEvent;
+use FireflyIII\Models\Note;
+use FireflyIII\Models\Account;
 
 /**
  * Class PiggyBank.
@@ -86,7 +90,7 @@ class PiggyBank extends Model
      */
     public function account(): BelongsTo
     {
-        return $this->belongsTo('FireflyIII\Models\Account');
+        return $this->belongsTo(Account::class);
     }
 
     /**
@@ -179,7 +183,7 @@ class PiggyBank extends Model
      */
     public function notes()
     {
-        return $this->morphMany('FireflyIII\Models\Note', 'noteable');
+        return $this->morphMany(Note::class, 'noteable');
     }
 
     /**
@@ -188,7 +192,7 @@ class PiggyBank extends Model
      */
     public function piggyBankEvents()
     {
-        return $this->hasMany('FireflyIII\Models\PiggyBankEvent');
+        return $this->hasMany(PiggyBankEvent::class);
     }
 
     /**
@@ -197,7 +201,7 @@ class PiggyBank extends Model
      */
     public function piggyBankRepetitions()
     {
-        return $this->hasMany('FireflyIII\Models\PiggyBankRepetition');
+        return $this->hasMany(PiggyBankRepetition::class);
     }
 
     /**

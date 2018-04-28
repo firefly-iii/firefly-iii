@@ -408,10 +408,10 @@ class SingleController extends Controller
         $this->attachments->saveAttachmentsForModel($journal, $files);
 
         // @codeCoverageIgnoreStart
-        if (count($this->attachments->getErrors()->get('attachments')) > 0) {
+        if (\count($this->attachments->getErrors()->get('attachments')) > 0) {
             session()->flash('error', $this->attachments->getErrors()->get('attachments'));
         }
-        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+        if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
             session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
         // @codeCoverageIgnoreEnd
