@@ -255,17 +255,23 @@ class ImportBill
         }
 
         $data = [
-            'name'        => $name,
-            'match'       => $name,
-            'amount_min'  => bcmul($this->amount, '0.9'),
-            'amount_max'  => bcmul($this->amount, '1.1'),
-            'user_id'     => $this->user->id,
-            'date'        => date('Y-m-d'),
-            'repeat_freq' => 'monthly',
-            'skip'        => '0',
-            'automatch'   => '0',
-            'active'      => '1',
+            'name'                    => $name,
+            'match'                   => $name,
+            'amount_min'              => bcmul($this->amount, '0.9'),
+            'amount_max'              => bcmul($this->amount, '1.1'),
+            'user_id'                 => $this->user->id,
+            'date'                    => date('Y-m-d'),
+            'repeat_freq'             => 'monthly',
+            'skip'                    => '0',
+            'transaction_currency_id' => 1,
+            'automatch'               => '0',
+            'active'                  => '1',
         ];
+
+        $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+        if (null !== $currency) {
+            $data['transaction_currency_id'] = $currency->id;
+        }
 
         Log::debug('Found no bill so must create one ourselves. Assume default values.', $data);
         $result = $this->repository->store($data);

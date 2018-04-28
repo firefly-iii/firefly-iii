@@ -176,7 +176,7 @@ class MonetaryAccountBank extends BunqObject
             'monetary_account_profile' => $this->monetaryAccountProfile->toArray(),
             'setting'                  => $this->setting->toArray(),
             'overdraft_limit'          => $this->overdraftLimit->toArray(),
-            'avatar'                   => null === $this->avatar ? null : $this->avatar->toArray()->toArray(),
+            'avatar'                   => null === $this->avatar ? null : $this->avatar->toArray(),
             'reason'                   => $this->reason,
             'reason_description'       => $this->reasonDescription,
             'alias'                    => [],
