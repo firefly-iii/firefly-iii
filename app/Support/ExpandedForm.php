@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -186,6 +187,41 @@ class ExpandedForm
         $html = view('form.checkbox', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
+    }
+
+    /**
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
+     *
+     * @return string
+     */
+    public function currencyList(string $name, $value = null, array $options = []): string
+    {
+        // properties for cache
+        $cache = new CacheProperties;
+        $cache->addProperty('exp-form-currency-list');
+        $cache->addProperty($name);
+        $cache->addProperty($value);
+        $cache->addProperty($options);
+
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+
+        // get all currencies:
+        $list  = $currencyRepos->get();
+        $array = [];
+        /** @var TransactionCurrency $currency */
+        foreach ($list as $currency) {
+            $array[$currency->id] = $currency->name . ' (' . $currency->symbol . ')';
+        }
+        $res = $this->select($name, $array, $value, $options);
+        $cache->store($res);
+
+        return $res;
     }
 
     /**
