@@ -249,6 +249,14 @@ Breadcrumbs::register(
 
 // ATTACHMENTS
 Breadcrumbs::register(
+    'attachments.index',
+    function (BreadCrumbsGenerator $breadcrumbs) {
+        $breadcrumbs->parent('home');
+        $breadcrumbs->push(trans('firefly.attachments'), route('attachments.index'));
+    }
+);
+
+Breadcrumbs::register(
     'attachments.edit',
     function (BreadCrumbsGenerator $breadcrumbs, Attachment $attachment) {
         $object = $attachment->attachable;

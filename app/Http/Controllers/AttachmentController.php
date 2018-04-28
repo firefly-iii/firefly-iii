@@ -148,6 +148,24 @@ class AttachmentController extends Controller
     }
 
     /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index()
+    {
+        $set = $this->repository->get();
+        $set = $set->each(
+            function (Attachment $attachment) {
+                $attachment->file_exists = $this->repository->exists($attachment);
+
+                return $attachment;
+            }
+        );
+
+
+        return view('attachments.index', compact('set'));
+    }
+
+    /**
      * @param AttachmentFormRequest $request
      * @param Attachment            $attachment
      *

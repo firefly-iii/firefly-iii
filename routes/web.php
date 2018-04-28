@@ -140,6 +140,7 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'attachments', 'as' => 'attachments.'], function () {
+    Route::get('', ['uses' => 'AttachmentController@index', 'as' => 'index']);
     Route::get('edit/{attachment}', ['uses' => 'AttachmentController@edit', 'as' => 'edit']);
     Route::get('delete/{attachment}', ['uses' => 'AttachmentController@delete', 'as' => 'delete']);
     Route::get('download/{attachment}', ['uses' => 'AttachmentController@download', 'as' => 'download']);
