@@ -283,6 +283,7 @@ return [
         'user'              => \FireflyIII\User::class,
 
         // strings
+        'import_source'        => \FireflyIII\Support\Binder\ImportSource::class,
 
         // dates
         'start_date'        => \FireflyIII\Support\Binder\Date::class,

@@ -35,17 +35,40 @@ use FireflyIII\Import\Routine\SpectreRoutine;
 
 return [
     'enabled'       => [
+        'fake'    => false,
         'file'    => true,
         'bunq'    => true,
         'spectre' => true,
         'plaid'   => false,
+        'quovo'   => false,
+        'yodlee'  => false,
+    ],
+    'has_prereq'    => [
+        'fake'    => true,
+        'file'    => false,
+        'bunq'    => true,
+        'spectre' => true,
+        'plaid'   => true,
+        'quovo'   => true,
+        'yodlee'  => true,
     ],
     'prerequisites' => [
+        'fake'    => false,
         'file'    => FilePrerequisites::class,
         'bunq'    => BunqPrerequisites::class,
         'spectre' => SpectrePrerequisites::class,
         'plaid'   => 'FireflyIII\Import\Prerequisites\PlaidPrerequisites',
-
+        'quovo'   => false,
+        'yodlee'  => false,
+    ],
+    'has_config'    => [
+        'fake'    => true,
+        'file'    => true,
+        'bunq'    => true,
+        'spectre' => true,
+        'plaid'   => true,
+        'quovo'   => true,
+        'yodlee'  => true,
     ],
     'configuration' => [
         'file'    => FileConfigurator::class,
@@ -61,15 +84,15 @@ return [
     ],
 
     'options'        => [
-        'file' => [
+        'file'    => [
             'import_formats'        => ['csv'], // mt940
             'default_import_format' => 'csv',
             'processors'            => [
                 'csv' => CsvProcessor::class,
             ],
         ],
-        'bunq' => [
-            'server'  => 'api.bunq.com', // sandbox.public.api.bunq.com - api.bunq.com
+        'bunq'    => [
+            'server'  => 'sandbox.public.api.bunq.com', // sandbox.public.api.bunq.com - api.bunq.com
             'version' => 'v1',
         ],
         'spectre' => [
