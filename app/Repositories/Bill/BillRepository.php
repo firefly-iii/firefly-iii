@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Factory\BillFactory;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -240,6 +241,24 @@ class BillRepository implements BillRepositoryInterface
         }
 
         return $sum;
+    }
+
+    /**
+     * Get text or return empty string.
+     *
+     * @param Bill $bill
+     *
+     * @return string
+     */
+    public function getNoteText(Bill $bill): string
+    {
+        /** @var Note $note */
+        $note = $bill->notes()->first();
+        if (null !== $note) {
+            return (string)$note->text;
+        }
+
+        return '';
     }
 
     /**
@@ -554,5 +573,4 @@ class BillRepository implements BillRepositoryInterface
 
         return $service->update($bill, $data);
     }
-
 }
