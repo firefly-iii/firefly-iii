@@ -6,6 +6,7 @@ use FireflyIII\Import\Configuration\FileConfigurator;
 use FireflyIII\Import\Configuration\SpectreConfigurator;
 use FireflyIII\Import\FileProcessor\CsvProcessor;
 use FireflyIII\Import\Prerequisites\BunqPrerequisites;
+use FireflyIII\Import\Prerequisites\FakePrerequisites;
 use FireflyIII\Import\Prerequisites\FilePrerequisites;
 use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
 use FireflyIII\Import\Routine\BunqRoutine;
@@ -53,7 +54,7 @@ return [
         'yodlee'  => true,
     ],
     'prerequisites' => [
-        'fake'    => false,
+        'fake'    => FakePrerequisites::class,
         'file'    => FilePrerequisites::class,
         'bunq'    => BunqPrerequisites::class,
         'spectre' => SpectrePrerequisites::class,

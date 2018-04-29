@@ -74,8 +74,23 @@ class IndexController extends Controller
     {
         $importJob = $this->repository->create($importProvider);
 
-        // redirect to global prerequisites
-        return redirect(route('import.prerequisites.index', [$importProvider, $importJob->key]));
+        // if need to set prerequisites, do that first.
+        $class = (string)config(sprintf('import.prerequisites.%s', $importProvider));
+        if (!class_exists($class)) {
+            throw new FireflyException(sprintf('No class to handle configuration for "%s".', $importProvider)); // @codeCoverageIgnore
+        }
+        /** @var PrerequisitesInterface $object */
+        $object = app($class);
+        $object->setUser(auth()->user());
+
+        if (!$object->isComplete()) {
+            // redirect to global prerequisites
+            return redirect(route('import.prerequisites.index', [$importProvider, $importJob->key]));
+        }
+
+        // Otherwise just redirect to job configuration.
+        return redirect(route('import.job.configuration.index', [$importJob->key]));
+
     }
 
     //    /**

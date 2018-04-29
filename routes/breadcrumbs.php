@@ -593,10 +593,10 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'import.prerequisites',
-    function (BreadCrumbsGenerator $breadcrumbs, string $bank) {
+    'import.prerequisites.index',
+    function (BreadCrumbsGenerator $breadcrumbs, string $importProvider) {
         $breadcrumbs->parent('import.index');
-        $breadcrumbs->push(trans('import.prerequisites'), route('import.prerequisites', [$bank]));
+        $breadcrumbs->push(trans('import.prerequisites'), route('import.prerequisites.index', [$importProvider]));
     }
 );
 

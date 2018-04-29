@@ -449,7 +449,8 @@ Route::group(
     Route::get('create/{import_provider}', ['uses' => 'Import\IndexController@create', 'as' => 'create']);
 
     // set global prerequisites for an import source, possible with a job already attached.
-    Route::get('prerequisites/{import_provider}/{importJob}', ['uses' => 'Import\PrerequisitesController@index', 'as' => 'prerequisites.index']);
+    Route::get('prerequisites/{import_provider}/{importJob?}', ['uses' => 'Import\PrerequisitesController@index', 'as' => 'prerequisites.index']);
+    Route::post('prerequisites/{import_provider}/{importJob?}', ['uses' => 'Import\PrerequisitesController@post', 'as' => 'prerequisites.post']);
     // import method prerequisites:
     #
     #
