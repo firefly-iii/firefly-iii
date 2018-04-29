@@ -199,78 +199,87 @@ class ImportStorage
 
             throw new FireflyException($message);
         }
+
+        /**
+         * Search for journals with the same external ID.
+         * 
+         */
+
+
         unset($parameters);
         $this->addStep();
 
+        $budget      = $importJournal->budget->getBudget();
+        $category    = $importJournal->category->getCategory();
+        $bill        = $importJournal->bill->getBill();
+        $source      = $assetAccount;
+        $destination = $opposingAccount;
 
-        try {
-            $budget      = $importJournal->budget->getBudget();
-            $category    = $importJournal->category->getCategory();
-            $bill        = $importJournal->bill->getBill();
-            $source      = $assetAccount;
-            $destination = $opposingAccount;
+        // switch account arounds when the transaction type is a deposit.
+        if ($transactionType === TransactionType::DEPOSIT) {
+            [$destination, $source] = [$source, $destination];
+        }
+        // switch accounts around when the amount is negative and it's a transfer.
+        // credits to @NyKoF
+        if ($transactionType === TransactionType::TRANSFER && -1 === bccomp($amount, '0')) {
+            [$destination, $source] = [$source, $destination];
+        }
+        Log::debug(
+            sprintf('Will make #%s (%s) the source and #%s (%s) the destination.', $source->id, $source->name, $destination->id, $destination->name)
+        );
 
-            // switch account arounds when the transaction type is a deposit.
-            if ($transactionType === TransactionType::DEPOSIT) {
-                [$destination, $source] = [$source, $destination];
-            }
-            // switch accounts around when the amount is negative and it's a transfer.
-            // credits to @NyKoF
-            if($transactionType === TransactionType::TRANSFER && -1 === bccomp($amount, '0')) {
-                [$destination, $source] = [$source, $destination];
-            }
-            Log::debug(
-                sprintf('Will make #%s (%s) the source and #%s (%s) the destination.', $source->id, $source->name, $destination->id, $destination->name)
-            );
-            $data           = [
-                'user'               => $this->job->user_id,
-                'type'               => $transactionType,
-                'date'               => $importJournal->getDate($this->dateFormat),
-                'description'        => $importJournal->getDescription(),
-                'piggy_bank_id'      => null,
-                'piggy_bank_name'    => null,
-                'bill_id'            => null === $bill ? null : $bill->id,
-                'bill_name'          => null,
-                'tags'               => $importJournal->tags,
-                'interest_date'      => $importJournal->getMetaDate('interest_date'),
-                'book_date'          => $importJournal->getMetaDate('book_date'),
-                'process_date'       => $importJournal->getMetaDate('process_date'),
-                'due_date'           => $importJournal->getMetaDate('due_date'),
-                'payment_date'       => $importJournal->getMetaDate('payment_date'),
-                'invoice_date'       => $importJournal->getMetaDate('invoice_date'),
-                'internal_reference' => $importJournal->metaFields['internal_reference'] ?? null,
-                'notes'              => $importJournal->notes,
-                'sepa-cc'            => $importJournal->getMetaString('sepa-cc'),
-                'sepa-ct-op'         => $importJournal->getMetaString('sepa-ct-op'),
-                'sepa-ct-id'         => $importJournal->getMetaString('sepa-ct-id'),
-                'sepa-db'            => $importJournal->getMetaString('sepa-db'),
-                'sepa-country'       => $importJournal->getMetaString('sepa-country'),
-                'sepa-ep'            => $importJournal->getMetaString('sepa-ep'),
-                'sepa-ci'            => $importJournal->getMetaString('sepa-ci'),
-                'importHash'         => $importJournal->hash,
-                'transactions'       => [
-                    // single transaction:
-                    [
-                        'description'           => null,
-                        'amount'                => $amount,
-                        'currency_id'           => $currencyId,
-                        'currency_code'         => null,
-                        'foreign_amount'        => $foreignAmount,
-                        'foreign_currency_id'   => $foreignCurrencyId,
-                        'foreign_currency_code' => null,
-                        'budget_id'             => null === $budget ? null : $budget->id,
-                        'budget_name'           => null,
-                        'category_id'           => null === $category ? null : $category->id,
-                        'category_name'         => null,
-                        'source_id'             => $source->id,
-                        'source_name'           => null,
-                        'destination_id'        => $destination->id,
-                        'destination_name'      => null,
-                        'reconciled'            => false,
-                        'identifier'            => 0,
-                    ],
+        $data           = [
+            'user'               => $this->job->user_id,
+            'type'               => $transactionType,
+            'date'               => $importJournal->getDate($this->dateFormat),
+            'description'        => $importJournal->getDescription(),
+            'piggy_bank_id'      => null,
+            'piggy_bank_name'    => null,
+            'bill_id'            => null === $bill ? null : $bill->id,
+            'bill_name'          => null,
+            'tags'               => $importJournal->tags,
+            'interest_date'      => $importJournal->getMetaDate('interest_date'),
+            'book_date'          => $importJournal->getMetaDate('book_date'),
+            'process_date'       => $importJournal->getMetaDate('process_date'),
+            'due_date'           => $importJournal->getMetaDate('due_date'),
+            'payment_date'       => $importJournal->getMetaDate('payment_date'),
+            'invoice_date'       => $importJournal->getMetaDate('invoice_date'),
+            'internal_reference' => $importJournal->metaFields['internal_reference'] ?? null,
+            'notes'              => $importJournal->notes,
+            'external_id'        => $importJournal->getExternalId(),
+            'sepa-cc'            => $importJournal->getMetaString('sepa-cc'),
+            'sepa-ct-op'         => $importJournal->getMetaString('sepa-ct-op'),
+            'sepa-ct-id'         => $importJournal->getMetaString('sepa-ct-id'),
+            'sepa-db'            => $importJournal->getMetaString('sepa-db'),
+            'sepa-country'       => $importJournal->getMetaString('sepa-country'),
+            'sepa-ep'            => $importJournal->getMetaString('sepa-ep'),
+            'sepa-ci'            => $importJournal->getMetaString('sepa-ci'),
+            'importHash'         => $importJournal->hash,
+            'transactions'       => [
+                // single transaction:
+                [
+                    'description'           => null,
+                    'amount'                => $amount,
+                    'currency_id'           => $currencyId,
+                    'currency_code'         => null,
+                    'foreign_amount'        => $foreignAmount,
+                    'foreign_currency_id'   => $foreignCurrencyId,
+                    'foreign_currency_code' => null,
+                    'budget_id'             => null === $budget ? null : $budget->id,
+                    'budget_name'           => null,
+                    'category_id'           => null === $category ? null : $category->id,
+                    'category_name'         => null,
+                    'source_id'             => $source->id,
+                    'source_name'           => null,
+                    'destination_id'        => $destination->id,
+                    'destination_name'      => null,
+                    'reconciled'            => false,
+                    'identifier'            => 0,
                 ],
-            ];
+            ],
+        ];
+        $factoryJournal = null;
+        try {
             $factoryJournal = $this->factory->create($data);
             $this->journals->push($factoryJournal);
         } catch (FireflyException $e) {
@@ -278,11 +287,12 @@ class ImportStorage
             Log::error($e->getTraceAsString());
         }
 
+        // double add step because "match bills" no longer happens.
         $this->addStep();
         $this->addStep();
 
         // run rules if config calls for it:
-        if (true === $this->applyRules) {
+        if (true === $this->applyRules && null !== $factoryJournal) {
             Log::info('Will apply rules to this journal.');
             $this->applyRules($factoryJournal);
         }
@@ -291,6 +301,8 @@ class ImportStorage
         if (!(true === $this->applyRules)) {
             Log::info('Will NOT apply rules to this journal.');
         }
+
+        // double add step because some other extra thing was removed here.
         $this->addStep();
         $this->addStep();
 

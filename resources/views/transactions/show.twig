@@ -210,7 +210,7 @@
                             {% endif %}
                         {% endfor %}
                         {# all other meta values #}
-                        {% for metaField in ['internal_reference','sepa-ct-id','sepa-ct-op','sepa-db','sepa-country','sepa-cc','sepa-ep','sepa-ci'] %}
+                        {% for metaField in ['external_id','internal_reference','sepa-ct-id','sepa-ct-op','sepa-db','sepa-country','sepa-cc','sepa-ep','sepa-ci'] %}
                             {% if journalHasMeta(journal, metaField) %}
                                 <tr>
                                     <td>{{ trans('list.'~metaField) }}</td>

@@ -159,6 +159,14 @@ class ImportJournal
     }
 
     /**
+     * @return string
+     */
+    public function getExternalId(): string
+    {
+        return $this->externalId;
+    }
+
+    /**
      * @return string|null
      */
     public function getForeignAmount(): ?string
@@ -230,7 +238,6 @@ class ImportJournal
 
         return null;
     }
-
 
     /**
      * @param string $hash
