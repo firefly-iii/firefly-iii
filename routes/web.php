@@ -451,6 +451,11 @@ Route::group(
     // set global prerequisites for an import source, possible with a job already attached.
     Route::get('prerequisites/{import_provider}/{importJob?}', ['uses' => 'Import\PrerequisitesController@index', 'as' => 'prerequisites.index']);
     Route::post('prerequisites/{import_provider}/{importJob?}', ['uses' => 'Import\PrerequisitesController@post', 'as' => 'prerequisites.post']);
+
+    // configure a job:
+    Route::get('job/configuration/{importJob}', ['uses' => 'Import\JobConfigurationController@index', 'as' => 'job.configuration.index']);
+    Route::post('job/configuration/{importJob}', ['uses' => 'Import\JobConfigurationController@post', 'as' => 'job.configuration.post']);
+
     // import method prerequisites:
     #
     #
@@ -460,7 +465,7 @@ Route::group(
     #Route::get('create/{bank}', ['uses' => 'Import\IndexController@create', 'as' => 'create-job']);
 
     // configure the job:
-    #Route::get('configure/{importJob}', ['uses' => 'Import\ConfigurationController@index', 'as' => 'configure']);
+
     #Route::post('configure/{importJob}', ['uses' => 'Import\ConfigurationController@post', 'as' => 'configure.post']);
 
     // get status of any job:

@@ -22,12 +22,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
-use Log;
-use Storage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -37,13 +34,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class ImportJob extends Model
 {
-    /**
-     * @var array
-     */
-    public $validStatus
-        = [
-            'new',
-        ];
+
     /**
      * The attributes that should be casted to native types.
      *
@@ -58,7 +49,7 @@ class ImportJob extends Model
             'transactions'    => 'array',
         ];
     /** @var array */
-    protected $fillable = ['key', 'user_id', 'file_type', 'source', 'status', 'stage', 'configuration', 'extended_status', 'transactions'];
+    protected $fillable = ['key', 'user_id', 'file_type', 'provider', 'status', 'stage', 'configuration', 'extended_status', 'transactions'];
 
     /**
      * @param $value
@@ -74,47 +65,10 @@ class ImportJob extends Model
             $key       = trim($value);
             $importJob = auth()->user()->importJobs()->where('key', $key)->first();
             if (null !== $importJob) {
-                // must have valid status:
-                if (!\in_array($importJob->status, $importJob->validStatus)) {
-                    throw new FireflyException(sprintf('ImportJob with key "%s" has invalid status "%s"', $importJob->key, $importJob->status));
-                }
-
                 return $importJob;
             }
         }
         throw new NotFoundHttpException;
-    }
-
-    /**
-     * @deprecated
-     *
-     * @param int $count
-     */
-    public function addTotalSteps(int $count): void
-    {
-        $status                = $this->extended_status;
-        $status['steps']       += $count;
-        $this->extended_status = $status;
-        $this->save();
-        Log::debug(sprintf('Add %d to total steps for job "%s" making total steps %d', $count, $this->key, $status['steps']));
-    }
-
-    /**
-     * @return string
-     * @deprecated
-     * @throws \Illuminate\Contracts\Encryption\DecryptException
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
-    public function uploadFileContents(): string
-    {
-        $fileName         = $this->key . '.upload';
-        $disk             = Storage::disk('upload');
-        $encryptedContent = $disk->get($fileName);
-        $content          = Crypt::decrypt($encryptedContent);
-        $content          = trim($content);
-        Log::debug(sprintf('Content size is %d bytes.', \strlen($content)));
-
-        return $content;
     }
 
     /**

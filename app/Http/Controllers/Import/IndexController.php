@@ -87,6 +87,8 @@ class IndexController extends Controller
             // redirect to global prerequisites
             return redirect(route('import.prerequisites.index', [$importProvider, $importJob->key]));
         }
+        // update job to say "has_prereq".
+        $this->repository->setStatus($importJob, 'has_prereq');
 
         // Otherwise just redirect to job configuration.
         return redirect(route('import.job.configuration.index', [$importJob->key]));

@@ -25,7 +25,7 @@ namespace FireflyIII\Http\Controllers\Import;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
-use FireflyIII\Import\Configuration\ConfiguratorInterface;
+use FireflyIII\Import\JobConfiguration\JobConfiguratorInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Http\Request;
@@ -73,10 +73,10 @@ class JobConfigurationController extends Controller
         $configurator = $this->makeConfigurator($job);
 
         // is the job already configured?
-        if ($configurator->isJobConfigured()) {
-            $this->repository->updateStatus($job, 'configured');
+        if ($configurator->configurationComplete()) {
+            $this->repository->updateStatus($job, 'ready_to_run');
 
-            return redirect(route('import.status', [$job->key]));
+            return redirect(route('import.job.landing', [$job->key]));
         }
 
         $this->repository->updateStatus($job, 'configuring');
@@ -105,40 +105,39 @@ class JobConfigurationController extends Controller
         $configurator = $this->makeConfigurator($job);
 
         // is the job already configured?
-        if ($configurator->isJobConfigured()) {
-            return redirect(route('import.status', [$job->key]));
+        if ($configurator->configurationComplete()) {
+            $this->repository->updateStatus($job, 'ready_to_run');
+
+            return redirect(route('import.job.landing', [$job->key]));
         }
-        $data = $request->all();
-        $configurator->configureJob($data);
 
-        // get possible warning from configurator:
-        $warning = $configurator->getWarningMessage();
+        $data     = $request->all();
+        $messages = $configurator->configureJob($data);
 
-        if (\strlen($warning) > 0) {
-            $request->session()->flash('warning', $warning);
+        if ($messages->count() > 0) {
+            $request->session()->flash('warning', $messages->first());
         }
 
         // return to configure
-        return redirect(route('import.configure', [$job->key]));
+        return redirect(route('import.job.configuration.index', [$job->key]));
     }
 
     /**
      * @param ImportJob $job
      *
-     * @return ConfiguratorInterface
+     * @return JobConfiguratorInterface
      *
      * @throws FireflyException
      */
-    private function makeConfigurator(ImportJob $job): ConfiguratorInterface
+    private function makeConfigurator(ImportJob $job): JobConfiguratorInterface
     {
-        $type      = $job->file_type;
-        $key       = sprintf('import.configuration.%s', $type);
-        $className = config($key);
+        $key       = sprintf('import.configuration.%s', $job->provider);
+        $className = (string)config($key);
         if (null === $className || !class_exists($className)) {
-            throw new FireflyException(sprintf('Cannot find configurator class for job of type "%s".', $type)); // @codeCoverageIgnore
+            throw new FireflyException(sprintf('Cannot find configurator class for job with provider "%s".', $job->provider)); // @codeCoverageIgnore
         }
         Log::debug(sprintf('Going to create class "%s"', $className));
-        /** @var ConfiguratorInterface $configurator */
+        /** @var JobConfiguratorInterface $configurator */
         $configurator = app($className);
         $configurator->setJob($job);
 

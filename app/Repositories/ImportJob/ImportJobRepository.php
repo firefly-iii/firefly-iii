@@ -116,7 +116,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      */
     public function create(string $importProvider): ImportJob
     {
-        $count        = 0;
+        $count          = 0;
         $importProvider = strtolower($importProvider);
 
         while ($count < 30) {
@@ -126,7 +126,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
                 $importJob = ImportJob::create(
                     [
                         'user_id'         => $this->user->id,
-                        'source'          => $importProvider,
+                        'provider'        => $importProvider,
                         'file_type'       => '',
                         'key'             => Str::random(12),
                         'status'          => 'new',

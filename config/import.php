@@ -5,6 +5,7 @@ use FireflyIII\Import\Configuration\BunqConfigurator;
 use FireflyIII\Import\Configuration\FileConfigurator;
 use FireflyIII\Import\Configuration\SpectreConfigurator;
 use FireflyIII\Import\FileProcessor\CsvProcessor;
+use FireflyIII\Import\JobConfiguration\FakeJobConfiguration;
 use FireflyIII\Import\Prerequisites\BunqPrerequisites;
 use FireflyIII\Import\Prerequisites\FakePrerequisites;
 use FireflyIII\Import\Prerequisites\FilePrerequisites;
@@ -72,6 +73,7 @@ return [
         'yodlee'  => true,
     ],
     'configuration' => [
+        'fake'    => FakeJobConfiguration::class,
         'file'    => FileConfigurator::class,
         'bunq'    => BunqConfigurator::class,
         'spectre' => SpectreConfigurator::class,

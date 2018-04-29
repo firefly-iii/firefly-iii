@@ -145,6 +145,9 @@ class PrerequisitesController extends Controller
             return redirect(route('import.index'));
         }
 
+        // update job:
+        $this->repository->setStatus($importJob, 'has_prereq');
+
         // redirect to job config:
         return redirect(route('import.job.configuration.index', [$importJob->key]));
 
