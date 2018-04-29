@@ -2,18 +2,20 @@
     <label for="{{ options.id }}" class="col-sm-4 control-label">{{ label }}</label>
 
     <div class="col-sm-8">
-        {% for value,description in list %}
-            {% set options = options|merge({'id': 'ffInput_'~name~'_'~value}) %}
-            <div class="checkbox">
-                <label>
-                    {% if value in selected %}
-                        {{ Form.checkbox(name~'[]', value, true, options) }}
-                    {% else %}
-                        {{ Form.checkbox(name~'[]', value, false, options) }}
-                    {% endif %}
-                    {{ description }}
-                </label>
-            </div>
+        {% for groupName, accounts in grouped %}
+            <strong>{{ groupName }}</strong><br />
+            {% for id, account in accounts %}
+                <div class="checkbox" style="margin-left:2em;">
+                    <label>
+                        {% if account in selected or (selected|length == 0 and options.select_all == true) %}
+                            {{ Form.checkbox(name~'[]', id, true, options) }}
+                        {% else %}
+                            {{ Form.checkbox(name~'[]', id, false, options) }}
+                        {% endif %}
+                        {{ account }}
+                    </label>
+                </div>
+            {% endfor %}
         {% endfor %}
         {% include 'form/help' %}
         {% include 'form/feedback' %}
