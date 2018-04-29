@@ -179,6 +179,7 @@ return [
     'authorization_request_intro'                => '<strong>:client</strong> is requesting permission to access your financial administration. Would you like to authorize <strong>:client</strong> to access these records?',
     'scopes_will_be_able'                        => 'This application will be able to:',
     'button_authorize'                           => 'Authorize',
+    'none_in_select_list'                        => '(none)',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',

@@ -23,11 +23,9 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use ExpandedForm;
 use FireflyIII\Http\Requests\RuleGroupFormRequest;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
 use FireflyIII\Jobs\ExecuteRuleGroupOnExistingTransactions;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
@@ -75,22 +73,18 @@ class RuleGroupController extends Controller
     }
 
     /**
-     * @param RuleGroupRepositoryInterface $repository
-     * @param RuleGroup                    $ruleGroup
+     * @param RuleGroup $ruleGroup
      *
      * @return View
      */
-    public function delete(RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
+    public function delete(RuleGroup $ruleGroup)
     {
         $subTitle = trans('firefly.delete_rule_group', ['title' => $ruleGroup->title]);
-
-        $ruleGroupList = ExpandedForm::makeSelectListWithEmpty($repository->get());
-        unset($ruleGroupList[$ruleGroup->id]);
 
         // put previous url in session
         $this->rememberPreviousUri('rule-groups.delete.uri');
 
-        return view('rules.rule-group.delete', compact('ruleGroup', 'subTitle', 'ruleGroupList'));
+        return view('rules.rule-group.delete', compact('ruleGroup', 'subTitle'));
     }
 
     /**
@@ -179,17 +173,17 @@ class RuleGroupController extends Controller
     }
 
     /**
-     * @param RuleGroup                  $ruleGroup
+     * @param RuleGroup $ruleGroup
      *
      * @return View
      */
     public function selectTransactions(RuleGroup $ruleGroup)
     {
-        $first           = session('first')->format('Y-m-d');
-        $today           = Carbon::create()->format('Y-m-d');
-        $subTitle        = (string)trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]);
+        $first    = session('first')->format('Y-m-d');
+        $today    = Carbon::create()->format('Y-m-d');
+        $subTitle = (string)trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]);
 
-        return view('rules.rule-group.select-transactions', compact( 'first', 'today', 'ruleGroup', 'subTitle'));
+        return view('rules.rule-group.select-transactions', compact('first', 'today', 'ruleGroup', 'subTitle'));
     }
 
     /**

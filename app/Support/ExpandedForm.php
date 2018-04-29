@@ -32,6 +32,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use Form;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use RuntimeException;
@@ -49,6 +50,7 @@ class ExpandedForm
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Throwable
      */
     public function amount(string $name, $value = null, array $options = []): string
     {
@@ -128,7 +130,7 @@ class ExpandedForm
         }
 
         unset($options['class']);
-        $html = view('form.assetAccountCheckList', compact('classes','selected', 'name', 'label', 'options', 'grouped'))->render();
+        $html = view('form.assetAccountCheckList', compact('classes', 'selected', 'name', 'label', 'options', 'grouped'))->render();
 
         return $html;
     }
@@ -545,9 +547,37 @@ class ExpandedForm
         foreach ($list as $group) {
             $array[$group->id] = $group->title;
         }
-        $res = $this->select($name, $array, $value, $options);
 
-        return $res;
+        return $this->select($name, $array, $value, $options);
+    }
+
+    /**
+     * @param string $name
+     * @param null   $value
+     * @param null   $options
+     *
+     * @return \Illuminate\Support\HtmlString
+     */
+    public function ruleGroupListWithEmpty(string $name, $value = null, $options = null)
+    {
+        $options          = $options ?? [];
+        $options['class'] = 'form-control';
+        /** @var RuleGroupRepositoryInterface $groupRepos */
+        $groupRepos = app(RuleGroupRepositoryInterface::class);
+
+        // get all currencies:
+        $list  = $groupRepos->get();
+        $array = [
+            0 => trans('firefly.none_in_select_list'),
+        ];
+        /** @var RuleGroup $group */
+        foreach ($list as $group) {
+            if (isset($options['hidden']) && (int)$options['hidden'] !== $group->id) {
+                $array[$group->id] = $group->title;
+            }
+        }
+
+        return Form::select($name, $array, $value, $options);
     }
 
     /**
