@@ -52,6 +52,8 @@ class PrerequisitesController extends Controller
                 app('view')->share('mainTitleIcon', 'fa-archive');
                 app('view')->share('title', trans('firefly.import_index_title'));
 
+                app('view')->share('subTitleIcon', 'fa-check');
+
                 $this->repository = app(ImportJobRepositoryInterface::class);
 
                 return $next($request);
@@ -73,6 +75,7 @@ class PrerequisitesController extends Controller
      */
     public function index(string $importProvider, ImportJob $importJob = null)
     {
+        app('view')->share('subTitle', trans('import.prerequisites_breadcrumb_' . $importProvider));
         $class = (string)config(sprintf('import.prerequisites.%s', $importProvider));
         if (!class_exists($class)) {
             throw new FireflyException(sprintf('No class to handle configuration for "%s".', $importProvider)); // @codeCoverageIgnore
@@ -134,7 +137,7 @@ class PrerequisitesController extends Controller
         }
 
         // session flash!
-        $request->session()->flash('success', (string)trans('firefly.prerequisites_saved_for_' . $importProvider));
+        $request->session()->flash('success', (string)trans('import.prerequisites_saved_for_' . $importProvider));
 
         // if has job, redirect to global config for provider
         // if no job, back to index!
@@ -142,8 +145,8 @@ class PrerequisitesController extends Controller
             return redirect(route('import.index'));
         }
 
-        // redirect to global config:
-        return redirect(route('import.index'));
+        // redirect to job config:
+        return redirect(route('import.job.configuration.index', [$importJob->key]));
 
 
     }

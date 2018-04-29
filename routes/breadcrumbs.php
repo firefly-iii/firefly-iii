@@ -580,7 +580,7 @@ Breadcrumbs::register(
     'import.index',
     function (BreadCrumbsGenerator $breadcrumbs) {
         $breadcrumbs->parent('home');
-        $breadcrumbs->push(trans('firefly.import'), route('import.index'));
+        $breadcrumbs->push(trans('firefly.import_index_title'), route('import.index'));
     }
 );
 
@@ -596,7 +596,7 @@ Breadcrumbs::register(
     'import.prerequisites.index',
     function (BreadCrumbsGenerator $breadcrumbs, string $importProvider) {
         $breadcrumbs->parent('import.index');
-        $breadcrumbs->push(trans('import.prerequisites'), route('import.prerequisites.index', [$importProvider]));
+        $breadcrumbs->push(trans('import.prerequisites_breadcrumb_'.$importProvider), route('import.prerequisites.index', [$importProvider]));
     }
 );
 

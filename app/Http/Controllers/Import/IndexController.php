@@ -162,7 +162,7 @@ class IndexController extends Controller
             $providers[$name]['prereq_complete'] = $result;
         }
 
-        $subTitle     = trans('firefly.import_index_sub_title');
+        $subTitle     = trans('import.index_breadcrumb');
         $subTitleIcon = 'fa-home';
 
         return view('import.index', compact('subTitle', 'subTitleIcon', 'providers'));

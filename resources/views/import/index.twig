@@ -8,19 +8,19 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="box box-default">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'import_index_title'|_ }}</h3>
+                    <h3 class="box-title">{{ trans('firefly.import_index_title') }}</h3>
                 </div>
                 <div class="box-body">
                     <p>
-                        {{ 'import_general_index_intro'|_ }}
+                        {{ trans('import.general_index_intro') }}
                     </p>
                     <div class="row">
                         {% for name, provider in providers %}
                             {# button for each import thing: #}
                             <div class="col-lg-1 col-md-4 col-sm-6 text-center">
                                 <a href="{{ route('import.create', [name]) }}">
-                                    <img src="images/logos/{{ name }}.png" alt="{{ ('import_button_'~name)|_ }}"/><br/>
-                                    {{ ('import_button_'~name)|_ }}
+                                    <img src="images/logos/{{ name }}.png" alt="{{ trans(('import.button_'~name)) }}"/><br/>
+                                    {{ trans(('import.button_'~name)) }}
                                 </a>
                             </div>
                         {% endfor %}
@@ -34,11 +34,11 @@
         <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
             <div class="box box-default">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'import_global_config_title'|_ }}</h3>
+                    <h3 class="box-title">{{ trans('import.global_config_title') }}</h3>
                 </div>
                 <div class="box-body">
                     <p>
-                        {{ 'import_global_config_text'|_ }}
+                        {{ trans('import.global_config_text') }}
                     </p>
                 </div>
             </div>
@@ -46,11 +46,11 @@
         <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
             <div class="box box-default">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'import_need_prereq_title'|_ }}</h3>
+                        <h3 class="box-title">{{ trans('import.need_prereq_title') }}</h3>
                 </div>
                 <div class="box-body">
                     <p>
-                        {{ 'import_need_prereq_intro'|_ }}
+                        {{ trans('import.need_prereq_intro') }}
                     </p>
                     <ul>
                         {% for name, provider in providers %}
@@ -61,7 +61,7 @@
                                     {% else %}
                                         <i class="fa fa-fw fa-warning text-danger"></i>
                                     {% endif %}
-                                    <a href="#">{{ ('import_do_prereq_'~name)|_ }}</a>
+                                    <a href="{{ route('import.prerequisites.index', [name]) }}">{{ trans('import.do_prereq_'~name) }}</a>
                                 </li>
                             {% endif %}
                         {% endfor %}
@@ -72,16 +72,16 @@
         <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
             <div class="box box-default">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'import_need_config_title'|_ }}</h3>
+                    <h3 class="box-title">{{ trans('import.can_config_title') }}</h3>
                 </div>
                 <div class="box-body">
                     <p>
-                        {{ 'import_need_config_intro'|_ }}
+                        {{ trans('import.can_config_title') }}
                     </p>
                     <ul>
                         {% for name, provider in providers %}
                             {% if provider.has_config %}
-                                <li><i class="fa fa-fw fa-wrench"></i> <a href="#">{{ ('import_do_config_'~name)|_ }}</a></li>
+                                <li><i class="fa fa-fw fa-wrench"></i> <a href="#">{{ trans('import.do_config_'~name) }}</a></li>
                             {% endif %}
                         {% endfor %}
                     </ul>

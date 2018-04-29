@@ -1,6 +1,6 @@
 <?php
 /**
- * ConfigurationController.php
+ * JobConfigurationController.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -32,9 +32,9 @@ use Illuminate\Http\Request;
 use Log;
 
 /**
- * Class ConfigurationController
+ * Class JobConfigurationController
  */
-class ConfigurationController extends Controller
+class JobConfigurationController extends Controller
 {
     /** @var ImportJobRepositoryInterface */
     public $repository;
