@@ -108,34 +108,34 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     }
 
     /**
-     * @param string $type
+     * @param string $importProvider
      *
      * @return ImportJob
      *
      * @throws FireflyException
      */
-    public function create(string $type): ImportJob
+    public function create(string $importProvider): ImportJob
     {
-        $count = 0;
-        $type  = strtolower($type);
+        $count        = 0;
+        $importProvider = strtolower($importProvider);
 
         while ($count < 30) {
             $key      = Str::random(12);
             $existing = $this->findByKey($key);
             if (null === $existing->id) {
-                $importJob = new ImportJob;
-                $importJob->user()->associate($this->user);
-                $importJob->file_type       = $type;
-                $importJob->key             = Str::random(12);
-                $importJob->status          = 'new';
-                $importJob->configuration   = [];
-                $importJob->extended_status = [
-                    'steps'  => 0,
-                    'done'   => 0,
-                    'tag'    => 0,
-                    'errors' => [],
-                ];
-                $importJob->save();
+                $importJob = ImportJob::create(
+                    [
+                        'user_id'         => $this->user->id,
+                        'source'          => $importProvider,
+                        'file_type'       => '',
+                        'key'             => Str::random(12),
+                        'status'          => 'new',
+                        'stage'           => 'new',
+                        'configuration'   => [],
+                        'extended_status' => [],
+                        'transactions'    => [],
+                    ]
+                );
 
                 // breaks the loop:
                 return $importJob;

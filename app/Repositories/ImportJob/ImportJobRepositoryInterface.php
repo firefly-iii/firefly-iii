@@ -67,11 +67,11 @@ interface ImportJobRepositoryInterface
     public function countByHash(string $hash): int;
 
     /**
-     * @param string $type
+     * @param string $importProvider
      *
      * @return ImportJob
      */
-    public function create(string $type): ImportJob;
+    public function create(string $importProvider): ImportJob;
 
     /**
      * @param string $key

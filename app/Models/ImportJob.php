@@ -43,11 +43,6 @@ class ImportJob extends Model
     public $validStatus
         = [
             'new',
-            'configuring',
-            'configured',
-            'running',
-            'error',
-            'finished',
         ];
     /**
      * The attributes that should be casted to native types.
@@ -56,9 +51,14 @@ class ImportJob extends Model
      */
     protected $casts
         = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
+            'created_at'      => 'datetime',
+            'updated_at'      => 'datetime',
+            'configuration'   => 'array',
+            'extended_status' => 'array',
+            'transactions'    => 'array',
         ];
+    /** @var array */
+    protected $fillable = ['key', 'user_id', 'file_type', 'source', 'status', 'stage', 'configuration', 'extended_status', 'transactions'];
 
     /**
      * @param $value
@@ -86,9 +86,11 @@ class ImportJob extends Model
     }
 
     /**
+     * @deprecated
+     *
      * @param int $count
      */
-    public function addTotalSteps(int $count)
+    public function addTotalSteps(int $count): void
     {
         $status                = $this->extended_status;
         $status['steps']       += $count;
@@ -98,87 +100,8 @@ class ImportJob extends Model
     }
 
     /**
-     * @param string $status
-     *
-     * @throws FireflyException
-     */
-    public function change(string $status): void
-    {
-        if (\in_array($status, $this->validStatus)) {
-            Log::debug(sprintf('Job status set (in model) to "%s"', $status));
-            $this->status = $status;
-            $this->save();
-
-            return;
-        }
-        throw new FireflyException(sprintf('Status "%s" is invalid for job "%s".', $status, $this->key));
-
-    }
-
-    /**
-     * @param $value
-     *
-     * @return mixed
-     */
-    public function getConfigurationAttribute($value)
-    {
-        if (null === $value) {
-            return [];
-        }
-        if (0 === \strlen($value)) {
-            return [];
-        }
-
-        return json_decode($value, true);
-    }
-
-    /**
-     * @param $value
-     *
-     * @return mixed
-     */
-    public function getExtendedStatusAttribute($value)
-    {
-        if (0 === \strlen((string)$value)) {
-            return [];
-        }
-
-        return json_decode($value, true);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     */
-    public function setConfigurationAttribute($value)
-    {
-        $this->attributes['configuration'] = json_encode($value);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     */
-    public function setExtendedStatusAttribute($value)
-    {
-        $this->attributes['extended_status'] = json_encode($value);
-    }
-
-    /**
-     * @param $value
-     */
-    public function setStatusAttribute(string $value)
-    {
-        if (\in_array($value, $this->validStatus)) {
-            $this->attributes['status'] = $value;
-        }
-    }
-
-    /**
      * @return string
-     *
+     * @deprecated
      * @throws \Illuminate\Contracts\Encryption\DecryptException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
