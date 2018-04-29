@@ -26,6 +26,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
+use FireflyIII\Models\ImportJob;
 use Illuminate\Http\Request;
 use Log;
 
@@ -58,20 +59,16 @@ class PrerequisitesController extends Controller
      * redirect the user to a view where this object can be used by a bank specific
      * class to process.
      *
-     * @param string $bank
-     *
-     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse
+     * @param string    $importProvider
+     * @param ImportJob $importJob
      *
      * @throws FireflyException
      */
-    public function index(string $bank)
+    public function index(string $importProvider, ImportJob $importJob)
     {
-        if (true === !config(sprintf('import.enabled.%s', $bank))) {
-            throw new FireflyException(sprintf('Cannot import from "%s" at this time.', $bank)); // @codeCoverageIgnore
-        }
-        $class = (string)config(sprintf('import.prerequisites.%s', $bank));
+        $class = (string)config(sprintf('import.prerequisites.%s', $importProvider));
         if (!class_exists($class)) {
-            throw new FireflyException(sprintf('No class to handle "%s".', $bank)); // @codeCoverageIgnore
+            throw new FireflyException(sprintf('No class to handle configuration for "%s".', $importProvider)); // @codeCoverageIgnore
         }
 
         /** @var PrerequisitesInterface $object */
