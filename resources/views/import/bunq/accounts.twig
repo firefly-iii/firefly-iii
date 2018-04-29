@@ -47,7 +47,7 @@
                                             <td>
                                                 <select class="form-control" name="import[{{ account.id }}]">
                                                     {% for id,name in account.options %}
-                                                        <option value="{{ id }}" label="{{ name }}">{{ name }}</option>
+                                                        <option value="{{ id }}" label="{{ name.name }}"{% if account.iban == name.iban %} selected="selected"{% endif %}>{{ name.name }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </td>
