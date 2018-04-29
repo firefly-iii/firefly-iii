@@ -46,8 +46,8 @@ return [
         'yodlee'  => false,
     ],
     'has_prereq'    => [
-        'fake'    => true,
-        'file'    => false,
+        'fake'    => false,
+        'file'    => true,
         'bunq'    => true,
         'spectre' => true,
         'plaid'   => true,
@@ -64,7 +64,7 @@ return [
         'yodlee'  => false,
     ],
     'has_config'    => [
-        'fake'    => true,
+        'fake'    => false,
         'file'    => true,
         'bunq'    => true,
         'spectre' => true,

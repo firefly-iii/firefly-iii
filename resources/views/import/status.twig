@@ -43,7 +43,7 @@
         </div>
     </div>
 
-    {# Box for when the job is ready to start #}
+    {# Box for when the job is ready to start
     <div class="row status_configured statusbox" style="display:none;">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-primary">
@@ -84,8 +84,9 @@
             </div>
         </div>
     </div>
+    #}
 
-    {# Box for when the job is running! #}
+    {# Box for when the job is running!
     <div class="row status_running statusbox" style="display: none;">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-primary">
@@ -106,8 +107,8 @@
             </div>
         </div>
     </div>
-
-    {# displays the finished status of the import #}
+    #}
+    {# displays the finished status of the import
     <div class="row status_finished statusbox" style="display:none;">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-default">
@@ -123,8 +124,10 @@
             </div>
         </div>
     </div>
+    #}
 
     {# box to show error information. #}
+    {#
     <div class="row info_errors" style="display:none;">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-danger">
@@ -139,22 +142,27 @@
             </div>
         </div>
     </div>
+    #}
 
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
 
+        var jobStatusUri = '{{ route('import.job.status.json', [importJob.key]) }}';
+        var jobStartUri = '{{ route('import.job.start', [importJob.key]) }}';
+
+
         // some useful translations.
-        var langImportTimeOutError = '(time out thing)';
-        var langImportSingleError = '{{ trans('import.status_errors_single')|escape('js') }}';
-        var langImportMultiError = '{{ trans('import.status_errors_multi')|escape('js') }}';
-        var jobStatusUri = '{{ route('import.status.json', [job.key]) }}';
-        var jobStartUri = '{{ route('import.start', [job.key]) }}';
-        var jobConfigureUri = '{{ route('import.configure', [job.key]) }}';
+        {#var langImportTimeOutError = '(time out thing)';#}
+        {#var langImportSingleError = '{{ trans('import.status_errors_single')|escape('js') }}';#}
+        {#var langImportMultiError = '{{ trans('import.status_errors_multi')|escape('js') }}';#}
+
+
+        {#var jobConfigureUri = '#}{#{{ route('import.configure', [job.key]) }}#}{#';#}
         var token = '{{ csrf_token() }}';
         var job = {{ job|json_encode|raw }};
     </script>
-    <script type="text/javascript" src="js/ff/import/status.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/import/status_v2.js?v={{ FF_VERSION }}"></script>
 {% endblock %}
 {% block styles %}
 {% endblock %}

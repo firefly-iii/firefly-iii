@@ -587,6 +587,14 @@ try {
     );
 
     Breadcrumbs::register(
+        'import.prerequisites.index',
+        function (BreadCrumbsGenerator $breadcrumbs, string $importProvider) {
+            $breadcrumbs->parent('import.index');
+            $breadcrumbs->push(trans('import.prerequisites_breadcrumb_' . $importProvider), route('import.prerequisites.index', [$importProvider]));
+        }
+    );
+
+    Breadcrumbs::register(
         'import.job.configuration.index',
         function (BreadCrumbsGenerator $breadcrumbs, ImportJob $job) {
             $breadcrumbs->parent('import.index');
@@ -595,19 +603,10 @@ try {
     );
 
     Breadcrumbs::register(
-        'import.prerequisites.index',
-        function (BreadCrumbsGenerator $breadcrumbs, string $importProvider) {
-            $breadcrumbs->parent('import.index');
-            $breadcrumbs->push(trans('import.prerequisites_breadcrumb_' . $importProvider), route('import.prerequisites.index', [$importProvider]));
-        }
-    );
-
-
-    Breadcrumbs::register(
-        'import.status',
+        'import.job.status.index',
         function (BreadCrumbsGenerator $breadcrumbs, ImportJob $job) {
             $breadcrumbs->parent('import.index');
-            $breadcrumbs->push(trans('import.status_bread_crumb', ['key' => $job->key]), route('import.status', [$job->key]));
+            $breadcrumbs->push(trans('import.job_status_breadcrumb', ['key' => $job->key]), route('import.job.status.index', [$job->key]));
         }
     );
 

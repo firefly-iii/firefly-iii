@@ -69,6 +69,15 @@ class JobConfigurationController extends Controller
      */
     public function index(ImportJob $job)
     {
+        // if provider has no config, just push it through
+        $importProvider = $job->provider;
+        if (!(bool)config(sprintf('import.has_config.%s', $importProvider))) {
+            $this->repository->updateStatus($job, 'ready_to_run');
+
+            return redirect(route('import.job.status.index', [$job->key]));
+        }
+
+
         // create configuration class:
         $configurator = $this->makeConfigurator($job);
 
@@ -76,7 +85,7 @@ class JobConfigurationController extends Controller
         if ($configurator->configurationComplete()) {
             $this->repository->updateStatus($job, 'ready_to_run');
 
-            return redirect(route('import.job.landing', [$job->key]));
+            return redirect(route('import.job.status.index', [$job->key]));
         }
 
         $this->repository->updateStatus($job, 'configuring');
@@ -108,7 +117,7 @@ class JobConfigurationController extends Controller
         if ($configurator->configurationComplete()) {
             $this->repository->updateStatus($job, 'ready_to_run');
 
-            return redirect(route('import.job.landing', [$job->key]));
+            return redirect(route('import.job.status.index', [$job->key]));
         }
 
         $data     = $request->all();

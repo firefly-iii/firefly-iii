@@ -456,6 +456,13 @@ Route::group(
     Route::get('job/configuration/{importJob}', ['uses' => 'Import\JobConfigurationController@index', 'as' => 'job.configuration.index']);
     Route::post('job/configuration/{importJob}', ['uses' => 'Import\JobConfigurationController@post', 'as' => 'job.configuration.post']);
 
+    // get status of a job. This is also the landing page of a job after job config is complete.
+    Route::get('job/status/{importJob}', ['uses' => 'Import\JobStatusController@index', 'as' => 'job.status.index']);
+    Route::get('job/json/{importJob}', ['uses' => 'Import\JobStatusController@json', 'as' => 'job.status.json']);
+
+    // start the job!
+    Route::post('job/start/{importJob}', ['uses' => 'Import\JobStatusController@start', 'as' => 'job.start']);
+
     // import method prerequisites:
     #
     #

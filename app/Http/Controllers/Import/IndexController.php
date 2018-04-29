@@ -26,11 +26,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
-use FireflyIII\Import\Routine\RoutineInterface;
-use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use Illuminate\Http\Request;
-use Preferences;
 use View;
 
 
@@ -74,6 +70,24 @@ class IndexController extends Controller
     {
         $importJob = $this->repository->create($importProvider);
 
+        // if job provider has no prerequisites:
+        if (!(bool)config(sprintf('import.has_prereq.%s', $importProvider))) {
+
+
+            // if job provider also has no configuration:
+            if (!(bool)config(sprintf('import.has_config.%s', $importProvider))) {
+                $this->repository->updateStatus($importJob, 'ready_to_run');
+
+                return redirect(route('import.job.status.index', [$importJob->key]));
+            }
+
+            // update job to say "has_prereq".
+            $this->repository->setStatus($importJob, 'has_prereq');
+
+            // redirect to job configuration.
+            return redirect(route('import.job.configuration.index', [$importJob->key]));
+        }
+
         // if need to set prerequisites, do that first.
         $class = (string)config(sprintf('import.prerequisites.%s', $importProvider));
         if (!class_exists($class)) {
@@ -87,6 +101,7 @@ class IndexController extends Controller
             // redirect to global prerequisites
             return redirect(route('import.prerequisites.index', [$importProvider, $importJob->key]));
         }
+
         // update job to say "has_prereq".
         $this->repository->setStatus($importJob, 'has_prereq');
 
@@ -158,7 +173,7 @@ class IndexController extends Controller
             if ($class !== '' && class_exists($class)) {
                 /** @var PrerequisitesInterface $object */
                 $object = app($class);
-                $object->setuser(auth()->user());
+                $object->setUser(auth()->user());
                 $result = $object->isComplete();
             }
             $providers[$name]['prereq_complete'] = $result;
@@ -169,72 +184,72 @@ class IndexController extends Controller
 
         return view('import.index', compact('subTitle', 'subTitleIcon', 'providers'));
     }
-//
-//    /**
-//     * @param Request $request
-//     * @param string  $bank
-//     *
-//     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-//     */
-//    public function reset(Request $request, string $bank)
-//    {
-//        if ($bank === 'bunq') {
-//            // remove bunq related preferences.
-//            Preferences::delete('bunq_api_key');
-//            Preferences::delete('bunq_server_public_key');
-//            Preferences::delete('bunq_private_key');
-//            Preferences::delete('bunq_public_key');
-//            Preferences::delete('bunq_installation_token');
-//            Preferences::delete('bunq_installation_id');
-//            Preferences::delete('bunq_device_server_id');
-//            Preferences::delete('external_ip');
-//
-//        }
-//
-//        if ($bank === 'spectre') {
-//            // remove spectre related preferences:
-//            Preferences::delete('spectre_client_id');
-//            Preferences::delete('spectre_app_secret');
-//            Preferences::delete('spectre_service_secret');
-//            Preferences::delete('spectre_app_id');
-//            Preferences::delete('spectre_secret');
-//            Preferences::delete('spectre_private_key');
-//            Preferences::delete('spectre_public_key');
-//            Preferences::delete('spectre_customer');
-//        }
-//
-//        Preferences::mark();
-//        $request->session()->flash('info', (string)trans('firefly.settings_reset_for_' . $bank));
-//
-//        return redirect(route('import.index'));
-//
-//    }
+    //
+    //    /**
+    //     * @param Request $request
+    //     * @param string  $bank
+    //     *
+    //     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+    //     */
+    //    public function reset(Request $request, string $bank)
+    //    {
+    //        if ($bank === 'bunq') {
+    //            // remove bunq related preferences.
+    //            Preferences::delete('bunq_api_key');
+    //            Preferences::delete('bunq_server_public_key');
+    //            Preferences::delete('bunq_private_key');
+    //            Preferences::delete('bunq_public_key');
+    //            Preferences::delete('bunq_installation_token');
+    //            Preferences::delete('bunq_installation_id');
+    //            Preferences::delete('bunq_device_server_id');
+    //            Preferences::delete('external_ip');
+    //
+    //        }
+    //
+    //        if ($bank === 'spectre') {
+    //            // remove spectre related preferences:
+    //            Preferences::delete('spectre_client_id');
+    //            Preferences::delete('spectre_app_secret');
+    //            Preferences::delete('spectre_service_secret');
+    //            Preferences::delete('spectre_app_id');
+    //            Preferences::delete('spectre_secret');
+    //            Preferences::delete('spectre_private_key');
+    //            Preferences::delete('spectre_public_key');
+    //            Preferences::delete('spectre_customer');
+    //        }
+    //
+    //        Preferences::mark();
+    //        $request->session()->flash('info', (string)trans('firefly.settings_reset_for_' . $bank));
+    //
+    //        return redirect(route('import.index'));
+    //
+    //    }
 
-//    /**
-//     * @param ImportJob $job
-//     *
-//     * @return \Illuminate\Http\JsonResponse
-//     *
-//     * @throws FireflyException
-//     */
-//    public function start(ImportJob $job)
-//    {
-//        $type      = $job->file_type;
-//        $key       = sprintf('import.routine.%s', $type);
-//        $className = config($key);
-//        if (null === $className || !class_exists($className)) {
-//            throw new FireflyException(sprintf('Cannot find import routine class for job of type "%s".', $type)); // @codeCoverageIgnore
-//        }
-//
-//        /** @var RoutineInterface $routine */
-//        $routine = app($className);
-//        $routine->setJob($job);
-//        $result = $routine->run();
-//
-//        if ($result) {
-//            return response()->json(['run' => 'ok']);
-//        }
-//
-//        throw new FireflyException('Job did not complete successfully. Please review the log files.');
-//    }
+    //    /**
+    //     * @param ImportJob $job
+    //     *
+    //     * @return \Illuminate\Http\JsonResponse
+    //     *
+    //     * @throws FireflyException
+    //     */
+    //    public function start(ImportJob $job)
+    //    {
+    //        $type      = $job->file_type;
+    //        $key       = sprintf('import.routine.%s', $type);
+    //        $className = config($key);
+    //        if (null === $className || !class_exists($className)) {
+    //            throw new FireflyException(sprintf('Cannot find import routine class for job of type "%s".', $type)); // @codeCoverageIgnore
+    //        }
+    //
+    //        /** @var RoutineInterface $routine */
+    //        $routine = app($className);
+    //        $routine->setJob($job);
+    //        $result = $routine->run();
+    //
+    //        if ($result) {
+    //            return response()->json(['run' => 'ok']);
+    //        }
+    //
+    //        throw new FireflyException('Job did not complete successfully. Please review the log files.');
+    //    }
 }
