@@ -88,6 +88,29 @@ class SpectrePrerequisites implements PrerequisitesInterface
     }
 
     /**
+     * Indicate if all prerequisites have been met.
+     *
+     * @return bool
+     */
+    public function isComplete(): bool
+    {
+        // return true when user has set the App Id and the Spectre Secret.
+        $values = [
+            Preferences::getForUser($this->user, 'spectre_app_id', false),
+            Preferences::getForUser($this->user, 'spectre_secret', false),
+        ];
+        $result = true;
+        /** @var Preference $value */
+        foreach ($values as $value) {
+            if (false === $value->data || null === $value->data) {
+                $result = false;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Set the user for this Prerequisites-routine. Class is expected to implement and save this.
      *
      * @param User $user

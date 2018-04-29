@@ -76,6 +76,17 @@ class FilePrerequisites implements PrerequisitesInterface
     }
 
     /**
+     * Indicate if all prerequisites have been met.
+     *
+     * @return bool
+     */
+    public function isComplete(): bool
+    {
+        // has no prerequisites, so always return true.
+        return true;
+    }
+
+    /**
      * Set the user for this Prerequisites-routine. Class is expected to implement and save this.
      *
      * @param User $user

@@ -92,6 +92,22 @@ class BunqPrerequisites implements PrerequisitesInterface
     }
 
     /**
+     * Indicate if all prerequisites have been met.
+     *
+     * @return bool
+     */
+    public function isComplete(): bool
+    {
+        // is complete when user has entered both the API key
+        // and his IP address.
+
+        $hasApiKey   = $this->hasApiKey();
+        $hasServerIP = $this->hasServerIP();
+
+        return $hasApiKey && $hasServerIP;
+    }
+
+    /**
      * Set the user for this Prerequisites-routine. Class is expected to implement and save this.
      *
      * @param User $user

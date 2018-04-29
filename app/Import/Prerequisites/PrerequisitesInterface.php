@@ -54,6 +54,13 @@ interface PrerequisitesInterface
     public function hasPrerequisites(): bool;
 
     /**
+     * Indicate if all prerequisites have been met.
+     *
+     * @return bool
+     */
+    public function isComplete(): bool;
+
+    /**
      * Set the user for this Prerequisites-routine. Class is expected to implement and save this.
      *
      * @param User $user
