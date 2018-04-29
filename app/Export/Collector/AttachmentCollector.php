@@ -94,7 +94,8 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
      */
     private function exportAttachment(Attachment $attachment): bool
     {
-        $file = $attachment->fileName();
+        $file      = $attachment->fileName();
+        $decrypted = false;
         if ($this->uploadDisk->exists($file)) {
             try {
                 $decrypted = Crypt::decrypt($this->uploadDisk->get($file));
@@ -103,6 +104,9 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
 
                 return false;
             }
+        }
+        if ($decrypted === false) {
+            return false;
         }
         $exportFile = $this->exportFileName($attachment);
         $this->exportDisk->put($exportFile, $decrypted);
