@@ -57,6 +57,7 @@ class LinkToBill implements ActionInterface
     {
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
+        $repository->setUser($this->action->rule->user);
         $billName   = (string)$this->action->action_value;
         $bill       = $repository->findByName($billName);
 
