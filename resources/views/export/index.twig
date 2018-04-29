@@ -74,7 +74,7 @@
 
 
                                     {# ACCOUNTS #}
-                                    {{ ExpandedForm.multiCheckbox('accounts',accountList, checked, {' class': 'account-checkbox'}) }}
+                                    {{ ExpandedForm.assetAccountCheckList('accounts', {' class': 'account-checkbox','select_all': true}) }}
 
                                     {{ ExpandedForm.checkbox('include_attachments','1', true) }}
 
