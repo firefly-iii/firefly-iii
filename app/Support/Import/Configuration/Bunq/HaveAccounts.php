@@ -29,7 +29,6 @@ use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
-use Illuminate\Support\Collection;
 
 /**
  * Class HaveAccounts
@@ -74,9 +73,9 @@ class HaveAccounts implements ConfigurationInterface
             // find accounts with currency code
             $code                                  = $bunqAccount['currency'];
             $selection                             = $this->filterAccounts($dbAccounts, $code);
-            $config['accounts'][$index]['options'] = app('expandedform')->makeSelectList($selection);
+            $config['accounts'][$index]['iban']    = $this->getIban($bunqAccount);
+            $config['accounts'][$index]['options'] = $selection;
         }
-
 
         return [
             'config' => $config,
@@ -136,17 +135,38 @@ class HaveAccounts implements ConfigurationInterface
      * @param array  $dbAccounts
      * @param string $code
      *
-     * @return Collection
+     * @return array
      */
-    private function filterAccounts(array $dbAccounts, string $code): Collection
+    private function filterAccounts(array $dbAccounts, string $code): array
     {
-        $collection = new Collection;
+        $account = [];
         foreach ($dbAccounts as $accountId => $data) {
             if ($data['currency']->code === $code) {
-                $collection->push($data['account']);
+                $account[$accountId] = [
+                    'name' => $data['account']['name'],
+                    'iban' => $data['account']['iban'],
+                ];
             }
         }
 
-        return $collection;
+        return $account;
+    }
+
+    /**
+     * @param array $bunqAccount
+     *
+     * @return string
+     */
+    private function getIban(array $bunqAccount)
+    {
+        $iban = '';
+        if (count($bunqAccount['alias'])) {
+            foreach ($bunqAccount['alias'] as $alias) {
+                if ($alias['type'] === 'IBAN') {
+                    $iban = $alias['value'];
+                }
+            }
+        }
+        return $iban;
     }
 }
