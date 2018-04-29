@@ -102,7 +102,6 @@ class RuleController extends Controller
         $preFilled    = [
             'strict' => true,
         ];
-        $groups       = ExpandedForm::makeSelectList($this->ruleGroupRepos->get());
         $oldTriggers  = [];
         $oldActions   = [];
         $returnToBill = false;
@@ -150,7 +149,7 @@ class RuleController extends Controller
         return view(
             'rules.rule.create',
             compact(
-                'subTitleIcon', 'oldTriggers', 'returnToBill', 'groups', 'preFilled', 'bill', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup',
+                'subTitleIcon', 'oldTriggers', 'returnToBill', 'preFilled', 'bill', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup',
                 'subTitle'
             )
         );
@@ -212,7 +211,6 @@ class RuleController extends Controller
      */
     public function edit(Request $request, Rule $rule)
     {
-        $ruleGroups   = ExpandedForm::makeSelectList($this->ruleGroupRepos->get());
         $triggerCount = 0;
         $actionCount  = 0;
         $oldActions   = [];
@@ -243,7 +241,7 @@ class RuleController extends Controller
         }
         session()->forget('rules.edit.fromUpdate');
 
-        return view('rules.rule.edit', compact('rule', 'subTitle', 'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroups'));
+        return view('rules.rule.edit', compact('rule', 'subTitle', 'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount'));
     }
 
     /**
@@ -333,14 +331,11 @@ class RuleController extends Controller
     public function selectTransactions(Rule $rule)
     {
         // does the user have shared accounts?
-        $accounts        = $this->accountRepos->getAccountsByType([AccountType::ASSET]);
-        $accountList     = ExpandedForm::makeSelectList($accounts);
-        $checkedAccounts = array_keys($accountList);
         $first           = session('first')->format('Y-m-d');
         $today           = Carbon::create()->format('Y-m-d');
         $subTitle        = (string)trans('firefly.apply_rule_selection', ['title' => $rule->title]);
 
-        return view('rules.rule.select-transactions', compact('checkedAccounts', 'accountList', 'first', 'today', 'rule', 'subTitle'));
+        return view('rules.rule.select-transactions', compact( 'first', 'today', 'rule', 'subTitle'));
     }
 
     /**

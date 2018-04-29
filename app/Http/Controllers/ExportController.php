@@ -23,12 +23,10 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Export\ProcessorInterface;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Requests\ExportFormRequest;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface;
@@ -107,12 +105,11 @@ class ExportController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface   $repository
      * @param ExportJobRepositoryInterface $jobs
      *
      * @return View
      */
-    public function index(AccountRepositoryInterface $repository, ExportJobRepositoryInterface $jobs)
+    public function index(ExportJobRepositoryInterface $jobs)
     {
         // create new export job.
         $job = $jobs->create();
@@ -120,15 +117,12 @@ class ExportController extends Controller
         $jobs->cleanup();
 
         // does the user have shared accounts?
-        $accounts      = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $accountList   = ExpandedForm::makeSelectList($accounts);
-        $checked       = array_keys($accountList);
         $formats       = array_keys(config('firefly.export_formats'));
         $defaultFormat = Preferences::get('export_format', config('firefly.default_export_format'))->data;
         $first         = session('first')->format('Y-m-d');
         $today         = Carbon::create()->format('Y-m-d');
 
-        return view('export.index', compact('job', 'checked', 'accountList', 'formats', 'defaultFormat', 'first', 'today'));
+        return view('export.index', compact('job', 'formats', 'defaultFormat', 'first', 'today'));
     }
 
     /**

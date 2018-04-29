@@ -179,22 +179,17 @@ class RuleGroupController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
      * @param RuleGroup                  $ruleGroup
      *
      * @return View
      */
-    public function selectTransactions(AccountRepositoryInterface $repository, RuleGroup $ruleGroup)
+    public function selectTransactions(RuleGroup $ruleGroup)
     {
-        // does the user have shared accounts?
-        $accounts        = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $accountList     = ExpandedForm::makeSelectList($accounts);
-        $checkedAccounts = array_keys($accountList);
         $first           = session('first')->format('Y-m-d');
         $today           = Carbon::create()->format('Y-m-d');
         $subTitle        = (string)trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]);
 
-        return view('rules.rule-group.select-transactions', compact('checkedAccounts', 'accountList', 'first', 'today', 'ruleGroup', 'subTitle'));
+        return view('rules.rule-group.select-transactions', compact( 'first', 'today', 'ruleGroup', 'subTitle'));
     }
 
     /**
