@@ -139,17 +139,17 @@ class HaveAccounts implements ConfigurationInterface
      */
     private function filterAccounts(array $dbAccounts, string $code): array
     {
-        $account = [];
+        $accounts = [];
         foreach ($dbAccounts as $accountId => $data) {
             if ($data['currency']->code === $code) {
-                $account[$accountId] = [
+                $accounts[$accountId] = [
                     'name' => $data['account']['name'],
                     'iban' => $data['account']['iban'],
                 ];
             }
         }
 
-        return $account;
+        return $accounts;
     }
 
     /**
@@ -157,16 +157,17 @@ class HaveAccounts implements ConfigurationInterface
      *
      * @return string
      */
-    private function getIban(array $bunqAccount)
+    private function getIban(array $bunqAccount): string
     {
         $iban = '';
-        if (count($bunqAccount['alias'])) {
+        if (\is_array($bunqAccount['alias'])) {
             foreach ($bunqAccount['alias'] as $alias) {
                 if ($alias['type'] === 'IBAN') {
                     $iban = $alias['value'];
                 }
             }
         }
+
         return $iban;
     }
 }
