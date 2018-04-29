@@ -22,14 +22,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use ExpandedForm;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\Note;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\BillTransformer;
@@ -50,6 +47,10 @@ class BillController extends Controller
 {
     /** @var AttachmentHelperInterface Helper for attachments. */
     private $attachments;
+    /** @var BillRepositoryInterface */
+    private $billRepository;
+    /** @var RuleGroupRepositoryInterface */
+    private $ruleGroupRepos;
 
     /**
      *
@@ -67,7 +68,9 @@ class BillController extends Controller
             function ($request, $next) {
                 app('view')->share('title', trans('firefly.bills'));
                 app('view')->share('mainTitleIcon', 'fa-calendar-o');
-                $this->attachments = app(AttachmentHelperInterface::class);
+                $this->attachments    = app(AttachmentHelperInterface::class);
+                $this->billRepository = app(BillRepositoryInterface::class);
+                $this->ruleGroupRepos = app(RuleGroupRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -75,21 +78,20 @@ class BillController extends Controller
     }
 
     /**
-     * @param Request                     $request
-     *
-     * @param CurrencyRepositoryInterface $repository
+     * @param Request $request
      *
      * @return View
      */
-    public function create(Request $request, CurrencyRepositoryInterface $repository)
+    public function create(Request $request)
     {
         $periods = [];
-        foreach (config('firefly.bill_periods') as $current) {
+        /** @var array $billPeriods */
+        $billPeriods = config('firefly.bill_periods');
+        foreach ($billPeriods as $current) {
             $periods[$current] = strtolower((string)trans('firefly.repeat_freq_' . $current));
         }
         $subTitle        = trans('firefly.create_new_bill');
         $defaultCurrency = app('amount')->getDefaultCurrency();
-        $currencies      = ExpandedForm::makeSelectList($repository->get());
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('bills.create.fromStore')) {
@@ -97,7 +99,7 @@ class BillController extends Controller
         }
         $request->session()->forget('bills.create.fromStore');
 
-        return view('bills.create', compact('periods', 'subTitle', 'currencies', 'defaultCurrency'));
+        return view('bills.create', compact('periods', 'subTitle', 'defaultCurrency'));
     }
 
     /**
@@ -115,16 +117,15 @@ class BillController extends Controller
     }
 
     /**
-     * @param Request                 $request
-     * @param BillRepositoryInterface $repository
-     * @param Bill                    $bill
+     * @param Request $request
+     * @param Bill    $bill
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(Request $request, BillRepositoryInterface $repository, Bill $bill)
+    public function destroy(Request $request, Bill $bill)
     {
         $name = $bill->name;
-        $repository->destroy($bill);
+        $this->billRepository->destroy($bill);
 
         $request->session()->flash('success', (string)trans('firefly.deleted_bill', ['name' => $name]));
         Preferences::mark();
@@ -133,18 +134,21 @@ class BillController extends Controller
     }
 
     /**
-     * @param Request                     $request
-     * @param CurrencyRepositoryInterface $repository
-     * @param Bill                        $bill
+     * @param Request $request
+     * @param Bill    $bill
      *
      * @return View
      */
-    public function edit(Request $request, CurrencyRepositoryInterface $repository, Bill $bill)
+    public function edit(Request $request, Bill $bill)
     {
         $periods = [];
-        foreach (config('firefly.bill_periods') as $current) {
+        /** @var array $billPeriods */
+        $billPeriods = config('firefly.bill_periods');
+
+        foreach ($billPeriods as $current) {
             $periods[$current] = trans('firefly.' . $current);
         }
+
         $subTitle = trans('firefly.edit_bill', ['name' => $bill->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -156,36 +160,27 @@ class BillController extends Controller
         $bill->amount_min = round($bill->amount_min, $currency->decimal_places);
         $bill->amount_max = round($bill->amount_max, $currency->decimal_places);
         $defaultCurrency  = app('amount')->getDefaultCurrency();
-        $currencies       = ExpandedForm::makeSelectList($repository->get());
 
         $preFilled = [
-            'notes' => '',
+            'notes'                   => $this->billRepository->getNoteText($bill),
+            'transaction_currency_id' => $bill->transaction_currency_id,
         ];
 
-        /** @var Note $note */
-        $note = $bill->notes()->first();
-        if (null !== $note) {
-            $preFilled['notes'] = $note->text;
-        }
-
         $request->session()->flash('preFilled', $preFilled);
-
         $request->session()->forget('bills.edit.fromUpdate');
 
-        return view('bills.edit', compact('subTitle', 'periods', 'bill', 'defaultCurrency', 'currencies'));
+        return view('bills.edit', compact('subTitle', 'periods', 'bill', 'defaultCurrency', 'preFilled'));
     }
 
     /**
-     * @param BillRepositoryInterface $repository
-     *
      * @return View
      */
-    public function index(BillRepositoryInterface $repository)
+    public function index()
     {
         $start      = session('start');
         $end        = session('end');
         $pageSize   = (int)Preferences::get('listPageSize', 50)->data;
-        $paginator  = $repository->getPaginator($pageSize);
+        $paginator  = $this->billRepository->getPaginator($pageSize);
         $parameters = new ParameterBag();
         $parameters->set('start', $start);
         $parameters->set('end', $end);
@@ -203,7 +198,7 @@ class BillController extends Controller
         );
 
         // add info about rules:
-        $rules = $repository->getRulesForBills($paginator->getCollection());
+        $rules = $this->billRepository->getRulesForBills($paginator->getCollection());
         $bills = $bills->map(
             function (array $bill) use ($rules) {
                 $bill['rules'] = $rules[$bill['id']] ?? [];
@@ -218,21 +213,20 @@ class BillController extends Controller
     }
 
     /**
-     * @param Request                 $request
-     * @param BillRepositoryInterface $repository
-     * @param Bill                    $bill
+     * @param Request $request
+     * @param Bill    $bill
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function rescan(Request $request, BillRepositoryInterface $repository, Bill $bill)
+    public function rescan(Request $request, Bill $bill)
     {
         if (0 === (int)$bill->active) {
             $request->session()->flash('warning', (string)trans('firefly.cannot_scan_inactive_bill'));
 
             return redirect(URL::previous());
         }
-        $set   = $repository->getRulesForBill($bill);
+        $set   = $this->billRepository->getRulesForBill($bill);
         $total = 0;
         foreach ($set as $rule) {
             // simply fire off all rules?
@@ -243,7 +237,7 @@ class BillController extends Controller
             $matcher->setRule($rule);
             $matchingTransactions = $matcher->findTransactionsByRule();
             $total                += $matchingTransactions->count();
-            $repository->linkCollectionToBill($bill, $matchingTransactions);
+            $this->billRepository->linkCollectionToBill($bill, $matchingTransactions);
         }
 
 
@@ -254,24 +248,23 @@ class BillController extends Controller
     }
 
     /**
-     * @param Request                 $request
-     * @param BillRepositoryInterface $repository
-     * @param Bill                    $bill
+     * @param Request $request
+     * @param Bill    $bill
      *
      * @return View
      */
-    public function show(Request $request, BillRepositoryInterface $repository, Bill $bill)
+    public function show(Request $request, Bill $bill)
     {
         // add info about rules:
-        $rules          = $repository->getRulesForBill($bill);
+        $rules          = $this->billRepository->getRulesForBill($bill);
         $subTitle       = $bill->name;
         $start          = session('start');
         $end            = session('end');
         $year           = $start->year;
         $page           = (int)$request->get('page');
         $pageSize       = (int)Preferences::get('listPageSize', 50)->data;
-        $yearAverage    = $repository->getYearAverage($bill, $start);
-        $overallAverage = $repository->getOverallAverage($bill);
+        $yearAverage    = $this->billRepository->getYearAverage($bill, $start);
+        $overallAverage = $this->billRepository->getOverallAverage($bill);
         $manager        = new Manager();
         $manager->setSerializer(new DataArraySerializer());
         $manager->parseIncludes(['attachments', 'notes']);
@@ -296,16 +289,14 @@ class BillController extends Controller
     }
 
     /**
-     * @param BillFormRequest              $request
-     * @param BillRepositoryInterface      $repository
+     * @param BillFormRequest $request
      *
-     * @param RuleGroupRepositoryInterface $ruleGroupRepository
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(BillFormRequest $request, BillRepositoryInterface $repository, RuleGroupRepositoryInterface $ruleGroupRepository)
+    public function store(BillFormRequest $request)
     {
         $billData = $request->getBillData();
-        $bill     = $repository->store($billData);
+        $bill     = $this->billRepository->store($billData);
         if (null === $bill) {
             $request->session()->flash('error', (string)trans('firefly.bill_store_error'));
 
@@ -330,16 +321,16 @@ class BillController extends Controller
         }
 
         // find first rule group, or create one:
-        $count = $ruleGroupRepository->count();
+        $count = $this->ruleGroupRepos->count();
         if ($count === 0) {
             $data  = [
                 'title'       => (string)trans('firefly.rulegroup_for_bills_title'),
                 'description' => (string)trans('firefly.rulegroup_for_bills_description'),
             ];
-            $group = $ruleGroupRepository->store($data);
+            $group = $this->ruleGroupRepos->store($data);
         }
         if ($count > 0) {
-            $group = $ruleGroupRepository->getActiveGroups(auth()->user())->first();
+            $group = $this->ruleGroupRepos->getActiveGroups(auth()->user())->first();
         }
 
         // redirect to page that will create a new rule.
@@ -349,16 +340,15 @@ class BillController extends Controller
     }
 
     /**
-     * @param BillFormRequest         $request
-     * @param BillRepositoryInterface $repository
-     * @param Bill                    $bill
+     * @param BillFormRequest $request
+     * @param Bill            $bill
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(BillFormRequest $request, BillRepositoryInterface $repository, Bill $bill)
+    public function update(BillFormRequest $request, Bill $bill)
     {
         $billData = $request->getBillData();
-        $bill     = $repository->update($bill, $billData);
+        $bill     = $this->billRepository->update($bill, $billData);
 
         $request->session()->flash('success', (string)trans('firefly.updated_bill', ['name' => $bill->name]));
         Preferences::mark();
