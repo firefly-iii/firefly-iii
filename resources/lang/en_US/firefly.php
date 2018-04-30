@@ -803,6 +803,7 @@ return [
     'opt_group_savingAsset'                   => 'Savings accounts',
     'opt_group_sharedAsset'                   => 'Shared asset accounts',
     'opt_group_ccAsset'                       => 'Credit cards',
+    'opt_group_cashWalletAsset'               => 'Cash wallets',
     'notes'                                   => 'Notes',
     'unknown_journal_error'                   => 'Could not store the transaction. Please check the log files.',
 
