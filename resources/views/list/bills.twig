@@ -46,7 +46,12 @@
                 {% if entry.rules|length > 0 %}
                     <ul class="list-unstyled">
                     {% for rule in entry.rules %}
-                        <li><a href="{{ route('rules.edit', [rule.id]) }}">{{ rule.title }}</a></li>
+                        <li>
+                            <a href="{{ route('rules.edit', [rule.id]) }}">
+                                {{ rule.title }}
+                            </a>
+                            {% if not rule.active %}({{ 'list_inactive_rule'|_|lower }}){% endif %}
+                        </li>
                     {% endfor %}
                     </ul>
                 {% endif %}

@@ -393,11 +393,11 @@ class BillRepository implements BillRepositoryInterface
         $rules = $this->user->rules()
                             ->leftJoin('rule_actions', 'rule_actions.rule_id', '=', 'rules.id')
                             ->where('rule_actions.action_type', 'link_to_bill')
-                            ->get(['rules.id', 'rules.title', 'rule_actions.action_value']);
+                            ->get(['rules.id', 'rules.title', 'rule_actions.action_value','rules.active']);
         $array = [];
         foreach ($rules as $rule) {
             $array[$rule->action_value]   = $array[$rule->action_value] ?? [];
-            $array[$rule->action_value][] = ['id' => $rule->id, 'title' => $rule->title];
+            $array[$rule->action_value][] = ['id' => $rule->id, 'title' => $rule->title,'active' => $rule->active];
         }
         $return = [];
         foreach ($collection as $bill) {

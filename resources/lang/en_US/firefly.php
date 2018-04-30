@@ -667,6 +667,7 @@ return [
     'bill_will_automatch'                     => 'Bill will automatically linked to matching transactions',
     'skips_over'                              => 'skips over',
     'bill_store_error'                        => 'An unexpected error occurred while storing your new bill. Please check the log files',
+    'list_inactive_rule'                      => 'inactive rule',
 
     // accounts:
     'details_for_asset'                       => 'Details for asset account ":name"',

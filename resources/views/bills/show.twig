@@ -73,7 +73,9 @@
                     {% if rules.count > 0 %}
                         <ul>
                             {% for rule in rules %}
-                                <li><a href="{{ route('rules.edit', [rule.id]) }}">{{ rule.title }}</a></li>
+                                <li><a href="{{ route('rules.edit', [rule.id]) }}">{{ rule.title }}</a>
+                                    {% if not rule.active %}({{ 'list_inactive_rule'|_|lower }}){% endif %}
+                                </li>
                             {% endfor %}
                         </ul>
                     {% endif %}
