@@ -147,6 +147,14 @@ interface ImportJobRepositoryInterface
 
     /**
      * @param ImportJob $job
+     * @param string    $stage
+     *
+     * @return ImportJob
+     */
+    public function setStage(ImportJob $job, string $stage): ImportJob;
+
+    /**
+     * @param ImportJob $job
      * @param int       $steps
      *
      * @return ImportJob

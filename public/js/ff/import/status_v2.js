@@ -52,8 +52,10 @@ function reportOnJobStatus(data) {
         case "ready_to_run":
             startJob();
             checkOnJob();
-
-
+            break;
+        case "running":
+            showProgressBox();
+            checkOnJob();
             break;
         default:
             console.error('Cannot handle status ' + data.status);
@@ -106,6 +108,17 @@ function reportFailure(xhr, status, error) {
 
     $('.fatal_error_txt').text('Cannot get status of current job: ' + status + ': ' + error);
     // show error box.
+}
+
+function showProgressBox() {
+    // hide fatal error box:
+    $('.fatal_error').hide();
+
+    // hide initial status box:
+    $('.status_initial').hide();
+
+    // show running box:
+    $('.status_running').show();
 }
 
 /**

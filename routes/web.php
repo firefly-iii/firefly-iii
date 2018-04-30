@@ -461,7 +461,7 @@ Route::group(
     Route::get('job/json/{importJob}', ['uses' => 'Import\JobStatusController@json', 'as' => 'job.status.json']);
 
     // start the job!
-    Route::post('job/start/{importJob}', ['uses' => 'Import\JobStatusController@start', 'as' => 'job.start']);
+    Route::any('job/start/{importJob}', ['uses' => 'Import\JobStatusController@start', 'as' => 'job.start']);
 
     // import method prerequisites:
     #

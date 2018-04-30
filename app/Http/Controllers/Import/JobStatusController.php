@@ -27,6 +27,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Import\Routine\RoutineInterface;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Log;
 
@@ -35,6 +36,9 @@ use Log;
  */
 class JobStatusController extends Controller
 {
+    /** @var ImportJobRepositoryInterface */
+    private $repository;
+
     /**
      *
      */
@@ -46,6 +50,7 @@ class JobStatusController extends Controller
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-archive');
                 app('view')->share('title', trans('firefly.import_index_title'));
+                $this->repository = app(ImportJobRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -104,6 +109,8 @@ class JobStatusController extends Controller
         if (null === $className || !class_exists($className)) {
             return response()->json(['status' => 'NOK', 'message' => sprintf('Cannot find import routine class for job of type "%s".', $importProvider)]);
         }
+        // set job to be running:
+        $this->repository->setStatus($job, 'running');
 
         /** @var RoutineInterface $routine */
         $routine = app($className);
@@ -115,8 +122,14 @@ class JobStatusController extends Controller
             Log::error($message);
             Log::error($e->getTraceAsString());
 
+            // set job errored out:
+            $this->repository->setStatus($job, 'errored');
+
             return response()->json(['status' => 'NOK', 'message' => $message]);
         }
+
+        // set job finished this step:
+        $this->repository->setStatus($job, 'stage_finished');
 
         // expect nothing from routine, just return OK to user.
         return response()->json(['status' => 'OK', 'message' => 'finished']);

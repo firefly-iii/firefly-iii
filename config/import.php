@@ -11,6 +11,7 @@ use FireflyIII\Import\Prerequisites\FakePrerequisites;
 use FireflyIII\Import\Prerequisites\FilePrerequisites;
 use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
 use FireflyIII\Import\Routine\BunqRoutine;
+use FireflyIII\Import\Routine\FakeRoutine;
 use FireflyIII\Import\Routine\FileRoutine;
 use FireflyIII\Import\Routine\SpectreRoutine;
 
@@ -59,7 +60,7 @@ return [
         'file'    => FilePrerequisites::class,
         'bunq'    => BunqPrerequisites::class,
         'spectre' => SpectrePrerequisites::class,
-        'plaid'   => 'FireflyIII\Import\Prerequisites\PlaidPrerequisites',
+        'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
     ],
@@ -77,13 +78,18 @@ return [
         'file'    => FileConfigurator::class,
         'bunq'    => BunqConfigurator::class,
         'spectre' => SpectreConfigurator::class,
-        'plaid'   => 'FireflyIII\Import\Configuration\PlaidConfigurator',
+        'plaid'   => false,
+        'quovo'   => false,
+        'yodlee'  => false,
     ],
     'routine'       => [
+        'fake'    => FakeRoutine::class,
         'file'    => FileRoutine::class,
         'bunq'    => BunqRoutine::class,
         'spectre' => SpectreRoutine::class,
-        'plaid'   => 'FireflyIII\Import\Routine\PlaidRoutine',
+        'plaid'   => false,
+        'quovo'   => false,
+        'yodlee'  => false,
     ],
 
     'options'        => [

@@ -336,6 +336,20 @@ class ImportJobRepository implements ImportJobRepositoryInterface
 
     /**
      * @param ImportJob $job
+     * @param string    $stage
+     *
+     * @return ImportJob
+     */
+    public function setStage(ImportJob $job, string $stage): ImportJob
+    {
+        $job->stage = $stage;
+        $job->save();
+
+        return $job;
+    }
+
+    /**
+     * @param ImportJob $job
      * @param string    $status
      *
      * @return ImportJob

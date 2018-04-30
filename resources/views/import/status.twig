@@ -42,6 +42,26 @@
             </div>
         </div>
     </div>
+    {# box to show when job is running ... #}
+    <div class="row status_running statusbox" style="display: none;">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title" id="import-status-title">{{ trans('import.status_running_title') }}</h3>
+                </div>
+                <div class="box-body">
+                    <div id="import-status-holder">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-info active progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                <span class="sr-only">Running...</span>
+                            </div>
+                        </div>
+                        <p id="import-status-txt">Some text here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     {# Box for when the job is ready to start
     <div class="row status_configured statusbox" style="display:none;">
