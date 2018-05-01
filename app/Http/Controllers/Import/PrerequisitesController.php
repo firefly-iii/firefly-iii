@@ -63,9 +63,8 @@ class PrerequisitesController extends Controller
     }
 
     /**
-     * Once there are no prerequisites, this method will create an importjob object and
-     * redirect the user to a view where this object can be used by a bank specific
-     * class to process.
+     * This method will process and store import provider global prerequisites
+     * such as API keys.
      *
      * @param string    $importProvider
      * @param ImportJob $importJob
@@ -75,6 +74,14 @@ class PrerequisitesController extends Controller
      */
     public function index(string $importProvider, ImportJob $importJob = null)
     {
+        // catch impossible status:
+        $allowed = ['new'];
+        if (null !== $importJob && !in_array($importJob->status, $allowed)) {
+            Log::error('Job is not new but wants to do prerequisites');
+            session()->flash('error', trans('import.bad_job_status'));
+            return redirect(route('import.index'));
+        }
+
         app('view')->share('subTitle', trans('import.prerequisites_breadcrumb_' . $importProvider));
         $class = (string)config(sprintf('import.prerequisites.%s', $importProvider));
         if (!class_exists($class)) {
@@ -84,9 +91,12 @@ class PrerequisitesController extends Controller
         $object = app($class);
         $object->setUser(auth()->user());
 
-        // TODO if prerequisites have been met and job is not null, just skip this step.
         if (null !== $importJob && $object->isComplete()) {
-            // set job to
+            // update job:
+            $this->repository->setStatus($importJob, 'has_prereq');
+
+            // redirect to job config:
+            return redirect(route('import.job.configuration.index', [$importJob->key]));
         }
 
 
@@ -116,6 +126,15 @@ class PrerequisitesController extends Controller
     public function post(Request $request, string $importProvider, ImportJob $importJob = null)
     {
         Log::debug(sprintf('Now in postPrerequisites for %s', $importProvider));
+
+        // catch impossible status:
+        $allowed = ['new'];
+        if (null !== $importJob && !in_array($importJob->status, $allowed)) {
+            Log::error('Job is not new but wants to do prerequisites');
+            session()->flash('error', trans('import.bad_job_status'));
+            return redirect(route('import.index'));
+        }
+
 
         $class = (string)config(sprintf('import.prerequisites.%s', $importProvider));
         if (!class_exists($class)) {

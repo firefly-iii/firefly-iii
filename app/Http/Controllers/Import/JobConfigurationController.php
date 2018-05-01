@@ -61,63 +61,80 @@ class JobConfigurationController extends Controller
     /**
      * Configure the job. This method is returned to until job is deemed "configured".
      *
-     * @param ImportJob $job
+     * @param ImportJob $importJob
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      *
      * @throws FireflyException
      */
-    public function index(ImportJob $job)
+    public function index(ImportJob $importJob)
     {
-        // if provider has no config, just push it through
-        $importProvider = $job->provider;
-        if (!(bool)config(sprintf('import.has_config.%s', $importProvider))) {
-            $this->repository->updateStatus($job, 'ready_to_run');
-
-            return redirect(route('import.job.status.index', [$job->key]));
+        // catch impossible status:
+        $allowed = ['has_prereq', 'need_job_config', 'has_config'];
+        if (null !== $importJob && !in_array($importJob->status, $allowed)) {
+            Log::error('Job is not new but wants to do prerequisites');
+            session()->flash('error', trans('import.bad_job_status'));
+            return redirect(route('import.index'));
         }
 
+        Log::debug(sprintf('Now in JobConfigurationController::index() with job "%s" and status "%s"', $importJob->key, $importJob->status));
+
+        // if provider has no config, just push it through:
+        $importProvider = $importJob->provider;
+        if (!(bool)config(sprintf('import.has_config.%s', $importProvider))) {
+            Log::debug('Job needs no config, is ready to run!');
+            $this->repository->updateStatus($importJob ,'ready_to_run');
+
+            return redirect(route('import.job.status.index', [$importProvider->key]));
+        }
 
         // create configuration class:
-        $configurator = $this->makeConfigurator($job);
+        $configurator = $this->makeConfigurator($importJob);
 
         // is the job already configured?
         if ($configurator->configurationComplete()) {
-            $this->repository->updateStatus($job, 'ready_to_run');
+            Log::debug('Config is complete, set status to ready_to_run.');
+            $this->repository->updateStatus($importJob, 'ready_to_run');
 
-            return redirect(route('import.job.status.index', [$job->key]));
+            return redirect(route('import.job.status.index', [$importJob->key]));
         }
-
-        $this->repository->updateStatus($job, 'configuring');
 
         $view         = $configurator->getNextView();
         $data         = $configurator->getNextData();
         $subTitle     = trans('firefly.import_config_bread_crumb');
         $subTitleIcon = 'fa-wrench';
 
-        return view($view, compact('data', 'job', 'subTitle', 'subTitleIcon'));
+        return view($view, compact('data', 'importJob', 'subTitle', 'subTitleIcon'));
     }
 
     /**
      * Store the configuration. Returns to "configure" method until job is configured.
      *
      * @param Request   $request
-     * @param ImportJob $job
+     * @param ImportJob $importJob
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
      * @throws FireflyException
      */
-    public function post(Request $request, ImportJob $job)
+    public function post(Request $request, ImportJob $importJob)
     {
-        Log::debug('Now in postConfigure()', ['job' => $job->key]);
-        $configurator = $this->makeConfigurator($job);
+        // catch impossible status:
+        $allowed = ['has_prereq', 'need_job_config', 'has_config'];
+        if (null !== $importJob && !in_array($importJob->status, $allowed)) {
+            Log::error('Job is not new but wants to do prerequisites');
+            session()->flash('error', trans('import.bad_job_status'));
+            return redirect(route('import.index'));
+        }
+
+        Log::debug('Now in postConfigure()', ['job' => $importJob->key]);
+        $configurator = $this->makeConfigurator($importJob);
 
         // is the job already configured?
         if ($configurator->configurationComplete()) {
-            $this->repository->updateStatus($job, 'ready_to_run');
+            $this->repository->updateStatus($importJob, 'ready_to_run');
 
-            return redirect(route('import.job.status.index', [$job->key]));
+            return redirect(route('import.job.status.index', [$importJob->key]));
         }
 
         $data     = $request->all();
@@ -128,27 +145,27 @@ class JobConfigurationController extends Controller
         }
 
         // return to configure
-        return redirect(route('import.job.configuration.index', [$job->key]));
+        return redirect(route('import.job.configuration.index', [$importJob->key]));
     }
 
     /**
-     * @param ImportJob $job
+     * @param ImportJob $importJob
      *
      * @return JobConfiguratorInterface
      *
      * @throws FireflyException
      */
-    private function makeConfigurator(ImportJob $job): JobConfiguratorInterface
+    private function makeConfigurator(ImportJob $importJob): JobConfiguratorInterface
     {
-        $key       = sprintf('import.configuration.%s', $job->provider);
+        $key       = sprintf('import.configuration.%s', $importJob->provider);
         $className = (string)config($key);
         if (null === $className || !class_exists($className)) {
-            throw new FireflyException(sprintf('Cannot find configurator class for job with provider "%s".', $job->provider)); // @codeCoverageIgnore
+            throw new FireflyException(sprintf('Cannot find configurator class for job with provider "%s".', $importJob->provider)); // @codeCoverageIgnore
         }
         Log::debug(sprintf('Going to create class "%s"', $className));
         /** @var JobConfiguratorInterface $configurator */
         $configurator = app($className);
-        $configurator->setJob($job);
+        $configurator->setJob($importJob);
 
         return $configurator;
     }

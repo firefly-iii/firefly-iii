@@ -180,6 +180,7 @@ return [
     // index of import:
     'general_index_title'                  => 'Import a file',
     'general_index_intro'                  => 'Welcome to Firefly III\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
+    'bad_job_status'                       => 'You cannot access this page when the job is at this point. Sorry!',
 
     // import provider strings (index):
     'button_fake'                          => 'Fake an import',
@@ -217,7 +218,7 @@ return [
     'do_config_quovo'                      => 'Configuration for imports from Quovo',
 
     // job configuration:
-    'job_configuration_breadcrumb' => 'Configuration for job ":key"',
+    'job_configuration_breadcrumb'         => 'Configuration for job ":key"',
 
     // import index page:
     'index_breadcrumb'                     => 'Index',

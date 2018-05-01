@@ -58,7 +58,7 @@ class IndexController extends Controller
     }
 
     /**
-     * Creates a new import job for $importProvider with the default (global) job configuration.
+     * Creates a new import job for $importProvider.
      *
      * @param string $importProvider
      *
@@ -72,7 +72,6 @@ class IndexController extends Controller
 
         // if job provider has no prerequisites:
         if (!(bool)config(sprintf('import.has_prereq.%s', $importProvider))) {
-
 
             // if job provider also has no configuration:
             if (!(bool)config(sprintf('import.has_config.%s', $importProvider))) {
@@ -93,11 +92,11 @@ class IndexController extends Controller
         if (!class_exists($class)) {
             throw new FireflyException(sprintf('No class to handle configuration for "%s".', $importProvider)); // @codeCoverageIgnore
         }
-        /** @var PrerequisitesInterface $object */
-        $object = app($class);
-        $object->setUser(auth()->user());
+        /** @var PrerequisitesInterface $providerPre */
+        $providerPre = app($class);
+        $providerPre->setUser(auth()->user());
 
-        if (!$object->isComplete()) {
+        if (!$providerPre->isComplete()) {
             // redirect to global prerequisites
             return redirect(route('import.prerequisites.index', [$importProvider, $importJob->key]));
         }
@@ -110,42 +109,6 @@ class IndexController extends Controller
 
     }
 
-    //    /**
-    //     * Generate a JSON file of the job's configuration and send it to the user.
-    //     *
-    //     * @param ImportJob $job
-    //     *
-    //     * @return LaravelResponse
-    //     */
-    //    public function download(ImportJob $job)
-    //    {
-    //        Log::debug('Now in download()', ['job' => $job->key]);
-    //        $config = $job->configuration;
-    //
-    //        // This is CSV import specific:
-    //        $config['column-roles-complete']   = false;
-    //        $config['column-mapping-complete'] = false;
-    //        $config['initial-config-complete'] = false;
-    //        $config['has-file-upload']         = false;
-    //        $config['delimiter']               = "\t" === $config['delimiter'] ? 'tab' : $config['delimiter'];
-    //        unset($config['stage']);
-    //
-    //        $result = json_encode($config, JSON_PRETTY_PRINT);
-    //        $name   = sprintf('"%s"', addcslashes('import-configuration-' . date('Y-m-d') . '.json', '"\\'));
-    //
-    //        /** @var LaravelResponse $response */
-    //        $response = response($result, 200);
-    //        $response->header('Content-disposition', 'attachment; filename=' . $name)
-    //                 ->header('Content-Type', 'application/json')
-    //                 ->header('Content-Description', 'File Transfer')
-    //                 ->header('Connection', 'Keep-Alive')
-    //                 ->header('Expires', '0')
-    //                 ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
-    //                 ->header('Pragma', 'public')
-    //                 ->header('Content-Length', \strlen($result));
-    //
-    //        return $response;
-    //    }
 
     /**
      * General import index.
@@ -251,5 +214,43 @@ class IndexController extends Controller
     //        }
     //
     //        throw new FireflyException('Job did not complete successfully. Please review the log files.');
+    //    }
+
+
+    //    /**
+    //     * Generate a JSON file of the job's configuration and send it to the user.
+    //     *
+    //     * @param ImportJob $job
+    //     *
+    //     * @return LaravelResponse
+    //     */
+    //    public function download(ImportJob $job)
+    //    {
+    //        Log::debug('Now in download()', ['job' => $job->key]);
+    //        $config = $job->configuration;
+    //
+    //        // This is CSV import specific:
+    //        $config['column-roles-complete']   = false;
+    //        $config['column-mapping-complete'] = false;
+    //        $config['initial-config-complete'] = false;
+    //        $config['has-file-upload']         = false;
+    //        $config['delimiter']               = "\t" === $config['delimiter'] ? 'tab' : $config['delimiter'];
+    //        unset($config['stage']);
+    //
+    //        $result = json_encode($config, JSON_PRETTY_PRINT);
+    //        $name   = sprintf('"%s"', addcslashes('import-configuration-' . date('Y-m-d') . '.json', '"\\'));
+    //
+    //        /** @var LaravelResponse $response */
+    //        $response = response($result, 200);
+    //        $response->header('Content-disposition', 'attachment; filename=' . $name)
+    //                 ->header('Content-Type', 'application/json')
+    //                 ->header('Content-Description', 'File Transfer')
+    //                 ->header('Connection', 'Keep-Alive')
+    //                 ->header('Expires', '0')
+    //                 ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+    //                 ->header('Pragma', 'public')
+    //                 ->header('Content-Length', \strlen($result));
+    //
+    //        return $response;
     //    }
 }

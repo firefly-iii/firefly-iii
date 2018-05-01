@@ -1,7 +1,7 @@
 <?php
 /**
- * RoutineInterface.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * StageAhoyHandler.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,32 +18,28 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace FireflyIII\Import\Routine;
+namespace FireflyIII\Support\Import\Routine\Fake;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\ImportJob;
+use Log;
 
 /**
- * Interface RoutineInterface
+ * Class StageAhoyHandler
  */
-interface RoutineInterface
+class StageAhoyHandler
 {
     /**
-     * At the end of each run(), the import routine must set the job to the expected status.
-     *
-     * The final status of the routine must be "provider_finished".
-     *
-     * @return bool
      * @throws FireflyException
      */
-    public function run(): void;
+    public function run(): void
+    {
+        for ($i = 0; $i < 15; $i++) {
+            Log::debug(sprintf('Am now in stage AHOY hander, sleeping... (%d)', $i));
+            sleep(1);
+        }
+    }
 
-    /**
-     * @param ImportJob $job
-     *
-     * @return mixed
-     */
-    public function setJob(ImportJob $job);
 }

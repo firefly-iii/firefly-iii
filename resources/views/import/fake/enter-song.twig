@@ -20,7 +20,7 @@
         </div>
     </div>
 
-    <form method="POST" action="{{ route('import.job.configuration.post', job.key) }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('import.job.configuration.post', importJob.key) }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
             <div class="col-lg-12">

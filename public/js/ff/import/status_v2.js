@@ -24,8 +24,9 @@ var timeOutId;
 var hasStartedJob = false;
 var checkInitialInterval = 1000;
 var checkNextInterval = 500;
-var maxLoops = 20;
+var maxLoops = 60;
 var totalLoops = 0;
+var startCount = 0;
 
 $(function () {
     "use strict";
@@ -50,6 +51,10 @@ function reportOnJobStatus(data) {
     console.log(data);
     switch (data.status) {
         case "ready_to_run":
+            if (startCount > 0) {
+                hasStartedJob = false;
+            }
+            startCount++;
             startJob();
             checkOnJob();
             break;
@@ -57,8 +62,14 @@ function reportOnJobStatus(data) {
             showProgressBox();
             checkOnJob();
             break;
+
+        case "need_job_config":
+            // redirect user to configuration for this job.
+            window.location.replace(jobConfigurationUri);
+            break;
         default:
             console.error('Cannot handle status ' + data.status);
+
     }
 }
 

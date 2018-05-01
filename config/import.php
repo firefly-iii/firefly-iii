@@ -38,7 +38,7 @@ use FireflyIII\Import\Routine\SpectreRoutine;
 
 return [
     'enabled'       => [
-        'fake'    => false,
+        'fake'    => true,
         'file'    => true,
         'bunq'    => true,
         'spectre' => true,
@@ -65,7 +65,7 @@ return [
         'yodlee'  => false,
     ],
     'has_config'    => [
-        'fake'    => false,
+        'fake'    => true,
         'file'    => true,
         'bunq'    => true,
         'spectre' => true,

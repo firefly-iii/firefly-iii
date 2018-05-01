@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Routine\Fake;
 
+use FireflyIII\Exceptions\FireflyException;
 use Log;
 
 /**
@@ -31,7 +32,7 @@ use Log;
 class StageNewHandler
 {
     /**
-     *
+     * @throws FireflyException
      */
     public function run(): void
     {

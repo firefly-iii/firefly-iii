@@ -356,6 +356,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      */
     public function setStatus(ImportJob $job, string $status): ImportJob
     {
+        Log::debug(sprintf('Set status of job "%s" to "%s"', $job->key, $status));
         $job->status = $status;
         $job->save();
 

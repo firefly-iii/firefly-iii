@@ -170,7 +170,7 @@
 
         var jobStatusUri = '{{ route('import.job.status.json', [importJob.key]) }}';
         var jobStartUri = '{{ route('import.job.start', [importJob.key]) }}';
-
+        var jobConfigurationUri = '{{ route('import.job.configuration.index', [importJob.key]) }}';
 
         // some useful translations.
         {#var langImportTimeOutError = '(time out thing)';#}
@@ -178,7 +178,7 @@
         {#var langImportMultiError = '{{ trans('import.status_errors_multi')|escape('js') }}';#}
 
 
-        {#var jobConfigureUri = '#}{#{{ route('import.configure', [job.key]) }}#}{#';#}
+
         var token = '{{ csrf_token() }}';
         var job = {{ job|json_encode|raw }};
     </script>

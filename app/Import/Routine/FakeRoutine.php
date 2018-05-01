@@ -26,8 +26,10 @@ namespace FireflyIII\Import\Routine;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Support\Import\Routine\Fake\StageAhoyHandler;
+use FireflyIII\Support\Import\Routine\Fake\StageFinalHandler;
 use FireflyIII\Support\Import\Routine\Fake\StageNewHandler;
-
+use Log;
 
 /**
  * Class FakeRoutine
@@ -51,9 +53,9 @@ class FakeRoutine implements RoutineInterface
     /**
      * Fake import routine has three stages:
      *
-     * "new": will quietly log gibberish for 15 seconds, then switch to stage "ahoy"
-     *        unless "ahoy" has been done already. If so, jump to stage "final".
-     * "ahoy": will log some nonsense and then drop job into "need_extra_config" to force it back to the job config routine.
+     * "new": will quietly log gibberish for 15 seconds, then switch to stage "ahoy".
+     *        will also set status to "ready_to_run" so it will arrive here again.
+     * "ahoy": will log some nonsense and then drop job into status:"need_job_config" to force it back to the job config routine.
      * "final": will do some logging, sleep for 10 seconds and then finish. Generates 5 random transactions.
      *
      * @return bool
@@ -61,12 +63,33 @@ class FakeRoutine implements RoutineInterface
      */
     public function run(): void
     {
+        Log::debug(sprintf('Now in run() for fake routine with status: %s', $this->job->status));
+        if ($this->job->status !== 'running') {
+            throw new FireflyException('This fake job should not be started.');
+        }
+
         switch ($this->job->stage) {
             default:
                 throw new FireflyException(sprintf('Fake routine cannot handle stage "%s".', $this->job->stage));
             case 'new':
                 $handler = new StageNewHandler;
                 $handler->run();
+                $this->repository->setStage($this->job, 'ahoy');
+                // set job finished this step:
+                $this->repository->setStatus($this->job, 'ready_to_run');
+
+                return;
+            case 'ahoy':
+                $handler = new StageAhoyHandler;
+                $handler->run();
+                $this->repository->setStatus($this->job, 'need_job_config');
+                $this->repository->setStage($this->job, 'final');
+                break;
+            case 'final':
+                $handler = new StageFinalHandler;
+                $transactions = $handler->getTransactions();
+                $this->repository->setStatus($this->job, 'provider_finished');
+                $this->repository->setStage($this->job, 'final');
         }
     }
 
