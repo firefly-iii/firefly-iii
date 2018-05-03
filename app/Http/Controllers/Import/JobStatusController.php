@@ -102,7 +102,17 @@ class JobStatusController extends Controller
             'tag_name'      => null === $importJob->tag_id ? null : $importJob->tag->tag,
             'journals'      => $extendedStatus['count'] ?? 0,
             'journals_text' => trans_choice('import.status_with_count', $extendedStatus['count'] ?? 0),
+            'tag_text'      => '',
         ];
+        if (null !== $importJob->tag_id) {
+            $json['tag_text'] = trans(
+                'import.status_finished_job',
+                ['count' => $extendedStatus['count'],
+                 'link'  => route('tags.show', [$importJob->tag_id]),
+                 'tag'   => $importJob->tag->tag,
+                ]
+            );
+        }
 
         return response()->json($json);
     }
@@ -228,8 +238,6 @@ class JobStatusController extends Controller
         } catch (FireflyException|Exception|FatalThrowableError $e) {
             throw new FireflyException($e->getMessage());
         }
-
-
 
 
     }

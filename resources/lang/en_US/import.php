@@ -49,6 +49,7 @@ return [
     'status_errors_single'       => 'An error has occurred during the import. It does not appear to be fatal.',
     'status_errors_multi'        => 'Some errors occurred during the import. These do not appear to be fatal.',
     'status_with_count'          => 'One transaction has been imported|:count transactions have been imported.',
+    'job_status_breadcrumb'      => 'Import job state',
 
     'status_bread_crumb'                   => 'Import status',
     'status_sub_title'                     => 'Import status',

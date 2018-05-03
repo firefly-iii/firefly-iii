@@ -95,6 +95,9 @@ function showJobResults(data) {
     // render the count:
     $('#import-status-more-info').append($('<span>').text(data.journals_text));
 
+    if(data.tag_id) {
+        $('#import-status-more-info').append($('<br>')).append($('<span>').html(data.tag_text));
+    }
 
     // render relevant data from JSON thing.
     if (data.errors.length > 0) {
@@ -182,7 +185,7 @@ function showProgressBox(status) {
 
     // hide initial status box:
     $('.status_initial').hide();
-    if(status === 'running') {
+    if(status === 'running' || status === 'ready_to_run') {
         $('#import-status-txt').text(langImportRunning);
     } else {
         $('#import-status-txt').text(langImportStoring);
