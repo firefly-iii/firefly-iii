@@ -1,6 +1,6 @@
 <?php
 /**
- * JobConfiguratorInterface.php
+ * JobConfigurationInterface.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -26,9 +26,9 @@ use FireflyIII\Models\ImportJob;
 use Illuminate\Support\MessageBag;
 
 /**
- * Interface JobConfiguratorInterface.
+ * Interface JobConfigurationInterface.
  */
-interface JobConfiguratorInterface
+interface JobConfigurationInterface
 {
     /**
      * ConfiguratorInterface constructor.

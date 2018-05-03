@@ -25,7 +25,7 @@ namespace FireflyIII\Http\Controllers\Import;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
-use FireflyIII\Import\JobConfiguration\JobConfiguratorInterface;
+use FireflyIII\Import\JobConfiguration\JobConfigurationInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Http\Request;
@@ -151,11 +151,11 @@ class JobConfigurationController extends Controller
     /**
      * @param ImportJob $importJob
      *
-     * @return JobConfiguratorInterface
+     * @return JobConfigurationInterface
      *
      * @throws FireflyException
      */
-    private function makeConfigurator(ImportJob $importJob): JobConfiguratorInterface
+    private function makeConfigurator(ImportJob $importJob): JobConfigurationInterface
     {
         $key       = sprintf('import.configuration.%s', $importJob->provider);
         $className = (string)config($key);
@@ -163,7 +163,7 @@ class JobConfigurationController extends Controller
             throw new FireflyException(sprintf('Cannot find configurator class for job with provider "%s".', $importJob->provider)); // @codeCoverageIgnore
         }
         Log::debug(sprintf('Going to create class "%s"', $className));
-        /** @var JobConfiguratorInterface $configurator */
+        /** @var JobConfigurationInterface $configurator */
         $configurator = app($className);
         $configurator->setJob($importJob);
 

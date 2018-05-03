@@ -8,11 +8,11 @@
         <div class="col-lg-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ trans('import.file_upload_title') }}</h3>
+                    <h3 class="box-title">Rules</h3>
                 </div>
                 <div class="box-body">
                     <p>
-                        {{ trans('import.file_upload_text') }}
+                        Should apply rules?
                     </p>
                 </div>
             </div>
@@ -20,20 +20,19 @@
         </div>
     </div>
 
-    <form method="POST" action="{{ route('import.configure.post', job.key) }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('import.job.configuration.post', importJob.key) }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
-        <input type="hidden" name="settings" value="upload"/>
-
         <div class="row">
             <div class="col-lg-12">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ trans('import.file_upload_fields') }}</h3>
+                        <h3 class="box-title">Fields be here.</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.file('import_file', {helpText: trans('import.file_upload_help')}) }}
-                        {{ ExpandedForm.file('configuration_file', {helpText: trans('import.file_upload_config_help')|raw}) }}
-                        {{ ExpandedForm.select('import_file_type', data.file_types, data.default_type, {'helpText' : trans('import.file_upload_type_help')}) }}
+                        <select name="apply-rules">
+                            <option value="1">yes</option>
+                            <option value="0">no</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -43,7 +42,7 @@
                 <div class="box">
                     <div class="box-body">
                         <button type="submit" class="btn btn-success pull-right">
-                            {{ trans('import.file_upload_submit') }} <i class="fa fa-arrow-right"></i>
+                            Submit it!
                         </button>
                     </div>
                 </div>

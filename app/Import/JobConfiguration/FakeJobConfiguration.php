@@ -30,7 +30,7 @@ use Illuminate\Support\MessageBag;
 /**
  * Class FakeJobConfiguration
  */
-class FakeJobConfiguration implements JobConfiguratorInterface
+class FakeJobConfiguration implements JobConfigurationInterface
 {
     /** @var ImportJob */
     private $job;
@@ -60,7 +60,8 @@ class FakeJobConfiguration implements JobConfiguratorInterface
         $config = $this->job->configuration;
         if ($this->job->stage === 'new') {
             return (isset($config['artist']) && 'david bowie' === strtolower($config['artist']))
-                   && (isset($config['song']) && 'golden years' === strtolower($config['song']));
+                   && (isset($config['song']) && 'golden years' === strtolower($config['song']))
+                   && isset($config['apply-rules']);
         }
 
         return isset($config['album']) && 'station to station' === strtolower($config['album']);
@@ -80,6 +81,7 @@ class FakeJobConfiguration implements JobConfiguratorInterface
         $artist        = strtolower($data['artist'] ?? '');
         $song          = strtolower($data['song'] ?? '');
         $album         = strtolower($data['album'] ?? '');
+        $applyRules    = isset($data['apply-rules']) ? (int)$data['apply-rules'] === 1 : null;
         $configuration = $this->job->configuration;
         if ($artist === 'david bowie') {
             // store artist
@@ -91,17 +93,20 @@ class FakeJobConfiguration implements JobConfiguratorInterface
             $configuration['song'] = $song;
         }
 
-        if ($album=== 'station to station') {
+        if ($album === 'station to station') {
             // store album
             $configuration['album'] = $album;
+        }
+        if (null !== $applyRules) {
+            $configuration['apply-rules'] = $applyRules;
         }
 
         $this->repository->setConfiguration($this->job, $configuration);
         $messages = new MessageBag();
 
-        if (\count($configuration) !== 2) {
+        if (\count($configuration) !== 3) {
 
-            $messages->add('some_key', 'Ignore this error');
+            $messages->add('some_key', 'Ignore this error: ' . \count($configuration));
         }
 
         return $messages;
@@ -128,7 +133,11 @@ class FakeJobConfiguration implements JobConfiguratorInterface
         $config = $this->job->configuration;
         $artist = $config['artist'] ?? '';
         $song   = $config['song'] ?? '';
-        $album = $config['album'] ?? '';
+        $album  = $config['album'] ?? '';
+        $applyRules = $config['apply-rules'] ?? null;
+        if (null === $applyRules) {
+            return 'import.fake.apply-rules';
+        }
         if (strtolower($artist) !== 'david bowie') {
             return 'import.fake.enter-artist';
         }

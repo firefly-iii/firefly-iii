@@ -61,7 +61,7 @@ function reportOnJobStatus(data) {
             break;
         case "running":
         case "storing_data":
-            showProgressBox(data.ttatus);
+            showProgressBox(data.status);
             checkOnJob();
             break;
 
