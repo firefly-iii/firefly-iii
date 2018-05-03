@@ -22,6 +22,7 @@
 
 var timeOutId;
 var hasStartedJob = false;
+var jobStorageStarted = false;
 var checkInitialInterval = 1000;
 var checkNextInterval = 500;
 var maxLoops = 60;
@@ -59,7 +60,8 @@ function reportOnJobStatus(data) {
             checkOnJob();
             break;
         case "running":
-            showProgressBox();
+        case "storing_data":
+            showProgressBox(data.ttatus);
             checkOnJob();
             break;
 
@@ -67,10 +69,46 @@ function reportOnJobStatus(data) {
             // redirect user to configuration for this job.
             window.location.replace(jobConfigurationUri);
             break;
+        case 'provider_finished':
+            // call routine to store stuff:
+            storeJobData();
+            checkOnJob();
+            break;
+        case "finished":
+            showJobResults(data);
+            break;
         default:
             console.error('Cannot handle status ' + data.status);
 
     }
+}
+
+/**
+ *
+ * @param data
+ */
+function showJobResults(data) {
+    // hide all boxes.
+// hide status boxes:
+    $('.statusbox').hide();
+
+    // render the count:
+    $('#import-status-more-info').append($('<span>').text(data.journals_text));
+
+
+    // render relevant data from JSON thing.
+    if (data.errors.length > 0) {
+        $('#import-status-error-txt').show();
+        data.errors.forEach(function (element) {
+            $('#import-status-errors').append($('<li>').text(element));
+        });
+
+
+    }
+
+    // show success box.
+    $('.status_finished').show();
+
 }
 
 /**
@@ -101,6 +139,20 @@ function startJob() {
 }
 
 /**
+ * Start the storage routine for this job.
+ */
+function storeJobData() {
+    console.log('In storeJobData()');
+    if (jobStorageStarted) {
+        console.log('Store job already started!');
+        return;
+    }
+    console.log('STORAGE JOB STARTED!');
+    jobStorageStarted = true;
+    $.post(jobStorageStartUri, {_token: token}).fail(reportOnSubmitError).done(reportOnSubmit)
+}
+
+/**
  * Function is called when the JSON array could not be retrieved.
  *
  * @param xhr
@@ -121,12 +173,20 @@ function reportFailure(xhr, status, error) {
     // show error box.
 }
 
-function showProgressBox() {
+/**
+ *
+ */
+function showProgressBox(status) {
     // hide fatal error box:
     $('.fatal_error').hide();
 
     // hide initial status box:
     $('.status_initial').hide();
+    if(status === 'running') {
+        $('#import-status-txt').text(langImportRunning);
+    } else {
+        $('#import-status-txt').text(langImportStoring);
+    }
 
     // show running box:
     $('.status_running').show();

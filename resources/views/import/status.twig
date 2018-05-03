@@ -56,7 +56,7 @@
                                 <span class="sr-only">Running...</span>
                             </div>
                         </div>
-                        <p id="import-status-txt">Some text here</p>
+                        <p id="import-status-txt"></p>
                     </div>
                 </div>
             </div>
@@ -128,7 +128,7 @@
         </div>
     </div>
     #}
-    {# displays the finished status of the import
+    {# displays the finished status of the import    #}
     <div class="row status_finished statusbox" style="display:none;">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-default">
@@ -138,14 +138,16 @@
                 <div class="box-body">
                     <p id="import-status-intro">
                         {{ trans('import.status_finished_text') }}
+                        <span id="import-status-more-info"></span>
                     </p>
-                    <p id="import-status-more-info"></p>
+                    <p id="import-status-error-txt" style="display:none;">{{ trans('import.finished_with_errors') }}</p>
+                    <ul id="import-status-errors" class="text-danger">
+
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
-    #}
-
     {# box to show error information. #}
     {#
     <div class="row info_errors" style="display:none;">
@@ -171,6 +173,11 @@
         var jobStatusUri = '{{ route('import.job.status.json', [importJob.key]) }}';
         var jobStartUri = '{{ route('import.job.start', [importJob.key]) }}';
         var jobConfigurationUri = '{{ route('import.job.configuration.index', [importJob.key]) }}';
+        var jobStorageStartUri = '{{ route('import.job.store', [importJob.key]) }}';
+
+        // import is running:
+        var langImportRunning = '{{ trans('import.status_job_running') }}';
+        var langImportStoring = '{{ trans('import.status_job_storing') }}';
 
         // some useful translations.
         {#var langImportTimeOutError = '(time out thing)';#}

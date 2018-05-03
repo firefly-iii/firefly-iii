@@ -47,9 +47,10 @@ class ImportJob extends Model
             'configuration'   => 'array',
             'extended_status' => 'array',
             'transactions'    => 'array',
+            'errors'          => 'array',
         ];
     /** @var array */
-    protected $fillable = ['key', 'user_id', 'file_type', 'provider', 'status', 'stage', 'configuration', 'extended_status', 'transactions'];
+    protected $fillable = ['key', 'user_id', 'file_type', 'provider', 'status', 'stage', 'configuration', 'extended_status', 'transactions', 'errors'];
 
     /**
      * @param $value
@@ -78,5 +79,14 @@ class ImportJob extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function tag()
+    {
+        return $this->belongsTo(Tag::class);
     }
 }

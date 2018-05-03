@@ -56,10 +56,16 @@ class FakeJobConfiguration implements JobConfiguratorInterface
         // configuration array of job must have two values:
         // 'artist' must be 'david bowie', case insensitive
         // 'song' must be 'golden years', case insensitive.
+        // if stage is not "new", then album must be 'station to station'
         $config = $this->job->configuration;
+        if ($this->job->stage === 'new') {
+            return (isset($config['artist']) && 'david bowie' === strtolower($config['artist']))
+                   && (isset($config['song']) && 'golden years' === strtolower($config['song']));
+        }
 
-        return (isset($config['artist']) && 'david bowie' === strtolower($config['artist']))
-               && (isset($config['song']) && 'golden years' === strtolower($config['song']));
+        return isset($config['album']) && 'station to station' === strtolower($config['album']);
+
+
     }
 
     /**
@@ -72,16 +78,24 @@ class FakeJobConfiguration implements JobConfiguratorInterface
     public function configureJob(array $data): MessageBag
     {
         $artist        = strtolower($data['artist'] ?? '');
+        $song          = strtolower($data['song'] ?? '');
+        $album         = strtolower($data['album'] ?? '');
         $configuration = $this->job->configuration;
         if ($artist === 'david bowie') {
             // store artist
             $configuration['artist'] = $artist;
         }
-        $song = strtolower($data['song'] ?? '');
+
         if ($song === 'golden years') {
-            // store artist
+            // store song
             $configuration['song'] = $song;
         }
+
+        if ($album=== 'station to station') {
+            // store album
+            $configuration['album'] = $album;
+        }
+
         $this->repository->setConfiguration($this->job, $configuration);
         $messages = new MessageBag();
 
@@ -114,11 +128,15 @@ class FakeJobConfiguration implements JobConfiguratorInterface
         $config = $this->job->configuration;
         $artist = $config['artist'] ?? '';
         $song   = $config['song'] ?? '';
+        $album = $config['album'] ?? '';
         if (strtolower($artist) !== 'david bowie') {
             return 'import.fake.enter-artist';
         }
         if (strtolower($song) !== 'golden years') {
             return 'import.fake.enter-song';
+        }
+        if (strtolower($album) !== 'station to station' && $this->job->stage !== 'new') {
+            return 'import.fake.enter-album';
         }
     }
 

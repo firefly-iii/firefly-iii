@@ -65,7 +65,7 @@ return [
         'yodlee'  => false,
     ],
     'has_config'    => [
-        'fake'    => true,
+        'fake'    => false,
         'file'    => true,
         'bunq'    => true,
         'spectre' => true,

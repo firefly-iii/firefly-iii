@@ -462,6 +462,7 @@ Route::group(
 
     // start the job!
     Route::any('job/start/{importJob}', ['uses' => 'Import\JobStatusController@start', 'as' => 'job.start']);
+    Route::any('job/store/{importJob}', ['uses' => 'Import\JobStatusController@store', 'as' => 'job.store']);
 
     // import method prerequisites:
     #

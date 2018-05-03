@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\ImportJob;
 
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\Tag;
 use FireflyIII\User;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -31,6 +32,32 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 interface ImportJobRepositoryInterface
 {
+
+    /**
+     * @param ImportJob $job
+     * @param array     $transactions
+     *
+     * @return ImportJob
+     */
+    public function setTransactions(ImportJob $job, array $transactions): ImportJob;
+
+    /**
+     * @param ImportJob $job
+     * @param Tag       $tag
+     *
+     * @return ImportJob
+     */
+    public function setTag(ImportJob $job, Tag $tag): ImportJob;
+
+    /**
+     * Add message to job.
+     *
+     * @param ImportJob $job
+     * @param string    $error
+     *
+     * @return ImportJob
+     */
+    public function addErrorMessage(ImportJob $job, string $error): ImportJob;
 
     /**
      * @param ImportJob $job

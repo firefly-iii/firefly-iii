@@ -85,7 +85,7 @@ class JobConfigurationController extends Controller
             Log::debug('Job needs no config, is ready to run!');
             $this->repository->updateStatus($importJob ,'ready_to_run');
 
-            return redirect(route('import.job.status.index', [$importProvider->key]));
+            return redirect(route('import.job.status.index', [$importJob->key]));
         }
 
         // create configuration class:

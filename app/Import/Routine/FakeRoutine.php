@@ -87,9 +87,11 @@ class FakeRoutine implements RoutineInterface
                 break;
             case 'final':
                 $handler = new StageFinalHandler;
+                $handler->setJob($this->job);
                 $transactions = $handler->getTransactions();
                 $this->repository->setStatus($this->job, 'provider_finished');
                 $this->repository->setStage($this->job, 'final');
+                $this->repository->setTransactions($this->job, $transactions);
         }
     }
 

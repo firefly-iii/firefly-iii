@@ -69,6 +69,13 @@ interface TagRepositoryInterface
     /**
      * @param int $tagId
      *
+     * @return Tag|null
+     */
+    public function findNull(int $tagId): ?Tag;
+
+    /**
+     * @param int $tagId
+     * @deprecated
      * @return Tag
      */
     public function find(int $tagId): Tag;

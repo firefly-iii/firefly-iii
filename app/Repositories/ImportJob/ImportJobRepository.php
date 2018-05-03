@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\ImportJob;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
@@ -126,6 +127,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
                 $importJob = ImportJob::create(
                     [
                         'user_id'         => $this->user->id,
+                        'tag_id'          => null,
                         'provider'        => $importProvider,
                         'file_type'       => '',
                         'key'             => Str::random(12),
@@ -134,6 +136,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
                         'configuration'   => [],
                         'extended_status' => [],
                         'transactions'    => [],
+                        'errors'          => [],
                     ]
                 );
 
@@ -426,5 +429,51 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     public function uploadFileContents(ImportJob $job): string
     {
         return $job->uploadFileContents();
+    }
+
+    /**
+     * @param ImportJob $job
+     * @param array     $transactions
+     *
+     * @return ImportJob
+     */
+    public function setTransactions(ImportJob $job, array $transactions): ImportJob
+    {
+        $job->transactions = $transactions;
+        $job->save();
+
+        return $job;
+    }
+
+    /**
+     * Add message to job.
+     *
+     * @param ImportJob $job
+     * @param string    $error
+     *
+     * @return ImportJob
+     */
+    public function addErrorMessage(ImportJob $job, string $error): ImportJob
+    {
+        $errors      = $job->errors;
+        $errors[]    = $error;
+        $job->errors = $errors;
+        $job->save();
+
+        return $job;
+    }
+
+    /**
+     * @param ImportJob $job
+     * @param Tag       $tag
+     *
+     * @return ImportJob
+     */
+    public function setTag(ImportJob $job, Tag $tag): ImportJob
+    {
+        $job->tag()->associate($tag);
+        $job->save();
+
+        return $job;
     }
 }
