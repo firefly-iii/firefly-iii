@@ -79,7 +79,7 @@ return [
     'job_config_fake_song_title'    => 'Enter song name',
     'job_config_fake_song_text'     => 'Mention the song "Golden years" to continue with the fake import.',
     'job_config_fake_album_title'   => 'Enter album name',
-    'job_config_fake_album_text'    => 'Some import routines require extra data halfway through the import. In the case of the fake import provider, you must answer some weird questions. In this case, enter "station to station" to continue.',
+    'job_config_fake_album_text'    => 'Some import routines require extra data halfway through the import. In the case of the fake import provider, you must answer some weird questions. Enter "Station to station" to continue.',
 
     // import status page:
     'import_with_key'               => 'Import with key \':key\'',
@@ -88,6 +88,7 @@ return [
     'status_running_title'          => 'The import is running',
     'status_job_running'            => 'Please wait, running the import...',
     'status_job_storing'            => 'Please wait, storing data...',
+    'status_job_rules'              => 'Please wait, running rules...',
     'status_fatal_title'            => 'Fatal error',
     'status_fatal_text'             => 'The import has suffered from an error it could not recover from. Apologies!',
     'status_fatal_more'             => 'This (possibly very cryptic) error message is complemented by log files, which you can find on your hard drive, or in the Docker container where you run Firefly III from.',

@@ -51,7 +51,6 @@ class PrerequisitesController extends Controller
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-archive');
                 app('view')->share('title', trans('firefly.import_index_title'));
-
                 app('view')->share('subTitleIcon', 'fa-check');
 
                 $this->repository = app(ImportJobRepositoryInterface::class);
@@ -59,7 +58,6 @@ class PrerequisitesController extends Controller
                 return $next($request);
             }
         );
-        $this->middleware(IsDemoUser::class);
     }
 
     /**

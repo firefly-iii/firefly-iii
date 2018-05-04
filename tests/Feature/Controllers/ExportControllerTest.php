@@ -116,7 +116,7 @@ class ExportControllerTest extends TestCase
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('create')->andReturn($job);
         $repository->shouldReceive('cleanup');
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection);
 
         $this->be($this->user());
         $response = $this->get(route('export.index'));

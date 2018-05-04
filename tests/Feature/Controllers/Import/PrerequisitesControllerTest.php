@@ -22,9 +22,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Import;
 
-use FireflyIII\Import\Prerequisites\FilePrerequisites;
+use FireflyIII\Import\Prerequisites\FakePrerequisites;
+use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Support\MessageBag;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -46,74 +49,191 @@ class PrerequisitesControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Import\PrerequisitesController::__construct
-     * @covers \FireflyIII\Http\Controllers\Import\PrerequisitesController::index
+     * @covers \FireflyIII\Http\Controllers\Import\PrerequisitesController
      */
-    public function testIndex()
+    public function testIndex(): void
     {
-        $object = $this->mock(FilePrerequisites::class);
-        $object->shouldReceive('setUser');
-        $object->shouldReceive('hasPrerequisites')->andReturn(true);
-        $object->shouldReceive('getView')->andReturn('error'); // does not matter which view is returned
-        $object->shouldReceive('getViewParameters')->andReturn([]);
-        $this->be($this->user());
+        $job               = new ImportJob;
+        $job->user_id      = $this->user()->id;
+        $job->key          = 'A_pre_job_' . random_int(1, 1000);
+        $job->status       = 'new';
+        $job->provider     = 'fake';
+        $job->transactions = [];
+        $job->file_type    = '';
+        $job->save();
 
-        $response = $this->get(route('import.prerequisites', ['file']));
+        // mock stuff
+        $prereq     = $this->mock(FakePrerequisites::class);
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
+
+        $prereq->shouldReceive('setUser')->once();
+        $prereq->shouldReceive('isComplete')->once()->andReturn(false);
+        $prereq->shouldReceive('getView')->once()->andReturn('import.fake.prerequisites');
+        $prereq->shouldReceive('getViewParameters')->once()->andReturn(['api_key' => '']);
+
+
+        $this->be($this->user());
+        $response = $this->get(route('import.prerequisites.index', ['fake', $job->key]));
         $response->assertStatus(200);
 
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Import\PrerequisitesController::index
+     * @covers \FireflyIII\Http\Controllers\Import\PrerequisitesController
      */
-    public function testIndexRedirect()
+    public function testIndexBadState(): void
     {
-        $object = $this->mock(FilePrerequisites::class);
-        $object->shouldReceive('setUser');
-        $object->shouldReceive('hasPrerequisites')->andReturn(false);
-        $this->be($this->user());
+        $job               = new ImportJob;
+        $job->user_id      = $this->user()->id;
+        $job->key          = 'B_pre_job_' . random_int(1, 1000);
+        $job->status       = 'some_Bad_state';
+        $job->provider     = 'fake';
+        $job->transactions = [];
+        $job->file_type    = '';
+        $job->save();
 
-        $response = $this->get(route('import.prerequisites', ['file']));
+        $this->be($this->user());
+        $response = $this->get(route('import.prerequisites.index', ['fake', $job->key]));
         $response->assertStatus(302);
-        $response->assertRedirect(route('import.create-job', ['file']));
+        $response->assertRedirect(route('import.index'));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Import\PrerequisitesController
+     */
+    public function testIndexComplete(): void
+    {
+        $job               = new ImportJob;
+        $job->user_id      = $this->user()->id;
+        $job->key          = 'C_pre_job_' . random_int(1, 1000);
+        $job->status       = 'new';
+        $job->provider     = 'fake';
+        $job->transactions = [];
+        $job->file_type    = '';
+        $job->save();
+
+        // mock stuff
+        $prereq     = $this->mock(FakePrerequisites::class);
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
+
+        $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'has_prereq']);
+        $prereq->shouldReceive('setUser')->once();
+        $prereq->shouldReceive('isComplete')->once()->andReturn(true);
+
+        $this->be($this->user());
+        $response = $this->get(route('import.prerequisites.index', ['fake', $job->key]));
+        $response->assertStatus(302);
+        $response->assertRedirect(route('import.job.configuration.index', [$job->key]));
 
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Import\PrerequisitesController::post
+     * Redirects to configuration.
+     *
+     * @covers \FireflyIII\Http\Controllers\Import\PrerequisitesController
      */
-    public function testPost()
+    public function testPost(): void
     {
-        $messageBag = new MessageBag;
-        $messageBag->add('nomessage', 'nothing');
-        $object = $this->mock(FilePrerequisites::class);
-        $object->shouldReceive('setUser');
-        $object->shouldReceive('hasPrerequisites')->andReturn(true);
-        $object->shouldReceive('storePrerequisites')->andReturn($messageBag);
+        $job               = new ImportJob;
+        $job->user_id      = $this->user()->id;
+        $job->key          = 'D_pre_job_' . random_int(1, 1000);
+        $job->status       = 'new';
+        $job->provider     = 'fake';
+        $job->transactions = [];
+        $job->file_type    = '';
+        $job->save();
+
+        // mock stuff
+        $prereq     = $this->mock(FakePrerequisites::class);
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
+
+        $prereq->shouldReceive('setUser')->once();
+        $prereq->shouldReceive('storePrerequisites')->once()->andReturn(new MessageBag);
+        $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'has_prereq']);
+
         $this->be($this->user());
-
-        $response = $this->post(route('import.prerequisites.post', ['file']), []);
+        $response = $this->post(route('import.prerequisites.post', ['fake', $job->key]));
         $response->assertStatus(302);
-        $response->assertSessionHas('error');
-        $response->assertRedirect(route('import.prerequisites', ['file']));
-
+        $response->assertRedirect(route('import.job.configuration.index', [$job->key]));
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Import\PrerequisitesController::post
+     * Bad state gives errors.
+     *
+     * @covers \FireflyIII\Http\Controllers\Import\PrerequisitesController
      */
-    public function testPostDone()
+    public function testPostBadState(): void
     {
-        $messageBag = new MessageBag;
-        $messageBag->add('nomessage', 'nothing');
-        $object = $this->mock(FilePrerequisites::class);
-        $object->shouldReceive('setUser');
-        $object->shouldReceive('hasPrerequisites')->andReturn(false);
+        $job               = new ImportJob;
+        $job->user_id      = $this->user()->id;
+        $job->key          = 'D_pre_job_' . random_int(1, 1000);
+        $job->status       = 'badstate';
+        $job->provider     = 'fake';
+        $job->transactions = [];
+        $job->file_type    = '';
+        $job->save();
+
+        // mock stuff
+        $prereq     = $this->mock(FakePrerequisites::class);
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
+
         $this->be($this->user());
-
-        $response = $this->post(route('import.prerequisites.post', ['file']), []);
+        $response = $this->post(route('import.prerequisites.post', ['fake', $job->key]));
         $response->assertStatus(302);
-        $response->assertRedirect(route('import.create-job', ['file']));
+        $response->assertRedirect(route('import.index'));
+        $response->assertSessionHas('error', 'To access this page, your import job cannot have status "badstate".');
+    }
 
+    /**
+     * Redirects to index.
+     *
+     * @covers \FireflyIII\Http\Controllers\Import\PrerequisitesController
+     */
+    public function testPostNoJob(): void
+    {
+        // mock stuff
+        $prereq     = $this->mock(FakePrerequisites::class);
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
+
+        $prereq->shouldReceive('setUser')->once();
+        $prereq->shouldReceive('storePrerequisites')->once()->andReturn(new MessageBag);
+
+        $this->be($this->user());
+        $response = $this->post(route('import.prerequisites.post', ['fake']));
+        $response->assertStatus(302);
+        $response->assertRedirect(route('import.index'));
+    }
+
+    /**
+     * Error messages? Redirect back
+     *
+     * @covers \FireflyIII\Http\Controllers\Import\PrerequisitesController
+     */
+    public function testPostWithMessages(): void
+    {
+        $job               = new ImportJob;
+        $job->user_id      = $this->user()->id;
+        $job->key          = 'D_pre_job_' . random_int(1, 1000);
+        $job->status       = 'new';
+        $job->provider     = 'fake';
+        $job->transactions = [];
+        $job->file_type    = '';
+        $job->save();
+
+        $messages = new MessageBag;
+        $messages->add('some', 'message');
+
+        // mock stuff
+        $prereq     = $this->mock(FakePrerequisites::class);
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
+
+        $prereq->shouldReceive('setUser')->once();
+        $prereq->shouldReceive('storePrerequisites')->once()->andReturn($messages);
+
+        $this->be($this->user());
+        $response = $this->post(route('import.prerequisites.post', ['fake', $job->key]));
+        $response->assertStatus(302);
+        $response->assertRedirect(route('import.prerequisites.index', ['fake', $job->key]));
+        $response->assertSessionHas('error', 'message');
     }
 }

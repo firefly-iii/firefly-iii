@@ -21,8 +21,8 @@
 /** global: jobStatusUri */
 
 var timeOutId;
-var hasStartedJob = false;
-var jobStorageStarted = false;
+var jobRunRoutineStarted = false;
+var jobStorageRoutineStarted = false;
 var checkInitialInterval = 1000;
 var checkNextInterval = 500;
 var maxLoops = 60;
@@ -53,18 +53,12 @@ function reportJobJSONDone(data) {
     switch (data.status) {
         case "ready_to_run":
             if (startCount > 0) {
-                hasStartedJob = false;
+                jobRunRoutineStarted = false;
             }
             startCount++;
             sendJobPOSTStart();
             recheckJobJSONStatus();
             break;
-        case "running":
-        case "storing_data":
-            showProgressBox(data.status);
-            recheckJobJSONStatus();
-            break;
-
         case "need_job_config":
             // redirect user to configuration for this job.
             window.location.replace(jobConfigurationUri);
@@ -74,11 +68,14 @@ function reportJobJSONDone(data) {
             sendJobPOSTStore();
             recheckJobJSONStatus();
             break;
+        case "storage_finished":
         case "finished":
             showJobResults(data);
             break;
         default:
-            console.error('Cannot handle status ' + data.status);
+            console.warn('No specific action for status ' + data.status);
+            showProgressBox(data.status);
+            recheckJobJSONStatus();
 
     }
 }
@@ -129,12 +126,12 @@ function recheckJobJSONStatus() {
  */
 function sendJobPOSTStart() {
     console.log('In sendJobPOSTStart()');
-    if (hasStartedJob) {
+    if (jobRunRoutineStarted) {
         console.log('Import job already started!');
         return;
     }
     console.log('Job was started');
-    hasStartedJob = true;
+    jobRunRoutineStarted = true;
     $.post(jobStartUri, {_token: token}).fail(reportJobPOSTFailure).done(reportJobPOSTDone)
 }
 
@@ -143,12 +140,12 @@ function sendJobPOSTStart() {
  */
 function sendJobPOSTStore() {
     console.log('In sendJobPOSTStore()');
-    if (jobStorageStarted) {
+    if (jobStorageRoutineStarted) {
         console.log('Store job already started!');
         return;
     }
     console.log('Storage job has started!');
-    jobStorageStarted = true;
+    jobStorageRoutineStarted = true;
     $.post(jobStorageStartUri, {_token: token}).fail(reportJobPOSTFailure).done(reportJobPOSTDone)
 }
 
@@ -185,14 +182,26 @@ function showProgressBox(status) {
 
     // hide initial status box:
     $('.status_initial').hide();
-    if (status === 'running' || status === 'ready_to_run') {
-        $('#import-status-txt').text(langImportRunning);
-    } else {
-        $('#import-status-txt').text(langImportStoring);
-    }
 
     // show running box:
     $('.status_running').show();
+
+    if (status === 'running' || status === 'ready_to_run') {
+        $('#import-status-txt').text(langImportRunning);
+        return;
+    }
+    if (status === 'storing_data' || status === 'storage_finished' || status === 'stored_data') {
+        $('#import-status-txt').text(langImportStoring);
+        return;
+    }
+    if (status === 'applying_rules' || status === 'linking_to_tag' || status === 'linked_to_tag' || status === 'rules_applied') {
+        $('#import-status-txt').text(langImportRules);
+        return;
+    }
+
+    $('#import-status-txt').text('Job status: ' + status);
+
+
 }
 
 /**

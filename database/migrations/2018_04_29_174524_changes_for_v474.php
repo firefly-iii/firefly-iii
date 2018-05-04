@@ -30,8 +30,8 @@ class ChangesForV474 extends Migration
             function (Blueprint $table) {
                 $table->string('provider', 50)->after('file_type')->default('');
                 $table->string('stage', 50)->after('status')->default('');
-                $table->longText('transactions')->after('extended_status');
-                $table->longText('errors')->after('transactions');
+                $table->longText('transactions')->after('extended_status')->nullable();
+                $table->longText('errors')->after('transactions')->nullable();
 
                 $table->integer('tag_id', false, true)->nullable()->after('user_id');
                 $table->foreign('tag_id')->references('id')->on('tags')->onDelete('set null');

@@ -70,10 +70,10 @@ class JobConfigurationController extends Controller
     public function index(ImportJob $importJob)
     {
         // catch impossible status:
-        $allowed = ['has_prereq', 'need_job_config', 'has_config'];
-        if (null !== $importJob && !in_array($importJob->status, $allowed)) {
-            Log::error('Job is not new but wants to do prerequisites');
+        $allowed = ['has_prereq', 'need_job_config'];
+        if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
             session()->flash('error', trans('import.bad_job_status', ['status' => $importJob->status]));
+
             return redirect(route('import.index'));
         }
 
@@ -82,10 +82,12 @@ class JobConfigurationController extends Controller
         // if provider has no config, just push it through:
         $importProvider = $importJob->provider;
         if (!(bool)config(sprintf('import.has_config.%s', $importProvider))) {
+            // @codeCoverageIgnoreStart
             Log::debug('Job needs no config, is ready to run!');
-            $this->repository->updateStatus($importJob ,'ready_to_run');
+            $this->repository->updateStatus($importJob, 'ready_to_run');
 
             return redirect(route('import.job.status.index', [$importJob->key]));
+            // @codeCoverageIgnoreEnd
         }
 
         // create configuration class:
@@ -120,10 +122,10 @@ class JobConfigurationController extends Controller
     public function post(Request $request, ImportJob $importJob)
     {
         // catch impossible status:
-        $allowed = ['has_prereq', 'need_job_config', 'has_config'];
-        if (null !== $importJob && !in_array($importJob->status, $allowed)) {
-            Log::error('Job is not new but wants to do prerequisites');
+        $allowed = ['has_prereq', 'need_job_config'];
+        if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
             session()->flash('error', trans('import.bad_job_status', ['status' => $importJob->status]));
+
             return redirect(route('import.index'));
         }
 

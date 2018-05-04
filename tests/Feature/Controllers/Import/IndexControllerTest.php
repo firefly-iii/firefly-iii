@@ -22,13 +22,18 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Import;
 
-use FireflyIII\Import\Routine\FileRoutine;
+use FireflyIII\Import\Prerequisites\BunqPrerequisites;
+use FireflyIII\Import\Prerequisites\FakePrerequisites;
+use FireflyIII\Import\Prerequisites\FilePrerequisites;
+use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
+use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
- * Class AccountControllerTest
+ * Class IndexControllerTest
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
@@ -46,73 +51,85 @@ class IndexControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Import\IndexController::create
+     * @covers \FireflyIII\Http\Controllers\Import\IndexController
      */
-    public function testCreate()
+    public function testCreateFake()
     {
-        $job        = $this->user()->importJobs()->where('key', 'new')->first();
-        $repository = $this->mock(ImportJobRepositoryInterface::class);
-        $repository->shouldReceive('create')->withArgs(['file'])->andReturn($job);
+        // mock stuff:
+        $repository        = $this->mock(ImportJobRepositoryInterface::class);
+        $fakePrerequisites = $this->mock(FakePrerequisites::class);
+
+        // fake job:
+        $importJob           = new ImportJob;
+        $importJob->provider = 'fake';
+        $importJob->key      = 'fake_job_1';
+
+        // mock call:
+        $repository->shouldReceive('create')->withArgs(['fake'])->andReturn($importJob);
+        $fakePrerequisites->shouldReceive('isComplete')->once()->andReturn(false);
+        $fakePrerequisites->shouldReceive('setUser')->once();
+
+
         $this->be($this->user());
-        $response = $this->get(route('import.create-job', ['file']));
+        $response = $this->get(route('import.create', ['fake']));
         $response->assertStatus(302);
-        $response->assertRedirect(route('import.configure', ['new']));
-
+        // expect a redirect to prerequisites
+        $response->assertRedirect(route('import.prerequisites.index', ['fake', 'fake_job_1']));
     }
 
+
     /**
-     * @covers \FireflyIII\Http\Controllers\Import\IndexController::download
+     * @covers \FireflyIII\Http\Controllers\Import\IndexController
      */
-    public function testDownload()
+    public function testCreateFakeNoPrereq()
     {
-        $repository = $this->mock(ImportJobRepositoryInterface::class);
-        //$job = $this->user()->importJobs()->where('key', 'testImport')->first();
+        // mock stuff:
+        $repository        = $this->mock(ImportJobRepositoryInterface::class);
+        $fakePrerequisites = $this->mock(FakePrerequisites::class);
+
+        // fake job:
+        $importJob           = new ImportJob;
+        $importJob->provider = 'fake';
+        $importJob->key      = 'fake_job_2';
+
+        // mock call:
+        $repository->shouldReceive('create')->withArgs(['fake'])->andReturn($importJob);
+        $fakePrerequisites->shouldReceive('isComplete')->once()->andReturn(true);
+        $fakePrerequisites->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'has_prereq'])->andReturn($importJob)->once();
+
+
         $this->be($this->user());
-        $response = $this->get(route('import.download', ['testImport']));
-        $response->assertStatus(200);
+        $response = $this->get(route('import.create', ['fake']));
+        $response->assertStatus(302);
+        // expect a redirect to prerequisites
+        $response->assertRedirect(route('import.job.configuration.index', ['fake_job_2']));
     }
 
-    /**
-     * @covers \FireflyIII\Http\Controllers\Import\IndexController::__construct
-     * @covers \FireflyIII\Http\Controllers\Import\IndexController::index
-     */
     public function testIndex()
     {
-        $repository = $this->mock(ImportJobRepositoryInterface::class);
         $this->be($this->user());
+
+        // fake prerequisites providers:
+        $fake    = $this->mock(FakePrerequisites::class);
+        $file    = $this->mock(FilePrerequisites::class);
+        $bunq    = $this->mock(BunqPrerequisites::class);
+        $spectre = $this->mock(SpectrePrerequisites::class);
+
+        // call methods:
+        $fake->shouldReceive('setUser')->once();
+        $file->shouldReceive('setUser')->once();
+        $bunq->shouldReceive('setUser')->once();
+        $spectre->shouldReceive('setUser')->once();
+
+        $fake->shouldReceive('isComplete')->once()->andReturn(true);
+        $file->shouldReceive('isComplete')->once()->andReturn(true);
+        $bunq->shouldReceive('isComplete')->once()->andReturn(true);
+        $spectre->shouldReceive('isComplete')->once()->andReturn(true);
+
+
         $response = $this->get(route('import.index'));
         $response->assertStatus(200);
-
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Import\IndexController::start
-     */
-    public function testStart()
-    {
-        $repository = $this->mock(ImportJobRepositoryInterface::class);
-        $routine    = $this->mock(FileRoutine::class);
-        $routine->shouldReceive('setJob')->once();
-        $routine->shouldReceive('run')->once()->andReturn(true);
-
-        $this->be($this->user());
-        $response = $this->post(route('import.start', ['configured']));
-        $response->assertStatus(200);
-    }
-
-    /**
-     * @covers                   \FireflyIII\Http\Controllers\Import\IndexController::start
-     * @expectedExceptionMessage Job did not complete successfully.
-     */
-    public function testStartFailed()
-    {
-        $repository = $this->mock(ImportJobRepositoryInterface::class);
-        $routine    = $this->mock(FileRoutine::class);
-        $routine->shouldReceive('setJob')->once();
-        $routine->shouldReceive('run')->once()->andReturn(false);
-
-        $this->be($this->user());
-        $response = $this->post(route('import.start', ['configured']));
-        $response->assertStatus(500);
+        $response->assertSee('<ol class="breadcrumb">');
     }
 }

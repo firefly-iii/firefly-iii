@@ -1,0 +1,375 @@
+<?php
+/**
+ * JobStatusControllerTest.php
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
+ *
+ * This file is part of Firefly III.
+ *
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ */
+declare(strict_types=1);
+
+namespace Tests\Feature\Controllers\Import;
+
+use Exception;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Import\Routine\FakeRoutine;
+use FireflyIII\Import\Storage\ImportArrayStorage;
+use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\Tag;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use Log;
+use Mockery;
+use Tests\TestCase;
+
+/**
+ * Class JobStatusControllerTest
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class JobStatusControllerTest extends TestCase
+{
+    /**
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Import\JobStatusController
+     */
+    public function testIndex(): void
+    {
+        $job            = new ImportJob;
+        $job->user_id   = $this->user()->id;
+        $job->key       = 'Afake_job_' . random_int(1, 1000);
+        $job->status    = 'ready_to_run';
+        $job->provider  = 'fake';
+        $job->file_type = '';
+        $job->save();
+
+        // call thing.
+        $this->be($this->user());
+        $response = $this->get(route('import.job.status.index', [$job->key]));
+        $response->assertStatus(200);
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Import\JobStatusController
+     */
+    public function testJson(): void
+    {
+        $job               = new ImportJob;
+        $job->user_id      = $this->user()->id;
+        $job->key          = 'Bfake_job_' . random_int(1, 1000);
+        $job->status       = 'ready_to_run';
+        $job->provider     = 'fake';
+        $job->transactions = [];
+        $job->file_type    = '';
+        $job->save();
+
+        // call thing.
+        $this->be($this->user());
+        $response = $this->get(route('import.job.status.json', [$job->key]));
+        $response->assertStatus(200);
+        $response->assertSee(
+            'No transactions have been imported. Perhaps they were all duplicates is simply no transactions where present to be imported. Perhaps the error message below can tell you what happened.'
+        );
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Import\JobStatusController
+     */
+    public function testJsonWithTag(): void
+    {
+        $tag               = $this->user()->tags()->first();
+        $job               = new ImportJob;
+        $job->user_id      = $this->user()->id;
+        $job->key          = 'Cfake_job_' . random_int(1, 1000);
+        $job->status       = 'ready_to_run';
+        $job->provider     = 'fake';
+        $job->transactions = [];
+        $job->file_type    = '';
+        $job->tag()->associate($tag);
+        $job->save();
+
+        // call thing.
+        $this->be($this->user());
+        $response = $this->get(route('import.job.status.json', [$job->key]));
+        $response->assertStatus(200);
+        $response->assertSee(
+            'No transactions have been imported. Perhaps they were all duplicates is simply no transactions where present to be imported. Perhaps the error message below can tell you what happened.'
+        );
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Import\JobStatusController
+     */
+    public function testJsonWithTagManyJournals(): void
+    {
+        /** @var Tag $tag */
+        $tag     = $this->user()->tags()->first();
+        $journal = $this->user()->transactionJournals()->first();
+        $second  = $this->user()->transactionJournals()->where('id', '!=', $journal->id)->first();
+        $tag->transactionJournals()->sync([$journal->id, $second->id]);
+
+        $job               = new ImportJob;
+        $job->user_id      = $this->user()->id;
+        $job->key          = 'Dfake_job_' . random_int(1, 1000);
+        $job->status       = 'ready_to_run';
+        $job->provider     = 'fake';
+        $job->transactions = [];
+        $job->file_type    = '';
+        $job->tag()->associate($tag);
+        $job->save();
+
+        // call thing.
+        $this->be($this->user());
+        $response = $this->get(route('import.job.status.json', [$job->key]));
+        $response->assertStatus(200);
+        $response->assertSee(
+            'Firefly III has imported 2 transactions. They are stored under tag <a href=\"http:\/\/localhost\/tags\/show\/' . $tag->id
+        );
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Import\JobStatusController
+     */
+    public function testJsonWithTagOneJournal(): void
+    {
+        /** @var Tag $tag */
+        $tag     = $this->user()->tags()->first();
+        $journal = $this->user()->transactionJournals()->first();
+        $tag->transactionJournals()->sync([$journal->id]);
+
+        $job               = new ImportJob;
+        $job->user_id      = $this->user()->id;
+        $job->key          = 'Efake_job_' . random_int(1, 1000);
+        $job->status       = 'ready_to_run';
+        $job->provider     = 'fake';
+        $job->transactions = [];
+        $job->file_type    = '';
+        $job->tag()->associate($tag);
+        $job->save();
+
+        // call thing.
+        $this->be($this->user());
+        $response = $this->get(route('import.job.status.json', [$job->key]));
+        $response->assertStatus(200);
+        $response->assertSee(
+            'Exactly one transaction has been imported. It is stored under tag <a href=\"http:\/\/localhost\/tags\/show\/' . $tag->id
+        );
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Import\JobStatusController
+     */
+    public function testStart(): void
+    {
+        $job               = new ImportJob;
+        $job->user_id      = $this->user()->id;
+        $job->key          = 'Ffake_job_' . random_int(1, 1000);
+        $job->status       = 'ready_to_run';
+        $job->provider     = 'fake';
+        $job->transactions = [];
+        $job->file_type    = '';
+        $job->save();
+
+        // mock stuff
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $routine    = $this->mock(FakeRoutine::class);
+
+        // mock calls:
+        $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'running']);
+        $routine->shouldReceive('setJob')->once();
+        $routine->shouldReceive('run')->once();
+
+        // call thing.
+        $this->be($this->user());
+        $response = $this->post(route('import.job.start', [$job->key]));
+        $response->assertStatus(200);
+        $response->assertExactJson(['status' => 'OK', 'message' => 'stage_finished']);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Import\JobStatusController
+     */
+    public function testStartException(): void
+    {
+        $job               = new ImportJob;
+        $job->user_id      = $this->user()->id;
+        $job->key          = 'Gfake_job_' . random_int(1, 1000);
+        $job->status       = 'ready_to_run';
+        $job->provider     = 'fake';
+        $job->transactions = [];
+        $job->file_type    = '';
+        $job->save();
+
+        // mock stuff
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $routine    = $this->mock(FakeRoutine::class);
+
+        // mock calls:
+        $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'running']);
+        $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'error']);
+        $routine->shouldReceive('setJob')->once();
+        $routine->shouldReceive('run')->andThrow(new Exception('Unknown exception'));
+
+        // call thing.
+        $this->be($this->user());
+        $response = $this->post(route('import.job.start', [$job->key]));
+        $response->assertStatus(200);
+        $response->assertExactJson(['status' => 'NOK', 'message' => 'The import routine crashed: Unknown exception']);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Import\JobStatusController
+     */
+    public function testStartFireflyException(): void
+    {
+        $job               = new ImportJob;
+        $job->user_id      = $this->user()->id;
+        $job->key          = 'Hfake_job_' . random_int(1, 1000);
+        $job->status       = 'ready_to_run';
+        $job->provider     = 'fake';
+        $job->transactions = [];
+        $job->file_type    = '';
+        $job->save();
+
+        // mock stuff
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $routine    = $this->mock(FakeRoutine::class);
+
+        // mock calls:
+        $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'running']);
+        $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'error']);
+        $routine->shouldReceive('setJob')->once();
+        $routine->shouldReceive('run')->andThrow(new FireflyException('Unknown exception'));
+
+        // call thing.
+        $this->be($this->user());
+        $response = $this->post(route('import.job.start', [$job->key]));
+        $response->assertStatus(200);
+        $response->assertExactJson(['status' => 'NOK', 'message' => 'The import routine crashed: Unknown exception']);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Import\JobStatusController
+     */
+    public function testStartInvalidState(): void
+    {
+        $job               = new ImportJob;
+        $job->user_id      = $this->user()->id;
+        $job->key          = 'Ifake_job_' . random_int(1, 1000);
+        $job->status       = 'bad_state';
+        $job->provider     = 'fake';
+        $job->transactions = [];
+        $job->file_type    = '';
+        $job->save();
+
+        // call thing.
+        $this->be($this->user());
+        $response = $this->post(route('import.job.start', [$job->key]));
+        $response->assertStatus(200);
+        $response->assertExactJson(['status' => 'NOK', 'message' => 'JobStatusController::start expects state "ready_to_run".']);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Import\JobStatusController
+     */
+    public function testStore(): void
+    {
+        $job               = new ImportJob;
+        $job->user_id      = $this->user()->id;
+        $job->key          = 'Jfake_job_' . random_int(1, 1000);
+        $job->status       = 'provider_finished';
+        $job->provider     = 'fake';
+        $job->transactions = [];
+        $job->file_type    = '';
+        $job->save();
+
+        // mock stuff
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $storage    = $this->mock(ImportArrayStorage::class);
+
+        // mock calls:
+        $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'storing_data']);
+        $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'storage_finished']);
+        $storage->shouldReceive('setJob')->once();
+        $storage->shouldReceive('store')->once();
+
+
+        $this->be($this->user());
+        $response = $this->post(route('import.job.store', [$job->key]));
+        $response->assertStatus(200);
+        $response->assertExactJson(['status' => 'OK', 'message' => 'storage_finished']);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Import\JobStatusController
+     */
+    public function testStoreInvalidState(): void
+    {
+        $job               = new ImportJob;
+        $job->user_id      = $this->user()->id;
+        $job->key          = 'Kfake_job_' . random_int(1, 1000);
+        $job->status       = 'some_bad_state';
+        $job->provider     = 'fake';
+        $job->transactions = [];
+        $job->file_type    = '';
+        $job->save();
+
+        $this->be($this->user());
+        $response = $this->post(route('import.job.store', [$job->key]));
+        $response->assertStatus(200);
+        $response->assertExactJson(['status' => 'NOK', 'message' => 'JobStatusController::start expects state "provider_finished".']);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Import\JobStatusController
+     */
+    public function testStoreException(): void
+    {
+        $job               = new ImportJob;
+        $job->user_id      = $this->user()->id;
+        $job->key          = 'Lfake_job_' . random_int(1, 1000);
+        $job->status       = 'provider_finished';
+        $job->provider     = 'fake';
+        $job->transactions = [];
+        $job->file_type    = '';
+        $job->save();
+
+        // mock stuff
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $storage    = $this->mock(ImportArrayStorage::class);
+
+        // mock calls:
+        $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'storing_data']);
+        $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'error']);
+        $storage->shouldReceive('setJob')->once();
+        $storage->shouldReceive('store')->once()->andThrow(new FireflyException('Some storage exception.'));
+
+
+        $this->be($this->user());
+        $response = $this->post(route('import.job.store', [$job->key]));
+        $response->assertStatus(200);
+        $response->assertExactJson(['status' => 'NOK', 'message' => 'The import storage routine crashed: Some storage exception.']);
+    }
+}

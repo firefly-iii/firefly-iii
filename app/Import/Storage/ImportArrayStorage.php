@@ -3,21 +3,21 @@
 namespace FireflyIII\Import\Storage;
 
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\ImportJob;
-use FireflyIII\Models\Tag;
+use FireflyIII\Models\Rule;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\TransactionRules\Processor;
 use Illuminate\Support\Collection;
-use Illuminate\Support\MessageBag;
 use Log;
-use DB;
 
 /**
  * Creates new transactions based upon arrays. Will first check the array for duplicates.
@@ -40,11 +40,9 @@ class ImportArrayStorage
     private $transfers;
 
     /**
-     * ImportArrayStorage constructor.
-     *
      * @param ImportJob $importJob
      */
-    public function __construct(ImportJob $importJob)
+    public function setJob(ImportJob $importJob): void
     {
         $this->importJob = $importJob;
         $this->countTransfers();
@@ -56,104 +54,61 @@ class ImportArrayStorage
     }
 
     /**
-     * Actually does the storing.
+     * Actually does the storing. Does three things.
+     * - Store journals
+     * - Link to tag
+     * - Run rules (if set to)
      *
      * @return Collection
      * @throws FireflyException
      */
     public function store(): Collection
     {
-        $count = count($this->importJob->transactions);
-        Log::debug(sprintf('Now in store(). Count of items is %d', $count));
-        $toStore = [];
-        foreach ($this->importJob->transactions as $index => $transaction) {
-            Log::debug(sprintf('Now at item %d out of %d', ($index + 1), $count));
-            $existingId = $this->hashExists($transaction);
-            if (null !== $existingId) {
-                $this->logDuplicateObject($transaction, $existingId);
-                $this->repository->addErrorMessage(
-                    $this->importJob, sprintf(
-                                        'Entry #%d ("%s") could not be imported. It already exists.',
-                                        $index, $transaction['description']
-                                    )
-                );
-                continue;
-            }
-            if ($this->checkForTransfers) {
-                if ($this->transferExists($transaction)) {
-                    $this->logDuplicateTransfer($transaction);
-                    $this->repository->addErrorMessage(
-                        $this->importJob, sprintf(
-                                            'Entry #%d ("%s") could not be imported. Such a transfer already exists.',
-                                            $index,
-                                            $transaction['description']
-                                        )
-                    );
-                    continue;
-                }
-            }
-            $toStore[] = $transaction;
+        // store transactions
+        $this->setStatus('storing_data');
+        $collection = $this->storeArray();
+        $this->setStatus('stored_data');
+
+        // link tag:
+        $this->setStatus('linking_to_tag');
+        $this->linkToTag($collection);
+        $this->setStatus('linked_to_tag');
+
+        // run rules, if configured to.
+        $config = $this->importJob->configuration;
+        if (isset($config['apply-rules']) && $config['apply-rules'] === true) {
+            $this->setStatus('applying_rules');
+            $this->applyRules($collection);
+            $this->setStatus('rules_applied');
         }
-
-        if (count($toStore) === 0) {
-            Log::info('No transactions to store left!');
-
-            return new Collection;
-        }
-        Log::debug('Going to store...');
-        // now actually store them:
-        $collection = new Collection;
-        /** @var TransactionJournalFactory $factory */
-        $factory = app(TransactionJournalFactory::class);
-        $factory->setUser($this->importJob->user);
-        foreach ($toStore as $store) {
-            // convert the date to an object:
-            $store['date'] = Carbon::createFromFormat('Y-m-d', $store['date']);
-
-            // store the journal.
-            $collection->push($factory->create($store));
-        }
-        Log::debug('DONE storing!');
-
-
-        // create tag and append journals:
-        $this->createTag($collection);
 
         return $collection;
     }
 
     /**
      * @param Collection $collection
+     *
+     * @throws FireflyException
      */
-    private function createTag(Collection $collection): void
+    private function applyRules(Collection $collection): void
     {
+        $rules = $this->getRules();
+        if ($rules->count() > 0) {
+            foreach ($collection as $journal) {
+                $rules->each(
+                    function (Rule $rule) use ($journal) {
+                        Log::debug(sprintf('Going to apply rule #%d to journal %d.', $rule->id, $journal->id));
+                        $processor = Processor::make($rule);
+                        $processor->handleTransactionJournal($journal);
+                        if ($rule->stop_processing) {
+                            return false;
+                        }
 
-        /** @var TagRepositoryInterface $repository */
-        $repository = app(TagRepositoryInterface::class);
-        $repository->setUser($this->importJob->user);
-        $data = [
-            'tag'         => trans('import.import_with_key', ['key' => $this->importJob->key]),
-            'date'        => new Carbon,
-            'description' => null,
-            'latitude'    => null,
-            'longitude'   => null,
-            'zoomLevel'   => null,
-            'tagMode'     => 'nothing',
-        ];
-        $tag  = $repository->store($data);
-
-        Log::debug(sprintf('Created tag #%d ("%s")', $tag->id, $tag->tag));
-        Log::debug('Looping journals...');
-        $journalIds = $collection->pluck('id')->toArray();
-        $tagId      = $tag->id;
-        foreach ($journalIds as $journalId) {
-            Log::debug(sprintf('Linking journal #%d to tag #%d...', $journalId, $tagId));
-            DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journalId, 'tag_id' => $tagId]);
+                        return true;
+                    }
+                );
+            }
         }
-        Log::info(sprintf('Linked %d journals to tag #%d ("%s")', $collection->count(), $tag->id, $tag->tag));
-
-        $this->repository->setTag($this->importJob, $tag);
-
     }
 
     /**
@@ -161,8 +116,10 @@ class ImportArrayStorage
      */
     private function countTransfers(): void
     {
+        /** @var array $array */
+        $array = $this->importJob->transactions;
         $count = 0;
-        foreach ($this->importJob->transactions as $transaction) {
+        foreach ($array as $transaction) {
             if (strtolower(TransactionType::TRANSFER) === $transaction['type']) {
                 $count++;
             }
@@ -175,6 +132,29 @@ class ImportArrayStorage
             $this->getTransfers();
         }
 
+    }
+
+    /**
+     * @return Collection
+     */
+    private function getRules(): Collection
+    {
+        /** @var Collection $set */
+        $set = Rule::distinct()
+                   ->where('rules.user_id', $this->importJob->user_id)
+                   ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
+                   ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
+                   ->where('rule_groups.active', 1)
+                   ->where('rule_triggers.trigger_type', 'user_action')
+                   ->where('rule_triggers.trigger_value', 'store-journal')
+                   ->where('rules.active', 1)
+                   ->orderBy('rule_groups.order', 'ASC')
+                   ->orderBy('rules.order', 'ASC')
+                   ->get(['rules.*', 'rule_groups.order']);
+
+        Log::debug(sprintf('Found %d user rules.', $set->count()));
+
+        return $set;
     }
 
     /**
@@ -191,7 +171,6 @@ class ImportArrayStorage
         $this->transfers = $collector->getJournals();
 
     }
-
 
     /**
      * @param array $transaction
@@ -220,6 +199,39 @@ class ImportArrayStorage
         Log::info(sprintf('Found a transaction journal with an existing hash: %s', $hash));
 
         return (int)$entry->transaction_journal_id;
+    }
+
+    /**
+     * @param Collection $collection
+     */
+    private function linkToTag(Collection $collection): void
+    {
+        /** @var TagRepositoryInterface $repository */
+        $repository = app(TagRepositoryInterface::class);
+        $repository->setUser($this->importJob->user);
+        $data = [
+            'tag'         => trans('import.import_with_key', ['key' => $this->importJob->key]),
+            'date'        => new Carbon,
+            'description' => null,
+            'latitude'    => null,
+            'longitude'   => null,
+            'zoomLevel'   => null,
+            'tagMode'     => 'nothing',
+        ];
+        $tag  = $repository->store($data);
+
+        Log::debug(sprintf('Created tag #%d ("%s")', $tag->id, $tag->tag));
+        Log::debug('Looping journals...');
+        $journalIds = $collection->pluck('id')->toArray();
+        $tagId      = $tag->id;
+        foreach ($journalIds as $journalId) {
+            Log::debug(sprintf('Linking journal #%d to tag #%d...', $journalId, $tagId));
+            DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journalId, 'tag_id' => $tagId]);
+        }
+        Log::info(sprintf('Linked %d journals to tag #%d ("%s")', $collection->count(), $tag->id, $tag->tag));
+
+        $this->repository->setTag($this->importJob, $tag);
+
     }
 
     /**
@@ -253,6 +265,84 @@ class ImportArrayStorage
                 'date'        => isset($transaction['date']) ? $transaction['date'] : '',
             ]
         );
+    }
+
+    /**
+     * Shorthand method to quickly set job status
+     *
+     * @param string $status
+     */
+    private function setStatus(string $status): void
+    {
+        $this->repository->setStatus($this->importJob, $status);
+    }
+
+    /**
+     * Store array as journals.
+     *
+     * @return Collection
+     * @throws FireflyException
+     */
+    private function storeArray(): Collection
+    {
+        /** @var array $array */
+        $array   = $this->importJob->transactions;
+        $count   = \count($array);
+        $toStore = [];
+
+        Log::debug(sprintf('Now in store(). Count of items is %d', $count));
+
+        foreach ($array as $index => $transaction) {
+            Log::debug(sprintf('Now at item %d out of %d', $index + 1, $count));
+            $existingId = $this->hashExists($transaction);
+            if (null !== $existingId) {
+                $this->logDuplicateObject($transaction, $existingId);
+                $this->repository->addErrorMessage(
+                    $this->importJob, sprintf(
+                                        'Entry #%d ("%s") could not be imported. It already exists.',
+                                        $index, $transaction['description']
+                                    )
+                );
+                continue;
+            }
+            if ($this->checkForTransfers) {
+                if ($this->transferExists($transaction)) {
+                    $this->logDuplicateTransfer($transaction);
+                    $this->repository->addErrorMessage(
+                        $this->importJob, sprintf(
+                                            'Entry #%d ("%s") could not be imported. Such a transfer already exists.',
+                                            $index,
+                                            $transaction['description']
+                                        )
+                    );
+                    continue;
+                }
+            }
+            $toStore[] = $transaction;
+        }
+
+        if (\count($toStore) === 0) {
+            Log::info('No transactions to store left!');
+
+            return new Collection;
+        }
+
+        Log::debug('Going to store...');
+        // now actually store them:
+        $collection = new Collection;
+        /** @var TransactionJournalFactory $factory */
+        $factory = app(TransactionJournalFactory::class);
+        $factory->setUser($this->importJob->user);
+        foreach ($toStore as $store) {
+            // convert the date to an object:
+            $store['date'] = Carbon::createFromFormat('Y-m-d', $store['date']);
+
+            // store the journal.
+            $collection->push($factory->create($store));
+        }
+        Log::debug('DONE storing!');
+
+        return $collection;
     }
 
     /**

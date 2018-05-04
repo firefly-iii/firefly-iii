@@ -39,7 +39,7 @@ use FireflyIII\Import\Routine\SpectreRoutine;
 
 return [
     'enabled'       => [
-        'fake'    => true,
+        'fake'    => false,
         'file'    => true,
         'bunq'    => true,
         'spectre' => true,
