@@ -32,8 +32,9 @@
                                 {{ trans('firefly.repeat_freq_' ~object.data.repeat_freq) }}.
                             </td>
                         </tr>
+
                         <tr>
-                            <td>{{ 'bill_is_active'|_ }}</td>
+                            <td style="width:50%;">{{ 'bill_is_active'|_ }}</td>
                             <td>
                                 {% if object.data.active %}
                                     <i class="fa fa-check fa-fw" title="{{ 'active'|_ }}"></i> {{ 'yes'|_ }}
@@ -62,6 +63,12 @@
                         </tr>
                     </table>
                 </div>
+                <div class="box-footer">
+                    <div class="btn-group">
+                        <a class="btn btn-default" href="{{ route('bills.edit', [object.data.id]) }}">{{ 'edit'|_ }}</a>
+                        <a class="btn btn-danger" href="{{ route('bills.edit', [object.data.id]) }}">{{ 'delete'|_ }}</a>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-lg-6 col-sm-12 col-md-12">
@@ -84,6 +91,17 @@
                     <a href="{{ route('bills.rescan',object.data.id) }}" class="btn btn-default">{{ 'rescan_old'|_ }}</a>
                 </div>
             </div>
+            {% if object.data.notes != '' %}
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'notes'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive">
+                    {{ object.data.notes }}
+                </div>
+            </div>
+            {% endif %}
+
             {% if object.data.attachments_count > 0 %}
                 <div class="box">
                     <div class="box-header with-border">
