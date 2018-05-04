@@ -31,15 +31,15 @@ var startCount = 0;
 
 $(function () {
     "use strict";
-    timeOutId = setTimeout(checkJobStatus, checkInitialInterval);
+    timeOutId = setTimeout(checkJobJSONStatus, checkInitialInterval);
 });
 
 /**
  * Downloads some JSON and responds to its content to see what the status is of the current import job.
  */
-function checkJobStatus() {
-    console.log('In checkJobStatus()');
-    $.getJSON(jobStatusUri).done(reportOnJobStatus).fail(reportFailure);
+function checkJobJSONStatus() {
+    console.log('In checkJobJSONStatus()');
+    $.getJSON(jobStatusUri).done(reportJobJSONDone).fail(reportJobJSONFailure);
 }
 
 /**
@@ -47,8 +47,8 @@ function checkJobStatus() {
  *
  * @param data
  */
-function reportOnJobStatus(data) {
-    console.log('In reportOnJobStatus()');
+function reportJobJSONDone(data) {
+    console.log('In reportJobJSONDone() with status "' + data.status + '"');
     console.log(data);
     switch (data.status) {
         case "ready_to_run":
@@ -56,13 +56,13 @@ function reportOnJobStatus(data) {
                 hasStartedJob = false;
             }
             startCount++;
-            startJob();
-            checkOnJob();
+            sendJobPOSTStart();
+            recheckJobJSONStatus();
             break;
         case "running":
         case "storing_data":
             showProgressBox(data.status);
-            checkOnJob();
+            recheckJobJSONStatus();
             break;
 
         case "need_job_config":
@@ -71,8 +71,8 @@ function reportOnJobStatus(data) {
             break;
         case 'provider_finished':
             // call routine to store stuff:
-            storeJobData();
-            checkOnJob();
+            sendJobPOSTStore();
+            recheckJobJSONStatus();
             break;
         case "finished":
             showJobResults(data);
@@ -88,16 +88,12 @@ function reportOnJobStatus(data) {
  * @param data
  */
 function showJobResults(data) {
+    console.log('In showJobResults()');
     // hide all boxes.
-// hide status boxes:
     $('.statusbox').hide();
 
     // render the count:
-    $('#import-status-more-info').append($('<span>').text(data.journals_text));
-
-    if(data.tag_id) {
-        $('#import-status-more-info').append($('<br>')).append($('<span>').html(data.tag_text));
-    }
+    $('#import-status-more-info').append($('<span>').html(data.report_txt));
 
     // render relevant data from JSON thing.
     if (data.errors.length > 0) {
@@ -117,9 +113,10 @@ function showJobResults(data) {
 /**
  * Will refresh and get job status.
  */
-function checkOnJob() {
+function recheckJobJSONStatus() {
+    console.log('In recheckJobJSONStatus()');
     if (maxLoops !== 0 && totalLoops < maxLoops) {
-        timeOutId = setTimeout(checkJobStatus, checkNextInterval);
+        timeOutId = setTimeout(checkJobJSONStatus, checkNextInterval);
     }
     if (maxLoops !== 0) {
         console.log('max: ' + maxLoops + ' current: ' + totalLoops);
@@ -130,30 +127,31 @@ function checkOnJob() {
 /**
  * Start the job.
  */
-function startJob() {
-    console.log('In startJob()');
+function sendJobPOSTStart() {
+    console.log('In sendJobPOSTStart()');
     if (hasStartedJob) {
-        console.log('Job already started!');
+        console.log('Import job already started!');
         return;
     }
-    console.log('JOB STARTED!');
+    console.log('Job was started');
     hasStartedJob = true;
-    $.post(jobStartUri, {_token: token}).fail(reportOnSubmitError).done(reportOnSubmit)
+    $.post(jobStartUri, {_token: token}).fail(reportJobPOSTFailure).done(reportJobPOSTDone)
 }
 
 /**
  * Start the storage routine for this job.
  */
-function storeJobData() {
-    console.log('In storeJobData()');
+function sendJobPOSTStore() {
+    console.log('In sendJobPOSTStore()');
     if (jobStorageStarted) {
         console.log('Store job already started!');
         return;
     }
-    console.log('STORAGE JOB STARTED!');
+    console.log('Storage job has started!');
     jobStorageStarted = true;
-    $.post(jobStorageStartUri, {_token: token}).fail(reportOnSubmitError).done(reportOnSubmit)
+    $.post(jobStorageStartUri, {_token: token}).fail(reportJobPOSTFailure).done(reportJobPOSTDone)
 }
+
 
 /**
  * Function is called when the JSON array could not be retrieved.
@@ -162,7 +160,8 @@ function storeJobData() {
  * @param status
  * @param error
  */
-function reportFailure(xhr, status, error) {
+function reportJobJSONFailure(xhr, status, error) {
+    console.log('In reportJobJSONFailure()');
     // cancel checking again for job status:
     clearTimeout(timeOutId);
 
@@ -180,12 +179,13 @@ function reportFailure(xhr, status, error) {
  *
  */
 function showProgressBox(status) {
+    console.log('In showProgressBox()');
     // hide fatal error box:
     $('.fatal_error').hide();
 
     // hide initial status box:
     $('.status_initial').hide();
-    if(status === 'running' || status === 'ready_to_run') {
+    if (status === 'running' || status === 'ready_to_run') {
         $('#import-status-txt').text(langImportRunning);
     } else {
         $('#import-status-txt').text(langImportStoring);
@@ -202,7 +202,8 @@ function showProgressBox(status) {
  * @param status
  * @param error
  */
-function reportOnSubmitError(xhr, status, error) {
+function reportJobPOSTFailure(xhr, status, error) {
+    console.log('In reportJobPOSTFailure()');
     // cancel checking again for job status:
     clearTimeout(timeOutId);
 
@@ -216,7 +217,8 @@ function reportOnSubmitError(xhr, status, error) {
     // show error box.
 }
 
-function reportOnSubmit(data) {
+function reportJobPOSTDone(data) {
+    console.log('In function reportJobPOSTDone() with status "' + data.status + '"');
     if (data.status === 'NOK') {
         // cancel checking again for job status:
         clearTimeout(timeOutId);
@@ -231,245 +233,3 @@ function reportOnSubmit(data) {
         // show error box.
     }
 }
-
-// /**
-//  * This method is called when the JSON query returns an error. If possible, this error is relayed to the user.
-//  */
-// function reportFailedJob(jqxhr, textStatus, error) {
-//     console.log('In reportFailedJob()');
-//
-//     // cancel refresh
-//     clearTimeout(timeOutId);
-//
-//     // hide all possible boxes:
-//     $('.statusbox').hide();
-//
-//     // fill in some details:
-//     var errorMessage = textStatus + " " + error;
-//
-//     $('.fatal_error_txt').text(errorMessage);
-//
-//     // show the fatal error box:
-//     $('.fatal_error').show();
-// }
-//
-// /**
-//  * This method is called when the job enquiry (JSON) returns some info.
-//  * It also decides whether or not to check again.
-//  *
-//  * @param data
-//  */
-// function reportOnJobStatus(data) {
-//     console.log('In reportOnJobStatus()');
-//     switch (data.status) {
-//         case "configured":
-//             console.log('Job reports configured.');
-//             // job is ready. Do not check again, just show the start-box. Hide the rest.
-//             if (!job.configuration['auto-start']) {
-//                 $('.statusbox').hide();
-//                 $('.status_configured').show();
-//             }
-//             if (job.configuration['auto-start']) {
-//                 timeOutId = setTimeout(checkJobStatus, interval);
-//             }
-//             if (pressedStart) {
-//                 // do a time out just in case. Could be that job is running or is even done already.
-//                 timeOutId = setTimeout(checkJobStatus, 2000);
-//                 pressedStart = false;
-//             }
-//             break;
-//         case "running":
-//             console.log('Job reports running.');
-//             // job is running! Show the running box:
-//             $('.statusbox').hide();
-//             $('.status_running').show();
-//
-//             // update the bar
-//             updateBar(data);
-//
-//             // update the status text:
-//             updateStatusText(data);
-//
-//             // report on detected errors:
-//             reportOnErrors(data);
-//
-//             if (jobIsStalled(data)) {
-//                 // do something
-//                 showStalledBox();
-//             } else {
-//                 // check again in 500ms
-//                 timeOutId = setTimeout(checkJobStatus, interval);
-//             }
-//             break;
-//         case "finished":
-//             console.log('Job reports finished.');
-//             $('.statusbox').hide();
-//             $('.status_finished').show();
-//             // report on detected errors:
-//             reportOnErrors(data);
-//             // show text:
-//             $('#import-status-more-info').html(data.finishedText);
-//             break;
-//         case "error":
-//             clearTimeout(timeOutId);
-//             console.log('Job reports ERROR.');
-//             // hide all possible boxes:
-//             $('.statusbox').hide();
-//
-//             // fill in some details:
-//             var errorMessage = data.errors.join(", ");
-//
-//             $('.fatal_error_txt').text(errorMessage);
-//
-//             // show the fatal error box:
-//             $('.fatal_error').show();
-//             break;
-//         case "configuring":
-//             console.log('Job reports configuring.');
-//             // redirect back to configure screen.
-//             window.location = jobConfigureUri;
-//             break;
-//         default:
-//             console.error('Cannot handle job status ' + data.status);
-//             break;
-//
-//     }
-// }
-//
-// /**
-//  * Shows a fatal error when the job seems to be stalled.
-//  */
-// function showStalledBox() {
-//     console.log('In showStalledBox().');
-//     $('.statusbox').hide();
-//     $('.fatal_error').show();
-//     $('.fatal_error_txt').text(langImportTimeOutError);
-// }
-//
-// /**
-//  * Detects if a job is frozen.
-//  *
-//  * @param data
-//  */
-// function jobIsStalled(data) {
-//     console.log('In jobIsStalled().');
-//     if (data.done === numberOfSteps) {
-//         numberOfReports++;
-//         console.log('Number of reports ' + numberOfReports);
-//     }
-//     if (data.done !== numberOfSteps) {
-//         numberOfReports = 0;
-//         console.log('Number of reports ' + numberOfReports);
-//     }
-//     if (numberOfReports > 20) {
-//         console.log('Number of reports > 20! ' + numberOfReports);
-//         return true;
-//     }
-//     numberOfSteps = data.done;
-//     console.log('Number of steps ' + numberOfSteps);
-//     return false;
-// }
-//
-// /**
-//  * This function tells Firefly start the job. It will also initialize a re-check in 500ms time.
-//  * Only when job is in "configured" state.
-//  */
-// function startJob() {
-//     console.log('In startJob().');
-//     if (job.status === "configured") {
-//         console.log('Job status = configured.');
-//         // disable the button, add loading thing.
-//         $('.start-job').prop('disabled', true).text('...');
-//         $.post(jobStartUri, {_token: token}).fail(reportOnSubmitError);
-//
-//         // check status, every 500 ms.
-//         timeOutId = setTimeout(checkJobStatus, startInterval);
-//         return;
-//     }
-//     console.log('Job.status = ' + job.status);
-// }
-//
-// /**
-//  * When the start button fails (returns error code) this function reports. It assumes a time out.
-//  */
-// function reportOnSubmitError(jqxhr, textStatus, error) {
-//     console.log('In reportOnSubmitError().');
-//     // stop the refresh thing
-//     clearTimeout(timeOutId);
-//
-//     // hide all possible boxes:
-//     $('.statusbox').hide();
-//
-//     // fill in some details:
-//     var errorMessage = "Submitting the job returned an error: " + textStatus + ' ' + error;
-//
-//     $('.fatal_error_txt').text(errorMessage);
-//
-//     // show the fatal error box:
-//     $('.fatal_error').show();
-//     jobFailed = true;
-//
-// }
-//
-// /**
-//  * This method updates the percentage bar thing if the job is running!
-//  */
-// function updateBar(data) {
-//     console.log('In updateBar().');
-//     var bar = $('#import-status-bar');
-//     if (data.show_percentage) {
-//         bar.addClass('progress-bar-success').removeClass('progress-bar-info');
-//         bar.attr('aria-valuenow', data.percentage);
-//         bar.css('width', data.percentage + '%');
-//         $('#import-status-bar').text(data.done + '/' + data.steps);
-//         return true;
-//     }
-//     // dont show percentage:
-//     bar.removeClass('progress-bar-success').addClass('progress-bar-info');
-//     bar.attr('aria-valuenow', 100);
-//     bar.css('width', '100%');
-//     return true;
-// }
-//
-// /**
-//  * Add text with current import status.
-//  * @param data
-//  */
-// function updateStatusText(data) {
-//     "use strict";
-//     console.log('In updateStatusText().');
-//     $('#import-status-txt').removeClass('text-danger').text(data.statusText);
-// }
-//
-// /**
-//  * Report on errors found in import:
-//  * @param data
-//  */
-// function reportOnErrors(data) {
-//     console.log('In reportOnErrors().');
-//     if (knownErrors === data.errors.length) {
-//         return;
-//     }
-//     if (data.errors.length === 0) {
-//         return;
-//     }
-//
-//     if (data.errors.length === 1) {
-//         $('#import-status-error-intro').text(langImportSingleError);
-//         //'An error has occured during the import. The import can continue, however.'
-//     }
-//     if (data.errors.length > 1) {
-//         // 'Errors have occured during the import. The import can continue, however.'
-//         $('#import-status-error-intro').text(langImportMultiError);
-//     }
-//     $('.info_errors').show();
-//     // fill the list with error texts
-//     $('#import-status-error-list').empty();
-//     for (var i = 0; i < data.errors.length; i++) {
-//         var errorSet = data.errors[i];
-//         for (var j = 0; j < errorSet.length; j++) {
-//             var item = $('<li>').html(errorSet[j]);
-//             $('#import-status-error-list').append(item);
-//         }
-//     }
-// }

@@ -73,7 +73,7 @@ class JobConfigurationController extends Controller
         $allowed = ['has_prereq', 'need_job_config', 'has_config'];
         if (null !== $importJob && !in_array($importJob->status, $allowed)) {
             Log::error('Job is not new but wants to do prerequisites');
-            session()->flash('error', trans('import.bad_job_status'));
+            session()->flash('error', trans('import.bad_job_status', ['status' => $importJob->status]));
             return redirect(route('import.index'));
         }
 
@@ -101,7 +101,7 @@ class JobConfigurationController extends Controller
 
         $view         = $configurator->getNextView();
         $data         = $configurator->getNextData();
-        $subTitle     = trans('firefly.import_config_bread_crumb');
+        $subTitle     = trans('import.job_configuration_breadcrumb', ['key' => $importJob->key]);
         $subTitleIcon = 'fa-wrench';
 
         return view($view, compact('data', 'importJob', 'subTitle', 'subTitleIcon'));
@@ -123,7 +123,7 @@ class JobConfigurationController extends Controller
         $allowed = ['has_prereq', 'need_job_config', 'has_config'];
         if (null !== $importJob && !in_array($importJob->status, $allowed)) {
             Log::error('Job is not new but wants to do prerequisites');
-            session()->flash('error', trans('import.bad_job_status'));
+            session()->flash('error', trans('import.bad_job_status', ['status' => $importJob->status]));
             return redirect(route('import.index'));
         }
 

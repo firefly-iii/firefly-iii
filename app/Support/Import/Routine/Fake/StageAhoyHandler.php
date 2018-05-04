@@ -36,7 +36,7 @@ class StageAhoyHandler
      */
     public function run(): void
     {
-        for ($i = 0; $i < 2; $i++) {
+        for ($i = 0; $i < 15; $i++) {
             Log::debug(sprintf('Am now in stage AHOY hander, sleeping... (%d)', $i));
             sleep(1);
         }

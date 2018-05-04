@@ -78,7 +78,8 @@ class PrerequisitesController extends Controller
         $allowed = ['new'];
         if (null !== $importJob && !in_array($importJob->status, $allowed)) {
             Log::error('Job is not new but wants to do prerequisites');
-            session()->flash('error', trans('import.bad_job_status'));
+            session()->flash('error', trans('import.bad_job_status', ['status' => $importJob->status]));
+
             return redirect(route('import.index'));
         }
 
@@ -131,7 +132,8 @@ class PrerequisitesController extends Controller
         $allowed = ['new'];
         if (null !== $importJob && !in_array($importJob->status, $allowed)) {
             Log::error('Job is not new but wants to do prerequisites');
-            session()->flash('error', trans('import.bad_job_status'));
+            session()->flash('error', trans('import.bad_job_status', ['status' => $importJob->status]));
+
             return redirect(route('import.index'));
         }
 

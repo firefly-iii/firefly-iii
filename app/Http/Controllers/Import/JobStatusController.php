@@ -30,9 +30,7 @@ use FireflyIII\Import\Routine\RoutineInterface;
 use FireflyIII\Import\Storage\ImportArrayStorage;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Log;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 
@@ -83,7 +81,10 @@ class JobStatusController extends Controller
             // TODO to finished screen.
         }
 
-        return view('import.status', compact('importJob'));
+        $subTitleIcon = 'fa-gear';
+        $subTitle     = trans('import.job_status_breadcrumb', ['key' => $importJob->key]);
+
+        return view('import.status', compact('importJob', 'subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -94,24 +95,25 @@ class JobStatusController extends Controller
     public function json(ImportJob $importJob): JsonResponse
     {
         $extendedStatus = $importJob->extended_status;
+        $count          = \count($importJob->transactions);
         $json           = [
-            'status'        => $importJob->status,
-            'errors'        => $importJob->errors,
-            'count'         => count($importJob->transactions),
-            'tag_id'        => $importJob->tag_id,
-            'tag_name'      => null === $importJob->tag_id ? null : $importJob->tag->tag,
-            'journals'      => $extendedStatus['count'] ?? 0,
-            'journals_text' => trans_choice('import.status_with_count', $extendedStatus['count'] ?? 0),
-            'tag_text'      => '',
+            'status'     => $importJob->status,
+            'errors'     => $importJob->errors,
+            'count'      => $count,
+            'tag_id'     => $importJob->tag_id,
+            'tag_name'   => null === $importJob->tag_id ? null : $importJob->tag->tag,
+            'journals'   => $extendedStatus['count'] ?? 0,
+            'report_txt' => trans('import.unknown_import_result'),
         ];
-        if (null !== $importJob->tag_id) {
-            $json['tag_text'] = trans(
-                'import.status_finished_job',
-                ['count' => $extendedStatus['count'],
-                 'link'  => route('tags.show', [$importJob->tag_id]),
-                 'tag'   => $importJob->tag->tag,
-                ]
-            );
+        // if count is zero:
+        if ($count === 0) {
+            $json['report_txt'] = trans('import.result_no_transactions');
+        }
+        if ($count === 1 && null !== $importJob->tag_id) {
+            $json['report_txt'] = trans('import.result_one_transaction', ['route' => route('tags.show', [$importJob->tag_id]), 'tag' => $importJob->tag->tag ]);
+        }
+        if ($count > 1 && null !== $importJob->tag_id) {
+            $json['report_txt'] = trans('import.result_many_transactions', ['count' => $count,'route' => route('tags.show', [$importJob->tag_id]), 'tag' => $importJob->tag->tag ]);
         }
 
         return response()->json($json);

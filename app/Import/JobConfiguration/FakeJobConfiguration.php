@@ -81,7 +81,7 @@ class FakeJobConfiguration implements JobConfigurationInterface
         $artist        = strtolower($data['artist'] ?? '');
         $song          = strtolower($data['song'] ?? '');
         $album         = strtolower($data['album'] ?? '');
-        $applyRules    = isset($data['apply-rules']) ? (int)$data['apply-rules'] === 1 : null;
+        $applyRules    = isset($data['apply_rules']) ? (int)$data['apply_rules'] === 1 : null;
         $configuration = $this->job->configuration;
         if ($artist === 'david bowie') {
             // store artist
@@ -119,7 +119,12 @@ class FakeJobConfiguration implements JobConfigurationInterface
      */
     public function getNextData(): array
     {
-        return [];
+        return [
+            'rulesOptions' => [
+                1 => trans('firefly.yes'),
+                0 => trans('firefly.no'),
+            ],
+        ];
     }
 
     /**
@@ -130,10 +135,10 @@ class FakeJobConfiguration implements JobConfigurationInterface
     public function getNextView(): string
     {
         // first configure artist:
-        $config = $this->job->configuration;
-        $artist = $config['artist'] ?? '';
-        $song   = $config['song'] ?? '';
-        $album  = $config['album'] ?? '';
+        $config     = $this->job->configuration;
+        $artist     = $config['artist'] ?? '';
+        $song       = $config['song'] ?? '';
+        $album      = $config['album'] ?? '';
         $applyRules = $config['apply-rules'] ?? null;
         if (null === $applyRules) {
             return 'import.fake.apply-rules';

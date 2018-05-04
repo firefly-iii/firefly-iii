@@ -184,6 +184,13 @@ return [
     'blocked'               => 'Is blocked?',
     'blocked_code'          => 'Reason for block',
 
+    // import
+    'apply_rules'           => 'Apply rules',
+    'artist'                => 'Artist',
+    'album'                 => 'Album',
+    'song'                  => 'Song',
+
+
     // admin
     'domain'                => 'Domain',
     'single_user_mode'      => 'Disable user registration',
