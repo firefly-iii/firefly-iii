@@ -196,8 +196,7 @@ class SpectrePrerequisites implements PrerequisitesInterface
      */
     public function getView(): string
     {
-        // TODO: Implement getView() method.
-        throw new NotImplementedException;
+        return '';
     }
 
     /**
@@ -207,8 +206,7 @@ class SpectrePrerequisites implements PrerequisitesInterface
      */
     public function getViewParameters(): array
     {
-        // TODO: Implement getViewParameters() method.
-        throw new NotImplementedException;
+        return [];
     }
 
     /**
@@ -218,8 +216,7 @@ class SpectrePrerequisites implements PrerequisitesInterface
      */
     public function isComplete(): bool
     {
-        // TODO: Implement isComplete() method.
-        throw new NotImplementedException;
+        return false;
     }
 
     /**
@@ -229,8 +226,6 @@ class SpectrePrerequisites implements PrerequisitesInterface
      */
     public function setUser(User $user): void
     {
-        // TODO: Implement setUser() method.
-        throw new NotImplementedException;
     }
 
     /**
@@ -244,7 +239,6 @@ class SpectrePrerequisites implements PrerequisitesInterface
      */
     public function storePrerequisites(array $data): MessageBag
     {
-        // TODO: Implement storePrerequisites() method.
-        throw new NotImplementedException;
+        return new MessageBag;
     }
 }
