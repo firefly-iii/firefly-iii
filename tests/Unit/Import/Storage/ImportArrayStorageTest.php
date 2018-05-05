@@ -90,7 +90,7 @@ class ImportArrayStorageTest extends TestCase
         $transactions = [$this->singleWithdrawal(), $this->singleWithdrawal()];
         $job          = new ImportJob;
         $job->user()->associate($this->user());
-        $job->key           = 'a_storage' . random_int(1, 1000);
+        $job->key           = 'b_storage' . random_int(1, 1000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -151,7 +151,7 @@ class ImportArrayStorageTest extends TestCase
         // make fake job
         $job = new ImportJob;
         $job->user()->associate($this->user());
-        $job->key           = 'a_storage' . random_int(1, 1000);
+        $job->key           = 'c_storage' . random_int(1, 1000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -190,7 +190,7 @@ class ImportArrayStorageTest extends TestCase
         // make fake job
         $job = new ImportJob;
         $job->user()->associate($this->user());
-        $job->key           = 'a_storage' . random_int(1, 1000);
+        $job->key           = 'd_storage' . random_int(1, 1000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -232,7 +232,7 @@ class ImportArrayStorageTest extends TestCase
         // make fake job
         $job = new ImportJob;
         $job->user()->associate($this->user());
-        $job->key           = 'a_storage' . random_int(1, 1000);
+        $job->key           = 'e_storage' . random_int(1, 1000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -283,7 +283,7 @@ class ImportArrayStorageTest extends TestCase
         // make fake job
         $job = new ImportJob;
         $job->user()->associate($this->user());
-        $job->key           = 'a_storage' . random_int(1, 1000);
+        $job->key           = 'f_storage' . random_int(1, 1000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -338,7 +338,7 @@ class ImportArrayStorageTest extends TestCase
         // make fake job
         $job = new ImportJob;
         $job->user()->associate($this->user());
-        $job->key           = 'a_storage' . random_int(1, 1000);
+        $job->key           = 'g_storage' . random_int(1, 1000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -423,7 +423,7 @@ class ImportArrayStorageTest extends TestCase
         // make fake job
         $job = new ImportJob;
         $job->user()->associate($this->user());
-        $job->key           = 'a_storage' . random_int(1, 1000);
+        $job->key           = 'h_storage' . random_int(1, 1000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
