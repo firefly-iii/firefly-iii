@@ -25,6 +25,7 @@ namespace FireflyIII\Support\Import\Information;
 use FireflyIII\User;
 
 /**
+ * @deprecated
  * Interface InformationInterface.
  */
 interface InformationInterface

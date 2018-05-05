@@ -28,6 +28,7 @@ namespace FireflyIII\Import\Specifics;
 class SnsDescription implements SpecificInterface
 {
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public static function getDescription(): string
@@ -36,6 +37,7 @@ class SnsDescription implements SpecificInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public static function getName(): string

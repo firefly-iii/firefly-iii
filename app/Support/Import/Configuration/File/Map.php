@@ -34,6 +34,7 @@ use League\Csv\Statement;
 use Log;
 
 /**
+ * @deprecated
  * Class Mapping.
  */
 class Map implements ConfigurationInterface

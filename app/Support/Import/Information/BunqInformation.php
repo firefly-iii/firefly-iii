@@ -37,6 +37,7 @@ use Log;
 use Preferences;
 
 /**
+ * @deprecated
  * Class BunqInformation.
  */
 class BunqInformation implements InformationInterface

@@ -28,6 +28,7 @@ use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 use Log;
 
 /**
+ * @deprecated
  * Class Initial.
  */
 class Initial implements ConfigurationInterface

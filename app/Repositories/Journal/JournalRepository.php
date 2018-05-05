@@ -32,6 +32,7 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Services\Internal\Update\JournalUpdateService;
@@ -145,6 +146,22 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         return $journal;
+    }
+
+    /**
+     * Find a journal by its hash.
+     *
+     * @param string $hash
+     *
+     * @return TransactionJournalMeta|null
+     */
+    public function findByHash(string $hash): ?TransactionJournalMeta
+    {
+        return TransactionJournalMeta
+            ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+            ->where('data', $hash)
+            ->where('name', 'importHashV2')
+            ->first(['journal_meta.*']);
     }
 
     /**

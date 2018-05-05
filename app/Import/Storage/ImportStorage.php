@@ -35,6 +35,8 @@ use Log;
 use Preferences;
 
 /**
+ * @codeCoverageIgnore
+ * @deprecated
  * Is capable of storing individual ImportJournal objects.
  * Adds 7 steps per object stored:
  * 1. get all import data from import journal

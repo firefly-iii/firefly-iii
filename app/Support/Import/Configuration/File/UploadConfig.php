@@ -30,6 +30,7 @@ use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 use Log;
 
 /**
+ * @deprecated
  * Class UploadConfig.
  */
 class UploadConfig implements ConfigurationInterface

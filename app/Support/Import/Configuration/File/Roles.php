@@ -31,6 +31,7 @@ use League\Csv\Statement;
 use Log;
 
 /**
+ * @deprecated
  * Class Roles.
  */
 class Roles implements ConfigurationInterface

@@ -33,6 +33,7 @@ use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 use Illuminate\Support\Collection;
 
 /**
+ * @deprecated
  * Class HaveAccounts
  */
 class HaveAccounts implements ConfigurationInterface

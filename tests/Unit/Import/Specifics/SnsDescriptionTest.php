@@ -1,6 +1,6 @@
 <?php
 /**
- * RabobankDescriptionTest.php
+ * SnsDescriptionTest.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -21,55 +21,52 @@
 
 declare(strict_types=1);
 
-namespace tests\Unit\Import\Specifics;
+namespace Tests\Unit\Import\Specifics;
 
 
-use FireflyIII\Import\Specifics\RabobankDescription;
+use FireflyIII\Import\Specifics\SnsDescription;
 use Tests\TestCase;
 
 /**
- * Class RabobankDescriptionTest
+ * Class SnsDescriptionTest
  */
-class RabobankDescriptionTest extends TestCase
+class SnsDescriptionTest extends TestCase
 {
     /**
-     * Default behaviour
-     * @covers \FireflyIII\Import\Specifics\RabobankDescription
+     * @covers \FireflyIII\Import\Specifics\SnsDescription
      */
     public function testRunBasic(): void
     {
-        $row = ['','','','','','','','','','',''];
+        $row = ['a', 'b', 'c'];
 
-        $parser = new RabobankDescription;
+        $parser = new SnsDescription;
         $result = $parser->run($row);
         $this->assertEquals($row, $result);
     }
 
     /**
-     * No opposite name or iban
-     * @covers \FireflyIII\Import\Specifics\RabobankDescription
+     * @covers \FireflyIII\Import\Specifics\SnsDescription
      */
-    public function testRunUseDescription(): void
+    public function testRunNoQuotes(): void
     {
-        $row = ['','','','','','','','','','','Hello'];
+        $row = ['a', 'b', 'c', 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 'Some text'];
 
-        $parser = new RabobankDescription;
+        $parser = new SnsDescription;
         $result = $parser->run($row);
-        $this->assertEquals('Hello', $result[6]);
-        $this->assertEquals('', $result[10]);
+        $this->assertEquals($row, $result);
+        $this->assertEquals('Some text', $result[17]);
     }
 
     /**
-     * Has opposite name or iban
-     * @covers \FireflyIII\Import\Specifics\RabobankDescription
+     * @covers \FireflyIII\Import\Specifics\SnsDescription
      */
-    public function testRunUseFilledIn(): void
+    public function testRunQuotes(): void
     {
-        $row = ['','','','','','ABC','','','','',''];
+        $row = ['a', 'b', 'c', 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, '\'Some text\''];
 
-        $parser = new RabobankDescription;
+        $parser = new SnsDescription;
         $result = $parser->run($row);
-        $this->assertEquals($row, $result);
+        $this->assertEquals('Some text', $result[17]);
     }
 
 }

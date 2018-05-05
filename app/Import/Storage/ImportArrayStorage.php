@@ -5,17 +5,18 @@ namespace FireflyIII\Import\Storage;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\TransactionRules\Processor;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -32,10 +33,10 @@ class ImportArrayStorage
     private $checkForTransfers = false;
     /** @var ImportJob */
     private $importJob;
-
+    /** @var JournalRepositoryInterface */
+    private $journalRepos;
     /** @var ImportJobRepositoryInterface */
     private $repository;
-
     /** @var Collection */
     private $transfers;
 
@@ -51,6 +52,9 @@ class ImportArrayStorage
 
         $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($importJob->user);
+
+        $this->journalRepos = app(JournalRepositoryInterface::class);
+        $this->journalRepos->setUser($importJob->user);
 
         Log::debug('Constructed ImportArrayStorage()');
     }
@@ -128,7 +132,6 @@ class ImportArrayStorage
                 $count++;
             }
         }
-        $count = 1;
         if ($count > 0) {
             $this->checkForTransfers = true;
 
@@ -145,18 +148,10 @@ class ImportArrayStorage
      */
     private function getRules(): Collection
     {
-        /** @var Collection $set */
-        $set = Rule::distinct()
-                   ->where('rules.user_id', $this->importJob->user_id)
-                   ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
-                   ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
-                   ->where('rule_groups.active', 1)
-                   ->where('rule_triggers.trigger_type', 'user_action')
-                   ->where('rule_triggers.trigger_value', 'store-journal')
-                   ->where('rules.active', 1)
-                   ->orderBy('rule_groups.order', 'ASC')
-                   ->orderBy('rules.order', 'ASC')
-                   ->get(['rules.*', 'rule_groups.order']);
+        /** @var RuleRepositoryInterface $repository */
+        $repository = app(RuleRepositoryInterface::class);
+        $repository->setUser($this->importJob->user);
+        $set = $repository->getForImport();
 
         Log::debug(sprintf('Found %d user rules.', $set->count()));
 
@@ -190,17 +185,12 @@ class ImportArrayStorage
     {
         $json = json_encode($transaction);
         if ($json === false) {
-            throw new FireflyException('Could not encode import array. Please see the logs.', $transaction);
+            throw new FireflyException('Could not encode import array. Please see the logs.', $transaction); // @codeCoverageIgnore
         }
         $hash = hash('sha256', $json, false);
 
         // find it!
-        /** @var TransactionJournalMeta $entry */
-        $entry = TransactionJournalMeta
-            ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
-            ->where('data', $hash)
-            ->where('name', 'importHashV2')
-            ->first(['journal_meta.*']);
+        $entry = $this->journalRepos->findByHash($hash);
         if (null === $entry) {
             return null;
         }
@@ -216,6 +206,9 @@ class ImportArrayStorage
      */
     private function linkToTag(Collection $collection): void
     {
+        if ($collection->count() === 0) {
+            return;
+        }
         /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);
         $repository->setUser($this->importJob->user);
@@ -236,7 +229,12 @@ class ImportArrayStorage
         $tagId      = $tag->id;
         foreach ($journalIds as $journalId) {
             Log::debug(sprintf('Linking journal #%d to tag #%d...', $journalId, $tagId));
-            DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journalId, 'tag_id' => $tagId]);
+            try {
+                DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journalId, 'tag_id' => $tagId]);
+            } catch (QueryException $e) {
+                Log::error('Could not link journal #%d to tag #%d because: %s', $journalIds, $tagId, $e->getMessage());
+                Log::error($e->getTraceAsString());
+            }
         }
         Log::info(sprintf('Linked %d journals to tag #%d ("%s")', $collection->count(), $tag->id, $tag->tag));
 
@@ -344,15 +342,12 @@ class ImportArrayStorage
         Log::debug('Going to store...');
         // now actually store them:
         $collection = new Collection;
-        /** @var TransactionJournalFactory $factory */
-        $factory = app(TransactionJournalFactory::class);
-        $factory->setUser($this->importJob->user);
         foreach ($toStore as $store) {
             // convert the date to an object:
             $store['date'] = Carbon::createFromFormat('Y-m-d', $store['date']);
 
             // store the journal.
-            $collection->push($factory->create($store));
+            $collection->push($this->journalRepos->store($store));
         }
         Log::debug('DONE storing!');
 
@@ -374,7 +369,6 @@ class ImportArrayStorage
 
             return false;
         }
-
         // how many hits do we need?
         $requiredHits = count($transaction['transactions']) * 4;
         $totalHits    = 0;
@@ -386,11 +380,11 @@ class ImportArrayStorage
             // get the amount:
             $amount = (string)($current['amount'] ?? '0');
             if (bccomp($amount, '0') === -1) {
-                $amount = bcmul($amount, '-1');
+                $amount = bcmul($amount, '-1'); // @codeCoverageIgnore
             }
 
             // get the description:
-            $description = strlen((string)$current['description']) === 0 ? $transaction['description'] : $current['description'];
+            $description = '' === (string)$current['description'] ? $transaction['description'] : $current['description'];
 
             // get the source and destination ID's:
             $currentSourceIDs = [(int)$current['source_id'], (int)$current['destination_id']];

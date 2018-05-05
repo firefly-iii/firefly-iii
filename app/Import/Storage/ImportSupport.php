@@ -40,6 +40,8 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
+ * @codeCoverageIgnore
+ * @deprecated
  * Trait ImportSupport.
  *
  * @property int $defaultCurrencyId

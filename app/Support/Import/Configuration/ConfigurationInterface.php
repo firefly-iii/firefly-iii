@@ -25,6 +25,7 @@ namespace FireflyIII\Support\Import\Configuration;
 use FireflyIII\Models\ImportJob;
 
 /**
+ * @deprecated
  * Class ConfigurationInterface.
  */
 interface ConfigurationInterface
