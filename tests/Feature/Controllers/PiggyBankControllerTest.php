@@ -204,6 +204,8 @@ class PiggyBankControllerTest extends TestCase
         $repository->shouldReceive('getPiggyBanks')->andReturn(new Collection([$one, $two]));
         $repository->shouldReceive('getCurrentAmount')->andReturn('10');
         $repository->shouldReceive('setUser');
+        $repository->shouldReceive('correctOrder');
+
 
         Steam::shouldReceive('balance')->twice()->andReturn('1');
 
@@ -214,26 +216,9 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::order
-     */
-    public function testOrder()
-    {
-        // mock stuff
-        $repository   = $this->mock(PiggyBankRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('reset');
-        $repository->shouldReceive('setOrder')->times(2);
-
-        $this->be($this->user());
-        $response = $this->post(route('piggy-banks.order'), ['order' => [1, 2]]);
-        $response->assertStatus(200);
-    }
-
-    /**
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::postAdd
      */
-    public function testPostAdd()
+    public function testPostAdd(): void
     {
         // mock stuff
         $repository   = $this->mock(PiggyBankRepositoryInterface::class);
@@ -255,7 +240,7 @@ class PiggyBankControllerTest extends TestCase
      *
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::postAdd
      */
-    public function testPostAddTooMuch()
+    public function testPostAddTooMuch(): void
     {
         // mock stuff
         $repository   = $this->mock(PiggyBankRepositoryInterface::class);
@@ -274,7 +259,7 @@ class PiggyBankControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::postRemove
      */
-    public function testPostRemove()
+    public function testPostRemove(): void
     {
         // mock stuff
         $repository   = $this->mock(PiggyBankRepositoryInterface::class);
@@ -294,7 +279,7 @@ class PiggyBankControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::postRemove
      */
-    public function testPostRemoveTooMuch()
+    public function testPostRemoveTooMuch(): void
     {
         // mock stuff
         $repository   = $this->mock(PiggyBankRepositoryInterface::class);
@@ -313,7 +298,7 @@ class PiggyBankControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::remove
      */
-    public function testRemove()
+    public function testRemove(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -327,7 +312,7 @@ class PiggyBankControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::removeMobile
      */
-    public function testRemoveMobile()
+    public function testRemoveMobile(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -342,7 +327,7 @@ class PiggyBankControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::show
      */
-    public function testShow()
+    public function testShow(): void
     {
         // mock stuff
         $repository   = $this->mock(PiggyBankRepositoryInterface::class);
@@ -360,7 +345,7 @@ class PiggyBankControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\PiggyBankController::store
      * @covers       \FireflyIII\Http\Requests\PiggyBankFormRequest
      */
-    public function testStore()
+    public function testStore(): void
     {
         // mock stuff
         $repository   = $this->mock(PiggyBankRepositoryInterface::class);
@@ -386,7 +371,7 @@ class PiggyBankControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\PiggyBankController::update
      * @covers       \FireflyIII\Http\Requests\PiggyBankFormRequest
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         // mock stuff
         $repository   = $this->mock(PiggyBankRepositoryInterface::class);

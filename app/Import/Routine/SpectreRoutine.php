@@ -48,6 +48,8 @@ use Log;
 use Preferences;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class FileRoutine
  */
 class SpectreRoutine implements RoutineInterface

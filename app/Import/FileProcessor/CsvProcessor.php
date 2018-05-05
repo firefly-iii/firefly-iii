@@ -33,6 +33,9 @@ use League\Csv\Statement;
 use Log;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
+ *
  * Class CsvProcessor, as the name suggests, goes over CSV file line by line and creates
  * "ImportJournal" objects, which are used in another step to create new journals and transactions
  * and what-not.

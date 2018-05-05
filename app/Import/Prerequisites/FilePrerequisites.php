@@ -28,6 +28,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * This class contains all the routines necessary to import from a file. Hint: there are none.
  */
 class FilePrerequisites implements PrerequisitesInterface

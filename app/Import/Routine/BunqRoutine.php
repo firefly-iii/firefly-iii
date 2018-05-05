@@ -58,6 +58,8 @@ use Log;
 use Preferences;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class BunqRoutine
  *
  * Steps before import:

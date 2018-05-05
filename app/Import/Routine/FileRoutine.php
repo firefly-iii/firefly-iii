@@ -35,6 +35,8 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class FileRoutine
  */
 class FileRoutine implements RoutineInterface

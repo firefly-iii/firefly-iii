@@ -40,6 +40,8 @@ class ImportArrayStorage
     private $transfers;
 
     /**
+     * Set job, count transfers in the array and create the repository.
+     *
      * @param ImportJob $importJob
      */
     public function setJob(ImportJob $importJob): void
@@ -86,6 +88,8 @@ class ImportArrayStorage
     }
 
     /**
+     * Applies the users rules to the created journals.
+     *
      * @param Collection $collection
      *
      * @throws FireflyException
@@ -135,6 +139,8 @@ class ImportArrayStorage
     }
 
     /**
+     * Gets the users rules.
+     *
      * @return Collection
      */
     private function getRules(): Collection
@@ -173,6 +179,8 @@ class ImportArrayStorage
     }
 
     /**
+     * Check if the hash exists for the array the user wants to import.
+     *
      * @param array $transaction
      *
      * @return int|null
@@ -202,6 +210,8 @@ class ImportArrayStorage
     }
 
     /**
+     * Link all imported journals to a tag.
+     *
      * @param Collection $collection
      */
     private function linkToTag(Collection $collection): void
@@ -235,6 +245,8 @@ class ImportArrayStorage
     }
 
     /**
+     * Log about a duplicate object (double hash).
+     *
      * @param array $transaction
      * @param int   $existingId
      */
@@ -253,6 +265,8 @@ class ImportArrayStorage
     }
 
     /**
+     * Log about a duplicate transfer.
+     *
      * @param array $transaction
      */
     private function logDuplicateTransfer(array $transaction): void

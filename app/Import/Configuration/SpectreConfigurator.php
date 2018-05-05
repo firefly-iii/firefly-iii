@@ -29,6 +29,8 @@ use FireflyIII\Support\Import\Configuration\Spectre\HaveAccounts;
 use Log;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class SpectreConfigurator.
  */
 class SpectreConfigurator implements ConfiguratorInterface

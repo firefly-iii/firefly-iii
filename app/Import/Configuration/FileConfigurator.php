@@ -33,6 +33,8 @@ use FireflyIII\Support\Import\Configuration\File\UploadConfig;
 use Log;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class FileConfigurator.
  */
 class FileConfigurator implements ConfiguratorInterface

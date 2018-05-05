@@ -30,6 +30,8 @@ use Log;
 use Preferences;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * This class contains all the routines necessary to connect to Bunq.
  */
 class BunqPrerequisites implements PrerequisitesInterface
