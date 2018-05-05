@@ -31,6 +31,7 @@ use Log;
 
 /**
  * @deprecated
+ * @codeCoverageIgnore
  * Class UploadConfig.
  */
 class UploadConfig implements ConfigurationInterface

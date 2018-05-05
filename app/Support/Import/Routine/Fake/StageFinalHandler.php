@@ -5,6 +5,7 @@ namespace FireflyIII\Support\Import\Routine\Fake;
 use Carbon\Carbon;
 
 /**
+ * @codeCoverageIgnore
  * Class StageFinalHandler
  *
  * @package FireflyIII\Support\Import\Routine\Fake

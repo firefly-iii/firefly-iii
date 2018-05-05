@@ -232,7 +232,7 @@ class ImportArrayStorage
             try {
                 DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journalId, 'tag_id' => $tagId]);
             } catch (QueryException $e) {
-                Log::error('Could not link journal #%d to tag #%d because: %s', $journalIds, $tagId, $e->getMessage());
+                Log::error(sprintf('Could not link journal #%d to tag #%d because: %s', $journalId, $tagId, $e->getMessage()));
                 Log::error($e->getTraceAsString());
             }
         }
@@ -411,7 +411,7 @@ class ImportArrayStorage
                 // compare description:
                 Log::debug(sprintf('Comparing "%s" to "%s"', $description, $transfer->description));
                 if ($description !== $transfer->description) {
-                    continue;
+                    continue; // @codeCoverageIgnore
                 }
                 ++$hits;
                 Log::debug(sprintf('Comparison is a hit! (%s)', $hits));
@@ -420,7 +420,7 @@ class ImportArrayStorage
                 $transferDate = $transfer->date->format('Y-m-d');
                 Log::debug(sprintf('Comparing dates "%s" to "%s"', $transaction['date'], $transferDate));
                 if ($transaction['date'] !== $transferDate) {
-                    continue;
+                    continue; // @codeCoverageIgnore
                 }
                 ++$hits;
                 Log::debug(sprintf('Comparison is a hit! (%s)', $hits));
@@ -442,8 +442,10 @@ class ImportArrayStorage
                 Log::debug('Comparing current transaction source+dest names', $currentSourceNames);
                 Log::debug('.. with current transfer source+dest names', $transferSource);
                 if ($currentSourceNames === $transferSource) {
+                    // @codeCoverageIgnoreStart
                     Log::debug(sprintf('Source names are the same! (%d)', $hits));
                     ++$hits;
+                    // @codeCoverageIgnoreEnd
                 }
                 $totalHits += $hits;
                 if ($totalHits >= $requiredHits) {

@@ -32,6 +32,7 @@ use Log;
 
 /**
  * @deprecated
+ * @codeCoverageIgnore
  * Class Roles.
  */
 class Roles implements ConfigurationInterface

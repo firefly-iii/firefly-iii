@@ -25,11 +25,13 @@ namespace tests\Unit\Import\Storage;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Import\Storage\ImportArrayStorage;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Rule;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
@@ -350,6 +352,12 @@ class ImportArrayStorageTest extends TestCase
                          ->inRandomOrder()->where('transaction_type_id', 3)
                          ->first();
 
+        // get transfer as a collection, so the compare routine works.
+        $journalCollector = new JournalCollector();
+        $journalCollector->setUser($this->user());
+        $journalCollector->setJournals(new Collection([$transfer]));
+        $transferCollection = $journalCollector->withOpposingAccount()->getJournals();
+
         // get some stuff:
         $tag                      = $this->user()->tags()->inRandomOrder()->first();
         $journal                  = $this->user()->transactionJournals()->inRandomOrder()->first();
@@ -382,7 +390,7 @@ class ImportArrayStorageTest extends TestCase
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::TRANSFER]])->once()->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->once()->andReturnSelf();
         $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->once()->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transfer]));
+        $collector->shouldReceive('getJournals')->andReturn($transferCollection);
 
         $storage = new ImportArrayStorage;
         $storage->setJob($job);
@@ -393,6 +401,140 @@ class ImportArrayStorageTest extends TestCase
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertCount(2, $result);
+    }
+
+    /**
+     * @covers \FireflyIII\Import\Storage\ImportArrayStorage
+     */
+    public function testBasicStoreDoubleTransferWithRules(): void
+    {
+        // get a transfer:
+        /** @var TransactionJournal $transfer */
+        $transfer = $this->user()->transactionJournals()
+                         ->inRandomOrder()->where('transaction_type_id', 3)
+                         ->first();
+
+        // get transfer as a collection, so the compare routine works.
+        $journalCollector = new JournalCollector();
+        $journalCollector->setUser($this->user());
+        $journalCollector->setJournals(new Collection([$transfer]));
+        $transferCollection = $journalCollector->withOpposingAccount()->getJournals();
+
+        // make fake job
+        $job = new ImportJob;
+        $job->user()->associate($this->user());
+        $job->key           = 'a_storage' . random_int(1, 1000);
+        $job->status        = 'new';
+        $job->stage         = 'new';
+        $job->provider      = 'fake';
+        $job->file_type     = '';
+        $job->configuration = ['apply-rules' => true];
+        $job->transactions  = [$this->singleTransfer(), $this->singleWithdrawal(), $this->basedOnTransfer($transfer)];
+        $job->save();
+
+
+        // get some stuff:
+        $tag                      = $this->user()->tags()->inRandomOrder()->first();
+        $journal                  = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $ruleOne                  = new Rule;
+        $ruleOne->stop_processing = false;
+        $ruleTwo                  = new Rule;
+        $ruleTwo->stop_processing = true;
+
+        // mock stuff
+        $repository   = $this->mock(ImportJobRepositoryInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
+        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+
+        // mock calls:
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setStatus')->withAnyArgs();
+        $ruleRepos->shouldReceive('setUser')->once();
+        $tagRepos->shouldReceive('setUser')->once();
+        $tagRepos->shouldReceive('store')->once()->andReturn($tag);
+        $repository->shouldReceive('setTag')->once();
+        $ruleRepos->shouldReceive('getForImport')->andReturn(new Collection([$ruleOne, $ruleTwo]));
+        $journalRepos->shouldReceive('setUser')->once();
+        $journalRepos->shouldReceive('store')->twice()->andReturn($journal);
+        $journalRepos->shouldReceive('findByHash')->andReturn(null)->times(3);
+        $repository->shouldReceive('addErrorMessage')->withArgs(
+            [Mockery::any(), 'Entry #2 ("' . $transfer->description . '") could not be imported. Such a transfer already exists.']
+        )->once();
+
+
+        // mock collector so it will return some transfers:
+        $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::TRANSFER]])->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->once()->andReturnSelf();
+        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->once()->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn($transferCollection);
+
+        $storage = new ImportArrayStorage;
+        $storage->setJob($job);
+        $result = new Collection;
+        try {
+            $result = $storage->store();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+        $this->assertCount(2, $result);
+    }
+
+    /**
+     * @param TransactionJournal $transfer
+     *
+     * @return array
+     */
+    private function basedOnTransfer(TransactionJournal $transfer): array
+    {
+        $destination = $transfer->transactions()->where('amount', '>', 0)->first();
+        $source      = $transfer->transactions()->where('amount', '<', 0)->first();
+        $amount      = $destination->amount;
+
+        return
+            [
+                'type'               => 'transfer',
+                'date'               => $transfer->date->format('Y-m-d'),
+                'tags'               => '',
+                'user'               => $this->user()->id,
+
+                // all custom fields:
+                'internal_reference' => null,
+                'notes'              => null,
+
+                // journal data:
+                'description'        => $transfer->description,
+                'piggy_bank_id'      => null,
+                'piggy_bank_name'    => null,
+                'bill_id'            => null,
+                'bill_name'          => null,
+
+                // transaction data:
+                'transactions'       => [
+                    [
+                        'currency_id'           => null,
+                        'currency_code'         => 'EUR',
+                        'description'           => null,
+                        'amount'                => $amount,
+                        'budget_id'             => null,
+                        'budget_name'           => null,
+                        'category_id'           => null,
+                        'category_name'         => null,
+                        'source_id'             => $source->account_id,
+                        'source_name'           => null,
+                        'destination_id'        => $destination->account_id,
+                        'destination_name'      => null,
+                        'foreign_currency_id'   => null,
+                        'foreign_currency_code' => null,
+                        'foreign_amount'        => null,
+                        'reconciled'            => false,
+                        'identifier'            => 0,
+                    ],
+                ],
+            ];
+
     }
 
     /**

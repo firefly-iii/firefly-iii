@@ -29,6 +29,7 @@ use Log;
 
 /**
  * @deprecated
+ * @codeCoverageIgnore
  * Class Initial.
  */
 class Initial implements ConfigurationInterface

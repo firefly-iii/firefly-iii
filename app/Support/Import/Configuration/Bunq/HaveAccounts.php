@@ -31,6 +31,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 
 /**
+ * @codeCoverageIgnore
  * @deprecated
  * Class HaveAccounts
  */

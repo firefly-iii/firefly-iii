@@ -37,6 +37,7 @@ use Log;
 use Preferences;
 
 /**
+ * @codeCoverageIgnore
  * @deprecated
  * Class BunqInformation.
  */

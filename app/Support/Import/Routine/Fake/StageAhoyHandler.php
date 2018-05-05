@@ -27,6 +27,7 @@ use FireflyIII\Exceptions\FireflyException;
 use Log;
 
 /**
+ * @codeCoverageIgnore
  * Class StageAhoyHandler
  */
 class StageAhoyHandler

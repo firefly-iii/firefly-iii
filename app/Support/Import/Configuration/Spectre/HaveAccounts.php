@@ -34,6 +34,7 @@ use Illuminate\Support\Collection;
 
 /**
  * @deprecated
+ * @codeCoverageIgnore
  * Class HaveAccounts
  */
 class HaveAccounts implements ConfigurationInterface

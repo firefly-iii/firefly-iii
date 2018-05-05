@@ -35,6 +35,7 @@ use Log;
 
 /**
  * @deprecated
+ * @codeCoverageIgnore
  * Class Mapping.
  */
 class Map implements ConfigurationInterface
