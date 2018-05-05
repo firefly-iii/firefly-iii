@@ -114,7 +114,7 @@ class FakeJobConfiguration implements JobConfigurationInterface
 
     /**
      * Return the data required for the next step in the job configuration.
-     *
+     * @codeCoverageIgnore
      * @return array
      */
     public function getNextData(): array
@@ -152,6 +152,7 @@ class FakeJobConfiguration implements JobConfigurationInterface
         if (strtolower($album) !== 'station to station' && $this->job->stage !== 'new') {
             return 'import.fake.enter-album';
         }
+        return 'impossible-view'; // @codeCoverageIgnore
     }
 
     /**

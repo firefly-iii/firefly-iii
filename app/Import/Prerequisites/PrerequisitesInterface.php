@@ -64,9 +64,9 @@ interface PrerequisitesInterface
      *
      * Errors must be returned in the message bag under the field name they are requested by.
      *
-     * @param Request $request
+     * @param array $data
      *
      * @return MessageBag
      */
-    public function storePrerequisites(Request $request): MessageBag;
+    public function storePrerequisites(array $data): MessageBag;
 }

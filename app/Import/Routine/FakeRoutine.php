@@ -65,14 +65,15 @@ class FakeRoutine implements RoutineInterface
     {
         Log::debug(sprintf('Now in run() for fake routine with status: %s', $this->job->status));
         if ($this->job->status !== 'running') {
-            throw new FireflyException('This fake job should not be started.');
+            throw new FireflyException('This fake job should not be started.'); // @codeCoverageIgnore
         }
 
         switch ($this->job->stage) {
             default:
-                throw new FireflyException(sprintf('Fake routine cannot handle stage "%s".', $this->job->stage));
+                throw new FireflyException(sprintf('Fake routine cannot handle stage "%s".', $this->job->stage)); // @codeCoverageIgnore
             case 'new':
-                $handler = new StageNewHandler;
+                /** @var StageNewHandler $handler */
+                $handler = app(StageNewHandler::class);
                 $handler->run();
                 $this->repository->setStage($this->job, 'ahoy');
                 // set job finished this step:
@@ -80,13 +81,15 @@ class FakeRoutine implements RoutineInterface
 
                 return;
             case 'ahoy':
-                $handler = new StageAhoyHandler;
+                /** @var StageAhoyHandler $handler */
+                $handler = app(StageAhoyHandler::class);
                 $handler->run();
                 $this->repository->setStatus($this->job, 'need_job_config');
                 $this->repository->setStage($this->job, 'final');
                 break;
             case 'final':
-                $handler = new StageFinalHandler;
+                /** @var StageFinalHandler $handler */
+                $handler = app(StageFinalHandler::class);
                 $handler->setJob($this->job);
                 $transactions = $handler->getTransactions();
                 $this->repository->setStatus($this->job, 'provider_finished');

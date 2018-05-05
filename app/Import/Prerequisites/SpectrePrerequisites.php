@@ -36,17 +36,168 @@ use Preferences;
  */
 class SpectrePrerequisites implements PrerequisitesInterface
 {
-    /** @var User */
-    private $user;
-
+//    /** @var User */
+//    private $user;
+//
+//    /**
+//     * Returns view name that allows user to fill in prerequisites. Currently asks for the API key.
+//     *
+//     * @return string
+//     */
+//    public function getView(): string
+//    {
+//        return 'import.spectre.prerequisites';
+//    }
+//
+//    /**
+//     * Returns any values required for the prerequisites-view.
+//     *
+//     * @return array
+//     */
+//    public function getViewParameters(): array
+//    {
+//        $publicKey    = $this->getPublicKey();
+//        $subTitle     = (string)trans('import.spectre_title');
+//        $subTitleIcon = 'fa-archive';
+//
+//        return compact('publicKey', 'subTitle', 'subTitleIcon');
+//    }
+//
+//    /**
+//     * Returns if this import method has any special prerequisites such as config
+//     * variables or other things. The only thing we verify is the presence of the API key. Everything else
+//     * tumbles into place: no installation token? Will be requested. No device server? Will be created. Etc.
+//     *
+//     * @return bool
+//     */
+//    public function hasPrerequisites(): bool
+//    {
+//        $values = [
+//            Preferences::getForUser($this->user, 'spectre_app_id', false),
+//            Preferences::getForUser($this->user, 'spectre_secret', false),
+//        ];
+//        /** @var Preference $value */
+//        foreach ($values as $value) {
+//            if (false === $value->data || null === $value->data) {
+//                Log::info(sprintf('Config var "%s" is missing.', $value->name));
+//
+//                return true;
+//            }
+//        }
+//        Log::debug('All prerequisites are here!');
+//
+//        return false;
+//    }
+//
+//    /**
+//     * Indicate if all prerequisites have been met.
+//     *
+//     * @return bool
+//     */
+//    public function isComplete(): bool
+//    {
+//        // return true when user has set the App Id and the Spectre Secret.
+//        $values = [
+//            Preferences::getForUser($this->user, 'spectre_app_id', false),
+//            Preferences::getForUser($this->user, 'spectre_secret', false),
+//        ];
+//        $result = true;
+//        /** @var Preference $value */
+//        foreach ($values as $value) {
+//            if (false === $value->data || null === $value->data) {
+//                $result = false;
+//            }
+//        }
+//
+//        return $result;
+//    }
+//
+//    /**
+//     * Set the user for this Prerequisites-routine. Class is expected to implement and save this.
+//     *
+//     * @param User $user
+//     */
+//    public function setUser(User $user): void
+//    {
+//        $this->user = $user;
+//
+//    }
+//
+//    /**
+//     * This method responds to the user's submission of an API key. It tries to register this instance as a new Firefly III device.
+//     * If this fails, the error is returned in a message bag and the user is notified (this is fairly friendly).
+//     *
+//     * @param Request $request
+//     *
+//     * @return MessageBag
+//     */
+//    public function storePrerequisites(Request $request): MessageBag
+//    {
+//        Log::debug('Storing Spectre API keys..');
+//        Preferences::setForUser($this->user, 'spectre_app_id', $request->get('app_id'));
+//        Preferences::setForUser($this->user, 'spectre_secret', $request->get('secret'));
+//        Log::debug('Done!');
+//
+//        return new MessageBag;
+//    }
+//
+//    /**
+//     * This method creates a new public/private keypair for the user. This isn't really secure, since the key is generated on the fly with
+//     * no regards for HSM's, smart cards or other things. It would require some low level programming to get this right. But the private key
+//     * is stored encrypted in the database so it's something.
+//     */
+//    private function createKeyPair(): void
+//    {
+//        Log::debug('Generate new Spectre key pair for user.');
+//        $keyConfig = [
+//            'digest_alg'       => 'sha512',
+//            'private_key_bits' => 2048,
+//            'private_key_type' => OPENSSL_KEYTYPE_RSA,
+//        ];
+//        // Create the private and public key
+//        $res = openssl_pkey_new($keyConfig);
+//
+//        // Extract the private key from $res to $privKey
+//        $privKey = '';
+//        openssl_pkey_export($res, $privKey);
+//
+//        // Extract the public key from $res to $pubKey
+//        $pubKey = openssl_pkey_get_details($res);
+//
+//        Preferences::setForUser($this->user, 'spectre_private_key', $privKey);
+//        Preferences::setForUser($this->user, 'spectre_public_key', $pubKey['key']);
+//        Log::debug('Created key pair');
+//
+//    }
+//
+//    /**
+//     * Get a public key from the users preferences.
+//     *
+//     * @return string
+//     */
+//    private function getPublicKey(): string
+//    {
+//        Log::debug('get public key');
+//        $preference = Preferences::getForUser($this->user, 'spectre_public_key', null);
+//        if (null === $preference) {
+//            Log::debug('public key is null');
+//            // create key pair
+//            $this->createKeyPair();
+//        }
+//        $preference = Preferences::getForUser($this->user, 'spectre_public_key', null);
+//        Log::debug('Return public key for user');
+//
+//        return $preference->data;
+//    }
     /**
-     * Returns view name that allows user to fill in prerequisites. Currently asks for the API key.
+     * Returns view name that allows user to fill in prerequisites.
      *
      * @return string
      */
     public function getView(): string
     {
-        return 'import.spectre.prerequisites';
+        // TODO: Implement getView() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -56,37 +207,8 @@ class SpectrePrerequisites implements PrerequisitesInterface
      */
     public function getViewParameters(): array
     {
-        $publicKey    = $this->getPublicKey();
-        $subTitle     = (string)trans('import.spectre_title');
-        $subTitleIcon = 'fa-archive';
-
-        return compact('publicKey', 'subTitle', 'subTitleIcon');
-    }
-
-    /**
-     * Returns if this import method has any special prerequisites such as config
-     * variables or other things. The only thing we verify is the presence of the API key. Everything else
-     * tumbles into place: no installation token? Will be requested. No device server? Will be created. Etc.
-     *
-     * @return bool
-     */
-    public function hasPrerequisites(): bool
-    {
-        $values = [
-            Preferences::getForUser($this->user, 'spectre_app_id', false),
-            Preferences::getForUser($this->user, 'spectre_secret', false),
-        ];
-        /** @var Preference $value */
-        foreach ($values as $value) {
-            if (false === $value->data || null === $value->data) {
-                Log::info(sprintf('Config var "%s" is missing.', $value->name));
-
-                return true;
-            }
-        }
-        Log::debug('All prerequisites are here!');
-
-        return false;
+        // TODO: Implement getViewParameters() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -96,20 +218,8 @@ class SpectrePrerequisites implements PrerequisitesInterface
      */
     public function isComplete(): bool
     {
-        // return true when user has set the App Id and the Spectre Secret.
-        $values = [
-            Preferences::getForUser($this->user, 'spectre_app_id', false),
-            Preferences::getForUser($this->user, 'spectre_secret', false),
-        ];
-        $result = true;
-        /** @var Preference $value */
-        foreach ($values as $value) {
-            if (false === $value->data || null === $value->data) {
-                $result = false;
-            }
-        }
-
-        return $result;
+        // TODO: Implement isComplete() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -119,74 +229,22 @@ class SpectrePrerequisites implements PrerequisitesInterface
      */
     public function setUser(User $user): void
     {
-        $this->user = $user;
-
+        // TODO: Implement setUser() method.
+        throw new NotImplementedException;
     }
 
     /**
-     * This method responds to the user's submission of an API key. It tries to register this instance as a new Firefly III device.
-     * If this fails, the error is returned in a message bag and the user is notified (this is fairly friendly).
+     * This method responds to the user's submission of an API key. Should do nothing but store the value.
      *
-     * @param Request $request
+     * Errors must be returned in the message bag under the field name they are requested by.
+     *
+     * @param array $data
      *
      * @return MessageBag
      */
-    public function storePrerequisites(Request $request): MessageBag
+    public function storePrerequisites(array $data): MessageBag
     {
-        Log::debug('Storing Spectre API keys..');
-        Preferences::setForUser($this->user, 'spectre_app_id', $request->get('app_id'));
-        Preferences::setForUser($this->user, 'spectre_secret', $request->get('secret'));
-        Log::debug('Done!');
-
-        return new MessageBag;
-    }
-
-    /**
-     * This method creates a new public/private keypair for the user. This isn't really secure, since the key is generated on the fly with
-     * no regards for HSM's, smart cards or other things. It would require some low level programming to get this right. But the private key
-     * is stored encrypted in the database so it's something.
-     */
-    private function createKeyPair(): void
-    {
-        Log::debug('Generate new Spectre key pair for user.');
-        $keyConfig = [
-            'digest_alg'       => 'sha512',
-            'private_key_bits' => 2048,
-            'private_key_type' => OPENSSL_KEYTYPE_RSA,
-        ];
-        // Create the private and public key
-        $res = openssl_pkey_new($keyConfig);
-
-        // Extract the private key from $res to $privKey
-        $privKey = '';
-        openssl_pkey_export($res, $privKey);
-
-        // Extract the public key from $res to $pubKey
-        $pubKey = openssl_pkey_get_details($res);
-
-        Preferences::setForUser($this->user, 'spectre_private_key', $privKey);
-        Preferences::setForUser($this->user, 'spectre_public_key', $pubKey['key']);
-        Log::debug('Created key pair');
-
-    }
-
-    /**
-     * Get a public key from the users preferences.
-     *
-     * @return string
-     */
-    private function getPublicKey(): string
-    {
-        Log::debug('get public key');
-        $preference = Preferences::getForUser($this->user, 'spectre_public_key', null);
-        if (null === $preference) {
-            Log::debug('public key is null');
-            // create key pair
-            $this->createKeyPair();
-        }
-        $preference = Preferences::getForUser($this->user, 'spectre_public_key', null);
-        Log::debug('Return public key for user');
-
-        return $preference->data;
+        // TODO: Implement storePrerequisites() method.
+        throw new NotImplementedException;
     }
 }

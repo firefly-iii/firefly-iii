@@ -145,7 +145,8 @@ class PrerequisitesController extends Controller
         $object->setUser(auth()->user());
         Log::debug('Going to store entered prerequisites.');
         // store post data
-        $result = $object->storePrerequisites($request);
+        $data = $request->all();
+        $result = $object->storePrerequisites($data);
         Log::debug(sprintf('Result of storePrerequisites has message count: %d', $result->count()));
 
         if ($result->count() > 0) {

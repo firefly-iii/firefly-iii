@@ -33,6 +33,8 @@ use Log;
 use Steam;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class ImportJournal.
  */
 class ImportJournal

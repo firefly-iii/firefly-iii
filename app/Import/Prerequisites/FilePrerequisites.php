@@ -34,17 +34,92 @@ use Illuminate\Support\MessageBag;
  */
 class FilePrerequisites implements PrerequisitesInterface
 {
-    /** @var User */
-    private $user;
-
+//    /** @var User */
+//    private $user;
+//
+//    /**
+//     * Returns view name that allows user to fill in prerequisites. Currently asks for the API key.
+//     *
+//     * @return string
+//     */
+//    public function getView(): string
+//    {
+//        return '';
+//    }
+//
+//    /**
+//     * Returns any values required for the prerequisites-view.
+//     *
+//     * @return array
+//     */
+//    public function getViewParameters(): array
+//    {
+//        return [];
+//    }
+//
+//    /**
+//     * Returns if this import method has any special prerequisites such as config
+//     * variables or other things. The only thing we verify is the presence of the API key. Everything else
+//     * tumbles into place: no installation token? Will be requested. No device server? Will be created. Etc.
+//     *
+//     * True if prerequisites. False if not.
+//     *
+//     * @return bool
+//     *
+//     * @throws FireflyException
+//     */
+//    public function hasPrerequisites(): bool
+//    {
+//        if ($this->user->hasRole('demo')) {
+//            throw new FireflyException('Apologies, the demo user cannot import files.');
+//        }
+//
+//        return false;
+//    }
+//
+//    /**
+//     * Indicate if all prerequisites have been met.
+//     *
+//     * @return bool
+//     */
+//    public function isComplete(): bool
+//    {
+//        // has no prerequisites, so always return true.
+//        return true;
+//    }
+//
+//    /**
+//     * Set the user for this Prerequisites-routine. Class is expected to implement and save this.
+//     *
+//     * @param User $user
+//     */
+//    public function setUser(User $user): void
+//    {
+//        $this->user = $user;
+//
+//    }
+//
+//    /**
+//     * This method responds to the user's submission of an API key. It tries to register this instance as a new Firefly III device.
+//     * If this fails, the error is returned in a message bag and the user is notified (this is fairly friendly).
+//     *
+//     * @param Request $request
+//     *
+//     * @return MessageBag
+//     */
+//    public function storePrerequisites(Request $request): MessageBag
+//    {
+//        return new MessageBag;
+//    }
     /**
-     * Returns view name that allows user to fill in prerequisites. Currently asks for the API key.
+     * Returns view name that allows user to fill in prerequisites.
      *
      * @return string
      */
     public function getView(): string
     {
-        return '';
+        // TODO: Implement getView() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -54,27 +129,8 @@ class FilePrerequisites implements PrerequisitesInterface
      */
     public function getViewParameters(): array
     {
-        return [];
-    }
-
-    /**
-     * Returns if this import method has any special prerequisites such as config
-     * variables or other things. The only thing we verify is the presence of the API key. Everything else
-     * tumbles into place: no installation token? Will be requested. No device server? Will be created. Etc.
-     *
-     * True if prerequisites. False if not.
-     *
-     * @return bool
-     *
-     * @throws FireflyException
-     */
-    public function hasPrerequisites(): bool
-    {
-        if ($this->user->hasRole('demo')) {
-            throw new FireflyException('Apologies, the demo user cannot import files.');
-        }
-
-        return false;
+        // TODO: Implement getViewParameters() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -84,8 +140,8 @@ class FilePrerequisites implements PrerequisitesInterface
      */
     public function isComplete(): bool
     {
-        // has no prerequisites, so always return true.
-        return true;
+        // TODO: Implement isComplete() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -95,20 +151,22 @@ class FilePrerequisites implements PrerequisitesInterface
      */
     public function setUser(User $user): void
     {
-        $this->user = $user;
-
+        // TODO: Implement setUser() method.
+        throw new NotImplementedException;
     }
 
     /**
-     * This method responds to the user's submission of an API key. It tries to register this instance as a new Firefly III device.
-     * If this fails, the error is returned in a message bag and the user is notified (this is fairly friendly).
+     * This method responds to the user's submission of an API key. Should do nothing but store the value.
      *
-     * @param Request $request
+     * Errors must be returned in the message bag under the field name they are requested by.
+     *
+     * @param array $data
      *
      * @return MessageBag
      */
-    public function storePrerequisites(Request $request): MessageBag
+    public function storePrerequisites(array $data): MessageBag
     {
-        return new MessageBag;
+        // TODO: Implement storePrerequisites() method.
+        throw new NotImplementedException;
     }
 }
