@@ -23,11 +23,20 @@ declare(strict_types=1);
 namespace FireflyIII\Import\JobConfiguration;
 
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Support\Import\Configuration\File\ConfigurationInterface;
+use FireflyIII\Support\Import\Configuration\File\ConfigureUploadHandler;
+use FireflyIII\Support\Import\Configuration\File\NewFileJobHandler;
 use Illuminate\Support\MessageBag;
 
 class FileJobConfiguration implements JobConfigurationInterface
 {
+    /** @var ImportJob */
+    private $importJob;
+    /** @var ImportJobRepositoryInterface */
+    private $repository;
 
     /**
      * ConfiguratorInterface constructor.
@@ -43,30 +52,86 @@ class FileJobConfiguration implements JobConfigurationInterface
      * @param array $data
      *
      * @return MessageBag
+     * @throws FireflyException
      */
     public function configureJob(array $data): MessageBag
     {
-        // TODO: Implement configureJob() method.
+        $configurator = $this->getConfigurationObject();
+        $configurator->setJob($this->importJob);
+
+        return $configurator->configureJob($data);
     }
 
     /**
      * Return the data required for the next step in the job configuration.
      *
+     * @throws FireflyException
      * @return array
      */
     public function getNextData(): array
     {
-        // TODO: Implement getNextData() method.
+        $configurator = $this->getConfigurationObject();
+        $configurator->setJob($this->importJob);
+
+        return $configurator->getNextData();
+    }
+
+    /**
+     * Get the configuration handler for this specific stage.
+     *
+     * @return ConfigurationInterface
+     * @throws FireflyException
+     */
+    private function getConfigurationObject(): ConfigurationInterface
+    {
+        $class = 'DoNotExist';
+        switch ($this->importJob->stage) {
+            case 'new': // has nothing, no file upload or anything.
+                $class = NewFileJobHandler::class;
+                break;
+            case 'configure-upload':
+                $class = ConfigureUploadHandler::class;
+                break;
+            //            case 'upload-config': // has file, needs file config.
+            //                $class = UploadConfig::class;
+            //                break;
+            //            case 'roles': // has configured file, needs roles.
+            //                $class = Roles::class;
+            //                break;
+            //            case 'map': // has roles, needs mapping.
+            //                $class = Map::class;
+            //                break;
+            //            default:
+            //                break;
+        }
+        if (!class_exists($class)) {
+            throw new FireflyException(sprintf('Class %s does not exist in getConfigurationClass().', $class)); // @codeCoverageIgnore
+        }
+
+        return app($class);
     }
 
     /**
      * Returns the view of the next step in the job configuration.
      *
+     * @throws FireflyException
      * @return string
      */
     public function getNextView(): string
     {
-        // TODO: Implement getNextView() method.
+        switch ($this->importJob->stage) {
+            case 'new':
+                return 'import.file.new';
+            case 'configure-upload':
+                return 'import.file.configure-upload';
+                break;
+            default:
+                // @codeCoverageIgnoreStart
+                throw new FireflyException(
+                    sprintf('FileJobConfiguration::getNextView() cannot handle stage "%s"', $this->importJob->stage)
+                );
+            // @codeCoverageIgnoreEnd
+        }
     }
 
     /**
@@ -76,7 +141,11 @@ class FileJobConfiguration implements JobConfigurationInterface
      */
     public function configurationComplete(): bool
     {
-        // TODO: Implement configurationComplete() method.
+        if ($this->importJob->stage === 'ready_to run') {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -84,6 +153,8 @@ class FileJobConfiguration implements JobConfigurationInterface
      */
     public function setJob(ImportJob $job): void
     {
-        // TODO: Implement setJob() method.
+        $this->importJob  = $job;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
     }
 }

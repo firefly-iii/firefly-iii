@@ -24,11 +24,13 @@ namespace FireflyIII\Repositories\ImportJob;
 
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
 use Log;
 use SplFileObject;
@@ -42,6 +44,16 @@ class ImportJobRepository implements ImportJobRepositoryInterface
 {
     /** @var User */
     private $user;
+    /** @var int */
+    private $maxUploadSize;
+    /** @var \Illuminate\Contracts\Filesystem\Filesystem */
+    protected $uploadDisk;
+
+    public function __construct()
+    {
+        $this->maxUploadSize = (int)config('firefly.maxUploadSize');
+        $this->uploadDisk    = Storage::disk('upload');
+    }
 
     /**
      * @param ImportJob $job
@@ -421,6 +433,8 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     /**
      * Return import file content.
      *
+     * @deprecated
+     *
      * @param ImportJob $job
      *
      * @return string
@@ -475,5 +489,75 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $job->save();
 
         return $job;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     *
+     * @param UploadedFile $file
+     *
+     * @return bool
+     */
+    protected function validSize(UploadedFile $file): bool
+    {
+        $size = $file->getSize();
+
+        return $size > $this->maxUploadSize;
+    }
+
+
+    /**
+     * Handle upload for job.
+     *
+     * @param ImportJob    $job
+     * @param string       $name
+     * @param UploadedFile $file
+     *
+     * @return MessageBag
+     * @throws FireflyException
+     */
+    public function storeFileUpload(ImportJob $job, string $name, UploadedFile $file): MessageBag
+    {
+        $messages = new MessageBag;
+        if ($this->validSize($file)) {
+            $name = e($file->getClientOriginalName());
+            $messages->add('size', (string)trans('validation.file_too_large', ['name' => $name]));
+
+            return $messages;
+        }
+        $count = $job->attachments()->get()->filter(
+            function (Attachment $att) use($name) {
+                return $att->filename === $name;
+            }
+        )->count();
+
+        if ($count > 0) {
+            // don't upload, but also don't complain about it.
+            Log::error(sprintf('Detected duplicate upload. Will ignore second "%s" file.', $name));
+
+            return new MessageBag;
+        }
+
+        $attachment = new Attachment; // create Attachment object.
+        $attachment->user()->associate($job->user);
+        $attachment->attachable()->associate($job);
+        $attachment->md5      = md5_file($file->getRealPath());
+        $attachment->filename = $name;
+        $attachment->mime     = $file->getMimeType();
+        $attachment->size     = $file->getSize();
+        $attachment->uploaded = 0;
+        $attachment->save();
+        $fileObject = $file->openFile('r');
+        $fileObject->rewind();
+        $content   = $fileObject->fread($file->getSize());
+        $encrypted = Crypt::encrypt($content);
+
+        // store it:
+        $this->uploadDisk->put($attachment->fileName(), $encrypted);
+        $attachment->uploaded = 1; // update attachment
+        $attachment->save();
+
+        // return it.
+        return new MessageBag;
     }
 }

@@ -33,7 +33,7 @@ class SnsDescription implements SpecificInterface
      */
     public static function getDescription(): string
     {
-        return 'Trim quotes from SNS descriptions.';
+        return 'import.specific_sns_descr';
     }
 
     /**
@@ -42,7 +42,7 @@ class SnsDescription implements SpecificInterface
      */
     public static function getName(): string
     {
-        return 'SNS description';
+        return 'import.specific_sns_name';
     }
 
     /**

@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\ImportJob;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Tag;
 use FireflyIII\User;
+use Illuminate\Support\MessageBag;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -32,6 +34,18 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 interface ImportJobRepositoryInterface
 {
+
+    /**
+     * Handle upload for job.
+     *
+     * @param ImportJob    $job
+     * @param string       $name
+     * @param UploadedFile $file
+     *
+     * @return MessageBag
+     * @throws FireflyException
+     */
+    public function storeFileUpload(ImportJob $job, string $name, UploadedFile $file): MessageBag;
 
     /**
      * @param ImportJob $job

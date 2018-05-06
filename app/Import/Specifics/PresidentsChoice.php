@@ -33,7 +33,7 @@ class PresidentsChoice implements SpecificInterface
      */
     public static function getDescription(): string
     {
-        return 'Fixes problems with files from Presidents Choice Financial.';
+        return 'import.specific_pres_descr';
     }
 
     /**
@@ -42,7 +42,7 @@ class PresidentsChoice implements SpecificInterface
      */
     public static function getName(): string
     {
-        return 'Presidents "Choice"';
+        return 'import.specific_pres_name';
     }
 
     /**

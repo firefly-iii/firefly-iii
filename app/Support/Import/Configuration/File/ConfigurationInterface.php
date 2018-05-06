@@ -20,12 +20,12 @@
  */
 declare(strict_types=1);
 
-namespace FireflyIII\Support\Import\Configuration;
+namespace FireflyIII\Support\Import\Configuration\File;
 
 use FireflyIII\Models\ImportJob;
+use Illuminate\Support\MessageBag;
 
 /**
- * @deprecated
  * Class ConfigurationInterface.
  */
 interface ConfigurationInterface
@@ -35,14 +35,7 @@ interface ConfigurationInterface
      *
      * @return array
      */
-    public function getData(): array;
-
-    /**
-     * Return possible warning to user.
-     *
-     * @return string
-     */
-    public function getWarningMessage(): string;
+    public function getNextData(): array;
 
     /**
      * @param ImportJob $job
@@ -52,11 +45,11 @@ interface ConfigurationInterface
     public function setJob(ImportJob $job);
 
     /**
-     * Store the result.
+     * Store data associated with current stage.
      *
      * @param array $data
      *
-     * @return bool
+     * @return MessageBag
      */
-    public function storeConfiguration(array $data): bool;
+    public function configureJob(array $data): MessageBag;
 }

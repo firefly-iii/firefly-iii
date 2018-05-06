@@ -53,6 +53,15 @@ class ImportJob extends Model
     protected $fillable = ['key', 'user_id', 'file_type', 'provider', 'status', 'stage', 'configuration', 'extended_status', 'transactions', 'errors'];
 
     /**
+     * @codeCoverageIgnore
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
+    }
+
+    /**
      * @param $value
      *
      * @return mixed

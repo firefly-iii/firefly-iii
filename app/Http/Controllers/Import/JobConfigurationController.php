@@ -29,6 +29,8 @@ use FireflyIII\Import\JobConfiguration\JobConfigurationInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\MessageBag;
 use Log;
 
 /**
@@ -139,8 +141,17 @@ class JobConfigurationController extends Controller
             return redirect(route('import.job.status.index', [$importJob->key]));
         }
 
+        // uploaded files are attached to the job.
+        // the configurator can then handle them.
+        $result = new MessageBag;
+
+        /** @var UploadedFile $upload */
+        foreach ($request->allFiles() as $name => $upload) {
+            $result = $this->repository->storeFileUpload($importJob, $name, $upload);
+        }
         $data     = $request->all();
         $messages = $configurator->configureJob($data);
+        $result->merge($messages);
 
         if ($messages->count() > 0) {
             $request->session()->flash('warning', $messages->first());

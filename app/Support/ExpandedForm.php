@@ -145,16 +145,6 @@ class ExpandedForm
      */
     public function assetAccountList(string $name, $value = null, array $options = []): string
     {
-        // properties for cache
-        $cache = new CacheProperties;
-        $cache->addProperty('exp-form-asset-list');
-        $cache->addProperty($name);
-        $cache->addProperty($value);
-        $cache->addProperty($options);
-
-        if ($cache->has()) {
-            return $cache->get();
-        }
         // make repositories
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -182,7 +172,6 @@ class ExpandedForm
             $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
         }
         $res = $this->select($name, $grouped, $value, $options);
-        $cache->store($res);
 
         return $res;
     }
