@@ -124,6 +124,14 @@ return [
     'job_config_roles_fa_warning'        => 'If you mark a column as containing an amount in a foreign currency, you must also set the column that contains which currency it is.',
     'job_config_roles_rwarning'          => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
     'job_config_roles_colum_count'       => 'Column',
+    // job config for the file provider (stage: mapping):
+    'job_config_map_title'               => 'Import setup (4/4) - Connect import data to Firefly III data',
+    'job_config_map_text'                => 'In the following tables, the left value shows you information found in your uploaded file. It is your task to map this value, if possible, to a value already present in your database. Firefly will stick to this mapping. If there is no value to map to, or you do not wish to map the specific value, select nothing.',
+    'job_config_map_nothing'             => 'There is no data present in your file that you can map to existing values. Please press "Start the import" to continue.',
+    'job_config_field_value'             => 'Field value',
+    'job_config_field_mapped'            => 'Mapped to',
+    'map_do_not_map'                     => '(do not map)',
+    'job_config_map_submit'                  => 'Start the import',
 
 
     // import status page:

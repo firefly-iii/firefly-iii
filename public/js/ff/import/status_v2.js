@@ -63,6 +63,9 @@ function reportJobJSONDone(data) {
             // redirect user to configuration for this job.
             window.location.replace(jobConfigurationUri);
             break;
+        case 'error':
+            reportJobError();
+            break;
         case 'provider_finished':
             // call routine to store stuff:
             sendJobPOSTStore();
@@ -223,6 +226,24 @@ function reportJobPOSTFailure(xhr, status, error) {
     $('.fatal_error').show();
 
     $('.fatal_error_txt').text('Job could not be started or crashed: ' + status + ': ' + error);
+    // show error box.
+}
+
+/**
+ * Show error to user.
+ */
+function reportJobError() {
+    console.log('In reportJobError()');
+    // cancel checking again for job status:
+    clearTimeout(timeOutId);
+
+    // hide status boxes:
+    $('.statusbox').hide();
+
+    // show fatal error box:
+    $('.fatal_error').show();
+
+    $('.fatal_error_txt').text('Job reports error. Please start again. Apologies.');
     // show error box.
 }
 

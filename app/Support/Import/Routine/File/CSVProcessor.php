@@ -1,7 +1,7 @@
 <?php
 /**
- * RoutineInterface.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * CSVProcessor.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,32 +18,45 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace FireflyIII\Import\Routine;
+namespace FireflyIII\Support\Import\Routine\File;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+
 
 /**
- * Interface RoutineInterface
+ * Class CSVProcessor
+ *
+ * @package FireflyIII\Support\Import\Routine\File
  */
-interface RoutineInterface
+class CSVProcessor implements FileProcessorInterface
 {
+    /** @var ImportJob */
+    private $importJob;
+    /** @var ImportJobRepositoryInterface */
+    private $repository;
+
     /**
-     * At the end of each run(), the import routine must set the job to the expected status.
+     * Fires the file processor.
      *
-     * The final status of the routine must be "provider_finished".
-     *
-     * @return bool
-     * @throws FireflyException
+     * @return array
      */
-    public function run(): void;
+    public function run(): array
+    {
+        die('here we are');
+    }
 
     /**
      * @param ImportJob $job
-     *
-     * @return void
      */
-    public function setJob(ImportJob $job): void;
+    public function setJob(ImportJob $job): void
+    {
+        $this->importJob  = $job;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
+
+    }
 }

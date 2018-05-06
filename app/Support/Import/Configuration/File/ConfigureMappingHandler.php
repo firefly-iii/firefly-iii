@@ -26,6 +26,8 @@ namespace FireflyIII\Support\Import\Configuration\File;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Import\Mapper\MapperInterface;
+use FireflyIII\Import\MapperPreProcess\PreProcessorInterface;
+use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
@@ -33,6 +35,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use League\Csv\Exception;
 use League\Csv\Reader;
+use League\Csv\Statement;
 use Log;
 
 /**
@@ -58,6 +61,22 @@ class ConfigureMappingHandler implements ConfigurationInterface
      */
     public function configureJob(array $data): MessageBag
     {
+        $config = $this->importJob->configuration;
+
+        if (isset($data['mapping']) && \is_array($data['mapping'])) {
+            foreach ($data['mapping'] as $index => $array) {
+                $config['column-mapping-config'][$index] = [];
+                foreach ($array as $value => $mapId) {
+                    $mapId = (int)$mapId;
+                    if (0 !== $mapId) {
+                        $config['column-mapping-config'][$index][$value] = $mapId;
+                    }
+                }
+            }
+        }
+        $this->repository->setConfiguration($this->importJob, $config);
+        $this->repository->setStage($this->importJob, 'ready_to_run');
+
         return new MessageBag;
     }
 
@@ -79,65 +98,11 @@ class ConfigureMappingHandler implements ConfigurationInterface
             Log::error($e->getMessage());
             throw new FireflyException('Cannot get reader: ' . $e->getMessage());
         }
-        //
-        //        if ($config['has-headers']) {
-        //            $offset = 1;
-        //        }
-        //        $stmt                 = (new Statement)->offset($offset);
-        //        $results              = $stmt->process($reader);
-        //        $this->validSpecifics = array_keys(config('csv.import_specifics'));
-        //        $indexes              = array_keys($this->data);
-        //        $rowIndex             = 0;
-        //        foreach ($results as $rowIndex => $row) {
-        //            $row = $this->runSpecifics($row);
-        //
-        //            //do something here
-        //            foreach ($indexes as $index) { // this is simply 1, 2, 3, etc.
-        //                if (!isset($row[$index])) {
-        //                    // don't really know how to handle this. Just skip, for now.
-        //                    continue;
-        //                }
-        //                $value = trim($row[$index]);
-        //                if (\strlen($value) > 0) {
-        //                    // we can do some preprocessing here,
-        //                    // which is exclusively to fix the tags:
-        //                    if (null !== $this->data[$index]['preProcessMap'] && \strlen($this->data[$index]['preProcessMap']) > 0) {
-        //                        /** @var PreProcessorInterface $preProcessor */
-        //                        $preProcessor                 = app($this->data[$index]['preProcessMap']);
-        //                        $result                       = $preProcessor->run($value);
-        //                        $this->data[$index]['values'] = array_merge($this->data[$index]['values'], $result);
-        //
-        //                        Log::debug($rowIndex . ':' . $index . 'Value before preprocessor', ['value' => $value]);
-        //                        Log::debug($rowIndex . ':' . $index . 'Value after preprocessor', ['value-new' => $result]);
-        //                        Log::debug($rowIndex . ':' . $index . 'Value after joining', ['value-complete' => $this->data[$index]['values']]);
-        //
-        //                        continue;
-        //                    }
-        //
-        //                    $this->data[$index]['values'][] = $value;
-        //                }
-        //            }
-        //        }
-        //        $setIndexes = array_keys($this->data);
-        //        foreach ($setIndexes as $index) {
-        //            $this->data[$index]['values'] = array_unique($this->data[$index]['values']);
-        //            asort($this->data[$index]['values']);
-        //            // if the count of this array is zero, there is nothing to map.
-        //            if (\count($this->data[$index]['values']) === 0) {
-        //                unset($this->data[$index]);
-        //            }
-        //        }
-        //        unset($setIndexes);
-        //
-        //        // save number of rows, thus number of steps, in job:
-        //        $steps                      = $rowIndex * 5;
-        //        $extended                   = $this->job->extended_status;
-        //        $extended['steps']          = $steps;
-        //        $this->job->extended_status = $extended;
-        //        $this->job->save();
-        //
-        //        return $this->data;
-        //         */
+
+        // get ALL values for the mappable columns from the CSV file:
+        $columnConfig = $this->getValuesForMapping($reader, $config, $columnConfig);
+
+        return $columnConfig;
     }
 
     /**
@@ -150,6 +115,36 @@ class ConfigureMappingHandler implements ConfigurationInterface
         $this->repository->setUser($job->user);
         $this->attachments  = app(AttachmentHelperInterface::class);
         $this->columnConfig = [];
+    }
+
+    /**
+     * Apply the users selected specifics on the current row.
+     *
+     * @param array $config
+     * @param array $validSpecifics
+     * @param array $row
+     *
+     * @return array
+     */
+    private function applySpecifics(array $config, array $validSpecifics, array $row): array
+    {
+        // run specifics here:
+        // and this is the point where the specifix go to work.
+        $specifics = $config['specifics'] ?? [];
+        $names     = array_keys($specifics);
+        foreach ($names as $name) {
+            if (!\in_array($name, $validSpecifics)) {
+                continue;
+            }
+            $class = config(sprintf('csv.import_specifics.%s', $name));
+            /** @var SpecificInterface $specific */
+            $specific = app($class);
+
+            // it returns the row, possibly modified:
+            $row = $specific->run($row);
+        }
+
+        return $row;
     }
 
     /**
@@ -273,6 +268,72 @@ class ConfigureMappingHandler implements ConfigurationInterface
         $reader->setDelimiter($config['delimiter']);
 
         return $reader;
+    }
+
+    /**
+     * Read the CSV file. For each row, check for each column:
+     *
+     * - If it can be mapped. And if so,
+     * - Run the pre-processor
+     * - Add the value to the list of "values" that the user must map.
+     *
+     * @param Reader $reader
+     * @param array  $columnConfig
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    private function getValuesForMapping(Reader $reader, array $config, array $columnConfig): array
+    {
+        $offset = isset($config['has-headers']) && $config['has-headers'] === true ? 1 : 0;
+        try {
+            $stmt = (new Statement)->offset($offset);
+        } catch (Exception $e) {
+            throw new FireflyException(sprintf('Could not create reader: %s', $e->getMessage()));
+        }
+        $results        = $stmt->process($reader);
+        $validSpecifics = array_keys(config('csv.import_specifics'));
+        $validIndexes   = array_keys($columnConfig); // the actually columns that can be mapped.
+        foreach ($results as $rowIndex => $row) {
+            $row = $this->applySpecifics($config, $validSpecifics, $row);
+
+            //do something here
+            /** @var int $currentIndex */
+            foreach ($validIndexes as $currentIndex) { // this is simply 1, 2, 3, etc.
+                if (!isset($row[$currentIndex])) {
+                    // don't need to handle this. Continue.
+                    continue;
+                }
+                $value = trim($row[$currentIndex]);
+                if (\strlen($value) === 0) {
+                    continue;
+                }
+                // we can do some preprocessing here,
+                // which is exclusively to fix the tags:
+                if (null !== $columnConfig[$currentIndex]['preProcessMap'] && \strlen($columnConfig[$currentIndex]['preProcessMap']) > 0) {
+                    /** @var PreProcessorInterface $preProcessor */
+                    $preProcessor = app($columnConfig[$currentIndex]['preProcessMap']);
+                    $result       = $preProcessor->run($value);
+                    // can merge array, this is usually the case:
+                    $columnConfig[$currentIndex]['values'] = array_merge($columnConfig[$currentIndex]['values'], $result);
+                    continue;
+                }
+                $columnConfig[$currentIndex]['values'][] = $value;
+            }
+        }
+
+        // loop array again. This time, do uniqueness.
+        // and remove arrays that have 0 values.
+        foreach ($validIndexes as $currentIndex) {
+            $columnConfig[$currentIndex]['values'] = array_unique($columnConfig[$currentIndex]['values']);
+            asort($columnConfig[$currentIndex]['values']);
+            // if the count of this array is zero, there is nothing to map.
+            if (\count($columnConfig[$currentIndex]['values']) === 0) {
+                unset($columnConfig[$currentIndex]);
+            }
+        }
+
+        return $columnConfig;
     }
 
     /**

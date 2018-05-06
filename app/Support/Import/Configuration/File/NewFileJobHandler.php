@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Import\Configuration\File;
 
 use Crypt;
-use FireflyIII\Console\Commands\Import;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\ImportJob;
@@ -35,7 +35,6 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\MessageBag;
 use Log;
 use Storage;
-use Exception;
 
 /**
  * Class NewFileJobHandler
@@ -49,37 +48,6 @@ class NewFileJobHandler implements ConfigurationInterface
 
     /** @var ImportJobRepositoryInterface */
     private $repository;
-
-    /**
-     * Get the data necessary to show the configuration screen.
-     *
-     * @return array
-     */
-    public function getNextData(): array
-    {
-        $importFileTypes   = [];
-        $defaultImportType = config('import.options.file.default_import_format');
-
-        foreach (config('import.options.file.import_formats') as $type) {
-            $importFileTypes[$type] = trans('import.import_file_type_' . $type);
-        }
-
-        return [
-            'default_type' => $defaultImportType,
-            'file_types'   => $importFileTypes,
-        ];
-    }
-
-    /**
-     * @param ImportJob $job
-     */
-    public function setJob(ImportJob $job): void
-    {
-        $this->importJob  = $job;
-        $this->repository = app(ImportJobRepositoryInterface::class);
-        $this->repository->setUser($job->user);
-
-    }
 
     /**
      * Store data associated with current stage.
@@ -118,10 +86,44 @@ class NewFileJobHandler implements ConfigurationInterface
                 $this->storeConfig($attachment);
             }
         }
-
+        // set file type in config:
+        $config = $this->repository->getConfiguration($this->importJob);
+        $config['file-type'] = $data['import_file_type'];
+        $this->repository->setConfiguration($this->importJob, $config);
         $this->repository->setStage($this->importJob, 'configure-upload');
 
         return new MessageBag();
+
+    }
+
+    /**
+     * Get the data necessary to show the configuration screen.
+     *
+     * @return array
+     */
+    public function getNextData(): array
+    {
+        $importFileTypes   = [];
+        $defaultImportType = config('import.options.file.default_import_format');
+
+        foreach (config('import.options.file.import_formats') as $type) {
+            $importFileTypes[$type] = trans('import.import_file_type_' . $type);
+        }
+
+        return [
+            'default_type' => $defaultImportType,
+            'file_types'   => $importFileTypes,
+        ];
+    }
+
+    /**
+     * @param ImportJob $job
+     */
+    public function setJob(ImportJob $job): void
+    {
+        $this->importJob  = $job;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
 
     }
 

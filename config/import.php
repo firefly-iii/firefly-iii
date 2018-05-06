@@ -2,19 +2,17 @@
 declare(strict_types=1);
 
 use FireflyIII\Import\Configuration\BunqConfigurator;
-use FireflyIII\Import\Configuration\FileConfigurator;
 use FireflyIII\Import\Configuration\SpectreConfigurator;
-use FireflyIII\Import\FileProcessor\CsvProcessor;
 use FireflyIII\Import\JobConfiguration\FakeJobConfiguration;
 use FireflyIII\Import\JobConfiguration\FileJobConfiguration;
 use FireflyIII\Import\Prerequisites\BunqPrerequisites;
 use FireflyIII\Import\Prerequisites\FakePrerequisites;
-use FireflyIII\Import\Prerequisites\FilePrerequisites;
 use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
 use FireflyIII\Import\Routine\BunqRoutine;
 use FireflyIII\Import\Routine\FakeRoutine;
 use FireflyIII\Import\Routine\FileRoutine;
 use FireflyIII\Import\Routine\SpectreRoutine;
+use FireflyIII\Support\Import\Routine\File\CSVProcessor;
 
 /**
  * import.php
@@ -58,7 +56,7 @@ return [
     ],
     'prerequisites' => [
         'fake'    => FakePrerequisites::class,
-        'file'    => FilePrerequisites::class,
+        'file'    => false,
         'bunq'    => BunqPrerequisites::class,
         'spectre' => SpectrePrerequisites::class,
         'plaid'   => false,
@@ -98,7 +96,7 @@ return [
             'import_formats'        => ['csv'], // mt940
             'default_import_format' => 'csv',
             'processors'            => [
-                'csv' => CsvProcessor::class,
+                'csv' => CSVProcessor::class,
             ],
         ],
         'bunq'    => [

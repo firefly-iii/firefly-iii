@@ -116,13 +116,17 @@ class JobStatusController extends Controller
     public function start(ImportJob $importJob): JsonResponse
     {
         // catch impossible status:
-        $allowed = ['ready_to_run', 'need_job_config'];
+        $allowed = ['ready_to_run', 'need_job_config','error','running'];
+        // todo remove error and running.
+
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
             Log::error('Job is not ready.');
 
+            // kill the job:
+            $this->repository->setStatus($importJob, 'error');
+
             return response()->json(['status' => 'NOK', 'message' => 'JobStatusController::start expects status "ready_to_run".']);
         }
-
         $importProvider = $importJob->provider;
         $key            = sprintf('import.routine.%s', $importProvider);
         $className      = config($key);
