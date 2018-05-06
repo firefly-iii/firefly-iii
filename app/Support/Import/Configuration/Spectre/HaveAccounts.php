@@ -37,7 +37,7 @@ use Illuminate\Support\Collection;
  * @codeCoverageIgnore
  * Class HaveAccounts
  */
-class HaveAccounts implements ConfigurationInterface
+class HaveAccounts
 {
     /** @var ImportJob */
     private $job;

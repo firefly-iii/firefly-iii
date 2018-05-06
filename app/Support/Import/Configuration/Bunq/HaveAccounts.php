@@ -28,14 +28,13 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 
 /**
  * @codeCoverageIgnore
  * @deprecated
  * Class HaveAccounts
  */
-class HaveAccounts implements ConfigurationInterface
+class HaveAccounts
 {
     /** @var ImportJob */
     private $job;

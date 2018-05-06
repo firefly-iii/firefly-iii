@@ -31,6 +31,9 @@ use FireflyIII\Support\Import\Configuration\File\ConfigureUploadHandler;
 use FireflyIII\Support\Import\Configuration\File\NewFileJobHandler;
 use Illuminate\Support\MessageBag;
 
+/**
+ * Class FileJobConfiguration
+ */
 class FileJobConfiguration implements JobConfigurationInterface
 {
     /** @var ImportJob */

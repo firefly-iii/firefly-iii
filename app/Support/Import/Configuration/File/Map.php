@@ -28,7 +28,6 @@ use FireflyIII\Import\MapperPreProcess\PreProcessorInterface;
 use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 use League\Csv\Reader;
 use League\Csv\Statement;
 use Log;
@@ -38,7 +37,7 @@ use Log;
  * @codeCoverageIgnore
  * Class Mapping.
  */
-class Map implements ConfigurationInterface
+class Map
 {
     /** @var array that holds each column to be mapped by the user */
     private $data = [];

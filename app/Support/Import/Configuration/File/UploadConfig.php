@@ -26,7 +26,6 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 use Log;
 
 /**
@@ -34,7 +33,7 @@ use Log;
  * @codeCoverageIgnore
  * Class UploadConfig.
  */
-class UploadConfig implements ConfigurationInterface
+class UploadConfig
 {
     /** @var AccountRepositoryInterface */
     private $accountRepository;

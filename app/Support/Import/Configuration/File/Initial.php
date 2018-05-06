@@ -24,7 +24,6 @@ namespace FireflyIII\Support\Import\Configuration\File;
 
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 use Log;
 
 /**
@@ -32,7 +31,7 @@ use Log;
  * @codeCoverageIgnore
  * Class Initial.
  */
-class Initial implements ConfigurationInterface
+class Initial
 {
     /** @var ImportJob */
     private $job;

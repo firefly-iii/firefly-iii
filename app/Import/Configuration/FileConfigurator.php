@@ -25,7 +25,6 @@ namespace FireflyIII\Import\Configuration;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 use FireflyIII\Support\Import\Configuration\File\Initial;
 use FireflyIII\Support\Import\Configuration\File\Map;
 use FireflyIII\Support\Import\Configuration\File\Roles;
@@ -37,7 +36,7 @@ use Log;
  * @codeCoverageIgnore
  * Class FileConfigurator.
  */
-class FileConfigurator implements ConfiguratorInterface
+class FileConfigurator
 {
     /** @var array */
     private $defaultConfig

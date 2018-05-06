@@ -25,7 +25,6 @@ namespace FireflyIII\Support\Import\Configuration\File;
 use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 use League\Csv\Reader;
 use League\Csv\Statement;
 use Log;
@@ -35,7 +34,7 @@ use Log;
  * @codeCoverageIgnore
  * Class Roles.
  */
-class Roles implements ConfigurationInterface
+class Roles
 {
     /**
      * @var array
