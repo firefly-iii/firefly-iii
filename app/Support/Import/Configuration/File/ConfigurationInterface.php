@@ -31,6 +31,15 @@ use Illuminate\Support\MessageBag;
 interface ConfigurationInterface
 {
     /**
+     * Store data associated with current stage.
+     *
+     * @param array $data
+     *
+     * @return MessageBag
+     */
+    public function configureJob(array $data): MessageBag;
+
+    /**
      * Get the data necessary to show the configuration screen.
      *
      * @return array
@@ -39,17 +48,6 @@ interface ConfigurationInterface
 
     /**
      * @param ImportJob $job
-     *
-     * @return ConfigurationInterface
      */
-    public function setJob(ImportJob $job);
-
-    /**
-     * Store data associated with current stage.
-     *
-     * @param array $data
-     *
-     * @return MessageBag
-     */
-    public function configureJob(array $data): MessageBag;
+    public function setJob(ImportJob $job): void;
 }

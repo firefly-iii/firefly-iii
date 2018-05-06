@@ -27,6 +27,8 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Configuration\File\ConfigurationInterface;
+use FireflyIII\Support\Import\Configuration\File\ConfigureMappingHandler;
+use FireflyIII\Support\Import\Configuration\File\ConfigureRolesHandler;
 use FireflyIII\Support\Import\Configuration\File\ConfigureUploadHandler;
 use FireflyIII\Support\Import\Configuration\File\NewFileJobHandler;
 use Illuminate\Support\MessageBag;
@@ -46,6 +48,20 @@ class FileJobConfiguration implements JobConfigurationInterface
      */
     public function __construct()
     {
+    }
+
+    /**
+     * Returns true when the initial configuration for this job is complete.
+     *
+     * @return bool
+     */
+    public function configurationComplete(): bool
+    {
+        if ($this->importJob->stage === 'ready_to_run') {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -80,6 +96,45 @@ class FileJobConfiguration implements JobConfigurationInterface
     }
 
     /**
+     * Returns the view of the next step in the job configuration.
+     *
+     * @throws FireflyException
+     * @return string
+     */
+    public function getNextView(): string
+    {
+        switch ($this->importJob->stage) {
+            case 'new':
+                return 'import.file.new';
+            case 'configure-upload':
+                return 'import.file.configure-upload';
+                break;
+            case 'roles':
+                return 'import.file.roles';
+                break;
+            case 'map':
+                return 'import.file.map';
+                break;
+            default:
+                // @codeCoverageIgnoreStart
+                throw new FireflyException(
+                    sprintf('FileJobConfiguration::getNextView() cannot handle stage "%s"', $this->importJob->stage)
+                );
+            // @codeCoverageIgnoreEnd
+        }
+    }
+
+    /**
+     * @param ImportJob $job
+     */
+    public function setJob(ImportJob $job): void
+    {
+        $this->importJob  = $job;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
+    }
+
+    /**
      * Get the configuration handler for this specific stage.
      *
      * @return ConfigurationInterface
@@ -94,6 +149,12 @@ class FileJobConfiguration implements JobConfigurationInterface
                 break;
             case 'configure-upload':
                 $class = ConfigureUploadHandler::class;
+                break;
+            case 'roles':
+                $class = ConfigureRolesHandler::class;
+                break;
+            case 'map':
+                $class = ConfigureMappingHandler::class;
                 break;
             //            case 'upload-config': // has file, needs file config.
             //                $class = UploadConfig::class;
@@ -112,52 +173,5 @@ class FileJobConfiguration implements JobConfigurationInterface
         }
 
         return app($class);
-    }
-
-    /**
-     * Returns the view of the next step in the job configuration.
-     *
-     * @throws FireflyException
-     * @return string
-     */
-    public function getNextView(): string
-    {
-        switch ($this->importJob->stage) {
-            case 'new':
-                return 'import.file.new';
-            case 'configure-upload':
-                return 'import.file.configure-upload';
-                break;
-            default:
-                // @codeCoverageIgnoreStart
-                throw new FireflyException(
-                    sprintf('FileJobConfiguration::getNextView() cannot handle stage "%s"', $this->importJob->stage)
-                );
-            // @codeCoverageIgnoreEnd
-        }
-    }
-
-    /**
-     * Returns true when the initial configuration for this job is complete.
-     *
-     * @return bool
-     */
-    public function configurationComplete(): bool
-    {
-        if ($this->importJob->stage === 'ready_to run') {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param ImportJob $job
-     */
-    public function setJob(ImportJob $job): void
-    {
-        $this->importJob  = $job;
-        $this->repository = app(ImportJobRepositoryInterface::class);
-        $this->repository->setUser($job->user);
     }
 }

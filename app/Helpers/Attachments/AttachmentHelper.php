@@ -24,6 +24,7 @@ namespace FireflyIII\Helpers\Attachments;
 
 use Crypt;
 use FireflyIII\Models\Attachment;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
@@ -62,6 +63,24 @@ class AttachmentHelper implements AttachmentHelperInterface
         $this->messages      = new MessageBag;
         $this->attachments   = new Collection;
         $this->uploadDisk    = Storage::disk('upload');
+    }
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return string
+     */
+    public function getAttachmentContent(Attachment $attachment): string
+    {
+        try {
+            $content = Crypt::decrypt($this->uploadDisk->get(sprintf('at-%d.data', $attachment->id)));
+        } catch (DecryptException $e) {
+            Log::error(sprintf('Could not decrypt data of attachment #%d', $attachment->id));
+
+            return '';
+        }
+
+        return $content;
     }
 
     /**

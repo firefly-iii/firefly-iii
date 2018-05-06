@@ -120,7 +120,7 @@ class JobStatusController extends Controller
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
             Log::error('Job is not ready.');
 
-            return response()->json(['status' => 'NOK', 'message' => 'JobStatusController::start expects state "ready_to_run".']);
+            return response()->json(['status' => 'NOK', 'message' => 'JobStatusController::start expects status "ready_to_run".']);
         }
 
         $importProvider = $importJob->provider;
@@ -174,7 +174,7 @@ class JobStatusController extends Controller
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
             Log::error('Job is not ready.');
 
-            return response()->json(['status' => 'NOK', 'message' => 'JobStatusController::start expects state "provider_finished".']);
+            return response()->json(['status' => 'NOK', 'message' => 'JobStatusController::start expects status "provider_finished".']);
         }
 
         // set job to be storing data:
