@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -45,10 +46,14 @@ class TransactionFactory
      * @param array $data
      *
      * @return Transaction
+     * @throws FireflyException
      */
-    public function create(array $data): Transaction
+    public function create(array $data): ?Transaction
     {
         $currencyId = isset($data['currency']) ? $data['currency']->id : $data['currency_id'];
+        if ('' === $data['amount']) {
+            throw new FireflyException('Amount is an empty string, which Firefly III cannot handle. Apologies.');
+        }
 
         return Transaction::create(
             [
@@ -72,6 +77,7 @@ class TransactionFactory
      * @param array              $data
      *
      * @return Collection
+     * @throws FireflyException
      */
     public function createPair(TransactionJournal $journal, array $data): Collection
     {
