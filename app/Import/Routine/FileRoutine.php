@@ -58,10 +58,9 @@ class FileRoutine implements RoutineInterface
             case 'ready_to_run':
                 // get processor, depending on file type
                 // is just CSV for now.
-
                 $processor    = $this->getProcessor();
+                $processor->setJob($this->importJob);
                 $transactions = $processor->run();
-
 
                 // make processor run.
                 // then done!
