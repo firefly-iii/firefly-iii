@@ -28,6 +28,8 @@ use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Support\Import\Placeholder\ColumnValue;
+use FireflyIII\Support\Import\Placeholder\ImportTransaction;
 use Illuminate\Support\Collection;
 use League\Csv\Exception;
 use League\Csv\Reader;
@@ -44,8 +46,12 @@ class CSVProcessor implements FileProcessorInterface
 {
     /** @var AttachmentHelperInterface */
     private $attachments;
+    /** @var array */
+    private $config;
     /** @var ImportJob */
     private $importJob;
+    /** @var array */
+    private $mappedValues;
     /** @var ImportJobRepositoryInterface */
     private $repository;
 
@@ -57,7 +63,7 @@ class CSVProcessor implements FileProcessorInterface
      */
     public function run(): array
     {
-        $config = $this->importJob->configuration;
+
 
         // in order to actually map we also need to read the FULL file.
         try {
@@ -66,14 +72,11 @@ class CSVProcessor implements FileProcessorInterface
             Log::error($e->getMessage());
             throw new FireflyException('Cannot get reader: ' . $e->getMessage());
         }
-        // get mapping from config
-        $roles = $config['column-roles'];
-
         // get all lines from file:
-        $lines = $this->getLines($reader, $config);
+        $lines = $this->getLines($reader);
 
         // make import objects, according to their role:
-        $importables = $this->processLines($lines, $roles);
+        $importables = $this->processLines($lines);
 
         echo '<pre>';
         print_r($importables);
@@ -89,6 +92,7 @@ class CSVProcessor implements FileProcessorInterface
     public function setJob(ImportJob $job): void
     {
         $this->importJob   = $job;
+        $this->config      = $job->configuration;
         $this->repository  = app(ImportJobRepositoryInterface::class);
         $this->attachments = app(AttachmentHelperInterface::class);
         $this->repository->setUser($job->user);
@@ -99,14 +103,13 @@ class CSVProcessor implements FileProcessorInterface
      * Returns all lines from the CSV file.
      *
      * @param Reader $reader
-     * @param array  $config
      *
      * @return array
      * @throws FireflyException
      */
-    private function getLines(Reader $reader, array $config): array
+    private function getLines(Reader $reader): array
     {
-        $offset = isset($config['has-headers']) && $config['has-headers'] === true ? 1 : 0;
+        $offset = isset($this->config['has-headers']) && $this->config['has-headers'] === true ? 1 : 0;
         try {
             $stmt = (new Statement)->offset($offset);
         } catch (Exception $e) {
@@ -146,45 +149,93 @@ class CSVProcessor implements FileProcessorInterface
     }
 
     /**
-     * Process a single column. Return is an array with:
-     * [0 => key, 1 => value]
-     * where the first item is the key under which the value
-     * must be stored, and the second is the value.
+     * If the value in the column is mapped to a certain ID,
+     * the column where this ID must be placed will change.
      *
-     * @param int    $column
-     * @param string $value
-     * @param string $role
+     * For example, if you map role "budget-name" with value "groceries" to 1,
+     * then that should become the budget-id. Not the name.
      *
-     * @return array
+     * @param int $column
+     * @param int $mapped
+     *
+     * @return string
      * @throws FireflyException
      */
-    private function processColumn(int $column, string $value, string $role): array
+    private function getRoleForColumn(int $column, int $mapped): string
     {
+        $roles = $this->config['column-roles'];
+        $role  = $roles[$column] ?? '_ignore';
+        if ($mapped === 0) {
+            Log::debug(sprintf('Column #%d with role "%s" is not mapped.', $column, $role));
+
+            return $role;
+        }
+        if (!(isset($this->config['column-do-mapping'][$column]) && $this->config['column-do-mapping'][$column] === true)) {
+
+            return $role;
+        }
         switch ($role) {
             default:
-                throw new FireflyException(sprintf('Cannot handle role "%s" with value "%s"', $role, $value));
-
-
-                // feed each line into a new class which will process
-            // the line. 
+                throw new FireflyException(sprintf('Cannot indicate new role for mapped role "%s"', $role));
+            case 'account-id':
+            case 'account-name':
+            case 'account-iban':
+            case 'account-number':
+                $newRole = 'account-id';
+                break;
+            case 'foreign-currency-id':
+            case 'foreign-currency-code':
+                $newRole = 'foreign-currency-id';
+                break;
+            case 'bill-id':
+            case 'bill-name':
+                $newRole = 'bill-id';
+                break;
+            case 'currency-id':
+            case 'currency-name':
+            case 'currency-code':
+            case 'currency-symbol':
+                $newRole = 'currency-id';
+                break;
+            case 'budget-id':
+            case 'budget-name':
+                $newRole = 'budget-id';
+                break;
+            case 'category-id':
+            case 'category-name':
+                $newRole = 'category-id';
+                break;
+            case 'opposing-id':
+            case 'opposing-name':
+            case 'opposing-iban':
+            case 'opposing-number':
+                $newRole = 'opposing-id';
+                break;
         }
+        Log::debug(sprintf('Role was "%s", but because of mapping, role becomes "%s"', $role, $newRole));
+
+        // also store the $mapped values in a "mappedValues" array.
+        $this->mappedValues[$newRole] = $mapped;
+
+        return $newRole;
     }
+
 
     /**
      * Process all lines in the CSV file. Each line is processed separately.
      *
      * @param array $lines
-     * @param array $roles
      *
      * @return array
      * @throws FireflyException
      */
-    private function processLines(array $lines, array $roles): array
+    private function processLines(array $lines): array
     {
         $processed = [];
-        foreach ($lines as $line) {
-            $processed[] = $this->processSingleLine($line, $roles);
-
+        $count     = \count($lines);
+        foreach ($lines as $index => $line) {
+            Log::debug(sprintf('Now at line #%d of #%d', $index, $count));
+            $processed[] = $this->processSingleLine($line);
         }
 
         return $processed;
@@ -197,18 +248,34 @@ class CSVProcessor implements FileProcessorInterface
      * @param array $line
      * @param array $roles
      *
-     * @return array
+     * @return ImportTransaction
      * @throws FireflyException
      */
-    private function processSingleLine(array $line, array $roles): array
+    private function processSingleLine(array $line): ImportTransaction
     {
+        $transaction = new ImportTransaction;
         // todo run all specifics on row.
-        $transaction = [];
         foreach ($line as $column => $value) {
-            $value = trim($value);
-            $role  = $roles[$column] ?? '_ignore';
-            [$key, $result] = $this->processColumn($column, $value, $role);
-            // if relevant, find mapped value:
+            $value        = trim($value);
+            $originalRole = $this->config['column-roles'][$column] ?? '_ignore';
+            if (\strlen($value) > 0 && $originalRole !== '_ignore') {
+
+                // is a mapped value present?
+                $mapped = $this->config['column-mapping-config'][$column][$value] ?? 0;
+                // the role might change.
+                $role = $this->getRoleForColumn($column, $mapped);
+
+                $columnValue = new ColumnValue;
+                $columnValue->setValue($value);
+                $columnValue->setRole($role);
+                $columnValue->setMappedValue($mapped);
+                $columnValue->setOriginalRole($originalRole);
+                $transaction->addColumnValue($columnValue);
+
+                // create object that parses this column value.
+
+                Log::debug(sprintf('Now at column #%d (%s), value "%s"', $column, $role, $value));
+            }
         }
 
         return $transaction;

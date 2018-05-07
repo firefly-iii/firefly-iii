@@ -26,7 +26,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Routine\File\FileProcessorInterface;
-use FireflyIII\Support\Import\Routine\File\FileRoutineInterface;
 use Log;
 
 /**
