@@ -23,10 +23,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Routine\File;
 
+use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Placeholder\ColumnValue;
 use FireflyIII\Support\Import\Placeholder\ImportTransaction;
@@ -77,6 +83,12 @@ class CSVProcessor implements FileProcessorInterface
 
         // make import objects, according to their role:
         $importables = $this->processLines($lines);
+
+        // now validate all mapped values:
+        $this->validateMappedValues();
+
+
+        $array = $this->parseImportables($importables);
 
         echo '<pre>';
         print_r($importables);
@@ -215,11 +227,87 @@ class CSVProcessor implements FileProcessorInterface
         Log::debug(sprintf('Role was "%s", but because of mapping, role becomes "%s"', $role, $newRole));
 
         // also store the $mapped values in a "mappedValues" array.
-        $this->mappedValues[$newRole] = $mapped;
+        $this->mappedValues[$newRole][] = $mapped;
 
         return $newRole;
     }
 
+    /**
+     * Each entry is an ImportTransaction that must be converted to an array compatible with the
+     * journal factory. To do so some stuff must still be resolved. See below.
+     *
+     * @param array $importables
+     *
+     * @return array
+     */
+    private function parseImportables(array $importables): array
+    {
+        $array = [];
+        /** @var ImportTransaction $importable */
+        foreach ($importables as $importable) {
+
+            // todo: verify bill mapping
+            // todo: verify currency mapping.
+
+
+            $entry = [
+                'type'               => 'unknown', // todo
+                'date'               => Carbon::createFromFormat($this->config['date-format'] ?? 'Ymd', $importable->getDate()),
+                'tags'               => $importable->getTags(), // todo make sure its filled.
+                'user'               => $this->importJob->user_id,
+                'notes'              => $importable->getNote(),
+
+                // all custom fields:
+                'internal_reference' => $importable->getMeta()['internal-reference'] ?? null,
+                'sepa-cc'            => $importable->getMeta()['sepa-cc'] ?? null,
+                'sepa-ct-op'         => $importable->getMeta()['sepa-ct-op'] ?? null,
+                'sepa-ct-id'         => $importable->getMeta()['sepa-ct-id'] ?? null,
+                'sepa-db'            => $importable->getMeta()['sepa-db'] ?? null,
+                'sepa-country'       => $importable->getMeta()['sepa-countru'] ?? null,
+                'sepa-ep'            => $importable->getMeta()['sepa-ep'] ?? null,
+                'sepa-ci'            => $importable->getMeta()['sepa-ci'] ?? null,
+                'interest_date'      => $importable->getMeta()['date-interest'] ?? null,
+                'book_date'          => $importable->getMeta()['date-book'] ?? null,
+                'process_date'       => $importable->getMeta()['date-process'] ?? null,
+                'due_date'           => $importable->getMeta()['date-due'] ?? null,
+                'payment_date'       => $importable->getMeta()['date-payment'] ?? null,
+                'invoice_date'       => $importable->getMeta()['date-invoice'] ?? null,
+                // todo external ID
+
+                // journal data:
+                'description'        => $importable->getDescription(),
+                'piggy_bank_id'      => null,
+                'piggy_bank_name'    => null,
+                'bill_id'            => $importable->getBillId() === 0 ? null : $importable->getBillId(), //
+                'bill_name'          => $importable->getBillId() !== 0 ? null : $importable->getBillName(),
+
+                // transaction data:
+                'transactions'       => [
+                    [
+                        'currency_id'           => null, // todo find ma
+                        'currency_code'         => 'EUR',
+                        'description'           => null,
+                        'amount'                => random_int(500, 5000) / 100,
+                        'budget_id'             => null,
+                        'budget_name'           => null,
+                        'category_id'           => null,
+                        'category_name'         => null,
+                        'source_id'             => null,
+                        'source_name'           => 'Checking Account',
+                        'destination_id'        => null,
+                        'destination_name'      => 'Random expense account #' . random_int(1, 10000),
+                        'foreign_currency_id'   => null,
+                        'foreign_currency_code' => null,
+                        'foreign_amount'        => null,
+                        'reconciled'            => false,
+                        'identifier'            => 0,
+                    ],
+                ],
+            ];
+        }
+
+        return $array;
+    }
 
     /**
      * Process all lines in the CSV file. Each line is processed separately.
@@ -272,12 +360,73 @@ class CSVProcessor implements FileProcessorInterface
                 $columnValue->setOriginalRole($originalRole);
                 $transaction->addColumnValue($columnValue);
 
-                // create object that parses this column value.
-
                 Log::debug(sprintf('Now at column #%d (%s), value "%s"', $column, $role, $value));
             }
         }
 
         return $transaction;
+    }
+
+    /**
+     * For each value that has been mapped, this method will check if the mapped value(s) are actually existing
+     *
+     * User may indicate that he wants his categories mapped to category #3, #4, #5 but if #5 is owned by another
+     * user it will be removed.
+     *
+     * @throws FireflyException
+     */
+    private function validateMappedValues()
+    {
+        foreach ($this->mappedValues as $role => $values) {
+            $values = array_unique($values);
+            if (count($values) > 0) {
+                switch ($role) {
+                    default:
+                        throw new FireflyException(sprintf('Cannot validate mapped values for role "%s"', $role));
+                    case 'opposing-id':
+                    case 'account-id':
+                        /** @var AccountRepositoryInterface $repository */
+                        $repository = app(AccountRepositoryInterface::class);
+                        $repository->setUser($this->importJob->user);
+                        $set                       = $repository->getAccountsById($values);
+                        $valid                     = $set->pluck('id')->toArray();
+                        $this->mappedValues[$role] = $valid;
+                        break;
+                    case 'currency-id':
+                    case 'foreign-currency-id':
+                        /** @var CurrencyRepositoryInterface $repository */
+                        $repository = app(CurrencyRepositoryInterface::class);
+                        $repository->setUser($this->importJob->user);
+                        $set                       = $repository->getByIds($values);
+                        $valid                     = $set->pluck('id')->toArray();
+                        $this->mappedValues[$role] = $valid;
+                        break;
+                    case 'bill-id':
+                        /** @var BillRepositoryInterface $repository */
+                        $repository = app(BillRepositoryInterface::class);
+                        $repository->setUser($this->importJob->user);
+                        $set                       = $repository->getByIds($values);
+                        $valid                     = $set->pluck('id')->toArray();
+                        $this->mappedValues[$role] = $valid;
+                        break;
+                    case 'budget-id':
+                        /** @var BudgetRepositoryInterface $repository */
+                        $repository = app(BudgetRepositoryInterface::class);
+                        $repository->setUser($this->importJob->user);
+                        $set                       = $repository->getByIds($values);
+                        $valid                     = $set->pluck('id')->toArray();
+                        $this->mappedValues[$role] = $valid;
+                        break;
+                    case 'category-id':
+                        /** @var CategoryRepositoryInterface $repository */
+                        $repository = app(CategoryRepositoryInterface::class);
+                        $repository->setUser($this->importJob->user);
+                        $set                       = $repository->getByIds($values);
+                        $valid                     = $set->pluck('id')->toArray();
+                        $this->mappedValues[$role] = $valid;
+                        break;
+                }
+            }
+        }
     }
 }

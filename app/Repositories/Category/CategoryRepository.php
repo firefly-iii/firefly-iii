@@ -154,6 +154,18 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * Get all categories with ID's.
+     *
+     * @param array $categoryIds
+     *
+     * @return Collection
+     */
+    public function getByIds(array $categoryIds): Collection
+    {
+        return $this->user->categories()->whereIn('id', $categoryIds)->get();
+    }
+
+    /**
      * Returns a list of all the categories belonging to a user.
      *
      * @return Collection

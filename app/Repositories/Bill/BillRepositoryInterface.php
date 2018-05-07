@@ -99,6 +99,15 @@ interface BillRepositoryInterface
     public function getBillsUnpaidInRange(Carbon $start, Carbon $end): string;
 
     /**
+     * Get all bills with these ID's.
+     *
+     * @param array $billIds
+     *
+     * @return Collection
+     */
+    public function getByIds(array $billIds): Collection;
+
+    /**
      * Get text or return empty string.
      *
      * @param Bill $bill

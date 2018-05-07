@@ -32,6 +32,7 @@ use Illuminate\Support\Collection;
  */
 interface CategoryRepositoryInterface
 {
+
     /**
      * @param Category $category
      *
@@ -83,6 +84,15 @@ interface CategoryRepositoryInterface
      * @return Carbon|null
      */
     public function firstUseDate(Category $category): ?Carbon;
+
+    /**
+     * Get all categories with ID's.
+     *
+     * @param array $categoryIds
+     *
+     * @return Collection
+     */
+    public function getByIds(array $categoryIds): Collection;
 
     /**
      * Returns a list of all the categories belonging to a user.

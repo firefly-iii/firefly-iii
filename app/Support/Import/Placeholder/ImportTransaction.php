@@ -39,6 +39,8 @@ class ImportTransaction
     /** @var string */
     private $accountName;
     /** @var string */
+    private $accountNumber;
+    /** @var string */
     private $amount;
     /** @var string */
     private $amountCredit;
@@ -46,12 +48,24 @@ class ImportTransaction
     private $amountDebit;
     /** @var int */
     private $billId;
+    /** @var string */
+    private $billName;
     /** @var int */
     private $budgetId;
+    /** @var string */
+    private $budgetName;
     /** @var int */
     private $categoryId;
+    /** @var string */
+    private $categoryName;
+    /** @var string */
+    private $currencyCode;
     /** @var int */
     private $currencyId;
+    /** @var string */
+    private $currencyName;
+    /** @var string */
+    private $currencySymbol;
     /** @var string */
     private $date;
     /** @var string */
@@ -60,6 +74,8 @@ class ImportTransaction
     private $externalId;
     /** @var string */
     private $foreignAmount;
+    /** @var string */
+    private $foreignCurrencyCode;
     /** @var int */
     private $foreignCurrencyId;
     /** @var array */
@@ -76,8 +92,28 @@ class ImportTransaction
     private $opposingId;
     /** @var string */
     private $opposingName;
+    /** @var string */
+    private $opposingNumber;
     /** @var array */
     private $tags;
+
+    /**
+     * @return array
+     */
+    public function getMeta(): array
+    {
+        return $this->meta;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNote(): string
+    {
+        return $this->note;
+    }
+
+
 
     /**
      * ImportTransaction constructor.
@@ -89,7 +125,43 @@ class ImportTransaction
         $this->meta        = [];
         $this->description = '';
         $this->note        = '';
+
+        // mappable items, set to 0:
+        $this->accountId         = 0;
+        $this->budgetId          = 0;
+        $this->billId            = 0;
+        $this->currencyId        = 0;
+        $this->categoryId        = 0;
+        $this->foreignCurrencyId = 0;
+        $this->opposingId        = 0;
+
     }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBillId(): int
+    {
+        return $this->billId;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getBillName(): ?string
+    {
+        return $this->billName;
+    }
+
+
 
     /**
      * @param ColumnValue $columnValue
@@ -107,8 +179,62 @@ class ImportTransaction
                 // could be the result of a mapping?
                 $this->accountId = $this->getMappedValue($columnValue);
                 break;
+            case 'account-iban':
+                $this->accountIban = $columnValue->getValue();
+                break;
             case 'account-name':
                 $this->accountName = $columnValue->getValue();
+                break;
+            case 'account-bic':
+                $this->accountBic = $columnValue->getValue();
+                break;
+            case 'account-number':
+                $this->accountNumber = $columnValue->getValue();
+                break;
+            case'amount_debit':
+                $this->amountDebit = $columnValue->getValue();
+                break;
+            case'amount_credit':
+                $this->amountCredit = $columnValue->getValue();
+                break;
+            case 'amount':
+                $this->amount = $columnValue->getValue();
+                break;
+            case 'amount_foreign':
+                $this->foreignAmount = $columnValue->getValue();
+                break;
+            case 'bill-id':
+                $this->billId = $this->getMappedValue($columnValue);
+                break;
+            case 'bill-name':
+                $this->billName = $columnValue->getValue();
+                break;
+            case 'budget-id':
+                $this->budgetId = $this->getMappedValue($columnValue);
+                break;
+            case 'budget-name':
+                $this->budgetName = $columnValue->getValue();
+                break;
+            case 'category-id':
+                $this->categoryId = $this->getMappedValue($columnValue);
+                break;
+            case 'category-name':
+                $this->categoryName = $columnValue->getValue();
+                break;
+            case 'currency-id':
+                $this->currencyId = $this->getMappedValue($columnValue);
+                break;
+            case 'currency-name':
+                $this->currencyName = $columnValue->getValue();
+                break;
+            case 'currency-code':
+                $this->currencyCode = $columnValue->getValue();
+                break;
+            case 'currency-symbol':
+                $this->currencySymbol = $columnValue->getValue();
+                break;
+            case 'external-id':
+                $this->externalId = $columnValue->getValue();
                 break;
             case 'sepa-ct-id';
             case 'sepa-ct-op';
@@ -126,33 +252,14 @@ class ImportTransaction
             case 'date-due':
                 $this->meta[$columnValue->getRole()] = $columnValue->getValue();
                 break;
-            case'amount_debit':
-                $this->amountDebit = $columnValue->getValue();
-                break;
-            case'amount_credit':
-                $this->amountCredit = $columnValue->getValue();
-                break;
-            case 'amount':
-                $this->amount = $columnValue->getValue();
-                break;
-            case 'amount_foreign':
-                $this->foreignAmount = $columnValue->getValue();
-                break;
+
             case 'foreign-currency-id':
                 $this->foreignCurrencyId = $this->getMappedValue($columnValue);
                 break;
-            case 'bill-id':
-                $this->billId = $this->getMappedValue($columnValue);
+            case 'foreign-currency-code':
+                $this->foreignCurrencyCode = $columnValue->getValue();
                 break;
-            case 'budget-id':
-                $this->budgetId = $this->getMappedValue($columnValue);
-                break;
-            case 'category-id':
-                $this->categoryId = $this->getMappedValue($columnValue);
-                break;
-            case 'currency-id':
-                $this->currencyId = $this->getMappedValue($columnValue);
-                break;
+
             case 'date-transaction':
                 $this->date = $columnValue->getValue();
                 break;
@@ -162,15 +269,12 @@ class ImportTransaction
             case 'note':
                 $this->note .= $columnValue->getValue();
                 break;
-            case 'external-id':
-                $this->externalId = $columnValue->getValue();
-                break;
-            case 'rabo-debit-credit':
-            case 'ing-debit-credit':
-                $this->modifiers[$columnValue->getRole()] = $columnValue->getValue();
-                break;
+
             case 'opposing-id':
                 $this->opposingId = $this->getMappedValue($columnValue);
+                break;
+            case 'opposing-iban':
+                $this->opposingIban = $columnValue->getValue();
                 break;
             case 'opposing-name':
                 $this->opposingName = $columnValue->getValue();
@@ -178,6 +282,15 @@ class ImportTransaction
             case 'opposing-bic':
                 $this->opposingBic = $columnValue->getValue();
                 break;
+            case 'opposing-number':
+                $this->opposingNumber = $columnValue->getValue();
+                break;
+
+            case 'rabo-debit-credit':
+            case 'ing-debit-credit':
+                $this->modifiers[$columnValue->getRole()] = $columnValue->getValue();
+                break;
+
             case 'tags-comma':
                 // todo split using pre-processor.
                 $this->tags = $columnValue->getValue();
@@ -186,23 +299,26 @@ class ImportTransaction
                 // todo split using pre-processor.
                 $this->tags = $columnValue->getValue();
                 break;
-            case 'account-iban':
-                $this->accountIban = $columnValue->getValue();
-                break;
-            case 'opposing-iban':
-                $this->opposingIban = $columnValue->getValue();
-                break;
             case '_ignore':
-            case 'bill-name':
-            case 'currency-name':
-            case 'currency-code':
-            case 'foreign-currency-code':
-            case 'currency-symbol':
-            case 'budget-name':
-            case 'category-name':
-            case 'account-number':
-            case 'opposing-number':
+                break;
+
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getDate(): string
+    {
+        return $this->date;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTags(): array
+    {
+        return $this->tags;
     }
 
     /**

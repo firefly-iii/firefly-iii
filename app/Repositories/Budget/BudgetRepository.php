@@ -459,6 +459,18 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * Get all budgets with these ID's.
+     *
+     * @param array $budgetIds
+     *
+     * @return Collection
+     */
+    public function getByIds(array $budgetIds): Collection
+    {
+        return $this->user->budgets()->whereIn('id', $budgetIds)->get();
+    }
+
+    /**
      * @return Collection
      */
     public function getInactiveBudgets(): Collection

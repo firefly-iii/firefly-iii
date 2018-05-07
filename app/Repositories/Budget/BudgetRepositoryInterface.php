@@ -34,6 +34,16 @@ use Illuminate\Support\Collection;
  */
 interface BudgetRepositoryInterface
 {
+
+    /**
+     * Get all budgets with these ID's.
+     *
+     * @param array $budgetIds
+     *
+     * @return Collection
+     */
+    public function getByIds(array $budgetIds): Collection;
+
     /**
      * A method that returns the amount of money budgeted per day for this budget,
      * on average.
