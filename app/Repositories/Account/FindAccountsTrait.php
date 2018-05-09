@@ -58,12 +58,9 @@ trait FindAccountsTrait
     /**
      * @param string $number
      * @param array  $types
-     *
-     *
-     * @deprecated
-     * @return Account
+     * @return Account|null
      */
-    public function findByAccountNumber(string $number, array $types): Account
+    public function findByAccountNumber(string $number, array $types): ?Account
     {
         $query = $this->user->accounts()
                             ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
@@ -81,7 +78,7 @@ trait FindAccountsTrait
             return $accounts->first();
         }
 
-        return new Account;
+        return null;
     }
 
     /**

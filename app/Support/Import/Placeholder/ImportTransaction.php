@@ -24,6 +24,11 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Import\Placeholder;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Import\Converter\Amount;
+use FireflyIII\Import\Converter\AmountCredit;
+use FireflyIII\Import\Converter\AmountDebit;
+use FireflyIII\Import\Converter\ConverterInterface;
+use Log;
 
 /**
  * Class ImportTransaction
@@ -98,24 +103,6 @@ class ImportTransaction
     private $tags;
 
     /**
-     * @return array
-     */
-    public function getMeta(): array
-    {
-        return $this->meta;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNote(): string
-    {
-        return $this->note;
-    }
-
-
-
-    /**
      * ImportTransaction constructor.
      */
     public function __construct()
@@ -136,32 +123,6 @@ class ImportTransaction
         $this->opposingId        = 0;
 
     }
-
-    /**
-     * @return string
-     */
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @return int
-     */
-    public function getBillId(): int
-    {
-        return $this->billId;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getBillName(): ?string
-    {
-        return $this->billName;
-    }
-
-
 
     /**
      * @param ColumnValue $columnValue
@@ -306,6 +267,135 @@ class ImportTransaction
     }
 
     /**
+     * Calculate the amount of this transaction.
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public function calculateAmount(): string
+    {
+        Log::debug('Now in importTransaction->calculateAmount()');
+        $info = $this->selectAmountInput();
+
+        if (0 === \count($info)) {
+            throw new FireflyException('No amount information for this row.');
+        }
+        $class = $info['class'] ?? '';
+        if (0 === \strlen($class)) {
+            throw new FireflyException('No amount information (conversion class) for this row.');
+        }
+
+        Log::debug(sprintf('Converter class is %s', $info['class']));
+        /** @var ConverterInterface $amountConverter */
+        $amountConverter = app($info['class']);
+        $result          = $amountConverter->convert($info['amount']);
+        Log::debug(sprintf('First attempt to convert gives "%s"', $result));
+        // modify
+        /**
+         * @var string $role
+         * @var string $modifier
+         */
+        foreach ($this->modifiers as $role => $modifier) {
+            $class = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $role)));
+            /** @var ConverterInterface $converter */
+            $converter = app($class);
+            Log::debug(sprintf('Now launching converter %s', $class));
+            $conversion = $converter->convert($modifier);
+            if ($conversion === -1) {
+                $result = app('steam')->negative($result);
+            }
+            if ($conversion === 1) {
+                $result = app('steam')->positive($result);
+            }
+            Log::debug(sprintf('convertedAmount after conversion is  %s', $result));
+        }
+
+        Log::debug(sprintf('After modifiers the result is: "%s"', $result));
+
+
+        return $result;
+    }
+
+    /**
+     * This array is being used to map the account the user is using.
+     *
+     * @return array
+     */
+    public function getAccountData(): array
+    {
+        return [
+            'iban'   => $this->accountIban,
+            'name'   => $this->accountName,
+            'number' => $this->accountNumber,
+            'bic'    => $this->accountBic,
+        ];
+    }
+
+    /**
+     * @return int
+     */
+    public function getAccountId(): int
+    {
+        return $this->accountId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBillId(): int
+    {
+        return $this->billId;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getBillName(): ?string
+    {
+        return $this->billName;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBudgetId(): int
+    {
+        return $this->budgetId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getBudgetName(): ?string
+    {
+        return $this->budgetName;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCategoryId(): int
+    {
+        return $this->categoryId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCategoryName(): ?string
+    {
+        return $this->categoryName;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCurrencyId(): int
+    {
+        return $this->currencyId;
+    }
+
+    /**
      * @return string
      */
     public function getDate(): string
@@ -314,10 +404,63 @@ class ImportTransaction
     }
 
     /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return int
+     */
+    public function getForeignCurrencyId(): int
+    {
+        return $this->foreignCurrencyId;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMeta(): array
+    {
+        return $this->meta;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNote(): string
+    {
+        return $this->note;
+    }
+
+    public function getOpposingAccountData(): array
+    {
+        return [
+            'iban'   => $this->opposingIban,
+            'name'   => $this->opposingName,
+            'number' => $this->opposingNumber,
+            'bic'    => $this->opposingBic,
+        ];
+    }
+
+    /**
+     * @return int
+     */
+    public function getOpposingId(): int
+    {
+        return $this->opposingId;
+    }
+
+    /**
      * @return array
      */
     public function getTags(): array
     {
+        return [];
+
+        // todo make sure this is an array
         return $this->tags;
     }
 
@@ -331,6 +474,35 @@ class ImportTransaction
     private function getMappedValue(ColumnValue $columnValue): int
     {
         return $columnValue->getMappedValue() > 0 ? $columnValue->getMappedValue() : (int)$columnValue->getValue();
+    }
+
+    /**
+     * This methods decides which input value to use for the amount calculation.
+     *
+     * @return array
+     */
+    private function selectAmountInput()
+    {
+        $info           = [];
+        $converterClass = '';
+        if (null !== $this->amount) {
+            Log::debug('Amount value is not NULL, assume this is the correct value.');
+            $converterClass = Amount::class;
+            $info['amount'] = $this->amount;
+        }
+        if (null !== $this->amountDebit) {
+            Log::debug('Amount DEBIT value is not NULL, assume this is the correct value (overrules Amount).');
+            $converterClass = AmountDebit::class;
+            $info['amount'] = $this->amountDebit;
+        }
+        if (null !== $this->amountCredit) {
+            Log::debug('Amount CREDIT value is not NULL, assume this is the correct value (overrules Amount and AmountDebit).');
+            $converterClass = AmountCredit::class;
+            $info['amount'] = $this->amountCredit;
+        }
+        $info['class'] = $converterClass;
+
+        return $info;
     }
 
 }
