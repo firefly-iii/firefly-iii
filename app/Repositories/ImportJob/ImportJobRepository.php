@@ -30,6 +30,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
 use Log;
@@ -42,12 +43,12 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class ImportJobRepository implements ImportJobRepositoryInterface
 {
-    /** @var User */
-    private $user;
-    /** @var int */
-    private $maxUploadSize;
     /** @var \Illuminate\Contracts\Filesystem\Filesystem */
     protected $uploadDisk;
+    /** @var int */
+    private $maxUploadSize;
+    /** @var User */
+    private $user;
 
     public function __construct()
     {
@@ -68,6 +69,24 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $extended['errors'][$index][] = $error;
 
         return $this->setExtendedStatus($job, $extended);
+    }
+
+    /**
+     * Add message to job.
+     *
+     * @param ImportJob $job
+     * @param string    $error
+     *
+     * @return ImportJob
+     */
+    public function addErrorMessage(ImportJob $job, string $error): ImportJob
+    {
+        $errors      = $job->errors;
+        $errors[]    = $error;
+        $job->errors = $errors;
+        $job->save();
+
+        return $job;
     }
 
     /**
@@ -174,6 +193,18 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Return all attachments for job.
+     *
+     * @param ImportJob $job
+     *
+     * @return Collection
+     */
+    public function getAttachments(ImportJob $job): Collection
+    {
+        return $job->attachments()->get();
     }
 
     /**
@@ -395,6 +426,20 @@ class ImportJobRepository implements ImportJobRepositoryInterface
 
     /**
      * @param ImportJob $job
+     * @param Tag       $tag
+     *
+     * @return ImportJob
+     */
+    public function setTag(ImportJob $job, Tag $tag): ImportJob
+    {
+        $job->tag()->associate($tag);
+        $job->save();
+
+        return $job;
+    }
+
+    /**
+     * @param ImportJob $job
      * @param int       $count
      *
      * @return ImportJob
@@ -406,43 +451,6 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         Log::debug(sprintf('Set total steps for job "%s" to %d', $job->key, $count));
 
         return $this->setExtendedStatus($job, $status);
-    }
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * @param ImportJob $job
-     * @param string    $status
-     *
-     * @return ImportJob
-     */
-    public function updateStatus(ImportJob $job, string $status): ImportJob
-    {
-        $job->status = $status;
-        $job->save();
-
-        return $job;
-    }
-
-    /**
-     * Return import file content.
-     *
-     * @deprecated
-     *
-     * @param ImportJob $job
-     *
-     * @return string
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
-    public function uploadFileContents(ImportJob $job): string
-    {
-        return $job->uploadFileContents();
     }
 
     /**
@@ -460,51 +468,12 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     }
 
     /**
-     * Add message to job.
-     *
-     * @param ImportJob $job
-     * @param string    $error
-     *
-     * @return ImportJob
+     * @param User $user
      */
-    public function addErrorMessage(ImportJob $job, string $error): ImportJob
+    public function setUser(User $user)
     {
-        $errors      = $job->errors;
-        $errors[]    = $error;
-        $job->errors = $errors;
-        $job->save();
-
-        return $job;
+        $this->user = $user;
     }
-
-    /**
-     * @param ImportJob $job
-     * @param Tag       $tag
-     *
-     * @return ImportJob
-     */
-    public function setTag(ImportJob $job, Tag $tag): ImportJob
-    {
-        $job->tag()->associate($tag);
-        $job->save();
-
-        return $job;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param UploadedFile $file
-     *
-     * @return bool
-     */
-    protected function validSize(UploadedFile $file): bool
-    {
-        $size = $file->getSize();
-
-        return $size > $this->maxUploadSize;
-    }
-
 
     /**
      * Handle upload for job.
@@ -526,7 +495,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
             return $messages;
         }
         $count = $job->attachments()->get()->filter(
-            function (Attachment $att) use($name) {
+            function (Attachment $att) use ($name) {
                 return $att->filename === $name;
             }
         )->count();
@@ -559,5 +528,48 @@ class ImportJobRepository implements ImportJobRepositoryInterface
 
         // return it.
         return new MessageBag;
+    }
+
+    /**
+     * @param ImportJob $job
+     * @param string    $status
+     *
+     * @return ImportJob
+     */
+    public function updateStatus(ImportJob $job, string $status): ImportJob
+    {
+        $job->status = $status;
+        $job->save();
+
+        return $job;
+    }
+
+    /**
+     * Return import file content.
+     *
+     * @deprecated
+     *
+     * @param ImportJob $job
+     *
+     * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    public function uploadFileContents(ImportJob $job): string
+    {
+        return $job->uploadFileContents();
+    }
+
+    /**
+     * @codeCoverageIgnore
+     *
+     * @param UploadedFile $file
+     *
+     * @return bool
+     */
+    protected function validSize(UploadedFile $file): bool
+    {
+        $size = $file->getSize();
+
+        return $size > $this->maxUploadSize;
     }
 }

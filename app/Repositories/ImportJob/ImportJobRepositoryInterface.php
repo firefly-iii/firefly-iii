@@ -26,6 +26,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Tag;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -34,6 +35,14 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 interface ImportJobRepositoryInterface
 {
+    /**
+     * Return all attachments for job.
+     *
+     * @param ImportJob $job
+     *
+     * @return Collection
+     */
+    public function getAttachments(ImportJob $job): Collection;
 
     /**
      * Handle upload for job.

@@ -26,7 +26,6 @@ namespace FireflyIII\Support\Import\Configuration\File;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Import\Mapper\MapperInterface;
-use FireflyIII\Import\MapperPreProcess\PreProcessorInterface;
 use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\ImportJob;
@@ -53,85 +52,20 @@ class ConfigureMappingHandler implements ConfigurationInterface
     private $repository;
 
     /**
-     * Store data associated with current stage.
-     *
-     * @param array $data
-     *
-     * @return MessageBag
-     */
-    public function configureJob(array $data): MessageBag
-    {
-        $config = $this->importJob->configuration;
-
-        if (isset($data['mapping']) && \is_array($data['mapping'])) {
-            foreach ($data['mapping'] as $index => $array) {
-                $config['column-mapping-config'][$index] = [];
-                foreach ($array as $value => $mapId) {
-                    $mapId = (int)$mapId;
-                    if (0 !== $mapId) {
-                        $config['column-mapping-config'][$index][$value] = $mapId;
-                    }
-                }
-            }
-        }
-        $this->repository->setConfiguration($this->importJob, $config);
-        $this->repository->setStage($this->importJob, 'ready_to_run');
-
-        return new MessageBag;
-    }
-
-    /**
-     * Get the data necessary to show the configuration screen.
-     *
-     * @return array
-     * @throws FireflyException
-     */
-    public function getNextData(): array
-    {
-        $config       = $this->importJob->configuration;
-        $columnConfig = $this->doColumnConfig($config);
-
-        // in order to actually map we also need to read the FULL file.
-        try {
-            $reader = $this->getReader();
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            throw new FireflyException('Cannot get reader: ' . $e->getMessage());
-        }
-
-        // get ALL values for the mappable columns from the CSV file:
-        $columnConfig = $this->getValuesForMapping($reader, $config, $columnConfig);
-
-        return $columnConfig;
-    }
-
-    /**
-     * @param ImportJob $job
-     */
-    public function setJob(ImportJob $job): void
-    {
-        $this->importJob  = $job;
-        $this->repository = app(ImportJobRepositoryInterface::class);
-        $this->repository->setUser($job->user);
-        $this->attachments  = app(AttachmentHelperInterface::class);
-        $this->columnConfig = [];
-    }
-
-    /**
      * Apply the users selected specifics on the current row.
      *
      * @param array $config
-     * @param array $validSpecifics
      * @param array $row
      *
      * @return array
      */
-    private function applySpecifics(array $config, array $validSpecifics, array $row): array
+    public function applySpecifics(array $config, array $row): array
     {
         // run specifics here:
         // and this is the point where the specifix go to work.
-        $specifics = $config['specifics'] ?? [];
-        $names     = array_keys($specifics);
+        $validSpecifics = array_keys(config('csv.import_specifics'));
+        $specifics      = $config['specifics'] ?? [];
+        $names          = array_keys($specifics);
         foreach ($names as $name) {
             if (!\in_array($name, $validSpecifics)) {
                 continue;
@@ -148,23 +82,31 @@ class ConfigureMappingHandler implements ConfigurationInterface
     }
 
     /**
-     * Create the "mapper" class that will eventually return the correct data for the user
-     * to map against. For example: a list of asset accounts. A list of budgets. A list of tags.
+     * Store data associated with current stage.
      *
-     * @param string $column
+     * @param array $data
      *
-     * @return MapperInterface
-     * @throws FireflyException
+     * @return MessageBag
      */
-    private function createMapper(string $column): MapperInterface
+    public function configureJob(array $data): MessageBag
     {
-        $mapperClass = config('csv.import_roles.' . $column . '.mapper');
-        $mapperName  = sprintf('\\FireflyIII\\Import\Mapper\\%s', $mapperClass);
-        if (!class_exists($mapperName)) {
-            throw new FireflyException(sprintf('Class "%s" does not exist. Cannot map "%s"', $mapperName, $column));
-        }
+        $config = $this->importJob->configuration;
 
-        return app($mapperName);
+        if (isset($data['mapping']) && \is_array($data['mapping'])) {
+            foreach ($data['mapping'] as $index => $array) {
+                $config['column-mapping-config'][$index] = [];
+                foreach ($array as $value => $mapId) {
+                    $mapId = (int)$mapId;
+                    if (0 !== $mapId) {
+                        $config['column-mapping-config'][$index][(string)$value] = $mapId;
+                    }
+                }
+            }
+        }
+        $this->repository->setConfiguration($this->importJob, $config);
+        $this->repository->setStage($this->importJob, 'ready_to_run');
+
+        return new MessageBag;
     }
 
     /**
@@ -178,7 +120,7 @@ class ConfigureMappingHandler implements ConfigurationInterface
      * @return array the column configuration.
      * @throws FireflyException
      */
-    private function doColumnConfig(array $config): array
+    public function doColumnConfig(array $config): array
     {
         /** @var array $requestMapping */
         $requestMapping = $config['column-do-mapping'] ?? [];
@@ -217,11 +159,36 @@ class ConfigureMappingHandler implements ConfigurationInterface
      *
      * @return bool
      */
-    private function doMapOfColumn(string $name, bool $requested): bool
+    public function doMapOfColumn(string $name, bool $requested): bool
     {
         $canBeMapped = config('csv.import_roles.' . $name . '.mappable');
 
-        return $canBeMapped && $requested;
+        return $canBeMapped === true && $requested === true;
+    }
+
+    /**
+     * Get the data necessary to show the configuration screen.
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    public function getNextData(): array
+    {
+        $config       = $this->importJob->configuration;
+        $columnConfig = $this->doColumnConfig($config);
+
+        // in order to actually map we also need to read the FULL file.
+        try {
+            $reader = $this->getReader();
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            throw new FireflyException('Cannot get reader: ' . $e->getMessage());
+        }
+
+        // get ALL values for the mappable columns from the CSV file:
+        $columnConfig = $this->getValuesForMapping($reader, $config, $columnConfig);
+
+        return $columnConfig;
     }
 
     /**
@@ -233,7 +200,7 @@ class ConfigureMappingHandler implements ConfigurationInterface
      *
      * @return string
      */
-    private function getPreProcessorName(string $column): string
+    public function getPreProcessorName(string $column): string
     {
         $name            = '';
         $hasPreProcess   = config(sprintf('csv.import_roles.%s.pre-process-map', $column));
@@ -251,11 +218,11 @@ class ConfigureMappingHandler implements ConfigurationInterface
      *
      * @throws \League\Csv\Exception
      */
-    private function getReader(): Reader
+    public function getReader(): Reader
     {
         $content = '';
         /** @var Collection $collection */
-        $collection = $this->importJob->attachments;
+        $collection = $this->repository->getAttachments($this->importJob);
         /** @var Attachment $attachment */
         foreach ($collection as $attachment) {
             if ($attachment->filename === 'import_file') {
@@ -283,53 +250,45 @@ class ConfigureMappingHandler implements ConfigurationInterface
      * @return array
      * @throws FireflyException
      */
-    private function getValuesForMapping(Reader $reader, array $config, array $columnConfig): array
+    public function getValuesForMapping(Reader $reader, array $config, array $columnConfig): array
     {
         $offset = isset($config['has-headers']) && $config['has-headers'] === true ? 1 : 0;
         try {
             $stmt = (new Statement)->offset($offset);
+            // @codeCoverageIgnoreStart
         } catch (Exception $e) {
             throw new FireflyException(sprintf('Could not create reader: %s', $e->getMessage()));
         }
-        $results        = $stmt->process($reader);
-        $validSpecifics = array_keys(config('csv.import_specifics'));
-        $validIndexes   = array_keys($columnConfig); // the actually columns that can be mapped.
-        foreach ($results as $rowIndex => $row) {
-            $row = $this->applySpecifics($config, $validSpecifics, $row);
+        // @codeCoverageIgnoreEnd
+        $results         = $stmt->process($reader);
+        $mappableColumns = array_keys($columnConfig); // the actually columns that can be mapped.
+        foreach ($results as $lineIndex => $line) {
+            Log::debug(sprintf('Trying to collect values for line #%d', $lineIndex));
+            $line = $this->applySpecifics($config, $line);
 
-            //do something here
-            /** @var int $currentIndex */
-            foreach ($validIndexes as $currentIndex) { // this is simply 1, 2, 3, etc.
-                if (!isset($row[$currentIndex])) {
+            /** @var int $columnIndex */
+            foreach ($mappableColumns as $columnIndex) { // this is simply 1, 2, 3, etc.
+                if (!isset($line[$columnIndex])) {
                     // don't need to handle this. Continue.
                     continue;
                 }
-                $value = trim($row[$currentIndex]);
+                $value = trim($line[$columnIndex]);
                 if (\strlen($value) === 0) {
+                    // value is empty, ignore it.
                     continue;
                 }
-                // we can do some preprocessing here,
-                // which is exclusively to fix the tags:
-                if (null !== $columnConfig[$currentIndex]['preProcessMap'] && \strlen($columnConfig[$currentIndex]['preProcessMap']) > 0) {
-                    /** @var PreProcessorInterface $preProcessor */
-                    $preProcessor = app($columnConfig[$currentIndex]['preProcessMap']);
-                    $result       = $preProcessor->run($value);
-                    // can merge array, this is usually the case:
-                    $columnConfig[$currentIndex]['values'] = array_merge($columnConfig[$currentIndex]['values'], $result);
-                    continue;
-                }
-                $columnConfig[$currentIndex]['values'][] = $value;
+                $columnConfig[$columnIndex]['values'][] = $value;
             }
         }
 
         // loop array again. This time, do uniqueness.
         // and remove arrays that have 0 values.
-        foreach ($validIndexes as $currentIndex) {
-            $columnConfig[$currentIndex]['values'] = array_unique($columnConfig[$currentIndex]['values']);
-            asort($columnConfig[$currentIndex]['values']);
+        foreach ($mappableColumns as $columnIndex) {
+            $columnConfig[$columnIndex]['values'] = array_unique($columnConfig[$columnIndex]['values']);
+            asort($columnConfig[$columnIndex]['values']);
             // if the count of this array is zero, there is nothing to map.
-            if (\count($columnConfig[$currentIndex]['values']) === 0) {
-                unset($columnConfig[$currentIndex]);
+            if (\count($columnConfig[$columnIndex]['values']) === 0) {
+                unset($columnConfig[$columnIndex]);
             }
         }
 
@@ -344,7 +303,7 @@ class ConfigureMappingHandler implements ConfigurationInterface
      *
      * @return string
      */
-    private function sanitizeColumnName(string $name): string
+    public function sanitizeColumnName(string $name): string
     {
         /** @var array $validColumns */
         $validColumns = array_keys(config('csv.import_roles'));
@@ -353,5 +312,37 @@ class ConfigureMappingHandler implements ConfigurationInterface
         }
 
         return $name;
+    }
+
+    /**
+     * @param ImportJob $job
+     */
+    public function setJob(ImportJob $job): void
+    {
+        $this->importJob  = $job;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
+        $this->attachments  = app(AttachmentHelperInterface::class);
+        $this->columnConfig = [];
+    }
+
+    /**
+     * Create the "mapper" class that will eventually return the correct data for the user
+     * to map against. For example: a list of asset accounts. A list of budgets. A list of tags.
+     *
+     * @param string $column
+     *
+     * @return MapperInterface
+     * @throws FireflyException
+     */
+    private function createMapper(string $column): MapperInterface
+    {
+        $mapperClass = config('csv.import_roles.' . $column . '.mapper');
+        $mapperName  = sprintf('FireflyIII\\Import\Mapper\\%s', $mapperClass);
+        if (!class_exists($mapperName)) {
+            throw new FireflyException(sprintf('Class "%s" does not exist. Cannot map "%s"', $mapperName, $column)); // @codeCoverageIgnore
+        }
+
+        return app($mapperName);
     }
 }
