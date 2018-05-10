@@ -48,6 +48,7 @@ class FileJobConfiguration implements JobConfigurationInterface
      */
     public function __construct()
     {
+        $this->repository = app(ImportJobRepositoryInterface::class);
     }
 
     /**
@@ -57,11 +58,7 @@ class FileJobConfiguration implements JobConfigurationInterface
      */
     public function configurationComplete(): bool
     {
-        if ($this->importJob->stage === 'ready_to_run') {
-            return true;
-        }
-
-        return false;
+        return $this->importJob->stage === 'ready_to_run';
     }
 
     /**
@@ -129,8 +126,7 @@ class FileJobConfiguration implements JobConfigurationInterface
      */
     public function setJob(ImportJob $job): void
     {
-        $this->importJob  = $job;
-        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->importJob = $job;
         $this->repository->setUser($job->user);
     }
 
@@ -156,17 +152,6 @@ class FileJobConfiguration implements JobConfigurationInterface
             case 'map':
                 $class = ConfigureMappingHandler::class;
                 break;
-            //            case 'upload-config': // has file, needs file config.
-            //                $class = UploadConfig::class;
-            //                break;
-            //            case 'roles': // has configured file, needs roles.
-            //                $class = Roles::class;
-            //                break;
-            //            case 'map': // has roles, needs mapping.
-            //                $class = Map::class;
-            //                break;
-            //            default:
-            //                break;
         }
         if (!class_exists($class)) {
             throw new FireflyException(sprintf('Class %s does not exist in getConfigurationClass().', $class)); // @codeCoverageIgnore

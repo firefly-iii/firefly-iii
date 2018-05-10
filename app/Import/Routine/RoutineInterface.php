@@ -35,7 +35,6 @@ interface RoutineInterface
      *
      * The final status of the routine must be "provider_finished".
      *
-     * @return bool
      * @throws FireflyException
      */
     public function run(): void;

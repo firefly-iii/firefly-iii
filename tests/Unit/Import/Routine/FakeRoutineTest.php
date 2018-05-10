@@ -41,7 +41,7 @@ class FakeRoutineTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Routine\FakeRoutine
      */
-    public function testRunAhoy()
+    public function testRunAhoy(): void
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
@@ -76,7 +76,7 @@ class FakeRoutineTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Routine\FakeRoutine
      */
-    public function testRunFinal()
+    public function testRunFinal(): void
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
@@ -112,7 +112,7 @@ class FakeRoutineTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Routine\FakeRoutine
      */
-    public function testRunNew()
+    public function testRunNew(): void
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;

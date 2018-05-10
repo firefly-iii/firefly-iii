@@ -26,6 +26,7 @@ namespace Tests\Feature\Controllers\Import;
 use FireflyIII\Import\JobConfiguration\FakeJobConfiguration;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\MessageBag;
 use Log;
 use Mockery;
@@ -168,6 +169,35 @@ class JobConfigurationControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Import\JobConfigurationController
      */
+    public function testPostBadState(): void
+    {
+
+        $job            = new ImportJob;
+        $job->user_id   = $this->user()->id;
+        $job->key       = 'Ffake_job_' . random_int(1, 1000);
+        $job->status    = 'some_bad_state';
+        $job->provider  = 'fake';
+        $job->file_type = '';
+        $job->save();
+
+        $messages = new MessageBag;
+        $messages->add('some', 'srrange message');
+
+        // mock repositories and configuration handling classes:
+        $repository   = $this->mock(ImportJobRepositoryInterface::class);
+        $configurator = $this->mock(FakeJobConfiguration::class);
+
+        // call thing.
+        $this->be($this->user());
+        $response = $this->post(route('import.job.configuration.post', [$job->key]));
+        $response->assertStatus(302);
+        $response->assertRedirect(route('import.index'));
+        $response->assertSessionHas('error', 'To access this page, your import job cannot have status "some_bad_state".');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Import\JobConfigurationController
+     */
     public function testPostComplete(): void
     {
 
@@ -198,13 +228,13 @@ class JobConfigurationControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Import\JobConfigurationController
      */
-    public function testPostBadState(): void
+    public function testPostWithUpload(): void
     {
-
+        $file           = UploadedFile::fake()->image('avatar.jpg');
         $job            = new ImportJob;
         $job->user_id   = $this->user()->id;
-        $job->key       = 'Ffake_job_' . random_int(1, 1000);
-        $job->status    = 'some_bad_state';
+        $job->key       = 'Dfake_job_' . random_int(1, 1000);
+        $job->status    = 'has_prereq';
         $job->provider  = 'fake';
         $job->file_type = '';
         $job->save();
@@ -216,12 +246,18 @@ class JobConfigurationControllerTest extends TestCase
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $configurator = $this->mock(FakeJobConfiguration::class);
 
+        // mock calls:
+        $configurator->shouldReceive('setJob')->once();
+        $configurator->shouldReceive('configurationComplete')->once()->andReturn(false);
+        $configurator->shouldReceive('configureJob')->once()->andReturn($messages);
+        $repository->shouldReceive('storeFileUpload')->once()->andReturn(new MessageBag);
+
         // call thing.
         $this->be($this->user());
-        $response = $this->post(route('import.job.configuration.post', [$job->key]));
+        $response = $this->post(route('import.job.configuration.post', [$job->key]), ['import_file' => $file]);
         $response->assertStatus(302);
-        $response->assertRedirect(route('import.index'));
-        $response->assertSessionHas('error', 'To access this page, your import job cannot have status "some_bad_state".');
+        $response->assertRedirect(route('import.job.configuration.index', [$job->key]));
+        $response->assertSessionHas('warning', $messages->first());
     }
 
 

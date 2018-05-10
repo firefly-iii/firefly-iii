@@ -32,6 +32,7 @@ use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Log;
 use Storage;
@@ -61,7 +62,108 @@ class NewFileJobHandler implements ConfigurationInterface
     {
         // nothing to store, validate upload
         // and push to next stage.
-        $messages    = new MessageBag;
+        $messages = $this->validateAttachments();
+
+        if ($messages->count() > 0) {
+            return $messages;
+        }
+
+        // store config if it's in one of the attachments.
+        $this->storeConfiguration();
+
+        // set file type in config:
+        $config              = $this->repository->getConfiguration($this->importJob);
+        $config['file-type'] = $data['import_file_type'];
+        $this->repository->setConfiguration($this->importJob, $config);
+        $this->repository->setStage($this->importJob, 'configure-upload');
+
+        return new MessageBag();
+
+    }
+
+    /**
+     * Get the data necessary to show the configuration screen.
+     *
+     * @return array
+     */
+    public function getNextData(): array
+    {
+        /** @var array $allowedTypes */
+        $allowedTypes      = config('import.options.file.import_formats');
+        $importFileTypes   = [];
+        $defaultImportType = config('import.options.file.default_import_format');
+        foreach ($allowedTypes as $type) {
+            $importFileTypes[$type] = trans('import.import_file_type_' . $type);
+        }
+
+        return [
+            'default_type' => $defaultImportType,
+            'file_types'   => $importFileTypes,
+        ];
+    }
+
+    /**
+     * @param ImportJob $job
+     */
+    public function setJob(ImportJob $job): void
+    {
+        $this->importJob  = $job;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
+
+    }
+
+    /**
+     * Take attachment, extract config, and put in job.\
+     *
+     * @param Attachment $attachment
+     *
+     * @throws FireflyException
+     */
+    public function storeConfig(Attachment $attachment): void
+    {
+        $disk = Storage::disk('upload');
+        try {
+            $content = $disk->get(sprintf('at-%d.data', $attachment->id));
+            $content = Crypt::decrypt($content);
+        } catch (FileNotFoundException $e) {
+            Log::error($e->getMessage());
+            throw new FireflyException($e->getMessage());
+        }
+        $json = json_decode($content, true);
+        if (null !== $json) {
+            $this->repository->setConfiguration($this->importJob, $json);
+        }
+    }
+
+    /**
+     * Store config from job.
+     *
+     * @throws FireflyException
+     */
+    public function storeConfiguration(): void
+    {
+        /** @var Collection $attachments */
+        $attachments = $this->importJob->attachments;
+        /** @var Attachment $attachment */
+        foreach ($attachments as $attachment) {
+            // if file is configuration file, store it into the job.
+            if ($attachment->filename === 'configuration_file') {
+                $this->storeConfig($attachment);
+            }
+        }
+    }
+
+    /**
+     * Check if all attachments are UTF8.
+     *
+     * @return MessageBag
+     * @throws FireflyException
+     */
+    public function validateAttachments(): MessageBag
+    {
+        $messages = new MessageBag;
+        /** @var Collection $attachments */
         $attachments = $this->importJob->attachments;
         /** @var Attachment $attachment */
         foreach ($attachments as $attachment) {
@@ -86,45 +188,8 @@ class NewFileJobHandler implements ConfigurationInterface
                 $this->storeConfig($attachment);
             }
         }
-        // set file type in config:
-        $config = $this->repository->getConfiguration($this->importJob);
-        $config['file-type'] = $data['import_file_type'];
-        $this->repository->setConfiguration($this->importJob, $config);
-        $this->repository->setStage($this->importJob, 'configure-upload');
 
-        return new MessageBag();
-
-    }
-
-    /**
-     * Get the data necessary to show the configuration screen.
-     *
-     * @return array
-     */
-    public function getNextData(): array
-    {
-        $importFileTypes   = [];
-        $defaultImportType = config('import.options.file.default_import_format');
-
-        foreach (config('import.options.file.import_formats') as $type) {
-            $importFileTypes[$type] = trans('import.import_file_type_' . $type);
-        }
-
-        return [
-            'default_type' => $defaultImportType,
-            'file_types'   => $importFileTypes,
-        ];
-    }
-
-    /**
-     * @param ImportJob $job
-     */
-    public function setJob(ImportJob $job): void
-    {
-        $this->importJob  = $job;
-        $this->repository = app(ImportJobRepositoryInterface::class);
-        $this->repository->setUser($job->user);
-
+        return $messages;
     }
 
     /**
@@ -153,26 +218,5 @@ class NewFileJobHandler implements ConfigurationInterface
         }
 
         return true;
-    }
-
-    /**
-     * @param Attachment $attachment
-     *
-     * @throws FireflyException
-     */
-    private function storeConfig(Attachment $attachment): void
-    {
-        $disk = Storage::disk('upload');
-        try {
-            $content = $disk->get(sprintf('at-%d.data', $attachment->id));
-            $content = Crypt::decrypt($content);
-        } catch (FileNotFoundException $e) {
-            Log::error($e->getMessage());
-            throw new FireflyException($e->getMessage());
-        }
-        $json = json_decode($content, true);
-        if (null !== $json) {
-            $this->repository->setConfiguration($this->importJob, $json);
-        }
     }
 }

@@ -35,7 +35,7 @@ class HasAnyCategoryTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasAnyCategory::triggered
      */
-    public function testTriggered()
+    public function testTriggered(): void
     {
         $journal  = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $category = $journal->user->categories()->first();
@@ -51,14 +51,14 @@ class HasAnyCategoryTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasAnyCategory::triggered
      */
-    public function testTriggeredNot()
+    public function testTriggeredNot(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->categories()->detach();
 
         // also detach transactions:
         /** @var Transaction $transaction */
-        foreach($journal->transactions as $transaction) {
+        foreach ($journal->transactions as $transaction) {
             $transaction->categories()->detach();
         }
 
@@ -71,10 +71,16 @@ class HasAnyCategoryTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasAnyCategory::triggered
      */
-    public function testTriggeredTransactions()
+    public function testTriggeredTransactions(): void
     {
-        /** @var TransactionJournal $journal */
-        $journal  = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $count   = 0;
+        $journal = null;
+        while ($count === 0) {
+            /** @var TransactionJournal $journal */
+            $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+            $count   = $journal->transactions()->count();
+        }
+
         $category = $journal->user->categories()->first();
         $journal->categories()->detach();
         $this->assertEquals(0, $journal->categories()->count());
@@ -94,7 +100,7 @@ class HasAnyCategoryTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasAnyCategory::willMatchEverything
      */
-    public function testWillMatchEverything()
+    public function testWillMatchEverything(): void
     {
         $value  = '';
         $result = HasAnyCategory::willMatchEverything($value);
