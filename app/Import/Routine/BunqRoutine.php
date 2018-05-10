@@ -929,10 +929,8 @@ class BunqRoutine implements RoutineInterface
 
     /**
      * @param ImportJob $job
-     *
-     * @return mixed
      */
-    public function setJob(ImportJob $job)
+    public function setJob(ImportJob $job): void
     {
         // TODO: Implement setJob() method.
         throw new NotImplementedException;
