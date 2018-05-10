@@ -68,7 +68,8 @@ class TransactionCurrencyFactory
         $currencyCode = (string)$currencyCode;
         $currencyId   = (int)$currencyId;
 
-        if (\strlen($currencyCode) === 0 && (int)$currencyId === 0) {
+        if ('' === $currencyCode && $currencyId === 0) {
+            Log::warning('Cannot find anything on empty currency code and empty currency ID!');
             return null;
         }
 
@@ -78,6 +79,7 @@ class TransactionCurrencyFactory
             if (null !== $currency) {
                 return $currency;
             }
+            Log::warning(sprintf('Currency ID is %d but found nothing!', $currencyId));
         }
         // then by code:
         if (\strlen($currencyCode) > 0) {
@@ -85,7 +87,9 @@ class TransactionCurrencyFactory
             if (null !== $currency) {
                 return $currency;
             }
+            Log::warning(sprintf('Currency code is %d but found nothing!', $currencyCode));
         }
+        Log::warning('Found nothing for currency.');
 
         return null;
     }

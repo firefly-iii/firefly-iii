@@ -31,6 +31,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Support\TransactionServiceTrait;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class TransactionFactory
@@ -50,10 +51,17 @@ class TransactionFactory
      */
     public function create(array $data): ?Transaction
     {
-        $currencyId = isset($data['currency']) ? $data['currency']->id : $data['currency_id'];
+        Log::debug('Start of TransactionFactory::create()');
+        $currencyId = $data['currency_id'] ?? null;
+        $currencyId = isset($data['currency']) ? $data['currency']->id : $currencyId;
+        Log::debug('We dont make it here');
         if ('' === $data['amount']) {
             throw new FireflyException('Amount is an empty string, which Firefly III cannot handle. Apologies.');
         }
+        if (null === $currencyId) {
+            throw new FireflyException('Cannot store transaction without currency information.');
+        }
+        $data['foreign_amount'] = '' === (string)$data['foreign_amount'] ? null : $data['foreign_amount'];
 
         return Transaction::create(
             [
@@ -81,6 +89,7 @@ class TransactionFactory
      */
     public function createPair(TransactionJournal $journal, array $data): Collection
     {
+        Log::debug('Start of TransactionFactory::createPair()');
         // all this data is the same for both transactions:
         $currency    = $this->findCurrency($data['currency_id'], $data['currency_code']);
         $description = $journal->description === $data['description'] ? null : $data['description'];

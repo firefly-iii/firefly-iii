@@ -81,7 +81,7 @@ class IndexControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Import\IndexController
      */
-    public function testCreateFakeNoPrereq()
+    public function testCreateFakeNoPrereq(): void
     {
         // mock stuff:
         $repository        = $this->mock(ImportJobRepositoryInterface::class);
@@ -112,18 +112,15 @@ class IndexControllerTest extends TestCase
 
         // fake prerequisites providers:
         $fake    = $this->mock(FakePrerequisites::class);
-        $file    = $this->mock(FilePrerequisites::class);
         $bunq    = $this->mock(BunqPrerequisites::class);
         $spectre = $this->mock(SpectrePrerequisites::class);
 
         // call methods:
         $fake->shouldReceive('setUser')->once();
-        $file->shouldReceive('setUser')->once();
         $bunq->shouldReceive('setUser')->once();
         $spectre->shouldReceive('setUser')->once();
 
         $fake->shouldReceive('isComplete')->once()->andReturn(true);
-        $file->shouldReceive('isComplete')->once()->andReturn(true);
         $bunq->shouldReceive('isComplete')->once()->andReturn(true);
         $spectre->shouldReceive('isComplete')->once()->andReturn(true);
 

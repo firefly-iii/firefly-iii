@@ -247,6 +247,7 @@ trait TransactionServiceTrait
      */
     protected function setForeignAmount(Transaction $transaction, ?string $amount): void
     {
+        $amount                      = '' === (string)$amount ? null : $amount;
         $transaction->foreign_amount = $amount;
         $transaction->save();
     }

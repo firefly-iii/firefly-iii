@@ -278,11 +278,15 @@ class ImportTransaction
         $info = $this->selectAmountInput();
 
         if (0 === \count($info)) {
-            throw new FireflyException('No amount information for this row.');
+            Log::error('No amount information for this row.');
+
+            return '';
         }
         $class = $info['class'] ?? '';
-        if (0 === \strlen($class)) {
-            throw new FireflyException('No amount information (conversion class) for this row.');
+        if ('' === $class) {
+            Log::error('No amount information (conversion class) for this row.');
+
+            return '';
         }
 
         Log::debug(sprintf('Converter class is %s', $info['class']));
@@ -312,6 +316,47 @@ class ImportTransaction
 
         Log::debug(sprintf('After modifiers the result is: "%s"', $result));
 
+
+        return $result;
+    }
+
+    /**
+     * The method that calculates the foreign amount isn't nearly as complex,\
+     * because Firefly III only supports one foreign amount field. So the foreign amount is there
+     * or isn't. That's about it. However, if it's there, modifiers will be applied too.
+     *
+     * @return string
+     */
+    public function calculateForeignAmount(): string
+    {
+        if (null === $this->foreignAmount) {
+            Log::debug('ImportTransaction holds no foreign amount info.');
+            return '';
+        }
+        /** @var ConverterInterface $amountConverter */
+        $amountConverter = app(Amount::class);
+        $result          = $amountConverter->convert($this->foreignAmount);
+        Log::debug(sprintf('First attempt to convert foreign amount gives "%s"', $result));
+        /**
+         * @var string $role
+         * @var string $modifier
+         */
+        foreach ($this->modifiers as $role => $modifier) {
+            $class = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $role)));
+            /** @var ConverterInterface $converter */
+            $converter = app($class);
+            Log::debug(sprintf('Now launching converter %s', $class));
+            $conversion = $converter->convert($modifier);
+            if ($conversion === -1) {
+                $result = app('steam')->negative($result);
+            }
+            if ($conversion === 1) {
+                $result = app('steam')->positive($result);
+            }
+            Log::debug(sprintf('Foreign amount after conversion is  %s', $result));
+        }
+
+        Log::debug(sprintf('After modifiers the foreign amount is: "%s"', $result));
 
         return $result;
     }
@@ -388,6 +433,18 @@ class ImportTransaction
     }
 
     /**
+     * @return array
+     */
+    public function getCurrencyData(): array
+    {
+        return [
+            'name'   => $this->currencyName,
+            'code'   => $this->currencyCode,
+            'symbol' => $this->currencySymbol,
+        ];
+    }
+
+    /**
      * @return int
      */
     public function getCurrencyId(): int
@@ -435,6 +492,9 @@ class ImportTransaction
         return $this->note;
     }
 
+    /**
+     * @return array
+     */
     public function getOpposingAccountData(): array
     {
         return [
@@ -481,7 +541,7 @@ class ImportTransaction
      *
      * @return array
      */
-    private function selectAmountInput()
+    private function selectAmountInput(): array
     {
         $info           = [];
         $converterClass = '';

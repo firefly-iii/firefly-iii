@@ -28,6 +28,7 @@ var checkNextInterval = 500;
 var maxLoops = 60;
 var totalLoops = 0;
 var startCount = 0;
+var jobFailed = false;
 
 $(function () {
     "use strict";
@@ -39,7 +40,12 @@ $(function () {
  */
 function checkJobJSONStatus() {
     console.log('In checkJobJSONStatus()');
-    $.getJSON(jobStatusUri).done(reportJobJSONDone).fail(reportJobJSONFailure);
+    if(jobFailed === false) {
+        $.getJSON(jobStatusUri).done(reportJobJSONDone).fail(reportJobJSONFailure);
+    }
+    if(jobFailed === true) {
+        console.error('Job has failed, will not check.');
+    }
 }
 
 /**
@@ -115,11 +121,14 @@ function showJobResults(data) {
  */
 function recheckJobJSONStatus() {
     console.log('In recheckJobJSONStatus()');
-    if (maxLoops !== 0 && totalLoops < maxLoops) {
+    if (maxLoops !== 0 && totalLoops < maxLoops && jobFailed === false) {
         timeOutId = setTimeout(checkJobJSONStatus, checkNextInterval);
     }
     if (maxLoops !== 0) {
         console.log('max: ' + maxLoops + ' current: ' + totalLoops);
+    }
+    if(jobFailed === true) {
+        console.error('Job has failed, will not do recheck.');
     }
     totalLoops++;
 }
@@ -131,6 +140,10 @@ function sendJobPOSTStart() {
     console.log('In sendJobPOSTStart()');
     if (jobRunRoutineStarted) {
         console.log('Import job already started!');
+        return;
+    }
+    if(jobFailed === true) {
+        console.log('Job has failed, will not start again.');
         return;
     }
     console.log('Job was started');
@@ -145,6 +158,10 @@ function sendJobPOSTStore() {
     console.log('In sendJobPOSTStore()');
     if (jobStorageRoutineStarted) {
         console.log('Store job already started!');
+        return;
+    }
+    if(jobFailed === true) {
+        console.log('Job has failed, will not start again.');
         return;
     }
     console.log('Storage job has started!');
@@ -162,8 +179,10 @@ function sendJobPOSTStore() {
  */
 function reportJobJSONFailure(xhr, status, error) {
     console.log('In reportJobJSONFailure()');
+    jobFailed = true;
     // cancel checking again for job status:
     clearTimeout(timeOutId);
+
 
     // hide status boxes:
     $('.statusbox').hide();

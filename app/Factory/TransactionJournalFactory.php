@@ -70,8 +70,10 @@ class TransactionJournalFactory
         $factory = app(TransactionFactory::class);
         $factory->setUser($this->user);
 
+        Log::debug(sprintf('Found %d transactions in array.', \count($data['transactions'])));
         /** @var array $trData */
-        foreach ($data['transactions'] as $trData) {
+        foreach ($data['transactions'] as $index => $trData) {
+            Log::debug(sprintf('Now storing transaction %d of %d', $index + 1, \count($data['transactions'])));
             $factory->createPair($journal, $trData);
         }
         $journal->completed = true;

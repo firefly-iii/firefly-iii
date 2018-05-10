@@ -288,7 +288,7 @@ class JobStatusControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->post(route('import.job.start', [$job->key]));
         $response->assertStatus(200);
-        $response->assertExactJson(['status' => 'NOK', 'message' => 'JobStatusController::start expects state "ready_to_run".']);
+        $response->assertExactJson(['status' => 'NOK', 'message' => 'JobStatusController::start expects status "ready_to_run".']);
     }
 
     /**
@@ -325,26 +325,6 @@ class JobStatusControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Import\JobStatusController
      */
-    public function testStoreInvalidState(): void
-    {
-        $job               = new ImportJob;
-        $job->user_id      = $this->user()->id;
-        $job->key          = 'Kfake_job_' . random_int(1, 1000);
-        $job->status       = 'some_bad_state';
-        $job->provider     = 'fake';
-        $job->transactions = [];
-        $job->file_type    = '';
-        $job->save();
-
-        $this->be($this->user());
-        $response = $this->post(route('import.job.store', [$job->key]));
-        $response->assertStatus(200);
-        $response->assertExactJson(['status' => 'NOK', 'message' => 'JobStatusController::start expects state "provider_finished".']);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Import\JobStatusController
-     */
     public function testStoreException(): void
     {
         $job               = new ImportJob;
@@ -371,5 +351,27 @@ class JobStatusControllerTest extends TestCase
         $response = $this->post(route('import.job.store', [$job->key]));
         $response->assertStatus(200);
         $response->assertExactJson(['status' => 'NOK', 'message' => 'The import storage routine crashed: Some storage exception.']);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Import\JobStatusController
+     */
+    public function testStoreInvalidState(): void
+    {
+        $job               = new ImportJob;
+        $job->user_id      = $this->user()->id;
+        $job->key          = 'Kfake_job_' . random_int(1, 1000);
+        $job->status       = 'some_bad_state';
+        $job->provider     = 'fake';
+        $job->transactions = [];
+        $job->file_type    = '';
+        $job->save();
+
+        $this->be($this->user());
+        $response = $this->post(route('import.job.store', [$job->key]));
+        $response->assertStatus(200);
+        $response->assertExactJson(
+            ['status' => 'NOK', 'message' => 'JobStatusController::start expects status "provider_finished" instead of "' . $job->status . '".']
+        );
     }
 }

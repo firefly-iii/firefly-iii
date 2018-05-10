@@ -174,11 +174,11 @@ class JobStatusController extends Controller
     public function store(ImportJob $importJob): JsonResponse
     {
         // catch impossible status:
-        $allowed = ['provider_finished', 'storing_data'];
+        $allowed = ['provider_finished', 'storing_data','error'];
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
             Log::error('Job is not ready.');
 
-            return response()->json(['status' => 'NOK', 'message' => 'JobStatusController::start expects status "provider_finished".']);
+            return response()->json(['status' => 'NOK', 'message' => sprintf('JobStatusController::start expects status "provider_finished" instead of "%s".', $importJob->status)]);
         }
 
         // set job to be storing data:

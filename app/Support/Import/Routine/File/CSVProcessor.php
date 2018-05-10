@@ -31,6 +31,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -59,6 +60,10 @@ class CSVProcessor implements FileProcessorInterface
     private $attachments;
     /** @var array */
     private $config;
+    /** @var CurrencyRepositoryInterface */
+    private $currencyRepos;
+    /** @var TransactionCurrency */
+    private $defaultCurrency;
     /** @var ImportJob */
     private $importJob;
     /** @var array */
@@ -101,13 +106,16 @@ class CSVProcessor implements FileProcessorInterface
     public function setJob(ImportJob $job): void
     {
         Log::debug('Now in setJob()');
-        $this->importJob    = $job;
-        $this->config       = $job->configuration;
-        $this->repository   = app(ImportJobRepositoryInterface::class);
-        $this->attachments  = app(AttachmentHelperInterface::class);
-        $this->accountRepos = app(AccountRepositoryInterface::class);
+        $this->importJob     = $job;
+        $this->config        = $job->configuration;
+        $this->repository    = app(ImportJobRepositoryInterface::class);
+        $this->attachments   = app(AttachmentHelperInterface::class);
+        $this->accountRepos  = app(AccountRepositoryInterface::class);
+        $this->currencyRepos = app(CurrencyRepositoryInterface::class);
         $this->repository->setUser($job->user);
         $this->accountRepos->setUser($job->user);
+        $this->currencyRepos->setUser($job->user);
+        $this->defaultCurrency = app('amount')->getDefaultCurrencyByUser($job->user);
 
     }
 
@@ -237,7 +245,8 @@ class CSVProcessor implements FileProcessorInterface
     /**
      * Based upon data in the importable, try to find or create the asset account account.
      *
-     * @param $importable
+     * @param int|null $accountId
+     * @param array    $accountData
      *
      * @return Account
      */
@@ -247,10 +256,15 @@ class CSVProcessor implements FileProcessorInterface
         if ((int)$accountId > 0) {
             // find asset account with this ID:
             $result = $this->accountRepos->findNull($accountId);
-            if (null !== $result) {
-                Log::debug(sprintf('Found account "%s" based on given ID %d. Return it!', $result->name, $accountId));
+            if (null !== $result && $result->accountType->type === AccountType::ASSET) {
+                Log::debug(sprintf('Found asset account "%s" based on given ID %d', $result->name, $accountId));
 
                 return $result;
+            }
+            if (null !== $result && $result->accountType->type !== AccountType::ASSET) {
+                Log::warning(
+                    sprintf('Found account "%s" based on given ID %d but its a %s, return nothing.', $result->name, $accountId, $result->accountType->type)
+                );
             }
         }
         // find by (respectively):
@@ -264,7 +278,7 @@ class CSVProcessor implements FileProcessorInterface
             $result = $this->accountRepos->$function($value, [AccountType::ASSET]);
             Log::debug(sprintf('Going to run %s() with argument "%s" (asset account)', $function, $value));
             if (null !== $result) {
-                Log::debug(sprintf('Found asset account "%s". Return it!', $result->name, $accountId));
+                Log::debug(sprintf('Found asset account "%s". Return it!', $result->name));
 
                 return $result;
             }
@@ -286,6 +300,49 @@ class CSVProcessor implements FileProcessorInterface
     }
 
     /**
+     * @param int|null $currencyId
+     * @param array    $currencyData
+     *
+     * @return TransactionCurrency|null
+     */
+    private function mapCurrency(?int $currencyId, array $currencyData): ?TransactionCurrency
+    {
+        if ((int)$currencyId > 0) {
+            $result = $this->currencyRepos->findNull($currencyId);
+            if (null !== $result) {
+                Log::debug(sprintf('Found currency %s based on ID, return it.', $result->code));
+
+                return $result;
+            }
+        }
+        // try to find it by all other fields.
+        $fields = ['code' => 'findByCodeNull', 'symbol' => 'findBySymbolNull', 'name' => 'findByNameNull'];
+        foreach ($fields as $field => $function) {
+            $value = $currencyData[$field];
+            if ('' === (string)$value) {
+                continue;
+            }
+            Log::debug(sprintf('Will search for currency using %s() and argument "%s".', $function, $value));
+            $result = $this->currencyRepos->$function($value);
+            if (null !== $result) {
+                Log::debug(sprintf('Found result: Currency #%d, code "%s"', $result->id, $result->code));
+
+                return $result;
+            }
+        }
+        // if still nothing, and fields not null, try to create it
+        $creation = [
+            'code'           => $currencyData['code'],
+            'name'           => $currencyData['name'],
+            'symbol'         => $currencyData['symbol'],
+            'decimal_places' => 2,
+        ];
+
+        // could be NULL
+        return $this->currencyRepos->store($creation);
+    }
+
+    /**
      * @param int|null $accountId
      * @param string   $amount
      * @param array    $accountData
@@ -294,24 +351,46 @@ class CSVProcessor implements FileProcessorInterface
      */
     private function mapOpposingAccount(?int $accountId, string $amount, array $accountData): Account
     {
-        Log::debug('Now in mapOpposingAccount()');
-        if ((int)$accountId > 0) {
-            // find any account with this ID:
-            $result = $this->accountRepos->findNull($accountId);
-            if (null !== $result) {
-                Log::debug(sprintf('Found account "%s" (%s) based on given ID %d. Return it!', $result->name, $result->accountType->type, $accountId));
-
-                return $result;
-            }
-        }
         // default assumption is we're looking for an expense account.
         $expectedType = AccountType::EXPENSE;
+        $result       = null;
         Log::debug(sprintf('Going to search for accounts of type %s', $expectedType));
         if (bccomp($amount, '0') === 1) {
             // more than zero.
             $expectedType = AccountType::REVENUE;
             Log::debug(sprintf('Because amount is %s, will instead search for accounts of type %s', $amount, $expectedType));
         }
+
+        Log::debug('Now in mapOpposingAccount()');
+        if ((int)$accountId > 0) {
+            // find any account with this ID:
+            $result = $this->accountRepos->findNull($accountId);
+            if (null !== $result && $result->accountType->type === $expectedType) {
+                Log::debug(sprintf('Found account "%s" (%s) based on given ID %d. Return it!', $result->name, $result->accountType->type, $accountId));
+
+                return $result;
+            }
+            if (null !== $result && $result->accountType->type !== $expectedType) {
+                Log::warning(
+                    sprintf(
+                        'Found account "%s" (%s) based on given ID %d, but need a %s. Return nothing.', $result->name, $result->accountType->type, $accountId,
+                        $expectedType
+                    )
+                );
+            }
+        }
+        // if result is not null, system has found an account
+        // but it's of the wrong type. If we dont have a name, use
+        // the result's name, iban in the search below.
+        if (null !== $result && '' === (string)$accountData['name']) {
+            Log::debug(sprintf('Will search for account with name "%s" instead of NULL.', $result->name));
+            $accountData['name'] = $result->name;
+        }
+        if (null !== $result && '' === $accountData['iban'] && '' !== (string)$result->iban) {
+            Log::debug(sprintf('Will search for account with IBAN "%s" instead of NULL.', $result->iban));
+            $accountData['iban'] = $result->iban;
+        }
+
 
         // first search for $expectedType, then find asset:
         $searchTypes = [$expectedType, AccountType::ASSET];
@@ -321,10 +400,10 @@ class CSVProcessor implements FileProcessorInterface
             $fields = ['iban' => 'findByIbanNull', 'number' => 'findByAccountNumber', 'name' => 'findByName'];
             foreach ($fields as $field => $function) {
                 $value = $accountData[$field];
-                if (null === $value) {
+                if ('' === (string)$value) {
                     continue;
                 }
-                Log::debug(sprintf('Will search for account of type "%s" using %s() and argument %s.', $type, $function, $value));
+                Log::debug(sprintf('Will search for account of type "%s" using %s() and argument "%s".', $type, $function, $value));
                 $result = $this->accountRepos->$function($value, [$type]);
                 if (null !== $result) {
                     Log::debug(sprintf('Found result: Account #%d, named "%s"', $result->id, $result->name));
@@ -335,7 +414,7 @@ class CSVProcessor implements FileProcessorInterface
         }
         // not found? Create it!
         $creation = [
-            'name'            => $accountData['name'],
+            'name'            => $accountData['name'] ?? '(no name)',
             'iban'            => $accountData['iban'],
             'accountNumber'   => $accountData['number'],
             'account_type_id' => null,
@@ -361,26 +440,40 @@ class CSVProcessor implements FileProcessorInterface
     {
         Log::debug('Now in parseImportables()');
         $array = [];
-        $total = count($importables);
+        $total = \count($importables);
         /** @var ImportTransaction $importable */
         foreach ($importables as $index => $importable) {
             Log::debug(sprintf('Now going to parse importable %d of %d', $index + 1, $total));
-            $array[] = $this->parseSingleImportable($importable);
+            $result = $this->parseSingleImportable($index, $importable);
+            if (null !== $result) {
+                $array[] = $result;
+            }
         }
 
         return $array;
     }
 
     /**
+     * @param int               $index
      * @param ImportTransaction $importable
      *
      * @return array
      * @throws FireflyException
      */
-    private function parseSingleImportable(ImportTransaction $importable): array
+    private function parseSingleImportable(int $index, ImportTransaction $importable): ?array
     {
 
-        $amount = $importable->calculateAmount();
+        $amount        = $importable->calculateAmount();
+        $foreignAmount = $importable->calculateForeignAmount();
+        if ('' === $amount) {
+            $amount = $foreignAmount;
+        }
+        if ('' === $amount) {
+            $this->repository->addErrorMessage($this->importJob, sprintf('No transaction amount information in row %d', $index + 1));
+
+            return null;
+        }
+
 
         /**
          * first finalise the amount. cehck debit en credit.
@@ -397,7 +490,7 @@ class CSVProcessor implements FileProcessorInterface
         $accountId         = $this->verifyObjectId('account-id', $importable->getAccountId());
         $billId            = $this->verifyObjectId('bill-id', $importable->getForeignCurrencyId());
         $budgetId          = $this->verifyObjectId('budget-id', $importable->getBudgetId());
-        $currencyId        = $this->verifyObjectId('currency-id', $importable->getForeignCurrencyId());
+        $currencyId        = $this->verifyObjectId('currency-id', $importable->getCurrencyId());
         $categoryId        = $this->verifyObjectId('category-id', $importable->getCategoryId());
         $foreignCurrencyId = $this->verifyObjectId('foreign-currency-id', $importable->getForeignCurrencyId());
         $opposingId        = $this->verifyObjectId('opposing-id', $importable->getOpposingId());
@@ -405,6 +498,12 @@ class CSVProcessor implements FileProcessorInterface
         //$account           = $this->mapAccount($accountId, $importable->getAccountData());
         $source      = $this->mapAssetAccount($accountId, $importable->getAccountData());
         $destination = $this->mapOpposingAccount($opposingId, $amount, $importable->getOpposingAccountData());
+        $currency    = $this->mapCurrency($currencyId, $importable->getCurrencyData());
+        $foreignCurrency = $this->mapCurrency($foreignCurrencyId, $importable->getForeignCurrencyData());
+        if (null === $currency) {
+            Log::debug(sprintf('Could not map currency, use default (%s)', $this->defaultCurrency->code));
+            $currency = $this->defaultCurrency;
+        }
 
         if (bccomp($amount, '0') === 1) {
             // amount is positive? Then switch:
@@ -473,7 +572,7 @@ class CSVProcessor implements FileProcessorInterface
             // transaction data:
             'transactions'       => [
                 [
-                    'currency_id'           => $currencyId, // todo what if null?
+                    'currency_id'           => $currency->id,
                     'currency_code'         => null,
                     'description'           => $importable->getDescription(),
                     'amount'                => $amount,
@@ -487,7 +586,7 @@ class CSVProcessor implements FileProcessorInterface
                     'destination_name'      => null,
                     'foreign_currency_id'   => $foreignCurrencyId,
                     'foreign_currency_code' => null,
-                    'foreign_amount'        => null, // todo get me.
+                    'foreign_amount'        => $foreignAmount, // todo get me.
                     'reconciled'            => false,
                     'identifier'            => 0,
                 ],
@@ -537,7 +636,7 @@ class CSVProcessor implements FileProcessorInterface
             $value        = trim($value);
             $originalRole = $this->config['column-roles'][$column] ?? '_ignore';
             Log::debug(sprintf('Now at column #%d (%s), value "%s"', $column, $originalRole, $value));
-            if (\strlen($value) > 0 && $originalRole !== '_ignore') {
+            if ($originalRole !== '_ignore' && \strlen($value) > 0) {
 
                 // is a mapped value present?
                 $mapped = $this->config['column-mapping-config'][$column][$value] ?? 0;

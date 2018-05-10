@@ -305,9 +305,9 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * @param array $data
      *
-     * @return TransactionCurrency
+     * @return TransactionCurrency|null
      */
-    public function store(array $data): TransactionCurrency
+    public function store(array $data): ?TransactionCurrency
     {
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);

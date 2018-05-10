@@ -333,8 +333,8 @@ class ImportArrayStorage
             }
             $toStore[] = $transaction;
         }
-
-        if (\count($toStore) === 0) {
+        $count = \count($toStore);
+        if ($count === 0) {
             Log::info('No transactions to store left!');
 
             return new Collection;
@@ -343,7 +343,8 @@ class ImportArrayStorage
         Log::debug('Going to store...');
         // now actually store them:
         $collection = new Collection;
-        foreach ($toStore as $store) {
+        foreach ($toStore as $index => $store) {
+            Log::debug(sprintf('Going to store entry %d of %d', $index + 1, $count));
             // convert the date to an object:
             $store['date'] = Carbon::createFromFormat('Y-m-d', $store['date']);
 
