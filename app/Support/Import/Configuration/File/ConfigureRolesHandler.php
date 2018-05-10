@@ -180,21 +180,20 @@ class ConfigureRolesHandler implements ConfigurationInterface
         }
 
 
-
         return new MessageBag;
     }
 
     /**
      * Extracts example data from a single row and store it in the class.
      *
-     * @param array $row
+     * @param array $line
      */
-    private function getExampleFromRow(array $row): void
+    private function getExampleFromLine(array $line): void
     {
-        foreach ($row as $index => $value) {
+        foreach ($line as $column => $value) {
             $value = trim($value);
             if (\strlen($value) > 0) {
-                $this->examples[$index][] = $value;
+                $this->examples[$column][] = $value;
             }
         }
     }
@@ -223,13 +222,13 @@ class ConfigureRolesHandler implements ConfigurationInterface
 
         // grab the records:
         $records = $stmt->process($reader);
-        /** @var array $row */
-        foreach ($records as $row) {
-            $row                = array_values($row);
-            $row                = $this->processSpecifics($row);
-            $count              = \count($row);
+        /** @var array $line */
+        foreach ($records as $line) {
+            $line               = array_values($line);
+            $line               = $this->processSpecifics($line);
+            $count              = \count($line);
             $this->totalColumns = $count > $this->totalColumns ? $count : $this->totalColumns;
-            $this->getExampleFromRow($row);
+            $this->getExampleFromLine($line);
         }
         // save column count:
         $this->saveColumCount();
@@ -361,11 +360,11 @@ class ConfigureRolesHandler implements ConfigurationInterface
     /**
      * if the user has configured specific fixes to be applied, they must be applied to the example data as well.
      *
-     * @param array $row
+     * @param array $line
      *
      * @return array
      */
-    private function processSpecifics(array $row): array
+    private function processSpecifics(array $line): array
     {
         $config    = $this->importJob->configuration;
         $specifics = $config['specifics'] ?? [];
@@ -373,10 +372,10 @@ class ConfigureRolesHandler implements ConfigurationInterface
         foreach ($names as $name) {
             /** @var SpecificInterface $specific */
             $specific = app('FireflyIII\Import\Specifics\\' . $name);
-            $row      = $specific->run($row);
+            $line     = $specific->run($line);
         }
 
-        return $row;
+        return $line;
 
     }
 

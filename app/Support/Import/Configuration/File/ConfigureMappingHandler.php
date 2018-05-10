@@ -180,10 +180,12 @@ class ConfigureMappingHandler implements ConfigurationInterface
         // in order to actually map we also need to read the FULL file.
         try {
             $reader = $this->getReader();
+            // @codeCoverageIgnoreStart
         } catch (Exception $e) {
             Log::error($e->getMessage());
             throw new FireflyException('Cannot get reader: ' . $e->getMessage());
         }
+        // @codeCoverageIgnoreEnd
 
         // get ALL values for the mappable columns from the CSV file:
         $columnConfig = $this->getValuesForMapping($reader, $config, $columnConfig);
