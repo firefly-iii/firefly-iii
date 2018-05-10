@@ -28,6 +28,7 @@ use FireflyIII\Jobs\MailError;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -79,6 +80,11 @@ class Handler extends ExceptionHandler
             return response()->json(['message' => 'Unauthenticated', 'exception' => 'AuthenticationException'], 401);
         }
 
+        if ($exception instanceof OAuthServerException && $request->expectsJson()) {
+            // somehow Laravel handler does not catch this:
+            return response()->json(['message' => $exception->getMessage(), 'exception' => 'OAuthServerException'], 401);
+        }
+
         if ($request->expectsJson()) {
             $isDebug = config('app.debug', false);
             if ($isDebug) {
@@ -96,7 +102,7 @@ class Handler extends ExceptionHandler
             return response()->json(['message' => 'Internal Firefly III Exception. See log files.', 'exception' => \get_class($exception)], 500);
         }
 
-        if ($exception instanceof FireflyException || $exception instanceof ErrorException) {
+        if ($exception instanceof FireflyException || $exception instanceof ErrorException || $exception instanceof OAuthServerException) {
             $isDebug = env('APP_DEBUG', false);
 
             return response()->view('errors.FireflyException', ['exception' => $exception, 'debug' => $isDebug], 500);
@@ -121,7 +127,13 @@ class Handler extends ExceptionHandler
     public function report(Exception $exception)
     {
         $doMailError = env('SEND_ERROR_MESSAGE', true);
-        if (($exception instanceof FireflyException || $exception instanceof ErrorException) && $doMailError) {
+        if (
+            (
+                $exception instanceof FireflyException
+                || $exception instanceof ErrorException
+                || $exception instanceof OAuthServerException
+            )
+            && $doMailError) {
             $userData = [
                 'id'    => 0,
                 'email' => 'unknown@example.com',
