@@ -61,17 +61,13 @@ class FileRoutine implements RoutineInterface
                 $processor->setJob($this->importJob);
                 $transactions = $processor->run();
 
-                // make processor run.
-                // then done!
-                // move to status 'processor_finished'.
-                // $this->repository->setStatus($this->importJob, 'provider_finished');
-                // $this->repository->setStage($this->importJob, 'final');
+                $this->repository->setStatus($this->importJob, 'provider_finished');
+                $this->repository->setStage($this->importJob, 'final');
+                $this->repository->setTransactions($this->importJob, $transactions);
                 break;
             default:
                 throw new FireflyException(sprintf('Import routine cannot handle stage "%s"', $this->importJob->stage));
         }
-
-        exit;
     }
 
     /**

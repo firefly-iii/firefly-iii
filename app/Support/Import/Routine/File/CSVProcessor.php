@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Import\Routine\File;
 
 use Carbon\Carbon;
+use Carbon\Exceptions\InvalidDateException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Account;
@@ -91,16 +92,7 @@ class CSVProcessor implements FileProcessorInterface
         // now validate all mapped values:
         $this->validateMappedValues();
 
-
-        $array = $this->parseImportables($importables);
-
-        echo '<pre>';
-        print_r($array);
-        print_r($importables);
-        print_r($lines);
-
-        exit;
-        die('here we are');
+        return $this->parseImportables($importables);
     }
 
     /**
@@ -401,6 +393,7 @@ class CSVProcessor implements FileProcessorInterface
          * pos = assume
          */
 
+        $transactionType   = 'unknown';
         $accountId         = $this->verifyObjectId('account-id', $importable->getAccountId());
         $billId            = $this->verifyObjectId('bill-id', $importable->getForeignCurrencyId());
         $budgetId          = $this->verifyObjectId('budget-id', $importable->getBudgetId());
@@ -410,19 +403,45 @@ class CSVProcessor implements FileProcessorInterface
         $opposingId        = $this->verifyObjectId('opposing-id', $importable->getOpposingId());
         // also needs amount to be final.
         //$account           = $this->mapAccount($accountId, $importable->getAccountData());
-        $asset    = $this->mapAssetAccount($accountId, $importable->getAccountData());
-        $sourceId = $asset->id;
-        $opposing = $this->mapOpposingAccount($opposingId, $amount, $importable->getOpposingAccountData());
-        $destId   = $opposing->id;
+        $source      = $this->mapAssetAccount($accountId, $importable->getAccountData());
+        $destination = $this->mapOpposingAccount($opposingId, $amount, $importable->getOpposingAccountData());
 
         if (bccomp($amount, '0') === 1) {
             // amount is positive? Then switch:
-            [$destId, $sourceId] = [$sourceId, $destId];
+            [$destination, $source] = [$source, $destination];
         }
 
+        if ($source->accountType->type === AccountType::ASSET && $destination->accountType->type === AccountType::ASSET) {
+            $transactionType = 'transfer';
+        }
+        if ($source->accountType->type === AccountType::REVENUE) {
+            $transactionType = 'deposit';
+        }
+        if ($destination->accountType->type === AccountType::EXPENSE) {
+            $transactionType = 'withdrawal';
+        }
+        if ($transactionType === 'unknown') {
+            Log::error(
+                sprintf(
+                    'Cannot determine transaction type. Source account is a %s, destination is a %s',
+                    $source->accountType->type, $destination->accountType->type
+                ), ['source' => $source->toArray(), 'dest' => $destination->toArray()]
+            );
+        }
+
+        try {
+            $date = Carbon::createFromFormat($this->config['date-format'] ?? 'Ymd', $importable->getDate());
+        } catch (InvalidDateException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $date = new Carbon;
+        }
+
+        $dateStr = $date->format('Y-m-d');
+
         return [
-            'type'               => 'unknown', // todo
-            'date'               => Carbon::createFromFormat($this->config['date-format'] ?? 'Ymd', $importable->getDate()),
+            'type'               => $transactionType,
+            'date'               => $dateStr,
             'tags'               => $importable->getTags(), // todo make sure its filled.
             'user'               => $this->importJob->user_id,
             'notes'              => $importable->getNote(),
@@ -462,9 +481,9 @@ class CSVProcessor implements FileProcessorInterface
                     'budget_name'           => null === $budgetId ? $importable->getBudgetName() : null,
                     'category_id'           => $categoryId,
                     'category_name'         => null === $categoryId ? $importable->getCategoryName() : null,
-                    'source_id'             => $sourceId,
+                    'source_id'             => $source->id,
                     'source_name'           => null,
-                    'destination_id'        => $destId,
+                    'destination_id'        => $destination->id,
                     'destination_name'      => null,
                     'foreign_currency_id'   => $foreignCurrencyId,
                     'foreign_currency_code' => null,
@@ -474,6 +493,7 @@ class CSVProcessor implements FileProcessorInterface
                 ],
             ],
         ];
+
     }
 
     /**
