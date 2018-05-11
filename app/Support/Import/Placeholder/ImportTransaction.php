@@ -36,71 +36,71 @@ use Log;
 class ImportTransaction
 {
     /** @var string */
-    private $accountBic;
+    public $accountBic;
     /** @var string */
-    private $accountIban;
+    public $accountIban;
     /** @var int */
-    private $accountId;
+    public $accountId;
     /** @var string */
-    private $accountName;
+    public $accountName;
     /** @var string */
-    private $accountNumber;
+    public $accountNumber;
     /** @var string */
-    private $amount;
+    public $amount;
     /** @var string */
-    private $amountCredit;
+    public $amountCredit;
     /** @var string */
-    private $amountDebit;
+    public $amountDebit;
     /** @var int */
-    private $billId;
+    public $billId;
     /** @var string */
-    private $billName;
+    public $billName;
     /** @var int */
-    private $budgetId;
+    public $budgetId;
     /** @var string */
-    private $budgetName;
+    public $budgetName;
     /** @var int */
-    private $categoryId;
+    public $categoryId;
     /** @var string */
-    private $categoryName;
+    public $categoryName;
     /** @var string */
-    private $currencyCode;
+    public $currencyCode;
     /** @var int */
-    private $currencyId;
+    public $currencyId;
     /** @var string */
-    private $currencyName;
+    public $currencyName;
     /** @var string */
-    private $currencySymbol;
+    public $currencySymbol;
     /** @var string */
-    private $date;
+    public $date;
     /** @var string */
-    private $description;
+    public $description;
     /** @var string */
-    private $externalId;
+    public $externalId;
     /** @var string */
-    private $foreignAmount;
+    public $foreignAmount;
     /** @var string */
-    private $foreignCurrencyCode;
+    public $foreignCurrencyCode;
     /** @var int */
-    private $foreignCurrencyId;
+    public $foreignCurrencyId;
     /** @var array */
-    private $meta;
+    public $meta;
     /** @var array */
-    private $modifiers;
+    public $modifiers;
     /** @var string */
-    private $note;
+    public $note;
     /** @var string */
-    private $opposingBic;
+    public $opposingBic;
     /** @var string */
-    private $opposingIban;
+    public $opposingIban;
     /** @var int */
-    private $opposingId;
+    public $opposingId;
     /** @var string */
-    private $opposingName;
+    public $opposingName;
     /** @var string */
-    private $opposingNumber;
+    public $opposingNumber;
     /** @var array */
-    private $tags;
+    public $tags;
 
     /**
      * ImportTransaction constructor.
@@ -133,9 +133,11 @@ class ImportTransaction
     {
         switch ($columnValue->getRole()) {
             default:
+                // @codeCoverageIgnoreStart
                 throw new FireflyException(
                     sprintf('ImportTransaction cannot handle role "%s" with value "%s"', $columnValue->getRole(), $columnValue->getValue())
                 );
+            // @codeCoverageIgnoreEnd
             case 'account-id':
                 // could be the result of a mapping?
                 $this->accountId = $this->getMappedValue($columnValue);
@@ -152,10 +154,10 @@ class ImportTransaction
             case 'account-number':
                 $this->accountNumber = $columnValue->getValue();
                 break;
-            case'amount_debit':
+            case 'amount_debit':
                 $this->amountDebit = $columnValue->getValue();
                 break;
-            case'amount_credit':
+            case 'amount_credit':
                 $this->amountCredit = $columnValue->getValue();
                 break;
             case 'amount':
@@ -225,10 +227,10 @@ class ImportTransaction
                 $this->date = $columnValue->getValue();
                 break;
             case 'description':
-                $this->description .= $columnValue->getValue();
+                $this->description = trim($this->description . ' ' . $columnValue->getValue());
                 break;
             case 'note':
-                $this->note .= $columnValue->getValue();
+                $this->note = trim($this->note . ' ' . $columnValue->getValue());
                 break;
 
             case 'opposing-id':
@@ -246,19 +248,17 @@ class ImportTransaction
             case 'opposing-number':
                 $this->opposingNumber = $columnValue->getValue();
                 break;
-
             case 'rabo-debit-credit':
             case 'ing-debit-credit':
                 $this->modifiers[$columnValue->getRole()] = $columnValue->getValue();
                 break;
-
             case 'tags-comma':
-                // todo split using pre-processor.
-                $this->tags = $columnValue->getValue();
+                $tags       = explode(',', $columnValue->getValue());
+                $this->tags = array_unique(array_merge($this->tags, $tags));
                 break;
             case 'tags-space':
-                // todo split using pre-processor.
-                $this->tags = $columnValue->getValue();
+                $tags       = explode(' ', $columnValue->getValue());
+                $this->tags = array_unique(array_merge($this->tags, $tags));
                 break;
             case '_ignore':
                 break;
@@ -275,13 +275,7 @@ class ImportTransaction
     public function calculateAmount(): string
     {
         Log::debug('Now in importTransaction->calculateAmount()');
-        $info = $this->selectAmountInput();
-
-        if (0 === \count($info)) {
-            Log::error('No amount information for this row.');
-
-            return '';
-        }
+        $info  = $this->selectAmountInput();
         $class = $info['class'] ?? '';
         if ('' === $class) {
             Log::error('No amount information (conversion class) for this row.');
@@ -331,6 +325,7 @@ class ImportTransaction
     {
         if (null === $this->foreignAmount) {
             Log::debug('ImportTransaction holds no foreign amount info.');
+
             return '';
         }
         /** @var ConverterInterface $amountConverter */
@@ -364,6 +359,7 @@ class ImportTransaction
     /**
      * This array is being used to map the account the user is using.
      *
+     * @codeCoverageIgnore
      * @return array
      */
     public function getAccountData(): array
@@ -377,62 +373,7 @@ class ImportTransaction
     }
 
     /**
-     * @return int
-     */
-    public function getAccountId(): int
-    {
-        return $this->accountId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getBillId(): int
-    {
-        return $this->billId;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getBillName(): ?string
-    {
-        return $this->billName;
-    }
-
-    /**
-     * @return int
-     */
-    public function getBudgetId(): int
-    {
-        return $this->budgetId;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getBudgetName(): ?string
-    {
-        return $this->budgetName;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCategoryId(): int
-    {
-        return $this->categoryId;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getCategoryName(): ?string
-    {
-        return $this->categoryName;
-    }
-
-    /**
+     * @codeCoverageIgnore
      * @return array
      */
     public function getCurrencyData(): array
@@ -445,54 +386,7 @@ class ImportTransaction
     }
 
     /**
-     * @return int
-     */
-    public function getCurrencyId(): int
-    {
-        return $this->currencyId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDate(): string
-    {
-        return $this->date;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @return int
-     */
-    public function getForeignCurrencyId(): int
-    {
-        return $this->foreignCurrencyId;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMeta(): array
-    {
-        return $this->meta;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNote(): string
-    {
-        return $this->note;
-    }
-
-    /**
+     * @codeCoverageIgnore
      * @return array
      */
     public function getOpposingAccountData(): array
@@ -503,25 +397,6 @@ class ImportTransaction
             'number' => $this->opposingNumber,
             'bic'    => $this->opposingBic,
         ];
-    }
-
-    /**
-     * @return int
-     */
-    public function getOpposingId(): int
-    {
-        return $this->opposingId;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTags(): array
-    {
-        return [];
-
-        // todo make sure this is an array
-        return $this->tags;
     }
 
     /**

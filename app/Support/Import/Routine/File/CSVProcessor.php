@@ -29,7 +29,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Attachment;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -40,10 +39,6 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Placeholder\ColumnValue;
 use FireflyIII\Support\Import\Placeholder\ImportTransaction;
-use Illuminate\Support\Collection;
-use League\Csv\Exception;
-use League\Csv\Reader;
-use League\Csv\Statement;
 use Log;
 
 
@@ -81,23 +76,40 @@ class CSVProcessor implements FileProcessorInterface
     {
         Log::debug('Now in CSVProcessor() run');
 
-        // in order to actually map we also need to read the FULL file.
-        try {
-            $reader = $this->getReader();
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            throw new FireflyException('Cannot get reader: ' . $e->getMessage());
-        }
-        // get all lines from file:
-        $lines = $this->getLines($reader);
+        // create separate objects to handle separate tasks:
+        /** @var LineReader $lineReader */
+        $lineReader = app(LineReader::class);
+        $lineReader->setImportJob($this->importJob);
+        $lines = $lineReader->getLines();
 
+        // convert each line into a small set of "ColumnValue" objects,
+        // joining each with its mapped counterpart.
+        /** @var MappingConverger $mappingConverger */
+        $mappingConverger = app(MappingConverger::class);
+        $mappingConverger->setImportJob($this->importJob);
+        $converged = $mappingConverger->converge($lines);
+
+        // validate mapped values:
+        /** @var MappedValuesValidator $validator */
+        $validator    = app(MappedValuesValidator::class);
+        $mappedValues = $validator->validate($mappingConverger->getMappedValues());
+
+        // make import transaction things from these objects.
+        /** @var ImportableCreator $creator */
+        $creator     = app(ImportableCreator::class);
+        $importables = $creator->convertSets($converged);
+
+        // todo parse importables from $importables and $mappedValues
+
+
+        // from here.
         // make import objects, according to their role:
-        $importables = $this->processLines($lines);
+        //$importables = $this->processLines($lines);
 
         // now validate all mapped values:
-        $this->validateMappedValues();
+        //$this->validateMappedValues();
 
-        return $this->parseImportables($importables);
+        //return $this->parseImportables($importables);
     }
 
     /**
@@ -117,57 +129,6 @@ class CSVProcessor implements FileProcessorInterface
         $this->currencyRepos->setUser($job->user);
         $this->defaultCurrency = app('amount')->getDefaultCurrencyByUser($job->user);
 
-    }
-
-    /**
-     * Returns all lines from the CSV file.
-     *
-     * @param Reader $reader
-     *
-     * @return array
-     * @throws FireflyException
-     */
-    private function getLines(Reader $reader): array
-    {
-        Log::debug('now in getLines()');
-        $offset = isset($this->config['has-headers']) && $this->config['has-headers'] === true ? 1 : 0;
-        try {
-            $stmt = (new Statement)->offset($offset);
-        } catch (Exception $e) {
-            throw new FireflyException(sprintf('Could not execute statement: %s', $e->getMessage()));
-        }
-        $results = $stmt->process($reader);
-        $lines   = [];
-        foreach ($results as $line) {
-            $lines[] = array_values($line);
-        }
-
-        return $lines;
-    }
-
-    /**
-     * Return an instance of a CSV file reader so content of the file can be read.
-     *
-     * @throws \League\Csv\Exception
-     */
-    private function getReader(): Reader
-    {
-        Log::debug('Now in getReader()');
-        $content = '';
-        /** @var Collection $collection */
-        $collection = $this->importJob->attachments;
-        /** @var Attachment $attachment */
-        foreach ($collection as $attachment) {
-            if ($attachment->filename === 'import_file') {
-                $content = $this->attachments->getAttachmentContent($attachment);
-                break;
-            }
-        }
-        $config = $this->repository->getConfiguration($this->importJob);
-        $reader = Reader::createFromString($content);
-        $reader->setDelimiter($config['delimiter']);
-
-        return $reader;
     }
 
     /**
@@ -496,9 +457,9 @@ class CSVProcessor implements FileProcessorInterface
         $opposingId        = $this->verifyObjectId('opposing-id', $importable->getOpposingId());
         // also needs amount to be final.
         //$account           = $this->mapAccount($accountId, $importable->getAccountData());
-        $source      = $this->mapAssetAccount($accountId, $importable->getAccountData());
-        $destination = $this->mapOpposingAccount($opposingId, $amount, $importable->getOpposingAccountData());
-        $currency    = $this->mapCurrency($currencyId, $importable->getCurrencyData());
+        $source          = $this->mapAssetAccount($accountId, $importable->getAccountData());
+        $destination     = $this->mapOpposingAccount($opposingId, $amount, $importable->getOpposingAccountData());
+        $currency        = $this->mapCurrency($currencyId, $importable->getCurrencyData());
         $foreignCurrency = $this->mapCurrency($foreignCurrencyId, $importable->getForeignCurrencyData());
         if (null === $currency) {
             Log::debug(sprintf('Could not map currency, use default (%s)', $this->defaultCurrency->code));
@@ -595,129 +556,6 @@ class CSVProcessor implements FileProcessorInterface
 
     }
 
-    /**
-     * Process all lines in the CSV file. Each line is processed separately.
-     *
-     * @param array $lines
-     *
-     * @return array
-     * @throws FireflyException
-     */
-    private function processLines(array $lines): array
-    {
-        Log::debug('Now in processLines()');
-        $processed = [];
-        $count     = \count($lines);
-        foreach ($lines as $index => $line) {
-            Log::debug(sprintf('Now at line #%d of #%d', $index, $count));
-            $processed[] = $this->processSingleLine($line);
-        }
-
-        return $processed;
-    }
-
-    /**
-     * Process a single line in the CSV file.
-     * Each column is processed separately.
-     *
-     * @param array $line
-     * @param array $roles
-     *
-     * @return ImportTransaction
-     * @throws FireflyException
-     */
-    private function processSingleLine(array $line): ImportTransaction
-    {
-        Log::debug('Now in processSingleLine()');
-        $transaction = new ImportTransaction;
-        // todo run all specifics on row.
-        foreach ($line as $column => $value) {
-
-            $value        = trim($value);
-            $originalRole = $this->config['column-roles'][$column] ?? '_ignore';
-            Log::debug(sprintf('Now at column #%d (%s), value "%s"', $column, $originalRole, $value));
-            if ($originalRole !== '_ignore' && \strlen($value) > 0) {
-
-                // is a mapped value present?
-                $mapped = $this->config['column-mapping-config'][$column][$value] ?? 0;
-                // the role might change.
-                $role = $this->getRoleForColumn($column, $mapped);
-
-                $columnValue = new ColumnValue;
-                $columnValue->setValue($value);
-                $columnValue->setRole($role);
-                $columnValue->setMappedValue($mapped);
-                $columnValue->setOriginalRole($originalRole);
-                $transaction->addColumnValue($columnValue);
-            }
-            if ('' === $value) {
-                Log::debug('Column skipped because value is empty.');
-            }
-        }
-
-        return $transaction;
-    }
-
-    /**
-     * For each value that has been mapped, this method will check if the mapped value(s) are actually existing
-     *
-     * User may indicate that he wants his categories mapped to category #3, #4, #5 but if #5 is owned by another
-     * user it will be removed.
-     *
-     * @throws FireflyException
-     */
-    private function validateMappedValues()
-    {
-        Log::debug('Now in validateMappedValues()');
-        foreach ($this->mappedValues as $role => $values) {
-            $values = array_unique($values);
-            if (count($values) > 0) {
-                switch ($role) {
-                    default:
-                        throw new FireflyException(sprintf('Cannot validate mapped values for role "%s"', $role));
-                    case 'opposing-id':
-                    case 'account-id':
-                        $set                       = $this->accountRepos->getAccountsById($values);
-                        $valid                     = $set->pluck('id')->toArray();
-                        $this->mappedValues[$role] = $valid;
-                        break;
-                    case 'currency-id':
-                    case 'foreign-currency-id':
-                        /** @var CurrencyRepositoryInterface $repository */
-                        $repository = app(CurrencyRepositoryInterface::class);
-                        $repository->setUser($this->importJob->user);
-                        $set                       = $repository->getByIds($values);
-                        $valid                     = $set->pluck('id')->toArray();
-                        $this->mappedValues[$role] = $valid;
-                        break;
-                    case 'bill-id':
-                        /** @var BillRepositoryInterface $repository */
-                        $repository = app(BillRepositoryInterface::class);
-                        $repository->setUser($this->importJob->user);
-                        $set                       = $repository->getByIds($values);
-                        $valid                     = $set->pluck('id')->toArray();
-                        $this->mappedValues[$role] = $valid;
-                        break;
-                    case 'budget-id':
-                        /** @var BudgetRepositoryInterface $repository */
-                        $repository = app(BudgetRepositoryInterface::class);
-                        $repository->setUser($this->importJob->user);
-                        $set                       = $repository->getByIds($values);
-                        $valid                     = $set->pluck('id')->toArray();
-                        $this->mappedValues[$role] = $valid;
-                        break;
-                    case 'category-id':
-                        /** @var CategoryRepositoryInterface $repository */
-                        $repository = app(CategoryRepositoryInterface::class);
-                        $repository->setUser($this->importJob->user);
-                        $set                       = $repository->getByIds($values);
-                        $valid                     = $set->pluck('id')->toArray();
-                        $this->mappedValues[$role] = $valid;
-                        break;
-                }
-            }
-        }
-    }
 
     /**
      * A small function that verifies if this particular key (ID) is present in the list

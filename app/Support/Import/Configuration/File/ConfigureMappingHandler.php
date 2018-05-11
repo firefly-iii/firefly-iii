@@ -229,7 +229,7 @@ class ConfigureMappingHandler implements ConfigurationInterface
         $preProcessClass = config(sprintf('csv.import_roles.%s.pre-process-mapper', $column));
 
         if (null !== $hasPreProcess && true === $hasPreProcess && null !== $preProcessClass) {
-            $name = sprintf('\\FireflyIII\\Import\\MapperPreProcess\\%s', $preProcessClass);
+            $name = sprintf('FireflyIII\\Import\\MapperPreProcess\\%s', $preProcessClass);
         }
 
         return $name;
