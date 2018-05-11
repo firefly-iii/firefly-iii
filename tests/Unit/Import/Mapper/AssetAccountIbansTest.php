@@ -38,7 +38,7 @@ class AssetAccountIbansTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Mapper\AssetAccountIbans::getMap()
      */
-    public function testGetMapBasic()
+    public function testGetMapBasic(): void
     {
         $one        = new Account;
         $one->id    = 17;

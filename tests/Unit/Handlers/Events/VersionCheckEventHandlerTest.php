@@ -43,7 +43,7 @@ class VersionCheckEventHandlerTest extends TestCase
     /**
      *
      */
-    public function testCheckForUpdatesError()
+    public function testCheckForUpdatesError(): void
     {
         $updateConfig       = new Configuration;
         $updateConfig->data = 1;
@@ -73,7 +73,7 @@ class VersionCheckEventHandlerTest extends TestCase
      * @covers \FireflyIII\Events\RequestedVersionCheckStatus
      * @covers \FireflyIII\Handlers\Events\VersionCheckEventHandler
      */
-    public function testCheckForUpdatesNewer()
+    public function testCheckForUpdatesNewer(): void
     {
         $updateConfig       = new Configuration;
         $updateConfig->data = 1;
@@ -106,7 +106,7 @@ class VersionCheckEventHandlerTest extends TestCase
     /**
      *
      */
-    public function testCheckForUpdatesNoAdmin()
+    public function testCheckForUpdatesNoAdmin(): void
     {
         $updateConfig       = new Configuration;
         $updateConfig->data = 1;
@@ -125,7 +125,7 @@ class VersionCheckEventHandlerTest extends TestCase
     /**
      *
      */
-    public function testCheckForUpdatesNoPermission()
+    public function testCheckForUpdatesNoPermission(): void
     {
         $updateConfig       = new Configuration;
         $updateConfig->data = -1;
@@ -148,7 +148,7 @@ class VersionCheckEventHandlerTest extends TestCase
     /**
      *
      */
-    public function testCheckForUpdatesTooRecent()
+    public function testCheckForUpdatesTooRecent(): void
     {
         $updateConfig       = new Configuration;
         $updateConfig->data = 1;

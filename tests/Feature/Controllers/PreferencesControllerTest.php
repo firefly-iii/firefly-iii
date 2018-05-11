@@ -30,7 +30,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Tests\TestCase;
-use Preferences;
+
 /**
  * Class PreferencesControllerTest
  *
@@ -54,7 +54,7 @@ class PreferencesControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\PreferencesController::index
      * @covers \FireflyIII\Http\Controllers\PreferencesController::__construct
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -71,7 +71,7 @@ class PreferencesControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\PreferencesController::postIndex
      */
-    public function testPostIndex()
+    public function testPostIndex(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);

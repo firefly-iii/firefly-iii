@@ -57,7 +57,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BudgetController::amount
      */
-    public function testAmount()
+    public function testAmount(): void
     {
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
@@ -77,7 +77,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BudgetController::amount
      */
-    public function testAmountZero()
+    public function testAmountZero(): void
     {
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
@@ -96,7 +96,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BudgetController::create
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
@@ -113,7 +113,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BudgetController::delete
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
@@ -130,7 +130,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BudgetController::destroy
      */
-    public function testDestroy()
+    public function testDestroy(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -149,7 +149,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BudgetController::edit
      */
-    public function testEdit()
+    public function testEdit(): void
     {
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
@@ -170,7 +170,7 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testIndex(string $range)
+    public function testIndex(string $range): void
     {
         // mock stuff
         $budget      = factory(Budget::class)->make();
@@ -216,7 +216,7 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testIndexWithDate(string $range)
+    public function testIndexWithDate(string $range): void
     {
         // mock stuff
         $budget      = factory(Budget::class)->make();
@@ -262,7 +262,7 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testIndexWithInvalidDate(string $range)
+    public function testIndexWithInvalidDate(string $range): void
     {
         // mock stuff
         $budget      = factory(Budget::class)->make();
@@ -304,7 +304,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BudgetController::infoIncome
      */
-    public function testInfoIncome()
+    public function testInfoIncome(): void
     {
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -325,7 +325,7 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testInfoIncomeExpanded(string $range)
+    public function testInfoIncomeExpanded(string $range): void
     {
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -348,7 +348,7 @@ class BudgetControllerTest extends TestCase
      * @param string $range
      *
      */
-    public function testNoBudget(string $range)
+    public function testNoBudget(string $range): void
     {
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
@@ -383,7 +383,7 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testNoBudgetAll(string $range)
+    public function testNoBudgetAll(string $range): void
     {
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
@@ -420,7 +420,7 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testNoBudgetDate(string $range)
+    public function testNoBudgetDate(string $range): void
     {
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
@@ -452,7 +452,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BudgetController::postUpdateIncome
      */
-    public function testPostUpdateIncome()
+    public function testPostUpdateIncome(): void
     {
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
@@ -474,7 +474,7 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testShow(string $range)
+    public function testShow(string $range): void
     {
         // mock stuff
 
@@ -514,7 +514,7 @@ class BudgetControllerTest extends TestCase
      * @covers                   \FireflyIII\Http\Controllers\BudgetController::showByBudgetLimit
      * @expectedExceptionMessage This budget limit is not part of
      */
-    public function testShowByBadBudgetLimit()
+    public function testShowByBadBudgetLimit(): void
     {
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
@@ -532,7 +532,7 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testShowByBudgetLimit(string $range)
+    public function testShowByBudgetLimit(string $range): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -568,7 +568,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BudgetController::store
      */
-    public function testStore()
+    public function testStore(): void
     {
         // mock stuff
         $budget       = factory(Budget::class)->make();
@@ -593,7 +593,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BudgetController::update
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         // mock stuff
         $budget       = factory(Budget::class)->make();
@@ -619,7 +619,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BudgetController::updateIncome
      */
-    public function testUpdateIncome()
+    public function testUpdateIncome(): void
     {
         // must be in list
         $this->be($this->user());

@@ -26,6 +26,7 @@ namespace Tests\Unit\Support\Import\Configuration\File;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Import\Mapper\Budgets;
+use FireflyIII\Import\MapperPreProcess\TagsSpace;
 use FireflyIII\Import\Specifics\IngDescription;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\ImportJob;
@@ -333,7 +334,7 @@ class ConfigureMappingHandlerTest extends TestCase
         $job->save();
 
         $combinations = [
-            ['role' => 'tags-space', 'expected' => '\\FireflyIII\\Import\\MapperPreProcess\\TagsSpace'], // tags- space has a pre-processor. Return it.
+            ['role' => 'tags-space', 'expected' => TagsSpace::class], // tags- space has a pre-processor. Return it.
             ['role' => 'description', 'expected' => ''], // description has not.
             ['role' => 'no-such-role', 'expected' => ''], // not existing role has not.
         ];

@@ -44,7 +44,7 @@ class JournalUpdateServiceTest extends TestCase
      * @covers \FireflyIII\Services\Internal\Update\JournalUpdateService
      * @covers \FireflyIII\Services\Internal\Support\JournalServiceTrait
      */
-    public function testUpdateBasic()
+    public function testUpdateBasic(): void
     {
         // mock other stuff:
         $transactionFactory = $this->mock(TransactionFactory::class);
@@ -86,7 +86,7 @@ class JournalUpdateServiceTest extends TestCase
      * @covers \FireflyIII\Services\Internal\Update\JournalUpdateService
      * @covers \FireflyIII\Services\Internal\Support\JournalServiceTrait
      */
-    public function testUpdateBasicEmptyNote()
+    public function testUpdateBasicEmptyNote(): void
     {
         // mock other stuff:
         $transactionFactory = $this->mock(TransactionFactory::class);
@@ -128,7 +128,7 @@ class JournalUpdateServiceTest extends TestCase
     /**
      * @covers \FireflyIII\Services\Internal\Update\JournalUpdateService
      */
-    public function testUpdateBudget()
+    public function testUpdateBudget(): void
     {
         $budget  = $this->user()->budgets()->first();
         $service = $this->mock(TransactionUpdateService::class);
@@ -151,7 +151,7 @@ class JournalUpdateServiceTest extends TestCase
     /**
      * @covers \FireflyIII\Services\Internal\Update\JournalUpdateService
      */
-    public function testUpdateCategory()
+    public function testUpdateCategory(): void
     {
         $service = $this->mock(TransactionUpdateService::class);
         $service->shouldReceive('setUser');
@@ -175,7 +175,7 @@ class JournalUpdateServiceTest extends TestCase
      * @covers \FireflyIII\Services\Internal\Update\JournalUpdateService
      * @covers \FireflyIII\Services\Internal\Support\JournalServiceTrait
      */
-    public function testUpdateLotsOfTransactions()
+    public function testUpdateLotsOfTransactions(): void
     {
         // mock other stuff:
         $transactionFactory = $this->mock(TransactionFactory::class);

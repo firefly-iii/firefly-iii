@@ -52,7 +52,7 @@ class AccountControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController::delete
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         // mock stuff:
         $repository    = $this->mock(AccountRepositoryInterface::class);
@@ -76,7 +76,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\AccountController::index
      * @covers \FireflyIII\Api\V1\Controllers\AccountController::mapTypes
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         // create stuff
         $accounts = factory(Account::class, 10)->create();
@@ -115,7 +115,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Requests\AccountRequest::rules
      * @covers \FireflyIII\Api\V1\Requests\AccountRequest::getAll
      */
-    public function testInvalidBalance()
+    public function testInvalidBalance(): void
     {
         // mock repositories
         $repository    = $this->mock(AccountRepositoryInterface::class);
@@ -157,7 +157,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Requests\AccountRequest::rules
      * @covers \FireflyIII\Api\V1\Requests\AccountRequest::getAll
      */
-    public function testNoCreditCardData()
+    public function testNoCreditCardData(): void
     {
         // mock repositories
         $repository    = $this->mock(AccountRepositoryInterface::class);
@@ -199,7 +199,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Requests\AccountRequest::rules
      * @covers \FireflyIII\Api\V1\Requests\AccountRequest::getAll
      */
-    public function testNoCurrencyInfo()
+    public function testNoCurrencyInfo(): void
     {
         // mock repositories
         $repository    = $this->mock(AccountRepositoryInterface::class);
@@ -236,7 +236,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\AccountController::show
      */
 
-    public function testShow()
+    public function testShow(): void
     {
         // create stuff
         $account = $this->user()->accounts()->first();
@@ -273,7 +273,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Requests\AccountRequest::rules
      * @covers \FireflyIII\Api\V1\Requests\AccountRequest::getAll
      */
-    public function testStoreNotUnique()
+    public function testStoreNotUnique(): void
     {
         // mock repositories
         $repository    = $this->mock(AccountRepositoryInterface::class);
@@ -315,7 +315,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Requests\AccountRequest::rules
      * @covers \FireflyIII\Api\V1\Requests\AccountRequest::getAll
      */
-    public function testStoreValid()
+    public function testStoreValid(): void
     {
         // mock repositories
         $repository    = $this->mock(AccountRepositoryInterface::class);
@@ -359,7 +359,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Requests\AccountRequest::rules
      * @covers \FireflyIII\Api\V1\Requests\AccountRequest::getAll
      */
-    public function testStoreWithCurrencyCode()
+    public function testStoreWithCurrencyCode(): void
     {
         // mock repositories
         $repository    = $this->mock(AccountRepositoryInterface::class);
@@ -405,7 +405,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\AccountController::update
      * @covers \FireflyIII\Api\V1\Requests\AccountRequest::rules
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         // mock repositories
         $repository    = $this->mock(AccountRepositoryInterface::class);
@@ -448,7 +448,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\AccountController::update
      * @covers \FireflyIII\Api\V1\Requests\AccountRequest::rules
      */
-    public function testUpdateCurrencyCode()
+    public function testUpdateCurrencyCode(): void
     {
         // mock repositories
         $repository    = $this->mock(AccountRepositoryInterface::class);

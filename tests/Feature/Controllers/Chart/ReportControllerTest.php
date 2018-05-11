@@ -51,7 +51,7 @@ class ReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Chart\ReportController::arraySum
      * @covers \FireflyIII\Http\Controllers\Chart\ReportController::__construct
      */
-    public function testNetWorth()
+    public function testNetWorth(): void
     {
         $generator = $this->mock(GeneratorInterface::class);
 
@@ -67,7 +67,7 @@ class ReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Chart\ReportController::operations
      * @covers \FireflyIII\Http\Controllers\Chart\ReportController::getChartData
      */
-    public function testOperations()
+    public function testOperations(): void
     {
         $generator = $this->mock(GeneratorInterface::class);
         $tasker    = $this->mock(AccountTaskerInterface::class);
@@ -86,7 +86,7 @@ class ReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Chart\ReportController::sum
      * @covers \FireflyIII\Http\Controllers\Chart\ReportController::getChartData
      */
-    public function testSum()
+    public function testSum(): void
     {
         $generator = $this->mock(GeneratorInterface::class);
         $tasker    = $this->mock(AccountTaskerInterface::class);

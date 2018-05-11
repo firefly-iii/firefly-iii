@@ -52,7 +52,7 @@ class BillControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\BillController
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         // mock stuff:
         $repository = $this->mock(BillRepositoryInterface::class);
@@ -73,7 +73,7 @@ class BillControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\BillController::__construct
      * @covers \FireflyIII\Api\V1\Controllers\BillController::index
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         // create stuff
         $bills     = factory(Bill::class, 10)->create();
@@ -99,7 +99,7 @@ class BillControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Api\V1\Controllers\BillController::show
      */
-    public function testShow()
+    public function testShow(): void
     {
         // create stuff
         $bill       = $this->user()->bills()->first();
@@ -127,7 +127,7 @@ class BillControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Requests\BillRequest::getAll
      * @covers \FireflyIII\Api\V1\Requests\BillRequest::withValidator
      */
-    public function testStoreMinOverMax()
+    public function testStoreMinOverMax(): void
     {
         // create stuff
         $bill       = $this->user()->bills()->first();
@@ -172,7 +172,7 @@ class BillControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Requests\BillRequest::authorize
      * @covers \FireflyIII\Api\V1\Requests\BillRequest::getAll
      */
-    public function testStoreValid()
+    public function testStoreValid(): void
     {
         // create stuff
         $bill       = $this->user()->bills()->first();
@@ -211,7 +211,7 @@ class BillControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Requests\BillRequest::authorize
      * @covers \FireflyIII\Api\V1\Requests\BillRequest::getAll
      */
-    public function testUpdateValid()
+    public function testUpdateValid(): void
     {
         // create stuff
         $bill       = $this->user()->bills()->first();

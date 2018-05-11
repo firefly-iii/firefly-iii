@@ -33,7 +33,7 @@ class AmountCreditTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Converter\AmountCredit::convert()
      */
-    public function testConvert()
+    public function testConvert(): void
     {
         $values = [
             '0'                       => '0',
@@ -161,7 +161,7 @@ class AmountCreditTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Converter\AmountCredit::convert()
      */
-    public function testConvertNull()
+    public function testConvertNull(): void
     {
         $converter = new AmountCredit;
         $result    = $converter->convert(null);

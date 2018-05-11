@@ -49,7 +49,7 @@ class BalanceControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Report\BalanceController::general
      */
-    public function testGeneral()
+    public function testGeneral(): void
     {
         $balance = $this->mock(BalanceReportHelperInterface::class);
         $balance->shouldReceive('getBalanceReport')->andReturn(new Balance);

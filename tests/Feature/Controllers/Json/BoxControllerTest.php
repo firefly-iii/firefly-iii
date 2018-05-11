@@ -51,7 +51,7 @@ class BoxControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Json\BoxController::available
      */
-    public function testAvailable()
+    public function testAvailable(): void
     {
         $return     = [
             0 => [
@@ -72,7 +72,7 @@ class BoxControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Json\BoxController::balance
      */
-    public function testBalance()
+    public function testBalance(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
@@ -93,7 +93,7 @@ class BoxControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Json\BoxController::bills
      */
-    public function testBills()
+    public function testBills(): void
     {
         $billRepos = $this->mock(BillRepositoryInterface::class);
         $billRepos->shouldReceive('getBillsPaidInRange')->andReturn('0');
@@ -107,7 +107,7 @@ class BoxControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Json\BoxController::netWorth()
      */
-    public function testNetWorth()
+    public function testNetWorth(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
@@ -124,7 +124,7 @@ class BoxControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Json\BoxController::netWorth()
      */
-    public function testNetWorthFuture()
+    public function testNetWorthFuture(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);

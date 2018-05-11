@@ -35,7 +35,7 @@ class AmountMoreTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\AmountMore::triggered
      */
-    public function testTriggeredExact()
+    public function testTriggeredExact(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('setUser');
@@ -52,7 +52,7 @@ class AmountMoreTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\AmountMore::triggered
      */
-    public function testTriggeredMore()
+    public function testTriggeredMore(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('setUser');
@@ -69,7 +69,7 @@ class AmountMoreTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\AmountMore::triggered
      */
-    public function testTriggeredNotMore()
+    public function testTriggeredNotMore(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('setUser');
@@ -86,7 +86,7 @@ class AmountMoreTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\AmountMore::willMatchEverything
      */
-    public function testWillMatchEverythingNotNull()
+    public function testWillMatchEverythingNotNull(): void
     {
         $value  = '1';
         $result = AmountMore::willMatchEverything($value);
@@ -96,7 +96,7 @@ class AmountMoreTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\AmountMore::willMatchEverything
      */
-    public function testWillMatchEverythingNull()
+    public function testWillMatchEverythingNull(): void
     {
         $value  = null;
         $result = AmountMore::willMatchEverything($value);
@@ -106,7 +106,7 @@ class AmountMoreTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\AmountMore::willMatchEverything
      */
-    public function testWillMatchEverythingZero()
+    public function testWillMatchEverythingZero(): void
     {
         $value  = '0';
         $result = AmountMore::willMatchEverything($value);

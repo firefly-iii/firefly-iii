@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Factory;
 
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Factory\BudgetFactory;
 use FireflyIII\Factory\CategoryFactory;
@@ -45,7 +46,7 @@ class TransactionFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionFactory
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
      */
-    public function testCreatePairBasic()
+    public function testCreatePairBasic(): void
     {
         // objects:
         $asset   = $this->user()->accounts()->where('account_type_id', 3)->first();
@@ -97,7 +98,11 @@ class TransactionFactoryTest extends TestCase
         /** @var TransactionFactory $factory */
         $factory = app(TransactionFactory::class);
         $factory->setUser($this->user());
-        $collection = $factory->createPair($withdrawal, $data);
+        try {
+            $collection = $factory->createPair($withdrawal, $data);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
 
         $newCount = $withdrawal->transactions()->count();
 
@@ -119,7 +124,7 @@ class TransactionFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionFactory
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
      */
-    public function testCreatePairBasicByName()
+    public function testCreatePairBasicByName(): void
     {
         // objects:
         $asset   = $this->user()->accounts()->where('account_type_id', 3)->first();
@@ -175,7 +180,11 @@ class TransactionFactoryTest extends TestCase
         /** @var TransactionFactory $factory */
         $factory = app(TransactionFactory::class);
         $factory->setUser($this->user());
-        $collection = $factory->createPair($withdrawal, $data);
+        try {
+            $collection = $factory->createPair($withdrawal, $data);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
 
         $newCount = $withdrawal->transactions()->count();
 
@@ -197,7 +206,7 @@ class TransactionFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionFactory
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
      */
-    public function testCreatePairBasicIntoCash()
+    public function testCreatePairBasicIntoCash(): void
     {
         // objects:
         $asset   = $this->user()->accounts()->where('account_type_id', 3)->first();
@@ -253,8 +262,11 @@ class TransactionFactoryTest extends TestCase
         /** @var TransactionFactory $factory */
         $factory = app(TransactionFactory::class);
         $factory->setUser($this->user());
-        $collection = $factory->createPair($withdrawal, $data);
-
+        try {
+            $collection = $factory->createPair($withdrawal, $data);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
         $newCount = $withdrawal->transactions()->count();
 
         $this->assertCount(2, $collection);
@@ -277,7 +289,7 @@ class TransactionFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionFactory
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
      */
-    public function testCreatePairBasicMeta()
+    public function testCreatePairBasicMeta(): void
     {
         // objects:
         $asset    = $this->user()->accounts()->where('account_type_id', 3)->first();
@@ -331,8 +343,11 @@ class TransactionFactoryTest extends TestCase
         /** @var TransactionFactory $factory */
         $factory = app(TransactionFactory::class);
         $factory->setUser($this->user());
-        $collection = $factory->createPair($withdrawal, $data);
-
+        try {
+            $collection = $factory->createPair($withdrawal, $data);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
         $newCount = $withdrawal->transactions()->count();
 
         $this->assertCount(2, $collection);
@@ -357,7 +372,7 @@ class TransactionFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionFactory
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
      */
-    public function testCreatePairDeposit()
+    public function testCreatePairDeposit(): void
     {
         // objects:
         $asset   = $this->user()->accounts()->where('account_type_id', 3)->first();
@@ -410,8 +425,11 @@ class TransactionFactoryTest extends TestCase
         /** @var TransactionFactory $factory */
         $factory = app(TransactionFactory::class);
         $factory->setUser($this->user());
-        $collection = $factory->createPair($deposit, $data);
-
+        try {
+            $collection = $factory->createPair($deposit, $data);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
         $newCount = $deposit->transactions()->count();
 
         $this->assertCount(2, $collection);
@@ -434,7 +452,7 @@ class TransactionFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionFactory
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
      */
-    public function testCreatePairDepositByName()
+    public function testCreatePairDepositByName(): void
     {
         // objects:
         $asset   = $this->user()->accounts()->where('account_type_id', 3)->first();
@@ -491,7 +509,11 @@ class TransactionFactoryTest extends TestCase
         /** @var TransactionFactory $factory */
         $factory = app(TransactionFactory::class);
         $factory->setUser($this->user());
-        $collection = $factory->createPair($deposit, $data);
+        try {
+            $collection = $factory->createPair($deposit, $data);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
 
         $newCount = $deposit->transactions()->count();
 
@@ -515,7 +537,7 @@ class TransactionFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionFactory
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
      */
-    public function testCreatePairDepositCash()
+    public function testCreatePairDepositCash(): void
     {
         // objects:
         $asset   = $this->user()->accounts()->where('account_type_id', 3)->first();
@@ -573,7 +595,11 @@ class TransactionFactoryTest extends TestCase
         /** @var TransactionFactory $factory */
         $factory = app(TransactionFactory::class);
         $factory->setUser($this->user());
-        $collection = $factory->createPair($deposit, $data);
+        try {
+            $collection = $factory->createPair($deposit, $data);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
 
         $newCount = $deposit->transactions()->count();
 
@@ -595,7 +621,7 @@ class TransactionFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionFactory
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
      */
-    public function testCreatePairForeign()
+    public function testCreatePairForeign(): void
     {
         // objects:
         $asset   = $this->user()->accounts()->where('account_type_id', 3)->first();
@@ -648,8 +674,11 @@ class TransactionFactoryTest extends TestCase
         /** @var TransactionFactory $factory */
         $factory = app(TransactionFactory::class);
         $factory->setUser($this->user());
-        $collection = $factory->createPair($withdrawal, $data);
-
+        try {
+            $collection = $factory->createPair($withdrawal, $data);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
         $newCount = $withdrawal->transactions()->count();
 
         $this->assertCount(2, $collection);
@@ -672,7 +701,7 @@ class TransactionFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionFactory
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
      */
-    public function testCreatePairReconciliation()
+    public function testCreatePairReconciliation(): void
     {
         // objects:
         $asset    = $this->user()->accounts()->where('account_type_id', 3)->first();
@@ -725,7 +754,11 @@ class TransactionFactoryTest extends TestCase
         /** @var TransactionFactory $factory */
         $factory = app(TransactionFactory::class);
         $factory->setUser($this->user());
-        $collection = $factory->createPair($recon, $data);
+        try {
+            $collection = $factory->createPair($recon, $data);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
 
         $newCount = $recon->transactions()->count();
 
@@ -749,7 +782,7 @@ class TransactionFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionFactory
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
      */
-    public function testCreatePairTransfer()
+    public function testCreatePairTransfer(): void
     {
         // objects:
         $asset    = $this->user()->accounts()->where('account_type_id', 3)->first();
@@ -802,7 +835,11 @@ class TransactionFactoryTest extends TestCase
         /** @var TransactionFactory $factory */
         $factory = app(TransactionFactory::class);
         $factory->setUser($this->user());
-        $collection = $factory->createPair($transfer, $data);
+        try {
+            $collection = $factory->createPair($transfer, $data);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
 
         $newCount = $transfer->transactions()->count();
 

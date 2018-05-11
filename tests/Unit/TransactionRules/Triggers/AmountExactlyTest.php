@@ -35,7 +35,7 @@ class AmountExactlyTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\AmountExactly::triggered
      */
-    public function testTriggeredExact()
+    public function testTriggeredExact(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('setUser');
@@ -51,7 +51,7 @@ class AmountExactlyTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\AmountExactly::triggered
      */
-    public function testTriggeredNotExact()
+    public function testTriggeredNotExact(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('setUser');
@@ -67,7 +67,7 @@ class AmountExactlyTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\AmountExactly::willMatchEverything
      */
-    public function testWillMatchEverythingNotNull()
+    public function testWillMatchEverythingNotNull(): void
     {
         $value  = 'x';
         $result = AmountExactly::willMatchEverything($value);
@@ -77,7 +77,7 @@ class AmountExactlyTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\AmountExactly::willMatchEverything
      */
-    public function testWillMatchEverythingNull()
+    public function testWillMatchEverythingNull(): void
     {
         $value  = null;
         $result = AmountExactly::willMatchEverything($value);

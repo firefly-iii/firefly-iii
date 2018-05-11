@@ -57,7 +57,7 @@ class BillControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BillController::create
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         // mock stuff
         $attachHelper = $this->mock(AttachmentHelperInterface::class);
@@ -74,7 +74,7 @@ class BillControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BillController::delete
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         // mock stuff
         $attachHelper = $this->mock(AttachmentHelperInterface::class);
@@ -91,7 +91,7 @@ class BillControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BillController::destroy
      */
-    public function testDestroy()
+    public function testDestroy(): void
     {
         // mock stuff
         $attachHelper = $this->mock(AttachmentHelperInterface::class);
@@ -110,7 +110,7 @@ class BillControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BillController::edit
      */
-    public function testEdit()
+    public function testEdit(): void
     {
         // mock stuff
         $attachHelper = $this->mock(AttachmentHelperInterface::class);
@@ -128,7 +128,7 @@ class BillControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\BillController::index
      * @covers \FireflyIII\Http\Controllers\BillController::__construct
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         // mock stuff
         $attachHelper = $this->mock(AttachmentHelperInterface::class);
@@ -153,7 +153,7 @@ class BillControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BillController::rescan
      */
-    public function testRescan()
+    public function testRescan(): void
     {
         // mock stuff
         $attachHelper = $this->mock(AttachmentHelperInterface::class);
@@ -171,7 +171,7 @@ class BillControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BillController::rescan
      */
-    public function testRescanInactive()
+    public function testRescanInactive(): void
     {
         // mock stuff
         $attachHelper = $this->mock(AttachmentHelperInterface::class);
@@ -188,7 +188,7 @@ class BillControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BillController::show
      */
-    public function testShow()
+    public function testShow(): void
     {
         // mock stuff
         $attachHelper = $this->mock(AttachmentHelperInterface::class);
@@ -223,7 +223,7 @@ class BillControllerTest extends TestCase
      * @covers \FireflyIII\Http\Requests\BillFormRequest
      * @covers \FireflyIII\Http\Requests\Request
      */
-    public function testStore()
+    public function testStore(): void
     {
         // mock stuff
         $attachHelper = $this->mock(AttachmentHelperInterface::class);
@@ -256,7 +256,7 @@ class BillControllerTest extends TestCase
      * @covers \FireflyIII\Http\Requests\BillFormRequest
      * @covers \FireflyIII\Http\Requests\Request
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         // mock stuff
         $attachHelper = $this->mock(AttachmentHelperInterface::class);

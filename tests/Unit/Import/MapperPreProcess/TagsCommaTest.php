@@ -35,7 +35,7 @@ class TagsCommaTest extends TestCase
     /**
      * \FireflyIII\Import\MapperPreProcess\TagsComma::run
      */
-    public function testBasic()
+    public function testBasic(): void
     {
         $input  = 'some,tags, with, spaces ,and,without,,';
         $output = ['some', 'tags', 'with', 'spaces', 'and', 'without'];

@@ -54,7 +54,7 @@ class JavascriptControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\JavascriptController::accounts
      */
-    public function testAccounts()
+    public function testAccounts(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
@@ -73,7 +73,7 @@ class JavascriptControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\JavascriptController::currencies
      */
-    public function testCurrencies()
+    public function testCurrencies(): void
     {
         $repository = $this->mock(CurrencyRepositoryInterface::class);
         $currency   = factory(TransactionCurrency::class)->make();
@@ -94,7 +94,7 @@ class JavascriptControllerTest extends TestCase
      *
      * @dataProvider dateRangeProvider
      */
-    public function testVariables(string $range)
+    public function testVariables(string $range): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
@@ -115,7 +115,7 @@ class JavascriptControllerTest extends TestCase
      *
      * @dataProvider dateRangeProvider
      */
-    public function testVariablesCustom(string $range)
+    public function testVariablesCustom(string $range): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);

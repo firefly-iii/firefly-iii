@@ -53,7 +53,7 @@ class BulkControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\BulkController::edit
      * @covers \FireflyIII\Http\Controllers\Transaction\BulkController::__construct
      */
-    public function testEdit()
+    public function testEdit(): void
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -78,7 +78,7 @@ class BulkControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\BulkController::edit
      */
-    public function testEditMultiple()
+    public function testEditMultiple(): void
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -114,7 +114,7 @@ class BulkControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\BulkController::update
      * @covers \FireflyIII\Http\Requests\BulkEditJournalRequest
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $tags       = ['a', 'b', 'c'];
         $collection = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->take(4)->get();

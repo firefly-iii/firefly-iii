@@ -55,7 +55,7 @@ class TagControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\TagController::create
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         // mock stuff
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
@@ -71,7 +71,7 @@ class TagControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\TagController::delete
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         // mock stuff
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
@@ -87,7 +87,7 @@ class TagControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\TagController::destroy
      */
-    public function testDestroy()
+    public function testDestroy(): void
     {
         // mock stuff
         $repository   = $this->mock(TagRepositoryInterface::class);
@@ -104,7 +104,7 @@ class TagControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\TagController::edit
      */
-    public function testEdit()
+    public function testEdit(): void
     {
         // mock stuff
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
@@ -121,7 +121,7 @@ class TagControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\TagController::index
      * @covers \FireflyIII\Http\Controllers\TagController::__construct
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         // mock stuff
         $repository   = $this->mock(TagRepositoryInterface::class);
@@ -141,7 +141,7 @@ class TagControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\TagController::show
      * @covers \FireflyIII\Http\Controllers\TagController::getPeriodOverview
      */
-    public function testShow()
+    public function testShow(): void
     {
         $amounts = [
             TransactionType::WITHDRAWAL => '0',
@@ -180,7 +180,7 @@ class TagControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\TagController::show
      */
-    public function testShowAll()
+    public function testShowAll(): void
     {
         // mock stuff
         $repository   = $this->mock(TagRepositoryInterface::class);
@@ -216,7 +216,7 @@ class TagControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\TagController::show
      */
-    public function testShowDate()
+    public function testShowDate(): void
     {
         // mock stuff
         $repository   = $this->mock(TagRepositoryInterface::class);
@@ -256,7 +256,7 @@ class TagControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\TagController::store
      * @covers       \FireflyIII\Http\Requests\TagFormRequest
      */
-    public function testStore()
+    public function testStore(): void
     {
         // mock stuff
         $repository   = $this->mock(TagRepositoryInterface::class);
@@ -282,7 +282,7 @@ class TagControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\TagController::update
      * @covers       \FireflyIII\Http\Requests\TagFormRequest
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         // mock stuff
         $repository   = $this->mock(TagRepositoryInterface::class);

@@ -53,7 +53,7 @@ class NewUserControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\NewUserController::index
      * @covers \FireflyIII\Http\Controllers\NewUserController::__construct
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -71,7 +71,7 @@ class NewUserControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\NewUserController::index
      * @covers \FireflyIII\Http\Controllers\NewUserController::__construct
      */
-    public function testIndexExisting()
+    public function testIndexExisting(): void
     {
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -90,7 +90,7 @@ class NewUserControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\NewUserController::createAssetAccount
      * @covers \FireflyIII\Http\Controllers\NewUserController::createSavingsAccount
      */
-    public function testSubmit()
+    public function testSubmit(): void
     {
         // mock stuff
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
@@ -116,7 +116,7 @@ class NewUserControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\NewUserController::submit
      */
-    public function testSubmitSingle()
+    public function testSubmitSingle(): void
     {
         // mock stuff
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);

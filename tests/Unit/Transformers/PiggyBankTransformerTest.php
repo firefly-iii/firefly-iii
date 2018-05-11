@@ -44,7 +44,7 @@ class PiggyBankTransformerTest extends TestCase
      *
      * @covers \FireflyIII\Transformers\PiggyBankTransformer::transform()
      */
-    public function testBasic()
+    public function testBasic(): void
     {
         // mock repository:
         $repository = $this->mock(PiggyBankRepositoryInterface::class);
@@ -87,7 +87,7 @@ class PiggyBankTransformerTest extends TestCase
      *
      * @covers \FireflyIII\Transformers\PiggyBankTransformer::transform()
      */
-    public function testBasicWithCurrency()
+    public function testBasicWithCurrency(): void
     {
         // mock repository.
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
@@ -144,7 +144,7 @@ class PiggyBankTransformerTest extends TestCase
      *
      * @covers \FireflyIII\Transformers\PiggyBankTransformer::transform()
      */
-    public function testBasicWithCurrencyAndNote()
+    public function testBasicWithCurrencyAndNote(): void
     {
         // mock repository.
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);

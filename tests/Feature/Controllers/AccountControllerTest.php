@@ -64,7 +64,7 @@ class AccountControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\AccountController::create
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -84,7 +84,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\AccountController::delete
      * @covers \FireflyIII\Http\Controllers\Controller::rememberPreviousUri
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -106,7 +106,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Controller::__construct
      * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
-    public function testDestroy()
+    public function testDestroy(): void
     {
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -128,7 +128,7 @@ class AccountControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\AccountController::edit
      */
-    public function testEdit()
+    public function testEdit(): void
     {
         $note       = new Note();
         $note->text = 'This is a test';
@@ -168,7 +168,7 @@ class AccountControllerTest extends TestCase
      * @param string $range
      *
      */
-    public function testIndex(string $range)
+    public function testIndex(string $range): void
     {
         // mock stuff
         $account       = factory(Account::class)->make();
@@ -199,7 +199,7 @@ class AccountControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testShow(string $range)
+    public function testShow(string $range): void
     {
         $date = new Carbon;
         $this->session(['start' => $date, 'end' => clone $date]);
@@ -243,7 +243,7 @@ class AccountControllerTest extends TestCase
      * @covers                   \FireflyIII\Http\Controllers\AccountController::show
      * @expectedExceptionMessage End is after start!
      */
-    public function testShowBrokenBadDates()
+    public function testShowBrokenBadDates(): void
     {
         // mock
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -262,7 +262,7 @@ class AccountControllerTest extends TestCase
      * @covers                   \FireflyIII\Http\Controllers\AccountController::redirectToOriginalAccount
      * @expectedExceptionMessage Expected a transaction
      */
-    public function testShowBrokenInitial()
+    public function testShowBrokenInitial(): void
     {
         // mock
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -283,7 +283,7 @@ class AccountControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testShowByDateEmpty(string $range)
+    public function testShowByDateEmpty(string $range): void
     {
         // mock stuff
         $collector     = $this->mock(JournalCollectorInterface::class);
@@ -318,7 +318,7 @@ class AccountControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\AccountController::show
      * @covers       \FireflyIII\Http\Controllers\AccountController::redirectToOriginalAccount
      */
-    public function testShowInitial()
+    public function testShowInitial(): void
     {
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -339,7 +339,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Http\Requests\AccountFormRequest
      * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
-    public function testStore()
+    public function testStore(): void
     {
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -368,7 +368,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Http\Requests\AccountFormRequest
      * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
-    public function testStoreAnother()
+    public function testStoreAnother(): void
     {
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -395,7 +395,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Http\Requests\AccountFormRequest
      * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -422,7 +422,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Http\Requests\AccountFormRequest
      * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
-    public function testUpdateAgain()
+    public function testUpdateAgain(): void
     {
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);

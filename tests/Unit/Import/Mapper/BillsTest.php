@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Import\Mapper;
 
 use FireflyIII\Import\Mapper\Bills;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -38,7 +37,7 @@ class BillsTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Mapper\Bills::getMap()
      */
-    public function testGetMapBasic()
+    public function testGetMapBasic(): void
     {
         $one        = new Bill;
         $one->id    = 5;

@@ -39,7 +39,7 @@ class AttachmentTransformerTest extends TestCase
      *
      * @covers \FireflyIII\Transformers\AttachmentTransformer::transform
      */
-    public function testBasic()
+    public function testBasic(): void
     {
         $md5        = md5('hello' . random_int(1, 10000));
         $attachment = Attachment::create(

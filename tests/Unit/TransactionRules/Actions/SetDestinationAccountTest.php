@@ -44,7 +44,7 @@ class SetDestinationAccountTest extends TestCase
      *
      * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount
      */
-    public function testActDepositExisting()
+    public function testActDepositExisting(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $type         = TransactionType::whereType(TransactionType::DEPOSIT)->first();
@@ -86,7 +86,7 @@ class SetDestinationAccountTest extends TestCase
      *
      * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount
      */
-    public function testActDepositNotExisting()
+    public function testActDepositNotExisting(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $type         = TransactionType::whereType(TransactionType::DEPOSIT)->first();
@@ -114,7 +114,7 @@ class SetDestinationAccountTest extends TestCase
      *
      * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount
      */
-    public function testActWithDrawalNotExisting()
+    public function testActWithDrawalNotExisting(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $type         = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
@@ -146,7 +146,7 @@ class SetDestinationAccountTest extends TestCase
      *
      * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount
      */
-    public function testActWithdrawalExisting()
+    public function testActWithdrawalExisting(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $type         = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
@@ -189,7 +189,7 @@ class SetDestinationAccountTest extends TestCase
      *
      * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount
      */
-    public function testSplitJournal()
+    public function testSplitJournal(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $transaction  = Transaction::orderBy('count', 'DESC')->groupBy('transaction_journal_id')

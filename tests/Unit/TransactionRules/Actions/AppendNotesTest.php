@@ -37,7 +37,7 @@ class AppendNotesTest extends TestCase
      * @covers \FireflyIII\TransactionRules\Actions\AppendNotes::__construct()
      * @covers \FireflyIII\TransactionRules\Actions\AppendNotes::act()
      */
-    public function testAct()
+    public function testAct(): void
     {
         // give journal some notes.
         $journal  = TransactionJournal::find(3);
@@ -66,7 +66,7 @@ class AppendNotesTest extends TestCase
      * @covers \FireflyIII\TransactionRules\Actions\AppendNotes::__construct()
      * @covers \FireflyIII\TransactionRules\Actions\AppendNotes::act()
      */
-    public function testActNewNote()
+    public function testActNewNote(): void
     {
         // give journal some notes.
         $journal = TransactionJournal::find(4);

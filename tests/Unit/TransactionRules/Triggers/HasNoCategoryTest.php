@@ -35,7 +35,7 @@ class HasNoCategoryTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasNoCategory::triggered
      */
-    public function testTriggeredCategory()
+    public function testTriggeredCategory(): void
     {
         $journal  = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $category = $journal->user->categories()->first();
@@ -51,7 +51,7 @@ class HasNoCategoryTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasNoCategory::triggered
      */
-    public function testTriggeredNoCategory()
+    public function testTriggeredNoCategory(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->categories()->detach();
@@ -73,7 +73,7 @@ class HasNoCategoryTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasNoCategory::triggered
      */
-    public function testTriggeredTransaction()
+    public function testTriggeredTransaction(): void
     {
         $count = 0;
         while ($count === 0) {
@@ -96,7 +96,7 @@ class HasNoCategoryTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasNoCategory::willMatchEverything
      */
-    public function testWillMatchEverythingNull()
+    public function testWillMatchEverythingNull(): void
     {
         $value  = null;
         $result = HasNoCategory::willMatchEverything($value);

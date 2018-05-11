@@ -36,7 +36,7 @@ class IsSandstormUserTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\IsSandStormUser::handle
      */
-    public function testMiddlewareNotAuthenticated()
+    public function testMiddlewareNotAuthenticated(): void
     {
         $this->withoutExceptionHandling();
         $response = $this->get('/_test/is-sandstorm');
@@ -46,7 +46,7 @@ class IsSandstormUserTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\IsSandStormUser::handle
      */
-    public function testMiddlewareNotSandStorm()
+    public function testMiddlewareNotSandStorm(): void
     {
         $this->withoutExceptionHandling();
         $this->be($this->user());
@@ -57,7 +57,7 @@ class IsSandstormUserTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\IsSandStormUser::handle
      */
-    public function testMiddlewareSandstorm()
+    public function testMiddlewareSandstorm(): void
     {
         putenv('SANDSTORM=1');
         $this->withoutExceptionHandling();

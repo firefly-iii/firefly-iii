@@ -34,7 +34,7 @@ class DescriptionEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
      */
-    public function testTriggeredCase()
+    public function testTriggeredCase(): void
     {
         $journal              = new TransactionJournal;
         $journal->description = 'Lorem IPSUMbla';
@@ -46,7 +46,7 @@ class DescriptionEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
      */
-    public function testTriggeredClose()
+    public function testTriggeredClose(): void
     {
         $journal              = new TransactionJournal;
         $journal->description = 'Something is going to happen';
@@ -58,7 +58,7 @@ class DescriptionEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
      */
-    public function testTriggeredDefault()
+    public function testTriggeredDefault(): void
     {
         $journal              = new TransactionJournal;
         $journal->description = 'Should contain test string';
@@ -70,7 +70,7 @@ class DescriptionEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
      */
-    public function testTriggeredLongSearch()
+    public function testTriggeredLongSearch(): void
     {
         $journal              = new TransactionJournal;
         $journal->description = 'Something';
@@ -82,7 +82,7 @@ class DescriptionEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
      */
-    public function testTriggeredLonger()
+    public function testTriggeredLonger(): void
     {
         $journal              = new TransactionJournal;
         $journal->description = 'Something is going to happen';
@@ -94,7 +94,7 @@ class DescriptionEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
      */
-    public function testTriggeredNot()
+    public function testTriggeredNot(): void
     {
         $journal              = new TransactionJournal;
         $journal->description = 'Lorem IPSUM blabla';
@@ -106,7 +106,7 @@ class DescriptionEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::willMatchEverything
      */
-    public function testWillMatchEverythingEmpty()
+    public function testWillMatchEverythingEmpty(): void
     {
         $value  = '';
         $result = DescriptionEnds::willMatchEverything($value);
@@ -116,7 +116,7 @@ class DescriptionEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::willMatchEverything
      */
-    public function testWillMatchEverythingNotNull()
+    public function testWillMatchEverythingNotNull(): void
     {
         $value  = 'x';
         $result = DescriptionEnds::willMatchEverything($value);
@@ -126,7 +126,7 @@ class DescriptionEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::willMatchEverything
      */
-    public function testWillMatchEverythingNull()
+    public function testWillMatchEverythingNull(): void
     {
         $value  = null;
         $result = DescriptionEnds::willMatchEverything($value);

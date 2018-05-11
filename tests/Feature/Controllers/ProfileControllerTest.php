@@ -54,7 +54,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::changeEmail()
      */
-    public function testChangeEmail()
+    public function testChangeEmail(): void
     {
         $this->be($this->user());
         $response = $this->get(route('profile.change-email'));
@@ -65,7 +65,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::changePassword
      */
-    public function testChangePassword()
+    public function testChangePassword(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -81,7 +81,7 @@ class ProfileControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\ProfileController::code
      * @covers \FireflyIII\Http\Controllers\ProfileController::getDomain
      */
-    public function testCode()
+    public function testCode(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -99,7 +99,7 @@ class ProfileControllerTest extends TestCase
      * @covers                   \FireflyIII\Http\Controllers\ProfileController::confirmEmailChange()
      * @expectedExceptionMessage Invalid token
      */
-    public function testConfirmEmailChangeNoToken()
+    public function testConfirmEmailChangeNoToken(): void
     {
         Preferences::shouldReceive('findByName')->withArgs(['email_change_confirm_token'])->andReturn(new Collection());
         // email_change_confirm_token
@@ -110,7 +110,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @covers                   \FireflyIII\Http\Controllers\ProfileController::confirmEmailChange()
      */
-    public function testConfirmEmailWithToken()
+    public function testConfirmEmailWithToken(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('unblockUser');
@@ -128,7 +128,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::deleteAccount
      */
-    public function testDeleteAccount()
+    public function testDeleteAccount(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -143,7 +143,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::deleteCode
      */
-    public function testDeleteCode()
+    public function testDeleteCode(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -161,7 +161,7 @@ class ProfileControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\ProfileController::index
      * @covers \FireflyIII\Http\Controllers\ProfileController::__construct
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         // delete access token.
         Preference::where('user_id', $this->user()->id)->where('name', 'access_token')->delete();
@@ -178,7 +178,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::postChangeEmail
      */
-    public function testPostChangeEmail()
+    public function testPostChangeEmail(): void
     {
         $data       = [
             'email' => 'new@example.com',
@@ -197,7 +197,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::postChangeEmail
      */
-    public function testPostChangeEmailExisting()
+    public function testPostChangeEmailExisting(): void
     {
 
         $data       = [
@@ -216,7 +216,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::postChangeEmail
      */
-    public function testPostChangeEmailSame()
+    public function testPostChangeEmailSame(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $data       = [
@@ -233,7 +233,7 @@ class ProfileControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\ProfileController::postChangePassword
      * @covers \FireflyIII\Http\Controllers\ProfileController::validatePassword
      */
-    public function testPostChangePassword()
+    public function testPostChangePassword(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -256,7 +256,7 @@ class ProfileControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\ProfileController::postChangePassword
      * @covers \FireflyIII\Http\Controllers\ProfileController::validatePassword
      */
-    public function testPostChangePasswordNotCorrect()
+    public function testPostChangePasswordNotCorrect(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -279,7 +279,7 @@ class ProfileControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\ProfileController::postChangePassword
      * @covers \FireflyIII\Http\Controllers\ProfileController::validatePassword
      */
-    public function testPostChangePasswordSameNew()
+    public function testPostChangePasswordSameNew(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -301,7 +301,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::postCode
      */
-    public function testPostCode()
+    public function testPostCode(): void
     {
         $secret = '0123456789abcde';
         $key    = '123456';
@@ -328,7 +328,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::postDeleteAccount
      */
-    public function testPostDeleteAccount()
+    public function testPostDeleteAccount(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -347,7 +347,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::postDeleteAccount
      */
-    public function testPostDeleteAccountWrong()
+    public function testPostDeleteAccountWrong(): void
     {
         // mock stuff
         $repository   = $this->mock(UserRepositoryInterface::class);
@@ -366,7 +366,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::regenerate()
      */
-    public function testRegenerate()
+    public function testRegenerate(): void
     {
         $token        = '';
         $currentToken = Preference::where('user_id', $this->user()->id)->where('name', 'access_token')->first();
@@ -391,7 +391,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::undoEmailChange()
      */
-    public function testUndoEmailChange()
+    public function testUndoEmailChange(): void
     {
         $hash                  = hash('sha256', 'previous@example.com');
         $tokenPreference       = new Preference;
@@ -421,7 +421,7 @@ class ProfileControllerTest extends TestCase
      * @covers                   \FireflyIII\Http\Controllers\ProfileController::undoEmailChange()
      * @expectedExceptionMessage Invalid token
      */
-    public function testUndoEmailChangeBadHash()
+    public function testUndoEmailChangeBadHash(): void
     {
         $repository            = $this->mock(UserRepositoryInterface::class);
         $hash                  = hash('sha256', 'previous@example.comX');
@@ -446,7 +446,7 @@ class ProfileControllerTest extends TestCase
      * @covers                   \FireflyIII\Http\Controllers\ProfileController::undoEmailChange()
      * @expectedExceptionMessage Invalid token
      */
-    public function testUndoEmailChangeBadToken()
+    public function testUndoEmailChangeBadToken(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         Preferences::shouldReceive('findByName')->once()->andReturn(new Collection);

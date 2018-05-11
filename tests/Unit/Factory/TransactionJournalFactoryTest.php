@@ -49,7 +49,7 @@ class TransactionJournalFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionJournalFactory
      * @covers \FireflyIII\Services\Internal\Support\JournalServiceTrait
      */
-    public function testCreateBasic()
+    public function testCreateBasic(): void
     {
         // mock used classes:
         $type               = TransactionType::find(1);
@@ -111,7 +111,7 @@ class TransactionJournalFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionJournalFactory
      * @covers \FireflyIII\Services\Internal\Support\JournalServiceTrait
      */
-    public function testCreateBasicMeta()
+    public function testCreateBasicMeta(): void
     {
         // mock used classes:
         $type               = TransactionType::find(1);

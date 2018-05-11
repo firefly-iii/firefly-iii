@@ -34,7 +34,7 @@ class HasAnyBudgetTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasAnyBudget::triggered
      */
-    public function testTriggered()
+    public function testTriggered(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $budget  = $journal->user->budgets()->first();
@@ -50,7 +50,7 @@ class HasAnyBudgetTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasAnyBudget::triggered
      */
-    public function testTriggeredNot()
+    public function testTriggeredNot(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->budgets()->detach();
@@ -63,7 +63,7 @@ class HasAnyBudgetTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasAnyBudget::triggered
      */
-    public function testTriggeredTransactions()
+    public function testTriggeredTransactions(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $budget  = $journal->user->budgets()->first();
@@ -86,7 +86,7 @@ class HasAnyBudgetTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasAnyBudget::willMatchEverything
      */
-    public function testWillMatchEverything()
+    public function testWillMatchEverything(): void
     {
         $value  = '';
         $result = HasAnyBudget::willMatchEverything($value);

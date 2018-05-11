@@ -35,7 +35,7 @@ class NotesContainTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesContain::triggered
      */
-    public function testTriggered()
+    public function testTriggered(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->notes()->delete();
@@ -51,7 +51,7 @@ class NotesContainTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesContain::triggered
      */
-    public function testTriggeredDifferent()
+    public function testTriggeredDifferent(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->notes()->delete();
@@ -67,7 +67,7 @@ class NotesContainTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesContain::triggered
      */
-    public function testTriggeredEmpty()
+    public function testTriggeredEmpty(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->notes()->delete();
@@ -83,7 +83,7 @@ class NotesContainTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesContain::triggered
      */
-    public function testTriggeredNone()
+    public function testTriggeredNone(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->notes()->delete();
@@ -95,7 +95,7 @@ class NotesContainTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesContain::triggered
      */
-    public function testTriggeredPartial()
+    public function testTriggeredPartial(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->notes()->delete();
@@ -111,7 +111,7 @@ class NotesContainTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesContain::willMatchEverything
      */
-    public function testWillMatchEverythingEmpty()
+    public function testWillMatchEverythingEmpty(): void
     {
         $value  = '';
         $result = NotesContain::willMatchEverything($value);
@@ -121,7 +121,7 @@ class NotesContainTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesContain::willMatchEverything
      */
-    public function testWillMatchEverythingNotNull()
+    public function testWillMatchEverythingNotNull(): void
     {
         $value  = 'x';
         $result = NotesContain::willMatchEverything($value);
@@ -131,7 +131,7 @@ class NotesContainTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesContain::willMatchEverything
      */
-    public function testWillMatchEverythingNull()
+    public function testWillMatchEverythingNull(): void
     {
         $value  = null;
         $result = NotesContain::willMatchEverything($value);

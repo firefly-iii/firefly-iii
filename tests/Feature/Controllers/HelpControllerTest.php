@@ -50,7 +50,7 @@ class HelpControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
      * @covers \FireflyIII\Http\Controllers\HelpController::__construct
      */
-    public function testShow()
+    public function testShow(): void
     {
         $help = $this->mock(HelpInterface::class);
         $help->shouldReceive('hasRoute')->andReturn(true)->once();
@@ -68,7 +68,7 @@ class HelpControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\HelpController::show
      * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
      */
-    public function testShowBackupFromCache()
+    public function testShowBackupFromCache(): void
     {
         // force pref in dutch for test
         Preference::where('user_id', $this->user()->id)->where('name', 'language')->delete();
@@ -97,7 +97,7 @@ class HelpControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\HelpController::show
      * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
      */
-    public function testShowBackupFromGithub()
+    public function testShowBackupFromGithub(): void
     {
         // force pref in dutch for test
         Preference::where('user_id', $this->user()->id)->where('name', 'language')->delete();
@@ -126,7 +126,7 @@ class HelpControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\HelpController::show
      * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
      */
-    public function testShowCached()
+    public function testShowCached(): void
     {
         $help = $this->mock(HelpInterface::class);
         $help->shouldReceive('hasRoute')->andReturn(true)->once();
@@ -143,7 +143,7 @@ class HelpControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\HelpController::show
      * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
      */
-    public function testShowNoRoute()
+    public function testShowNoRoute(): void
     {
         $help = $this->mock(HelpInterface::class);
         $help->shouldReceive('hasRoute')->andReturn(false)->once();

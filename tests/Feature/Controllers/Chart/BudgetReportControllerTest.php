@@ -59,7 +59,7 @@ class BudgetReportControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController::accountExpense
      * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController::__construct
      */
-    public function testAccountExpense()
+    public function testAccountExpense(): void
     {
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
         $generator   = $this->mock(GeneratorInterface::class);
@@ -82,7 +82,7 @@ class BudgetReportControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController::budgetExpense
      */
-    public function testBudgetExpense()
+    public function testBudgetExpense(): void
     {
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
         $generator   = $this->mock(GeneratorInterface::class);
@@ -107,7 +107,7 @@ class BudgetReportControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController::getExpenses
      * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController::groupByBudget
      */
-    public function testMainChart()
+    public function testMainChart(): void
     {
         $generator   = $this->mock(GeneratorInterface::class);
         $collector   = $this->mock(JournalCollectorInterface::class);

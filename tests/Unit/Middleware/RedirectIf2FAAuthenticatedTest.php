@@ -38,7 +38,7 @@ class RedirectIf2FAAuthenticatedTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated::handle
      */
-    public function testMiddleware()
+    public function testMiddleware(): void
     {
         $response = $this->get('/_test/authenticate');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
@@ -47,7 +47,7 @@ class RedirectIf2FAAuthenticatedTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated::handle
      */
-    public function testMiddlewareAuthenticated()
+    public function testMiddlewareAuthenticated(): void
     {
         // pref for has 2fa is true
         $preference       = new Preference;
@@ -71,7 +71,7 @@ class RedirectIf2FAAuthenticatedTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated::handle
      */
-    public function testMiddlewareLightAuth()
+    public function testMiddlewareLightAuth(): void
     {
         $this->be($this->user());
         $response = $this->get('/_test/authenticate');

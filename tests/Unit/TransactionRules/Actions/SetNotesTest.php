@@ -37,7 +37,7 @@ class SetNotesTest extends TestCase
      * @covers \FireflyIII\TransactionRules\Actions\SetNotes::__construct()
      * @covers \FireflyIII\TransactionRules\Actions\SetNotes::act()
      */
-    public function testAct()
+    public function testAct(): void
     {
         // give journal a note:
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
@@ -66,7 +66,7 @@ class SetNotesTest extends TestCase
      * @covers \FireflyIII\TransactionRules\Actions\SetNotes::__construct()
      * @covers \FireflyIII\TransactionRules\Actions\SetNotes::act()
      */
-    public function testActNoNotes()
+    public function testActNoNotes(): void
     {
         // give journal a note:
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();

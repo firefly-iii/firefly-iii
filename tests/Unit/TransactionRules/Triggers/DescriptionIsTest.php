@@ -34,7 +34,7 @@ class DescriptionIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs::triggered
      */
-    public function testTriggeredCase()
+    public function testTriggeredCase(): void
     {
         $journal              = new TransactionJournal;
         $journal->description = 'Lorem IPSUMbla';
@@ -46,7 +46,7 @@ class DescriptionIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs::triggered
      */
-    public function testTriggeredClose()
+    public function testTriggeredClose(): void
     {
         $journal              = new TransactionJournal;
         $journal->description = 'Something is going to happen';
@@ -58,7 +58,7 @@ class DescriptionIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs::triggered
      */
-    public function testTriggeredDefault()
+    public function testTriggeredDefault(): void
     {
         $journal              = new TransactionJournal;
         $journal->description = 'Should be test string';
@@ -70,7 +70,7 @@ class DescriptionIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs::triggered
      */
-    public function testTriggeredNot()
+    public function testTriggeredNot(): void
     {
         $journal              = new TransactionJournal;
         $journal->description = 'Lorem IPSUM blabla';
@@ -82,7 +82,7 @@ class DescriptionIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs::willMatchEverything
      */
-    public function testWillMatchEverythingNotNull()
+    public function testWillMatchEverythingNotNull(): void
     {
         $value  = 'x';
         $result = DescriptionIs::willMatchEverything($value);
@@ -92,7 +92,7 @@ class DescriptionIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs::willMatchEverything
      */
-    public function testWillMatchEverythingNull()
+    public function testWillMatchEverythingNull(): void
     {
         $value  = null;
         $result = DescriptionIs::willMatchEverything($value);

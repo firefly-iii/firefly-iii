@@ -59,7 +59,7 @@ class HomeControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\HomeController::dateRange
      * @covers \FireflyIII\Http\Controllers\HomeController::__construct
      */
-    public function testDateRange()
+    public function testDateRange(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -81,7 +81,7 @@ class HomeControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\HomeController::dateRange
      * @covers \FireflyIII\Http\Controllers\HomeController::__construct
      */
-    public function testDateRangeCustom()
+    public function testDateRangeCustom(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -103,7 +103,7 @@ class HomeControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\HomeController::displayError
      */
-    public function testDisplayError()
+    public function testDisplayError(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -117,7 +117,7 @@ class HomeControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\HomeController::flush
      */
-    public function testFlush()
+    public function testFlush(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -136,7 +136,7 @@ class HomeControllerTest extends TestCase
      *
      * @param $range
      */
-    public function testIndex(string $range)
+    public function testIndex(string $range): void
     {
         // mock stuff
         $account      = factory(Account::class)->make();
@@ -173,7 +173,7 @@ class HomeControllerTest extends TestCase
      *
      * @param $range
      */
-    public function testIndexEmpty(string $range)
+    public function testIndexEmpty(string $range): void
     {
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -190,7 +190,7 @@ class HomeControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\HomeController::routes()
      */
-    public function testRoutes()
+    public function testRoutes(): void
     {
         $this->be($this->user());
         $response = $this->get(route('routes'));
@@ -200,7 +200,7 @@ class HomeControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\HomeController::testFlash
      */
-    public function testTestFlash()
+    public function testTestFlash(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);

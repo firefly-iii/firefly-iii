@@ -55,7 +55,7 @@ class ExpenseControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Report\ExpenseController::combineAccounts
      * @covers \FireflyIII\Http\Controllers\Report\ExpenseController::spentByBudget
      */
-    public function testBudget()
+    public function testBudget(): void
     {
         $expense    = $this->user()->accounts()->where('account_type_id', 4)->first();
         $revenue    = $this->user()->accounts()->where('account_type_id', 5)->first();
@@ -103,7 +103,7 @@ class ExpenseControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Report\ExpenseController::spentByCategory
      * @covers \FireflyIII\Http\Controllers\Report\ExpenseController::earnedByCategory
      */
-    public function testCategory()
+    public function testCategory(): void
     {
         $expense    = $this->user()->accounts()->where('account_type_id', 4)->first();
         $revenue    = $this->user()->accounts()->where('account_type_id', 5)->first();
@@ -160,7 +160,7 @@ class ExpenseControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Report\ExpenseController::spentInPeriod
      * @covers \FireflyIII\Http\Controllers\Report\ExpenseController::earnedInPeriod
      */
-    public function testSpent()
+    public function testSpent(): void
     {
         $expense    = $this->user()->accounts()->where('account_type_id', 4)->first();
         $revenue    = $this->user()->accounts()->where('account_type_id', 5)->first();
@@ -204,7 +204,7 @@ class ExpenseControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Report\ExpenseController::topExpense
      */
-    public function testTopExpense()
+    public function testTopExpense(): void
     {
         $expense    = $this->user()->accounts()->where('account_type_id', 4)->first();
         $revenue    = $this->user()->accounts()->where('account_type_id', 5)->first();
@@ -250,7 +250,7 @@ class ExpenseControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Report\ExpenseController::topIncome
      */
-    public function testTopIncome()
+    public function testTopIncome(): void
     {
         $expense    = $this->user()->accounts()->where('account_type_id', 4)->first();
         $revenue    = $this->user()->accounts()->where('account_type_id', 5)->first();

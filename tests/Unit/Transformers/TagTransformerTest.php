@@ -39,7 +39,7 @@ class TagTransformerTest extends TestCase
      *
      * @covers \FireflyIII\Transformers\TagTransformer::transform
      */
-    public function testBasic()
+    public function testBasic(): void
     {
         $tag         = Tag::create(
             [

@@ -34,7 +34,7 @@ class FromAccountStartsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountStarts::triggered
      */
-    public function testTriggered()
+    public function testTriggered(): void
     {
         $transaction = null;
         do {
@@ -51,7 +51,7 @@ class FromAccountStartsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountStarts::triggered
      */
-    public function testTriggeredLonger()
+    public function testTriggeredLonger(): void
     {
         $transaction = null;
         do {
@@ -69,7 +69,7 @@ class FromAccountStartsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountStarts::triggered
      */
-    public function testTriggeredNot()
+    public function testTriggeredNot(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
 
@@ -81,7 +81,7 @@ class FromAccountStartsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountStarts::willMatchEverything
      */
-    public function testWillMatchEverythingEmpty()
+    public function testWillMatchEverythingEmpty(): void
     {
         $value  = '';
         $result = FromAccountStarts::willMatchEverything($value);
@@ -91,7 +91,7 @@ class FromAccountStartsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountStarts::willMatchEverything
      */
-    public function testWillMatchEverythingNotNull()
+    public function testWillMatchEverythingNotNull(): void
     {
         $value  = 'x';
         $result = FromAccountStarts::willMatchEverything($value);
@@ -101,7 +101,7 @@ class FromAccountStartsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountStarts::willMatchEverything
      */
-    public function testWillMatchEverythingNull()
+    public function testWillMatchEverythingNull(): void
     {
         $value  = null;
         $result = FromAccountStarts::willMatchEverything($value);

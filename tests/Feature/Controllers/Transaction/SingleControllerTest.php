@@ -69,7 +69,7 @@ class SingleControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::cloneTransaction
      */
-    public function testCloneTransaction()
+    public function testCloneTransaction(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
@@ -102,7 +102,7 @@ class SingleControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::create
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::__construct
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
@@ -128,7 +128,7 @@ class SingleControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::create
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::__construct
      */
-    public function testCreateDepositWithSource()
+    public function testCreateDepositWithSource(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
@@ -153,7 +153,7 @@ class SingleControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::create
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::__construct
      */
-    public function testCreateWithSource()
+    public function testCreateWithSource(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
@@ -177,7 +177,7 @@ class SingleControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::delete
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
@@ -198,7 +198,7 @@ class SingleControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::destroy
      */
-    public function testDestroy()
+    public function testDestroy(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
@@ -224,7 +224,7 @@ class SingleControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::isSplitJournal
      */
-    public function testEdit()
+    public function testEdit(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
@@ -266,7 +266,7 @@ class SingleControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
      */
-    public function testEditCashDeposit()
+    public function testEditCashDeposit(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
@@ -312,7 +312,7 @@ class SingleControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
      */
-    public function testEditCashWithdrawal()
+    public function testEditCashWithdrawal(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
@@ -358,7 +358,7 @@ class SingleControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
      */
-    public function testEditReconcile()
+    public function testEditReconcile(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
@@ -384,7 +384,7 @@ class SingleControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
      */
-    public function testEditRedirect()
+    public function testEditRedirect(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
@@ -413,7 +413,7 @@ class SingleControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
      */
-    public function testEditRedirectOpening()
+    public function testEditRedirectOpening(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
@@ -433,7 +433,7 @@ class SingleControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
      */
-    public function testEditTransferWithForeignAmount()
+    public function testEditTransferWithForeignAmount(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
@@ -481,7 +481,7 @@ class SingleControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::isSplitJournal
      */
-    public function testEditWithForeign()
+    public function testEditWithForeign(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
@@ -522,7 +522,7 @@ class SingleControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
      */
-    public function testEditWithForeignAmount()
+    public function testEditWithForeignAmount(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
@@ -570,7 +570,7 @@ class SingleControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
-    public function testStoreError()
+    public function testStoreError(): void
     {
 
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -606,7 +606,7 @@ class SingleControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
-    public function testStoreSuccess()
+    public function testStoreSuccess(): void
     {
 
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -622,8 +622,11 @@ class SingleControllerTest extends TestCase
         $journal->id          = 1000;
         $journal->description = 'New journal';
         $journalRepos->shouldReceive('store')->andReturn($journal);
-        $this->expectsEvents(StoredTransactionJournal::class);
-
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
         $errors = new MessageBag;
         $errors->add('attachments', 'Fake error');
 
@@ -658,7 +661,7 @@ class SingleControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
-    public function testStoreSuccessDeposit()
+    public function testStoreSuccessDeposit(): void
     {
 
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -674,8 +677,11 @@ class SingleControllerTest extends TestCase
         $journal->id          = 1000;
         $journal->description = 'New deposit';
         $journalRepos->shouldReceive('store')->andReturn($journal);
-        $this->expectsEvents(StoredTransactionJournal::class);
-
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
         $errors = new MessageBag;
         $errors->add('attachments', 'Fake error');
 
@@ -710,7 +716,7 @@ class SingleControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
-    public function testStoreSuccessTransfer()
+    public function testStoreSuccessTransfer(): void
     {
 
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -726,7 +732,11 @@ class SingleControllerTest extends TestCase
         $journal->id          = 1000;
         $journal->description = 'New transfer';
         $journalRepos->shouldReceive('store')->andReturn($journal);
-        $this->expectsEvents(StoredTransactionJournal::class);
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
 
         $errors = new MessageBag;
         $errors->add('attachments', 'Fake error');
@@ -762,7 +772,7 @@ class SingleControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
-    public function testStoreSuccessTransferForeign()
+    public function testStoreSuccessTransferForeign(): void
     {
 
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -778,7 +788,11 @@ class SingleControllerTest extends TestCase
         $journal->id          = 1000;
         $journal->description = 'New transfer';
         $journalRepos->shouldReceive('store')->andReturn($journal);
-        $this->expectsEvents(StoredTransactionJournal::class);
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
 
         $errors = new MessageBag;
         $errors->add('attachments', 'Fake error');
@@ -816,7 +830,7 @@ class SingleControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::update
      * @covers \FireflyIII\Http\Requests\JournalFormRequest
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
@@ -841,7 +855,7 @@ class SingleControllerTest extends TestCase
         try {
             $this->expectsEvents(UpdatedTransactionJournal::class);
         } catch (Exception $e) {
-            $this->assertTrue(false, 'expectsEvents failed!');
+            $this->assertTrue(false, $e->getMessage());
         }
 
         $journal              = new TransactionJournal();

@@ -38,7 +38,7 @@ class JournalMetaTransformerTest extends TestCase
      *
      * @covers  \FireflyIII\Transformers\JournalMetaTransformer::transform
      */
-    public function testBasic()
+    public function testBasic(): void
     {
         $data = 'Lots of data';
         $hash = hash('sha256', json_encode($data));

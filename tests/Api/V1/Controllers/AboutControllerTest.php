@@ -48,7 +48,7 @@ class AboutControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\AboutController::__construct
      * @covers \FireflyIII\Api\V1\Controllers\AboutController::about
      */
-    public function testAbout()
+    public function testAbout(): void
     {
         // test API
         $response = $this->get('/api/v1/about');
@@ -67,7 +67,7 @@ class AboutControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\AboutController::user
      */
-    public function testUser()
+    public function testUser(): void
     {
         // test API
         $response = $this->get('/api/v1/about/user');

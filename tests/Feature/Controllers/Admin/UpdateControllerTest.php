@@ -54,7 +54,7 @@ class UpdateControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::index
      * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::__construct
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         $this->be($this->user());
 
@@ -77,7 +77,7 @@ class UpdateControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::post
      */
-    public function testPost()
+    public function testPost(): void
     {
         $falseConfig       = new Configuration;
         $falseConfig->data = false;
@@ -95,7 +95,7 @@ class UpdateControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::updateCheck
      */
-    public function testUpdateCheck()
+    public function testUpdateCheck(): void
     {
         $falseConfig       = new Configuration;
         $falseConfig->data = false;
@@ -124,7 +124,7 @@ class UpdateControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::updateCheck
      */
-    public function testUpdateCheckCurrent()
+    public function testUpdateCheckCurrent(): void
     {
         $falseConfig       = new Configuration;
         $falseConfig->data = false;
@@ -151,7 +151,7 @@ class UpdateControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::updateCheck
      */
-    public function testUpdateCheckError()
+    public function testUpdateCheckError(): void
     {
         $falseConfig       = new Configuration;
         $falseConfig->data = false;
@@ -174,7 +174,7 @@ class UpdateControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::updateCheck
      */
-    public function testUpdateCheckNewer()
+    public function testUpdateCheckNewer(): void
     {
         $falseConfig       = new Configuration;
         $falseConfig->data = false;

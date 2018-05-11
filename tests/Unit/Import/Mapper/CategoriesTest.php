@@ -37,7 +37,7 @@ class CategoriesTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Mapper\Categories::getMap()
      */
-    public function testGetMapBasic()
+    public function testGetMapBasic(): void
     {
         $one        = new Category;
         $one->id    = 9;

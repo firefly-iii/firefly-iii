@@ -34,7 +34,7 @@ class HasAttachmentTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasAttachment::triggered
      */
-    public function testTriggered()
+    public function testTriggered(): void
     {
         do {
             $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
@@ -53,7 +53,7 @@ class HasAttachmentTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasAttachment::triggered
      */
-    public function testTriggeredFalse()
+    public function testTriggeredFalse(): void
     {
         do {
             // this is kind of cheating but OK.
@@ -71,7 +71,7 @@ class HasAttachmentTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasAttachment::willMatchEverything
      */
-    public function testWillMatchEverything()
+    public function testWillMatchEverything(): void
     {
         $value  = '5';
         $result = HasAttachment::willMatchEverything($value);
@@ -81,7 +81,7 @@ class HasAttachmentTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasAttachment::willMatchEverything
      */
-    public function testWillMatchEverythingTrue()
+    public function testWillMatchEverythingTrue(): void
     {
         $value  = -1;
         $result = HasAttachment::willMatchEverything($value);

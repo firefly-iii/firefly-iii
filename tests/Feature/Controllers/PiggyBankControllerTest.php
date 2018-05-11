@@ -59,7 +59,7 @@ class PiggyBankControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::add
      */
-    public function testAdd()
+    public function testAdd(): void
     {
         // mock stuff
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
@@ -76,7 +76,7 @@ class PiggyBankControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::addMobile
      */
-    public function testAddMobile()
+    public function testAddMobile(): void
     {
         // mock stuff
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
@@ -94,7 +94,7 @@ class PiggyBankControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::create
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         // mock stuff
 
@@ -126,7 +126,7 @@ class PiggyBankControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::delete
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -141,7 +141,7 @@ class PiggyBankControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::destroy
      */
-    public function testDestroy()
+    public function testDestroy(): void
     {
         // mock stuff
         $repository   = $this->mock(PiggyBankRepositoryInterface::class);
@@ -161,7 +161,7 @@ class PiggyBankControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::edit
      */
-    public function testEdit()
+    public function testEdit(): void
     {
         // mock stuff
         $account      = factory(Account::class)->make();
@@ -192,7 +192,7 @@ class PiggyBankControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::index
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::__construct
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         // mock stuff
         $repository      = $this->mock(PiggyBankRepositoryInterface::class);

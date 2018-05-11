@@ -38,7 +38,7 @@ class AuthenticateTwoFactorTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor::handle
      */
-    public function testMiddleware()
+    public function testMiddleware(): void
     {
         $this->withoutExceptionHandling();
         $response = $this->get('/_test/authenticate');
@@ -56,7 +56,7 @@ class AuthenticateTwoFactorTest extends TestCase
      *
      * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor::handle
      */
-    public function testMiddlewareNoTwoFA()
+    public function testMiddlewareNoTwoFA(): void
     {
         $this->withoutExceptionHandling();
         $user          = $this->user();
@@ -87,7 +87,7 @@ class AuthenticateTwoFactorTest extends TestCase
      *
      * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor::handle
      */
-    public function testMiddlewareTwoFAAuthed()
+    public function testMiddlewareTwoFAAuthed(): void
     {
         $this->withoutExceptionHandling();
         $user          = $this->user();
@@ -120,7 +120,7 @@ class AuthenticateTwoFactorTest extends TestCase
      *
      * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor::handle
      */
-    public function testMiddlewareTwoFANoSecret()
+    public function testMiddlewareTwoFANoSecret(): void
     {
         $this->withoutExceptionHandling();
         $user          = $this->user();
@@ -151,7 +151,7 @@ class AuthenticateTwoFactorTest extends TestCase
      *
      * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor::handle
      */
-    public function testMiddlewareTwoFASecret()
+    public function testMiddlewareTwoFASecret(): void
     {
         $this->withoutExceptionHandling();
         $user          = $this->user();

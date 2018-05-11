@@ -43,7 +43,7 @@ class PiggyBankEventTransformerTest extends TestCase
      *
      * @covers \FireflyIII\Transformers\PiggyBankEventTransformer::transform
      */
-    public function testBasic()
+    public function testBasic(): void
     {
         // make new account:
         $account = Account::create(
@@ -87,7 +87,7 @@ class PiggyBankEventTransformerTest extends TestCase
      *
      * @covers \FireflyIII\Transformers\PiggyBankEventTransformer::transform
      */
-    public function testBasicCurrency()
+    public function testBasicCurrency(): void
     {
         // mock repository.
         $repository = $this->mock(CurrencyRepositoryInterface::class);

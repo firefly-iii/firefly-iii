@@ -39,7 +39,7 @@ class BudgetTransformerTest extends TestCase
      *
      * @covers \FireflyIII\Transformers\BudgetTransformer::transform
      */
-    public function testBasic()
+    public function testBasic(): void
     {
 
         $budget      = Budget::create(

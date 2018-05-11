@@ -48,7 +48,7 @@ class MetaPieChartTest extends TestCase
     /**
      * @covers \FireflyIII\Helpers\Chart\MetaPieChart
      */
-    public function testGenerateExpenseAccount()
+    public function testGenerateExpenseAccount(): void
     {
         $som        = (new Carbon())->startOfMonth();
         $eom        = (new Carbon())->endOfMonth();
@@ -101,7 +101,7 @@ class MetaPieChartTest extends TestCase
     /**
      * @covers \FireflyIII\Helpers\Chart\MetaPieChart
      */
-    public function testGenerateExpenseAccountWithOthers()
+    public function testGenerateExpenseAccountWithOthers(): void
     {
         $som        = (new Carbon())->startOfMonth();
         $eom        = (new Carbon())->endOfMonth();
@@ -160,7 +160,7 @@ class MetaPieChartTest extends TestCase
     /**
      * @covers \FireflyIII\Helpers\Chart\MetaPieChart
      */
-    public function testGenerateIncomeAccount()
+    public function testGenerateIncomeAccount(): void
     {
         $som        = (new Carbon())->startOfMonth();
         $eom        = (new Carbon())->endOfMonth();
@@ -212,7 +212,7 @@ class MetaPieChartTest extends TestCase
     /**
      * @covers \FireflyIII\Helpers\Chart\MetaPieChart
      */
-    public function testGenerateIncomeAccountWithOthers()
+    public function testGenerateIncomeAccountWithOthers(): void
     {
         $som        = (new Carbon())->startOfMonth();
         $eom        = (new Carbon())->endOfMonth();

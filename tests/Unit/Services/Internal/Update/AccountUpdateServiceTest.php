@@ -42,7 +42,7 @@ class AccountUpdateServiceTest extends TestCase
      * @covers \FireflyIII\Services\Internal\Update\AccountUpdateService
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      */
-    public function testDeleteExistingIB()
+    public function testDeleteExistingIB(): void
     {
         /** @var Account $account */
         $account  = Account::create(
@@ -91,7 +91,7 @@ class AccountUpdateServiceTest extends TestCase
      * @covers \FireflyIII\Services\Internal\Update\AccountUpdateService
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      */
-    public function testUpdateBasic()
+    public function testUpdateBasic(): void
     {
         /** @var Account $account */
         $account = $this->user()->accounts()->first();
@@ -114,7 +114,7 @@ class AccountUpdateServiceTest extends TestCase
      * @covers \FireflyIII\Services\Internal\Update\AccountUpdateService
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      */
-    public function testUpdateBasicEmptyNote()
+    public function testUpdateBasicEmptyNote(): void
     {
         /** @var Account $account */
         $account = $this->user()->accounts()->first();
@@ -139,7 +139,7 @@ class AccountUpdateServiceTest extends TestCase
      * @covers \FireflyIII\Services\Internal\Update\AccountUpdateService
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      */
-    public function testUpdateBasicExistingNote()
+    public function testUpdateBasicExistingNote(): void
     {
         /** @var Account $account */
         $account = $this->user()->accounts()->first();
@@ -170,7 +170,7 @@ class AccountUpdateServiceTest extends TestCase
      * @covers \FireflyIII\Services\Internal\Update\AccountUpdateService
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      */
-    public function testUpdateExistingIB()
+    public function testUpdateExistingIB(): void
     {
         /** @var Account $account */
         $account  = Account::create(
@@ -222,7 +222,7 @@ class AccountUpdateServiceTest extends TestCase
      * @covers \FireflyIII\Services\Internal\Update\AccountUpdateService
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      */
-    public function testUpdateExistingIBZero()
+    public function testUpdateExistingIBZero(): void
     {
         $deleteService = $this->mock(JournalDestroyService::class);
         $deleteService->shouldReceive('destroy')->once();
@@ -277,7 +277,7 @@ class AccountUpdateServiceTest extends TestCase
      * @covers \FireflyIII\Services\Internal\Update\AccountUpdateService
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      */
-    public function testUpdateNewIB()
+    public function testUpdateNewIB(): void
     {
         /** @var Account $account */
         $account = Account::create(

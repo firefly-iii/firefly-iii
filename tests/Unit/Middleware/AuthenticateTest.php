@@ -35,7 +35,7 @@ class AuthenticateTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\Authenticate
      */
-    public function testMiddleware()
+    public function testMiddleware(): void
     {
         Log::debug('Now at testMiddleware');
         $response = $this->get('/_test/authenticate');
@@ -46,7 +46,7 @@ class AuthenticateTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\Authenticate
      */
-    public function testMiddlewareAjax()
+    public function testMiddlewareAjax(): void
     {
         Log::debug('Now at testMiddlewareAjax');
         $server   = ['HTTP_X-Requested-With' => 'XMLHttpRequest'];
@@ -57,7 +57,7 @@ class AuthenticateTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\Authenticate
      */
-    public function testMiddlewareAuth()
+    public function testMiddlewareAuth(): void
     {
         Log::debug('Now at testMiddlewareAuth');
         $this->be($this->user());
@@ -68,7 +68,7 @@ class AuthenticateTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\Authenticate
      */
-    public function testMiddlewareBlockedUser()
+    public function testMiddlewareBlockedUser(): void
     {
         Log::debug('Now at testMiddlewareBlockedUser');
         $user          = $this->user();
@@ -85,7 +85,7 @@ class AuthenticateTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\Authenticate
      */
-    public function testMiddlewareEmail()
+    public function testMiddlewareEmail(): void
     {
         Log::debug('Now at testMiddlewareEmail');
         $user               = $this->user();

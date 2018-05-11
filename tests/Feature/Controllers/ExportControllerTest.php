@@ -55,7 +55,7 @@ class ExportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ExportController::download
      */
-    public function testDownload()
+    public function testDownload(): void
     {
         // mock stuff
         $repository   = $this->mock(ExportJobRepositoryInterface::class);
@@ -74,7 +74,7 @@ class ExportControllerTest extends TestCase
      * @covers                   \FireflyIII\Http\Controllers\ExportController::download
      * @expectedExceptionMessage Against all expectations
      */
-    public function testDownloadFailed()
+    public function testDownloadFailed(): void
     {
         // mock stuff
         $repository   = $this->mock(ExportJobRepositoryInterface::class);
@@ -91,7 +91,7 @@ class ExportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ExportController::getStatus
      */
-    public function testGetStatus()
+    public function testGetStatus(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -106,7 +106,7 @@ class ExportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\ExportController::index
      * @covers \FireflyIII\Http\Controllers\ExportController::__construct
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         // mock stuff
         $repository   = $this->mock(ExportJobRepositoryInterface::class);
@@ -130,7 +130,7 @@ class ExportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\ExportController::postIndex
      * @covers \FireflyIII\Http\Requests\ExportFormRequest
      */
-    public function testPostIndex()
+    public function testPostIndex(): void
     {
         // mock stuff
         $repository   = $this->mock(ExportJobRepositoryInterface::class);

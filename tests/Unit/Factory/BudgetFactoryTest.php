@@ -37,7 +37,7 @@ class BudgetFactoryTest extends TestCase
      *
      * @covers \FireflyIII\Factory\BudgetFactory
      */
-    public function testFindById()
+    public function testFindById(): void
     {
         $existing = $this->user()->budgets()->first();
         /** @var BudgetFactory $factory */
@@ -54,7 +54,7 @@ class BudgetFactoryTest extends TestCase
      *
      * @covers \FireflyIII\Factory\BudgetFactory
      */
-    public function testFindByName()
+    public function testFindByName(): void
     {
         $existing = $this->user()->budgets()->first();
         /** @var BudgetFactory $factory */
@@ -71,7 +71,7 @@ class BudgetFactoryTest extends TestCase
      *
      * @covers \FireflyIII\Factory\BudgetFactory
      */
-    public function testFindNull()
+    public function testFindNull(): void
     {
         /** @var BudgetFactory $factory */
         $factory = app(BudgetFactory::class);
@@ -86,7 +86,7 @@ class BudgetFactoryTest extends TestCase
      *
      * @covers \FireflyIII\Factory\BudgetFactory
      */
-    public function testFindUnknown()
+    public function testFindUnknown(): void
     {
         /** @var BudgetFactory $factory */
         $factory = app(BudgetFactory::class);

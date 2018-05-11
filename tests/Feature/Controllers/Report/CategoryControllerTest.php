@@ -51,7 +51,7 @@ class CategoryControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Report\CategoryController::expenses
      * @covers \FireflyIII\Http\Controllers\Report\CategoryController::filterReport
      */
-    public function testExpenses()
+    public function testExpenses(): void
     {
         $first      = [1 => ['entries' => ['1', '1']]];
         $second     = ['entries' => ['1', '1']];
@@ -69,7 +69,7 @@ class CategoryControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Report\CategoryController::income
      * @covers \FireflyIII\Http\Controllers\Report\CategoryController::filterReport
      */
-    public function testIncome()
+    public function testIncome(): void
     {
         $first      = [1 => ['entries' => ['1', '1']]];
         $second     = ['entries' => ['1', '1']];
@@ -86,7 +86,7 @@ class CategoryControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Report\CategoryController::operations
      */
-    public function testOperations()
+    public function testOperations(): void
     {
         $repository = $this->mock(CategoryRepositoryInterface::class);
         $category   = factory(Category::class)->make();

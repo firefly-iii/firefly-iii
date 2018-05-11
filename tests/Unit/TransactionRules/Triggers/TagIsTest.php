@@ -24,6 +24,7 @@ namespace Tests\Unit\TransactionRules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\TagIs;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 /**
@@ -34,7 +35,7 @@ class TagIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\TagIs::triggered
      */
-    public function testNotTriggered()
+    public function testNotTriggered(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->tags()->detach();
@@ -48,10 +49,11 @@ class TagIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\TagIs::triggered
      */
-    public function testTriggered()
+    public function testTriggered(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->tags()->detach();
+        /** @var Collection $tags */
         $tags   = $journal->user->tags()->take(3)->get();
         $search = '';
         foreach ($tags as $index => $tag) {
@@ -70,7 +72,7 @@ class TagIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\TagIs::willMatchEverything
      */
-    public function testWillMatchEverythingEmpty()
+    public function testWillMatchEverythingEmpty(): void
     {
         $value  = '';
         $result = TagIs::willMatchEverything($value);
@@ -80,7 +82,7 @@ class TagIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\TagIs::willMatchEverything
      */
-    public function testWillMatchEverythingNotNull()
+    public function testWillMatchEverythingNotNull(): void
     {
         $value  = 'x';
         $result = TagIs::willMatchEverything($value);
@@ -90,7 +92,7 @@ class TagIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\TagIs::willMatchEverything
      */
-    public function testWillMatchEverythingNull()
+    public function testWillMatchEverythingNull(): void
     {
         $value  = null;
         $result = TagIs::willMatchEverything($value);

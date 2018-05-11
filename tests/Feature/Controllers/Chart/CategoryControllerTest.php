@@ -58,7 +58,7 @@ class CategoryControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testAll(string $range)
+    public function testAll(string $range): void
     {
 
         $repository   = $this->mock(CategoryRepositoryInterface::class);
@@ -85,7 +85,7 @@ class CategoryControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testFrontpage(string $range)
+    public function testFrontpage(string $range): void
     {
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -108,7 +108,7 @@ class CategoryControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\CategoryController::reportPeriod
      */
-    public function testReportPeriod()
+    public function testReportPeriod(): void
     {
         $repository = $this->mock(CategoryRepositoryInterface::class);
         $generator  = $this->mock(GeneratorInterface::class);
@@ -125,7 +125,7 @@ class CategoryControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\CategoryController::reportPeriodNoCategory
      */
-    public function testReportPeriodNoCategory()
+    public function testReportPeriodNoCategory(): void
     {
         $repository = $this->mock(CategoryRepositoryInterface::class);
         $generator  = $this->mock(GeneratorInterface::class);
@@ -146,7 +146,7 @@ class CategoryControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testSpecificPeriod(string $range)
+    public function testSpecificPeriod(string $range): void
     {
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);

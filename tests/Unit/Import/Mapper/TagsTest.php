@@ -37,7 +37,7 @@ class TagsTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Mapper\Tags::getMap()
      */
-    public function testGetMapBasic()
+    public function testGetMapBasic(): void
     {
         $one        = new Tag;
         $one->id    = 12;

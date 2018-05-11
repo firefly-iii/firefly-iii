@@ -34,7 +34,7 @@ class FromAccountEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds::triggered
      */
-    public function testTriggered()
+    public function testTriggered(): void
     {
         $count = 0;
         while ($count === 0) {
@@ -52,7 +52,7 @@ class FromAccountEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds::triggered
      */
-    public function testTriggeredLonger()
+    public function testTriggeredLonger(): void
     {
         $count = 0;
         while ($count === 0) {
@@ -70,7 +70,7 @@ class FromAccountEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds::triggered
      */
-    public function testTriggeredNot()
+    public function testTriggeredNot(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
 
@@ -82,7 +82,7 @@ class FromAccountEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds::willMatchEverything
      */
-    public function testWillMatchEverythingEmpty()
+    public function testWillMatchEverythingEmpty(): void
     {
         $value  = '';
         $result = FromAccountEnds::willMatchEverything($value);
@@ -92,7 +92,7 @@ class FromAccountEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds::willMatchEverything
      */
-    public function testWillMatchEverythingNotNull()
+    public function testWillMatchEverythingNotNull(): void
     {
         $value  = 'x';
         $result = FromAccountEnds::willMatchEverything($value);
@@ -102,7 +102,7 @@ class FromAccountEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds::willMatchEverything
      */
-    public function testWillMatchEverythingNull()
+    public function testWillMatchEverythingNull(): void
     {
         $value  = null;
         $result = FromAccountEnds::willMatchEverything($value);

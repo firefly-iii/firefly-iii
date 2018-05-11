@@ -54,7 +54,7 @@ class UserControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\UserController::delete
      * @covers \FireflyIII\Api\V1\Requests\UserRequest
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         // create a user first:
         $user = User::create(['email' => 'some@newu' . random_int(1, 1000) . 'ser.nl', 'password' => 'hello', 'blocked' => 0]);
@@ -72,7 +72,7 @@ class UserControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\UserController::delete
      * @covers \FireflyIII\Api\V1\Requests\UserRequest
      */
-    public function testDeleteNoAdmin()
+    public function testDeleteNoAdmin(): void
     {
         Passport::actingAs($this->emptyUser());
 
@@ -89,7 +89,7 @@ class UserControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\UserController::__construct
      * @covers \FireflyIII\Api\V1\Controllers\UserController::index
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         // create stuff
         $users = factory(User::class, 10)->create();
@@ -113,7 +113,7 @@ class UserControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Api\V1\Controllers\UserController::show
      */
-    public function testShow()
+    public function testShow(): void
     {
         $user = User::first();
 
@@ -127,7 +127,7 @@ class UserControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\UserController::store
      * @covers \FireflyIII\Api\V1\Requests\UserRequest
      */
-    public function testStoreBasic()
+    public function testStoreBasic(): void
     {
         $data = [
             'email'   => 'some_new@user' . random_int(1, 1000) . '.com',
@@ -148,7 +148,7 @@ class UserControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\UserController::store
      * @covers \FireflyIII\Api\V1\Requests\UserRequest
      */
-    public function testStoreNotUnique()
+    public function testStoreNotUnique(): void
     {
         $data = [
             'email'   => $this->user()->email,
@@ -177,7 +177,7 @@ class UserControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\UserController::update
      * @covers \FireflyIII\Api\V1\Requests\UserRequest
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         // create a user first:
         $user = User::create(['email' => 'some@newu' . random_int(1, 1000) . 'ser.nl', 'password' => 'hello', 'blocked' => 0]);

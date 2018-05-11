@@ -37,7 +37,7 @@ class ClearBudgetTest extends TestCase
      * @covers \FireflyIII\TransactionRules\Actions\ClearBudget::__construct()
      * @covers \FireflyIII\TransactionRules\Actions\ClearBudget::act()
      */
-    public function testAct()
+    public function testAct(): void
     {
         // associate budget with journal:
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();

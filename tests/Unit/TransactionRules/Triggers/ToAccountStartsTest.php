@@ -34,7 +34,7 @@ class ToAccountStartsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountStarts::triggered
      */
-    public function testTriggered()
+    public function testTriggered(): void
     {
         $count = 0;
         while ($count === 0) {
@@ -52,7 +52,7 @@ class ToAccountStartsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountStarts::triggered
      */
-    public function testTriggeredLonger()
+    public function testTriggeredLonger(): void
     {
         $count = 0;
         while ($count === 0) {
@@ -70,7 +70,7 @@ class ToAccountStartsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountStarts::triggered
      */
-    public function testTriggeredNot()
+    public function testTriggeredNot(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
 
@@ -82,7 +82,7 @@ class ToAccountStartsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountStarts::willMatchEverything
      */
-    public function testWillMatchEverythingEmpty()
+    public function testWillMatchEverythingEmpty(): void
     {
         $value  = '';
         $result = ToAccountStarts::willMatchEverything($value);
@@ -92,7 +92,7 @@ class ToAccountStartsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountStarts::willMatchEverything
      */
-    public function testWillMatchEverythingNotNull()
+    public function testWillMatchEverythingNotNull(): void
     {
         $value  = 'x';
         $result = ToAccountStarts::willMatchEverything($value);
@@ -102,7 +102,7 @@ class ToAccountStartsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountStarts::willMatchEverything
      */
-    public function testWillMatchEverythingNull()
+    public function testWillMatchEverythingNull(): void
     {
         $value  = null;
         $result = ToAccountStarts::willMatchEverything($value);

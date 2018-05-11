@@ -58,7 +58,7 @@ class ExpenseReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Chart\ExpenseReportController::getIncome
      * @covers \FireflyIII\Http\Controllers\Chart\ExpenseReportController::combineAccounts
      */
-    public function testMainChart()
+    public function testMainChart(): void
     {
         $expense           = $this->user()->accounts()->where('account_type_id', 4)->first();
         $generator         = $this->mock(GeneratorInterface::class);

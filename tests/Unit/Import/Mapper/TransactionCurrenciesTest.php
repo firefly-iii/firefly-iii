@@ -37,7 +37,7 @@ class TransactionCurrenciesTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Mapper\TransactionCurrencies::getMap()
      */
-    public function testGetMapBasic()
+    public function testGetMapBasic(): void
     {
         $one        = new TransactionCurrency;
         $one->id    = 9;

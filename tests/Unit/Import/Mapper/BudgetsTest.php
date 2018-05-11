@@ -37,7 +37,7 @@ class BudgetsTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Mapper\Budgets::getMap()
      */
-    public function testGetMapBasic()
+    public function testGetMapBasic(): void
     {
         $one        = new Budget;
         $one->id    = 8;

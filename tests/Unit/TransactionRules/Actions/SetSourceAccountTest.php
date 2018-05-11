@@ -42,7 +42,7 @@ class SetSourceAccountTest extends TestCase
      *
      * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount
      */
-    public function testActDepositExistingUpdated()
+    public function testActDepositExistingUpdated(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
@@ -86,7 +86,7 @@ class SetSourceAccountTest extends TestCase
      *
      * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount
      */
-    public function testActDepositRevenue()
+    public function testActDepositRevenue(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $type         = TransactionType::whereType(TransactionType::DEPOSIT)->first();
@@ -115,7 +115,7 @@ class SetSourceAccountTest extends TestCase
      *
      * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount
      */
-    public function testActWithdrawalExistingUpdated()
+    public function testActWithdrawalExistingUpdated(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $type         = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
@@ -157,7 +157,7 @@ class SetSourceAccountTest extends TestCase
      *
      * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount
      */
-    public function testActWithdrawalNotExisting()
+    public function testActWithdrawalNotExisting(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $type         = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
@@ -184,7 +184,7 @@ class SetSourceAccountTest extends TestCase
      *
      * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount
      */
-    public function testSplitJournal()
+    public function testSplitJournal(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $transaction  = Transaction::orderBy('count', 'DESC')->groupBy('transaction_journal_id')

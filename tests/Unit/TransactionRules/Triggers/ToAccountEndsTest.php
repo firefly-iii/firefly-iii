@@ -34,7 +34,7 @@ class ToAccountEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountEnds::triggered
      */
-    public function testTriggered()
+    public function testTriggered(): void
     {
         $count = 0;
         while ($count === 0) {
@@ -52,7 +52,7 @@ class ToAccountEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountEnds::triggered
      */
-    public function testTriggeredLonger()
+    public function testTriggeredLonger(): void
     {
         $count = 0;
         while ($count === 0) {
@@ -70,7 +70,7 @@ class ToAccountEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountEnds::triggered
      */
-    public function testTriggeredNot()
+    public function testTriggeredNot(): void
     {
         $count = 0;
         while ($count === 0) {
@@ -86,7 +86,7 @@ class ToAccountEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountEnds::willMatchEverything
      */
-    public function testWillMatchEverythingEmpty()
+    public function testWillMatchEverythingEmpty(): void
     {
         $value  = '';
         $result = ToAccountEnds::willMatchEverything($value);
@@ -96,7 +96,7 @@ class ToAccountEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountEnds::willMatchEverything
      */
-    public function testWillMatchEverythingNotNull()
+    public function testWillMatchEverythingNotNull(): void
     {
         $value  = 'x';
         $result = ToAccountEnds::willMatchEverything($value);
@@ -106,7 +106,7 @@ class ToAccountEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountEnds::willMatchEverything
      */
-    public function testWillMatchEverythingNull()
+    public function testWillMatchEverythingNull(): void
     {
         $value  = null;
         $result = ToAccountEnds::willMatchEverything($value);

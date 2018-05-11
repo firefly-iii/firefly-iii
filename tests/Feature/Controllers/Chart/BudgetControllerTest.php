@@ -63,7 +63,7 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testBudget(string $range)
+    public function testBudget(string $range): void
     {
         $repository = $this->mock(BudgetRepositoryInterface::class);
         $generator  = $this->mock(GeneratorInterface::class);
@@ -84,7 +84,7 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testBudgetLimit(string $range)
+    public function testBudgetLimit(string $range): void
     {
         $repository = $this->mock(BudgetRepositoryInterface::class);
         $generator  = $this->mock(GeneratorInterface::class);
@@ -102,7 +102,7 @@ class BudgetControllerTest extends TestCase
      * @covers                   \FireflyIII\Http\Controllers\Chart\BudgetController::budgetLimit
      * @expectedExceptionMessage This budget limit is not part of this budget.
      */
-    public function testBudgetLimitWrongLimit()
+    public function testBudgetLimitWrongLimit(): void
     {
         $repository = $this->mock(BudgetRepositoryInterface::class);
         $generator  = $this->mock(GeneratorInterface::class);
@@ -119,7 +119,7 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testExpenseAsset(string $range)
+    public function testExpenseAsset(string $range): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $generator        = $this->mock(GeneratorInterface::class);
@@ -148,7 +148,7 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testExpenseCategory(string $range)
+    public function testExpenseCategory(string $range): void
     {
         $generator  = $this->mock(GeneratorInterface::class);
         $collector  = $this->mock(JournalCollectorInterface::class);
@@ -182,7 +182,7 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testExpenseExpense(string $range)
+    public function testExpenseExpense(string $range): void
     {
         $generator    = $this->mock(GeneratorInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
@@ -218,7 +218,7 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testFrontpage(string $range)
+    public function testFrontpage(string $range): void
     {
         $repository             = $this->mock(BudgetRepositoryInterface::class);
         $generator              = $this->mock(GeneratorInterface::class);
@@ -255,7 +255,7 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testFrontpageMultiLimit(string $range)
+    public function testFrontpageMultiLimit(string $range): void
     {
         $repository     = $this->mock(BudgetRepositoryInterface::class);
         $generator      = $this->mock(GeneratorInterface::class);
@@ -294,7 +294,7 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testFrontpageNoLimits(string $range)
+    public function testFrontpageNoLimits(string $range): void
     {
         $repository  = $this->mock(BudgetRepositoryInterface::class);
         $generator   = $this->mock(GeneratorInterface::class);
@@ -324,7 +324,7 @@ class BudgetControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Chart\BudgetController::period
      * @covers \FireflyIII\Http\Controllers\Chart\BudgetController::getBudgetedInPeriod
      */
-    public function testPeriod()
+    public function testPeriod(): void
     {
         $repository             = $this->mock(BudgetRepositoryInterface::class);
         $generator              = $this->mock(GeneratorInterface::class);
@@ -344,7 +344,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\BudgetController::periodNoBudget
      */
-    public function testPeriodNoBudget()
+    public function testPeriodNoBudget(): void
     {
         $repository = $this->mock(BudgetRepositoryInterface::class);
         $generator  = $this->mock(GeneratorInterface::class);

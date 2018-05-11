@@ -44,7 +44,7 @@ class BillTransformerTest extends TestCase
      * @covers \FireflyIII\Transformers\BillTransformer::paidData
      * @covers \FireflyIII\Transformers\BillTransformer::payDates
      */
-    public function testBasic()
+    public function testBasic(): void
     {
 
         $bill        = Bill::create(
@@ -73,7 +73,7 @@ class BillTransformerTest extends TestCase
      *
      * @covers \FireflyIII\Transformers\BillTransformer::transform
      */
-    public function testNote()
+    public function testNote(): void
     {
 
         $bill     = Bill::create(
@@ -115,7 +115,7 @@ class BillTransformerTest extends TestCase
      * @covers \FireflyIII\Transformers\BillTransformer::lastPaidDate
      * @covers \FireflyIII\Transformers\BillTransformer::nextDateMatch
      */
-    public function testWithDates()
+    public function testWithDates(): void
     {
         // mock stuff
         $repository = $this->mock(BillRepositoryInterface::class);

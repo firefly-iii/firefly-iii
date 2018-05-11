@@ -49,7 +49,7 @@ class LinkControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::__construct
      * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::delete
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $linkRepos    = $this->mock(LinkTypeRepositoryInterface::class);
@@ -63,7 +63,7 @@ class LinkControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::destroy
      */
-    public function testDestroy()
+    public function testDestroy(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
@@ -85,7 +85,7 @@ class LinkControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Transaction\LinkController::store
      * @covers       \FireflyIII\Http\Requests\JournalLinkRequest
      */
-    public function testStore()
+    public function testStore(): void
     {
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -111,7 +111,7 @@ class LinkControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Transaction\LinkController::store
      * @covers       \FireflyIII\Http\Requests\JournalLinkRequest
      */
-    public function testStoreAlreadyLinked()
+    public function testStoreAlreadyLinked(): void
     {
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -136,7 +136,7 @@ class LinkControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Transaction\LinkController::store
      * @covers       \FireflyIII\Http\Requests\JournalLinkRequest
      */
-    public function testStoreInvalid()
+    public function testStoreInvalid(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $linkRepos    = $this->mock(LinkTypeRepositoryInterface::class);
@@ -157,7 +157,7 @@ class LinkControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::switchLink
      */
-    public function testSwitchLink()
+    public function testSwitchLink(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);

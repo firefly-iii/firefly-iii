@@ -35,7 +35,7 @@ class NotesStartTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesStart::triggered
      */
-    public function testTriggered()
+    public function testTriggered(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->notes()->delete();
@@ -51,7 +51,7 @@ class NotesStartTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesStart::triggered
      */
-    public function testTriggeredLonger()
+    public function testTriggeredLonger(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->notes()->delete();
@@ -67,7 +67,7 @@ class NotesStartTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesStart::triggered
      */
-    public function testTriggeredNoMatch()
+    public function testTriggeredNoMatch(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->notes()->delete();
@@ -83,7 +83,7 @@ class NotesStartTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesStart::willMatchEverything
      */
-    public function testWillMatchEverythingEmpty()
+    public function testWillMatchEverythingEmpty(): void
     {
         $value  = '';
         $result = NotesStart::willMatchEverything($value);
@@ -93,7 +93,7 @@ class NotesStartTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesStart::willMatchEverything
      */
-    public function testWillMatchEverythingNotNull()
+    public function testWillMatchEverythingNotNull(): void
     {
         $value  = 'x';
         $result = NotesStart::willMatchEverything($value);
@@ -103,7 +103,7 @@ class NotesStartTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesStart::willMatchEverything
      */
-    public function testWillMatchEverythingNull()
+    public function testWillMatchEverythingNull(): void
     {
         $value  = null;
         $result = NotesStart::willMatchEverything($value);

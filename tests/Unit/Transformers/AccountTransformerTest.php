@@ -45,7 +45,7 @@ class AccountTransformerTest extends TestCase
      *
      * @covers \FireflyIII\Transformers\AccountTransformer::transform
      */
-    public function testBasic()
+    public function testBasic(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');
@@ -83,7 +83,7 @@ class AccountTransformerTest extends TestCase
      *
      * @covers \FireflyIII\Transformers\AccountTransformer::transform
      */
-    public function testBasicDate()
+    public function testBasicDate(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');
@@ -121,7 +121,7 @@ class AccountTransformerTest extends TestCase
      *
      * @covers \FireflyIII\Transformers\AccountTransformer::transform
      */
-    public function testCCDataAsset()
+    public function testCCDataAsset(): void
     {
         // make new account:
         $account = Account::create(
@@ -212,7 +212,7 @@ class AccountTransformerTest extends TestCase
      *
      * @covers \FireflyIII\Transformers\AccountTransformer::transform
      */
-    public function testIgnoreCCExpense()
+    public function testIgnoreCCExpense(): void
     {
 
         // make new account:
@@ -297,7 +297,7 @@ class AccountTransformerTest extends TestCase
      *
      * @covers \FireflyIII\Transformers\AccountTransformer::transform
      */
-    public function testOpeningBalance()
+    public function testOpeningBalance(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');
@@ -355,7 +355,7 @@ class AccountTransformerTest extends TestCase
      *
      * @covers \FireflyIII\Transformers\AccountTransformer::transform
      */
-    public function testWithCurrency()
+    public function testWithCurrency(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');
@@ -401,7 +401,7 @@ class AccountTransformerTest extends TestCase
      *
      * @covers \FireflyIII\Transformers\AccountTransformer::transform
      */
-    public function testWithNotes()
+    public function testWithNotes(): void
     {
         // make new account:
         $account = Account::create(

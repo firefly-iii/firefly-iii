@@ -24,7 +24,6 @@ namespace Tests\Feature\Controllers\Import;
 
 use FireflyIII\Import\Prerequisites\BunqPrerequisites;
 use FireflyIII\Import\Prerequisites\FakePrerequisites;
-use FireflyIII\Import\Prerequisites\FilePrerequisites;
 use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
@@ -53,7 +52,7 @@ class IndexControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Import\IndexController
      */
-    public function testCreateFake()
+    public function testCreateFake(): void
     {
         // mock stuff:
         $repository        = $this->mock(ImportJobRepositoryInterface::class);
@@ -106,7 +105,7 @@ class IndexControllerTest extends TestCase
         $response->assertRedirect(route('import.job.configuration.index', ['fake_job_2']));
     }
 
-    public function testIndex()
+    public function testIndex(): void
     {
         $this->be($this->user());
 

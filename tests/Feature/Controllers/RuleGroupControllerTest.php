@@ -56,7 +56,7 @@ class RuleGroupControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::create
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::__construct
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -71,7 +71,7 @@ class RuleGroupControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::delete
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -88,7 +88,7 @@ class RuleGroupControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::destroy
      */
-    public function testDestroy()
+    public function testDestroy(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -107,7 +107,7 @@ class RuleGroupControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::down
      */
-    public function testDown()
+    public function testDown(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -124,7 +124,7 @@ class RuleGroupControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::edit
      */
-    public function testEdit()
+    public function testEdit(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -139,7 +139,7 @@ class RuleGroupControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::execute
      */
-    public function testExecute()
+    public function testExecute(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -166,7 +166,7 @@ class RuleGroupControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::selectTransactions
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::__construct
      */
-    public function testSelectTransactions()
+    public function testSelectTransactions(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -184,7 +184,7 @@ class RuleGroupControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\RuleGroupController::store
      * @covers       \FireflyIII\Http\Requests\RuleGroupFormRequest
      */
-    public function testStore()
+    public function testStore(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -208,7 +208,7 @@ class RuleGroupControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::up
      */
-    public function testUp()
+    public function testUp(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -226,7 +226,7 @@ class RuleGroupControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\RuleGroupController::update
      * @covers       \FireflyIII\Http\Requests\RuleGroupFormRequest
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);

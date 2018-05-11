@@ -59,7 +59,7 @@ class TransactionControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\TransactionController::getPeriodOverview
      * @covers \FireflyIII\Http\Controllers\TransactionController::sumPerCurrency
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         $date = new Carbon;
         $this->session(['start' => $date, 'end' => clone $date]);
@@ -93,7 +93,7 @@ class TransactionControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\TransactionController::index
      */
-    public function testIndexAll()
+    public function testIndexAll(): void
     {
         $date = new Carbon;
         $this->session(['start' => $date, 'end' => clone $date]);
@@ -129,7 +129,7 @@ class TransactionControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\TransactionController::getPeriodOverview
      * @covers \FireflyIII\Http\Controllers\TransactionController::sumPerCurrency
      */
-    public function testIndexByDate()
+    public function testIndexByDate(): void
     {
         $transaction                              = new Transaction;
         $transaction->transaction_currency_id     = 1;
@@ -173,7 +173,7 @@ class TransactionControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\TransactionController::getPeriodOverview
      * @covers \FireflyIII\Http\Controllers\TransactionController::sumPerCurrency
      */
-    public function testIndexDeposit()
+    public function testIndexDeposit(): void
     {
         $transaction                              = new Transaction;
         $transaction->transaction_currency_id     = 1;
@@ -216,7 +216,7 @@ class TransactionControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\TransactionController::getPeriodOverview
      * @covers \FireflyIII\Http\Controllers\TransactionController::sumPerCurrency
      */
-    public function testIndexWithdrawal()
+    public function testIndexWithdrawal(): void
     {
         $transaction                              = new Transaction;
         $transaction->transaction_currency_id     = 1;
@@ -256,7 +256,7 @@ class TransactionControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\TransactionController::reconcile
      */
-    public function testReconcile()
+    public function testReconcile(): void
     {
         $data       = ['transactions' => [1, 2]];
         $repository = $this->mock(JournalRepositoryInterface::class);
@@ -273,7 +273,7 @@ class TransactionControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\TransactionController::reorder
      */
-    public function testReorder()
+    public function testReorder(): void
     {
         // mock stuff
         $journal       = factory(TransactionJournal::class)->make();
@@ -296,7 +296,7 @@ class TransactionControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\TransactionController::show
      * @covers \FireflyIII\Http\Controllers\Controller::isOpeningBalance
      */
-    public function testShow()
+    public function testShow(): void
     {
         // mock stuff
         $linkRepos = $this->mock(LinkTypeRepositoryInterface::class);
@@ -319,7 +319,7 @@ class TransactionControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Controller::redirectToAccount
      * @covers \FireflyIII\Http\Controllers\TransactionController::show
      */
-    public function testShowOpeningBalance()
+    public function testShowOpeningBalance(): void
     {
         $linkRepos = $this->mock(LinkTypeRepositoryInterface::class);
         $linkRepos->shouldReceive('get')->andReturn(new Collection);

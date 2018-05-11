@@ -60,7 +60,7 @@ class TagReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::accountExpense
      * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::__construct
      */
-    public function testAccountExpense()
+    public function testAccountExpense(): void
     {
         $generator    = $this->mock(GeneratorInterface::class);
         $pieChart     = $this->mock(MetaPieChartInterface::class);
@@ -88,7 +88,7 @@ class TagReportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::accountIncome
      */
-    public function testAccountIncome()
+    public function testAccountIncome(): void
     {
         $generator    = $this->mock(GeneratorInterface::class);
         $pieChart     = $this->mock(MetaPieChartInterface::class);
@@ -115,7 +115,7 @@ class TagReportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::budgetExpense()
      */
-    public function testBudgetExpense()
+    public function testBudgetExpense(): void
     {
         $generator    = $this->mock(GeneratorInterface::class);
         $pieChart     = $this->mock(MetaPieChartInterface::class);
@@ -141,7 +141,7 @@ class TagReportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::categoryExpense()
      */
-    public function testCategoryExpense()
+    public function testCategoryExpense(): void
     {
         $generator    = $this->mock(GeneratorInterface::class);
         $pieChart     = $this->mock(MetaPieChartInterface::class);
@@ -170,7 +170,7 @@ class TagReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::getIncome
      * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::groupByTag
      */
-    public function testMainChart()
+    public function testMainChart(): void
     {
         $generator    = $this->mock(GeneratorInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
@@ -209,7 +209,7 @@ class TagReportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::tagExpense()
      */
-    public function testTagExpense()
+    public function testTagExpense(): void
     {
         $generator    = $this->mock(GeneratorInterface::class);
         $pieChart     = $this->mock(MetaPieChartInterface::class);
@@ -235,7 +235,7 @@ class TagReportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::tagIncome
      */
-    public function testTagIncome()
+    public function testTagIncome(): void
     {
         $generator    = $this->mock(GeneratorInterface::class);
         $pieChart     = $this->mock(MetaPieChartInterface::class);

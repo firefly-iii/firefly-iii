@@ -39,7 +39,7 @@ class CategoryTransformerTest extends TestCase
      *
      * @covers \FireflyIII\Transformers\CategoryTransformer::transform
      */
-    public function testBasic()
+    public function testBasic(): void
     {
 
         $category    = Category::create(
