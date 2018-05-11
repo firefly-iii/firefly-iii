@@ -66,14 +66,13 @@ class ConfigureUploadHandler implements ConfigurationInterface
         // collect specifics.
         foreach (config('csv.import_specifics') as $name => $className) {
             $specifics[$name] = [
-                'name'        => $className::getName(),
-                'description' => $className::getDescription(),
+                'name'        => trans($className::getName()),
+                'description' => trans($className::getDescription()),
             ];
         }
 
         $data = [
             'accounts'   => [],
-            'specifix'   => [],
             'delimiters' => $delimiters,
             'specifics'  => $specifics,
         ];
