@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+
 /**
  * TransactionRequest.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -20,6 +20,7 @@ declare(strict_types=1);
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 

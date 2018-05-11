@@ -1,15 +1,8 @@
 <?php
-declare(strict_types=1);
-
-use FireflyIII\Import\Specifics\AbnAmroDescription;
-use FireflyIII\Import\Specifics\IngDescription;
-use FireflyIII\Import\Specifics\PresidentsChoice;
-use FireflyIII\Import\Specifics\RabobankDescription;
-use FireflyIII\Import\Specifics\SnsDescription;
 
 /**
  * csv.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -27,6 +20,13 @@ use FireflyIII\Import\Specifics\SnsDescription;
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+use FireflyIII\Import\Specifics\AbnAmroDescription;
+use FireflyIII\Import\Specifics\IngDescription;
+use FireflyIII\Import\Specifics\PresidentsChoice;
+use FireflyIII\Import\Specifics\RabobankDescription;
+use FireflyIII\Import\Specifics\SnsDescription;
 
 return [
 

@@ -1,22 +1,8 @@
 <?php
-declare(strict_types=1);
-
-use TwigBridge\Extension\Laravel\Auth;
-use TwigBridge\Extension\Laravel\Config;
-use TwigBridge\Extension\Laravel\Dump;
-use TwigBridge\Extension\Laravel\Input;
-use TwigBridge\Extension\Laravel\Session;
-use TwigBridge\Extension\Laravel\Str;
-use TwigBridge\Extension\Laravel\Translator;
-use TwigBridge\Extension\Laravel\Url;
-use TwigBridge\Extension\Loader\Facades;
-use TwigBridge\Extension\Loader\Filters;
-use TwigBridge\Extension\Loader\Functions;
-use TwigBridge\Twig\Template;
 
 /**
  * twigbridge.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -34,6 +20,20 @@ use TwigBridge\Twig\Template;
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+use TwigBridge\Extension\Laravel\Auth;
+use TwigBridge\Extension\Laravel\Config;
+use TwigBridge\Extension\Laravel\Dump;
+use TwigBridge\Extension\Laravel\Input;
+use TwigBridge\Extension\Laravel\Session;
+use TwigBridge\Extension\Laravel\Str;
+use TwigBridge\Extension\Laravel\Translator;
+use TwigBridge\Extension\Laravel\Url;
+use TwigBridge\Extension\Loader\Facades;
+use TwigBridge\Extension\Loader\Filters;
+use TwigBridge\Extension\Loader\Functions;
+use TwigBridge\Twig\Template;
 
 /**
  * Configuration options for Twig.

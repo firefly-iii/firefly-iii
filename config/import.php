@@ -1,22 +1,8 @@
 <?php
-declare(strict_types=1);
-
-use FireflyIII\Import\Configuration\BunqConfigurator;
-use FireflyIII\Import\Configuration\SpectreConfigurator;
-use FireflyIII\Import\JobConfiguration\FakeJobConfiguration;
-use FireflyIII\Import\JobConfiguration\FileJobConfiguration;
-use FireflyIII\Import\Prerequisites\BunqPrerequisites;
-use FireflyIII\Import\Prerequisites\FakePrerequisites;
-use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
-use FireflyIII\Import\Routine\BunqRoutine;
-use FireflyIII\Import\Routine\FakeRoutine;
-use FireflyIII\Import\Routine\FileRoutine;
-use FireflyIII\Import\Routine\SpectreRoutine;
-use FireflyIII\Support\Import\Routine\File\CSVProcessor;
 
 /**
  * import.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -34,6 +20,20 @@ use FireflyIII\Support\Import\Routine\File\CSVProcessor;
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+use FireflyIII\Import\Configuration\BunqConfigurator;
+use FireflyIII\Import\Configuration\SpectreConfigurator;
+use FireflyIII\Import\JobConfiguration\FakeJobConfiguration;
+use FireflyIII\Import\JobConfiguration\FileJobConfiguration;
+use FireflyIII\Import\Prerequisites\BunqPrerequisites;
+use FireflyIII\Import\Prerequisites\FakePrerequisites;
+use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
+use FireflyIII\Import\Routine\BunqRoutine;
+use FireflyIII\Import\Routine\FakeRoutine;
+use FireflyIII\Import\Routine\FileRoutine;
+use FireflyIII\Import\Routine\SpectreRoutine;
+use FireflyIII\Support\Import\Routine\File\CSVProcessor;
 
 return [
     'enabled'       => [
