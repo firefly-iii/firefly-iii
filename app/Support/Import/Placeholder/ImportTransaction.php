@@ -300,7 +300,7 @@ class ImportTransaction
          * @var string $modifier
          */
         foreach ($this->modifiers as $role => $modifier) {
-            $class = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $role)));
+            $class = sprintf('FireflyIII\\Import\\Converter\\%s', config(sprintf('csv.import_roles.%s.converter', $role)));
             /** @var ConverterInterface $converter */
             $converter = app($class);
             Log::debug(sprintf('Now launching converter %s', $class));
@@ -342,7 +342,7 @@ class ImportTransaction
          * @var string $modifier
          */
         foreach ($this->modifiers as $role => $modifier) {
-            $class = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $role)));
+            $class = sprintf('FireflyIII\\Import\\Converter\\%s', config(sprintf('csv.import_roles.%s.converter', $role)));
             /** @var ConverterInterface $converter */
             $converter = app($class);
             Log::debug(sprintf('Now launching converter %s', $class));

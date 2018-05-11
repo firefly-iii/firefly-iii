@@ -53,88 +53,16 @@ class ConfigureRolesHandler implements ConfigurationInterface
     private $totalColumns;
 
     /**
-     * Store data associated with current stage.
-     *
-     * @param array $data
-     *
-     * @return MessageBag
-     */
-    public function configureJob(array $data): MessageBag
-    {
-        $config = $this->importJob->configuration;
-        $count  = $config['column-count'];
-        for ($i = 0; $i < $count; ++$i) {
-            $role                            = $data['role'][$i] ?? '_ignore';
-            $mapping                         = (isset($data['map'][$i]) && $data['map'][$i] === '1');
-            $config['column-roles'][$i]      = $role;
-            $config['column-do-mapping'][$i] = $mapping;
-            Log::debug(sprintf('Column %d has been given role %s (mapping: %s)', $i, $role, var_export($mapping, true)));
-        }
-        $config   = $this->ignoreUnmappableColumns($config);
-        $messages = $this->configurationComplete($config);
-
-        if ($messages->count() === 0) {
-            $this->repository->setStage($this->importJob, 'ready_to_run');
-            if ($this->isMappingNecessary($config)) {
-                $this->repository->setStage($this->importJob, 'map');
-            }
-            $this->repository->setConfiguration($this->importJob, $config);
-        }
-
-        return $messages;
-    }
-
-    /**
-     * Get the data necessary to show the configuration screen.
-     *
-     * @return array
-     * @throws FireflyException
-     */
-    public function getNextData(): array
-    {
-        try {
-            $reader = $this->getReader();
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            throw new FireflyException($e->getMessage());
-        }
-        $headers = $this->getHeaders($reader);
-
-        // get example rows:
-        $this->getExamples($reader);
-
-        return [
-            'examples' => $this->examples,
-            'roles'    => $this->getRoles(),
-            'total'    => $this->totalColumns,
-            'headers'  => $headers,
-        ];
-    }
-
-    /**
-     * Set job and some start values.
-     *
-     * @param ImportJob $job
-     */
-    public function setJob(ImportJob $job): void
-    {
-        $this->importJob  = $job;
-        $this->repository = app(ImportJobRepositoryInterface::class);
-        $this->repository->setUser($job->user);
-        $this->attachments  = app(AttachmentHelperInterface::class);
-        $this->totalColumns = 0;
-        $this->examples     = [];
-    }
-
-    /**
      * Verifies that the configuration of the job is actually complete, and valid.
      *
      * @param array $config
      *
      * @return MessageBag
      */
-    private function configurationComplete(array $config): MessageBag
+    public function configurationComplete(array $config): MessageBag
     {
+        /** @var array $roles */
+        $roles    = $config['column-roles'];
         $count    = $config['column-count'];
         $assigned = 0;
 
@@ -142,8 +70,7 @@ class ConfigureRolesHandler implements ConfigurationInterface
         $hasAmount        = false;
         $hasForeignAmount = false;
         $hasForeignCode   = false;
-        for ($i = 0; $i < $count; ++$i) {
-            $role = $config['column-roles'][$i] ?? '_ignore';
+        foreach ($roles as $role) {
             if ('_ignore' !== $role) {
                 ++$assigned;
             }
@@ -180,7 +107,39 @@ class ConfigureRolesHandler implements ConfigurationInterface
         }
 
 
-        return new MessageBag;
+        return new MessageBag; // @codeCoverageIgnore
+    }
+
+    /**
+     * Store data associated with current stage.
+     *
+     * @param array $data
+     *
+     * @return MessageBag
+     */
+    public function configureJob(array $data): MessageBag
+    {
+        $config = $this->importJob->configuration;
+        $count  = $config['column-count'];
+        for ($i = 0; $i < $count; ++$i) {
+            $role                            = $data['role'][$i] ?? '_ignore';
+            $mapping                         = (isset($data['map'][$i]) && $data['map'][$i] === '1');
+            $config['column-roles'][$i]      = $role;
+            $config['column-do-mapping'][$i] = $mapping;
+            Log::debug(sprintf('Column %d has been given role %s (mapping: %s)', $i, $role, var_export($mapping, true)));
+        }
+        $config   = $this->ignoreUnmappableColumns($config);
+        $messages = $this->configurationComplete($config);
+
+        if ($messages->count() === 0) {
+            $this->repository->setStage($this->importJob, 'ready_to_run');
+            if ($this->isMappingNecessary($config)) {
+                $this->repository->setStage($this->importJob, 'map');
+            }
+            $this->repository->setConfiguration($this->importJob, $config);
+        }
+
+        return $messages;
     }
 
     /**
@@ -188,7 +147,7 @@ class ConfigureRolesHandler implements ConfigurationInterface
      *
      * @param array $line
      */
-    private function getExampleFromLine(array $line): void
+    public function getExampleFromLine(array $line): void
     {
         foreach ($line as $column => $value) {
             $value = trim($value);
@@ -199,33 +158,42 @@ class ConfigureRolesHandler implements ConfigurationInterface
     }
 
     /**
+     * @return array
+     */
+    public function getExamples(): array
+    {
+        return $this->examples;
+    }
+
+    /**
      * Return a bunch of examples from the CSV file the user has uploaded.
      *
      * @param Reader $reader
+     * @param array  $config
      *
      * @throws FireflyException
      */
-    private function getExamples(Reader $reader): void
+    public function getExamplesFromFile(Reader $reader, array $config): void
     {
-        // configure example data:
-        $config = $this->importJob->configuration;
         $limit  = (int)config('csv.example_rows', 5);
         $offset = isset($config['has-headers']) && $config['has-headers'] === true ? 1 : 0;
 
         // make statement.
         try {
             $stmt = (new Statement)->limit($limit)->offset($offset);
+            // @codeCoverageIgnoreStart
         } catch (Exception $e) {
             Log::error($e->getMessage());
             throw new FireflyException($e->getMessage());
         }
+        // @codeCoverageIgnoreEnd
 
         // grab the records:
         $records = $stmt->process($reader);
         /** @var array $line */
         foreach ($records as $line) {
             $line               = array_values($line);
-            $line               = $this->processSpecifics($line);
+            $line               = $this->processSpecifics($config, $line);
             $count              = \count($line);
             $this->totalColumns = $count > $this->totalColumns ? $count : $this->totalColumns;
             $this->getExampleFromLine($line);
@@ -239,23 +207,25 @@ class ConfigureRolesHandler implements ConfigurationInterface
      * Get the header row, if one is present.
      *
      * @param Reader $reader
+     * @param array  $config
      *
      * @return array
      * @throws FireflyException
      */
-    private function getHeaders(Reader $reader): array
+    public function getHeaders(Reader $reader, array $config): array
     {
         $headers = [];
-        $config  = $this->importJob->configuration;
-        if ($config['has-headers']) {
+        if (isset($config['has-headers']) && $config['has-headers'] === true) {
             try {
                 $stmt    = (new Statement)->limit(1)->offset(0);
                 $records = $stmt->process($reader);
                 $headers = $records->fetchOne(0);
+                // @codeCoverageIgnoreStart
             } catch (Exception $e) {
                 Log::error($e->getMessage());
                 throw new FireflyException($e->getMessage());
             }
+            // @codeCoverageIgnoreEnd
             Log::debug('Detected file headers:', $headers);
         }
 
@@ -263,15 +233,45 @@ class ConfigureRolesHandler implements ConfigurationInterface
     }
 
     /**
+     * Get the data necessary to show the configuration screen.
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    public function getNextData(): array
+    {
+        try {
+            $reader = $this->getReader();
+            // @codeCoverageIgnoreStart
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            throw new FireflyException($e->getMessage());
+        }
+        // @codeCoverageIgnoreEnd
+        $configuration = $this->importJob->configuration;
+        $headers       = $this->getHeaders($reader, $configuration);
+
+        // get example rows:
+        $this->getExamplesFromFile($reader, $configuration);
+
+        return [
+            'examples' => $this->examples,
+            'roles'    => $this->getRoles(),
+            'total'    => $this->totalColumns,
+            'headers'  => $headers,
+        ];
+    }
+
+    /**
      * Return an instance of a CSV file reader so content of the file can be read.
      *
      * @throws \League\Csv\Exception
      */
-    private function getReader(): Reader
+    public function getReader(): Reader
     {
         $content = '';
         /** @var Collection $collection */
-        $collection = $this->importJob->attachments;
+        $collection = $this->repository->getAttachments($this->importJob);
         /** @var Attachment $attachment */
         foreach ($collection as $attachment) {
             if ($attachment->filename === 'import_file') {
@@ -289,9 +289,10 @@ class ConfigureRolesHandler implements ConfigurationInterface
     /**
      * Returns all possible roles and translate their name. Then sort them.
      *
+     * @codeCoverageIgnore
      * @return array
      */
-    private function getRoles(): array
+    public function getRoles(): array
     {
         $roles = [];
         foreach (array_keys(config('csv.import_roles')) as $role) {
@@ -310,7 +311,7 @@ class ConfigureRolesHandler implements ConfigurationInterface
      *
      * @return array
      */
-    private function ignoreUnmappableColumns(array $config): array
+    public function ignoreUnmappableColumns(array $config): array
     {
         $count = $config['column-count'];
         for ($i = 0; $i < $count; ++$i) {
@@ -333,13 +334,13 @@ class ConfigureRolesHandler implements ConfigurationInterface
      *
      * @return bool
      */
-    private function isMappingNecessary(array $config): bool
+    public function isMappingNecessary(array $config): bool
     {
-        $count      = $config['column-count'];
+        /** @var array $doMapping */
+        $doMapping  = $config['column-do-mapping'] ?? [];
         $toBeMapped = 0;
-        for ($i = 0; $i < $count; ++$i) {
-            $mapping = $config['column-do-mapping'][$i] ?? false;
-            if (true === $mapping) {
+        foreach ($doMapping as $doMap) {
+            if (true === $doMap) {
                 ++$toBeMapped;
             }
         }
@@ -350,7 +351,7 @@ class ConfigureRolesHandler implements ConfigurationInterface
     /**
      * Make sure that the examples do not contain double data values.
      */
-    private function makeExamplesUnique(): void
+    public function makeExamplesUnique(): void
     {
         foreach ($this->examples as $index => $values) {
             $this->examples[$index] = array_unique($values);
@@ -360,16 +361,20 @@ class ConfigureRolesHandler implements ConfigurationInterface
     /**
      * if the user has configured specific fixes to be applied, they must be applied to the example data as well.
      *
+     * @param array $config
      * @param array $line
      *
      * @return array
      */
-    private function processSpecifics(array $line): array
+    public function processSpecifics(array $config, array $line): array
     {
-        $config    = $this->importJob->configuration;
-        $specifics = $config['specifics'] ?? [];
-        $names     = array_keys($specifics);
+        $validSpecifics = array_keys(config('csv.import_specifics'));
+        $specifics      = $config['specifics'] ?? [];
+        $names          = array_keys($specifics);
         foreach ($names as $name) {
+            if (!\in_array($name, $validSpecifics, true)) {
+                continue;
+            }
             /** @var SpecificInterface $specific */
             $specific = app('FireflyIII\Import\Specifics\\' . $name);
             $line     = $specific->run($line);
@@ -381,13 +386,29 @@ class ConfigureRolesHandler implements ConfigurationInterface
 
     /**
      * Save the column count in the job. It's used in a later stage.
+     * TODO move config out of this method (make it a parameter).
      *
      * @return void
      */
-    private function saveColumCount(): void
+    public function saveColumCount(): void
     {
         $config                 = $this->importJob->configuration;
         $config['column-count'] = $this->totalColumns;
         $this->repository->setConfiguration($this->importJob, $config);
+    }
+
+    /**
+     * Set job and some start values.
+     *
+     * @param ImportJob $job
+     */
+    public function setJob(ImportJob $job): void
+    {
+        $this->importJob  = $job;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($job->user);
+        $this->attachments  = app(AttachmentHelperInterface::class);
+        $this->totalColumns = 0;
+        $this->examples     = [];
     }
 }

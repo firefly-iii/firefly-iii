@@ -145,7 +145,7 @@ class ConfigureUploadHandler implements ConfigurationInterface
      *
      * @return array
      */
-    private function getSpecifics(array $data): array
+    public function getSpecifics(array $data): array
     {
         $return = [];
         // check if specifics given are correct:
@@ -153,7 +153,7 @@ class ConfigureUploadHandler implements ConfigurationInterface
 
             foreach ($data['specifics'] as $name) {
                 // verify their content.
-                $className = sprintf('FireflyIII\Import\Specifics\%s', $name);
+                $className = sprintf('FireflyIII\\Import\\Specifics\\%s', $name);
                 if (class_exists($className)) {
                     $return[$name] = 1;
                 }

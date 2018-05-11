@@ -67,7 +67,7 @@ class ConfigureMappingHandler implements ConfigurationInterface
         $specifics      = $config['specifics'] ?? [];
         $names          = array_keys($specifics);
         foreach ($names as $name) {
-            if (!\in_array($name, $validSpecifics)) {
+            if (!\in_array($name, $validSpecifics, true)) {
                 continue;
             }
             $class = config(sprintf('csv.import_specifics.%s', $name));
@@ -107,6 +107,26 @@ class ConfigureMappingHandler implements ConfigurationInterface
         $this->repository->setStage($this->importJob, 'ready_to_run');
 
         return new MessageBag;
+    }
+
+    /**
+     * Create the "mapper" class that will eventually return the correct data for the user
+     * to map against. For example: a list of asset accounts. A list of budgets. A list of tags.
+     *
+     * @param string $column
+     *
+     * @return MapperInterface
+     * @throws FireflyException
+     */
+    public function createMapper(string $column): MapperInterface
+    {
+        $mapperClass = config('csv.import_roles.' . $column . '.mapper');
+        $mapperName  = sprintf('FireflyIII\\Import\Mapper\\%s', $mapperClass);
+        if (!class_exists($mapperName)) {
+            throw new FireflyException(sprintf('Class "%s" does not exist. Cannot map "%s"', $mapperName, $column)); // @codeCoverageIgnore
+        }
+
+        return app($mapperName);
     }
 
     /**
@@ -326,25 +346,5 @@ class ConfigureMappingHandler implements ConfigurationInterface
         $this->repository->setUser($job->user);
         $this->attachments  = app(AttachmentHelperInterface::class);
         $this->columnConfig = [];
-    }
-
-    /**
-     * Create the "mapper" class that will eventually return the correct data for the user
-     * to map against. For example: a list of asset accounts. A list of budgets. A list of tags.
-     *
-     * @param string $column
-     *
-     * @return MapperInterface
-     * @throws FireflyException
-     */
-    private function createMapper(string $column): MapperInterface
-    {
-        $mapperClass = config('csv.import_roles.' . $column . '.mapper');
-        $mapperName  = sprintf('FireflyIII\\Import\Mapper\\%s', $mapperClass);
-        if (!class_exists($mapperName)) {
-            throw new FireflyException(sprintf('Class "%s" does not exist. Cannot map "%s"', $mapperName, $column)); // @codeCoverageIgnore
-        }
-
-        return app($mapperName);
     }
 }
