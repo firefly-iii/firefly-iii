@@ -85,7 +85,7 @@ class NewFileJobHandlerTest extends TestCase
         ];
 
         $handler = new NewFileJobHandler;
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         try {
             $messages = $handler->configureJob($data);
         } catch (FireflyException $e) {
@@ -139,7 +139,7 @@ class NewFileJobHandlerTest extends TestCase
         ];
 
         $handler = new NewFileJobHandler;
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         try {
             $messages = $handler->configureJob($data);
         } catch (FireflyException $e) {
@@ -190,7 +190,7 @@ class NewFileJobHandlerTest extends TestCase
         $repository->shouldReceive('setConfiguration')->withArgs([Mockery::any(), ['a' => 'b']])->once();
 
         $handler = new NewFileJobHandler;
-        $handler->setJob($job);
+        $handler->setImportJob($job);
 
         try {
             $handler->storeConfiguration();
@@ -237,7 +237,7 @@ class NewFileJobHandlerTest extends TestCase
 
 
         $handler = new NewFileJobHandler;
-        $handler->setJob($job);
+        $handler->setImportJob($job);
 
         try {
             $result = $handler->validateAttachments();
@@ -288,7 +288,7 @@ class NewFileJobHandlerTest extends TestCase
 
 
         $handler = new NewFileJobHandler;
-        $handler->setJob($job);
+        $handler->setImportJob($job);
 
         try {
             $result = $handler->validateAttachments();

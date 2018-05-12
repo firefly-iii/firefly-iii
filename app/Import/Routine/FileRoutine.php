@@ -55,7 +55,7 @@ class FileRoutine implements RoutineInterface
             // get processor, depending on file type
             // is just CSV for now.
             $processor = $this->getProcessor();
-            $processor->setJob($this->importJob);
+            $processor->setImportJob($this->importJob);
             $transactions = $processor->run();
 
             $this->repository->setStatus($this->importJob, 'provider_finished');
@@ -68,13 +68,13 @@ class FileRoutine implements RoutineInterface
     }
 
     /**
-     * @param ImportJob $job
+     * @param ImportJob $importJob
      *
      * @return void
      */
-    public function setJob(ImportJob $job): void
+    public function setImportJob(ImportJob $importJob): void
     {
-        $this->importJob  = $job;
+        $this->importJob  = $importJob;
         $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($job->user);
     }

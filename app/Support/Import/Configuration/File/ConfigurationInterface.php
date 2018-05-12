@@ -47,7 +47,7 @@ interface ConfigurationInterface
     public function getNextData(): array;
 
     /**
-     * @param ImportJob $job
+     * @param ImportJob $importJob
      */
-    public function setJob(ImportJob $job): void;
+    public function setImportJob(ImportJob $importJob): void;
 }

@@ -80,7 +80,7 @@ class ConfigureUploadHandlerTest extends TestCase
         $repository->shouldReceive('setStage')->once()->withArgs([Mockery::any(), 'roles']);
 
         $handler = new ConfigureUploadHandler;
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         $result = $handler->configureJob($data);
         $this->assertCount(0, $result);
     }
@@ -127,7 +127,7 @@ class ConfigureUploadHandlerTest extends TestCase
         $repository->shouldReceive('setConfiguration')->once()->withArgs([Mockery::any(), $expectedConfig]);
 
         $handler = new ConfigureUploadHandler;
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         $result = $handler->configureJob($data);
         $this->assertCount(1, $result);
         $this->assertEquals('You have selected an invalid account to import into.', $result->get('account')[0]);
@@ -153,7 +153,7 @@ class ConfigureUploadHandlerTest extends TestCase
         $repository->shouldReceive('setConfiguration')->once()->withArgs([Mockery::any(), ['date-format' => 'Ymd']]);
 
         $handler = new ConfigureUploadHandler;
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         $result   = $handler->getNextData();
         $expected = [
             'accounts'   => [],

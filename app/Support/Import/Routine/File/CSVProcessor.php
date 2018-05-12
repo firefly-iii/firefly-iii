@@ -80,11 +80,11 @@ class CSVProcessor implements FileProcessorInterface
     }
 
     /**
-     * @param ImportJob $job
+     * @param ImportJob $importJob
      */
-    public function setImportJob(ImportJob $job): void
+    public function setImportJob(ImportJob $importJob): void
     {
-        Log::debug('Now in setJob()');
-        $this->importJob = $job;
+        Log::debug('Now in setImportJob()');
+        $this->importJob = $importJob;
     }
 }

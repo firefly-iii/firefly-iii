@@ -53,7 +53,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // should be false:
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $this->assertFalse($configurator->configurationComplete());
     }
 
@@ -76,7 +76,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // should be false:
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $this->assertFalse($configurator->configurationComplete());
     }
 
@@ -101,7 +101,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // should be false:
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $this->assertFalse($configurator->configurationComplete());
     }
 
@@ -129,7 +129,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // should be false:
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $this->assertFalse($configurator->configurationComplete());
     }
 
@@ -156,7 +156,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // should be false:
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $this->assertFalse($configurator->configurationComplete());
     }
 
@@ -184,7 +184,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // should be false:
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $this->assertTrue($configurator->configurationComplete());
     }
 
@@ -211,7 +211,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // should be false:
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $this->assertTrue($configurator->configurationComplete());
     }
 
@@ -245,7 +245,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // call configuration
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $messages = $configurator->configureJob($data);
         $this->assertTrue($messages->has('some_key'));
     }
@@ -280,7 +280,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // call configuration
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $messages = $configurator->configureJob($data);
         $this->assertTrue($messages->has('some_key'));
     }
@@ -315,7 +315,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // call configuration
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $messages = $configurator->configureJob($data);
         $this->assertTrue($messages->has('some_key'));
     }
@@ -350,7 +350,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // call configuration
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $messages = $configurator->configureJob($data);
         $this->assertTrue($messages->has('some_key'));
     }
@@ -385,7 +385,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // call configuration
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $messages = $configurator->configureJob($data);
         $this->assertTrue($messages->has('some_key'));
     }
@@ -420,7 +420,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // call configuration
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $messages = $configurator->configureJob($data);
         $this->assertTrue($messages->has('some_key'));
     }
@@ -455,7 +455,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // call configuration
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $messages = $configurator->configureJob($data);
         $this->assertTrue($messages->has('some_key'));
     }
@@ -490,7 +490,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // call configuration
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $messages = $configurator->configureJob($data);
         $this->assertTrue($messages->has('some_key'));
     }
@@ -514,7 +514,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // call configuration
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $view = $configurator->getNextView();
         $this->assertEquals('import.fake.enter-album', $view);
     }
@@ -538,7 +538,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // call configuration
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $view = $configurator->getNextView();
         $this->assertEquals('import.fake.enter-artist', $view);
     }
@@ -562,7 +562,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // call configuration
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $view = $configurator->getNextView();
         $this->assertEquals('import.fake.apply-rules', $view);
     }
@@ -586,7 +586,7 @@ class FakeJobConfigurationTest extends TestCase
 
         // call configuration
         $configurator = new FakeJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $view = $configurator->getNextView();
         $this->assertEquals('import.fake.enter-song', $view);
     }

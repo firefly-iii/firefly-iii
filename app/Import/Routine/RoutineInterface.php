@@ -40,9 +40,9 @@ interface RoutineInterface
     public function run(): void;
 
     /**
-     * @param ImportJob $job
+     * @param ImportJob $importJob
      *
      * @return void
      */
-    public function setJob(ImportJob $job): void;
+    public function setImportJob(ImportJob $importJob): void;
 }

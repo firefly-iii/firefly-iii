@@ -76,7 +76,7 @@ class ImportArrayStorageTest extends TestCase
         $journalRepos->shouldReceive('setUser')->once();
 
         $storage = new ImportArrayStorage;
-        $storage->setJob($job);
+        $storage->setImportJob($job);
     }
 
     /**
@@ -131,7 +131,7 @@ class ImportArrayStorageTest extends TestCase
                    ->withArgs([Mockery::any(), 'Entry #1 ("' . $transactions[1]['description'] . '") could not be imported. It already exists.']);
 
         $storage = new ImportArrayStorage;
-        $storage->setJob($job);
+        $storage->setImportJob($job);
         $result = new Collection;
         try {
             $result = $storage->store();
@@ -170,7 +170,7 @@ class ImportArrayStorageTest extends TestCase
         $journalRepos->shouldReceive('setUser')->once();
 
         $storage = new ImportArrayStorage;
-        $storage->setJob($job);
+        $storage->setImportJob($job);
         $result = new Collection;
         try {
             $result = $storage->store();
@@ -214,7 +214,7 @@ class ImportArrayStorageTest extends TestCase
         $journalRepos->shouldReceive('setUser')->once();
 
         $storage = new ImportArrayStorage;
-        $storage->setJob($job);
+        $storage->setImportJob($job);
         $result = new Collection;
         try {
             $result = $storage->store();
@@ -265,7 +265,7 @@ class ImportArrayStorageTest extends TestCase
         $journalRepos->shouldReceive('findByHash')->andReturn(null)->once();
 
         $storage = new ImportArrayStorage;
-        $storage->setJob($job);
+        $storage->setImportJob($job);
         $result = new Collection;
         try {
             $result = $storage->store();
@@ -320,7 +320,7 @@ class ImportArrayStorageTest extends TestCase
         $journalRepos->shouldReceive('findByHash')->andReturn(null)->once();
 
         $storage = new ImportArrayStorage;
-        $storage->setJob($job);
+        $storage->setImportJob($job);
         $result = new Collection;
         try {
             $result = $storage->store();
@@ -393,7 +393,7 @@ class ImportArrayStorageTest extends TestCase
         $collector->shouldReceive('getJournals')->andReturn($transferCollection);
 
         $storage = new ImportArrayStorage;
-        $storage->setJob($job);
+        $storage->setImportJob($job);
         $result = new Collection;
         try {
             $result = $storage->store();
@@ -472,7 +472,7 @@ class ImportArrayStorageTest extends TestCase
         $collector->shouldReceive('getJournals')->andReturn($transferCollection);
 
         $storage = new ImportArrayStorage;
-        $storage->setJob($job);
+        $storage->setImportJob($job);
         $result = new Collection;
         try {
             $result = $storage->store();

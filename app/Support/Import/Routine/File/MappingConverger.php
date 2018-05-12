@@ -82,6 +82,7 @@ class MappingConverger
     }
 
     /**
+     * @codeCoverageIgnore
      * @return array
      */
     public function getMappedValues(): array

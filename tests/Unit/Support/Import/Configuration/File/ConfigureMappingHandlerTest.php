@@ -74,7 +74,7 @@ class ConfigureMappingHandlerTest extends TestCase
         ];
 
         $handler = new ConfigureMappingHandler;
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         $result = $handler->applySpecifics($config, []);
         $this->assertEquals($expected, $result);
 
@@ -139,7 +139,7 @@ class ConfigureMappingHandlerTest extends TestCase
 
 
         $handler = new ConfigureMappingHandler;
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         $handler->configureJob($input);
 
     }
@@ -197,7 +197,7 @@ class ConfigureMappingHandlerTest extends TestCase
         ];
 
         $handler = new ConfigureMappingHandler;
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         try {
             $result = $handler->doColumnConfig($input);
         } catch (FireflyException $e) {
@@ -231,7 +231,7 @@ class ConfigureMappingHandlerTest extends TestCase
         ];
 
         $handler = new ConfigureMappingHandler;
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         foreach ($combinations as $info) {
             $this->assertEquals($info['expected'], $handler->doMapOfColumn($info['role'], $info['requested']));
         }
@@ -298,7 +298,7 @@ class ConfigureMappingHandlerTest extends TestCase
 
 
         $handler = new ConfigureMappingHandler;
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         try {
             $result = $handler->getNextData();
         } catch (FireflyException $e) {
@@ -340,7 +340,7 @@ class ConfigureMappingHandlerTest extends TestCase
         ];
 
         $handler = new ConfigureMappingHandler;
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         foreach ($combinations as $info) {
             $this->assertEquals($info['expected'], $handler->getPreProcessorName($info['role']));
         }
@@ -386,7 +386,7 @@ class ConfigureMappingHandlerTest extends TestCase
         $attachments->shouldReceive('getAttachmentContent')->withArgs([Mockery::any()])->andReturn($fileContent);
 
         $handler = new ConfigureMappingHandler;
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         try {
             $reader = $handler->getReader();
         } catch (Exception $e) {
@@ -449,7 +449,7 @@ class ConfigureMappingHandlerTest extends TestCase
         $job->save();
 
         $handler = new ConfigureMappingHandler;
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         $result = [];
         try {
             $result = $handler->getValuesForMapping($reader, $config, $columnConfig);
@@ -478,7 +478,7 @@ class ConfigureMappingHandlerTest extends TestCase
         $job->save();
 
         $handler = new ConfigureMappingHandler;
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         $keys = array_keys(config('csv.import_roles'));
         foreach ($keys as $key) {
             $this->assertEquals($key, $handler->sanitizeColumnName($key));

@@ -198,7 +198,7 @@ class JobStatusControllerTest extends TestCase
 
         // mock calls:
         $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'running']);
-        $routine->shouldReceive('setJob')->once();
+        $routine->shouldReceive('setImportJob')->once();
         $routine->shouldReceive('run')->once();
 
         // call thing.
@@ -229,7 +229,7 @@ class JobStatusControllerTest extends TestCase
         // mock calls:
         $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'running']);
         $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'error']);
-        $routine->shouldReceive('setJob')->once();
+        $routine->shouldReceive('setImportJob')->once();
         $routine->shouldReceive('run')->andThrow(new Exception('Unknown exception'));
 
         // call thing.
@@ -260,7 +260,7 @@ class JobStatusControllerTest extends TestCase
         // mock calls:
         $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'running']);
         $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'error']);
-        $routine->shouldReceive('setJob')->once();
+        $routine->shouldReceive('setImportJob')->once();
         $routine->shouldReceive('run')->andThrow(new FireflyException('Unknown exception'));
 
         // call thing.
@@ -312,7 +312,7 @@ class JobStatusControllerTest extends TestCase
         // mock calls:
         $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'storing_data']);
         $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'storage_finished']);
-        $storage->shouldReceive('setJob')->once();
+        $storage->shouldReceive('setImportJob')->once();
         $storage->shouldReceive('store')->once();
 
 
@@ -343,7 +343,7 @@ class JobStatusControllerTest extends TestCase
         // mock calls:
         $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'storing_data']);
         $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'error']);
-        $storage->shouldReceive('setJob')->once();
+        $storage->shouldReceive('setImportJob')->once();
         $storage->shouldReceive('store')->once()->andThrow(new FireflyException('Some storage exception.'));
 
 

@@ -81,15 +81,15 @@ class ConfigureUploadHandler implements ConfigurationInterface
     }
 
     /**
-     * @param ImportJob $job
+     * @param ImportJob $importJob
      */
-    public function setJob(ImportJob $job): void
+    public function setImportJob(ImportJob $importJob): void
     {
-        $this->importJob  = $job;
+        $this->importJob  = $importJob;
         $this->repository = app(ImportJobRepositoryInterface::class);
-        $this->repository->setUser($job->user);
+        $this->repository->setUser($importJob->user);
         $this->accountRepos = app(AccountRepositoryInterface::class);
-        $this->accountRepos->setUser($job->user);
+        $this->accountRepos->setUser($importJob->user);
 
     }
 

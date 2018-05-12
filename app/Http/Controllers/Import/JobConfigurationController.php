@@ -178,7 +178,7 @@ class JobConfigurationController extends Controller
         Log::debug(sprintf('Going to create class "%s"', $className));
         /** @var JobConfigurationInterface $configurator */
         $configurator = app($className);
-        $configurator->setJob($importJob);
+        $configurator->setImportJob($importJob);
 
         return $configurator;
     }

@@ -159,7 +159,7 @@ class ConfigureRolesHandlerTest extends TestCase
         $repository->shouldReceive('setConfiguration')->once()->withArgs([Mockery::any(), $expected]);
 
         $handler = new ConfigureRolesHandler();
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         $handler->configureJob($data);
     }
 
@@ -207,7 +207,7 @@ class ConfigureRolesHandlerTest extends TestCase
         $file    = "one,two,,three\nfour,five,,six\none,three,X,three";
         $reader  = Reader::createFromString($file);
         $handler = new ConfigureRolesHandler;
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         try {
             $handler->getExamplesFromFile($reader, $job->configuration);
         } catch (Exception $e) {
@@ -321,7 +321,7 @@ class ConfigureRolesHandlerTest extends TestCase
         ];
 
         $handler = new ConfigureRolesHandler();
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         try {
             $result = $handler->getNextData();
         } catch (Exception $e) {
@@ -373,7 +373,7 @@ class ConfigureRolesHandlerTest extends TestCase
         $attachments->shouldReceive('getAttachmentContent')->withArgs([Mockery::any()])->andReturn($fileContent);
 
         $handler = new ConfigureRolesHandler();
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         try {
             $reader = $handler->getReader();
         } catch (Exception $e) {
@@ -518,7 +518,7 @@ class ConfigureRolesHandlerTest extends TestCase
                    ->withArgs([Mockery::any(), ['column-count' => 0]]);
 
         $handler = new ConfigureRolesHandler();
-        $handler->setJob($job);
+        $handler->setImportJob($job);
         $handler->saveColumCount();
     }
 

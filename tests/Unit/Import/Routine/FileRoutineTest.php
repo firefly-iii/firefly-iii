@@ -63,12 +63,12 @@ class FileRoutineTest extends TestCase
         $repository->shouldReceive('setStage')->withArgs([Mockery::any(), 'final'])->once();
         $repository->shouldReceive('setTransactions')->withArgs([Mockery::any(), ['a' => 'b']])->once();
         $repository->shouldReceive('getConfiguration')->withArgs([Mockery::any()])->once()->andReturn([]);
-        $processor->shouldReceive('setJob')->once();
+        $processor->shouldReceive('setImportJob')->once();
         $processor->shouldReceive('run')->once()->andReturn(['a' => 'b']);
 
 
         $routine = new FileRoutine;
-        $routine->setJob($job);
+        $routine->setImportJob($job);
         try {
             $routine->run();
         } catch (FireflyException $e) {

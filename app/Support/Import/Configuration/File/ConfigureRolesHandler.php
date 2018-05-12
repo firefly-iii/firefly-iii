@@ -400,13 +400,13 @@ class ConfigureRolesHandler implements ConfigurationInterface
     /**
      * Set job and some start values.
      *
-     * @param ImportJob $job
+     * @param ImportJob $importJob
      */
-    public function setJob(ImportJob $job): void
+    public function setImportJob(ImportJob $importJob): void
     {
-        $this->importJob  = $job;
+        $this->importJob  = $importJob;
         $this->repository = app(ImportJobRepositoryInterface::class);
-        $this->repository->setUser($job->user);
+        $this->repository->setUser($importJob->user);
         $this->attachments  = app(AttachmentHelperInterface::class);
         $this->totalColumns = 0;
         $this->examples     = [];

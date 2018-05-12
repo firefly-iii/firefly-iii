@@ -104,12 +104,12 @@ class NewFileJobHandler implements ConfigurationInterface
     /**
      * @param ImportJob $job
      */
-    public function setJob(ImportJob $job): void
+    public function setImportJob(ImportJob $importJob): void
     {
-        $this->importJob   = $job;
+        $this->importJob   = $importJob;
         $this->repository  = app(ImportJobRepositoryInterface::class);
         $this->attachments = app(AttachmentHelperInterface::class);
-        $this->repository->setUser($job->user);
+        $this->repository->setUser($importJob->user);
     }
 
     /**

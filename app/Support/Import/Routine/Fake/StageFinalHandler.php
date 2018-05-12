@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Import\Routine\Fake;
 
 use Carbon\Carbon;
+use FireflyIII\Models\ImportJob;
 
 /**
  * @codeCoverageIgnore
@@ -34,17 +35,8 @@ use Carbon\Carbon;
  */
 class StageFinalHandler
 {
-
-    private $job;
-
-    /**
-     * @param mixed $job
-     */
-    public function setJob($job): void
-    {
-        $this->job = $job;
-    }
-
+    /** @var ImportJob */
+    private $importJob;
 
     /**
      * @return array
@@ -58,7 +50,7 @@ class StageFinalHandler
                 'type'               => 'withdrawal',
                 'date'               => Carbon::create()->format('Y-m-d'),
                 'tags'               => '',
-                'user'               => $this->job->user_id,
+                'user'               => $this->importJob->user_id,
 
                 // all custom fields:
                 'internal_reference' => null,
@@ -103,7 +95,7 @@ class StageFinalHandler
             'type'               => 'transfer',
             'date'               => '2017-02-28',
             'tags'               => '',
-            'user'               => $this->job->user_id,
+            'user'               => $this->importJob->user_id,
 
             // all custom fields:
             'internal_reference' => null,
@@ -143,6 +135,14 @@ class StageFinalHandler
 
         return $transactions;
 
+    }
+
+    /**
+     * @param ImportJob $importJob
+     */
+    public function setImportJob(ImportJob $importJob): void
+    {
+        $this->importJob = $importJob;
     }
 
 }

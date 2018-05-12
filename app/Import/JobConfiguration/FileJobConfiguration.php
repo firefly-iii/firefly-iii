@@ -75,7 +75,7 @@ class FileJobConfiguration implements JobConfigurationInterface
     public function configureJob(array $data): MessageBag
     {
         $configurator = $this->getConfigurationObject();
-        $configurator->setJob($this->importJob);
+        $configurator->setImportJob($this->importJob);
 
         return $configurator->configureJob($data);
     }
@@ -89,7 +89,7 @@ class FileJobConfiguration implements JobConfigurationInterface
     public function getNextData(): array
     {
         $configurator = $this->getConfigurationObject();
-        $configurator->setJob($this->importJob);
+        $configurator->setImportJob($this->importJob);
 
         return $configurator->getNextData();
     }
@@ -124,12 +124,12 @@ class FileJobConfiguration implements JobConfigurationInterface
     }
 
     /**
-     * @param ImportJob $job
+     * @param ImportJob $importJob
      */
-    public function setJob(ImportJob $job): void
+    public function setImportJob(ImportJob $importJob): void
     {
-        $this->importJob = $job;
-        $this->repository->setUser($job->user);
+        $this->importJob = $importJob;
+        $this->repository->setUser($importJob->user);
     }
 
     /**

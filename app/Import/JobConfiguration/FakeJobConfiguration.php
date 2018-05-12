@@ -33,7 +33,7 @@ use Illuminate\Support\MessageBag;
 class FakeJobConfiguration implements JobConfigurationInterface
 {
     /** @var ImportJob */
-    private $job;
+    private $importJob;
 
     /** @var ImportJobRepositoryInterface */
     private $repository;
@@ -57,8 +57,8 @@ class FakeJobConfiguration implements JobConfigurationInterface
         // 'artist' must be 'david bowie', case insensitive
         // 'song' must be 'golden years', case insensitive.
         // if stage is not "new", then album must be 'station to station'
-        $config = $this->job->configuration;
-        if ($this->job->stage === 'new') {
+        $config = $this->importJob->configuration;
+        if ($this->importJob->stage === 'new') {
             return (isset($config['artist']) && 'david bowie' === strtolower($config['artist']))
                    && (isset($config['song']) && 'golden years' === strtolower($config['song']))
                    && isset($config['apply-rules']);
@@ -82,7 +82,7 @@ class FakeJobConfiguration implements JobConfigurationInterface
         $song          = strtolower($data['song'] ?? '');
         $album         = strtolower($data['album'] ?? '');
         $applyRules    = isset($data['apply_rules']) ? (int)$data['apply_rules'] === 1 : null;
-        $configuration = $this->job->configuration;
+        $configuration = $this->importJob->configuration;
         if ($artist === 'david bowie') {
             // store artist
             $configuration['artist'] = $artist;
@@ -101,7 +101,7 @@ class FakeJobConfiguration implements JobConfigurationInterface
             $configuration['apply-rules'] = $applyRules;
         }
 
-        $this->repository->setConfiguration($this->job, $configuration);
+        $this->repository->setConfiguration($this->importJob, $configuration);
         $messages = new MessageBag();
 
         if (\count($configuration) !== 3) {
@@ -135,7 +135,7 @@ class FakeJobConfiguration implements JobConfigurationInterface
     public function getNextView(): string
     {
         // first configure artist:
-        $config     = $this->job->configuration;
+        $config     = $this->importJob->configuration;
         $artist     = $config['artist'] ?? '';
         $song       = $config['song'] ?? '';
         $album      = $config['album'] ?? '';
@@ -149,18 +149,18 @@ class FakeJobConfiguration implements JobConfigurationInterface
         if (strtolower($song) !== 'golden years') {
             return 'import.fake.enter-song';
         }
-        if (strtolower($album) !== 'station to station' && $this->job->stage !== 'new') {
+        if (strtolower($album) !== 'station to station' && $this->importJob->stage !== 'new') {
             return 'import.fake.enter-album';
         }
         return 'impossible-view'; // @codeCoverageIgnore
     }
 
     /**
-     * @param ImportJob $job
+     * @param ImportJob $importJob
      */
-    public function setJob(ImportJob $job): void
+    public function setImportJob(ImportJob $importJob): void
     {
-        $this->job = $job;
-        $this->repository->setUser($job->user);
+        $this->importJob = $importJob;
+        $this->repository->setUser($importJob->user);
     }
 }

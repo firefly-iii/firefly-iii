@@ -64,7 +64,7 @@ class JobConfigurationControllerTest extends TestCase
         $configurator = $this->mock(FakeJobConfiguration::class);
 
         // mock calls:
-        $configurator->shouldReceive('setJob')->once();
+        $configurator->shouldReceive('setImportJob')->once();
         $configurator->shouldReceive('configurationComplete')->once()->andReturn(false);
         $configurator->shouldReceive('getNextView')->once()->andReturn('import.fake.apply-rules');
         $configurator->shouldReceive('getNextData')->once()
@@ -122,7 +122,7 @@ class JobConfigurationControllerTest extends TestCase
         $configurator = $this->mock(FakeJobConfiguration::class);
 
         // mock calls:
-        $configurator->shouldReceive('setJob')->once();
+        $configurator->shouldReceive('setImportJob')->once();
         $configurator->shouldReceive('configurationComplete')->once()->andReturn(true);
         $repository->shouldReceive('updateStatus')->withArgs([Mockery::any(), 'ready_to_run']);
 
@@ -154,7 +154,7 @@ class JobConfigurationControllerTest extends TestCase
         $configurator = $this->mock(FakeJobConfiguration::class);
 
         // mock calls:
-        $configurator->shouldReceive('setJob')->once();
+        $configurator->shouldReceive('setImportJob')->once();
         $configurator->shouldReceive('configurationComplete')->once()->andReturn(false);
         $configurator->shouldReceive('configureJob')->withArgs([[]])->once()->andReturn($messages);
 
@@ -214,7 +214,7 @@ class JobConfigurationControllerTest extends TestCase
         $configurator = $this->mock(FakeJobConfiguration::class);
 
         // mock calls:
-        $configurator->shouldReceive('setJob')->once();
+        $configurator->shouldReceive('setImportJob')->once();
         $configurator->shouldReceive('configurationComplete')->once()->andReturn(true);
         $repository->shouldReceive('updateStatus')->withArgs([Mockery::any(), 'ready_to_run']);
 
@@ -247,7 +247,7 @@ class JobConfigurationControllerTest extends TestCase
         $configurator = $this->mock(FakeJobConfiguration::class);
 
         // mock calls:
-        $configurator->shouldReceive('setJob')->once();
+        $configurator->shouldReceive('setImportJob')->once();
         $configurator->shouldReceive('configurationComplete')->once()->andReturn(false);
         $configurator->shouldReceive('configureJob')->once()->andReturn($messages);
         $repository->shouldReceive('storeFileUpload')->once()->andReturn(new MessageBag);

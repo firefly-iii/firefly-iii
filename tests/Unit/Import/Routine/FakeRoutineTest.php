@@ -65,7 +65,7 @@ class FakeRoutineTest extends TestCase
 
 
         $routine = new FakeRoutine;
-        $routine->setJob($job);
+        $routine->setImportJob($job);
         try {
             $routine->run();
         } catch (FireflyException $e) {
@@ -98,10 +98,10 @@ class FakeRoutineTest extends TestCase
         $repository->shouldReceive('setStage')->withArgs([Mockery::any(), 'final'])->once();
         $repository->shouldReceive('setTransactions')->withArgs([Mockery::any(), []])->once();
         $handler->shouldReceive('getTransactions')->once()->andReturn([]);
-        $handler->shouldReceive('setJob')->once();
+        $handler->shouldReceive('setImportJob')->once();
 
         $routine = new FakeRoutine;
-        $routine->setJob($job);
+        $routine->setImportJob($job);
         try {
             $routine->run();
         } catch (FireflyException $e) {
@@ -136,7 +136,7 @@ class FakeRoutineTest extends TestCase
 
 
         $routine = new FakeRoutine;
-        $routine->setJob($job);
+        $routine->setImportJob($job);
         try {
             $routine->run();
         } catch (FireflyException $e) {

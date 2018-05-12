@@ -81,7 +81,7 @@ class FakeRoutine implements RoutineInterface
             case 'final':
                 /** @var StageFinalHandler $handler */
                 $handler = app(StageFinalHandler::class);
-                $handler->setJob($this->importJob);
+                $handler->setImportJob($this->importJob);
                 $transactions = $handler->getTransactions();
                 $this->repository->setStatus($this->importJob, 'provider_finished');
                 $this->repository->setStage($this->importJob, 'final');
@@ -90,14 +90,14 @@ class FakeRoutine implements RoutineInterface
     }
 
     /**
-     * @param ImportJob $job
+     * @param ImportJob $importJob
      *
      * @return
      */
-    public function setJob(ImportJob $job): void
+    public function setImportJob(ImportJob $importJob): void
     {
-        $this->importJob = $job;
+        $this->importJob = $importJob;
         $this->repository = app(ImportJobRepositoryInterface::class);
-        $this->repository->setUser($job->user);
+        $this->repository->setUser($importJob->user);
     }
 }

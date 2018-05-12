@@ -31,6 +31,7 @@ use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Placeholder\ImportTransaction;
+use InvalidArgumentException;
 use Log;
 
 /**
@@ -112,6 +113,8 @@ class ImportableConverter
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param array $mappedValues
      */
     public function setMappedValues(array $mappedValues): void
@@ -179,18 +182,27 @@ class ImportableConverter
             Log::debug('Destination is an expense account. This is a withdrawal.');
             $transactionType = 'withdrawal';
         }
-        if ($transactionType === 'unknown') {
-            Log::error(
+        if ($destination->id === $source->id) {
+            throw new FireflyException(
                 sprintf(
-                    'Cannot determine transaction type. Source account is a %s, destination is a %s',
-                    $source->accountType->type, $destination->accountType->type
-                ), ['source' => $source->toArray(), 'dest' => $destination->toArray()]
+                    'Source ("%s", #%d) and destination ("%s", #%d) are the same account.', $source->name, $source->id, $destination->name, $destination->id
+                )
             );
         }
 
+        if ($transactionType === 'unknown') {
+            $message = sprintf(
+                'Cannot determine transaction type. Source account is a %s, destination is a %s', $source->accountType->type, $destination->accountType->type
+            );
+            Log::error($message, ['source' => $source->toArray(), 'dest' => $destination->toArray()]);
+            throw new FireflyException($message);
+        }
+
+        // throw error when both are he same
+
         try {
             $date = Carbon::createFromFormat($this->config['date-format'] ?? 'Ymd', $importable->date);
-        } catch (InvalidDateException $e) {
+        } catch (InvalidDateException|InvalidArgumentException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             $date = new Carbon;

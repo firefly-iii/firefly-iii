@@ -59,7 +59,7 @@ class FileJobConfigurationTest extends TestCase
 
         // should be false:
         $configurator = new FileJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $this->assertFalse($configurator->configurationComplete());
     }
 
@@ -82,7 +82,7 @@ class FileJobConfigurationTest extends TestCase
 
         // should be false:
         $configurator = new FileJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         $this->assertTrue($configurator->configurationComplete());
     }
 
@@ -107,10 +107,10 @@ class FileJobConfigurationTest extends TestCase
         $result       = null;
 
         $configurator = new FileJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
 
         $handler = $this->mock(ConfigureMappingHandler::class);
-        $handler->shouldReceive('setJob')->once()->withArgs([Mockery::any()]);
+        $handler->shouldReceive('setImportJob')->once()->withArgs([Mockery::any()]);
         $handler->shouldReceive('configureJob')->withArgs([['c' => 'd']])->andReturn($bag)->once();
 
         try {
@@ -140,10 +140,10 @@ class FileJobConfigurationTest extends TestCase
 
         $result       = 'x';
         $configurator = new FileJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
 
         $handler = $this->mock(ConfigureUploadHandler::class);
-        $handler->shouldReceive('setJob')->once()->withArgs([Mockery::any()]);
+        $handler->shouldReceive('setImportJob')->once()->withArgs([Mockery::any()]);
         $handler->shouldReceive('getNextData')->andReturn(['a' => 'b'])->withNoArgs()->once();
 
         try {
@@ -173,10 +173,10 @@ class FileJobConfigurationTest extends TestCase
 
         $result       = 'x';
         $configurator = new FileJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
 
         $handler = $this->mock(ConfigureMappingHandler::class);
-        $handler->shouldReceive('setJob')->once()->withArgs([Mockery::any()]);
+        $handler->shouldReceive('setImportJob')->once()->withArgs([Mockery::any()]);
         $handler->shouldReceive('getNextData')->andReturn(['a' => 'b'])->withNoArgs()->once();
 
         try {
@@ -206,10 +206,10 @@ class FileJobConfigurationTest extends TestCase
 
         $result       = 'x';
         $configurator = new FileJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
 
         $handler = $this->mock(NewFileJobHandler::class);
-        $handler->shouldReceive('setJob')->once()->withArgs([Mockery::any()]);
+        $handler->shouldReceive('setImportJob')->once()->withArgs([Mockery::any()]);
         $handler->shouldReceive('getNextData')->andReturn(['a' => 'b'])->withNoArgs()->once();
 
         try {
@@ -239,10 +239,10 @@ class FileJobConfigurationTest extends TestCase
 
         $result       = 'x';
         $configurator = new FileJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
 
         $handler = $this->mock(ConfigureRolesHandler::class);
-        $handler->shouldReceive('setJob')->once()->withArgs([Mockery::any()]);
+        $handler->shouldReceive('setImportJob')->once()->withArgs([Mockery::any()]);
         $handler->shouldReceive('getNextData')->andReturn(['a' => 'b'])->withNoArgs()->once();
 
         try {
@@ -272,7 +272,7 @@ class FileJobConfigurationTest extends TestCase
 
         $result       = 'x';
         $configurator = new FileJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         try {
             $result = $configurator->getNextView();
         } catch (FireflyException $e) {
@@ -300,7 +300,7 @@ class FileJobConfigurationTest extends TestCase
 
         $result       = 'x';
         $configurator = new FileJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         try {
             $result = $configurator->getNextView();
         } catch (FireflyException $e) {
@@ -328,7 +328,7 @@ class FileJobConfigurationTest extends TestCase
 
         $result       = 'x';
         $configurator = new FileJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         try {
             $result = $configurator->getNextView();
         } catch (FireflyException $e) {
@@ -356,7 +356,7 @@ class FileJobConfigurationTest extends TestCase
 
         $result       = 'x';
         $configurator = new FileJobConfiguration;
-        $configurator->setJob($job);
+        $configurator->setImportJob($job);
         try {
             $result = $configurator->getNextView();
         } catch (FireflyException $e) {

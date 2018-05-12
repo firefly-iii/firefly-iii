@@ -36,6 +36,13 @@ interface JobConfigurationInterface
     public function __construct();
 
     /**
+     * Returns true when the initial configuration for this job is complete.
+     *
+     * @return bool
+     */
+    public function configurationComplete(): bool;
+
+    /**
      * Store any data from the $data array into the job. Anything in the message bag will be flashed
      * as an error to the user, regardless of its content.
      *
@@ -60,14 +67,7 @@ interface JobConfigurationInterface
     public function getNextView(): string;
 
     /**
-     * Returns true when the initial configuration for this job is complete.
-     *
-     * @return bool
+     * @param ImportJob $importJob
      */
-    public function configurationComplete(): bool;
-
-    /**
-     * @param ImportJob $job
-     */
-    public function setJob(ImportJob $job): void;
+    public function setImportJob(ImportJob $importJob): void;
 }

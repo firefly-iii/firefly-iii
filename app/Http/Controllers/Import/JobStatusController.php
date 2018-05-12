@@ -143,7 +143,7 @@ class JobStatusController extends Controller
 
         /** @var RoutineInterface $routine */
         $routine = app($className);
-        $routine->setJob($importJob);
+        $routine->setImportJob($importJob);
         try {
             $routine->run();
         } catch (FireflyException|Exception $e) {
@@ -213,7 +213,7 @@ class JobStatusController extends Controller
     {
         /** @var ImportArrayStorage $storage */
         $storage = app(ImportArrayStorage::class);
-        $storage->setJob($importJob);
+        $storage->setImportJob($importJob);
         try {
             $storage->store();
         } catch (FireflyException|Exception $e) {

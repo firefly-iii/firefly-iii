@@ -67,7 +67,7 @@ class ImportArrayStorage
      *
      * @param ImportJob $importJob
      */
-    public function setJob(ImportJob $importJob): void
+    public function setImportJob(ImportJob $importJob): void
     {
         $this->importJob = $importJob;
         $this->countTransfers();
