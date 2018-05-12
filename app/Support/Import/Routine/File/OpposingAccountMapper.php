@@ -62,7 +62,7 @@ class OpposingAccountMapper
         if ((int)$accountId > 0) {
             // find any account with this ID:
             $result = $this->repository->findNull($accountId);
-            if (null !== $result && $result->accountType->type === $expectedType) {
+            if (null !== $result && ($result->accountType->type === $expectedType || $result->accountType->type === AccountType::ASSET)) {
                 Log::debug(sprintf('Found account "%s" (%s) based on given ID %d. Return it!', $result->name, $result->accountType->type, $accountId));
 
                 return $result;
@@ -112,7 +112,7 @@ class OpposingAccountMapper
         // not found? Create it!
         $creation = [
             'name'            => $data['name'] ?? '(no name)',
-            'iban'            => $data['iban']?? null,
+            'iban'            => $data['iban'] ?? null,
             'accountNumber'   => $data['number'] ?? null,
             'account_type_id' => null,
             'accountType'     => $expectedType,

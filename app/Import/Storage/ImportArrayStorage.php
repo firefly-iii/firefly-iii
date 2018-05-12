@@ -379,8 +379,8 @@ class ImportArrayStorage
         foreach ($toStore as $index => $store) {
             Log::debug(sprintf('Going to store entry %d of %d', $index + 1, $count));
             // convert the date to an object:
-            $store['date'] = Carbon::createFromFormat('Y-m-d', $store['date']);
-
+            $store['date']        = Carbon::createFromFormat('Y-m-d', $store['date']);
+            $store['description'] = $store['description'] === '' ? '(empty description)' : $store['description'];
             // store the journal.
             $collection->push($this->journalRepos->store($store));
         }

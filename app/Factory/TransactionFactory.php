@@ -55,7 +55,6 @@ class TransactionFactory
         Log::debug('Start of TransactionFactory::create()');
         $currencyId = $data['currency_id'] ?? null;
         $currencyId = isset($data['currency']) ? $data['currency']->id : $currencyId;
-        Log::debug('We dont make it here');
         if ('' === $data['amount']) {
             throw new FireflyException('Amount is an empty string, which Firefly III cannot handle. Apologies.');
         }
