@@ -168,7 +168,7 @@ class MappingConverger
                 $newRole = 'opposing-id';
                 break;
         }
-        Log::debug(sprintf('Role was "%s", but because of mapping, role becomes "%s"', $role, $newRole));
+        Log::debug(sprintf('Role was "%s", but because of mapping (mapped to #%d), role becomes "%s"', $role, $mapped, $newRole));
 
         // also store the $mapped values in a "mappedValues" array.
         $this->mappedValues[$newRole][] = $mapped;

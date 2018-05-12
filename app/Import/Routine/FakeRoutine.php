@@ -55,14 +55,15 @@ class FakeRoutine implements RoutineInterface
     public function run(): void
     {
         Log::debug(sprintf('Now in run() for fake routine with status: %s', $this->importJob->status));
-        if ($this->importJob->status !== 'running') {
-            throw new FireflyException('This fake job should not be started.'); // @codeCoverageIgnore
+        if ($this->importJob->status !== 'ready_to_run') {
+            throw new FireflyException(sprintf('Fake job should have status "ready_to_run", not "%s"', $this->importJob->status)); // @codeCoverageIgnore
         }
 
         switch ($this->importJob->stage) {
             default:
                 throw new FireflyException(sprintf('Fake routine cannot handle stage "%s".', $this->importJob->stage)); // @codeCoverageIgnore
             case 'new':
+                $this->repository->setStatus($this->importJob, 'running');
                 /** @var StageNewHandler $handler */
                 $handler = app(StageNewHandler::class);
                 $handler->run();
@@ -72,13 +73,15 @@ class FakeRoutine implements RoutineInterface
 
                 return;
             case 'ahoy':
+                $this->repository->setStatus($this->importJob, 'running');
                 /** @var StageAhoyHandler $handler */
                 $handler = app(StageAhoyHandler::class);
                 $handler->run();
-                $this->repository->setStatus($this->importJob, 'need_job_config');
+                $this->repository->setStatus($this->importJob, 'ready_to_run');
                 $this->repository->setStage($this->importJob, 'final');
                 break;
             case 'final':
+                $this->repository->setStatus($this->importJob, 'running');
                 /** @var StageFinalHandler $handler */
                 $handler = app(StageFinalHandler::class);
                 $handler->setImportJob($this->importJob);
@@ -96,7 +99,7 @@ class FakeRoutine implements RoutineInterface
      */
     public function setImportJob(ImportJob $importJob): void
     {
-        $this->importJob = $importJob;
+        $this->importJob  = $importJob;
         $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($importJob->user);
     }

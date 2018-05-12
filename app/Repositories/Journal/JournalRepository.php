@@ -159,7 +159,7 @@ class JournalRepository implements JournalRepositoryInterface
     {
         return TransactionJournalMeta
             ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
-            ->where('data', $hash)
+            ->where('data', json_encode($hash))
             ->where('name', 'importHashV2')
             ->first(['journal_meta.*']);
     }

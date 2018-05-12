@@ -485,6 +485,59 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      * @return MessageBag
      * @throws FireflyException
      */
+    public function storeCLIUpload(ImportJob $job, string $name, string $fileName): MessageBag
+    {
+        $messages = new MessageBag;
+
+        if (!file_exists($fileName)) {
+            $messages->add('notfound', sprintf('File not found: %s', $fileName));
+
+            return $messages;
+        }
+
+        $count = $job->attachments()->get()->filter(
+            function (Attachment $att) use ($name) {
+                return $att->filename === $name;
+            }
+        )->count();
+
+        if ($count > 0) {
+            // don't upload, but also don't complain about it.
+            Log::error(sprintf('Detected duplicate upload. Will ignore second "%s" file.', $name));
+
+            return new MessageBag;
+        }
+        $content    = file_get_contents($fileName);
+        $attachment = new Attachment; // create Attachment object.
+        $attachment->user()->associate($job->user);
+        $attachment->attachable()->associate($job);
+        $attachment->md5      = md5($content);
+        $attachment->filename = $name;
+        $attachment->mime     = 'plain/txt';
+        $attachment->size     = \strlen($content);
+        $attachment->uploaded = 0;
+        $attachment->save();
+        $encrypted = Crypt::encrypt($content);
+
+        // store it:
+        $this->uploadDisk->put($attachment->fileName(), $encrypted);
+        $attachment->uploaded = 1; // update attachment
+        $attachment->save();
+
+        // return it.
+        return new MessageBag;
+    }
+
+    /**
+     * Handle upload for job.
+     *
+     * @param ImportJob    $job
+     * @param string       $name
+     * @param UploadedFile $file
+     *
+     * @return MessageBag
+     * @throws FireflyException
+     */
     public function storeFileUpload(ImportJob $job, string $name, UploadedFile $file): MessageBag
     {
         $messages = new MessageBag;

@@ -57,6 +57,17 @@ interface ImportJobRepositoryInterface
     public function storeFileUpload(ImportJob $job, string $name, UploadedFile $file): MessageBag;
 
     /**
+     * Store file.
+     *
+     * @param ImportJob $job
+     * @param string    $name
+     * @param string    $fileName
+     *
+     * @return MessageBag
+     */
+    public function storeCLIUpload(ImportJob $job, string $name, string $fileName): MessageBag;
+
+    /**
      * @param ImportJob $job
      * @param array     $transactions
      *

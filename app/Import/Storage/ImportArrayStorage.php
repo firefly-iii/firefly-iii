@@ -164,6 +164,22 @@ class ImportArrayStorage
     }
 
     /**
+     * @param array $transaction
+     *
+     * @throws FireflyException
+     * @return string
+     */
+    private function getHash(array $transaction): string
+    {
+        $json = json_encode($transaction);
+        if ($json === false) {
+            throw new FireflyException('Could not encode import array. Please see the logs.', $transaction); // @codeCoverageIgnore
+        }
+
+        return hash('sha256', $json, false);
+    }
+
+    /**
      * Gets the users rules.
      *
      * @return Collection
@@ -187,6 +203,7 @@ class ImportArrayStorage
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
+        $collector->setUser($this->importJob->user);
         $collector->setAllAssetAccounts()
                   ->setTypes([TransactionType::TRANSFER])
                   ->withOpposingAccount();
@@ -198,20 +215,13 @@ class ImportArrayStorage
     /**
      * Check if the hash exists for the array the user wants to import.
      *
-     * @param array $transaction
+     * @param string $hash
      *
      * @return int|null
      * @throws FireflyException
      */
-    private function hashExists(array $transaction): ?int
+    private function hashExists(string $hash): ?int
     {
-        $json = json_encode($transaction);
-        if ($json === false) {
-            throw new FireflyException('Could not encode import array. Please see the logs.', $transaction); // @codeCoverageIgnore
-        }
-        $hash = hash('sha256', $json, false);
-
-        // find it!
         $entry = $this->journalRepos->findByHash($hash);
         if (null === $entry) {
             return null;
@@ -328,12 +338,13 @@ class ImportArrayStorage
 
         foreach ($array as $index => $transaction) {
             Log::debug(sprintf('Now at item %d out of %d', $index + 1, $count));
-            $existingId = $this->hashExists($transaction);
+            $hash       = $this->getHash($transaction);
+            $existingId = $this->hashExists($hash);
             if (null !== $existingId) {
                 $this->logDuplicateObject($transaction, $existingId);
                 $this->repository->addErrorMessage(
                     $this->importJob, sprintf(
-                                        'Entry #%d ("%s") could not be imported. It already exists.',
+                                        'Row #%d ("%s") could not be imported. It already exists.',
                                         $index, $transaction['description']
                                     )
                 );
@@ -344,7 +355,7 @@ class ImportArrayStorage
                     $this->logDuplicateTransfer($transaction);
                     $this->repository->addErrorMessage(
                         $this->importJob, sprintf(
-                                            'Entry #%d ("%s") could not be imported. Such a transfer already exists.',
+                                            'Row #%d ("%s") could not be imported. Such a transfer already exists.',
                                             $index,
                                             $transaction['description']
                                         )
@@ -352,7 +363,8 @@ class ImportArrayStorage
                     continue;
                 }
             }
-            $toStore[] = $transaction;
+            $transaction['importHashV2'] = $hash;
+            $toStore[]                   = $transaction;
         }
         $count = \count($toStore);
         if ($count === 0) {
