@@ -76,7 +76,7 @@ class FileRoutine implements RoutineInterface
     {
         $this->importJob  = $importJob;
         $this->repository = app(ImportJobRepositoryInterface::class);
-        $this->repository->setUser($job->user);
+        $this->repository->setUser($importJob->user);
     }
 
     /**

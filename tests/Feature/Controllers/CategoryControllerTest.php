@@ -370,7 +370,10 @@ class CategoryControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->twice()->andReturn(TransactionJournal::first());
+        $month        = new Carbon();
+        $month->startOfMonth();
+        $journal = TransactionJournal::where('date', '>=', $month->format('Y-m-d') . ' 00:00:00')->first();
+        $journalRepos->shouldReceive('firstNull')->twice()->andReturn($journal);
 
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
 
