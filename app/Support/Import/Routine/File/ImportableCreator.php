@@ -30,6 +30,8 @@ use FireflyIII\Support\Import\Placeholder\ImportTransaction;
  * Takes an array of arrays of ColumnValue objects and returns one (1) ImportTransaction
  * for each line.
  *
+ * @codeCoverageIgnore
+ *
  * Class ImportableCreator
  */
 class ImportableCreator

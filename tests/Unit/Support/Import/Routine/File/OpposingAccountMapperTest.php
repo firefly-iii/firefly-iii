@@ -1,6 +1,6 @@
 <?php
 /**
- * FileRoutineInterface.php
+ * OpposingAccountMapperTest.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -21,29 +21,15 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Support\Import\Routine\File;
-use FireflyIII\Models\ImportJob;
+namespace Tests\Unit\Support\Import\Routine\File;
 
+
+use Tests\TestCase;
 
 /**
- * Interface FileProcessorInterface
- *
- * @package FireflyIII\Support\Import\Routine\File
+ * Class OpposingAccountMapperTest
  */
-interface FileProcessorInterface
+class OpposingAccountMapperTest extends TestCase
 {
 
-    /**
-     * Fires the file processor.
-     *
-     * @return array
-     */
-    public function run(): array;
-
-    /**
-     * Set values.
-     *
-     * @param ImportJob $job
-     */
-    public function setImportJob(ImportJob $job): void;
 }

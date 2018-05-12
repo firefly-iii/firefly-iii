@@ -24,18 +24,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Configuration\File;
 
-use Crypt;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Log;
-use Storage;
 
 /**
  * Class NewFileJobHandler
@@ -44,9 +41,10 @@ use Storage;
  */
 class NewFileJobHandler implements ConfigurationInterface
 {
+    /** @var AttachmentHelperInterface */
+    private $attachments;
     /** @var ImportJob */
     private $importJob;
-
     /** @var ImportJobRepositoryInterface */
     private $repository;
 
@@ -82,8 +80,9 @@ class NewFileJobHandler implements ConfigurationInterface
     }
 
     /**
-     * Get the data necessary to show the configuration screen.
      *
+     * Get the data necessary to show the configuration screen.
+     * @codeCoverageIgnore
      * @return array
      */
     public function getNextData(): array
@@ -107,33 +106,10 @@ class NewFileJobHandler implements ConfigurationInterface
      */
     public function setJob(ImportJob $job): void
     {
-        $this->importJob  = $job;
-        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->importJob   = $job;
+        $this->repository  = app(ImportJobRepositoryInterface::class);
+        $this->attachments = app(AttachmentHelperInterface::class);
         $this->repository->setUser($job->user);
-
-    }
-
-    /**
-     * Take attachment, extract config, and put in job.\
-     *
-     * @param Attachment $attachment
-     *
-     * @throws FireflyException
-     */
-    public function storeConfig(Attachment $attachment): void
-    {
-        $disk = Storage::disk('upload');
-        try {
-            $content = $disk->get(sprintf('at-%d.data', $attachment->id));
-            $content = Crypt::decrypt($content);
-        } catch (FileNotFoundException $e) {
-            Log::error($e->getMessage());
-            throw new FireflyException($e->getMessage());
-        }
-        $json = json_decode($content, true);
-        if (null !== $json) {
-            $this->repository->setConfiguration($this->importJob, $json);
-        }
     }
 
     /**
@@ -144,7 +120,7 @@ class NewFileJobHandler implements ConfigurationInterface
     public function storeConfiguration(): void
     {
         /** @var Collection $attachments */
-        $attachments = $this->importJob->attachments;
+        $attachments = $this->repository->getAttachments($this->importJob);
         /** @var Attachment $attachment */
         foreach ($attachments as $attachment) {
             // if file is configuration file, store it into the job.
@@ -164,7 +140,7 @@ class NewFileJobHandler implements ConfigurationInterface
     {
         $messages = new MessageBag;
         /** @var Collection $attachments */
-        $attachments = $this->importJob->attachments;
+        $attachments = $this->repository->getAttachments($this->importJob);
         /** @var Attachment $attachment */
         foreach ($attachments as $attachment) {
 
@@ -176,9 +152,12 @@ class NewFileJobHandler implements ConfigurationInterface
                 // delete attachment:
                 try {
                     $attachment->delete();
+                    // @codeCoverageIgnoreStart
                 } catch (Exception $e) {
                     throw new FireflyException(sprintf('Could not delete attachment: %s', $e->getMessage()));
                 }
+
+                // @codeCoverageIgnoreEnd
 
                 return $messages;
             }
@@ -196,27 +175,34 @@ class NewFileJobHandler implements ConfigurationInterface
      * @param Attachment $attachment
      *
      * @return bool
-     * @throws FireflyException
      */
     private function isUTF8(Attachment $attachment): bool
     {
-        $disk = Storage::disk('upload');
-        try {
-            $content = $disk->get(sprintf('at-%d.data', $attachment->id));
-            $content = Crypt::decrypt($content);
-        } catch (FileNotFoundException|DecryptException $e) {
-            Log::error($e->getMessage());
-            throw new FireflyException($e->getMessage());
-        }
-
-        $result = mb_detect_encoding($content, 'UTF-8', true);
+        $content = $this->attachments->getAttachmentContent($attachment);
+        $result  = mb_detect_encoding($content, 'UTF-8', true);
         if ($result === false) {
             return false;
         }
         if ($result !== 'ASCII' && $result !== 'UTF-8') {
-            return false;
+            return false; // @codeCoverageIgnore
         }
 
         return true;
+    }
+
+    /**
+     * Take attachment, extract config, and put in job.\
+     *
+     * @param Attachment $attachment
+     *
+     * @throws FireflyException
+     */
+    private function storeConfig(Attachment $attachment): void
+    {
+        $content = $this->attachments->getAttachmentContent($attachment);
+        $json    = json_decode($content, true);
+        if (null !== $json) {
+            $this->repository->setConfiguration($this->importJob, $json);
+        }
     }
 }

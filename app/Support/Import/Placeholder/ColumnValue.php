@@ -24,7 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Import\Placeholder;
 
 /**
- * Class Column
+ * Class ColumnValue
+ * @codeCoverageIgnore
  */
 class ColumnValue
 {

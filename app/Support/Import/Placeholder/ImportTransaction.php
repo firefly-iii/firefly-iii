@@ -215,14 +215,12 @@ class ImportTransaction
             case 'date-due':
                 $this->meta[$columnValue->getRole()] = $columnValue->getValue();
                 break;
-
             case 'foreign-currency-id':
                 $this->foreignCurrencyId = $this->getMappedValue($columnValue);
                 break;
             case 'foreign-currency-code':
                 $this->foreignCurrencyCode = $columnValue->getValue();
                 break;
-
             case 'date-transaction':
                 $this->date = $columnValue->getValue();
                 break;
@@ -232,7 +230,6 @@ class ImportTransaction
             case 'note':
                 $this->note = trim($this->note . ' ' . $columnValue->getValue());
                 break;
-
             case 'opposing-id':
                 $this->opposingId = $this->getMappedValue($columnValue);
                 break;
@@ -382,6 +379,17 @@ class ImportTransaction
             'name'   => $this->currencyName,
             'code'   => $this->currencyCode,
             'symbol' => $this->currencySymbol,
+        ];
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return array
+     */
+    public function getForeignCurrencyData(): array
+    {
+        return [
+            'code' => $this->foreignCurrencyCode,
         ];
     }
 

@@ -91,7 +91,7 @@ class MappedValuesValidator
             if (\count($values) > 0) {
                 switch ($role) {
                     default:
-                        throw new FireflyException(sprintf('Cannot validate mapped values for role "%s"', $role));
+                        throw new FireflyException(sprintf('Cannot validate mapped values for role "%s"', $role)); // @codeCoverageIgnore
                     case 'opposing-id':
                     case 'account-id':
                         $set           = $this->accountRepos->getAccountsById($values);

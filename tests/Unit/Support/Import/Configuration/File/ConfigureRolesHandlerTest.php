@@ -286,7 +286,7 @@ class ConfigureRolesHandlerTest extends TestCase
         $att->filename        = 'import_file';
         $att->user_id         = $this->user()->id;
         $att->attachable_id   = $job->id;
-        $att->attachable_type = Attachment::class;
+        $att->attachable_type = ImportJob::class;
         $att->md5             = md5('hello');
         $att->mime            = 'fake';
         $att->size            = 3;
@@ -353,7 +353,7 @@ class ConfigureRolesHandlerTest extends TestCase
         $att->filename        = 'import_file';
         $att->user_id         = $this->user()->id;
         $att->attachable_id   = $job->id;
-        $att->attachable_type = Attachment::class;
+        $att->attachable_type = ImportJob::class;
         $att->md5             = md5('hello');
         $att->mime            = 'fake';
         $att->size            = 3;
