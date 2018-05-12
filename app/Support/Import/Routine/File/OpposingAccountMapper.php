@@ -79,11 +79,11 @@ class OpposingAccountMapper
         // if result is not null, system has found an account
         // but it's of the wrong type. If we dont have a name, use
         // the result's name, iban in the search below.
-        if (null !== $result && '' === (string)$data['name']) {
+        if (null !== $result && '' === (string)($data['name'] ?? '')) {
             Log::debug(sprintf('Will search for account with name "%s" instead of NULL.', $result->name));
             $data['name'] = $result->name;
         }
-        if ('' !== (string)$result->iban && null !== $result && '' === $data['iban']) {
+        if (null !== $result && '' !== (string)$result->iban && '' === ($data['iban'] ?? '')) {
             Log::debug(sprintf('Will search for account with IBAN "%s" instead of NULL.', $result->iban));
             $data['iban'] = $result->iban;
         }
@@ -95,7 +95,7 @@ class OpposingAccountMapper
             // IBAN, accountNumber, name,
             $fields = ['iban' => 'findByIbanNull', 'number' => 'findByAccountNumber', 'name' => 'findByName'];
             foreach ($fields as $field => $function) {
-                $value = (string)$data[$field];
+                $value = (string)($data[$field] ?? '');
                 if ('' === $value) {
                     Log::debug(sprintf('Array does not contain a value for %s. Continue', $field));
                     continue;
@@ -112,12 +112,12 @@ class OpposingAccountMapper
         // not found? Create it!
         $creation = [
             'name'            => $data['name'] ?? '(no name)',
-            'iban'            => $data['iban'],
-            'accountNumber'   => $data['number'],
+            'iban'            => $data['iban']?? null,
+            'accountNumber'   => $data['number'] ?? null,
             'account_type_id' => null,
             'accountType'     => $expectedType,
             'active'          => true,
-            'BIC'             => $data['bic'],
+            'BIC'             => $data['bic'] ?? null,
         ];
         Log::debug('Will try to store a new account: ', $creation);
 

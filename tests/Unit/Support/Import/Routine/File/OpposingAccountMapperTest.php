@@ -24,6 +24,10 @@ declare(strict_types=1);
 namespace Tests\Unit\Support\Import\Routine\File;
 
 
+use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Import\Routine\File\OpposingAccountMapper;
 use Tests\TestCase;
 
 /**
@@ -31,5 +35,185 @@ use Tests\TestCase;
  */
 class OpposingAccountMapperTest extends TestCase
 {
+    /**
+     *
+     * Should return account with given ID (which is of correct type).
+     *
+     * @covers \FireflyIII\Support\Import\Routine\File\OpposingAccountMapper
+     */
+    public function testAccountId(): void
+    {
+        $expected   = $this->user()->accounts()->where('account_type_id', 4)->inRandomOrder()->first();
+        $amount     = '-12.34';
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('findNull')->andReturn($expected)->once();
+        $mapper = new OpposingAccountMapper;
+        $mapper->setUser($this->user());
+        $mapper->map(1, $amount, []);
+    }
+
+    /**
+     *
+     * Should return account with given ID (which is of wrong account type).
+     * Will continue the search or store a revenue account with that name.
+     *
+     * @covers \FireflyIII\Support\Import\Routine\File\OpposingAccountMapper
+     */
+    public function testAccountIdBadType(): void
+    {
+        $expected     = $this->user()->accounts()->where('account_type_id', 5)->inRandomOrder()->first();
+        $expected->iban = null;
+        $expected->save();
+        $amount       = '-12.34';
+        $expectedArgs = [
+            'name'            => $expected->name,
+            'iban'            => null,
+            'accountNumber'   => null,
+            'account_type_id' => null,
+            'accountType'     => AccountType::EXPENSE,
+            'active'          => true,
+            'BIC'             => null,
+        ];
+        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('findNull')->andReturn($expected)->once();
+        $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::EXPENSE]])->andReturnNull();
+        $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::ASSET]])->andReturnNull();
+        $repository->shouldReceive('store')->withArgs([$expectedArgs])->once()
+                   ->andReturn(new Account);
+
+
+        $mapper = new OpposingAccountMapper;
+        $mapper->setUser($this->user());
+        $mapper->map(1, $amount, []);
+    }
+
+    /**
+     *
+     * Should return account with given ID (which is of wrong account type).
+     * Will continue the search or store a revenue account with that name.
+     *
+     * @covers \FireflyIII\Support\Import\Routine\File\OpposingAccountMapper
+     */
+    public function testAccountIdBadTypeIban(): void
+    {
+        $expected       = $this->user()->accounts()->where('account_type_id', 5)->inRandomOrder()->first();
+        $expected->iban = 'AD1200012030200359100100';
+        $expected->save();
+
+        $amount       = '-12.34';
+        $expectedArgs = [
+            'name'            => $expected->name,
+            'iban'            => $expected->iban,
+            'accountNumber'   => null,
+            'account_type_id' => null,
+            'accountType'     => AccountType::EXPENSE,
+            'active'          => true,
+            'BIC'             => null,
+        ];
+        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('findNull')->andReturn($expected)->once();
+        $repository->shouldReceive('findByIbanNull')->withArgs([$expected->iban, [AccountType::EXPENSE]])->andReturnNull();
+        $repository->shouldReceive('findByIbanNull')->withArgs([$expected->iban, [AccountType::ASSET]])->andReturnNull();
+        $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::EXPENSE]])->andReturnNull();
+        $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::ASSET]])->andReturnNull();
+        $repository->shouldReceive('store')->withArgs([$expectedArgs])->once()
+                   ->andReturn(new Account);
+
+
+        $mapper = new OpposingAccountMapper;
+        $mapper->setUser($this->user());
+        $mapper->map(1, $amount, []);
+    }
+
+    /**
+     * Amount = negative
+     * ID = null
+     * other data = null
+     * Should call store() with "(no name") for expense account
+     *
+     * @covers \FireflyIII\Support\Import\Routine\File\OpposingAccountMapper
+     */
+    public function testBasic(): void
+    {
+        $amount       = '-12.34';
+        $expectedArgs = [
+            'name'            => '(no name)',
+            'iban'            => null,
+            'accountNumber'   => null,
+            'account_type_id' => null,
+            'accountType'     => AccountType::EXPENSE,
+            'active'          => true,
+            'BIC'             => null,
+        ];
+
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('store')->withArgs([$expectedArgs])->once()
+                   ->andReturn(new Account);
+
+
+        $mapper = new OpposingAccountMapper;
+        $mapper->setUser($this->user());
+        $mapper->map(null, $amount, []);
+    }
+
+    /**
+     * Amount = negative
+     * ID = null
+     * other data = null
+     * Should call store() with "(no name") for expense account
+     *
+     * @covers \FireflyIII\Support\Import\Routine\File\OpposingAccountMapper
+     */
+    public function testFindByAccountNumber(): void
+    {
+        $expected       = $this->user()->accounts()->where('account_type_id', 4)->inRandomOrder()->first();
+        $amount       = '-12.34';
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('findByAccountNumber')->withArgs(['12345', [AccountType::EXPENSE]])
+            ->andReturn($expected)->once();
+
+
+        $mapper = new OpposingAccountMapper;
+        $mapper->setUser($this->user());
+        $result = $mapper->map(null, $amount, ['number' => '12345']);
+        $this->assertEquals($result->id, $expected->id);
+    }
+
+    /**
+     * Amount = positive
+     * ID = null
+     * other data = null
+     * Should call store() with "(no name") for revenue account
+     *
+     * @covers \FireflyIII\Support\Import\Routine\File\OpposingAccountMapper
+     */
+    public function testBasicPos(): void
+    {
+        $amount       = '12.34';
+        $expectedArgs = [
+            'name'            => '(no name)',
+            'iban'            => null,
+            'accountNumber'   => null,
+            'account_type_id' => null,
+            'accountType'     => AccountType::REVENUE,
+            'active'          => true,
+            'BIC'             => null,
+        ];
+
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('store')->withArgs([$expectedArgs])->once()
+                   ->andReturn(new Account);
+
+
+        $mapper = new OpposingAccountMapper;
+        $mapper->setUser($this->user());
+        $mapper->map(null, $amount, []);
+    }
 
 }
