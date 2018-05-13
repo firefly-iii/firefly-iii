@@ -25,7 +25,6 @@ namespace FireflyIII\Http\Controllers\Import;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Import\Routine\RoutineInterface;
 use FireflyIII\Import\Storage\ImportArrayStorage;
 use FireflyIII\Models\ImportJob;
@@ -57,7 +56,6 @@ class JobStatusController extends Controller
                 return $next($request);
             }
         );
-        $this->middleware(IsDemoUser::class);
     }
 
     /**
@@ -172,7 +170,9 @@ class JobStatusController extends Controller
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
             Log::error('Job is not ready.');
 
-            return response()->json(['status' => 'NOK', 'message' => sprintf('JobStatusController::start expects status "provider_finished" instead of "%s".', $importJob->status)]);
+            return response()->json(
+                ['status' => 'NOK', 'message' => sprintf('JobStatusController::start expects status "provider_finished" instead of "%s".', $importJob->status)]
+            );
         }
 
         // set job to be storing data:

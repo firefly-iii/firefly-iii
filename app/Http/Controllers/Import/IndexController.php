@@ -168,22 +168,22 @@ class IndexController extends Controller
         $isDemoUser    = $this->userRepository->hasRole(auth()->user(), 'demo');
         $isDebug       = (bool)config('app.debug');
         foreach ($providerNames as $providerName) {
-            Log::debug(sprintf('Now with provider %s', $providerName));
+            //Log::debug(sprintf('Now with provider %s', $providerName));
             // only consider enabled providers
             $enabled        = (bool)config(sprintf('import.enabled.%s', $providerName));
             $allowedForDemo = (bool)config(sprintf('import.allowed_for_demo.%s', $providerName));
             $allowedForUser = (bool)config(sprintf('import.allowed_for_user.%s', $providerName));
             if ($enabled === false) {
-                Log::debug('Provider is not enabled. NEXT!');
+                //Log::debug('Provider is not enabled. NEXT!');
                 continue;
             }
 
             if ($isDemoUser === true && $allowedForDemo === false) {
-                Log::debug('User is demo and this provider is not allowed for demo user. NEXT!');
+                //Log::debug('User is demo and this provider is not allowed for demo user. NEXT!');
                 continue;
             }
             if ($isDemoUser === false && $allowedForUser === false && $isDebug === false) {
-                Log::debug('User is not demo and this provider is not allowed for such users. NEXT!');
+                //Log::debug('User is not demo and this provider is not allowed for such users. NEXT!');
                 continue;
             }
 
@@ -194,7 +194,7 @@ class IndexController extends Controller
             $class                    = (string)config(sprintf('import.prerequisites.%s', $providerName));
             $result                   = false;
             if ($class !== '' && class_exists($class)) {
-                Log::debug('Will not check prerequisites.');
+                //Log::debug('Will not check prerequisites.');
                 /** @var PrerequisitesInterface $object */
                 $object = app($class);
                 $object->setUser(auth()->user());
@@ -202,6 +202,7 @@ class IndexController extends Controller
             }
             $providers[$providerName]['prereq_complete'] = $result;
         }
+        Log::debug(sprintf('Enabled providers: %s', json_encode(array_keys($providers))));
 
         return $providers;
     }

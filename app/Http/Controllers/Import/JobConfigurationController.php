@@ -24,7 +24,6 @@ namespace FireflyIII\Http\Controllers\Import;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Import\JobConfiguration\JobConfigurationInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
@@ -57,7 +56,6 @@ class JobConfigurationController extends Controller
                 return $next($request);
             }
         );
-        $this->middleware(IsDemoUser::class);
     }
 
     /**
@@ -71,9 +69,11 @@ class JobConfigurationController extends Controller
      */
     public function index(ImportJob $importJob)
     {
+        Log::debug('Now in JobConfigurationController::index()');
         // catch impossible status:
         $allowed = ['has_prereq', 'need_job_config'];
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
+            Log::debug(sprintf('Job has state "%s", but we only accept %s', $importJob->status, json_encode($allowed)));
             session()->flash('error', trans('import.bad_job_status', ['status' => $importJob->status]));
 
             return redirect(route('import.index'));
