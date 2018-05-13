@@ -71,22 +71,30 @@ class IndexController extends Controller
      */
     public function create(string $importProvider)
     {
+        Log::debug(sprintf('Will create job for provider %s', $importProvider));
         // can only create "fake" for demo user.
         $providers = array_keys($this->getProviders());
         if (!\in_array($importProvider, $providers, true)) {
+            Log::error(sprintf('%s-provider is disabled. Cannot create job.', $importProvider));
             session()->flash('warning', trans('import.cannot_create_for_provider', ['provider' => $importProvider]));
 
             return redirect(route('import.index'));
         }
 
         $importJob = $this->repository->create($importProvider);
+        Log::debug(sprintf('Created job #%d for provider %s', $importJob->id, $importProvider));
 
+        $hasPreReq = (bool)config(sprintf('import.has_prereq.%s', $importProvider));
+        $hasConfig = (bool)config(sprintf('import.has_config.%s', $importProvider));
         // if job provider has no prerequisites:
-        if (!(bool)config(sprintf('import.has_prereq.%s', $importProvider))) {
+        if ($hasPreReq === false) {
+            Log::debug('Provider has no prerequisites. Continue.');
             // @codeCoverageIgnoreStart
             // if job provider also has no configuration:
-            if (!(bool)config(sprintf('import.has_config.%s', $importProvider))) {
+            if ($hasConfig === false) {
+                Log::debug('Provider has no configuration. Job is ready to start.');
                 $this->repository->updateStatus($importJob, 'ready_to_run');
+                Log::debug('Redirect to status-page.');
 
                 return redirect(route('import.job.status.index', [$importJob->key]));
             }
@@ -95,10 +103,12 @@ class IndexController extends Controller
             $this->repository->setStatus($importJob, 'has_prereq');
 
             // redirect to job configuration.
+            Log::debug('Redirect to configuration.');
+
             return redirect(route('import.job.configuration.index', [$importJob->key]));
             // @codeCoverageIgnoreEnd
         }
-
+        Log::debug('Job provider has prerequisites.');
         // if need to set prerequisites, do that first.
         $class = (string)config(sprintf('import.prerequisites.%s', $importProvider));
         if (!class_exists($class)) {
@@ -109,13 +119,22 @@ class IndexController extends Controller
         $providerPre->setUser(auth()->user());
 
         if (!$providerPre->isComplete()) {
+            Log::debug('Job provider prerequisites are not yet filled in. Redirect to prerequisites-page.');
+
             // redirect to global prerequisites
             return redirect(route('import.prerequisites.index', [$importProvider, $importJob->key]));
         }
+        Log::debug('Prerequisites are complete.');
 
         // update job to say "has_prereq".
         $this->repository->setStatus($importJob, 'has_prereq');
+        if ($hasConfig === false) {
+            Log::debug('Provider has no configuration. Job is ready to start.');
+            $this->repository->updateStatus($importJob, 'ready_to_run');
+            Log::debug('Redirect to status-page.');
 
+            return redirect(route('import.job.status.index', [$importJob->key]));
+        }
         // Otherwise just redirect to job configuration.
         return redirect(route('import.job.configuration.index', [$importJob->key]));
 
