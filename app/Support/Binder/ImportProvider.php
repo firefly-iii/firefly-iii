@@ -40,14 +40,8 @@ class ImportProvider implements BinderInterface
      */
     public static function routeBinder(string $value, Route $route): string
     {
-        $providers = (array)config('import.enabled');
-        $allowed   = [];
-        foreach ($providers as $name => $enabled) {
-            if ($enabled || (bool)config('app.debug') === true) {
-                $allowed[] = $name;
-            }
-        }
-        if (\in_array($value, $allowed, true)) {
+        $providers = array_keys((array)config('import.enabled'));
+        if (\in_array($value, $providers, true)) {
             return $value;
         }
         throw new NotFoundHttpException;

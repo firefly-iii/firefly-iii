@@ -26,8 +26,9 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
+use Log;
 use View;
-
 
 /**
  * Class FileController.
@@ -36,6 +37,9 @@ class IndexController extends Controller
 {
     /** @var ImportJobRepositoryInterface */
     public $repository;
+
+    /** @var UserRepositoryInterface */
+    public $userRepository;
 
     /**
      *
@@ -48,7 +52,8 @@ class IndexController extends Controller
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-archive');
                 app('view')->share('title', trans('firefly.import_index_title'));
-                $this->repository = app(ImportJobRepositoryInterface::class);
+                $this->repository     = app(ImportJobRepositoryInterface::class);
+                $this->userRepository = app(UserRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -66,6 +71,8 @@ class IndexController extends Controller
      */
     public function create(string $importProvider)
     {
+        // can only create "fake" for demo user.
+
         if (
             !(bool)config('app.debug')
             && !(bool)config(sprintf('import.enabled.%s', $importProvider)) === true
@@ -124,34 +131,59 @@ class IndexController extends Controller
      */
     public function index()
     {
-        // get all import routines:
-        /** @var array $config */
-        $config    = config('import.enabled');
-        $providers = [];
-        foreach ($config as $name => $enabled) {
-            if ($enabled || (bool)config('app.debug') || \in_array(config('app.env'), ['demo', 'testing'])) {
-                $providers[$name] = [];
-            }
-        }
+        $providers    = $this->getProviders();
+        $subTitle     = trans('import.index_breadcrumb');
+        $subTitleIcon = 'fa-home';
 
-        // has prereq or config?
-        foreach (array_keys($providers) as $name) {
-            $providers[$name]['has_prereq'] = (bool)config('import.has_prereq.' . $name);
-            $providers[$name]['has_config'] = (bool)config('import.has_config.' . $name);
-            $class                          = (string)config('import.prerequisites.' . $name);
-            $result                         = false;
+        return view('import.index', compact('subTitle', 'subTitleIcon', 'providers'));
+    }
+
+    /**
+     * @return array
+     */
+    private function getProviders(): array
+    {
+        // get and filter all import routines:
+        /** @var array $config */
+        $providerNames = array_keys(config('import.enabled'));
+        $providers     = [];
+        $isDemoUser    = $this->userRepository->hasRole(auth()->user(), 'demo');
+        foreach ($providerNames as $providerName) {
+            Log::debug(sprintf('Now with provider %s', $providerName));
+            // only consider enabled providers
+            $enabled        = (bool)config(sprintf('import.enabled.%s', $providerName));
+            $allowedForDemo = (bool)config(sprintf('import.allowed_for_demo.%s', $providerName));
+            $allowedForUser = (bool)config(sprintf('import.allowed_for_user.%s', $providerName));
+            if ($enabled === false) {
+                Log::debug('Provider is not enabled. NEXT!');
+                continue;
+            }
+
+            if ($isDemoUser === true && $allowedForDemo === false) {
+                Log::debug('User is demo and this provider is not allowed for demo user. NEXT!');
+                continue;
+            }
+            if ($isDemoUser === false && $allowedForUser === false) {
+                Log::debug('User is not demo and this provider is not allowed for such users. NEXT!');
+                continue;
+            }
+
+            $providers[$providerName] = [
+                'has_prereq' => (bool)config('import.has_prereq.' . $providerName),
+                'has_config' => (bool)config('import.has_config.' . $providerName),
+            ];
+            $class                    = (string)config(sprintf('import.prerequisites.%s', $providerName));
+            $result                   = false;
             if ($class !== '' && class_exists($class)) {
+                Log::debug('Will not check prerequisites.');
                 /** @var PrerequisitesInterface $object */
                 $object = app($class);
                 $object->setUser(auth()->user());
                 $result = $object->isComplete();
             }
-            $providers[$name]['prereq_complete'] = $result;
+            $providers[$providerName]['prereq_complete'] = $result;
         }
 
-        $subTitle     = trans('import.index_breadcrumb');
-        $subTitleIcon = 'fa-home';
-
-        return view('import.index', compact('subTitle', 'subTitleIcon', 'providers'));
+        return $providers;
     }
 }

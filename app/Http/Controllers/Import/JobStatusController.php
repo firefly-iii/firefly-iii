@@ -117,12 +117,9 @@ class JobStatusController extends Controller
     {
         // catch impossible status:
         $allowed = ['ready_to_run', 'need_job_config'];
-        // todo remove error and running.
 
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
             Log::error('Job is not ready.');
-
-            // kill the job:
             $this->repository->setStatus($importJob, 'error');
 
             return response()->json(['status' => 'NOK', 'message' => 'JobStatusController::start expects status "ready_to_run".']);
@@ -137,9 +134,6 @@ class JobStatusController extends Controller
             );
             // @codeCoverageIgnoreEnd
         }
-
-        // set job to be running:
-        $this->repository->setStatus($importJob, 'running');
 
         /** @var RoutineInterface $routine */
         $routine = app($className);

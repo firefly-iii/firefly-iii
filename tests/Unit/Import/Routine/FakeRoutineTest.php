@@ -46,7 +46,7 @@ class FakeRoutineTest extends TestCase
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
         $job->key           = 'a_route_' . random_int(1, 1000);
-        $job->status        = 'running';
+        $job->status        = 'ready_to_run';
         $job->stage         = 'ahoy';
         $job->provider      = 'fake';
         $job->file_type     = '';
@@ -59,6 +59,7 @@ class FakeRoutineTest extends TestCase
 
         // calls
         $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'running'])->once();
         $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'need_job_config'])->once();
         $repository->shouldReceive('setStage')->withArgs([Mockery::any(), 'final'])->once();
         $handler->shouldReceive('run')->once();
@@ -81,7 +82,7 @@ class FakeRoutineTest extends TestCase
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
         $job->key           = 'a_route_' . random_int(1, 1000);
-        $job->status        = 'running';
+        $job->status        = 'ready_to_run';
         $job->stage         = 'final';
         $job->provider      = 'fake';
         $job->file_type     = '';
@@ -98,6 +99,7 @@ class FakeRoutineTest extends TestCase
         $repository->shouldReceive('setStage')->withArgs([Mockery::any(), 'final'])->once();
         $repository->shouldReceive('setTransactions')->withArgs([Mockery::any(), []])->once();
         $handler->shouldReceive('getTransactions')->once()->andReturn([]);
+        $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'running'])->once();
         $handler->shouldReceive('setImportJob')->once();
 
         $routine = new FakeRoutine;
@@ -117,7 +119,7 @@ class FakeRoutineTest extends TestCase
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
         $job->key           = 'a_route_' . random_int(1, 1000);
-        $job->status        = 'running';
+        $job->status        = 'ready_to_run';
         $job->stage         = 'new';
         $job->provider      = 'fake';
         $job->file_type     = '';
@@ -132,6 +134,7 @@ class FakeRoutineTest extends TestCase
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('setStage')->withArgs([Mockery::any(), 'ahoy'])->once();
         $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'ready_to_run'])->once();
+        $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'running'])->once();
         $handler->shouldReceive('run')->once();
 
 

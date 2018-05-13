@@ -59,6 +59,7 @@ class CSVProcessorTest extends TestCase
 
 
         $validator = $this->mock(MappedValuesValidator::class);
+        $validator->shouldReceive('setImportJob')->once();
         $validator->shouldReceive('validate')->andReturn([]);
 
         $creator = $this->mock(ImportableCreator::class);

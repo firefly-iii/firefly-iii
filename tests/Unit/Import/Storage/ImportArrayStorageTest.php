@@ -128,7 +128,7 @@ class ImportArrayStorageTest extends TestCase
         $journalRepos->shouldReceive('store')->once()->andReturn($journal);
         $journalRepos->shouldReceive('findByHash')->andReturn(null, $meta)->twice();
         $repository->shouldReceive('addErrorMessage')->once()
-                   ->withArgs([Mockery::any(), 'Entry #1 ("' . $transactions[1]['description'] . '") could not be imported. It already exists.']);
+                   ->withArgs([Mockery::any(), 'Row #1 ("' . $transactions[1]['description'] . '") could not be imported. It already exists.']);
 
         $storage = new ImportArrayStorage;
         $storage->setImportJob($job);
@@ -374,6 +374,7 @@ class ImportArrayStorageTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
         // mock calls:
+        $collector->shouldReceive('setUser')->once();
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('setStatus')->withAnyArgs();
         $ruleRepos->shouldReceive('setUser')->once();
@@ -449,6 +450,7 @@ class ImportArrayStorageTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
         // mock calls:
+        $collector->shouldReceive('setUser')->once();
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('setStatus')->withAnyArgs();
         $ruleRepos->shouldReceive('setUser')->once();
@@ -460,7 +462,7 @@ class ImportArrayStorageTest extends TestCase
         $journalRepos->shouldReceive('store')->twice()->andReturn($journal);
         $journalRepos->shouldReceive('findByHash')->andReturn(null)->times(3);
         $repository->shouldReceive('addErrorMessage')->withArgs(
-            [Mockery::any(), 'Entry #2 ("' . $transfer->description . '") could not be imported. Such a transfer already exists.']
+            [Mockery::any(), 'Row #2 ("' . $transfer->description . '") could not be imported. Such a transfer already exists.']
         )->once();
 
 

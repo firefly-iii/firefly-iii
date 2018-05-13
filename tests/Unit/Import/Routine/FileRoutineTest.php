@@ -46,7 +46,7 @@ class FileRoutineTest extends TestCase
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
         $job->key           = 'a_fr_' . random_int(1, 1000);
-        $job->status        = 'running';
+        $job->status        = 'ready_to_run';
         $job->stage         = 'ready_to_run';
         $job->provider      = 'file';
         $job->file_type     = '';
@@ -59,6 +59,7 @@ class FileRoutineTest extends TestCase
 
         // calls
         $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'running'])->once();
         $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'provider_finished'])->once();
         $repository->shouldReceive('setStage')->withArgs([Mockery::any(), 'final'])->once();
         $repository->shouldReceive('setTransactions')->withArgs([Mockery::any(), ['a' => 'b']])->once();

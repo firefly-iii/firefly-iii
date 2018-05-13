@@ -197,7 +197,6 @@ class JobStatusControllerTest extends TestCase
         $routine    = $this->mock(FakeRoutine::class);
 
         // mock calls:
-        $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'running']);
         $routine->shouldReceive('setImportJob')->once();
         $routine->shouldReceive('run')->once();
 
@@ -227,7 +226,6 @@ class JobStatusControllerTest extends TestCase
         $routine    = $this->mock(FakeRoutine::class);
 
         // mock calls:
-        $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'running']);
         $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'error']);
         $routine->shouldReceive('setImportJob')->once();
         $routine->shouldReceive('run')->andThrow(new Exception('Unknown exception'));
@@ -258,7 +256,6 @@ class JobStatusControllerTest extends TestCase
         $routine    = $this->mock(FakeRoutine::class);
 
         // mock calls:
-        $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'running']);
         $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'error']);
         $routine->shouldReceive('setImportJob')->once();
         $routine->shouldReceive('run')->andThrow(new FireflyException('Unknown exception'));

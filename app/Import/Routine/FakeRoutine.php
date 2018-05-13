@@ -49,7 +49,7 @@ class FakeRoutine implements RoutineInterface
      * "ahoy": will log some nonsense and then drop job into status:"need_job_config" to force it back to the job config routine.
      * "final": will do some logging, sleep for 10 seconds and then finish. Generates 5 random transactions.
      *
-     * @return bool
+     * @return void
      * @throws FireflyException
      */
     public function run(): void
@@ -77,7 +77,7 @@ class FakeRoutine implements RoutineInterface
                 /** @var StageAhoyHandler $handler */
                 $handler = app(StageAhoyHandler::class);
                 $handler->run();
-                $this->repository->setStatus($this->importJob, 'ready_to_run');
+                $this->repository->setStatus($this->importJob, 'need_job_config');
                 $this->repository->setStage($this->importJob, 'final');
                 break;
             case 'final':

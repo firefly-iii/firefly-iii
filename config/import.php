@@ -22,30 +22,45 @@
 
 declare(strict_types=1);
 
-use FireflyIII\Import\Configuration\BunqConfigurator;
-use FireflyIII\Import\Configuration\SpectreConfigurator;
 use FireflyIII\Import\JobConfiguration\FakeJobConfiguration;
 use FireflyIII\Import\JobConfiguration\FileJobConfiguration;
-use FireflyIII\Import\Prerequisites\BunqPrerequisites;
 use FireflyIII\Import\Prerequisites\FakePrerequisites;
-use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
-use FireflyIII\Import\Routine\BunqRoutine;
 use FireflyIII\Import\Routine\FakeRoutine;
 use FireflyIII\Import\Routine\FileRoutine;
-use FireflyIII\Import\Routine\SpectreRoutine;
 use FireflyIII\Support\Import\Routine\File\CSVProcessor;
 
 return [
-    'enabled'       => [
+    // these import providers are available:
+    'enabled'          => [
+        'fake'    => true,
+        'file'    => true,
+        'bunq'    => false,
+        'spectre' => false,
+        'plaid'   => false,
+        'quovo'   => false,
+        'yodlee'  => false,
+    ],
+    // demo user can use these import providers (when enabled):
+    'allowed_for_demo' => [
+        'fake'    => true,
+        'file'    => false,
+        'bunq'    => false,
+        'spectre' => false,
+        'plaid'   => false,
+        'quovo'   => false,
+        'yodlee'  => false,
+    ],
+    // a normal user user can use these import providers (when enabled):
+    'allowed_for_user' => [
         'fake'    => false,
         'file'    => true,
         'bunq'    => true,
         'spectre' => true,
-        'plaid'   => false,
-        'quovo'   => false,
-        'yodlee'  => false,
+        'plaid'   => true,
+        'quovo'   => true,
+        'yodlee'  => true,
     ],
-    'has_prereq'    => [
+    'has_prereq'       => [
         'fake'    => true,
         'file'    => false,
         'bunq'    => true,
@@ -54,16 +69,16 @@ return [
         'quovo'   => true,
         'yodlee'  => true,
     ],
-    'prerequisites' => [
+    'prerequisites'    => [
         'fake'    => FakePrerequisites::class,
         'file'    => false,
-        'bunq'    => BunqPrerequisites::class,
-        'spectre' => SpectrePrerequisites::class,
+        'bunq'    => false,
+        'spectre' => false,
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
     ],
-    'has_config'    => [
+    'has_config'       => [
         'fake'    => true,
         'file'    => true,
         'bunq'    => true,
@@ -72,26 +87,27 @@ return [
         'quovo'   => true,
         'yodlee'  => true,
     ],
-    'configuration' => [
+    'configuration'    => [
         'fake'    => FakeJobConfiguration::class,
         'file'    => FileJobConfiguration::class,
-        'bunq'    => BunqConfigurator::class,
-        'spectre' => SpectreConfigurator::class,
+        'bunq'    => false,
+        'spectre' => false,
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
     ],
-    'routine'       => [
+    'routine'          => [
         'fake'    => FakeRoutine::class,
         'file'    => FileRoutine::class,
-        'bunq'    => BunqRoutine::class,
-        'spectre' => SpectreRoutine::class,
+        'bunq'    => false,
+        'spectre' => false,
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
     ],
 
-    'options'        => [
+    'options' => [
+        'fake'    => [],
         'file'    => [
             'import_formats'        => ['csv'], // mt940
             'default_import_format' => 'csv',
@@ -100,29 +116,17 @@ return [
             ],
         ],
         'bunq'    => [
-            'server'  => 'sandbox.public.api.bunq.com', // sandbox.public.api.bunq.com - api.bunq.com
-            'version' => 'v1',
+            'live'    => [
+                'server'  => 'api.bunq.com',
+                'version' => 'v1',
+            ],
+            'sandbox' => [
+                'server'  => 'sandbox.public.api.bunq.com', // sandbox.public.api.bunq.com - api.bunq.com
+                'version' => 'v1',
+            ],
         ],
         'spectre' => [
             'server' => 'www.saltedge.com',
-        ],
-    ],
-    'default_config' => [
-        'file'    => [
-            'has-config-file' => true,
-            'auto-start'      => false,
-        ],
-        'bunq'    => [
-            'has-config-file' => false,
-            'auto-start'      => true,
-        ],
-        'spectre' => [
-            'has-config-file' => false,
-            'auto-start'      => true,
-        ],
-        'plaid'   => [
-            'has-config-file' => false,
-            'auto-start'      => true,
         ],
     ],
 ];

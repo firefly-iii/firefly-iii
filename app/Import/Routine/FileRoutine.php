@@ -62,7 +62,7 @@ class FileRoutine implements RoutineInterface
 
             return;
         }
-        throw new FireflyException(sprintf('Import routine cannot handle stage "%s"', $this->importJob->stage)); // @codeCoverageIgnore
+        throw new FireflyException(sprintf('Import routine cannot handle status "%s"', $this->importJob->status)); // @codeCoverageIgnore
     }
 
     /**
