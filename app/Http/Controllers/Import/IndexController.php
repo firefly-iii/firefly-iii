@@ -73,7 +73,7 @@ class IndexController extends Controller
     {
         // can only create "fake" for demo user.
         $providers = array_keys($this->getProviders());
-        if (!in_array($importProvider, $providers, true)) {
+        if (!\in_array($importProvider, $providers, true)) {
             session()->flash('warning', trans('import.cannot_create_for_provider', ['provider' => $importProvider]));
 
             return redirect(route('import.index'));

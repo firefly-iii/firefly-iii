@@ -24,7 +24,6 @@ namespace FireflyIII\Http\Controllers\Import;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
@@ -75,7 +74,7 @@ class PrerequisitesController extends Controller
         // catch impossible status:
         $allowed = ['new'];
         if (null !== $importJob && !in_array($importJob->status, $allowed)) {
-            Log::error('Job is not new but wants to do prerequisites');
+            Log::error(sprintf('Job has state "%s" but this Prerequisites::index() only accepts %s', $importJob->status, json_encode($allowed)));
             session()->flash('error', trans('import.bad_job_status', ['status' => $importJob->status]));
 
             return redirect(route('import.index'));
@@ -128,8 +127,8 @@ class PrerequisitesController extends Controller
 
         // catch impossible status:
         $allowed = ['new'];
-        if (null !== $importJob && !in_array($importJob->status, $allowed)) {
-            Log::error('Job is not new but wants to do prerequisites');
+        if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
+            Log::error(sprintf('Job has state "%s" but this Prerequisites::post() only accepts %s', $importJob->status, json_encode($allowed)));
             session()->flash('error', trans('import.bad_job_status', ['status' => $importJob->status]));
 
             return redirect(route('import.index'));
@@ -145,7 +144,7 @@ class PrerequisitesController extends Controller
         $object->setUser(auth()->user());
         Log::debug('Going to store entered prerequisites.');
         // store post data
-        $data = $request->all();
+        $data   = $request->all();
         $result = $object->storePrerequisites($data);
         Log::debug(sprintf('Result of storePrerequisites has message count: %d', $result->count()));
 
