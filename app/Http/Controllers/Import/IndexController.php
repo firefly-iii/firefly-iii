@@ -135,6 +135,7 @@ class IndexController extends Controller
 
             return redirect(route('import.job.status.index', [$importJob->key]));
         }
+        Log::debug('Job has configuration. Redirect to job-config.');
         // Otherwise just redirect to job configuration.
         return redirect(route('import.job.configuration.index', [$importJob->key]));
 
