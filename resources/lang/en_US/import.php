@@ -28,6 +28,7 @@ return [
     'prerequisites_breadcrumb_fake'      => 'Prerequisites for the fake import provider',
     'job_configuration_breadcrumb'       => 'Configuration for ":key"',
     'job_status_breadcrumb'              => 'Import status for ":key"',
+    'cannot_create_for_provider'         => 'Firefly III cannot create a job for the ":provider"-provider.',
 
     // index page:
     'general_index_title'                => 'Import a file',
@@ -132,7 +133,7 @@ return [
     'job_config_field_value'             => 'Field value',
     'job_config_field_mapped'            => 'Mapped to',
     'map_do_not_map'                     => '(do not map)',
-    'job_config_map_submit'                  => 'Start the import',
+    'job_config_map_submit'              => 'Start the import',
 
 
     // import status page:

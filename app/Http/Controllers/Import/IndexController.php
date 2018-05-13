@@ -72,13 +72,11 @@ class IndexController extends Controller
     public function create(string $importProvider)
     {
         // can only create "fake" for demo user.
+        $providers = array_keys($this->getProviders());
+        if (!in_array($importProvider, $providers, true)) {
+            session()->flash('warning', trans('import.cannot_create_for_provider', ['provider' => $importProvider]));
 
-        if (
-            !(bool)config('app.debug')
-            && !(bool)config(sprintf('import.enabled.%s', $importProvider)) === true
-            && !\in_array(config('app.env'), ['demo', 'testing'])
-        ) {
-            throw new FireflyException(sprintf('Import using provider "%s" is currently not available.', $importProvider)); // @codeCoverageIgnore
+            return redirect(route('import.index'));
         }
 
         $importJob = $this->repository->create($importProvider);
@@ -148,6 +146,7 @@ class IndexController extends Controller
         $providerNames = array_keys(config('import.enabled'));
         $providers     = [];
         $isDemoUser    = $this->userRepository->hasRole(auth()->user(), 'demo');
+        $isDebug       = (bool)config('app.debug');
         foreach ($providerNames as $providerName) {
             Log::debug(sprintf('Now with provider %s', $providerName));
             // only consider enabled providers
@@ -163,7 +162,7 @@ class IndexController extends Controller
                 Log::debug('User is demo and this provider is not allowed for demo user. NEXT!');
                 continue;
             }
-            if ($isDemoUser === false && $allowedForUser === false) {
+            if ($isDemoUser === false && $allowedForUser === false && $isDebug === false) {
                 Log::debug('User is not demo and this provider is not allowed for such users. NEXT!');
                 continue;
             }
