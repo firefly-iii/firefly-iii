@@ -25,6 +25,7 @@ declare(strict_types=1);
 use FireflyIII\Import\JobConfiguration\FakeJobConfiguration;
 use FireflyIII\Import\JobConfiguration\FileJobConfiguration;
 use FireflyIII\Import\Prerequisites\FakePrerequisites;
+use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
 use FireflyIII\Import\Routine\FakeRoutine;
 use FireflyIII\Import\Routine\FileRoutine;
 use FireflyIII\Support\Import\Routine\File\CSVProcessor;
@@ -60,6 +61,7 @@ return [
         'quovo'   => true,
         'yodlee'  => true,
     ],
+    // some providers have pre-requisites.
     'has_prereq'       => [
         'fake'    => true,
         'file'    => false,
@@ -69,15 +71,17 @@ return [
         'quovo'   => true,
         'yodlee'  => true,
     ],
+    // if so, there must be a class to handle them.
     'prerequisites'    => [
         'fake'    => FakePrerequisites::class,
         'file'    => false,
-        'bunq'    => false,
+        'bunq'    => SpectrePrerequisites::class,
         'spectre' => false,
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
     ],
+    // some providers may have extra configuration per job.
     'has_config'       => [
         'fake'    => true,
         'file'    => true,
@@ -87,6 +91,7 @@ return [
         'quovo'   => true,
         'yodlee'  => true,
     ],
+    // if so, this is the class that handles it.
     'configuration'    => [
         'fake'    => FakeJobConfiguration::class,
         'file'    => FileJobConfiguration::class,
@@ -96,6 +101,7 @@ return [
         'quovo'   => false,
         'yodlee'  => false,
     ],
+    // this is the routine that runs the actual import.
     'routine'          => [
         'fake'    => FakeRoutine::class,
         'file'    => FileRoutine::class,
@@ -128,5 +134,8 @@ return [
         'spectre' => [
             'server' => 'www.saltedge.com',
         ],
+        'plaid'   => [],
+        'quovo'   => [],
+        'yodlee'  => [],
     ],
 ];

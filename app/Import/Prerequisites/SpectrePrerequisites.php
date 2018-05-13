@@ -30,8 +30,6 @@ use Log;
 use Preferences;
 
 /**
- * @deprecated
- * @codeCoverageIgnore
  * This class contains all the routines necessary to connect to Spectre.
  */
 class SpectrePrerequisites implements PrerequisitesInterface
@@ -196,7 +194,7 @@ class SpectrePrerequisites implements PrerequisitesInterface
      */
     public function getView(): string
     {
-        return '';
+        return 'import.spectre.prerequisites';
     }
 
     /**

@@ -64,9 +64,10 @@ class IndexControllerTest extends TestCase
         $importJob->key      = 'fake_job_1';
 
         // mock call:
+        $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(),'demo'])->andReturn(true)->once();
         $repository->shouldReceive('create')->withArgs(['fake'])->andReturn($importJob);
-        $fakePrerequisites->shouldReceive('isComplete')->once()->andReturn(false);
-        $fakePrerequisites->shouldReceive('setUser')->once();
+        $fakePrerequisites->shouldReceive('isComplete')->twice()->andReturn(false);
+        $fakePrerequisites->shouldReceive('setUser')->twice();
 
 
         $this->be($this->user());
@@ -93,9 +94,10 @@ class IndexControllerTest extends TestCase
         $importJob->key      = 'fake_job_2';
 
         // mock call:
+        $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(),'demo'])->andReturn(true)->once();
         $repository->shouldReceive('create')->withArgs(['fake'])->andReturn($importJob);
-        $fakePrerequisites->shouldReceive('isComplete')->once()->andReturn(true);
-        $fakePrerequisites->shouldReceive('setUser')->once();
+        $fakePrerequisites->shouldReceive('isComplete')->twice()->andReturn(true);
+        $fakePrerequisites->shouldReceive('setUser')->twice();
         $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'has_prereq'])->andReturn($importJob)->once();
 
 
