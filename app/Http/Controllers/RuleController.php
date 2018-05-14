@@ -536,6 +536,7 @@ class RuleController extends Controller
                 'title'               => trans('firefly.default_rule_name'),
                 'description'         => trans('firefly.default_rule_description'),
                 'trigger'             => 'store-journal',
+                'strict'              => true,
                 'rule-trigger-values' => [
                     trans('firefly.default_rule_trigger_description'),
                     trans('firefly.default_rule_trigger_from_account'),
