@@ -36,7 +36,7 @@ return [
         'fake'    => true,
         'file'    => true,
         'bunq'    => false,
-        'spectre' => false,
+        'spectre' => true,
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
@@ -75,21 +75,21 @@ return [
     'prerequisites'    => [
         'fake'    => FakePrerequisites::class,
         'file'    => false,
-        'bunq'    => SpectrePrerequisites::class,
-        'spectre' => false,
+        'bunq'    => false,
+        'spectre' => SpectrePrerequisites::class,
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
     ],
-    // some providers may have extra configuration per job.
-    'has_config'       => [
+    // some providers may need extra configuration per job
+    'has_job_config'       => [
         'fake'    => true,
         'file'    => true,
-        'bunq'    => true,
-        'spectre' => true,
-        'plaid'   => true,
-        'quovo'   => true,
-        'yodlee'  => true,
+        'bunq'    => false,
+        'spectre' => false,
+        'plaid'   => false,
+        'quovo'   => false,
+        'yodlee'  => false,
     ],
     // if so, this is the class that handles it.
     'configuration'    => [

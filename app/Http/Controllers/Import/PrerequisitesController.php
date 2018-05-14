@@ -83,7 +83,7 @@ class PrerequisitesController extends Controller
         app('view')->share('subTitle', trans('import.prerequisites_breadcrumb_' . $importProvider));
         $class = (string)config(sprintf('import.prerequisites.%s', $importProvider));
         if (!class_exists($class)) {
-            throw new FireflyException(sprintf('No class to handle configuration for "%s".', $importProvider)); // @codeCoverageIgnore
+            throw new FireflyException(sprintf('No class to handle prerequisites for "%s".', $importProvider)); // @codeCoverageIgnore
         }
         /** @var PrerequisitesInterface $object */
         $object = app($class);

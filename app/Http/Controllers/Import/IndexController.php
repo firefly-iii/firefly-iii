@@ -85,14 +85,13 @@ class IndexController extends Controller
         Log::debug(sprintf('Created job #%d for provider %s', $importJob->id, $importProvider));
 
         $hasPreReq = (bool)config(sprintf('import.has_prereq.%s', $importProvider));
-        $hasConfig = (bool)config(sprintf('import.has_config.%s', $importProvider));
+        $hasConfig = (bool)config(sprintf('import.has_job_config.%s', $importProvider));
         // if job provider has no prerequisites:
         if ($hasPreReq === false) {
             Log::debug('Provider has no prerequisites. Continue.');
-            // @codeCoverageIgnoreStart
             // if job provider also has no configuration:
             if ($hasConfig === false) {
-                Log::debug('Provider has no configuration. Job is ready to start.');
+                Log::debug('Provider needs no configuration for job. Job is ready to start.');
                 $this->repository->updateStatus($importJob, 'ready_to_run');
                 Log::debug('Redirect to status-page.');
 
@@ -106,13 +105,12 @@ class IndexController extends Controller
             Log::debug('Redirect to configuration.');
 
             return redirect(route('import.job.configuration.index', [$importJob->key]));
-            // @codeCoverageIgnoreEnd
         }
         Log::debug('Job provider has prerequisites.');
         // if need to set prerequisites, do that first.
         $class = (string)config(sprintf('import.prerequisites.%s', $importProvider));
         if (!class_exists($class)) {
-            throw new FireflyException(sprintf('No class to handle configuration for "%s".', $importProvider)); // @codeCoverageIgnore
+            throw new FireflyException(sprintf('No class to handle prerequisites for "%s".', $importProvider)); // @codeCoverageIgnore
         }
         /** @var PrerequisitesInterface $providerPre */
         $providerPre = app($class);
@@ -189,7 +187,6 @@ class IndexController extends Controller
 
             $providers[$providerName] = [
                 'has_prereq' => (bool)config('import.has_prereq.' . $providerName),
-                'has_config' => (bool)config('import.has_config.' . $providerName),
             ];
             $class                    = (string)config(sprintf('import.prerequisites.%s', $providerName));
             $result                   = false;

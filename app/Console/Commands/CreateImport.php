@@ -116,7 +116,7 @@ class CreateImport extends Command
             // make prerequisites thing.
             $class = (string)config(sprintf('import.prerequisites.%s', $provider));
             if (!class_exists($class)) {
-                throw new FireflyException(sprintf('No class to handle configuration for "%s".', $provider)); // @codeCoverageIgnore
+                throw new FireflyException(sprintf('No class to handle prerequisites for "%s".', $provider)); // @codeCoverageIgnore
             }
             /** @var PrerequisitesInterface $object */
             $object = app($class);

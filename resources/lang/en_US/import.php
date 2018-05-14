@@ -68,6 +68,9 @@ return [
     // prerequisites:
     'prereq_fake_title'                  => 'Prerequisites for an import from the fake import provider',
     'prereq_fake_text'                   => 'This fake provider requires a fake API key. It must be 32 characters long. You can use this one: 123456789012345678901234567890AA',
+    'prereq_spectre_title'               => 'Prerequisites for an import using the Spectre API',
+    'prereq_spectre_text'                => 'In order to import data using the Spectre API (v4), you must provide Firefly III with two secret values. They can be found on the <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
+    'prereq_spectre_pub'              => 'Likewise, the Spectre API needs to know the public key you see below. Without it, it will not recognize you. Please enter this public key on your <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
     // prerequisites success messages:
     'prerequisites_saved_for_fake'       => 'Fake API key stored successfully!',
 

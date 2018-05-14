@@ -83,7 +83,7 @@ class JobConfigurationController extends Controller
 
         // if provider has no config, just push it through:
         $importProvider = $importJob->provider;
-        if (!(bool)config(sprintf('import.has_config.%s', $importProvider))) {
+        if (!(bool)config(sprintf('import.has_job_config.%s', $importProvider))) {
             // @codeCoverageIgnoreStart
             Log::debug('Job needs no config, is ready to run!');
             $this->repository->updateStatus($importJob, 'ready_to_run');
