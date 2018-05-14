@@ -31,6 +31,7 @@ use FireflyIII\TransactionRules\Actions\ActionInterface;
 use FireflyIII\TransactionRules\Factory\ActionFactory;
 use FireflyIII\TransactionRules\Factory\TriggerFactory;
 use FireflyIII\TransactionRules\Triggers\AbstractTrigger;
+use FireflyIII\TransactionRules\Triggers\UserAction;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -279,10 +280,13 @@ final class Processor
                 Log::debug('Is a match!');
                 ++$hitTriggers;
                 // is non-strict? then return true!
-                if (!$this->strict) {
+                if (!$this->strict && UserAction::class !== \get_class($trigger)) {
                     Log::debug('Rule is set as non-strict, return true!');
 
                     return true;
+                }
+                if (!$this->strict && UserAction::class === \get_class($trigger)) {
+                    Log::debug('Rule is set as non-strict, but action was "user-action". Will not return true.');
                 }
             }
             if ($trigger->stopProcessing) {
