@@ -28,6 +28,7 @@ use FireflyIII\Import\Prerequisites\FakePrerequisites;
 use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
 use FireflyIII\Import\Routine\FakeRoutine;
 use FireflyIII\Import\Routine\FileRoutine;
+use FireflyIII\Import\Routine\SpectreRoutine;
 use FireflyIII\Support\Import\Routine\File\CSVProcessor;
 
 return [
@@ -106,7 +107,7 @@ return [
         'fake'    => FakeRoutine::class,
         'file'    => FileRoutine::class,
         'bunq'    => false,
-        'spectre' => false,
+        'spectre' => SpectreRoutine::class,
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,

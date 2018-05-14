@@ -120,7 +120,7 @@ class JobStatusController extends Controller
             Log::error('Job is not ready.');
             $this->repository->setStatus($importJob, 'error');
 
-            return response()->json(['status' => 'NOK', 'message' => 'JobStatusController::start expects status "ready_to_run".']);
+            return response()->json(['status' => 'NOK', 'message' => sprintf('JobStatusController::start expects status "ready_to_run" instead of "%s".', $importJob->status)]);
         }
         $importProvider = $importJob->provider;
         $key            = sprintf('import.routine.%s', $importProvider);

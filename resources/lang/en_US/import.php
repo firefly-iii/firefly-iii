@@ -26,6 +26,7 @@ return [
     // ALL breadcrumbs and subtitles:
     'index_breadcrumb'                   => 'Import data into Firefly III',
     'prerequisites_breadcrumb_fake'      => 'Prerequisites for the fake import provider',
+    'prerequisites_breadcrumb_spectre'      => 'Prerequisites for Spectre',
     'job_configuration_breadcrumb'       => 'Configuration for ":key"',
     'job_status_breadcrumb'              => 'Import status for ":key"',
     'cannot_create_for_provider'         => 'Firefly III cannot create a job for the ":provider"-provider.',
@@ -73,6 +74,7 @@ return [
     'prereq_spectre_pub'              => 'Likewise, the Spectre API needs to know the public key you see below. Without it, it will not recognize you. Please enter this public key on your <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
     // prerequisites success messages:
     'prerequisites_saved_for_fake'       => 'Fake API key stored successfully!',
+    'prerequisites_saved_for_spectre' => 'App ID and secret stored!',
 
     // job configuration:
     'job_config_apply_rules_title'       => 'Job configuration - apply your rules?',

@@ -25,6 +25,7 @@ namespace FireflyIII\Import\Prerequisites;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;
 use Illuminate\Support\MessageBag;
+use Log;
 
 /**
  * This class contains all the routines necessary to connect to Spectre.
@@ -204,16 +205,15 @@ class SpectrePrerequisites implements PrerequisitesInterface
         /** @var Preference $appIdPreference */
         $appIdPreference = app('preferences')->getForUser($this->user, 'spectre_app_id', null);
         $appId           = null === $appIdPreference ? '' : $appIdPreference->data;
-
         /** @var Preference $secretPreference */
         $secretPreference = app('preferences')->getForUser($this->user, 'spectre_secret', null);
         $secret           = null === $secretPreference ? '' : $secretPreference->data;
-
-
+        $publicKey        = $this->getPublicKey();
 
         return [
-            'app_id' => $appId,
-            'secret' => $secret,
+            'app_id'     => $appId,
+            'secret'     => $secret,
+            'public_key' => $publicKey,
         ];
     }
 
@@ -224,7 +224,7 @@ class SpectrePrerequisites implements PrerequisitesInterface
      */
     public function isComplete(): bool
     {
-        return false;
+        return $this->hasAppId() && $this->hasSecret();
     }
 
     /**
@@ -248,7 +248,61 @@ class SpectrePrerequisites implements PrerequisitesInterface
      */
     public function storePrerequisites(array $data): MessageBag
     {
+        Log::debug('Storing Spectre API keys..');
+        app('preferences')->setForUser($this->user, 'spectre_app_id',$data['app_id'] ?? null);
+        app('preferences')->setForUser($this->user, 'spectre_secret', $data['secret'] ?? null);
+        Log::debug('Done!');
+
         return new MessageBag;
+    }
+
+    /**
+     * This method creates a new public/private keypair for the user. This isn't really secure, since the key is generated on the fly with
+     * no regards for HSM's, smart cards or other things. It would require some low level programming to get this right. But the private key
+     * is stored encrypted in the database so it's something.
+     */
+    private function createKeyPair(): void
+    {
+        Log::debug('Generate new Spectre key pair for user.');
+        $keyConfig = [
+            'digest_alg'       => 'sha512',
+            'private_key_bits' => 2048,
+            'private_key_type' => OPENSSL_KEYTYPE_RSA,
+        ];
+        // Create the private and public key
+        $res = openssl_pkey_new($keyConfig);
+
+        // Extract the private key from $res to $privKey
+        $privKey = '';
+        openssl_pkey_export($res, $privKey);
+
+        // Extract the public key from $res to $pubKey
+        $pubKey = openssl_pkey_get_details($res);
+
+        app('preferences')->setForUser($this->user, 'spectre_private_key', $privKey);
+        app('preferences')->setForUser($this->user, 'spectre_public_key', $pubKey['key']);
+        Log::debug('Created key pair');
+
+    }
+
+    /**
+     * Get a public key from the users preferences.
+     *
+     * @return string
+     */
+    private function getPublicKey(): string
+    {
+        Log::debug('get public key');
+        $preference = app('preferences')->getForUser($this->user, 'spectre_public_key', null);
+        if (null === $preference) {
+            Log::debug('public key is null');
+            // create key pair
+            $this->createKeyPair();
+        }
+        $preference = app('preferences')->getForUser($this->user, 'spectre_public_key', null);
+        Log::debug('Return public key for user');
+
+        return $preference->data;
     }
 
     /**
@@ -261,6 +315,22 @@ class SpectrePrerequisites implements PrerequisitesInterface
             return false;
         }
         if ('' === (string)$appId->data) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasSecret(): bool
+    {
+        $secret = app('preferences')->getForUser($this->user, 'spectre_secret', null);
+        if (null === $secret) {
+            return false;
+        }
+        if ('' === (string)$secret->data) {
             return false;
         }
 

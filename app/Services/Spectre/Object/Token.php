@@ -73,4 +73,16 @@ class Token extends SpectreObject
         return $this->token;
     }
 
+    /**
+     *
+     */
+    public function toArray(): array
+    {
+        return [
+            'connect_url' => $this->connectUrl,
+            'expires_at'  => $this->expiresAt->toW3cString(),
+            'token'       => $this->token,
+        ];
+    }
+
 }

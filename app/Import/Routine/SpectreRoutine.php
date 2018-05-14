@@ -24,14 +24,68 @@ namespace FireflyIII\Import\Routine;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Support\Import\Routine\Spectre\StageNewHandler;
 
 /**
- * @deprecated
  * @codeCoverageIgnore
  * Class FileRoutine
  */
 class SpectreRoutine implements RoutineInterface
 {
+
+    /** @var ImportJob */
+    private $importJob;
+
+    /** @var ImportJobRepositoryInterface */
+    private $repository;
+
+    /**
+     * At the end of each run(), the import routine must set the job to the expected status.
+     *
+     * The final status of the routine must be "provider_finished".
+     *
+     * Spectre:
+     *  Stage new:
+     *      - StageNewHandler
+     *
+     * @return bool
+     * @throws FireflyException
+     */
+    public function run(): void
+    {
+        if ($this->importJob->status === 'ready_to_run') {
+
+            switch ($this->importJob->stage) {
+                default:
+                    throw new FireflyException(sprintf('SpectreRoutine cannot handle stage "%s".', $this->importJob->stage));
+                case 'new':
+                    /** @var StageNewHandler $handler */
+                    $handler = app(StageNewHandler::class);
+                    $handler->setImportJob($this->importJob);
+                    $handler->run();
+                    $this->repository->setStage($this->importJob, 'authenticate');
+                    break;
+            }
+        }
+
+
+    }
+
+    /**
+     * @param ImportJob $importJob
+     *
+     * @return void
+     */
+    public function setImportJob(ImportJob $importJob): void
+    {
+        $this->importJob  = $importJob;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($importJob->user);
+    }
+
+
+
     //    /** @var Collection */
     //    public $errors;
     //    /** @var Collection */
@@ -570,28 +624,5 @@ class SpectreRoutine implements RoutineInterface
     //    {
     //        $this->repository->setStatus($this->job, $status);
     //    }
-    /**
-     * At the end of each run(), the import routine must set the job to the expected status.
-     *
-     * The final status of the routine must be "provider_finished".
-     *
-     * @return bool
-     * @throws FireflyException
-     */
-    public function run(): void
-    {
-        // TODO: Implement run() method.
-        throw new NotImplementedException;
-    }
 
-    /**
-     * @param ImportJob $importJob
-     *
-     * @return void
-     */
-    public function setImportJob(ImportJob $importJob): void
-    {
-        // TODO: Implement setImportJob() method.
-        throw new NotImplementedException;
-    }
 }
