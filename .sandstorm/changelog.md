@@ -1,3 +1,10 @@
+# 4.7.3.2
+- Forgot to increase the version number :(.
+
+
+# 4.7.3.1
+- Fixed a critical bug where the rules-engine would fire inadvertently.
+
 # 4.7.3
 - Currency added to API
 - Firfely III will also generate a cash wallet for new users.
