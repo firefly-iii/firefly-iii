@@ -54,17 +54,20 @@ class SpectreRoutine implements RoutineInterface
      */
     public function run(): void
     {
-        if ($this->importJob->status === 'ready_to_run') {
-
+        $valid = ['ready_to_run','error']; // should be only ready_to_run
+        if(in_array($this->importJob->status, $valid)) {
             switch ($this->importJob->stage) {
                 default:
                     throw new FireflyException(sprintf('SpectreRoutine cannot handle stage "%s".', $this->importJob->stage));
                 case 'new':
+                case 'authenticate':
                     /** @var StageNewHandler $handler */
                     $handler = app(StageNewHandler::class);
                     $handler->setImportJob($this->importJob);
                     $handler->run();
                     $this->repository->setStage($this->importJob, 'authenticate');
+                    var_dump($this->repository->getConfiguration($this->importJob));
+                    exit;
                     break;
             }
         }

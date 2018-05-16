@@ -59,6 +59,7 @@ class StageNewHandler
      */
     public function run(): void
     {
+        Log::debug('Now in stageNewHandler::run()');
         $customer = $this->getCustomer();
         // get token using customer.
         $token = $this->getToken($customer);
@@ -83,12 +84,15 @@ class StageNewHandler
      */
     private function getCustomer(): Customer
     {
+        Log::debug('Now in stageNewHandler::getCustomer()');
         $customer = $this->getExistingCustomer();
         if (null === $customer) {
+            Log::debug('The customer is NULL, will fire a newCustomerRequest.');
             $newCustomerRequest = new NewCustomerRequest($this->importJob->user);
             $customer           = $newCustomerRequest->getCustomer();
 
         }
+        Log::debug('The customer is not null.');
 
         return $customer;
     }
@@ -99,14 +103,18 @@ class StageNewHandler
      */
     private function getExistingCustomer(): ?Customer
     {
+        Log::debug('Now in getExistingCustomer()');
         $customer           = null;
         $getCustomerRequest = new ListCustomersRequest($this->importJob->user);
         $getCustomerRequest->call();
         $customers = $getCustomerRequest->getCustomers();
+
+        Log::debug(sprintf('Found %d customer(s)', \count($customers)));
         /** @var Customer $current */
         foreach ($customers as $current) {
             if ('default_ff3_customer' === $current->getIdentifier()) {
                 $customer = $current;
+                Log::debug('Found the correct customer.');
                 break;
             }
         }
@@ -122,6 +130,7 @@ class StageNewHandler
      */
     private function getToken(Customer $customer): Token
     {
+        Log::debug('Now in getToken()');
         $request = new CreateTokenRequest($this->importJob->user);
         $request->setUri(route('import.job.status.index', [$this->importJob->key]));
         $request->setCustomer($customer);
