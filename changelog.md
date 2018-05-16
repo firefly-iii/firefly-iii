@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.7.3.2] - 2018-05-16
+### Fixed
+- Forgot to increase the version number :(.
+
+
+## [4.7.3.1] - 2018-05-14
+### Fixed
+- Fixed a critical bug where the rules-engine would fire inadvertently.
+
 ## [4.7.3] - 2018-04-29
 ### Added
 - Currency added to API
