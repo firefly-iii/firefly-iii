@@ -90,7 +90,7 @@ class JobStatusControllerTest extends TestCase
         $response = $this->get(route('import.job.status.json', [$job->key]));
         $response->assertStatus(200);
         $response->assertSee(
-            'No transactions have been imported. Perhaps they were all duplicates is simply no transactions where present to be imported. Perhaps the error message below can tell you what happened.'
+            'No transactions have been imported. Perhaps they were all duplicates is simply no transactions where present to be imported. Perhaps the log files can tell you what happened. If you import data regularly, this is normal.'
         );
     }
 
@@ -115,7 +115,7 @@ class JobStatusControllerTest extends TestCase
         $response = $this->get(route('import.job.status.json', [$job->key]));
         $response->assertStatus(200);
         $response->assertSee(
-            'No transactions have been imported. Perhaps they were all duplicates is simply no transactions where present to be imported. Perhaps the error message below can tell you what happened.'
+            'No transactions have been imported. Perhaps they were all duplicates is simply no transactions where present to be imported. Perhaps the log files can tell you what happened. If you import data regularly, this is normal.'
         );
     }
 
@@ -285,7 +285,7 @@ class JobStatusControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->post(route('import.job.start', [$job->key]));
         $response->assertStatus(200);
-        $response->assertExactJson(['status' => 'NOK', 'message' => 'JobStatusController::start expects status "ready_to_run".']);
+        $response->assertExactJson(['status' => 'NOK', 'message' => 'JobStatusController::start expects status "ready_to_run" instead of "error".']);
     }
 
     /**
