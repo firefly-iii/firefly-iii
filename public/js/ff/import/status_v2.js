@@ -66,11 +66,12 @@ function reportJobJSONDone(data) {
             recheckJobJSONStatus();
             break;
         case "need_job_config":
+            console.log("Will redirect user to " + jobConfigurationUri);
             // redirect user to configuration for this job.
             window.location.replace(jobConfigurationUri);
             break;
         case 'error':
-            reportJobError();
+            reportJobError(data);
             break;
         case 'provider_finished':
             // call routine to store stuff:
@@ -251,7 +252,7 @@ function reportJobPOSTFailure(xhr, status, error) {
 /**
  * Show error to user.
  */
-function reportJobError() {
+function reportJobError(data) {
     console.log('In reportJobError()');
     // cancel checking again for job status:
     clearTimeout(timeOutId);
@@ -262,7 +263,7 @@ function reportJobError() {
     // show fatal error box:
     $('.fatal_error').show();
 
-    $('.fatal_error_txt').text('Job reports error. Please start again. Apologies.');
+    $('.fatal_error_txt').text('Job reports error. Please start again. Apologies. Error message is: ' + data.report_txt);
     // show error box.
 }
 

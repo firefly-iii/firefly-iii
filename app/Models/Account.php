@@ -24,6 +24,7 @@ namespace FireflyIII\Models;
 
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
@@ -31,16 +32,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\JoinClause;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Log;
-use FireflyIII\Models\AccountType;
-use FireflyIII\Models\AccountMeta;
-use FireflyIII\User;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\PiggyBank;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Account.
+ *
+ * @property string $name
+ * @property string $iban
  */
 class Account extends Model
 {

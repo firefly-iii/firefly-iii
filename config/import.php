@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 use FireflyIII\Import\JobConfiguration\FakeJobConfiguration;
 use FireflyIII\Import\JobConfiguration\FileJobConfiguration;
+use FireflyIII\Import\JobConfiguration\SpectreJobConfiguration;
 use FireflyIII\Import\Prerequisites\FakePrerequisites;
 use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
 use FireflyIII\Import\Routine\FakeRoutine;
@@ -87,7 +88,7 @@ return [
         'fake'    => true,
         'file'    => true,
         'bunq'    => false,
-        'spectre' => false,
+        'spectre' => true,
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
@@ -97,7 +98,7 @@ return [
         'fake'    => FakeJobConfiguration::class,
         'file'    => FileJobConfiguration::class,
         'bunq'    => false,
-        'spectre' => false,
+        'spectre' => SpectreJobConfiguration::class,
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,

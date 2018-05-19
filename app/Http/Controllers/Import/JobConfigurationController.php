@@ -78,7 +78,6 @@ class JobConfigurationController extends Controller
 
             return redirect(route('import.index'));
         }
-
         Log::debug(sprintf('Now in JobConfigurationController::index() with job "%s" and status "%s"', $importJob->key, $importJob->status));
 
         // if provider has no config, just push it through:

@@ -69,6 +69,49 @@ class Login extends SpectreObject
     private $updatedAt;
 
     /**
+     * @return string
+     */
+    public function getCountryCode(): string
+    {
+        return $this->countryCode;
+    }
+
+    /**
+     * @return Carbon
+     */
+    public function getLastSuccessAt(): Carbon
+    {
+        return $this->lastSuccessAt;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProviderName(): string
+    {
+        return $this->providerName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @return Carbon
+     */
+    public function getUpdatedAt(): Carbon
+    {
+        return $this->updatedAt;
+    }
+
+
+
+
+    /**
      * Login constructor.
      *
      * @param array $data
@@ -129,7 +172,7 @@ class Login extends SpectreObject
             'id'                        => $this->id,
             'last_attempt'              => $this->lastAttempt->toArray(),
             'last_success_at'           => $this->lastSuccessAt->toIso8601String(),
-            'next_refresh_possible_at'  => $this->nextRefreshPossibleAt,
+            'next_refresh_possible_at'  => $this->nextRefreshPossibleAt->toIso8601String(),
             'provider_code'             => $this->providerCode,
             'provider_id'               => $this->providerId,
             'provider_name'             => $this->providerName,

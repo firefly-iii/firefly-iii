@@ -50,6 +50,40 @@ class Account extends SpectreObject
     private $updatedAt;
 
     /**
+     * @return string
+     */
+    public function getNature(): string
+    {
+        return $this->nature;
+    }
+
+    /**
+     * @return float
+     */
+    public function getBalance(): float
+    {
+        return $this->balance;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrencyCode(): string
+    {
+        return $this->currencyCode;
+    }
+
+    /**
+     * @return array
+     */
+    public function getExtra(): array
+    {
+        return $this->extra;
+    }
+
+
+
+    /**
      * Account constructor.
      *
      * @param array $data

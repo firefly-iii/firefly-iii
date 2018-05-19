@@ -5,22 +5,21 @@
 {% endblock %}
 {% block content %}
     <div class="row">
-        <form class="form-horizontal" action="{{ route('import.configure.post',[job.key]) }}" method="post">
+        <form class="form-horizontal" action="{{ route('import.job.configuration.post',[importJob.key]) }}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box box-default">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ trans('import.spectre_accounts_title') }}</h3>
+                        <h3 class="box-title">{{ trans('import.job_config_spectre_accounts_title') }}</h3>
                     </div>
                     <div class="box-body">
                         <div class="row">
                             <div class="col-lg-8">
                                 <p>
-                                    {{ trans('import.spectre_accounts_text')|raw }}
+                                    {{ trans('import.job_config_spectre_accounts_text', {count: data.accounts|length,country: data.login.getCountryCode(),name: data.login.getProviderName()}) }}
                                 </p>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-lg-12">
                                 <table class="table table-bordered table-striped">
@@ -28,53 +27,46 @@
                                     <tr>
                                         <th>{{ trans('list.account_on_spectre') }}</th>
                                         <th>{{ trans('list.account') }}</th>
-                                        <th>{{ trans('list.do_import') }}</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for account in data.config.accounts %}
+                                    {% for account in data.accounts %}
                                         <tr>
                                             <td>
-                                                <input type="hidden" name="spectre_account_id[]" value="{{ account.id }}" />
-                                                {{ account.nature|capitalize }} "<strong>{{ account.name }}</strong>" ({{ formatAmountBySymbol(account.balance, account.currency_code~' ') }})<br />
-                                                {% for name, value in account.extra %}
+                                                {{ account.getNature()|capitalize }} "<strong>{{ account.getName() }}</strong>"
+                                                ({{ formatAmountBySymbol(account.getBalance(), account.getCurrencyCode()~' ') }})<br/>
+                                                {% set currentIban = '' %}
+                                                {% for name, value in account.getExtra() %}
                                                     {% if not value is iterable and name != 'sort_code' and name !='current_date' and name != 'available_amount' and name !='current_time' and name != 'last_posted_transaction_id' %}
-                                                        {{ trans('import.spectre_extra_key_'~name) }}: {{ value }}<br />
+                                                        {{ trans('import.spectre_extra_key_'~name) }}: {{ value }}<br/>
                                                     {% endif %}
                                                     {% if name == 'available_amount' %}
-                                                        {{ trans('import.spectre_extra_key_'~name) }}: {{ formatAmountBySymbol(value, account.currency_code~' ') }}
+                                                        {{ trans('import.spectre_extra_key_'~name) }}: {{ formatAmountBySymbol(value, account.getCurrencyCode()~' ') }}
+                                                    {% endif %}
+                                                    {% if name == 'iban' %}
+                                                        {% set currentIban = value %}
                                                     {% endif %}
                                                 {% endfor %}
                                             </td>
                                             <td>
-                                                {% if account.options|length > 0 %}
-                                                <select class="form-control" name="import[{{ account.id }}]">
-                                                    {% for id,name in account.options %}
-                                                        <option value="{{ id }}" label="{{ name }}">{{ name }}</option>
+                                                <select class="form-control" name="account_mapping[{{ account.getId() }}]">
+                                                    <option value="0" label="{{ trans('import.spectre_do_not_import') }}">
+                                                        {{ trans('import.spectre_do_not_import') }}
+                                                    </option>
+                                                    {% for ffId, ffAccount in data.ff_accounts %}
+                                                        {% if ffAccount.code == account.getCurrencyCode() %}
+                                                            <option value="{{ ffId }}"{% if currentIban != '' and currentIban == ffAccount.iban %} selected{% endif %}>
+                                                                {{ ffAccount.name }}{% if ffAccount.iban !='' %} ({{ ffAccount.iban }}){% endif %}
+                                                            </option>
+                                                        {% endif %}
                                                     {% endfor %}
                                                 </select>
-                                                {% else %}
-                                                    <em>
-                                                        {{ trans('import.spectre_no_supported_accounts') }}
-                                                    </em>
-                                                    {% endif %}
-                                            </td>
-                                            <td>
-                                                {% if account.options|length > 0 %}
-                                                <div class="checkbox">
-                                                    <label>
-                                                        <input type="checkbox" value="1" name="do_import[{{ account.id }}]" checked>
-                                                        {{ trans('import.spectre_do_import') }}
-                                                    </label>
-                                                </div>
-                                                {% endif %}
                                             </td>
                                         </tr>
 
                                     {% endfor %}
                                     </tbody>
                                 </table>
-
 
 
                             </div>

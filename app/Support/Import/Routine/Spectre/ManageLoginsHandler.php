@@ -1,6 +1,6 @@
 <?php
 /**
- * StageNewHandler.php
+ * ManageLoginsHandler.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -27,48 +27,53 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Services\Spectre\Object\Customer;
-use FireflyIII\Services\Spectre\Object\Token;
-use FireflyIII\Services\Spectre\Request\CreateTokenRequest;
+use FireflyIII\Services\Spectre\Object\Login;
 use FireflyIII\Services\Spectre\Request\ListCustomersRequest;
+use FireflyIII\Services\Spectre\Request\ListLoginsRequest;
 use FireflyIII\Services\Spectre\Request\NewCustomerRequest;
 use Log;
 
-/**
- * Class StageNewHandler
- *
- * @package FireflyIII\Support\Import\Routine\Spectre
- */
-class StageNewHandler
+class ManageLoginsHandler
 {
+
+
+    public $countLogins = 0;
     /** @var ImportJob */
     private $importJob;
-
     /** @var ImportJobRepositoryInterface */
     private $repository;
 
     /**
      * Tasks for this stage:
      *
-     * - Get the user's customer from Spectre.
-     * - Create a new customer if it does not exist.
-     * - Store it in the job either way.
-     * - Use it to grab a token.
-     * - Store the token in the job.
+     * - List all of the users logins.
+     * - If zero, return to "get-token" stage and make user make a login. That stage redirects here.
+     * - If one or more, list and let user select.
      *
      * @throws FireflyException
      */
     public function run(): void
     {
-        Log::debug('Now in stageNewHandler::run()');
         $customer = $this->getCustomer();
 
-        // get token using customer.
-        app('preferences')->setForUser($this->importJob->user, 'spectre_customer', $customer->toArray());
+        $request = new ListLoginsRequest($this->importJob->user);
+        $request->setCustomer($customer);
+        $request->call();
 
-        // store token in the job.
-        $config          = $this->repository->getConfiguration($this->importJob);
+        $list = $request->getLogins();
 
-        $this->repository->setConfiguration($this->importJob, $config);
+        // count is zero?
+        $this->countLogins = \count($list);
+        if ($this->countLogins > 0) {
+            $store = [];
+            /** @var Login $login */
+            foreach ($list as $login) {
+                $store[] = $login->toArray();
+            }
+            $config               = $this->repository->getConfiguration($this->importJob);
+            $config['all-logins'] = $store;
+            $this->repository->setConfiguration($this->importJob, $config);
+        }
     }
 
     /**
@@ -87,7 +92,7 @@ class StageNewHandler
      */
     private function getCustomer(): Customer
     {
-        Log::debug('Now in stageNewHandler::getCustomer()');
+        Log::debug('Now in manageLoginsHandler::getCustomer()');
         $customer = $this->getExistingCustomer();
         if (null === $customer) {
             Log::debug('The customer is NULL, will fire a newCustomerRequest.');
@@ -124,7 +129,5 @@ class StageNewHandler
 
         return $customer;
     }
-
-
 
 }

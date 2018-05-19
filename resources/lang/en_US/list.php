@@ -119,4 +119,7 @@ return [
     'file_type'               => 'File type',
     'attached_to'             => 'Attached to',
     'file_exists'             => 'File exists',
+    'spectre_bank'            => 'Bank',
+    'spectre_last_use'        => 'Last login',
+    'spectre_status'          => 'Status',
 ];

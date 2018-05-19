@@ -25,6 +25,9 @@ namespace FireflyIII\Import\Routine;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Support\Import\Routine\Spectre\ImportDataHandler;
+use FireflyIII\Support\Import\Routine\Spectre\ManageLoginsHandler;
+use FireflyIII\Support\Import\Routine\Spectre\StageAuthenticatedHandler;
 use FireflyIII\Support\Import\Routine\Spectre\StageNewHandler;
 
 /**
@@ -54,21 +57,59 @@ class SpectreRoutine implements RoutineInterface
      */
     public function run(): void
     {
-        $valid = ['ready_to_run','error']; // should be only ready_to_run
-        if(in_array($this->importJob->status, $valid)) {
+        $valid = ['ready_to_run']; // should be only ready_to_run
+        if (in_array($this->importJob->status, $valid)) {
             switch ($this->importJob->stage) {
                 default:
                     throw new FireflyException(sprintf('SpectreRoutine cannot handle stage "%s".', $this->importJob->stage));
                 case 'new':
-                case 'authenticate':
                     /** @var StageNewHandler $handler */
                     $handler = app(StageNewHandler::class);
                     $handler->setImportJob($this->importJob);
                     $handler->run();
-                    $this->repository->setStage($this->importJob, 'authenticate');
-                    var_dump($this->repository->getConfiguration($this->importJob));
-                    exit;
+                    $this->repository->setStage($this->importJob, 'manage-logins');
                     break;
+                case 'authenticate':
+                    // set job to require config.
+                    $this->repository->setStatus($this->importJob, 'need_job_config');
+
+                    return;
+                case 'manage-logins':
+                    // list all of the users logins.
+                    $handler = new ManageLoginsHandler;
+                    $handler->setImportJob($this->importJob);
+                    $handler->run();
+
+                    // if count logins is zero, go to authenticate stage
+                    if ($handler->countLogins === 0) {
+                        $this->repository->setStage($this->importJob, 'authenticate');
+                        $this->repository->setStatus($this->importJob, 'ready_to_run');
+
+                        return;
+                    }
+                    // or return to config to select login.
+                    $this->repository->setStage($this->importJob, 'choose-login');
+                    $this->repository->setStatus($this->importJob, 'need_job_config');
+                    break;
+                case 'authenticated':
+                    // get accounts from login, store in job.
+                    $handler = new StageAuthenticatedHandler;
+                    $handler->setImportJob($this->importJob);
+                    $handler->run();
+
+                    // return to config to select account(s).
+                    $this->repository->setStage($this->importJob, 'choose-account');
+                    $this->repository->setStatus($this->importJob, 'need_job_config');
+                    break;
+                case 'go-for-import':
+                    // user has chosen account mapping. Should now be ready to import data.
+                    //$this->repository->setStatus($this->importJob, 'running');
+                    //$this->repository->setStage($this->importJob, 'do_import');
+                    $handler = new ImportDataHandler;
+                    $handler->setImportJob($this->importJob);
+                    $handler->run();
+                    $this->repository->setStatus($this->importJob, 'provider_finished');
+                    $this->repository->setStage($this->importJob, 'final');
             }
         }
 
