@@ -84,6 +84,5 @@ class NewConfig implements SpectreJobConfig
      */
     public function setImportJob(ImportJob $importJob): void
     {
-        return;
     }
 }

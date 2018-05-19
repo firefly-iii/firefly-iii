@@ -29,10 +29,10 @@ use FireflyIII\Support\Import\Routine\Spectre\ImportDataHandler;
 use FireflyIII\Support\Import\Routine\Spectre\ManageLoginsHandler;
 use FireflyIII\Support\Import\Routine\Spectre\StageAuthenticatedHandler;
 use FireflyIII\Support\Import\Routine\Spectre\StageNewHandler;
+use Log;
 
 /**
- * @codeCoverageIgnore
- * Class FileRoutine
+ * Class SpectreRoutine
  */
 class SpectreRoutine implements RoutineInterface
 {
@@ -57,26 +57,17 @@ class SpectreRoutine implements RoutineInterface
      */
     public function run(): void
     {
+        Log::debug(sprintf('Now in SpectreRoutine::run() with status "%s" and stage "%s".', $this->importJob->status, $this->importJob->stage));
         $valid = ['ready_to_run']; // should be only ready_to_run
-        if (in_array($this->importJob->status, $valid)) {
+        if (\in_array($this->importJob->status, $valid, true)) {
             switch ($this->importJob->stage) {
                 default:
                     throw new FireflyException(sprintf('SpectreRoutine cannot handle stage "%s".', $this->importJob->stage));
                 case 'new':
+                    // list all of the users logins.
+                    $this->repository->setStatus($this->importJob, 'running');
                     /** @var StageNewHandler $handler */
                     $handler = app(StageNewHandler::class);
-                    $handler->setImportJob($this->importJob);
-                    $handler->run();
-                    $this->repository->setStage($this->importJob, 'manage-logins');
-                    break;
-                case 'authenticate':
-                    // set job to require config.
-                    $this->repository->setStatus($this->importJob, 'need_job_config');
-
-                    return;
-                case 'manage-logins':
-                    // list all of the users logins.
-                    $handler = new ManageLoginsHandler;
                     $handler->setImportJob($this->importJob);
                     $handler->run();
 
@@ -91,9 +82,16 @@ class SpectreRoutine implements RoutineInterface
                     $this->repository->setStage($this->importJob, 'choose-login');
                     $this->repository->setStatus($this->importJob, 'need_job_config');
                     break;
+                case 'authenticate':
+                    // set job to require config.
+                    $this->repository->setStatus($this->importJob, 'need_job_config');
+
+                    return;
                 case 'authenticated':
+                    $this->repository->setStatus($this->importJob, 'running');
                     // get accounts from login, store in job.
-                    $handler = new StageAuthenticatedHandler;
+                    /** @var StageAuthenticatedHandler $handler */
+                    $handler = app(StageAuthenticatedHandler::class);
                     $handler->setImportJob($this->importJob);
                     $handler->run();
 
@@ -103,9 +101,10 @@ class SpectreRoutine implements RoutineInterface
                     break;
                 case 'go-for-import':
                     // user has chosen account mapping. Should now be ready to import data.
-                    //$this->repository->setStatus($this->importJob, 'running');
-                    //$this->repository->setStage($this->importJob, 'do_import');
-                    $handler = new ImportDataHandler;
+                    $this->repository->setStatus($this->importJob, 'running');
+                    $this->repository->setStage($this->importJob, 'do_import');
+                    /** @var ImportDataHandler $handler */
+                    $handler = app(ImportDataHandler::class);
                     $handler->setImportJob($this->importJob);
                     $handler->run();
                     $this->repository->setStatus($this->importJob, 'provider_finished');

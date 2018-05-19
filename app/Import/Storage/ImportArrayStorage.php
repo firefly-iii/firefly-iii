@@ -382,7 +382,9 @@ class ImportArrayStorage
             $store['date']        = Carbon::createFromFormat('Y-m-d', $store['date']);
             $store['description'] = $store['description'] === '' ? '(empty description)' : $store['description'];
             // store the journal.
-            $collection->push($this->journalRepos->store($store));
+            $journal = $this->journalRepos->store($store);
+            Log::debug(sprintf('Stored as journal #%d', $journal->id));
+            $collection->push($journal);
         }
         Log::debug('DONE storing!');
 

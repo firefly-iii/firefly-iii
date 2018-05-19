@@ -55,10 +55,14 @@ class ChooseLoginHandler implements SpectreJobConfig
      */
     public function configurationComplete(): bool
     {
+        Log::debug('Now in ChooseLoginHandler::configurationComplete()');
         $config = $this->importJob->configuration;
-        if(isset($config['selected-login'])) {
+        if (isset($config['selected-login'])) {
+            Log::debug('config[selected-login] is set, return true.');
+
             return true;
         }
+        Log::debug('config[selected-login] is not set, return false.');
 
         return false;
     }
@@ -73,24 +77,30 @@ class ChooseLoginHandler implements SpectreJobConfig
      */
     public function configureJob(array $data): MessageBag
     {
+        Log::debug('Now in ChooseLoginHandler::configureJob()');
         $selectedLogin            = (int)$data['spectre_login_id'];
         $config                   = $this->importJob->configuration;
         $config['selected-login'] = $selectedLogin;
         $this->repository->setConfiguration($this->importJob, $config);
+        Log::debug(sprintf('The selected login by the user is #%d', $selectedLogin));
 
         // if selected login is zero, create a new one.
         if ($selectedLogin === 0) {
+            Log::debug('Login is zero, get a new customer + token and store it in config.');
             $customer = $this->getCustomer();
             // get a token for the user and redirect to next stage
-            $token           = $this->getToken($customer);
-            $config['token'] = $token->toArray();
+            $token              = $this->getToken($customer);
+            $config['customer'] = $customer->toArray();
+            $config['token']    = $token->toArray();
             $this->repository->setConfiguration($this->importJob, $config);
             // move job to correct stage to redirect to Spectre:
             $this->repository->setStage($this->importJob, 'authenticate');
+
             return new MessageBag;
 
         }
         $this->repository->setStage($this->importJob, 'authenticated');
+
         return new MessageBag;
     }
 
@@ -101,9 +111,11 @@ class ChooseLoginHandler implements SpectreJobConfig
      */
     public function getNextData(): array
     {
+        Log::debug('Now in ChooseLoginHandler::getNextData()');
         $config = $this->importJob->configuration;
         $data   = ['logins' => []];
         $logins = $config['all-logins'] ?? [];
+        Log::debug(sprintf('Count of logins in configuration is %d.', \count($logins)));
         foreach ($logins as $login) {
             $data['logins'][] = new Login($login);
         }
@@ -158,7 +170,7 @@ class ChooseLoginHandler implements SpectreJobConfig
      */
     private function getExistingCustomer(): ?Customer
     {
-        Log::debug('Now in getExistingCustomer()');
+        Log::debug('Now in ChooseLoginHandler::getExistingCustomer()');
         $preference = app('preferences')->getForUser($this->importJob->user, 'spectre_customer');
         if (null !== $preference) {
             Log::debug('Customer is in user configuration');
@@ -178,6 +190,7 @@ class ChooseLoginHandler implements SpectreJobConfig
             if ('default_ff3_customer' === $current->getIdentifier()) {
                 $customer = $current;
                 Log::debug('Found the correct customer.');
+                app('preferences')->setForUser($this->importJob->user, 'spectre_customer', $customer->toArray());
                 break;
             }
         }
@@ -193,7 +206,7 @@ class ChooseLoginHandler implements SpectreJobConfig
      */
     private function getToken(Customer $customer): Token
     {
-        Log::debug('Now in ChooseLoginsHandler::getToken()');
+        Log::debug('Now in ChooseLoginHandler::ChooseLoginsHandler::getToken()');
         $request = new CreateTokenRequest($this->importJob->user);
         $request->setUri(route('import.job.status.index', [$this->importJob->key]));
         $request->setCustomer($customer);

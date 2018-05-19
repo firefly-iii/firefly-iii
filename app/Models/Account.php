@@ -38,6 +38,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class Account.
  *
+ * @property int $id
  * @property string $name
  * @property string $iban
  */

@@ -120,6 +120,8 @@ return [
     'spectre_no_supported_accounts'        => 'You cannot import from this account due to a currency mismatch.',
     'spectre_do_not_import'                => '(do not import)',
     'spectre_no_mapping'                   => 'It seems you have not selected any accounts to import from.',
+    'imported_from_account'                => 'Imported from ":account"',
+    'spectre_account_with_number'          => 'Account :number',
 
     // keys from "extra" array:
     'spectre_extra_key_iban'               => 'IBAN',
@@ -460,5 +462,5 @@ return [
     //    'spectre_extra_key_transactions_count' => 'Transaction count',
     //
     //    // various other strings:
-    //    'imported_from_account'                => 'Imported from ":account"',
+    //
 ];

@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\JobConfiguration\Spectre;
 
-
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Support\MessageBag;
+use Log;
 
 class AuthenticatedConfigHandler implements SpectreJobConfig
 {
@@ -42,6 +42,8 @@ class AuthenticatedConfigHandler implements SpectreJobConfig
      */
     public function configurationComplete(): bool
     {
+        Log::debug('AuthenticatedConfigHandler::configurationComplete() always returns true');
+
         return true;
     }
 
@@ -54,6 +56,8 @@ class AuthenticatedConfigHandler implements SpectreJobConfig
      */
     public function configureJob(array $data): MessageBag
     {
+        Log::debug('AuthenticatedConfigHandler::configurationComplete() always returns empty message bag');
+
         return new MessageBag();
     }
 
@@ -64,6 +68,8 @@ class AuthenticatedConfigHandler implements SpectreJobConfig
      */
     public function getNextData(): array
     {
+        Log::debug('AuthenticatedConfigHandler::getNextData() always returns []');
+
         return [];
     }
 
@@ -74,6 +80,8 @@ class AuthenticatedConfigHandler implements SpectreJobConfig
      */
     public function getNextView(): string
     {
+        Log::debug('AuthenticatedConfigHandler::getNextView() always returns ""');
+
         return '';
     }
 

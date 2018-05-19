@@ -112,9 +112,9 @@ class Transaction extends SpectreObject
     }
 
     /**
-     * @return TransactionExtra
+     * @return TransactionExtra|null
      */
-    public function getExtra(): TransactionExtra
+    public function getExtra(): ?TransactionExtra
     {
         return $this->extra;
     }
@@ -165,6 +165,38 @@ class Transaction extends SpectreObject
     public function getMode(): string
     {
         return $this->mode;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOpposingAccountData(): array
+    {
+        $data  = [
+            'name'   => null,
+            'iban'   => null,
+            'number' => null,
+            'bic'    => null,
+        ];
+        $extra = $this->getExtra();
+        if (null !== $extra) {
+            $arr = $extra->toArray();
+            foreach ($arr as $key => $value) {
+                switch ($key) {
+                    case 'account_number':
+                        $data['number'] = $value;
+                        $data['name']   = $data['name'] ?? trans('import.spectre_account_with_number', ['number' => $value]);
+                        break;
+                    case 'payee':
+                        $data['name'] = $value;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        return $data;
     }
 
     /**

@@ -35,6 +35,7 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Services\Spectre\Object\Account as SpectreAccount;
 use FireflyIII\Services\Spectre\Object\Login;
 use Illuminate\Support\MessageBag;
+use Log;
 
 /**
  * Class ChooseAccount
@@ -60,10 +61,12 @@ class ChooseAccount implements SpectreJobConfig
      */
     public function configurationComplete(): bool
     {
+        Log::debug('Now in ChooseAccount::configurationComplete()');
         $config         = $this->importJob->configuration;
         $importAccounts = $config['account_mapping'] ?? [];
         $complete       = \count($importAccounts) > 0 && $importAccounts !== [0 => 0];
         if ($complete) {
+            Log::debug('Looks like user has mapped import accounts to Firefly III accounts', $importAccounts);
             $this->repository->setStage($this->importJob, 'go-for-import');
         }
 
@@ -79,6 +82,7 @@ class ChooseAccount implements SpectreJobConfig
      */
     public function configureJob(array $data): MessageBag
     {
+        Log::debug('Now in ChooseAccount::configureJob()', $data);
         $config  = $this->importJob->configuration;
         $mapping = $data['account_mapping'] ?? [];
         $final   = [];
@@ -89,11 +93,12 @@ class ChooseAccount implements SpectreJobConfig
             $final[$spectreId] = $accountId;
 
         }
+        Log::debug('Final mapping is:', $final);
         $messages                  = new MessageBag;
         $config['account_mapping'] = $final;
 
         $this->repository->setConfiguration($this->importJob, $config);
-        if (\count($final) === 0 || $final === [0 => 0]) {
+        if ($final === [0 => 0] || \count($final) === 0) {
             $messages->add('count', trans('import.spectre_no_mapping'));
         }
 
@@ -108,6 +113,7 @@ class ChooseAccount implements SpectreJobConfig
      */
     public function getNextData(): array
     {
+        Log::debug('Now in ChooseAccount::getnextData()');
         $config   = $this->importJob->configuration;
         $accounts = $config['accounts'] ?? [];
         if (\count($accounts) === 0) {
@@ -125,14 +131,17 @@ class ChooseAccount implements SpectreJobConfig
         if (\count($logins) === 0) {
             throw new FireflyException('It seems you have no configured logins in this import job. The import cannot continue.');
         }
+        Log::debug(sprintf('Selected login to use is %d', $selected));
         if ($selected === 0) {
             $login = new Login($logins[0]);
+            Log::debug(sprintf('Will use login %d (%s %s)', $login->getId(), $login->getProviderName(), $login->getCountryCode()));
         }
         if ($selected !== 0) {
             foreach ($logins as $loginArray) {
                 $loginId = $loginArray['id'] ?? -1;
                 if ($loginId === $selected) {
                     $login = new Login($loginArray);
+                    Log::debug(sprintf('Will use login %d (%s %s)', $login->getId(), $login->getProviderName(), $login->getCountryCode()));
                 }
             }
         }
