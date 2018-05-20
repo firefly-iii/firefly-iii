@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -1399,7 +1400,10 @@ class TransactionControllerTest extends TestCase
             $journal = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
             $count   = $journal->transactions()->count();
         } while ($count !== 2);
+        /** @var Transaction $transaction */
         $transaction = $journal->transactions()->first();
+        $transaction->description = null;
+        $transaction->save();
 
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');

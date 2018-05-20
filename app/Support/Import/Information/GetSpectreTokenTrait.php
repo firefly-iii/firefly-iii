@@ -1,6 +1,6 @@
 <?php
 /**
- * ManageLoginsHandler.php
+ * GetSpectreTokenTrait.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -21,23 +21,10 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Support\Import\Routine\Spectre;
+namespace FireflyIII\Support\Import\Information;
 
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\ImportJob;
-use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Services\Spectre\Object\Customer;
-use FireflyIII\Services\Spectre\Object\Login;
-use FireflyIII\Services\Spectre\Request\ListCustomersRequest;
-use FireflyIII\Services\Spectre\Request\ListLoginsRequest;
-use FireflyIII\Services\Spectre\Request\NewCustomerRequest;
-use Log;
 
-/**
- * Class ManageLoginsHandler
- */
-class ManageLoginsHandler
+trait GetSpectreTokenTrait
 {
-    
 
 }

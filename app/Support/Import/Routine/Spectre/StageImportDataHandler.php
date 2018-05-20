@@ -1,6 +1,6 @@
 <?php
 /**
- * ImportDataHandler.php
+ * StageImportDataHandler.phpr.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -37,11 +37,11 @@ use FireflyIII\Support\Import\Routine\File\OpposingAccountMapper;
 use Log;
 
 /**
- * Class ImportDataHandler
+ * Class StageImportDataHandler
  *
  * @package FireflyIII\Support\Import\Routine\Spectre
  */
-class ImportDataHandler
+class StageImportDataHandler
 {
     /** @var AccountRepositoryInterface */
     private $accountRepository;
@@ -57,7 +57,7 @@ class ImportDataHandler
      */
     public function run(): void
     {
-        Log::debug('Now in ImportDataHandler::run()');
+        Log::debug('Now in StageImportDataHandler::run()');
         $config   = $this->importJob->configuration;
         $accounts = $config['accounts'] ?? [];
         Log::debug(sprintf('Count of accounts in array is %d', \count($accounts)));
@@ -103,7 +103,7 @@ class ImportDataHandler
     {
         $array = [];
         $total = \count($transactions);
-        Log::debug(sprintf('Now in ImportDataHandler::convertToArray() with count %d', \count($transactions)));
+        Log::debug(sprintf('Now in StageImportDataHandler::convertToArray() with count %d', \count($transactions)));
         /** @var SpectreTransaction $transaction */
         foreach ($transactions as $index => $transaction) {
             Log::debug(sprintf('Now creating array for transaction %d of %d', $index + 1, $total));

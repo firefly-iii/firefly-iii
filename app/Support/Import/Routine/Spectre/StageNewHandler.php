@@ -26,11 +26,9 @@ namespace FireflyIII\Support\Import\Routine\Spectre;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Services\Spectre\Object\Customer;
 use FireflyIII\Services\Spectre\Object\Login;
-use FireflyIII\Services\Spectre\Request\ListCustomersRequest;
 use FireflyIII\Services\Spectre\Request\ListLoginsRequest;
-use FireflyIII\Services\Spectre\Request\NewCustomerRequest;
+use FireflyIII\Support\Import\Information\GetSpectreCustomerTrait;
 use Log;
 
 /**
@@ -40,12 +38,23 @@ use Log;
  */
 class StageNewHandler
 {
+    use GetSpectreCustomerTrait;
     /** @var int */
-    public $countLogins = 0;
+    private $countLogins = 0;
     /** @var ImportJob */
     private $importJob;
     /** @var ImportJobRepositoryInterface */
     private $repository;
+
+    /**
+     * @codeCoverageIgnore
+     * @return int
+     */
+    public function getCountLogins(): int
+    {
+        return $this->countLogins;
+    }
+
 
     /**
      * Tasks for this stage:
@@ -59,11 +68,13 @@ class StageNewHandler
     public function run(): void
     {
         Log::debug('Now in ManageLoginsHandler::run()');
-        $customer           = $this->getCustomer();
-        $config             = $this->repository->getConfiguration($this->importJob);
+        $customer = $this->getCustomer($this->importJob);
+        $config   = $this->repository->getConfiguration($this->importJob);
 
         Log::debug('Going to get a list of logins.');
-        $request = new ListLoginsRequest($this->importJob->user);
+        /** @var ListLoginsRequest $request */
+        $request = app(ListLoginsRequest::class);
+        $request->setUser($this->importJob->user);
         $request->setCustomer($customer);
         $request->call();
 
@@ -93,50 +104,5 @@ class StageNewHandler
         $this->importJob  = $importJob;
         $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($importJob->user);
-    }
-
-    /**
-     * @return Customer
-     * @throws FireflyException
-     */
-    private function getCustomer(): Customer
-    {
-        Log::debug('Now in manageLoginsHandler::getCustomer()');
-        $customer = $this->getExistingCustomer();
-        if (null === $customer) {
-            Log::debug('The customer is NULL, will fire a newCustomerRequest.');
-            $newCustomerRequest = new NewCustomerRequest($this->importJob->user);
-            $customer           = $newCustomerRequest->getCustomer();
-
-        }
-        Log::debug('The customer is not null.');
-
-        return $customer;
-    }
-
-    /**
-     * @return Customer|null
-     * @throws FireflyException
-     */
-    private function getExistingCustomer(): ?Customer
-    {
-        Log::debug('Now in manageLoginsHandler::getExistingCustomer()');
-        $customer           = null;
-        $getCustomerRequest = new ListCustomersRequest($this->importJob->user);
-        $getCustomerRequest->call();
-        $customers = $getCustomerRequest->getCustomers();
-
-        Log::debug(sprintf('Found %d customer(s)', \count($customers)));
-        /** @var Customer $current */
-        foreach ($customers as $current) {
-            if ('default_ff3_customer' === $current->getIdentifier()) {
-                $customer = $current;
-                Log::debug('Found the correct customer.');
-                break;
-            }
-            Log::debug(sprintf('Skip customer with name "%s"', $current->getIdentifier()));
-        }
-
-        return $customer;
     }
 }

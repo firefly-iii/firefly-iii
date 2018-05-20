@@ -31,11 +31,6 @@ use Illuminate\Support\MessageBag;
 interface JobConfigurationInterface
 {
     /**
-     * ConfiguratorInterface constructor.
-     */
-    public function __construct();
-
-    /**
      * Returns true when the initial configuration for this job is complete.
      *
      * @return bool

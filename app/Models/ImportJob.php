@@ -35,6 +35,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int    $user_id
  * @property string $status
  * @property string $stage
+ * @property string $key
+ * @property string $provider
+ * @property string $file_type
  */
 class ImportJob extends Model
 {

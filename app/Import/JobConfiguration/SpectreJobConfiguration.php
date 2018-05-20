@@ -50,13 +50,6 @@ class SpectreJobConfiguration implements JobConfigurationInterface
     private $repository;
 
     /**
-     * ConfiguratorInterface constructor.
-     */
-    public function __construct()
-    {
-    }
-
-    /**
      * Returns true when the initial configuration for this job is complete.
      *
      * @return bool
@@ -146,8 +139,9 @@ class SpectreJobConfiguration implements JobConfigurationInterface
                 $handler->setImportJob($this->importJob);
                 break;
             default:
+                // @codeCoverageIgnoreStart
                 throw new FireflyException(sprintf('Firefly III cannot create a configuration handler for stage "%s"', $this->importJob->stage));
-
+                // @codeCoverageIgnoreEnd
         }
 
         return $handler;

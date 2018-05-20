@@ -39,14 +39,6 @@ class FakeJobConfiguration implements JobConfigurationInterface
     private $repository;
 
     /**
-     * ConfiguratorInterface constructor.
-     */
-    public function __construct()
-    {
-        $this->repository = app(ImportJobRepositoryInterface::class);
-    }
-
-    /**
      * Returns true when the initial configuration for this job is complete.
      *
      * @return bool
@@ -161,6 +153,7 @@ class FakeJobConfiguration implements JobConfigurationInterface
     public function setImportJob(ImportJob $importJob): void
     {
         $this->importJob = $importJob;
+        $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($importJob->user);
     }
 }
