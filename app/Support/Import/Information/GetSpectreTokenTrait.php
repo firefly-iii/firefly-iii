@@ -23,8 +23,37 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Information;
 
+use FireflyIII\Models\ImportJob;
+use FireflyIII\Services\Spectre\Object\Customer;
+use FireflyIII\Services\Spectre\Object\Token;
+use FireflyIII\Services\Spectre\Request\CreateTokenRequest;
+use Log;
 
+/**
+ * Trait GetSpectreTokenTrait
+ *
+ * @package FireflyIII\Support\Import\Information
+ */
 trait GetSpectreTokenTrait
 {
+    /**
+     * @param ImportJob $importJob
+     * @param Customer  $customer
+     *
+     * @return Token
+     * @throws \FireflyIII\Exceptions\FireflyException
+     */
+    protected function getToken(ImportJob $importJob, Customer $customer): Token
+    {
+        Log::debug('Now in GetSpectreTokenTrait::ChooseLoginsHandler::getToken()');
+        /** @var CreateTokenRequest $request */
+        $request = app(CreateTokenRequest::class);
+        $request->setUser($importJob->user);
+        $request->setUri(route('import.job.status.index', [$importJob->key]));
+        $request->setCustomer($customer);
+        $request->call();
+        Log::debug('Call to get token is finished');
 
+        return $request->getToken();
+    }
 }

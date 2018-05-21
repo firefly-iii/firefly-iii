@@ -32,6 +32,8 @@ use FireflyIII\Services\Spectre\Object\Token;
 use FireflyIII\Services\Spectre\Request\CreateTokenRequest;
 use FireflyIII\Services\Spectre\Request\ListCustomersRequest;
 use FireflyIII\Services\Spectre\Request\NewCustomerRequest;
+use FireflyIII\Support\Import\Information\GetSpectreCustomerTrait;
+use FireflyIII\Support\Import\Information\GetSpectreTokenTrait;
 use Illuminate\Support\MessageBag;
 use Log;
 
@@ -42,6 +44,7 @@ use Log;
  */
 class ChooseLoginHandler implements SpectreConfigurationInterface
 {
+    use GetSpectreCustomerTrait, GetSpectreTokenTrait;
     /** @var ImportJob */
     private $importJob;
     /** @var ImportJobRepositoryInterface */
@@ -77,7 +80,7 @@ class ChooseLoginHandler implements SpectreConfigurationInterface
     public function configureJob(array $data): MessageBag
     {
         Log::debug('Now in ChooseLoginHandler::configureJob()');
-        $selectedLogin            = (int)$data['spectre_login_id'];
+        $selectedLogin            = (int)($data['spectre_login_id'] ?? 0.0);
         $config                   = $this->importJob->configuration;
         $config['selected-login'] = $selectedLogin;
         $this->repository->setConfiguration($this->importJob, $config);
@@ -85,10 +88,10 @@ class ChooseLoginHandler implements SpectreConfigurationInterface
 
         // if selected login is zero, create a new one.
         if ($selectedLogin === 0) {
-            Log::debug('Login is zero, get a new customer + token and store it in config.');
-            $customer = $this->getCustomer();
+            Log::debug('Login is zero, get Spectre customer + token and store it in config.');
+            $customer = $this->getCustomer($this->importJob);
             // get a token for the user and redirect to next stage
-            $token              = $this->getToken($customer);
+            $token              = $this->getToken($this->importJob, $customer);
             $config['customer'] = $customer->toArray();
             $config['token']    = $token->toArray();
             $this->repository->setConfiguration($this->importJob, $config);
@@ -123,6 +126,7 @@ class ChooseLoginHandler implements SpectreConfigurationInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * Get the view for this stage.
      *
      * @return string
@@ -142,76 +146,5 @@ class ChooseLoginHandler implements SpectreConfigurationInterface
         $this->importJob  = $importJob;
         $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($importJob->user);
-    }
-
-    /**
-     * @return Customer
-     * @throws FireflyException
-     */
-    private function getCustomer(): Customer
-    {
-        Log::debug('Now in stageNewHandler::getCustomer()');
-        $customer = $this->getExistingCustomer();
-        if (null === $customer) {
-            Log::debug('The customer is NULL, will fire a newCustomerRequest.');
-            $newCustomerRequest = new NewCustomerRequest($this->importJob->user);
-            $customer           = $newCustomerRequest->getCustomer();
-
-        }
-        Log::debug('The customer is not null.');
-
-        return $customer;
-    }
-
-    /**
-     * @return Customer|null
-     * @throws FireflyException
-     */
-    private function getExistingCustomer(): ?Customer
-    {
-        Log::debug('Now in ChooseLoginHandler::getExistingCustomer()');
-        $preference = app('preferences')->getForUser($this->importJob->user, 'spectre_customer');
-        if (null !== $preference) {
-            Log::debug('Customer is in user configuration');
-            $customer = new Customer($preference->data);
-
-            return $customer;
-        }
-        Log::debug('Customer is not in user config');
-        $customer           = null;
-        $getCustomerRequest = new ListCustomersRequest($this->importJob->user);
-        $getCustomerRequest->call();
-        $customers = $getCustomerRequest->getCustomers();
-
-        Log::debug(sprintf('Found %d customer(s)', \count($customers)));
-        /** @var Customer $current */
-        foreach ($customers as $current) {
-            if ('default_ff3_customer' === $current->getIdentifier()) {
-                $customer = $current;
-                Log::debug('Found the correct customer.');
-                app('preferences')->setForUser($this->importJob->user, 'spectre_customer', $customer->toArray());
-                break;
-            }
-        }
-
-        return $customer;
-    }
-
-    /**
-     * @param Customer $customer
-     *
-     * @throws FireflyException
-     * @return Token
-     */
-    private function getToken(Customer $customer): Token
-    {
-        Log::debug('Now in ChooseLoginHandler::ChooseLoginsHandler::getToken()');
-        $request = new CreateTokenRequest($this->importJob->user);
-        $request->setUri(route('import.job.status.index', [$this->importJob->key]));
-        $request->setCustomer($customer);
-        $request->call();
-        Log::debug('Call to get token is finished');
-
-        return $request->getToken();
     }
 }

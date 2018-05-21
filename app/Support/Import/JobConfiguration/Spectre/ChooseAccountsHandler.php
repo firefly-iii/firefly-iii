@@ -60,11 +60,12 @@ class ChooseAccountsHandler implements SpectreConfigurationInterface
      */
     public function configurationComplete(): bool
     {
-        Log::debug('Now in ChooseAccount::configurationComplete()');
+        Log::debug('Now in ChooseAccountsHandler::configurationComplete()');
         $config         = $this->importJob->configuration;
         $importAccounts = $config['account_mapping'] ?? [];
         $complete       = \count($importAccounts) > 0 && $importAccounts !== [0 => 0];
         if ($complete) {
+            // todo also actually validate content.
             Log::debug('Looks like user has mapped import accounts to Firefly III accounts', $importAccounts);
             $this->repository->setStage($this->importJob, 'go-for-import');
         }
@@ -81,14 +82,14 @@ class ChooseAccountsHandler implements SpectreConfigurationInterface
      */
     public function configureJob(array $data): MessageBag
     {
-        Log::debug('Now in ChooseAccount::configureJob()', $data);
+        Log::debug('Now in ChooseAccountsHandler::configureJob()', $data);
         $config  = $this->importJob->configuration;
         $mapping = $data['account_mapping'] ?? [];
         $final   = [];
-        foreach ($mapping as $spectreId => $fireflyIIIId) {
+        foreach ($mapping as $spectreId => $localId) {
             // validate each
             $spectreId         = $this->validSpectreAccount((int)$spectreId);
-            $accountId         = $this->validFireflyIIIAccount((int)$fireflyIIIId);
+            $accountId         = $this->validLocalAccount((int)$localId);
             $final[$spectreId] = $accountId;
 
         }
@@ -112,11 +113,11 @@ class ChooseAccountsHandler implements SpectreConfigurationInterface
      */
     public function getNextData(): array
     {
-        Log::debug('Now in ChooseAccount::getnextData()');
+        Log::debug('Now in ChooseAccountsHandler::getnextData()');
         $config   = $this->importJob->configuration;
         $accounts = $config['accounts'] ?? [];
         if (\count($accounts) === 0) {
-            throw new FireflyException('It seems you have no accounts with this bank. The import cannot continue.');
+            throw new FireflyException('It seems you have no accounts with this bank. The import cannot continue.'); // @codeCoverageIgnore
         }
         $converted = [];
         foreach ($accounts as $accountArray) {
@@ -128,7 +129,7 @@ class ChooseAccountsHandler implements SpectreConfigurationInterface
         $logins   = $config['all-logins'] ?? [];
         $selected = $config['selected-login'] ?? 0;
         if (\count($logins) === 0) {
-            throw new FireflyException('It seems you have no configured logins in this import job. The import cannot continue.');
+            throw new FireflyException('It seems you have no configured logins in this import job. The import cannot continue.'); // @codeCoverageIgnore
         }
         Log::debug(sprintf('Selected login to use is %d', $selected));
         if ($selected === 0) {
@@ -145,7 +146,7 @@ class ChooseAccountsHandler implements SpectreConfigurationInterface
             }
         }
         if (null === $login) {
-            throw new FireflyException('Was not able to determine which login to use. The import cannot continue.');
+            throw new FireflyException('Was not able to determine which login to use. The import cannot continue.'); // @codeCoverageIgnore
         }
 
         // list the users accounts:
@@ -173,6 +174,7 @@ class ChooseAccountsHandler implements SpectreConfigurationInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * Get the view for this stage.
      *
      * @return string
@@ -183,6 +185,7 @@ class ChooseAccountsHandler implements SpectreConfigurationInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * Set the import job.
      *
      * @param ImportJob $importJob
@@ -219,7 +222,7 @@ class ChooseAccountsHandler implements SpectreConfigurationInterface
      *
      * @return int
      */
-    private function validFireflyIIIAccount(int $accountId): int
+    private function validLocalAccount(int $accountId): int
     {
         $account = $this->accountRepository->findNull($accountId);
         if (null === $account) {

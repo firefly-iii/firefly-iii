@@ -24,20 +24,16 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Import\JobConfiguration\Spectre;
 
 use FireflyIII\Models\ImportJob;
-use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Support\MessageBag;
 use Log;
 
 /**
+ * @codeCoverageIgnore
+ *
  * Class AuthenticatedHandler
  */
 class AuthenticatedHandler implements SpectreConfigurationInterface
 {
-    /** @var ImportJob */
-    private $importJob;
-    /** @var ImportJobRepositoryInterface */
-    private $repository;
-
     /**
      * Return true when this stage is complete.
      *
@@ -59,7 +55,7 @@ class AuthenticatedHandler implements SpectreConfigurationInterface
      */
     public function configureJob(array $data): MessageBag
     {
-        Log::debug('AuthenticatedConfigHandler::configurationComplete() always returns empty message bag');
+        Log::debug('AuthenticatedConfigHandler::configureJob() always returns empty message bag');
 
         return new MessageBag();
     }
@@ -95,8 +91,5 @@ class AuthenticatedHandler implements SpectreConfigurationInterface
      */
     public function setImportJob(ImportJob $importJob): void
     {
-        $this->importJob  = $importJob;
-        $this->repository = app(ImportJobRepositoryInterface::class);
-        $this->repository->setUser($importJob->user);
     }
 }

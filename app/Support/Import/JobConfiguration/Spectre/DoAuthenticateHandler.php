@@ -26,11 +26,9 @@ namespace FireflyIII\Support\Import\JobConfiguration\Spectre;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Services\Spectre\Object\Customer;
 use FireflyIII\Services\Spectre\Object\Token;
-use FireflyIII\Services\Spectre\Request\CreateTokenRequest;
-use FireflyIII\Services\Spectre\Request\ListCustomersRequest;
-use FireflyIII\Services\Spectre\Request\NewCustomerRequest;
+use FireflyIII\Support\Import\Information\GetSpectreCustomerTrait;
+use FireflyIII\Support\Import\Information\GetSpectreTokenTrait;
 use Illuminate\Support\MessageBag;
 use Log;
 
@@ -40,12 +38,14 @@ use Log;
  */
 class DoAuthenticateHandler implements SpectreConfigurationInterface
 {
+    use GetSpectreTokenTrait, GetSpectreCustomerTrait;
     /** @var ImportJob */
     private $importJob;
     /** @var ImportJobRepositoryInterface */
     private $repository;
 
     /**
+     * @codeCoverageIgnore
      * Return true when this stage is complete.
      *
      * always returns false.
@@ -54,12 +54,13 @@ class DoAuthenticateHandler implements SpectreConfigurationInterface
      */
     public function configurationComplete(): bool
     {
-        Log::debug('AuthenticateConfig::configurationComplete() will always return false');
+        Log::debug('DoAuthenticateHandler::configurationComplete() will always return false');
 
         return false;
     }
 
     /**
+     * @codeCoverageIgnore
      * Store the job configuration.
      *
      * @param array $data
@@ -68,7 +69,7 @@ class DoAuthenticateHandler implements SpectreConfigurationInterface
      */
     public function configureJob(array $data): MessageBag
     {
-        Log::debug('AuthenticateConfig::configureJob() will do nothing.');
+        Log::debug('DoAuthenticateHandler::configureJob() will do nothing.');
 
         return new MessageBag;
     }
@@ -81,25 +82,29 @@ class DoAuthenticateHandler implements SpectreConfigurationInterface
      */
     public function getNextData(): array
     {
-        Log::debug('Now in AuthenticateConfig::getNextData()');
-        // next data only makes sure the job is ready for the next stage.
+        Log::debug('Now in DoAuthenticateHandler::getNextData()');
+
+        // getNextData() only makes sure the job is ready for the next stage.
         $this->repository->setStatus($this->importJob, 'ready_to_run');
         $this->repository->setStage($this->importJob, 'authenticated');
+
+        // get token from configuration:
         $config = $this->importJob->configuration;
         $token  = isset($config['token']) ? new Token($config['token']) : null;
-        if (null !== $token) {
-            Log::debug(sprintf('Return "%s" from token in config.', $token->getConnectUrl()));
 
-            return ['token-url' => $token->getConnectUrl()];
+        if (null === $token) {
+            // get a new one from Spectre:
+            Log::debug('No existing token, get a new one.');
+            // get a new token from Spectre.
+            $customer = $this->getCustomer($this->importJob);
+            $token    = $this->getToken($this->importJob, $customer);
         }
-        Log::debug('No existing token, get a new one.');
-        // get a new token from Spectre.
-        $customer = $this->getCustomer();
-        $token = $this->getToken($customer);
+
         return ['token-url' => $token->getConnectUrl()];
     }
 
     /**
+     * @codeCoverageIgnore
      * Get the view for this stage.
      *
      * @return string
@@ -110,6 +115,7 @@ class DoAuthenticateHandler implements SpectreConfigurationInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * Set the import job.
      *
      * @param ImportJob $importJob
@@ -119,76 +125,5 @@ class DoAuthenticateHandler implements SpectreConfigurationInterface
         $this->importJob  = $importJob;
         $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($importJob->user);
-    }
-
-    /**
-     * @return Customer
-     * @throws FireflyException
-     */
-    private function getCustomer(): Customer
-    {
-        Log::debug('Now in AuthenticateConfig::getCustomer()');
-        $customer = $this->getExistingCustomer();
-        if (null === $customer) {
-            Log::debug('The customer is NULL, will fire a newCustomerRequest.');
-            $newCustomerRequest = new NewCustomerRequest($this->importJob->user);
-            $customer           = $newCustomerRequest->getCustomer();
-
-        }
-        Log::debug('The customer is not null.');
-
-        return $customer;
-    }
-
-    /**
-     * @return Customer|null
-     * @throws FireflyException
-     */
-    private function getExistingCustomer(): ?Customer
-    {
-        Log::debug('Now in AuthenticateConfig::getExistingCustomer()');
-        $preference = app('preferences')->getForUser($this->importJob->user, 'spectre_customer');
-        if (null !== $preference) {
-            Log::debug('Customer is in user configuration');
-            $customer = new Customer($preference->data);
-
-            return $customer;
-        }
-        Log::debug('Customer is not in user config');
-        $customer           = null;
-        $getCustomerRequest = new ListCustomersRequest($this->importJob->user);
-        $getCustomerRequest->call();
-        $customers = $getCustomerRequest->getCustomers();
-
-        Log::debug(sprintf('Found %d customer(s)', \count($customers)));
-        /** @var Customer $current */
-        foreach ($customers as $current) {
-            if ('default_ff3_customer' === $current->getIdentifier()) {
-                $customer = $current;
-                Log::debug('Found the correct customer.');
-                app('preferences')->setForUser($this->importJob->user, 'spectre_customer', $customer->toArray());
-                break;
-            }
-        }
-
-        return $customer;
-    }
-
-    /**
-     * @param Customer $customer
-     *
-     * @throws FireflyException
-     * @return Token
-     */
-    private function getToken(Customer $customer): Token
-    {
-        Log::debug('Now in AuthenticateConfig::getToken()');
-        $request = new CreateTokenRequest($this->importJob->user);
-        $request->setUri(route('import.job.status.index', [$this->importJob->key]));
-        $request->setCustomer($customer);
-        $request->call();
-        Log::debug('Call to get token is finished');
-
-        return $request->getToken();
     }
 }
