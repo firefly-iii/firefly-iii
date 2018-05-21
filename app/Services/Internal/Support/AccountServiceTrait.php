@@ -42,7 +42,6 @@ use Validator;
 /**
  * Trait AccountServiceTrait
  *
- * @package FireflyIII\Services\Internal\Support
  */
 trait AccountServiceTrait
 {

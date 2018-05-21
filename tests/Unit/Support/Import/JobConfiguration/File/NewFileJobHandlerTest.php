@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Support\Import\Configuration\File;
+namespace Tests\Unit\Support\Import\JobConfiguration\File;
 
 
 use FireflyIII\Exceptions\FireflyException;
@@ -29,7 +29,7 @@ use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\Configuration\File\NewFileJobHandler;
+use FireflyIII\Support\Import\JobConfiguration\File\NewFileJobHandler;
 use Illuminate\Support\Collection;
 use Mockery;
 use Tests\TestCase;
@@ -40,7 +40,7 @@ use Tests\TestCase;
 class NewFileJobHandlerTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\NewFileJobHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\NewFileJobHandler
      */
     public function testConfigureJob(): void
     {
@@ -95,7 +95,7 @@ class NewFileJobHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\NewFileJobHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\NewFileJobHandler
      */
     public function testConfigureJobBadData(): void
     {
@@ -153,7 +153,7 @@ class NewFileJobHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\NewFileJobHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\NewFileJobHandler
      */
     public function testStoreConfiguration(): void
     {
@@ -200,7 +200,7 @@ class NewFileJobHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\NewFileJobHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\NewFileJobHandler
      */
     public function testValidateAttachments(): void
     {
@@ -248,7 +248,7 @@ class NewFileJobHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\NewFileJobHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\NewFileJobHandler
      */
     public function testValidateNotUTF(): void
     {

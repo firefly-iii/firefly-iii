@@ -33,7 +33,6 @@ use Log;
 /**
  * Trait GetSpectreCustomerTrait
  *
- * @package FireflyIII\Support\Import\Information
  */
 trait GetSpectreCustomerTrait
 {
@@ -52,9 +51,11 @@ trait GetSpectreCustomerTrait
             /** @var NewCustomerRequest $request */
             $request = app(NewCustomerRequest::class);
             $request->setUser($importJob->user);
+            // todo what if customer is still null?
             $customer = $request->getCustomer();
 
         }
+
         Log::debug('The customer is not null.');
 
         return $customer;
@@ -72,7 +73,7 @@ trait GetSpectreCustomerTrait
         $customer = null;
 
         // check users preferences.
-        $preference = app('preferences')->getForUser($importJob->user, 'spectre_customer');
+        $preference = app('preferences')->getForUser($importJob->user, 'spectre_customer', null);
         if (null !== $preference) {
             Log::debug('Customer is in user configuration');
             $customer = new Customer($preference->data);
@@ -96,9 +97,10 @@ trait GetSpectreCustomerTrait
             }
             Log::debug(sprintf('Skip customer with name "%s"', $current->getIdentifier()));
         }
-
-        // store in preferences.
-        app('preferences')->setForUser($importJob->user, 'spectre_customer', $customer->toArray());
+        if (null !== $customer) {
+            // store in preferences.
+            app('preferences')->setForUser($importJob->user, 'spectre_customer', $customer->toArray());
+        }
 
         return $customer;
     }

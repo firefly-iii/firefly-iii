@@ -31,7 +31,6 @@ use FireflyIII\Models\ImportJob;
  * @codeCoverageIgnore
  * Class StageFinalHandler
  *
- * @package FireflyIII\Support\Import\Routine\Fake
  */
 class StageFinalHandler
 {

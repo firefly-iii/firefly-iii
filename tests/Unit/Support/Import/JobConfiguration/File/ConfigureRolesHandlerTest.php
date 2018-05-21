@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Support\Import\Configuration\File;
+namespace Tests\Unit\Support\Import\JobConfiguration\File;
 
 
 use Exception;
@@ -31,7 +31,7 @@ use FireflyIII\Import\Specifics\IngDescription;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\Configuration\File\ConfigureRolesHandler;
+use FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler;
 use Illuminate\Support\Collection;
 use League\Csv\Reader;
 use Mockery;
@@ -43,7 +43,7 @@ use Tests\TestCase;
 class ConfigureRolesHandlerTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureRolesHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler
      */
     public function testConfigurationCompleteBasic(): void
     {
@@ -63,7 +63,7 @@ class ConfigureRolesHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureRolesHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler
      */
     public function testConfigurationCompleteForeign(): void
     {
@@ -87,7 +87,7 @@ class ConfigureRolesHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureRolesHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler
      */
     public function testConfigurationCompleteNoAmount(): void
     {
@@ -111,7 +111,7 @@ class ConfigureRolesHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureRolesHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler
      */
     public function testConfigureJob(): void
     {
@@ -164,7 +164,7 @@ class ConfigureRolesHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureRolesHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler
      */
     public function testGetExampleFromLine(): void
     {
@@ -187,7 +187,7 @@ class ConfigureRolesHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureRolesHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler
      */
     public function testGetExamplesFromFile(): void
     {
@@ -225,7 +225,7 @@ class ConfigureRolesHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureRolesHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler
      */
     public function testGetHeadersHas(): void
     {
@@ -246,7 +246,7 @@ class ConfigureRolesHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureRolesHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler
      */
     public function testGetHeadersNone(): void
     {
@@ -334,7 +334,7 @@ class ConfigureRolesHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureRolesHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler
      */
     public function testGetReader(): void
     {
@@ -382,7 +382,7 @@ class ConfigureRolesHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureRolesHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler
      */
     public function testIgnoreUnmappableColumns(): void
     {
@@ -425,7 +425,7 @@ class ConfigureRolesHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureRolesHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler
      */
     public function testIsMappingNecessaryNo(): void
     {
@@ -438,7 +438,7 @@ class ConfigureRolesHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureRolesHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler
      */
     public function testIsMappingNecessaryYes(): void
     {
@@ -451,7 +451,7 @@ class ConfigureRolesHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureRolesHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler
      */
     public function testMakeExamplesUnique(): void
     {
@@ -477,7 +477,7 @@ class ConfigureRolesHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureRolesHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler
      */
     public function testProcessSpecifics(): void
     {
@@ -498,7 +498,7 @@ class ConfigureRolesHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureRolesHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler
      */
     public function testSaveColumCount(): void
     {

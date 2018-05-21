@@ -37,8 +37,6 @@ use Log;
 
 /**
  * Class SpectreJobConfiguration
- *
- * @package FireflyIII\Import\JobConfiguration
  */
 class SpectreJobConfiguration implements JobConfigurationInterface
 {

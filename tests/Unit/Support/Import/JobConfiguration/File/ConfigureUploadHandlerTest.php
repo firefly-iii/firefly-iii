@@ -21,13 +21,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Support\Import\Configuration\File;
+namespace Tests\Unit\Support\Import\JobConfiguration\File;
 
 
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\Configuration\File\ConfigureUploadHandler;
+use FireflyIII\Support\Import\JobConfiguration\File\ConfigureUploadHandler;
 use Mockery;
 use Tests\TestCase;
 
@@ -37,7 +37,7 @@ use Tests\TestCase;
 class ConfigureUploadHandlerTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureUploadHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureUploadHandler
      */
     public function testConfigureJobAccount(): void
     {
@@ -86,7 +86,7 @@ class ConfigureUploadHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureUploadHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureUploadHandler
      */
     public function testConfigureJobNoAccount(): void
     {
@@ -134,7 +134,7 @@ class ConfigureUploadHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureUploadHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureUploadHandler
      */
     public function testGetNextData(): void
     {
@@ -164,7 +164,7 @@ class ConfigureUploadHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureUploadHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureUploadHandler
      */
     public function testGetSpecifics(): void
     {

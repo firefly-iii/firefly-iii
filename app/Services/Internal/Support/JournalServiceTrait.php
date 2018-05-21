@@ -32,7 +32,6 @@ use FireflyIII\Models\TransactionJournal;
 /**
  * Trait JournalServiceTrait
  *
- * @package FireflyIII\Services\Internal\Support
  */
 trait JournalServiceTrait
 {

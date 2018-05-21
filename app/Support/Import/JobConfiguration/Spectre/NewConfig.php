@@ -30,7 +30,6 @@ use Illuminate\Support\MessageBag;
 /**
  * Class NewConfig
  *
- * @package FireflyIII\Support\Import\JobConfiguration\Spectre
  */
 class NewConfig implements SpectreJobConfig
 {

@@ -28,11 +28,11 @@ namespace FireflyIII\Import\JobConfiguration;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\Configuration\File\ConfigurationInterface;
-use FireflyIII\Support\Import\Configuration\File\ConfigureMappingHandler;
-use FireflyIII\Support\Import\Configuration\File\ConfigureRolesHandler;
-use FireflyIII\Support\Import\Configuration\File\ConfigureUploadHandler;
-use FireflyIII\Support\Import\Configuration\File\NewFileJobHandler;
+use FireflyIII\Support\Import\JobConfiguration\File\ConfigurationInterface;
+use FireflyIII\Support\Import\JobConfiguration\File\ConfigureMappingHandler;
+use FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler;
+use FireflyIII\Support\Import\JobConfiguration\File\ConfigureUploadHandler;
+use FireflyIII\Support\Import\JobConfiguration\File\NewFileJobHandler;
 use Illuminate\Support\MessageBag;
 
 /**

@@ -28,7 +28,6 @@ use FireflyIII\Models\ImportJob;
 /**
  * Interface FileProcessorInterface
  *
- * @package FireflyIII\Support\Import\Routine\File
  */
 interface FileProcessorInterface
 {

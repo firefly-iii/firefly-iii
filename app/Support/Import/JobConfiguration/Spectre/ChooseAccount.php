@@ -40,7 +40,6 @@ use Log;
 /**
  * Class ChooseAccount
  *
- * @package FireflyIII\Support\Import\JobConfiguration\Spectre
  */
 class ChooseAccount implements SpectreJobConfig
 {

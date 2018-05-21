@@ -39,7 +39,6 @@ use Log;
 /**
  * Class ChooseLoginHandler
  *
- * @package FireflyIII\Support\Import\JobConfiguration\Spectre
  */
 class ChooseLoginHandler implements SpectreJobConfig
 {

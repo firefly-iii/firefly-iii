@@ -42,7 +42,6 @@ use Log;
 /**
  * Trait TransactionServiceTrait
  *
- * @package FireflyIII\Services\Internal\Support
  */
 trait TransactionServiceTrait
 {

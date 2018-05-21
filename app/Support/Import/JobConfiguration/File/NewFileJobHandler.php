@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Support\Import\Configuration\File;
+namespace FireflyIII\Support\Import\JobConfiguration\File;
 
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
@@ -36,8 +36,6 @@ use Log;
 
 /**
  * Class NewFileJobHandler
- *
- * @package FireflyIII\Support\Import\Configuration\File
  */
 class NewFileJobHandler implements ConfigurationInterface
 {

@@ -31,7 +31,6 @@ use Illuminate\Support\Collection;
 /**
  * Trait BillServiceTrait
  *
- * @package FireflyIII\Services\Internal\Support
  */
 trait BillServiceTrait
 {

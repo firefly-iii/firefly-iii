@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Support\Import\Configuration\File;
+namespace Tests\Unit\Support\Import\JobConfiguration\File;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
@@ -31,7 +31,7 @@ use FireflyIII\Import\Specifics\IngDescription;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\Configuration\File\ConfigureMappingHandler;
+use FireflyIII\Support\Import\JobConfiguration\File\ConfigureMappingHandler;
 use Illuminate\Support\Collection;
 use League\Csv\Exception;
 use League\Csv\Reader;
@@ -41,12 +41,11 @@ use Tests\TestCase;
 /**
  * Class ConfigureMappingHandlerTest
  *
- * @package Tests\Unit\Support\Import\Configuration\File
  */
 class ConfigureMappingHandlerTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureMappingHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureMappingHandler
      */
     public function testApplySpecifics(): void
     {
@@ -81,7 +80,7 @@ class ConfigureMappingHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureMappingHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureMappingHandler
      */
     public function testConfigureJob(): void
     {
@@ -145,7 +144,7 @@ class ConfigureMappingHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureMappingHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureMappingHandler
      */
     public function testDoColumnConfig(): void
     {
@@ -208,7 +207,7 @@ class ConfigureMappingHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureMappingHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureMappingHandler
      */
     public function testDoMapOfColumn(): void
     {
@@ -238,7 +237,7 @@ class ConfigureMappingHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureMappingHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureMappingHandler
      */
     public function testGetNextData(): void
     {
@@ -319,7 +318,7 @@ class ConfigureMappingHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureMappingHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureMappingHandler
      */
     public function testGetPreProcessorName(): void
     {
@@ -347,7 +346,7 @@ class ConfigureMappingHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureMappingHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureMappingHandler
      */
     public function testGetReader(): void
     {
@@ -395,7 +394,7 @@ class ConfigureMappingHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureMappingHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureMappingHandler
      */
     public function testGetValuesForMapping(): void
     {
@@ -462,7 +461,7 @@ class ConfigureMappingHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Import\Configuration\File\ConfigureMappingHandler
+     * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureMappingHandler
      */
     public function testSanitizeColumnName(): void
     {

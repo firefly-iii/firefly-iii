@@ -46,8 +46,6 @@ use Log;
  * Creates new transactions based upon arrays. Will first check the array for duplicates.
  *
  * Class ImportArrayStorage
- *
- * @package FireflyIII\Import\Storage
  */
 class ImportArrayStorage
 {

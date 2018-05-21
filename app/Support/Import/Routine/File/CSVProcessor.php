@@ -31,7 +31,6 @@ use Log;
 /**
  * Class CSVProcessor
  *
- * @package FireflyIII\Support\Import\Routine\File
  */
 class CSVProcessor implements FileProcessorInterface
 {

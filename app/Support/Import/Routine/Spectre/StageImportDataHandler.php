@@ -39,7 +39,6 @@ use Log;
 /**
  * Class StageImportDataHandler
  *
- * @package FireflyIII\Support\Import\Routine\Spectre
  */
 class StageImportDataHandler
 {

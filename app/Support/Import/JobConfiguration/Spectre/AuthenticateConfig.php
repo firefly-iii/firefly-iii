@@ -37,7 +37,6 @@ use Log;
 /**
  * Class AuthenticateConfig
  *
- * @package FireflyIII\Support\Import\JobConfiguration\Spectre
  */
 class AuthenticateConfig implements SpectreJobConfig
 {
