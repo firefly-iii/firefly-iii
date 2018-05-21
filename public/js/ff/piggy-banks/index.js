@@ -88,28 +88,23 @@ function stopSorting() {
         var holder = $(v);
         var position = parseInt(holder.data('position'));
         var originalOrder = parseInt(holder.data('order'));
+        var name = holder.data('name');
         var id = holder.data('id');
-        console.log('Now at row ' + i);
         var newOrder;
         if (position === i) {
+            // not changed, position is what it should be.
             return;
         }
         if (position < i) {
-            console.log('Row ' + i + ' has moved up!');
-            // update position:
-            holder.data('position', i);
-            newOrder = originalOrder + 1;
-
-
+            // position is less.
+            console.log('"' + name + '" has moved up from position ' + originalOrder + ' to ' + (i+1));
         }
         if (position > i) {
-            console.log('Row ' + i + ' has moved down!');
-            // update position:
-            holder.data('position', i);
-            newOrder = originalOrder - 1;
-
-
+            console.log('"' + name + '" has moved up from position ' + originalOrder + ' to ' + (i+1));
         }
+        // update position:
+        holder.data('position', i);
+        newOrder = i+1;
 
         $.post('piggy-banks/set-order/' + id, {order: newOrder, _token: token})
     });
