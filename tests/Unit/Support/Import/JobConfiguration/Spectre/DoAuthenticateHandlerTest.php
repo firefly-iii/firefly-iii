@@ -43,11 +43,12 @@ class DoAuthenticateHandlerTest extends TestCase
 {
     /**
      * No token in config, but grab it from users preferences.
-     *
+     * @covers \FireflyIII\Support\Import\Information\GetSpectreTokenTrait
      * @covers \FireflyIII\Support\Import\JobConfiguration\Spectre\DoAuthenticateHandler
      */
     public function testGetNextDataNoToken(): void
     {
+
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
         $job->key           = 'sda-A' . random_int(1, 1000);
