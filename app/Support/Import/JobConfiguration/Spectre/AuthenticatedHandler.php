@@ -28,7 +28,10 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Support\MessageBag;
 use Log;
 
-class AuthenticatedConfigHandler implements SpectreJobConfig
+/**
+ * Class AuthenticatedHandler
+ */
+class AuthenticatedHandler implements SpectreConfigurationInterface
 {
     /** @var ImportJob */
     private $importJob;

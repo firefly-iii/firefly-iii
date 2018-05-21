@@ -31,7 +31,7 @@ use Illuminate\Support\MessageBag;
  * Class NewConfig
  *
  */
-class NewConfig implements SpectreJobConfig
+class NewSpectreJobHandler implements SpectreConfigurationInterface
 {
 
     /**

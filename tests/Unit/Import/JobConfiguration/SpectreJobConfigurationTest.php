@@ -26,11 +26,11 @@ namespace Tests\Unit\Import\JobConfiguration;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\JobConfiguration\SpectreJobConfiguration;
 use FireflyIII\Models\ImportJob;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\AuthenticateConfig;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\AuthenticatedConfigHandler;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseAccount;
+use FireflyIII\Support\Import\JobConfiguration\Spectre\AuthenticatedHandler;
+use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseAccountsHandler;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseLoginHandler;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\NewConfig;
+use FireflyIII\Support\Import\JobConfiguration\Spectre\DoAuthenticateHandler;
+use FireflyIII\Support\Import\JobConfiguration\Spectre\NewSpectreJobHandler;
 use Illuminate\Support\MessageBag;
 use Tests\TestCase;
 
@@ -54,8 +54,8 @@ class SpectreJobConfigurationTest extends TestCase
         $job->configuration = [];
         $job->save();
 
-        // expect "NewConfig" to be created because job is new.
-        $handler = $this->mock(NewConfig::class);
+        // expect "NewSpectreJobHandler" to be created because job is new.
+        $handler = $this->mock(NewSpectreJobHandler::class);
         $handler->shouldReceive('setImportJob')->once();
         $handler->shouldReceive('configurationComplete')->once()->andReturn(true);
 
@@ -77,7 +77,7 @@ class SpectreJobConfigurationTest extends TestCase
         $job->user_id       = $this->user()->id;
         $job->key           = 'spectre_jc_B' . random_int(1, 1000);
         $job->status        = 'new';
-        $job->stage         = 'authenticate';
+        $job->stage         = 'do-authenticate';
         $job->provider      = 'spectre';
         $job->file_type     = '';
         $job->configuration = [];
@@ -86,8 +86,8 @@ class SpectreJobConfigurationTest extends TestCase
         $return     = new MessageBag();
         $return->add('some', 'return message');
 
-        // expect "NewConfig" to be created because job is new.
-        $handler = $this->mock(AuthenticateConfig::class);
+        // expect "DoAuthenticateHandler" to be created because job is in "do-authenticate".
+        $handler = $this->mock(DoAuthenticateHandler::class);
         $handler->shouldReceive('setImportJob')->once();
         $handler->shouldReceive('configureJob')->once()->withArgs([$configData])->andReturn($return);
 
@@ -116,6 +116,7 @@ class SpectreJobConfigurationTest extends TestCase
         $job->save();
         $data = ['ssome' => 'values'];
 
+        // Expect choose-login handler because of state.
         $handler = $this->mock(ChooseLoginHandler::class);
         $handler->shouldReceive('setImportJob')->once();
         $handler->shouldReceive('getNextData')->once()->andReturn($data);
@@ -144,7 +145,8 @@ class SpectreJobConfigurationTest extends TestCase
         $job->configuration = [];
         $job->save();
 
-        $handler = $this->mock(AuthenticatedConfigHandler::class);
+        // expect "AuthenticatedHandler" because of state.
+        $handler = $this->mock(AuthenticatedHandler::class);
         $handler->shouldReceive('setImportJob')->once();
         $handler->shouldReceive('getNextView')->once()->andReturn('import.fake.view');
 
@@ -166,13 +168,14 @@ class SpectreJobConfigurationTest extends TestCase
         $job->user_id       = $this->user()->id;
         $job->key           = 'spectre_jc_E' . random_int(1, 1000);
         $job->status        = 'new';
-        $job->stage         = 'choose-account';
+        $job->stage         = 'choose-accounts';
         $job->provider      = 'spectre';
         $job->file_type     = '';
         $job->configuration = [];
         $job->save();
 
-        $handler = $this->mock(ChooseAccount::class);
+        // expect "ChooseAccountsHandler" because of state.
+        $handler = $this->mock(ChooseAccountsHandler::class);
         $handler->shouldReceive('setImportJob')->once();
         $handler->shouldReceive('getNextView')->once()->andReturn('import.fake.view2');
 

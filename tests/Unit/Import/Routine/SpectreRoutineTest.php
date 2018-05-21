@@ -42,13 +42,13 @@ class SpectreRoutineTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Routine\SpectreRoutine
      */
-    public function testRunAuthenticate(): void
+    public function testRunDoAuthenticate(): void
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
         $job->key           = 'SRA' . random_int(1, 1000);
         $job->status        = 'ready_to_run';
-        $job->stage         = 'authenticate';
+        $job->stage         = 'do-authenticate';
         $job->provider      = 'spectre';
         $job->file_type     = '';
         $job->configuration = [];
@@ -93,7 +93,7 @@ class SpectreRoutineTest extends TestCase
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'running'])->once();
         $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'need_job_config'])->once();
-        $repository->shouldReceive('setStage')->withArgs([Mockery::any(), 'choose-account'])->once();
+        $repository->shouldReceive('setStage')->withArgs([Mockery::any(), 'choose-accounts'])->once();
 
         // mock calls for handler
         $handler->shouldReceive('setImportJob')->once();
@@ -210,7 +210,7 @@ class SpectreRoutineTest extends TestCase
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'running'])->once();
         $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'ready_to_run'])->once();
-        $repository->shouldReceive('setStage')->withArgs([Mockery::any(), 'authenticate'])->once();
+        $repository->shouldReceive('setStage')->withArgs([Mockery::any(), 'do-authenticate'])->once();
 
         // mock calls for handler
         $handler->shouldReceive('setImportJob')->once();

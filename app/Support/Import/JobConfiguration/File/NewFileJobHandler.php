@@ -37,7 +37,7 @@ use Log;
 /**
  * Class NewFileJobHandler
  */
-class NewFileJobHandler implements ConfigurationInterface
+class NewFileJobHandler implements FileConfigurationInterface
 {
     /** @var AttachmentHelperInterface */
     private $attachments;

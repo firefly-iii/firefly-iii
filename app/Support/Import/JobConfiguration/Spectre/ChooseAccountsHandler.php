@@ -38,10 +38,10 @@ use Illuminate\Support\MessageBag;
 use Log;
 
 /**
- * Class ChooseAccount
+ * Class ChooseAccountsHandler
  *
  */
-class ChooseAccount implements SpectreJobConfig
+class ChooseAccountsHandler implements SpectreConfigurationInterface
 {
 
     /** @var AccountRepositoryInterface */

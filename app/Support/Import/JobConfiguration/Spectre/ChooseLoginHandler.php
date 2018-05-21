@@ -40,7 +40,7 @@ use Log;
  * Class ChooseLoginHandler
  *
  */
-class ChooseLoginHandler implements SpectreJobConfig
+class ChooseLoginHandler implements SpectreConfigurationInterface
 {
     /** @var ImportJob */
     private $importJob;
@@ -93,7 +93,7 @@ class ChooseLoginHandler implements SpectreJobConfig
             $config['token']    = $token->toArray();
             $this->repository->setConfiguration($this->importJob, $config);
             // move job to correct stage to redirect to Spectre:
-            $this->repository->setStage($this->importJob, 'authenticate');
+            $this->repository->setStage($this->importJob, 'do-authenticate');
 
             return new MessageBag;
 

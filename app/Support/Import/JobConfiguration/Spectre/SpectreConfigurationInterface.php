@@ -31,7 +31,7 @@ use Illuminate\Support\MessageBag;
  * Interface SpectreJobConfig
  *
  */
-interface SpectreJobConfig
+interface SpectreConfigurationInterface
 {
     /**
      * Return true when this stage is complete.

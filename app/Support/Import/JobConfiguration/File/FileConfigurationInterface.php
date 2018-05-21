@@ -26,9 +26,9 @@ use FireflyIII\Models\ImportJob;
 use Illuminate\Support\MessageBag;
 
 /**
- * Class ConfigurationInterface.
+ * Class FileConfigurationInterface.
  */
-interface ConfigurationInterface
+interface FileConfigurationInterface
 {
     /**
      * Store data associated with current stage.

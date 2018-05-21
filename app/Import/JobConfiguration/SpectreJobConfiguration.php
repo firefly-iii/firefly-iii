@@ -26,12 +26,16 @@ namespace FireflyIII\Import\JobConfiguration;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\AuthenticateConfig;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\AuthenticatedConfigHandler;
+use FireflyIII\Support\Import\JobConfiguration\Spectre\AuthenticatedHandler;
+use FireflyIII\Support\Import\JobConfiguration\Spectre\AuthenticateHandler;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseAccount;
+use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseAccountsHandler;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseLoginHandler;
+use FireflyIII\Support\Import\JobConfiguration\Spectre\DoAuthenticateHandler;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\NewConfig;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\SpectreJobConfig;
+use FireflyIII\Support\Import\JobConfiguration\Spectre\NewSpectreJobHandler;
+use FireflyIII\Support\Import\JobConfiguration\Spectre\SpectreConfigurationInterface;
 use Illuminate\Support\MessageBag;
 use Log;
 
@@ -40,7 +44,7 @@ use Log;
  */
 class SpectreJobConfiguration implements JobConfigurationInterface
 {
-    /** @var SpectreJobConfig */
+    /** @var SpectreConfigurationInterface */
     private $handler;
     /** @var ImportJob */
     private $importJob;
@@ -104,42 +108,43 @@ class SpectreJobConfiguration implements JobConfigurationInterface
     }
 
     /**
-     * @return SpectreJobConfig
+     * @return SpectreConfigurationInterface
      * @throws FireflyException
      */
-    private function getHandler(): SpectreJobConfig
+    private function getHandler(): SpectreConfigurationInterface
     {
         Log::debug(sprintf('Now in SpectreJobConfiguration::getHandler() with stage "%s"', $this->importJob->stage));
         $handler = null;
         switch ($this->importJob->stage) {
             case 'new':
-                $handler = app(NewConfig::class);
+                /** @var NewSpectreJobHandler $handler */
+                $handler = app(NewSpectreJobHandler::class);
                 $handler->setImportJob($this->importJob);
                 break;
-            case 'authenticate':
-                /** @var SpectreJobConfig $handler */
-                $handler = app(AuthenticateConfig::class);
+            case 'do-authenticate':
+                /** @var DoAuthenticateHandler $handler */
+                $handler = app(DoAuthenticateHandler::class);
                 $handler->setImportJob($this->importJob);
                 break;
             case 'choose-login':
-                /** @var SpectreJobConfig $handler */
+                /** @var ChooseLoginHandler $handler */
                 $handler = app(ChooseLoginHandler::class);
                 $handler->setImportJob($this->importJob);
                 break;
             case 'authenticated':
-                /** @var AuthenticatedConfigHandler $handler */
-                $handler = app(AuthenticatedConfigHandler::class);
+                /** @var AuthenticatedHandler $handler */
+                $handler = app(AuthenticatedHandler::class);
                 $handler->setImportJob($this->importJob);
                 break;
-            case 'choose-account':
-                /** @var ChooseAccount $handler */
-                $handler = app(ChooseAccount::class);
+            case 'choose-accounts':
+                /** @var ChooseAccountsHandler $handler */
+                $handler = app(ChooseAccountsHandler::class);
                 $handler->setImportJob($this->importJob);
                 break;
             default:
                 // @codeCoverageIgnoreStart
                 throw new FireflyException(sprintf('Firefly III cannot create a configuration handler for stage "%s"', $this->importJob->stage));
-                // @codeCoverageIgnoreEnd
+            // @codeCoverageIgnoreEnd
         }
 
         return $handler;

@@ -33,7 +33,7 @@ use Log;
 /**
  * Class ConfigureUploadHandler
  */
-class ConfigureUploadHandler implements ConfigurationInterface
+class ConfigureUploadHandler implements FileConfigurationInterface
 {
     /** @var ImportJob */
     private $importJob;

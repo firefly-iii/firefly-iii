@@ -38,7 +38,7 @@ use Log;
  * Class AuthenticateConfig
  *
  */
-class AuthenticateConfig implements SpectreJobConfig
+class DoAuthenticateHandler implements SpectreConfigurationInterface
 {
     /** @var ImportJob */
     private $importJob;

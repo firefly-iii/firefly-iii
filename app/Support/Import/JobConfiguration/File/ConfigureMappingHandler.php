@@ -40,7 +40,7 @@ use Log;
 /**
  * Class ConfigureMappingHandler
  */
-class ConfigureMappingHandler implements ConfigurationInterface
+class ConfigureMappingHandler implements FileConfigurationInterface
 {
     /** @var AttachmentHelperInterface */
     private $attachments;

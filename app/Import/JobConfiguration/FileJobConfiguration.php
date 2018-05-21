@@ -28,7 +28,7 @@ namespace FireflyIII\Import\JobConfiguration;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\JobConfiguration\File\ConfigurationInterface;
+use FireflyIII\Support\Import\JobConfiguration\File\FileConfigurationInterface;
 use FireflyIII\Support\Import\JobConfiguration\File\ConfigureMappingHandler;
 use FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler;
 use FireflyIII\Support\Import\JobConfiguration\File\ConfigureUploadHandler;
@@ -128,10 +128,10 @@ class FileJobConfiguration implements JobConfigurationInterface
     /**
      * Get the configuration handler for this specific stage.
      *
-     * @return ConfigurationInterface
+     * @return FileConfigurationInterface
      * @throws FireflyException
      */
-    private function getConfigurationObject(): ConfigurationInterface
+    private function getConfigurationObject(): FileConfigurationInterface
     {
         $class = 'DoNotExist';
         switch ($this->importJob->stage) {

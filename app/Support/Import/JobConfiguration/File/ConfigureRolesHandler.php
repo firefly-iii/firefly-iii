@@ -39,7 +39,7 @@ use Log;
 /**
  * Class ConfigureRolesHandler
  */
-class ConfigureRolesHandler implements ConfigurationInterface
+class ConfigureRolesHandler implements FileConfigurationInterface
 {
     /** @var AttachmentHelperInterface */
     private $attachments;

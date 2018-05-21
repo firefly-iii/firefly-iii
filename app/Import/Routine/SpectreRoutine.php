@@ -67,7 +67,7 @@ class SpectreRoutine implements RoutineInterface
 
                     // if count logins is zero, go to authenticate stage
                     if ($handler->getCountLogins() === 0) {
-                        $this->repository->setStage($this->importJob, 'authenticate');
+                        $this->repository->setStage($this->importJob, 'do-authenticate');
                         $this->repository->setStatus($this->importJob, 'ready_to_run');
 
                         return;
@@ -76,7 +76,7 @@ class SpectreRoutine implements RoutineInterface
                     $this->repository->setStage($this->importJob, 'choose-login');
                     $this->repository->setStatus($this->importJob, 'need_job_config');
                     break;
-                case 'authenticate':
+                case 'do-authenticate':
                     // set job to require config.
                     $this->repository->setStatus($this->importJob, 'need_job_config');
 
@@ -90,7 +90,7 @@ class SpectreRoutine implements RoutineInterface
                     $handler->run();
 
                     // return to config to select account(s).
-                    $this->repository->setStage($this->importJob, 'choose-account');
+                    $this->repository->setStage($this->importJob, 'choose-accounts');
                     $this->repository->setStatus($this->importJob, 'need_job_config');
                     break;
                 case 'go-for-import':
