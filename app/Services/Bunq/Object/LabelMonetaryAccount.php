@@ -26,6 +26,7 @@ namespace FireflyIII\Services\Bunq\Object;
 use FireflyIII\Exceptions\FireflyException;
 
 /**
+ * @codeCoverageIgnore
  * Class LabelMonetaryAccount
  */
 class LabelMonetaryAccount extends BunqObject

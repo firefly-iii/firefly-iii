@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Bunq\Object;
 
 /**
+ * @codeCoverageIgnore
  * Class Image
  */
 class Image extends BunqObject

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Bunq\Id;
 
 /**
+ * @codeCoverageIgnore
  * Class DeviceSessionId.
  */
 class DeviceSessionId extends BunqId

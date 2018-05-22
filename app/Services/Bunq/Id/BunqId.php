@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Id;
 
-use Log;
 /**
+ * @codeCoverageIgnore
  * Class BunqId.
  */
 class BunqId
@@ -55,7 +55,7 @@ class BunqId
     /**
      * @param int $id
      */
-    public function setId(int $id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }

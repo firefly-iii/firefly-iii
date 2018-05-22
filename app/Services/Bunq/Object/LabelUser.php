@@ -25,6 +25,7 @@ namespace FireflyIII\Services\Bunq\Object;
 
 use FireflyIII\Exceptions\FireflyException;
 /**
+ * @codeCoverageIgnore
  * Class LabelUser
  */
 class LabelUser extends BunqObject

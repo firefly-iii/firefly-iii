@@ -28,6 +28,7 @@ use FireflyIII\Services\Bunq\Id\DeviceServerId;
 use FireflyIII\Exceptions\FireflyException;
 
 /**
+ * @codeCoverageIgnore
  * Class DeviceServer
  */
 class DeviceServer extends BunqObject

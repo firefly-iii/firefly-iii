@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Bunq\Object;
 
 /**
+ * @codeCoverageIgnore
  * Class MonetaryAccountSetting.
  */
 class MonetaryAccountSetting extends BunqObject

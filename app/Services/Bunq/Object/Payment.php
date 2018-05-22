@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 
 /**
+ * @codeCoverageIgnore
  * Class Payment
  */
 class Payment extends BunqObject

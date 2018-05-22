@@ -25,6 +25,7 @@ namespace FireflyIII\Services\Bunq\Object;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 /**
+ * @codeCoverageIgnore
  * Class UserLight.
  */
 class UserLight extends BunqObject
