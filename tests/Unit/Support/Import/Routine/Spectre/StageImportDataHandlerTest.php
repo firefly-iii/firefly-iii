@@ -237,4 +237,399 @@ class StageImportDataHandlerTest extends TestCase
         }
     }
 
+    /**
+     * @covers \FireflyIII\Support\Import\Routine\Spectre\StageImportDataHandler
+     */
+    public function testRunWithDuplication(): void
+    {
+        // needs to be a full spectre account this time.
+        $spectreAccount = new SpectreAccount(
+            [
+                'id'            => 1234,
+                'login_id'      => 5678,
+                'currency_code' => 'EUR',
+                'balance'       => 1000,
+                'name'          => 'Fake Spectre Account',
+                'nature'        => 'account',
+                'created_at'    => '2018-01-01 12:12:12',
+                'updated_at'    => '2018-01-01 12:12:12',
+                'extra'         => [],
+            ]
+        );
+
+        $today = new Carbon;
+        // create fake transactions:
+        $op1          = 'Some opposing account #' . random_int(1, 100);
+        $op2          = 'Some opposing revenue account #' . random_int(1, 100);
+        $transactions = [
+            new SpectreTransaction(
+                [
+                    'id'            => 1,
+                    'mode'          => 'mode',
+                    'status'        => 'active',
+                    'made_on'       => $today->toW3cString(),
+                    'amount'        => -123.45,
+                    'currency_code' => 'EUR',
+                    'description'   => 'Fake description #' . random_int(1, 100),
+                    'category'      => 'some-category',
+                    'duplicated'    => true,
+                    'extra'         => [
+                        'payee' => $op1,
+                    ],
+                    'account_id'    => 1234,
+                    'created_at'    => $today->toW3cString(),
+                    'updated_at'    => $today->toW3cString(),
+                ]
+            ),
+            new SpectreTransaction(
+                [
+                    'id'            => 2,
+                    'mode'          => 'mode',
+                    'status'        => 'active',
+                    'made_on'       => $today->toW3cString(),
+                    'amount'        => 563.21,
+                    'currency_code' => 'EUR',
+                    'description'   => 'Fake second description #' . random_int(1, 100),
+                    'category'      => 'some-other-category',
+                    'duplicated'    => false,
+                    'extra'         => [
+                        'payee' => $op2,
+                        'customer_category_name' => 'cat-name'
+                    ],
+                    'account_id'    => 1234,
+                    'created_at'    => $today->toW3cString(),
+                    'updated_at'    => $today->toW3cString(),
+                ]
+            ),
+        ];
+
+
+        $account            = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $expense            = $this->user()->accounts()->where('account_type_id', 4)->first();
+        $revenue            = $this->user()->accounts()->where('account_type_id', 5)->first();
+        $job                = new ImportJob;
+        $job->user_id       = $this->user()->id;
+        $job->key           = 'sid_a_' . random_int(1, 1000);
+        $job->status        = 'new';
+        $job->stage         = 'new';
+        $job->provider      = 'spectre';
+        $job->file_type     = '';
+        $job->configuration = [
+            'accounts'        => [$spectreAccount->toArray()],
+            'account_mapping' => [
+                1234 => 322,
+            ],
+        ];
+        $job->save();
+
+        // mock repositories
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $importRepos  = $this->mock(ImportJobRepositoryInterface::class);
+        $lrRequest    = $this->mock(ListTransactionsRequest::class);
+        $mapper       = $this->mock(OpposingAccountMapper::class);
+
+        // expected result
+        $expected = [
+            0 => [
+                'type'            => 'withdrawal',
+                'date'            => $today->format('Y-m-d'),
+                'tags'            => ['mode', 'active','possibly-duplicated'],
+                'user'            => $job->user_id,
+                'notes'           => "Imported from \"Fake Spectre Account\"  \npayee: " . $op1."  \n",
+                'external_id'     => '1',
+                // journal data:
+                'description'     => $transactions[0]->getDescription(),
+                'piggy_bank_id'   => null,
+                'piggy_bank_name' => null,
+                'bill_id'         => null,
+                'bill_name'       => null,
+
+                // transaction data:
+                'transactions'    => [
+                    [
+                        'currency_id'           => null,
+                        'currency_code'         => 'EUR',
+                        'description'           => null,
+                        'amount'                => '-123.45',
+                        'budget_id'             => null,
+                        'budget_name'           => null,
+                        'category_id'           => null,
+                        'category_name'         => 'some-category',
+                        'source_id'             => $account->id,
+                        'source_name'           => null,
+                        'destination_id'        => $expense->id,
+                        'destination_name'      => null,
+                        'foreign_currency_id'   => null,
+                        'foreign_currency_code' => null,
+                        'foreign_amount'        => null,
+                        'reconciled'            => false,
+                        'identifier'            => 0,
+                    ],
+                ],
+            ],
+            1 => [
+                'type'            => 'deposit',
+                'date'            => $today->format('Y-m-d'),
+                'tags'            => ['mode', 'active','cat-name'],
+                'user'            => $job->user_id,
+                'notes'           => "Imported from \"Fake Spectre Account\"  \npayee: " . $op2 . "  \n",
+                'external_id'     => '2',
+                // journal data:
+                'description'     => $transactions[1]->getDescription(),
+                'piggy_bank_id'   => null,
+                'piggy_bank_name' => null,
+                'bill_id'         => null,
+                'bill_name'       => null,
+
+                // transaction data:
+                'transactions'    => [
+                    [
+                        'currency_id'           => null,
+                        'currency_code'         => 'EUR',
+                        'description'           => null,
+                        'amount'                => '563.21',
+                        'budget_id'             => null,
+                        'budget_name'           => null,
+                        'category_id'           => null,
+                        'category_name'         => 'some-other-category',
+                        'source_id'             => $revenue->id,
+                        'source_name'           => null,
+                        'destination_id'        => $account->id,
+                        'destination_name'      => null,
+                        'foreign_currency_id'   => null,
+                        'foreign_currency_code' => null,
+                        'foreign_amount'        => null,
+                        'reconciled'            => false,
+                        'identifier'            => 0,
+                    ],
+                ],
+            ],
+        ];
+        $accountRepos->shouldReceive('setUser')->once();
+        $accountRepos->shouldReceive('findNull')->once()->withArgs([322])->andReturn($account);
+        $importRepos->shouldReceive('setUser')->once();
+        $importRepos->shouldReceive('setTransactions')->once()
+                    ->withArgs([Mockery::any(), $expected]);
+        $lrRequest->shouldReceive('setUser')->once();
+        $lrRequest->shouldReceive('setAccount')->once()->withArgs([Mockery::any()]);
+        $lrRequest->shouldReceive('call')->once();
+        $lrRequest->shouldReceive('getTransactions')->once()->andReturn($transactions);
+        $mapper->shouldReceive('setUser')->once();
+        // mapper should be called twice:
+        $mapper->shouldReceive('map')->withArgs(
+            [null, -123.45, ['name' => $op1, 'iban' => null, 'number' => null, 'bic' => null]]
+        )->once()->andReturn($expense);
+        $mapper->shouldReceive('map')->withArgs(
+            [null, 563.21, ['name' => $op2, 'iban' => null, 'number' => null, 'bic' => null]]
+        )->once()->andReturn($revenue);
+
+
+        $handler = new StageImportDataHandler;
+        $handler->setImportJob($job);
+        try {
+            $handler->run();
+        } catch (FireflyException $e) {
+            $this->assertFalse(true, $e->getMessage());
+        }
+    }
+
+
+    /**
+     * @covers \FireflyIII\Support\Import\Routine\Spectre\StageImportDataHandler
+     */
+    public function testRunForeignCurrency(): void
+    {
+        // needs to be a full spectre account this time.
+        $spectreAccount = new SpectreAccount(
+            [
+                'id'            => 1234,
+                'login_id'      => 5678,
+                'currency_code' => 'EUR',
+                'balance'       => 1000,
+                'name'          => 'Fake Spectre Account',
+                'nature'        => 'account',
+                'created_at'    => '2018-01-01 12:12:12',
+                'updated_at'    => '2018-01-01 12:12:12',
+                'extra'         => [],
+            ]
+        );
+
+        $today = new Carbon;
+        // create fake transactions:
+        $op1          = 'Some opposing account #' . random_int(1, 100);
+        $op2          = 'Some opposing revenue account #' . random_int(1, 100);
+        $transactions = [
+            new SpectreTransaction(
+                [
+                    'id'            => 1,
+                    'mode'          => 'mode',
+                    'status'        => 'active',
+                    'made_on'       => $today->toW3cString(),
+                    'amount'        => -123.45,
+                    'currency_code' => 'EUR',
+                    'description'   => 'Fake description #' . random_int(1, 100),
+                    'category'      => 'some-category',
+                    'duplicated'    => true,
+                    'extra'         => [
+                        'payee' => $op1,
+                        'original_amount' => -200.01
+                    ],
+                    'account_id'    => 1234,
+                    'created_at'    => $today->toW3cString(),
+                    'updated_at'    => $today->toW3cString(),
+                ]
+            ),
+            new SpectreTransaction(
+                [
+                    'id'            => 2,
+                    'mode'          => 'mode',
+                    'status'        => 'active',
+                    'made_on'       => $today->toW3cString(),
+                    'amount'        => 563.21,
+                    'currency_code' => 'EUR',
+                    'description'   => 'Fake second description #' . random_int(1, 100),
+                    'category'      => 'some-other-category',
+                    'duplicated'    => false,
+                    'extra'         => [
+                        'payee' => $op2,
+                        'customer_category_name' => 'cat-name',
+                        'original_currency_code' => 'USD',
+                    ],
+                    'account_id'    => 1234,
+                    'created_at'    => $today->toW3cString(),
+                    'updated_at'    => $today->toW3cString(),
+                ]
+            ),
+        ];
+
+
+        $account            = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $expense            = $this->user()->accounts()->where('account_type_id', 4)->first();
+        $revenue            = $this->user()->accounts()->where('account_type_id', 5)->first();
+        $job                = new ImportJob;
+        $job->user_id       = $this->user()->id;
+        $job->key           = 'sid_a_' . random_int(1, 1000);
+        $job->status        = 'new';
+        $job->stage         = 'new';
+        $job->provider      = 'spectre';
+        $job->file_type     = '';
+        $job->configuration = [
+            'accounts'        => [$spectreAccount->toArray()],
+            'account_mapping' => [
+                1234 => 322,
+            ],
+        ];
+        $job->save();
+
+        // mock repositories
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $importRepos  = $this->mock(ImportJobRepositoryInterface::class);
+        $lrRequest    = $this->mock(ListTransactionsRequest::class);
+        $mapper       = $this->mock(OpposingAccountMapper::class);
+
+        // expected result
+        $expected = [
+            0 => [
+                'type'            => 'withdrawal',
+                'date'            => $today->format('Y-m-d'),
+                'tags'            => ['mode', 'active','possibly-duplicated'],
+                'user'            => $job->user_id,
+                'notes'           => "Imported from \"Fake Spectre Account\"  \npayee: " . $op1."  \n",
+                'external_id'     => '1',
+                // journal data:
+                'description'     => $transactions[0]->getDescription(),
+                'piggy_bank_id'   => null,
+                'piggy_bank_name' => null,
+                'bill_id'         => null,
+                'bill_name'       => null,
+
+                // transaction data:
+                'transactions'    => [
+                    [
+                        'currency_id'           => null,
+                        'currency_code'         => 'EUR',
+                        'description'           => null,
+                        'amount'                => '-123.45',
+                        'budget_id'             => null,
+                        'budget_name'           => null,
+                        'category_id'           => null,
+                        'category_name'         => 'some-category',
+                        'source_id'             => $account->id,
+                        'source_name'           => null,
+                        'destination_id'        => $expense->id,
+                        'destination_name'      => null,
+                        'foreign_currency_id'   => null,
+                        'foreign_currency_code' => null,
+                        'foreign_amount'        => '-200.01',
+                        'reconciled'            => false,
+                        'identifier'            => 0,
+                    ],
+                ],
+            ],
+            1 => [
+                'type'            => 'deposit',
+                'date'            => $today->format('Y-m-d'),
+                'tags'            => ['mode', 'active','cat-name'],
+                'user'            => $job->user_id,
+                'notes'           => "Imported from \"Fake Spectre Account\"  \npayee: " . $op2 . "  \n",
+                'external_id'     => '2',
+                // journal data:
+                'description'     => $transactions[1]->getDescription(),
+                'piggy_bank_id'   => null,
+                'piggy_bank_name' => null,
+                'bill_id'         => null,
+                'bill_name'       => null,
+
+                // transaction data:
+                'transactions'    => [
+                    [
+                        'currency_id'           => null,
+                        'currency_code'         => 'EUR',
+                        'description'           => null,
+                        'amount'                => '563.21',
+                        'budget_id'             => null,
+                        'budget_name'           => null,
+                        'category_id'           => null,
+                        'category_name'         => 'some-other-category',
+                        'source_id'             => $revenue->id,
+                        'source_name'           => null,
+                        'destination_id'        => $account->id,
+                        'destination_name'      => null,
+                        'foreign_currency_id'   => null,
+                        'foreign_currency_code' => 'USD',
+                        'foreign_amount'        => null,
+                        'reconciled'            => false,
+                        'identifier'            => 0,
+                    ],
+                ],
+            ],
+        ];
+        $accountRepos->shouldReceive('setUser')->once();
+        $accountRepos->shouldReceive('findNull')->once()->withArgs([322])->andReturn($account);
+        $importRepos->shouldReceive('setUser')->once();
+        $importRepos->shouldReceive('setTransactions')->once()
+                    ->withArgs([Mockery::any(), $expected]);
+        $lrRequest->shouldReceive('setUser')->once();
+        $lrRequest->shouldReceive('setAccount')->once()->withArgs([Mockery::any()]);
+        $lrRequest->shouldReceive('call')->once();
+        $lrRequest->shouldReceive('getTransactions')->once()->andReturn($transactions);
+        $mapper->shouldReceive('setUser')->once();
+        // mapper should be called twice:
+        $mapper->shouldReceive('map')->withArgs(
+            [null, -123.45, ['name' => $op1, 'iban' => null, 'number' => null, 'bic' => null]]
+        )->once()->andReturn($expense);
+        $mapper->shouldReceive('map')->withArgs(
+            [null, 563.21, ['name' => $op2, 'iban' => null, 'number' => null, 'bic' => null]]
+        )->once()->andReturn($revenue);
+
+
+        $handler = new StageImportDataHandler;
+        $handler->setImportJob($job);
+        try {
+            $handler->run();
+        } catch (FireflyException $e) {
+            $this->assertFalse(true, $e->getMessage());
+        }
+    }
+
 }
