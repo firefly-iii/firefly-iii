@@ -61,7 +61,7 @@ class StageImportDataHandler
         $accounts = $config['accounts'] ?? [];
         Log::debug(sprintf('Count of accounts in array is %d', \count($accounts)));
         if (\count($accounts) === 0) {
-            throw new FireflyException('There are no accounts in this import job. Cannot continue.');
+            throw new FireflyException('There are no accounts in this import job. Cannot continue.'); // @codeCoverageIgnore
         }
         $toImport = $config['account_mapping'] ?? [];
         foreach ($toImport as $spectreId => $localId) {
@@ -217,10 +217,10 @@ class StageImportDataHandler
     {
         $account = $this->accountRepository->findNull($accountId);
         if (null === $account) {
-            throw new FireflyException(sprintf('Cannot find Firefly III asset account with ID #%d. Job must stop now.', $accountId));
+            throw new FireflyException(sprintf('Cannot find Firefly III asset account with ID #%d. Job must stop now.', $accountId)); // @codeCoverageIgnore
         }
         if ($account->accountType->type !== AccountType::ASSET) {
-            throw new FireflyException(sprintf('Account with ID #%d is not an asset account. Job must stop now.', $accountId));
+            throw new FireflyException(sprintf('Account with ID #%d is not an asset account. Job must stop now.', $accountId)); // @codeCoverageIgnore
         }
 
         return $account;
@@ -242,7 +242,7 @@ class StageImportDataHandler
                 return new SpectreAccount($account);
             }
         }
-        throw new FireflyException(sprintf('Cannot find Spectre account with ID #%d in configuration. Job will exit.', $accountId));
+        throw new FireflyException(sprintf('Cannot find Spectre account with ID #%d in configuration. Job will exit.', $accountId)); // @codeCoverageIgnore
     }
 
     /**
@@ -255,7 +255,9 @@ class StageImportDataHandler
     private function getTransactions(SpectreAccount $spectreAccount, LocalAccount $localAccount): array
     {
         // grab all transactions
-        $request = new ListTransactionsRequest($this->importJob->user);
+        /** @var ListTransactionsRequest $request */
+        $request = app(ListTransactionsRequest::class);
+        $request->setUser($this->importJob->user);
 
         $request->setAccount($spectreAccount);
         $request->call();
