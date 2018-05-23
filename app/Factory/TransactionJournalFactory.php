@@ -52,6 +52,7 @@ class TransactionJournalFactory
         // store basic journal first.
         $type            = $this->findTransactionType($data['type']);
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser($this->user);
+        Log::debug(sprintf('Going to store a %s', $type->type));
         $journal         = TransactionJournal::create(
             [
                 'user_id'                 => $data['user'],

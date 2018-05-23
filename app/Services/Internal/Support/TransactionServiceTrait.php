@@ -108,6 +108,8 @@ trait TransactionServiceTrait
         $repository  = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
 
+        Log::debug(sprintf('Going to find account #%d ("%s")', $accountId, $accountName));
+
         if (null === $expectedType) {
             return $repository->findNull($accountId);
         }

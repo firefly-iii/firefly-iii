@@ -62,6 +62,7 @@ class TransactionFactory
             throw new FireflyException('Cannot store transaction without currency information.');
         }
         $data['foreign_amount'] = '' === (string)$data['foreign_amount'] ? null : $data['foreign_amount'];
+        Log::debug(sprintf('Create transaction for account #%d ("%s") with amount %s', $data['account']->id, $data['account']->name, $data['amount']));
 
         return Transaction::create(
             [
@@ -96,10 +97,12 @@ class TransactionFactory
 
         // type of source account depends on journal type:
         $sourceType    = $this->accountType($journal, 'source');
+        Log::debug(sprintf('Expect source account to be of type %s', $sourceType));
         $sourceAccount = $this->findAccount($sourceType, $data['source_id'], $data['source_name']);
 
         // same for destination account:
         $destinationType    = $this->accountType($journal, 'destination');
+        Log::debug(sprintf('Expect source destination to be of type %s', $destinationType));
         $destinationAccount = $this->findAccount($destinationType, $data['destination_id'], $data['destination_name']);
         // first make a "negative" (source) transaction based on the data in the array.
         $source = $this->create(

@@ -64,16 +64,26 @@ class StageImportDataHandler
             throw new FireflyException('There are no accounts in this import job. Cannot continue.'); // @codeCoverageIgnore
         }
         $toImport = $config['account_mapping'] ?? [];
+        $totalSet = [[]];
         foreach ($toImport as $spectreId => $localId) {
             if ((int)$localId > 0) {
                 Log::debug(sprintf('Will get transactions from Spectre account #%d and save them in Firefly III account #%d', $spectreId, $localId));
                 $spectreAccount = $this->getSpectreAccount((int)$spectreId);
                 $localAccount   = $this->getLocalAccount((int)$localId);
-                $set            = $this->getTransactions($spectreAccount, $localAccount);
-                $this->repository->setTransactions($this->importJob, $set);
+                $merge          = $this->getTransactions($spectreAccount, $localAccount);
+                $totalSet[]     = $merge;
+                Log::debug(
+                    sprintf('Found %d transactions in account "%s" (%s)', \count($merge), $spectreAccount->getName(), $spectreAccount->getCurrencyCode())
+                );
+                continue;
             }
+            Log::debug(sprintf('Local account is = zero, will not import from Spectr account with ID #%d', $spectreId));
         }
+        $totalSet = array_merge(...$totalSet);
+        Log::debug(sprintf('Found %d transactions in total.', \count($totalSet)));
+        $this->repository->setTransactions($this->importJob, $totalSet);
     }
+
 
     /**
      * @param ImportJob $importJob
@@ -151,9 +161,11 @@ class StageImportDataHandler
                         break;
                     case 'original_amount':
                         $foreignAmount = $value;
+                        Log::debug(sprintf('Foreign amount is now %s', $value));
                         break;
                     case 'original_currency_code':
                         $foreignCurrencyCode = $value;
+                        Log::debug(sprintf('Foreign currency code is now %s', $value));
                         break;
                     default:
                         $notes .= $key . ': ' . $value . '  ' . "\n"; // for newline in Markdown.

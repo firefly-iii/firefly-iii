@@ -69,13 +69,13 @@ class StageAuthenticatedHandler
         foreach ($logins as $loginArray) {
             $loginId = $loginArray['id'] ?? -1;
             if ($loginId === $selectedLogin) {
-                Log::debug('Selected login is in the array with logins.');
                 $login = new Login($loginArray);
+                Log::debug(sprintf('Selected login "%s" ("%s") which is in the array with logins.', $login->getProviderName(), $login->getCountryCode()));
             }
         }
         if (null === $login) {
-            Log::debug('Login is null, simply use the first one from the array.');
             $login = new Login($logins[0]);
+            Log::debug(sprintf('Login is null, simply use the first one "%s" ("%s") from the array.', $login->getProviderName(), $login->getCountryCode()));
         }
 
         // with existing login we can grab accounts from this login.
@@ -83,6 +83,7 @@ class StageAuthenticatedHandler
         $config['accounts'] = [];
         /** @var Account $account */
         foreach ($accounts as $account) {
+            Log::debug(sprintf('Found account #%d ("%s") within Login.', $account->getId(), $account->getName()));
             $config['accounts'][] = $account->toArray();
         }
         $this->repository->setConfiguration($this->importJob, $config);
@@ -125,6 +126,7 @@ class StageAuthenticatedHandler
      */
     private function getLogins(): array
     {
+        Log::debug('Now in StageAuthenticatedHandler::getLogins().');
         $customer = $this->getCustomer($this->importJob);
 
         /** @var ListLoginsRequest $request */
@@ -134,6 +136,9 @@ class StageAuthenticatedHandler
         $request->call();
         $logins = $request->getLogins();
         $return = [];
+
+        Log::debug(sprintf('Found %d logins in users Spectre account.', \count($logins)));
+
         /** @var Login $login */
         foreach ($logins as $login) {
             $return[] = $login->toArray();
