@@ -24,6 +24,7 @@ namespace FireflyIII\Services\Bunq\Object;
 
 /**
  * @codeCoverageIgnore
+ * @deprecated
  * Class Alias.
  */
 class Alias extends BunqObject

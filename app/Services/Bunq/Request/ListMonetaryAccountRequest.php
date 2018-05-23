@@ -27,6 +27,8 @@ use FireflyIII\Services\Bunq\Token\SessionToken;
 use Illuminate\Support\Collection;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class ListMonetaryAccountRequest.
  */
 class ListMonetaryAccountRequest extends BunqRequest

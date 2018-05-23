@@ -27,6 +27,8 @@ use FireflyIII\Services\Bunq\Token\InstallationToken;
 use Log;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class DeviceServerRequest.
  */
 class DeviceServerRequest extends BunqRequest

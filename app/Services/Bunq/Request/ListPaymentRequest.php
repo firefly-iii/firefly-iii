@@ -30,6 +30,8 @@ use Illuminate\Support\Collection;
 
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class ListPaymentRequest
  */
 class ListPaymentRequest extends BunqRequest
@@ -45,8 +47,6 @@ class ListPaymentRequest extends BunqRequest
     private $userId = 0;
 
     /**
-     * TODO support pagination.
-     * TODO impose limits on import.
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */

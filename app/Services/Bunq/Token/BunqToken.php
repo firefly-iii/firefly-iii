@@ -25,6 +25,8 @@ namespace FireflyIII\Services\Bunq\Token;
 use Carbon\Carbon;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class BunqToken.
  */
 class BunqToken

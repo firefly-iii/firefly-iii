@@ -28,6 +28,8 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class ListDeviceServerRequest.
  */
 class ListDeviceServerRequest extends BunqRequest

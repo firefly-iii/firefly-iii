@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Bunq\Token;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class InstallationToken.
  */
 class InstallationToken extends BunqToken

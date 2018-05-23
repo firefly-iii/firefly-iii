@@ -30,6 +30,8 @@ use FireflyIII\Services\Bunq\Token\InstallationToken;
 use FireflyIII\Services\Bunq\Token\SessionToken;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class DeviceSessionRequest.
  */
 class DeviceSessionRequest extends BunqRequest

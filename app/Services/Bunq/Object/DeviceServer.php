@@ -28,6 +28,7 @@ use FireflyIII\Services\Bunq\Id\DeviceServerId;
 use FireflyIII\Exceptions\FireflyException;
 
 /**
+ * @deprecated
  * @codeCoverageIgnore
  * Class DeviceServer
  */

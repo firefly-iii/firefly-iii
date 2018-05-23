@@ -25,6 +25,8 @@ namespace Bunq\Token;
 namespace FireflyIII\Services\Bunq\Token;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class SessionToken.
  */
 class SessionToken extends BunqToken

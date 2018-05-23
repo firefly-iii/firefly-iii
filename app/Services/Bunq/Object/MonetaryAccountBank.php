@@ -25,6 +25,7 @@ namespace FireflyIII\Services\Bunq\Object;
 use Carbon\Carbon;
 
 /**
+ * @deprecated
  * @codeCoverageIgnore
  * Class MonetaryAccountBank.
  */

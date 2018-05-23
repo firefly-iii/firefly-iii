@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Bunq\Object;
 
 /**
+ * @deprecated
  * @codeCoverageIgnore
  * Class ServerPublicKey.
  */

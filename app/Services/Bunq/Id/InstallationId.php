@@ -24,6 +24,7 @@ namespace FireflyIII\Services\Bunq\Id;
 
 /**
  * @codeCoverageIgnore
+ * @deprecated
  * Class InstallationId.
  */
 class InstallationId extends BunqId

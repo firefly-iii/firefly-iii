@@ -29,6 +29,8 @@ use Log;
 use Requests;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class BunqRequest.
  */
 abstract class BunqRequest

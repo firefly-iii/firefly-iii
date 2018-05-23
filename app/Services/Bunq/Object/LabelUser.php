@@ -25,6 +25,7 @@ namespace FireflyIII\Services\Bunq\Object;
 
 use FireflyIII\Exceptions\FireflyException;
 /**
+ * @deprecated
  * @codeCoverageIgnore
  * Class LabelUser
  */

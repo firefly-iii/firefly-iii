@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 
 /**
+ * @deprecated
  * @codeCoverageIgnore
  * Class Payment
  */

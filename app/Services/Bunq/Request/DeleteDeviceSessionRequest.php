@@ -26,6 +26,8 @@ use FireflyIII\Services\Bunq\Token\SessionToken;
 use Log;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class DeleteDeviceSessionRequest.
  */
 class DeleteDeviceSessionRequest extends BunqRequest

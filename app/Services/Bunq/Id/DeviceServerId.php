@@ -25,6 +25,7 @@ namespace FireflyIII\Services\Bunq\Id;
 
 /**
  * @codeCoverageIgnore
+ * @deprecated
  * Class DeviceServerId.
  */
 class DeviceServerId extends BunqId

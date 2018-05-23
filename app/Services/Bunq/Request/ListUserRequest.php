@@ -28,6 +28,8 @@ use FireflyIII\Services\Bunq\Object\UserPerson;
 use FireflyIII\Services\Bunq\Token\SessionToken;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class ListUserRequest.
  */
 class ListUserRequest extends BunqRequest
