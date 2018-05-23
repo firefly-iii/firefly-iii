@@ -110,7 +110,7 @@ return [
     'in_array'                       => 'The :attribute field does not exist in :other.',
     'present'                        => 'The :attribute field must be present.',
     'amount_zero'                    => 'The total amount cannot be zero',
-    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://goo.gl/NCh2tN',
+    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit http://bit.ly/FF3-password-security',
     'attributes'                     => [
         'email'                   => 'email address',
         'description'             => 'description',
