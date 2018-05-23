@@ -5,18 +5,18 @@
 {% endblock %}
 {% block content %}
     <div class="row">
-        <form class="form-horizontal" action="{{ route('import.configure.post',[job.key]) }}" method="post">
+        <form class="form-horizontal" action="{{ route('import.job.configuration.post',[importJob.key]) }}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box box-default">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ trans('import.bunq_accounts_title') }}</h3>
+                        <h3 class="box-title">{{ trans('import.job_config_bunq_accounts_title') }}</h3>
                     </div>
                     <div class="box-body">
                         <div class="row">
                             <div class="col-lg-8">
                                 <p>
-                                    {{ trans('import.bunq_accounts_text')|raw }}
+                                    {{ trans('import.job_config_bunq_accounts_text') }}
                                 </p>
                             </div>
                         </div>
@@ -28,15 +28,13 @@
                                         <th>&nbsp;</th>
                                         <th>{{ trans('list.account_at_bunq') }}</th>
                                         <th>{{ trans('list.account') }}</th>
-                                        <th>{{ trans('list.do_import') }}</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for account in data.config.accounts %}
+                                    {% for account in data.accounts %}
                                         <tr>
-                                            <td style="background:{{ account.setting.color }};"></td>
+                                            <td style="background:{{ account.settings.color }};"></td>
                                             <td>
-                                                <input type="hidden" name="bunq_account_id[]" value="{{ account.id }}" />
                                                 <strong>{{ account.description }}</strong><br />
                                                 {% for alias in account.aliases %}
                                                     {% if alias.type == 'IBAN' %}
@@ -45,20 +43,18 @@
                                                 {% endfor %}
                                             </td>
                                             <td>
-                                                <select class="form-control" name="import[{{ account.id }}]">
-                                                    {% for id,name in account.options %}
-                                                        <option value="{{ id }}" label="{{ name.name }}"{% if account.iban == name.iban %} selected="selected"{% endif %}>{{ name.name }}</option>
+                                                <select class="form-control" name="account_mapping[{{ account.id }}]">
+                                                    <option value="0" label="{{ trans('import.spectre_do_not_import') }}">
+                                                        {{ trans('import.spectre_do_not_import') }}
+                                                    </option>
+                                                    {% for localId, localAccount in data.local_accounts %}
+                                                        {% if localAccount.code == account.currency_code %}
+                                                            <option value="{{ localId }}"{% if currentIban != '' and currentIban == localAccount.iban %} selected{% endif %}>
+                                                                {{ localAccount.name }}{% if localAccount.iban !='' %} ({{ localAccount.iban }}){% endif %}
+                                                            </option>
+                                                        {% endif %}
                                                     {% endfor %}
                                                 </select>
-                                            </td>
-                                            <td>
-                                                <div class="checkbox">
-                                                    <label>
-                                                        <input type="checkbox" value="1" name="do_import[{{ account.id }}]" checked>
-                                                        {{ trans('import.bunq_do_import') }}
-                                                    </label>
-                                                </div>
-
                                             </td>
                                         </tr>
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * AuthenticatedConfigHandler.php
+ * SpectreJobConfig.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -23,28 +23,23 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\JobConfiguration\Spectre;
 
+
 use FireflyIII\Models\ImportJob;
 use Illuminate\Support\MessageBag;
-use Log;
 
 /**
- * @codeCoverageIgnore
+ * Interface SpectreJobConfigurationInterface
  *
- * Class AuthenticatedHandler
  */
-class AuthenticatedHandler implements SpectreJobConfigurationInterface
+interface SpectreJobConfigurationInterface
 {
     /**
      * Return true when this stage is complete.
      *
      * @return bool
      */
-    public function configurationComplete(): bool
-    {
-        Log::debug('AuthenticatedConfigHandler::configurationComplete() always returns true');
+    public function configurationComplete(): bool;
 
-        return true;
-    }
 
     /**
      * Store the job configuration.
@@ -53,43 +48,27 @@ class AuthenticatedHandler implements SpectreJobConfigurationInterface
      *
      * @return MessageBag
      */
-    public function configureJob(array $data): MessageBag
-    {
-        Log::debug('AuthenticatedConfigHandler::configureJob() always returns empty message bag');
-
-        return new MessageBag();
-    }
+    public function configureJob(array $data): MessageBag;
 
     /**
      * Get data for config view.
      *
      * @return array
      */
-    public function getNextData(): array
-    {
-        Log::debug('AuthenticatedConfigHandler::getNextData() always returns []');
-
-        return [];
-    }
+    public function getNextData(): array;
 
     /**
      * Get the view for this stage.
      *
      * @return string
      */
-    public function getNextView(): string
-    {
-        Log::debug('AuthenticatedConfigHandler::getNextView() always returns ""');
-
-        return '';
-    }
+    public function getNextView(): string;
 
     /**
      * Set the import job.
      *
      * @param ImportJob $importJob
      */
-    public function setImportJob(ImportJob $importJob): void
-    {
-    }
+    public function setImportJob(ImportJob $importJob): void;
+
 }

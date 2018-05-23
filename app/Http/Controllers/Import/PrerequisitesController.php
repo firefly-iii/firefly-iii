@@ -151,8 +151,8 @@ class PrerequisitesController extends Controller
         if ($result->count() > 0) {
             $request->session()->flash('error', $result->first());
 
-            // redirect back:
-            return redirect(route('import.prerequisites.index', [$importProvider, $importJob->key]))->withInput();
+            // redirect back to job, if has job:
+            return redirect(route('import.prerequisites.index', [$importProvider, $importJob->key ?? '']))->withInput();
         }
 
         // session flash!

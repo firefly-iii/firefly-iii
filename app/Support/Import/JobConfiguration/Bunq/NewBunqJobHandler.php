@@ -1,6 +1,6 @@
 <?php
 /**
- * AuthenticatedConfigHandler.php
+ * NewBunqJobHandler.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Support\Import\JobConfiguration\Spectre;
+namespace FireflyIII\Support\Import\JobConfiguration\Bunq;
 
 use FireflyIII\Models\ImportJob;
 use Illuminate\Support\MessageBag;
@@ -29,11 +29,11 @@ use Log;
 
 /**
  * @codeCoverageIgnore
- *
- * Class AuthenticatedHandler
+ * Class NewBunqJobHandler
  */
-class AuthenticatedHandler implements SpectreJobConfigurationInterface
+class NewBunqJobHandler implements BunqJobConfigurationInterface
 {
+
     /**
      * Return true when this stage is complete.
      *
@@ -41,7 +41,7 @@ class AuthenticatedHandler implements SpectreJobConfigurationInterface
      */
     public function configurationComplete(): bool
     {
-        Log::debug('AuthenticatedConfigHandler::configurationComplete() always returns true');
+        Log::debug('NewBunqJobHandler::configurationComplete always returns true.');
 
         return true;
     }
@@ -55,9 +55,9 @@ class AuthenticatedHandler implements SpectreJobConfigurationInterface
      */
     public function configureJob(array $data): MessageBag
     {
-        Log::debug('AuthenticatedConfigHandler::configureJob() always returns empty message bag');
+        Log::debug('NewBunqJobHandler::configureJob always returns an empty message bag.');
 
-        return new MessageBag();
+        return new MessageBag;
     }
 
     /**
@@ -67,7 +67,7 @@ class AuthenticatedHandler implements SpectreJobConfigurationInterface
      */
     public function getNextData(): array
     {
-        Log::debug('AuthenticatedConfigHandler::getNextData() always returns []');
+        Log::debug('NewBunqJobHandler::getNextData always returns an empty array.');
 
         return [];
     }
@@ -79,7 +79,7 @@ class AuthenticatedHandler implements SpectreJobConfigurationInterface
      */
     public function getNextView(): string
     {
-        Log::debug('AuthenticatedConfigHandler::getNextView() always returns ""');
+        Log::debug('NewBunqJobHandler::getNextView always returns "".');
 
         return '';
     }
@@ -91,5 +91,6 @@ class AuthenticatedHandler implements SpectreJobConfigurationInterface
      */
     public function setImportJob(ImportJob $importJob): void
     {
+        Log::debug('NewBunqJobHandler::setImportJob does nothing.');
     }
 }

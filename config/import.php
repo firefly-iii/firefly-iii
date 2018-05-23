@@ -22,11 +22,14 @@
 
 declare(strict_types=1);
 
+use FireflyIII\Import\JobConfiguration\BunqJobConfiguration;
 use FireflyIII\Import\JobConfiguration\FakeJobConfiguration;
 use FireflyIII\Import\JobConfiguration\FileJobConfiguration;
 use FireflyIII\Import\JobConfiguration\SpectreJobConfiguration;
+use FireflyIII\Import\Prerequisites\BunqPrerequisites;
 use FireflyIII\Import\Prerequisites\FakePrerequisites;
 use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
+use FireflyIII\Import\Routine\BunqRoutine;
 use FireflyIII\Import\Routine\FakeRoutine;
 use FireflyIII\Import\Routine\FileRoutine;
 use FireflyIII\Import\Routine\SpectreRoutine;
@@ -37,7 +40,7 @@ return [
     'enabled'          => [
         'fake'    => true,
         'file'    => true,
-        'bunq'    => false,
+        'bunq'    => true,
         'spectre' => true,
         'plaid'   => false,
         'quovo'   => false,
@@ -77,7 +80,7 @@ return [
     'prerequisites'    => [
         'fake'    => FakePrerequisites::class,
         'file'    => false,
-        'bunq'    => false,
+        'bunq'    => BunqPrerequisites::class,
         'spectre' => SpectrePrerequisites::class,
         'plaid'   => false,
         'quovo'   => false,
@@ -87,7 +90,7 @@ return [
     'has_job_config'       => [
         'fake'    => true,
         'file'    => true,
-        'bunq'    => false,
+        'bunq'    => true,
         'spectre' => true,
         'plaid'   => false,
         'quovo'   => false,
@@ -97,7 +100,7 @@ return [
     'configuration'    => [
         'fake'    => FakeJobConfiguration::class,
         'file'    => FileJobConfiguration::class,
-        'bunq'    => false,
+        'bunq'    => BunqJobConfiguration::class,
         'spectre' => SpectreJobConfiguration::class,
         'plaid'   => false,
         'quovo'   => false,
@@ -107,7 +110,7 @@ return [
     'routine'          => [
         'fake'    => FakeRoutine::class,
         'file'    => FileRoutine::class,
-        'bunq'    => false,
+        'bunq'    => BunqRoutine::class,
         'spectre' => SpectreRoutine::class,
         'plaid'   => false,
         'quovo'   => false,

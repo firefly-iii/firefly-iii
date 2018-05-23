@@ -29,6 +29,10 @@ var maxLoops = 60;
 var totalLoops = 0;
 var startCount = 0;
 var jobFailed = false;
+// set to true when error is reported.
+// will prevent double error reporting
+var reportedError = false;
+
 
 $(function () {
     "use strict";
@@ -40,10 +44,10 @@ $(function () {
  */
 function checkJobJSONStatus() {
     console.log('In checkJobJSONStatus()');
-    if(jobFailed === false) {
+    if (jobFailed === false) {
         $.getJSON(jobStatusUri).done(reportJobJSONDone).fail(reportJobJSONFailure);
     }
-    if(jobFailed === true) {
+    if (jobFailed === true) {
         console.error('Job has failed, will not check.');
     }
 }
@@ -106,6 +110,7 @@ function showJobResults(data) {
     if (data.errors.length > 0) {
         $('#import-status-error-txt').show();
         data.errors.forEach(function (element) {
+            console.error(element);
             $('#import-status-errors').append($('<li>').text(element));
         });
 
@@ -128,7 +133,7 @@ function recheckJobJSONStatus() {
     if (maxLoops !== 0) {
         console.log('max: ' + maxLoops + ' current: ' + totalLoops);
     }
-    if(jobFailed === true) {
+    if (jobFailed === true) {
         console.error('Job has failed, will not do recheck.');
     }
     totalLoops++;
@@ -143,7 +148,7 @@ function sendJobPOSTStart() {
         console.log('Import job already started!');
         return;
     }
-    if(jobFailed === true) {
+    if (jobFailed === true) {
         console.log('Job has failed, will not start again.');
         return;
     }
@@ -161,7 +166,7 @@ function sendJobPOSTStore() {
         console.log('Store job already started!');
         return;
     }
-    if(jobFailed === true) {
+    if (jobFailed === true) {
         console.log('Job has failed, will not start again.');
         return;
     }
@@ -181,18 +186,19 @@ function sendJobPOSTStore() {
 function reportJobJSONFailure(xhr, status, error) {
     console.log('In reportJobJSONFailure()');
     jobFailed = true;
-    // cancel checking again for job status:
-    clearTimeout(timeOutId);
+    if (reportedError === false) {
+        reportedError = true;
+        // cancel checking again for job status:
+        clearTimeout(timeOutId);
 
 
-    // hide status boxes:
-    $('.statusbox').hide();
+        // hide status boxes:
+        $('.statusbox').hide();
 
-    // show fatal error box:
-    $('.fatal_error').show();
-
-    $('.fatal_error_txt').text('Cannot get status of current job: ' + status + ': ' + error);
-    // show error box.
+        // show fatal error box:
+        $('.fatal_error').show();
+        $('.fatal_error_txt').text('Cannot get status of current job: ' + status + ': ' + error);
+    }
 }
 
 /**
@@ -238,15 +244,17 @@ function reportJobPOSTFailure(xhr, status, error) {
     console.log('In reportJobPOSTFailure()');
     // cancel checking again for job status:
     clearTimeout(timeOutId);
+    if (reportedError === false) {
+        reportedError = true;
+        // hide status boxes:
+        $('.statusbox').hide();
 
-    // hide status boxes:
-    $('.statusbox').hide();
-
-    // show fatal error box:
-    $('.fatal_error').show();
-
-    $('.fatal_error_txt').text('Job could not be started or crashed: ' + status + ': ' + error);
-    // show error box.
+        // show fatal error box:
+        $('.fatal_error').show();
+        console.error('Job could not be started or crashed: ' + status + ': ' + error);
+        $('.fatal_error_txt').text('Job could not be started or crashed: ' + status + ': ' + error);
+        // show error box.
+    }
 }
 
 /**
@@ -256,20 +264,21 @@ function reportJobError(data) {
     console.log('In reportJobError()');
     // cancel checking again for job status:
     clearTimeout(timeOutId);
-
-    // hide status boxes:
-    $('.statusbox').hide();
-
-    // show fatal error box:
-    $('.fatal_error').show();
-
-    $('.fatal_error_txt').text('Job reports error. Please start again. Apologies. Error message is: ' + data.report_txt);
-    // show error box.
+    if (reportedError === false) {
+        reportedError = true;
+        // hide status boxes:
+        $('.statusbox').hide();
+        // show fatal error box:
+        $('.fatal_error').show();
+        console.error(data.report_txt);
+        $('.fatal_error_txt').text('Job reports error. Please start again. Apologies. Error message is: ' + data.report_txt);
+    }
 }
 
 function reportJobPOSTDone(data) {
     console.log('In function reportJobPOSTDone() with status "' + data.status + '"');
-    if (data.status === 'NOK') {
+    if (data.status === 'NOK' && reportedError === false) {
+        reportedError = true;
         // cancel checking again for job status:
         clearTimeout(timeOutId);
 
@@ -278,8 +287,9 @@ function reportJobPOSTDone(data) {
 
         // show fatal error box:
         $('.fatal_error').show();
-
+        console.error(data.message);
         $('.fatal_error_txt').text('Job could not be started or crashed: ' + data.message);
-        // show error box.
+
+
     }
 }

@@ -36,7 +36,7 @@ use Log;
  * Class AuthenticateConfig
  *
  */
-class DoAuthenticateHandler implements SpectreConfigurationInterface
+class DoAuthenticateHandler implements SpectreJobConfigurationInterface
 {
     use GetSpectreTokenTrait, GetSpectreCustomerTrait;
     /** @var ImportJob */

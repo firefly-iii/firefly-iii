@@ -42,7 +42,7 @@ use Log;
  * Class ChooseLoginHandler
  *
  */
-class ChooseLoginHandler implements SpectreConfigurationInterface
+class ChooseLoginHandler implements SpectreJobConfigurationInterface
 {
     use GetSpectreCustomerTrait, GetSpectreTokenTrait;
     /** @var ImportJob */

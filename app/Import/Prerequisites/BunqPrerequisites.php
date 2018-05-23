@@ -22,160 +22,23 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Prerequisites;
 
+use bunq\Context\ApiContext;
+use bunq\Exception\BadRequestException;
+use bunq\Exception\BunqException;
+use bunq\Util\BunqEnumApiEnvironmentType;
 use FireflyIII\Services\IP\IPRetrievalInterface;
 use FireflyIII\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 use Log;
-use Preferences;
 
 /**
- * @deprecated
- * @codeCoverageIgnore
  * This class contains all the routines necessary to connect to Bunq.
  */
 class BunqPrerequisites implements PrerequisitesInterface
 {
     /** @var User */
     private $user;
-    //
-    //    /**
-    //     * Returns view name that allows user to fill in prerequisites. Currently asks for the API key.
-    //     *
-    //     * @return string
-    //     */
-    //    public function getView(): string
-    //    {
-    //        Log::debug('Now in BunqPrerequisites::getView()');
-    //
-    //        return 'import.bunq.prerequisites';
-    //    }
-    //
-    //    /**
-    //     * Returns any values required for the prerequisites-view.
-    //     *
-    //     * @return array
-    //     */
-    //    public function getViewParameters(): array
-    //    {
-    //        Log::debug('Now in BunqPrerequisites::getViewParameters()');
-    //        $key      = '';
-    //        $serverIP = '';
-    //        if ($this->hasApiKey()) {
-    //            $key = Preferences::getForUser($this->user, 'bunq_api_key', null)->data;
-    //        }
-    //        if ($this->hasServerIP()) {
-    //            $serverIP = Preferences::getForUser($this->user, 'external_ip', null)->data;
-    //        }
-    //        if (!$this->hasServerIP()) {
-    //            /** @var IPRetrievalInterface $service */
-    //            $service  = app(IPRetrievalInterface::class);
-    //            $serverIP = (string)$service->getIP();
-    //        }
-    //
-    //
-    //        // get IP address
-    //        return ['key' => $key, 'ip' => $serverIP];
-    //    }
-    //
-    //    /**
-    //     * Returns if this import method has any special prerequisites such as config
-    //     * variables or other things. The only thing we verify is the presence of the API key. Everything else
-    //     * tumbles into place: no installation token? Will be requested. No device server? Will be created. Etc.
-    //     *
-    //     * @return bool
-    //     */
-    //    public function hasPrerequisites(): bool
-    //    {
-    //        $hasApiKey   = $this->hasApiKey();
-    //        $hasServerIP = $this->hasServerIP();
-    //
-    //        return !$hasApiKey || !$hasServerIP;
-    //    }
-    //
-    //    /**
-    //     * Indicate if all prerequisites have been met.
-    //     *
-    //     * @return bool
-    //     */
-    //    public function isComplete(): bool
-    //    {
-    //        // is complete when user has entered both the API key
-    //        // and his IP address.
-    //
-    //        $hasApiKey   = $this->hasApiKey();
-    //        $hasServerIP = $this->hasServerIP();
-    //
-    //        return $hasApiKey && $hasServerIP;
-    //    }
-    //
-    //    /**
-    //     * Set the user for this Prerequisites-routine. Class is expected to implement and save this.
-    //     *
-    //     * @param User $user
-    //     */
-    //    public function setUser(User $user): void
-    //    {
-    //        Log::debug(sprintf('Now in setUser(#%d)', $user->id));
-    //        $this->user = $user;
-    //    }
-    //
-    //    /**
-    //     * This method responds to the user's submission of an API key. It tries to register this instance as a new Firefly III device.
-    //     * If this fails, the error is returned in a message bag and the user is notified (this is fairly friendly).
-    //     *
-    //     * @param Request $request
-    //     *
-    //     * @return MessageBag
-    //     */
-    //    public function storePrerequisites(Request $request): MessageBag
-    //    {
-    //        $apiKey   = $request->get('api_key');
-    //        $serverIP = $request->get('external_ip');
-    //        Log::debug('Storing bunq API key');
-    //        Preferences::setForUser($this->user, 'bunq_api_key', $apiKey);
-    //        Preferences::setForUser($this->user, 'external_ip', $serverIP);
-    //
-    //        return new MessageBag;
-    //    }
-    //
-    //    /**
-    //     * @return bool
-    //     */
-    //    private function hasApiKey(): bool
-    //    {
-    //        $apiKey = Preferences::getForUser($this->user, 'bunq_api_key', false);
-    //        if (null === $apiKey) {
-    //            return false;
-    //        }
-    //        if (null === $apiKey->data) {
-    //            return false;
-    //        }
-    //        if (\strlen((string)$apiKey->data) === 64) {
-    //            return true;
-    //        }
-    //
-    //        return false;
-    //    }
-    //
-    //    /**
-    //     * @return bool
-    //     */
-    //    private function hasServerIP(): bool
-    //    {
-    //        $serverIP = Preferences::getForUser($this->user, 'external_ip', false);
-    //        if (null === $serverIP) {
-    //            return false;
-    //        }
-    //        if (null === $serverIP->data) {
-    //            return false;
-    //        }
-    //        if (\strlen((string)$serverIP->data) > 6) {
-    //            return true;
-    //        }
-    //
-    //        return false;
-    //    }
+
     /**
      * Returns view name that allows user to fill in prerequisites.
      *
@@ -183,7 +46,7 @@ class BunqPrerequisites implements PrerequisitesInterface
      */
     public function getView(): string
     {
-        return 'todo';
+        return 'import.bunq.prerequisites';
     }
 
     /**
@@ -193,7 +56,22 @@ class BunqPrerequisites implements PrerequisitesInterface
      */
     public function getViewParameters(): array
     {
-        return [];
+        Log::debug('Now in BunqPrerequisites::getViewParameters()');
+        $key        = '';
+        $externalIP = '';
+        if ($this->hasApiKey()) {
+            $key = app('preferences')->getForUser($this->user, 'bunq_api_key', null)->data;
+        }
+        if ($this->hasExternalIP()) {
+            $externalIP = app('preferences')->getForUser($this->user, 'bunq_external_ip', null)->data;
+        }
+        if (!$this->hasExternalIP()) {
+            /** @var IPRetrievalInterface $service */
+            $service    = app(IPRetrievalInterface::class);
+            $externalIP = (string)$service->getIP();
+        }
+
+        return ['api_key' => $key, 'external_ip' => $externalIP];
     }
 
     /**
@@ -203,7 +81,7 @@ class BunqPrerequisites implements PrerequisitesInterface
      */
     public function isComplete(): bool
     {
-        return false;
+        return $this->hasApiKey() && $this->hasExternalIP() && $this->hasApiContext();
     }
 
     /**
@@ -227,6 +105,105 @@ class BunqPrerequisites implements PrerequisitesInterface
      */
     public function storePrerequisites(array $data): MessageBag
     {
+        $apiKey     = $data['api_key'] ?? '';
+        $externalIP = $data['external_ip'] ?? '';
+        Log::debug('Storing bunq API key');
+        app('preferences')->setForUser($this->user, 'bunq_api_key', $apiKey);
+        app('preferences')->setForUser($this->user, 'bunq_external_ip', $externalIP);
+
+        $environment       = $this->getBunqEnvironment();
+        $deviceDescription = 'Firefly III v' . config('firefly.version');
+        $permittedIps      = [$externalIP];
+
+        try {
+            $apiContext = ApiContext::create(
+                $environment,
+                $apiKey,
+                $deviceDescription,
+                $permittedIps
+            );
+        } catch (BadRequestException $e) {
+            $messages = new MessageBag();
+            $messages->add('bunq_error', $e->getMessage());
+
+            return $messages;
+        }
+        // store context in JSON:
+        try {
+            $json = $apiContext->toJson();
+        } catch (BunqException $e) {
+            $messages = new MessageBag();
+            $messages->add('bunq_error', $e->getMessage());
+
+            return $messages;
+        }
+        // and store for user:
+        app('preferences')->setForUser($this->user, 'bunq_api_context', $json);
+
         return new MessageBag;
+    }
+
+    /**
+     * @return BunqEnumApiEnvironmentType
+     */
+    private function getBunqEnvironment(): BunqEnumApiEnvironmentType
+    {
+        $env = env('BUNQ_USE_SANDBOX');
+        if (null === $env) {
+            return BunqEnumApiEnvironmentType::PRODUCTION();
+        }
+        if (false === $env) {
+            return BunqEnumApiEnvironmentType::PRODUCTION();
+        }
+
+        return BunqEnumApiEnvironmentType::SANDBOX();
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasApiContext(): bool
+    {
+        $apiContext = app('preferences')->getForUser($this->user, 'bunq_api_context', null);
+        if (null === $apiContext) {
+            return false;
+        }
+        if ('' === (string)$apiContext->data) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasApiKey(): bool
+    {
+        $apiKey = app('preferences')->getForUser($this->user, 'bunq_api_key', null);
+        if (null === $apiKey) {
+            return false;
+        }
+        if ('' === (string)$apiKey->data) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasExternalIP(): bool
+    {
+        $externalIP = app('preferences')->getForUser($this->user, 'bunq_external_ip', null);
+        if (null === $externalIP) {
+            return false;
+        }
+        if ('' === (string)$externalIP->data) {
+            return false;
+        }
+
+        return true;
     }
 }

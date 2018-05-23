@@ -94,7 +94,7 @@ class JobStatusController extends Controller
         if ($count === 0) {
             $json['report_txt'] = trans('import.result_no_transactions');
         }
-        if ($count === 1) {
+        if ($count === 1 && null !== $importJob->tag_id) {
             $json['report_txt'] = trans('import.result_one_transaction', ['route' => route('tags.show', [$importJob->tag_id]), 'tag' => $importJob->tag->tag]);
         }
         if ($count > 1 && null !== $importJob->tag_id) {

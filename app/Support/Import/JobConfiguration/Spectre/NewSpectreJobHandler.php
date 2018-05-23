@@ -34,7 +34,7 @@ use Log;
  * Class NewSpectreJobHandler
  *
  */
-class NewSpectreJobHandler implements SpectreConfigurationInterface
+class NewSpectreJobHandler implements SpectreJobConfigurationInterface
 {
 
     /**

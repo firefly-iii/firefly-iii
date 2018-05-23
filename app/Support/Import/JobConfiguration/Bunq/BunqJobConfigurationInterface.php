@@ -1,6 +1,6 @@
 <?php
 /**
- * SpectreJobConfig.php
+ * BunqJobConfigurationInterface.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -21,17 +21,14 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Support\Import\JobConfiguration\Spectre;
-
-
+namespace FireflyIII\Support\Import\JobConfiguration\Bunq;
 use FireflyIII\Models\ImportJob;
 use Illuminate\Support\MessageBag;
 
 /**
- * Interface SpectreJobConfig
- *
+ * Interface BunqJobConfigurationInterface
  */
-interface SpectreConfigurationInterface
+interface BunqJobConfigurationInterface
 {
     /**
      * Return true when this stage is complete.

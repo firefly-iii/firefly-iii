@@ -27,6 +27,7 @@ return [
     'index_breadcrumb'                     => 'Import data into Firefly III',
     'prerequisites_breadcrumb_fake'        => 'Prerequisites for the fake import provider',
     'prerequisites_breadcrumb_spectre'     => 'Prerequisites for Spectre',
+    'prerequisites_breadcrumb_bunq'        => 'Prerequisites for Bunq',
     'job_configuration_breadcrumb'         => 'Configuration for ":key"',
     'job_status_breadcrumb'                => 'Import status for ":key"',
     'cannot_create_for_provider'           => 'Firefly III cannot create a job for the ":provider"-provider.',
@@ -72,9 +73,13 @@ return [
     'prereq_spectre_title'                 => 'Prerequisites for an import using the Spectre API',
     'prereq_spectre_text'                  => 'In order to import data using the Spectre API (v4), you must provide Firefly III with two secret values. They can be found on the <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
     'prereq_spectre_pub'                   => 'Likewise, the Spectre API needs to know the public key you see below. Without it, it will not recognize you. Please enter this public key on your <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
+    'prereq_bunq_title'                    => 'Prerequisites for an import from Bunq',
+    'prereq_bunq_text'                     => 'In order to import from bunq, you need to obtain an API key. You can do this through the app. Please note that the import function for bunq is in BETA. It has only been tested against the sandbox API.',
+    'prereq_bunq_ip'                       => 'Bunq requires your externally facing IP address. Firefly III has tried to fill this in using <a href="https://www.ipify.org/">the ipify service</a>. Make sure this IP address is correct, or the import will fail.',
     // prerequisites success messages:
     'prerequisites_saved_for_fake'         => 'Fake API key stored successfully!',
     'prerequisites_saved_for_spectre'      => 'App ID and secret stored!',
+    'prerequisites_saved_for_bunq'         => 'API key and IP stored!',
 
     // job configuration:
     'job_config_apply_rules_title'         => 'Job configuration - apply your rules?',
@@ -122,6 +127,10 @@ return [
     'spectre_no_mapping'                   => 'It seems you have not selected any accounts to import from.',
     'imported_from_account'                => 'Imported from ":account"',
     'spectre_account_with_number'          => 'Account :number',
+    // job configuration for Bunq:
+    'job_config_bunq_accounts_title'       => 'Bunq accounts',
+    'job_config_bunq_accounts_text'        => 'These are the accounts associated with your bunq account. Please select the accounts from which you want to import, and in which account the transactions must be imported.',
+    'bunq_no_mapping'                      => 'It seems you have not selected any accounts.',
 
     // keys from "extra" array:
     'spectre_extra_key_iban'               => 'IBAN',

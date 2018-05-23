@@ -1,6 +1,6 @@
 <?php
 /**
- * SpectreJobConfiguration.php
+ * BunqJobConfiguration.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -26,25 +26,18 @@ namespace FireflyIII\Import\JobConfiguration;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\AuthenticatedConfigHandler;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\AuthenticatedHandler;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\AuthenticateHandler;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseAccount;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseAccountsHandler;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseLoginHandler;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\DoAuthenticateHandler;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\NewConfig;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\NewSpectreJobHandler;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\SpectreJobConfigurationInterface;
+use FireflyIII\Support\Import\JobConfiguration\Bunq\BunqJobConfigurationInterface;
+use FireflyIII\Support\Import\JobConfiguration\Bunq\ChooseAccountsHandler;
+use FireflyIII\Support\Import\JobConfiguration\Bunq\NewBunqJobHandler;
 use Illuminate\Support\MessageBag;
 use Log;
 
 /**
- * Class SpectreJobConfiguration
+ * Class BunqJobConfiguration
  */
-class SpectreJobConfiguration implements JobConfigurationInterface
+class BunqJobConfiguration implements JobConfigurationInterface
 {
-    /** @var SpectreJobConfigurationInterface */
+    /** @var BunqJobConfigurationInterface */
     private $handler;
     /** @var ImportJob */
     private $importJob;
@@ -108,33 +101,16 @@ class SpectreJobConfiguration implements JobConfigurationInterface
     }
 
     /**
-     * @return SpectreJobConfigurationInterface
+     * @return BunqJobConfigurationInterface
      * @throws FireflyException
      */
-    private function getHandler(): SpectreJobConfigurationInterface
+    private function getHandler(): BunqJobConfigurationInterface
     {
-        Log::debug(sprintf('Now in SpectreJobConfiguration::getHandler() with stage "%s"', $this->importJob->stage));
+        Log::debug(sprintf('Now in BunqJobConfiguration::getHandler() with stage "%s"', $this->importJob->stage));
         $handler = null;
         switch ($this->importJob->stage) {
-            case 'new':
-                /** @var NewSpectreJobHandler $handler */
-                $handler = app(NewSpectreJobHandler::class);
-                $handler->setImportJob($this->importJob);
-                break;
-            case 'do-authenticate':
-                /** @var DoAuthenticateHandler $handler */
-                $handler = app(DoAuthenticateHandler::class);
-                $handler->setImportJob($this->importJob);
-                break;
-            case 'choose-login':
-                /** @var ChooseLoginHandler $handler */
-                $handler = app(ChooseLoginHandler::class);
-                $handler->setImportJob($this->importJob);
-                break;
-            case 'authenticated':
-                /** @var AuthenticatedHandler $handler */
-                $handler = app(AuthenticatedHandler::class);
-                $handler->setImportJob($this->importJob);
+            case 'new';
+                $handler = app(NewBunqJobHandler::class);
                 break;
             case 'choose-accounts':
                 /** @var ChooseAccountsHandler $handler */

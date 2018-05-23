@@ -41,7 +41,7 @@ use Log;
  * Class ChooseAccountsHandler
  *
  */
-class ChooseAccountsHandler implements SpectreConfigurationInterface
+class ChooseAccountsHandler implements SpectreJobConfigurationInterface
 {
 
     /** @var AccountRepositoryInterface */
