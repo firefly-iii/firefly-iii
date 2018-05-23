@@ -25,9 +25,12 @@ namespace FireflyIII\Support\Import\Routine\Bunq;
 
 use bunq\Context\ApiContext;
 use bunq\Context\BunqContext;
+use bunq\Exception\BadRequestException;
+use bunq\Exception\BunqException;
 use bunq\Model\Generated\Endpoint\Payment;
 use bunq\Model\Generated\Object\LabelMonetaryAccount;
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\Account as LocalAccount;
@@ -242,7 +245,18 @@ class StageImportDataHandler
         $preference = app('preferences')->getForUser($this->importJob->user, 'bunq_api_context', null);
         if (null !== $preference && '' !== (string)$preference->data) {
             // restore API context
-            $apiContext = ApiContext::fromJson($preference->data);
+            try {
+                $apiContext = ApiContext::fromJson($preference->data);
+            } catch (BadRequestException|BunqException|Exception $e) {
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
+                $message = $e->getMessage();
+                if (stripos($message, 'Generating a new private key failed')) {
+                    $message = 'Could not generate key-material. Please make sure OpenSSL is installed and configured: http://bit.ly/FF3-openSSL';
+
+                }
+                throw new FireflyException($message);
+            }
             BunqContext::loadApiContext($apiContext);
 
             return;

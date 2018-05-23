@@ -26,6 +26,7 @@ use bunq\Context\ApiContext;
 use bunq\Exception\BadRequestException;
 use bunq\Exception\BunqException;
 use bunq\Util\BunqEnumApiEnvironmentType;
+use Exception;
 use FireflyIII\Services\IP\IPRetrievalInterface;
 use FireflyIII\User;
 use Illuminate\Support\MessageBag;
@@ -122,9 +123,16 @@ class BunqPrerequisites implements PrerequisitesInterface
                 $deviceDescription,
                 $permittedIps
             );
-        } catch (BadRequestException $e) {
+        } catch (BadRequestException|BunqException|Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $message = $e->getMessage();
+            if (stripos($message, 'Generating a new private key failed')) {
+                $message = 'Could not generate key-material. Please make sure OpenSSL is installed and configured: http://bit.ly/FF3-openSSL';
+
+            }
             $messages = new MessageBag();
-            $messages->add('bunq_error', $e->getMessage());
+            $messages->add('bunq_error', $message);
 
             return $messages;
         }
