@@ -23,8 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Routine\Bunq;
 
+use bunq\exception\BunqException;
 use bunq\Model\Generated\Endpoint\MonetaryAccount as BunqMonetaryAccount;
 use bunq\Model\Generated\Endpoint\MonetaryAccountBank;
+use bunq\Model\Generated\Endpoint\MonetaryAccountJoint;
+use bunq\Model\Generated\Endpoint\MonetaryAccountLight;
+use bunq\Model\Generated\Object\CoOwner;
 use bunq\Model\Generated\Object\Pointer;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
@@ -32,6 +36,7 @@ use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Services\Bunq\ApiContext;
 use FireflyIII\Services\Bunq\MonetaryAccount;
+use Log;
 
 /**
  * Class StageNewHandler
@@ -66,8 +71,8 @@ class StageNewHandler
 
             return;
         }
-        throw new FireflyException('The bunq API context is unexpectedly empty.');
-    }
+        throw new FireflyException('The bunq API context is unexpectedly empty.'); // @codeCoverageIgnore
+    } // @codeCoverageIgnore
 
     /**
      * @param ImportJob $importJob
@@ -94,10 +99,36 @@ class StageNewHandler
 
         /** @var BunqMonetaryAccount $monetaryAccount */
         foreach ($result->getValue() as $monetaryAccount) {
-            $mab = $monetaryAccount->getMonetaryAccountBank();
-            if (null !== $mab) {
-                $array      = $this->processMab($mab);
-                $accounts[] = $array;
+            try {
+                $object = $monetaryAccount->getReferencedObject();
+                // @codeCoverageIgnoreStart
+            } catch (BunqException $e) {
+                throw new FireflyException($e->getMessage());
+            }
+            // @codeCoverageIgnoreEnd
+            if (null !== $object) {
+                $array = null;
+                switch (\get_class($object)) {
+                    case MonetaryAccountBank::class:
+                        /** @var MonetaryAccountBank $object */
+                        $array = $this->processMab($object);
+                        break;
+                    case MonetaryAccountJoint::class:
+                        /** @var MonetaryAccountJoint $object */
+                        $array = $this->processMaj($object);
+                        break;
+                    case MonetaryAccountLight::class:
+                        /** @var MonetaryAccountLight $object */
+                        $array = $this->processMal($object);
+                        break;
+                    default:
+                        // @codeCoverageIgnoreStart
+                        throw new FireflyException(sprintf('Bunq import routine cannot handle account of type "%s".', \get_class($object)));
+                    // @codeCoverageIgnoreEnd
+                }
+                if (null !== $array) {
+                    $accounts[] = $array;
+                }
             }
         }
 
@@ -118,6 +149,7 @@ class StageNewHandler
             'description'   => $mab->getDescription(),
             'balance'       => $mab->getBalance(),
             'status'        => $mab->getStatus(),
+            'type'          => 'MonetaryAccountBank',
             'aliases'       => [],
         ];
 
@@ -128,13 +160,111 @@ class StageNewHandler
                 'restriction_chat'      => $mab->getSetting()->getRestrictionChat(),
             ];
         }
-        /** @var Pointer $alias */
-        foreach ($mab->getAlias() as $alias) {
-            $return['aliases'][] = [
-                'type'  => $alias->getType(),
-                'name'  => $alias->getName(),
-                'value' => $alias->getValue(),
+        if (null !== $mab->getAlias()) {
+            /** @var Pointer $alias */
+            foreach ($mab->getAlias() as $alias) {
+                $return['aliases'][] = [
+                    'type'  => $alias->getType(),
+                    'name'  => $alias->getName(),
+                    'value' => $alias->getValue(),
+                ];
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param MonetaryAccountJoint $maj
+     *
+     * @return array
+     */
+    private function processMaj(MonetaryAccountJoint $maj): array
+    {
+        Log::debug('Now processing a MAJ');
+        $setting = $maj->getSetting();
+        $return  = [
+            'id'            => $maj->getId(),
+            'currency_code' => $maj->getCurrency(),
+            'description'   => $maj->getDescription(),
+            'balance'       => $maj->getBalance(),
+            'status'        => $maj->getStatus(),
+            'type'          => 'MonetaryAccountJoint',
+            'co-owners'     => [],
+            'aliases'       => [],
+        ];
+
+        if (null !== $setting) {
+            $return['settings'] = [
+                'color'                 => $maj->getSetting()->getColor(),
+                'default_avatar_status' => $maj->getSetting()->getDefaultAvatarStatus(),
+                'restriction_chat'      => $maj->getSetting()->getRestrictionChat(),
             ];
+            Log::debug('Setting is not null.');
+        }
+        if (null !== $maj->getAlias()) {
+            Log::debug(sprintf('Alias is not NULL. Count is %d', \count($maj->getAlias())));
+            /** @var Pointer $alias */
+            foreach ($maj->getAlias() as $alias) {
+                $return['aliases'][] = [
+                    'type'  => $alias->getType(),
+                    'name'  => $alias->getName(),
+                    'value' => $alias->getValue(),
+                ];
+            }
+        }
+        $coOwners = $maj->getAllCoOwner() ?? [];
+        Log::debug(sprintf('Count of getAllCoOwner is %d', \count($coOwners)));
+        /** @var CoOwner $coOwner */
+        foreach ($coOwners as $coOwner) {
+            $alias = $coOwner->getAlias();
+            if (null !== $alias) {
+                Log::debug('Alias is not NULL');
+                $name = (string)$alias->getDisplayName();
+                Log::debug(sprintf('Name is "%s"', $name));
+                if ('' !== $name) {
+                    $return['co-owners'][] = $name;
+                }
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param MonetaryAccountLight $mal
+     *
+     * @return array
+     */
+    private function processMal(MonetaryAccountLight $mal): array
+    {
+        $setting = $mal->getSetting();
+        $return  = [
+            'id'            => $mal->getId(),
+            'currency_code' => $mal->getCurrency(),
+            'description'   => $mal->getDescription(),
+            'balance'       => $mal->getBalance(),
+            'status'        => $mal->getStatus(),
+            'type'          => 'MonetaryAccountLight',
+            'aliases'       => [],
+        ];
+
+        if (null !== $setting) {
+            $return['settings'] = [
+                'color'                 => $mal->getSetting()->getColor(),
+                'default_avatar_status' => $mal->getSetting()->getDefaultAvatarStatus(),
+                'restriction_chat'      => $mal->getSetting()->getRestrictionChat(),
+            ];
+        }
+        if (null !== $mal->getAlias()) {
+            /** @var Pointer $alias */
+            foreach ($mal->getAlias() as $alias) {
+                $return['aliases'][] = [
+                    'type'  => $alias->getType(),
+                    'name'  => $alias->getName(),
+                    'value' => $alias->getValue(),
+                ];
+            }
         }
 
         return $return;
