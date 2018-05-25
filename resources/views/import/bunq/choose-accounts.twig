@@ -32,6 +32,7 @@
                                     </thead>
                                     <tbody>
                                     {% for account in data.accounts %}
+                                        {% set currentIban = 'not-iban' %}
                                         <tr>
                                             <td style="background:{{ account.settings.color }};"></td>
                                             <td>
@@ -39,6 +40,7 @@
                                                 {% for alias in account.aliases %}
                                                     {% if alias.type == 'IBAN' %}
                                                         {{ alias.name }}: {{ alias.value }}
+                                                        {% set currentIban = alias.value  %}
                                                     {% endif %}
                                                 {% endfor %}
                                             </td>
