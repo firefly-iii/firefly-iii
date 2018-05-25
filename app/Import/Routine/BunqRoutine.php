@@ -46,7 +46,6 @@ class BunqRoutine implements RoutineInterface
      *
      * The final status of the routine must be "provider_finished".
      *
-     * @return bool
      * @throws FireflyException
      */
     public function run(): void
@@ -86,6 +85,7 @@ class BunqRoutine implements RoutineInterface
                     break;
             }
         }
+        throw new FireflyException(sprintf('bunq import routine cannot handle status "%s"', $this->importJob->status)); // @codeCoverageIgnore
     }
 
 

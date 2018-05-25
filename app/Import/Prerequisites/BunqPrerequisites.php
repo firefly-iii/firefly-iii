@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Prerequisites;
 
-use bunq\Context\ApiContext;
-use bunq\Exception\BadRequestException;
 use bunq\Exception\BunqException;
 use bunq\Util\BunqEnumApiEnvironmentType;
-use Exception;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Services\Bunq\ApiContext;
 use FireflyIII\Services\IP\IPRetrievalInterface;
 use FireflyIII\User;
 use Illuminate\Support\MessageBag;
@@ -41,6 +40,7 @@ class BunqPrerequisites implements PrerequisitesInterface
     private $user;
 
     /**
+     * @codeCoverageIgnore
      * Returns view name that allows user to fill in prerequisites.
      *
      * @return string
@@ -86,6 +86,7 @@ class BunqPrerequisites implements PrerequisitesInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * Set the user for this Prerequisites-routine. Class is expected to implement and save this.
      *
      * @param User $user
@@ -117,34 +118,27 @@ class BunqPrerequisites implements PrerequisitesInterface
         $permittedIps      = [$externalIP];
 
         try {
-            $apiContext = ApiContext::create(
-                $environment,
-                $apiKey,
-                $deviceDescription,
-                $permittedIps
-            );
-        } catch (BadRequestException|BunqException|Exception $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            $message = $e->getMessage();
-            if (stripos($message, 'Generating a new private key failed')) {
-                $message = 'Could not generate key-material. Please make sure OpenSSL is installed and configured: http://bit.ly/FF3-openSSL';
-
-            }
+            /** @var ApiContext $object */
+            $object  = app(ApiContext::class);
+            $apiContext = $object->create($environment, $apiKey, $deviceDescription, $permittedIps);
+        } catch (FireflyException $e) {
             $messages = new MessageBag();
-            $messages->add('bunq_error', $message);
+            $messages->add('bunq_error', $e->getMessage());
 
             return $messages;
         }
         // store context in JSON:
         try {
             $json = $apiContext->toJson();
+            // @codeCoverageIgnoreStart
         } catch (BunqException $e) {
             $messages = new MessageBag();
             $messages->add('bunq_error', $e->getMessage());
 
             return $messages;
         }
+        // @codeCoverageIgnoreEnd
+
         // and store for user:
         app('preferences')->setForUser($this->user, 'bunq_api_context', $json);
 
@@ -152,6 +146,7 @@ class BunqPrerequisites implements PrerequisitesInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * @return BunqEnumApiEnvironmentType
      */
     private function getBunqEnvironment(): BunqEnumApiEnvironmentType
