@@ -11,7 +11,8 @@ RUN apt-get update -y && \
     apt-get install -y --no-install-recommends libcurl4-openssl-dev \
                                                zlib1g-dev \
                                                libjpeg62-turbo-dev \
-                                               libpng12-dev \
+                                               wget \
+                                               libpng-dev \
                                                libicu-dev \
                                                libedit-dev \
                                                libtidy-dev \
