@@ -3,6 +3,8 @@ FROM php:7.1-apache
 
 # set working dir
 ENV FIREFLY_PATH /var/www/firefly-iii
+ENV CURL_VERSION 7.60.0
+ENV OPENSSL_VERSION 1.1.1-pre6
 WORKDIR $FIREFLY_PATH
 ADD . $FIREFLY_PATH
 
@@ -27,6 +29,24 @@ RUN apt-get update -y && \
 
 # Setup the Composer installer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Install latest curl
+RUN cd /tmp && \
+    wget https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz && \
+    tar -xvf openssl-${OPENSSL_VERSION}.tar.gz && \
+    cd openssl-${OPENSSL_VERSION} && \
+    ./config && \
+    make && \
+    make install
+
+RUN cd /tmp && \
+    wget https://curl.haxx.se/download/curl-${CURL_VERSION}.tar.gz && \
+    tar -xvf curl-${CURL_VERSION}.tar.gz && \
+    cd curl-${CURL_VERSION} && \
+    ./configure --with-ssl && \
+    make && \
+    make install
+
 # Install PHP exentions.
 RUN docker-php-ext-install -j$(nproc) curl gd intl json readline tidy zip bcmath xml mbstring pdo_sqlite pdo_mysql bz2 pdo_pgsql
 
