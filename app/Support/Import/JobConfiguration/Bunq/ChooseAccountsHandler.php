@@ -81,7 +81,7 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
         $mapping  = $data['account_mapping'] ?? [];
         $final    = [];
         if (\count($accounts) === 0) {
-            throw new FireflyException('No bunq accounts found. Import cannot continue.');
+            throw new FireflyException('No bunq accounts found. Import cannot continue.'); // @codeCoverageIgnore
         }
         if (\count($mapping) === 0) {
             $messages = new MessageBag;
@@ -115,7 +115,7 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
         $config   = $this->repository->getConfiguration($this->importJob);
         $accounts = $config['accounts'] ?? [];
         if (\count($accounts) === 0) {
-            throw new FireflyException('No bunq accounts found. Import cannot continue.');
+            throw new FireflyException('No bunq accounts found. Import cannot continue.'); // @codeCoverageIgnore
         }
         // list the users accounts:
         $collection = $this->accountRepository->getAccountsByType([AccountType::ASSET]);
@@ -140,6 +140,8 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * Get the view for this stage.
      *
      * @return string

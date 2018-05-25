@@ -23,19 +23,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Routine\Bunq;
 
-use bunq\Context\ApiContext;
-use bunq\Context\BunqContext;
-use bunq\Exception\BadRequestException;
-use bunq\Exception\BunqException;
-use bunq\Model\Generated\Endpoint\MonetaryAccount;
+use bunq\Model\Generated\Endpoint\MonetaryAccount as BunqMonetaryAccount;
 use bunq\Model\Generated\Endpoint\MonetaryAccountBank;
 use bunq\Model\Generated\Object\Pointer;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use Log;
+use FireflyIII\Services\Bunq\ApiContext;
+use FireflyIII\Services\Bunq\MonetaryAccount;
 
 /**
  * Class StageNewHandler
@@ -56,19 +52,9 @@ class StageNewHandler
         $preference = app('preferences')->getForUser($this->importJob->user, 'bunq_api_context', null);
         if (null !== $preference && '' !== (string)$preference->data) {
             // restore API context
-            try {
-                $apiContext = ApiContext::fromJson($preference->data);
-                BunqContext::loadApiContext($apiContext);
-            } catch (BadRequestException|BunqException|Exception $e) {
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
-                $message = $e->getMessage();
-                if (stripos($message, 'Generating a new private key failed')) {
-                    $message = 'Could not generate key-material. Please make sure OpenSSL is installed and configured: http://bit.ly/FF3-openSSL';
-
-                }
-                throw new FireflyException($message);
-            }
+            /** @var ApiContext $apiContext */
+            $apiContext = app(ApiContext::class);
+            $apiContext->fromJson($preference->data);
 
             // list bunq accounts:
             $accounts = $this->listAccounts();
@@ -97,13 +83,17 @@ class StageNewHandler
 
     /**
      * @return array
+     * @throws FireflyException
      */
     private function listAccounts(): array
     {
-        $accounts            = [];
-        $monetaryAccountList = MonetaryAccount::listing();
-        /** @var MonetaryAccount $monetaryAccount */
-        foreach ($monetaryAccountList->getValue() as $monetaryAccount) {
+        $accounts = [];
+        /** @var MonetaryAccount $lister */
+        $lister = app(MonetaryAccount::class);
+        $result = $lister->listing();
+
+        /** @var BunqMonetaryAccount $monetaryAccount */
+        foreach ($result->getValue() as $monetaryAccount) {
             $mab        = $monetaryAccount->getMonetaryAccountBank();
             $array      = $this->processMab($mab);
             $accounts[] = $array;

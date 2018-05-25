@@ -24,13 +24,13 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Bunq;
 
 use bunq\Context\ApiContext as BunqApiContext;
+use bunq\Context\BunqContext;
 use bunq\Exception\BadRequestException;
 use bunq\Exception\BunqException;
 use bunq\Util\BunqEnumApiEnvironmentType;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use Log;
-use stdClass;
 
 /**
  * Special class to hide away bunq's static initialisation methods.
@@ -55,9 +55,10 @@ class ApiContext
         try {
             $context = BunqApiContext::create($environmentType, $apiKey, $description, $permittedIps, $proxyUrl);
         } catch (BunqException|BadRequestException|Exception $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
             $message = $e->getMessage();
+            Log::error($message);
+            Log::error($e->getTraceAsString());
+
             if (stripos($message, 'Generating a new private key failed')) {
                 $message = 'Could not generate key-material. Please make sure OpenSSL is installed and configured: http://bit.ly/FF3-openSSL';
             }
@@ -65,6 +66,27 @@ class ApiContext
         }
 
         return $context;
+    }
 
+    /**
+     * @throws FireflyException
+     *
+     * @param string $jsonString
+     */
+    public function fromJson(string $jsonString): void
+    {
+        try {
+            $apiContext = BunqApiContext::fromJson($jsonString);
+            BunqContext::loadApiContext($apiContext);
+        } catch (BadRequestException|BunqException|Exception $e) {
+            $message = $e->getMessage();
+            Log::error($message);
+            Log::error($e->getTraceAsString());
+
+            if (stripos($message, 'Generating a new private key failed')) {
+                $message = 'Could not generate key-material. Please make sure OpenSSL is installed and configured: http://bit.ly/FF3-openSSL';
+            }
+            throw new FireflyException($message);
+        }
     }
 }
