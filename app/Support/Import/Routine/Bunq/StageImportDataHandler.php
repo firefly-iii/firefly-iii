@@ -23,14 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Routine\Bunq;
 
-use bunq\Context\ApiContext;
-use bunq\Context\BunqContext;
-use bunq\Exception\BadRequestException;
-use bunq\Exception\BunqException;
-use bunq\Model\Generated\Endpoint\Payment;
+use bunq\Model\Generated\Endpoint\Payment as BunqPayment;
 use bunq\Model\Generated\Object\LabelMonetaryAccount;
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\Account as LocalAccount;
@@ -40,6 +35,8 @@ use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Services\Bunq\ApiContext;
+use FireflyIII\Services\Bunq\Payment;
 use Log;
 
 /**
@@ -59,6 +56,7 @@ class StageImportDataHandler
     private $transactions;
 
     /**
+     * @codeCoverageIgnore
      * @return array
      */
     public function getTransactions(): array
@@ -81,6 +79,7 @@ class StageImportDataHandler
         foreach ($accounts as $bunqAccount) {
             $bunqAccountId = $bunqAccount['id'] ?? 0;
             $localId       = $mapping[$bunqAccountId] ?? 0;
+            Log::debug(sprintf('Looping accounts, now at bunq account #%d and local account #%d', $bunqAccountId, $localId));
             if ($localId !== 0 && $bunqAccountId !== 0) {
                 $localAccount = $this->getLocalAccount((int)$localId);
                 $collection[] = $this->getTransactionsFromBunq($bunqAccountId, $localAccount);
@@ -101,19 +100,19 @@ class StageImportDataHandler
         $this->importJob         = $importJob;
         $this->repository        = app(ImportJobRepositoryInterface::class);
         $this->accountRepository = app(AccountRepositoryInterface::class);
-        $this->accountFactory    = app(AccountFactory::class);;
+        $this->accountFactory    = app(AccountFactory::class);
         $this->repository->setUser($importJob->user);
         $this->accountRepository->setUser($importJob->user);
         $this->accountFactory->setUser($importJob->user);
     }
 
     /**
-     * @param Payment      $payment
+     * @param BunqPayment  $payment
      * @param LocalAccount $source
      *
      * @return array
      */
-    private function convertPayment(Payment $payment, LocalAccount $source): array
+    private function convertPayment(BunqPayment $payment, LocalAccount $source): array
     {
         Log::debug(sprintf('Now at payment with ID #%d', $payment->getId()));
         $type         = TransactionType::WITHDRAWAL;
@@ -141,7 +140,6 @@ class StageImportDataHandler
             $type = TransactionType::TRANSFER;
             Log::debug('Both are assets, will make transfer.');
         }
-
         $created   = new Carbon($payment->getCreated());
         $storeData = [
             'user'               => $this->importJob->user_id,
@@ -245,23 +243,13 @@ class StageImportDataHandler
         $preference = app('preferences')->getForUser($this->importJob->user, 'bunq_api_context', null);
         if (null !== $preference && '' !== (string)$preference->data) {
             // restore API context
-            try {
-                $apiContext = ApiContext::fromJson($preference->data);
-            } catch (BadRequestException|BunqException|Exception $e) {
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
-                $message = $e->getMessage();
-                if (stripos($message, 'Generating a new private key failed')) {
-                    $message = 'Could not generate key-material. Please make sure OpenSSL is installed and configured: http://bit.ly/FF3-openSSL';
-
-                }
-                throw new FireflyException($message);
-            }
-            BunqContext::loadApiContext($apiContext);
+            /** @var ApiContext $apiContext */
+            $apiContext = app(ApiContext::class);
+            $apiContext->fromJson($preference->data);
 
             return;
         }
-        throw new FireflyException('The bunq API context is unexpectedly empty.');
+        throw new FireflyException('The bunq API context is unexpectedly empty.'); // @codeCoverageIgnore
     }
 
     /**
@@ -288,14 +276,17 @@ class StageImportDataHandler
      * @param LocalAccount $localAccount
      *
      * @return array
+     * @throws FireflyException
      */
     private function getTransactionsFromBunq(int $bunqAccountId, LocalAccount $localAccount): array
     {
         $return = [];
         // make request:
-        $result = Payment::listing($bunqAccountId);
+        /** @var Payment $paymentRequest */
+        $paymentRequest = app(Payment::class);
+        $result         = $paymentRequest->listing($bunqAccountId);
         // loop result:
-        /** @var Payment $payment */
+        /** @var BunqPayment $payment */
         foreach ($result->getValue() as $payment) {
             $return[] = $this->convertPayment($payment, $localAccount);
         }

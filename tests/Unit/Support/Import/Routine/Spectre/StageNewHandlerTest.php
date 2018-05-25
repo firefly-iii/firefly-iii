@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace tests\Unit\Support\Import\Routine\Spectre;
+namespace Tests\Unit\Support\Import\Routine\Spectre;
 
 
 use FireflyIII\Exceptions\FireflyException;

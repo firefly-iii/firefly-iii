@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace tests\Unit\Support\Import\JobConfiguration\Spectre;
+namespace Tests\Unit\Support\Import\JobConfiguration\Spectre;
 
 
 use Carbon\Carbon;

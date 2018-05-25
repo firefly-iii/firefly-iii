@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace tests\Unit\Import\Routine;
+namespace Tests\Unit\Import\Routine;
 
 
 use FireflyIII\Exceptions\FireflyException;

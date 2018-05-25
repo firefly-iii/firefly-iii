@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace tests\Unit\Support\Import\Routine\Bunq;
+namespace Tests\Unit\Support\Import\Routine\Bunq;
 
 
 use bunq\Model\Generated\Endpoint\BunqResponseMonetaryAccountList;

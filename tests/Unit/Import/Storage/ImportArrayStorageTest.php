@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace tests\Unit\Import\Storage;
+namespace Tests\Unit\Import\Storage;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;

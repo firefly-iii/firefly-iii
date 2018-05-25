@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace tests\Unit\Import\Specifics;
+namespace Tests\Unit\Import\Specifics;
 
 
 use FireflyIII\Import\Specifics\RabobankDescription;
