@@ -94,9 +94,11 @@ class StageNewHandler
 
         /** @var BunqMonetaryAccount $monetaryAccount */
         foreach ($result->getValue() as $monetaryAccount) {
-            $mab        = $monetaryAccount->getMonetaryAccountBank();
-            $array      = $this->processMab($mab);
-            $accounts[] = $array;
+            $mab = $monetaryAccount->getMonetaryAccountBank();
+            if (null !== $mab) {
+                $array      = $this->processMab($mab);
+                $accounts[] = $array;
+            }
         }
 
         return $accounts;
@@ -109,19 +111,23 @@ class StageNewHandler
      */
     private function processMab(MonetaryAccountBank $mab): array
     {
-        $return = [
+        $setting = $mab->getSetting();
+        $return  = [
             'id'            => $mab->getId(),
             'currency_code' => $mab->getCurrency(),
             'description'   => $mab->getDescription(),
             'balance'       => $mab->getBalance(),
             'status'        => $mab->getStatus(),
             'aliases'       => [],
-            'settings'      => [
+        ];
+
+        if (null !== $setting) {
+            $return['settings'] = [
                 'color'                 => $mab->getSetting()->getColor(),
                 'default_avatar_status' => $mab->getSetting()->getDefaultAvatarStatus(),
                 'restriction_chat'      => $mab->getSetting()->getRestrictionChat(),
-            ],
-        ];
+            ];
+        }
         /** @var Pointer $alias */
         foreach ($mab->getAlias() as $alias) {
             $return['aliases'][] = [
