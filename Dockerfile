@@ -25,6 +25,8 @@ RUN apt-get update -y && \
                                                apt-get clean && \
                                                rm -rf /var/lib/apt/lists/*
 
+# Setup the Composer installer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 # Install PHP exentions.
 RUN docker-php-ext-install -j$(nproc) curl gd intl json readline tidy zip bcmath xml mbstring pdo_sqlite pdo_mysql bz2 pdo_pgsql
 
@@ -42,9 +44,6 @@ RUN a2enmod ssl
 
 # Create volumes for several directories:
 VOLUME $FIREFLY_PATH/storage/export $FIREFLY_PATH/storage/upload
-
-# Setup the Composer installer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Enable default site (Firefly III)
 COPY ./.deploy/docker/apache-firefly.conf /etc/apache2/sites-available/000-default.conf
