@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bf40fba7d645937e78a74f539ebb3fdc",
+    "content-hash": "312e75271d4570f83bc7554892a3b6ab",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -54,16 +54,16 @@
         },
         {
             "name": "bunq/sdk_php",
-            "version": "0.13.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bunq/sdk_php.git",
-                "reference": "652e650aa35a8c0c598653e986ac7f68d4808bdd"
+                "reference": "8c1faefc111d9b970168a1837ca165d854954941"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bunq/sdk_php/zipball/652e650aa35a8c0c598653e986ac7f68d4808bdd",
-                "reference": "652e650aa35a8c0c598653e986ac7f68d4808bdd",
+                "url": "https://api.github.com/repos/bunq/sdk_php/zipball/8c1faefc111d9b970168a1837ca165d854954941",
+                "reference": "8c1faefc111d9b970168a1837ca165d854954941",
                 "shasum": ""
             },
             "require": {
@@ -6422,6 +6422,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "bunq/sdk_php": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
