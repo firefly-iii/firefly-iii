@@ -60,3 +60,4 @@ EXPOSE 80
 
 # Run entrypoint thing
 ENTRYPOINT [".deploy/docker/entrypoint.sh"]
+
