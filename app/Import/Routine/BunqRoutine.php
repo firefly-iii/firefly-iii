@@ -67,7 +67,8 @@ class BunqRoutine implements RoutineInterface
                     // make user choose accounts to import from.
                     $this->repository->setStage($this->importJob, 'choose-accounts');
                     $this->repository->setStatus($this->importJob, 'need_job_config');
-                    break;
+
+                    return;
                 case 'go-for-import':
                     // list all of the users accounts.
                     $this->repository->setStatus($this->importJob, 'running');
@@ -82,7 +83,7 @@ class BunqRoutine implements RoutineInterface
                     $this->repository->setStatus($this->importJob, 'provider_finished');
                     $this->repository->setStage($this->importJob, 'final');
 
-                    break;
+                    return;
             }
         }
         throw new FireflyException(sprintf('bunq import routine cannot handle status "%s"', $this->importJob->status)); // @codeCoverageIgnore
