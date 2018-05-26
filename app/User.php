@@ -56,6 +56,7 @@ use FireflyIII\Models\Attachment;
 /**
  * Class User.
  * @property int $id
+ * @property string $email
  */
 class User extends Authenticatable
 {

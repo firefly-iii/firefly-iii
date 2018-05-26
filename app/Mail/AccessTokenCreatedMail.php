@@ -1,7 +1,7 @@
 <?php
 /**
- * ConfirmEmailChangeMail.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * AccessTokenCreatedMail.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,45 +18,40 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Mail;
 
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Laravel\Passport\Token;
 
 /**
- * Class ConfirmEmailChangeMail
- *
- * Sends message to new address to confirm change.
+ * Class AccessTokenCreatedMail
  */
-class ConfirmEmailChangeMail extends Mailable
+class AccessTokenCreatedMail extends Mailable
 {
+
     use Queueable, SerializesModels;
 
-    /** @var string IP address of user */
+    /** @var string Email address of admin */
+    public $email;
+    /** @var string IP address of admin */
     public $ipAddress;
-    /** @var string New email address */
-    public $newEmail;
-    /** @var string Old email address */
-    public $oldEmail;
-    /** @var string Confirmation link */
-    public $uri;
 
     /**
-     * ConfirmEmailChangeMail constructor.
+     * AccessTokenCreatedMail constructor.
      *
-     * @param string $newEmail
-     * @param string $oldEmail
-     * @param string $uri
+     * @param string $email
      * @param string $ipAddress
+     * @param Token  $token
      */
-    public function __construct(string $newEmail, string $oldEmail, string $uri, string $ipAddress)
+    public function __construct(string $email, string $ipAddress)
     {
-        $this->newEmail  = $newEmail;
-        $this->oldEmail  = $oldEmail;
-        $this->uri       = $uri;
+        $this->email     = $email;
         $this->ipAddress = $ipAddress;
     }
 
@@ -67,7 +62,7 @@ class ConfirmEmailChangeMail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.confirm-email-change-html')->text('emails.confirm-email-change-text')
-                    ->subject('Your Firefly III email address has changed');
+        return $this->view('emails.access-token-created-html')->text('emails.access-token-created-text')
+                    ->subject('A new access token was created');
     }
 }

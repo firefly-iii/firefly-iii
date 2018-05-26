@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
+use Exception;
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
@@ -29,10 +30,18 @@ use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Events\StoredTransactionJournal;
 use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Events\UserChangedEmail;
+use FireflyIII\Mail\OAuthTokenCreatedMail;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Laravel\Passport\Client;
+use Laravel\Passport\Events\AccessTokenCreated;
+use Log;
+use Mail;
+use Request;
+use Session;
 
 /**
  * Class EventServiceProvider.
@@ -82,6 +91,10 @@ class EventServiceProvider extends ServiceProvider
             UpdatedTransactionJournal::class   => [
                 'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@processRules',
             ],
+            // API related events:
+            AccessTokenCreated::class          => [
+                'FireflyIII\Handlers\Events\APIEventHandler@accessTokenCreated',
+            ],
         ];
 
     /**
@@ -91,14 +104,13 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-        $this->registerDeleteEvents();
         $this->registerCreateEvents();
     }
 
     /**
      *
      */
-    protected function registerCreateEvents()
+    protected function registerCreateEvents(): void
     {
         // move this routine to a filter
         // in case of repeated piggy banks and/or other problems.
@@ -112,13 +124,36 @@ class EventServiceProvider extends ServiceProvider
                 $repetition->save();
             }
         );
+        Client::created(
+            function (Client $oauthClient) {
+                /** @var UserRepositoryInterface $repository */
+                $repository = app(UserRepositoryInterface::class);
+                $user       = $repository->findNull((int)$oauthClient->user_id);
+                if (null === $user) {
+                    Log::error('OAuth client generated but no user associated.');
+
+                    return;
+                }
+
+                $email     = $user->email;
+                $ipAddress = Request::ip();
+
+                Log::debug(sprintf('Now in EventServiceProvider::registerCreateEvents. Email is %s, IP is %s', $email, $ipAddress));
+                try {
+                    Log::debug('Trying to send message...');
+                    Mail::to($email)->send(new OAuthTokenCreatedMail($email, $ipAddress, $oauthClient));
+                    // @codeCoverageIgnoreStart
+                } catch (Exception $e) {
+                    Log::debug('Send message failed! :(');
+                    Log::error($e->getMessage());
+                    Log::error($e->getTraceAsString());
+                    Session::flash('error', 'Possible email error: ' . $e->getMessage());
+                }
+                Log::debug('If no error above this line, message was sent.');
+
+
+            }
+        );
     }
 
-    /**
-     *
-     */
-    protected function registerDeleteEvents()
-    {
-
-    }
 }

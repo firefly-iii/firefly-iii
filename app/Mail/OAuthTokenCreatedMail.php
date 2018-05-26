@@ -1,7 +1,7 @@
 <?php
 /**
- * ConfirmEmailChangeMail.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * OAuthTokenCreatedMail.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Mail;
@@ -25,39 +26,35 @@ namespace FireflyIII\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Laravel\Passport\Client;
+
 
 /**
- * Class ConfirmEmailChangeMail
- *
- * Sends message to new address to confirm change.
+ * Class OAuthTokenCreatedMail
  */
-class ConfirmEmailChangeMail extends Mailable
+class OAuthTokenCreatedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /** @var string IP address of user */
+    /** @var Client The client */
+    public $client;
+    /** @var string Email address of admin */
+    public $email;
+    /** @var string IP address of admin */
     public $ipAddress;
-    /** @var string New email address */
-    public $newEmail;
-    /** @var string Old email address */
-    public $oldEmail;
-    /** @var string Confirmation link */
-    public $uri;
 
     /**
-     * ConfirmEmailChangeMail constructor.
+     * OAuthTokenCreatedMail constructor.
      *
-     * @param string $newEmail
-     * @param string $oldEmail
-     * @param string $uri
+     * @param string $email
      * @param string $ipAddress
+     * @param Client $client
      */
-    public function __construct(string $newEmail, string $oldEmail, string $uri, string $ipAddress)
+    public function __construct(string $email, string $ipAddress, Client $client)
     {
-        $this->newEmail  = $newEmail;
-        $this->oldEmail  = $oldEmail;
-        $this->uri       = $uri;
+        $this->email     = $email;
         $this->ipAddress = $ipAddress;
+        $this->client    = $client;
     }
 
     /**
@@ -65,9 +62,9 @@ class ConfirmEmailChangeMail extends Mailable
      *
      * @return $this
      */
-    public function build()
+    public function build(): self
     {
-        return $this->view('emails.confirm-email-change-html')->text('emails.confirm-email-change-text')
-                    ->subject('Your Firefly III email address has changed');
+        return $this->view('emails.oauth-client-created-html')->text('emails.oauth-client-created-text')
+                    ->subject('A new OAuth client has been created');
     }
 }
