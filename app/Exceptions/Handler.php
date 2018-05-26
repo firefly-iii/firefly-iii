@@ -128,14 +128,17 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+
         $doMailError = env('SEND_ERROR_MESSAGE', true);
         if (
             (
                 $exception instanceof FireflyException
                 || $exception instanceof ErrorException
                 || $exception instanceof OAuthServerException
+                || $exception instanceof AuthenticationException
             )
             && $doMailError) {
+
             $userData = [
                 'id'    => 0,
                 'email' => 'unknown@example.com',
@@ -153,6 +156,9 @@ class Handler extends ExceptionHandler
                 'line'         => $exception->getLine(),
                 'code'         => $exception->getCode(),
                 'version'      => config('firefly.version'),
+                'url'          => Request::fullUrl(),
+                'userAgent'   => Request::userAgent(),
+                'json'         => Request::acceptsJson(),
             ];
 
             // create job that will mail.
