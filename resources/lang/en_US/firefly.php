@@ -820,6 +820,7 @@ return [
     'language'                                => 'Language',
     'new_savings_account'                     => ':bank_name savings account',
     'cash_wallet'                             => 'Cash wallet',
+    'currency_not_present' => 'If the currency you normally use is not listed do not worry. You can create your own currencies under Options > Currencies.',
 
     // home page:
     'yourAccounts'                            => 'Your accounts',
