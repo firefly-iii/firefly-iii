@@ -153,7 +153,7 @@ body.waiting * {
 }
 
 span.info-box-text a, span.info-box-number a {
-    color: #000;
+    color: #fff;
 }
 
 span.info-box-icon a {
@@ -161,7 +161,7 @@ span.info-box-icon a {
 }
 
 span.info-box-text a:hover, span.info-box-number a:hover {
-    color: #000;
+    color: #fff;
     text-decoration: underline;
 }
 
