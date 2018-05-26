@@ -10,6 +10,7 @@
         <th colspan="3" class="hidden-sm hidden-xs">&nbsp;</th>
         <th style="text-align: right;" class="hidden-sm hidden-xs">{{ 'target_amount'|_ }}</th>
         <th style="text-align: right;" class="hidden-sm hidden-xs">{{ 'left_to_save'|_ }}</th>
+        <th style="text-align: right;" class="hidden-sm hidden-xs">{{ 'suggested_savings_per_month'|_ }}</th>
     </tr>
     </thead>
     <tbody>
@@ -77,6 +78,11 @@
             <td class="hidden-sm hidden-xs" style="text-align:right;">
                 {% if piggy.left_to_save > 0 %}
                     <span title="{{ 'left_to_save'|_ }}">{{ formatAmountBySymbol(piggy.left_to_save,piggy.currency_symbol,piggy.currency_dp) }}</span>
+                {% endif %}
+            </td>
+            <td class="hidden-sm hidden-xs" style="text-align:right;">
+                {% if piggy.targetdate %}
+                    {{ formatAmountBySymbol(piggy.save_per_month, piggy.currency_symbol, piggy.currency_dp) }}
                 {% endif %}
             </td>
         </tr>

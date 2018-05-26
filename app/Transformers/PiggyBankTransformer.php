@@ -166,6 +166,7 @@ class PiggyBankTransformer extends TransformerAbstract
             'percentage'      => $percentage,
             'current_amount'  => $currentAmount,
             'left_to_save'    => round($leftToSave, $decimalPlaces),
+            'save_per_month'  => $piggyRepos->getSuggestedMonthlyAmount($piggyBank),
             'startdate'       => $startDate,
             'targetdate'      => $targetDate,
             'order'           => (int)$piggyBank->order,

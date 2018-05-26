@@ -325,6 +325,39 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
+     * Returns the suggested amount the user should save per month, or "".
+     *
+     * @param PiggyBank $piggyBank
+     *
+     * @return string
+     */
+    public function getSuggestedMonthlyAmount(PiggyBank $piggyBank): string
+    {
+        $savePerMonth = '0';
+        $repetition = $this->getRepetition($piggyBank);
+        if(null === $repetition) {
+            return $savePerMonth;
+        }
+        if (null !== $piggyBank->targetdate && $repetition->currentamount < $piggyBank->targetamount) {
+            $now             = Carbon::now();
+            $diffInMonths    = $now->diffInMonths($piggyBank->targetdate, false);
+            $remainingAmount = bcsub($piggyBank->targetamount, $repetition->currentamount);
+
+            // more than 1 month to go and still need money to save:
+            if ($diffInMonths > 0 && 1 === bccomp($remainingAmount, '0')) {
+                $savePerMonth = bcdiv($remainingAmount, (string)$diffInMonths);
+            }
+
+            // less than 1 month to go but still need money to save:
+            if (0 === $diffInMonths && 1 === bccomp($remainingAmount, '0')) {
+                $savePerMonth = $remainingAmount;
+            }
+        }
+
+        return $savePerMonth;
+    }
+
+    /**
      * Get for piggy account what is left to put in piggies.
      *
      * @param PiggyBank $piggyBank

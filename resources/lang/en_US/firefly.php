@@ -1017,6 +1017,7 @@ return [
     'remove_money_from_piggy_title'           => 'Remove money from piggy bank ":name"',
     'add'                                     => 'Add',
     'no_money_for_piggy'                      => 'You have no money to put in this piggy bank.',
+    'suggested_savings_per_month'             => 'Suggested per month',
 
     'remove'                    => 'Remove',
     'max_amount_add'            => 'The maximum amount you can add is',

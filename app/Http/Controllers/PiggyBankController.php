@@ -404,11 +404,17 @@ class PiggyBankController extends Controller
      */
     public function show(PiggyBank $piggyBank)
     {
-        $note     = $piggyBank->notes()->first();
-        $events   = $this->piggyRepos->getEvents($piggyBank);
-        $subTitle = $piggyBank->name;
+        /** @var Carbon $end */
+        $end = session('end', Carbon::now()->endOfMonth());
+        // transform piggies using the transformer:
+        $parameters = new ParameterBag;
+        $parameters->set('end', $end);
+        $transformer = new PiggyBankTransformer(new ParameterBag);
+        $piggy       = $transformer->transform($piggyBank);
+        $events      = $this->piggyRepos->getEvents($piggyBank);
+        $subTitle    = $piggyBank->name;
 
-        return view('piggy-banks.show', compact('piggyBank', 'events', 'subTitle', 'note'));
+        return view('piggy-banks.show', compact('piggyBank', 'events', 'subTitle', 'piggy'));
     }
 
     /**

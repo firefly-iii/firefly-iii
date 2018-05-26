@@ -26,8 +26,8 @@
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('piggy-banks.edit', piggyBank.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
-                                <li><a href="{{ route('piggy-banks.delete', piggyBank.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
+                                <li><a href="{{ route('piggy-banks.edit', piggy.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
+                                <li><a href="{{ route('piggy-banks.delete', piggy.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -40,15 +40,21 @@
                         </tr>
                         <tr>
                             <td>{{ 'target_amount'|_ }}</td>
-                            <td>{{ piggyBank.targetamount|formatAmount }}</td>
+                            <td>
+                                {{ formatAmountBySymbol(piggy.target_amount, piggy.currency_symbol, piggy.currency_dp) }}
+                            </td>
                         </tr>
                         <tr>
                             <td>{{ 'saved_so_far'|_ }}</td>
-                            <td>{{ currentRelevantRepAmount(piggyBank)|formatAmount }}</td>
+                            <td>
+                                {{ formatAmountBySymbol(piggy.current_amount, piggy.currency_symbol, piggy.currency_dp) }}
+                            </td>
                         </tr>
                         <tr>
                             <td>{{ 'left_to_save'|_ }}</td>
-                            <td>{{ (piggyBank.targetamount - currentRelevantRepAmount(piggyBank))|formatAmount }}</td>
+                            <td>
+                                {{ formatAmountBySymbol(piggy.left_to_save, piggy.currency_symbol, piggy.currency_dp) }}
+                            </td>
                         </tr>
                         <tr>
                             <td>{{ 'start_date'|_ }}</td>
@@ -74,7 +80,8 @@
                             <tr>
                                 <td>{{ 'suggested_amount'|_ }}</td>
                                 <td>
-                                    {{ suggestedMonthlyAmount(piggyBank)|formatAmount }}
+                                    {{ formatAmountBySymbol(piggy.save_per_month, piggy.currency_symbol, piggy.currency_dp) }}
+
                                 </td>
                             </tr>
                         {% endif %}

@@ -29,6 +29,7 @@ use FireflyIII\Models\PiggyBank;
 
 /**
  * Class PiggyBankRepetition.
+ * @property string $currentamount
  */
 class PiggyBankRepetition extends Model
 {
