@@ -24,6 +24,7 @@ namespace FireflyIII\Repositories\Attachment;
 
 use Carbon\Carbon;
 use Crypt;
+use Exception;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
@@ -52,7 +53,11 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         $helper = app(AttachmentHelperInterface::class);
 
         $file = $helper->getAttachmentLocation($attachment);
-        unlink($file);
+        try {
+            unlink($file);
+        } catch (Exception $e) {
+            Log::error(sprintf('Could not delete file for attachment %d.', $attachment->id));
+        }
         $attachment->delete();
 
         return true;
