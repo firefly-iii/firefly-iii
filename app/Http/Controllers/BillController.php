@@ -164,6 +164,7 @@ class BillController extends Controller
         $preFilled = [
             'notes'                   => $this->billRepository->getNoteText($bill),
             'transaction_currency_id' => $bill->transaction_currency_id,
+            'active'                  => $bill->active,
         ];
 
         $request->session()->flash('preFilled', $preFilled);
