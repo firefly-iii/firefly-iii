@@ -161,28 +161,41 @@ class UpgradeDatabase extends Command
                             'order'           => 2,
                         ]
                     );
-
-                    // add triggers for amounts:
-                    RuleTrigger::create(
-                        [
-                            'rule_id'         => $rule->id,
-                            'trigger_type'    => 'amount_less',
-                            'trigger_value'   => round($bill->amount_max, $currency->decimal_places),
-                            'active'          => 1,
-                            'stop_processing' => 0,
-                            'order'           => 3,
-                        ]
-                    );
-                    RuleTrigger::create(
-                        [
-                            'rule_id'         => $rule->id,
-                            'trigger_type'    => 'amount_more',
-                            'trigger_value'   => round($bill->amount_min, $currency->decimal_places),
-                            'active'          => 1,
-                            'stop_processing' => 0,
-                            'order'           => 4,
-                        ]
-                    );
+                    if ($bill->amount_max !== $bill->amount_min) {
+                        // add triggers for amounts:
+                        RuleTrigger::create(
+                            [
+                                'rule_id'         => $rule->id,
+                                'trigger_type'    => 'amount_less',
+                                'trigger_value'   => round($bill->amount_max, $currency->decimal_places),
+                                'active'          => 1,
+                                'stop_processing' => 0,
+                                'order'           => 3,
+                            ]
+                        );
+                        RuleTrigger::create(
+                            [
+                                'rule_id'         => $rule->id,
+                                'trigger_type'    => 'amount_more',
+                                'trigger_value'   => round($bill->amount_min, $currency->decimal_places),
+                                'active'          => 1,
+                                'stop_processing' => 0,
+                                'order'           => 4,
+                            ]
+                        );
+                    }
+                    if($bill->amount_max === $bill->amount_min) {
+                        RuleTrigger::create(
+                            [
+                                'rule_id'         => $rule->id,
+                                'trigger_type'    => 'amount_exactly',
+                                'trigger_value'   => round($bill->amount_min, $currency->decimal_places),
+                                'active'          => 1,
+                                'stop_processing' => 0,
+                                'order'           => 3,
+                            ]
+                        );
+                    }
 
                     // create action
                     RuleAction::create(
@@ -602,12 +615,16 @@ class UpgradeDatabase extends Command
             $opposing->transaction_currency_id = $currency->id;
             $transaction->save();
             $opposing->save();
-            Log::debug(sprintf('Currency for account "%s" is %s, and currency for account "%s" is also
+            Log::debug(
+                sprintf(
+                    'Currency for account "%s" is %s, and currency for account "%s" is also
              %s, so %s #%d (#%d and #%d) has been verified to be to %s exclusively.',
-                               $opposing->account->name, $opposingCurrency->code,
-                               $transaction->account->name, $transaction->transactionCurrency->code,
-                               $journal->transactionType->type, $journal->id,
-                               $transaction->id, $opposing->id, $currency->code));
+                    $opposing->account->name, $opposingCurrency->code,
+                    $transaction->account->name, $transaction->transactionCurrency->code,
+                    $journal->transactionType->type, $journal->id,
+                    $transaction->id, $opposing->id, $currency->code
+                )
+            );
 
             return;
         }
