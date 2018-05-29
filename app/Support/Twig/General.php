@@ -106,7 +106,7 @@ class General extends Twig_Extension
                 $what       = $args[2]; // name of the route.
                 $activeWhat = $context['what'] ?? false;
 
-                if ($what === $activeWhat && !(false === strpos(Route::getCurrentRoute()->getName(), $route))) {
+                if ($what === $activeWhat && !(false === stripos(Route::getCurrentRoute()->getName(), $route))) {
                     return 'active';
                 }
 
