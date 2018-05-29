@@ -346,6 +346,9 @@ trait AccountServiceTrait
                     Log::debug(sprintf('Updated meta-field "%s":"%s" for #%d ("%s") ', $field, $data[$field], $account->id, $account->name));
                 }
             }
+            if (null !== $entry && isset($data[$field]) && \strlen((string)$data[$field]) === 0) {
+                $entry->delete();
+            }
         }
     }
 
