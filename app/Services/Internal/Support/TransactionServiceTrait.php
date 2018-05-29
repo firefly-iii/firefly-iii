@@ -99,9 +99,9 @@ trait TransactionServiceTrait
      * @param int|null    $accountId
      * @param string|null $accountName
      *
-     * @return Account
+     * @return Account|null
      */
-    public function findAccount(?string $expectedType, ?int $accountId, ?string $accountName): Account
+    public function findAccount(?string $expectedType, ?int $accountId, ?string $accountName): ?Account
     {
         $accountId   = (int)$accountId;
         $accountName = (string)$accountName;

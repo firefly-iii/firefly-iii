@@ -27,11 +27,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\Category;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\Account;
 
 /**
  * Class Transaction.
@@ -49,12 +44,14 @@ use FireflyIII\Models\Account;
  * @property string $account_iban
  * @property string $account_number
  * @property string $account_bic
+ * @property string $account_type
  * @property string $account_currency_code
  * @property int    $opposing_account_id
  * @property string $opposing_account_name
  * @property string $opposing_account_iban
  * @property string $opposing_account_number
  * @property string $opposing_account_bic
+ * @property string $opposing_account_type
  * @property string $opposing_currency_code
  * @property int    $transaction_budget_id
  * @property string $transaction_budget_name
