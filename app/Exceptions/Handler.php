@@ -143,7 +143,7 @@ class Handler extends ExceptionHandler
              || (
                  // or this one, but it's a JSON exception.
                  $exception instanceof AuthenticationException
-                 && Request::acceptsJson() === true
+                 && Request::expectsJson() === true
              ))
             ) {
             // then, send email
