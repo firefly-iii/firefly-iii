@@ -284,7 +284,7 @@ class StageImportDataHandler
         // make request:
         /** @var Payment $paymentRequest */
         $paymentRequest = app(Payment::class);
-        $result         = $paymentRequest->listing($bunqAccountId);
+        $result         = $paymentRequest->listing($bunqAccountId, ['count' => 100]);
         // loop result:
         /** @var BunqPayment $payment */
         foreach ($result->getValue() as $payment) {
