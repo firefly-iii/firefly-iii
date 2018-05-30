@@ -71,7 +71,7 @@ class IndexController extends Controller
      */
     public function create(string $importProvider)
     {
-        Log::debug(sprintf('Will create job for provider %s', $importProvider));
+        Log::debug(sprintf('Will create job for provider "%s"', $importProvider));
         // can only create "fake" for demo user.
         $providers = array_keys($this->getProviders());
         if (!\in_array($importProvider, $providers, true)) {
@@ -91,11 +91,13 @@ class IndexController extends Controller
             Log::debug('Provider has no prerequisites. Continue.');
             // if job provider also has no configuration:
             if ($hasConfig === false) {
+                // @codeCoverageIgnoreStart
                 Log::debug('Provider needs no configuration for job. Job is ready to start.');
                 $this->repository->updateStatus($importJob, 'ready_to_run');
                 Log::debug('Redirect to status-page.');
 
                 return redirect(route('import.job.status.index', [$importJob->key]));
+                // @codeCoverageIgnoreEnd
             }
 
             // update job to say "has_prereq".
@@ -127,11 +129,13 @@ class IndexController extends Controller
         // update job to say "has_prereq".
         $this->repository->setStatus($importJob, 'has_prereq');
         if ($hasConfig === false) {
+            // @codeCoverageIgnoreStart
             Log::debug('Provider has no configuration. Job is ready to start.');
             $this->repository->updateStatus($importJob, 'ready_to_run');
             Log::debug('Redirect to status-page.');
 
             return redirect(route('import.job.status.index', [$importJob->key]));
+            // @codeCoverageIgnoreEnd
         }
         Log::debug('Job has configuration. Redirect to job-config.');
         // Otherwise just redirect to job configuration.
@@ -182,7 +186,7 @@ class IndexController extends Controller
             }
             if ($isDemoUser === false && $allowedForUser === false && $isDebug === false) {
                 //Log::debug('User is not demo and this provider is not allowed for such users. NEXT!');
-                continue;
+                continue; // @codeCoverageIgnore
             }
 
             $providers[$providerName] = [
