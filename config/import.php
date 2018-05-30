@@ -45,6 +45,7 @@ return [
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
+        'bad'     => false, // always disabled
     ],
     // demo user can use these import providers (when enabled):
     'allowed_for_demo' => [
@@ -87,7 +88,7 @@ return [
         'yodlee'  => false,
     ],
     // some providers may need extra configuration per job
-    'has_job_config'       => [
+    'has_job_config'   => [
         'fake'    => true,
         'file'    => true,
         'bunq'    => true,
