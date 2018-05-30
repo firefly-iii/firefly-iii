@@ -131,6 +131,8 @@ return [
     'job_config_bunq_accounts_title'       => 'bunq accounts',
     'job_config_bunq_accounts_text'        => 'These are the accounts associated with your bunq account. Please select the accounts from which you want to import, and in which account the transactions must be imported.',
     'bunq_no_mapping'                      => 'It seems you have not selected any accounts.',
+    'should_download_config'               => 'You should download <a href=":route">the configuration file</a> for this job. This will make future imports way easier.',
+    'share_config_file'                    => 'If you have imported data from a public bank, you should <a href="https://github.com/firefly-iii/import-configurations/wiki">share your configuration file</a> so it will be easy for other users to import their data. Sharing your configuration file will not expose your financial details.',
 
     // keys from "extra" array:
     'spectre_extra_key_iban'               => 'IBAN',

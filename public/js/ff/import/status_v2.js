@@ -113,8 +113,9 @@ function showJobResults(data) {
             console.error(element);
             $('#import-status-errors').append($('<li>').text(element));
         });
-
-
+    }
+    if(data.download_config) {
+        $('#import-status-download').append($('<span>').html(data.download_config_text));
     }
 
     // show success box.

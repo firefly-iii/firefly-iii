@@ -464,6 +464,9 @@ Route::group(
     Route::any('job/start/{importJob}', ['uses' => 'Import\JobStatusController@start', 'as' => 'job.start']);
     Route::any('job/store/{importJob}', ['uses' => 'Import\JobStatusController@store', 'as' => 'job.store']);
 
+    // download config:
+    Route::get('download/{importJob}', ['uses' => 'Import\IndexController@download', 'as' => 'job.download']);
+
     // import method prerequisites:
     #
     #

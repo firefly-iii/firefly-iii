@@ -25,8 +25,10 @@ namespace FireflyIII\Http\Controllers\Import;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
+use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use Illuminate\Http\Response as LaravelResponse;
 use Log;
 use View;
 
@@ -138,11 +140,43 @@ class IndexController extends Controller
             // @codeCoverageIgnoreEnd
         }
         Log::debug('Job has configuration. Redirect to job-config.');
+
         // Otherwise just redirect to job configuration.
         return redirect(route('import.job.configuration.index', [$importJob->key]));
 
     }
 
+    /**
+     * Generate a JSON file of the job's configuration and send it to the user.
+     *
+     * @param ImportJob $job
+     *
+     * @return LaravelResponse
+     */
+    public function download(ImportJob $job): LaravelResponse
+    {
+        Log::debug('Now in download()', ['job' => $job->key]);
+        $config = $job->configuration;
+        // This is CSV import specific:
+        $config['delimiter'] = "\t" === $config['delimiter'] ? 'tab' : $config['delimiter'];
+
+        // this prevents private information from escaping
+        $config['column-mapping-config'] = [];
+        $result                          = json_encode($config, JSON_PRETTY_PRINT);
+        $name                            = sprintf('"%s"', addcslashes('import-configuration-' . date('Y-m-d') . '.json', '"\\'));
+        /** @var LaravelResponse $response */
+        $response = response($result, 200);
+        $response->header('Content-disposition', 'attachment; filename=' . $name)
+                 ->header('Content-Type', 'application/json')
+                 ->header('Content-Description', 'File Transfer')
+                 ->header('Connection', 'Keep-Alive')
+                 ->header('Expires', '0')
+                 ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+                 ->header('Pragma', 'public')
+                 ->header('Content-Length', \strlen($result));
+
+        return $response;
+    }
 
     /**
      * General import index.

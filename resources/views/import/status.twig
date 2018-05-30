@@ -140,6 +140,9 @@
                         {{ trans('import.status_finished_text') }}
                         <span id="import-status-more-info"></span>
                     </p>
+                    <p id="import-status-download">
+
+                    </p>
                     <p id="import-status-error-txt" style="display:none;">{{ trans('import.finished_with_errors') }}</p>
                     <ul id="import-status-errors" class="text-danger">
 
@@ -176,9 +179,9 @@
         var jobStorageStartUri = '{{ route('import.job.store', [importJob.key]) }}';
 
         // import is running:
-        var langImportRunning = '{{ trans('import.status_job_running') }}';
-        var langImportStoring = '{{ trans('import.status_job_storing') }}';
-        var langImportRules = '{{ trans('import.status_job_rules') }}';
+        var langImportRunning = '{{ trans('import.status_job_running')|escape('js') }}';
+        var langImportStoring = '{{ trans('import.status_job_storing')|escape('js') }}';
+        var langImportRules = '{{ trans('import.status_job_rules')|escape('js') }}';
 
         // some useful translations.
         {#var langImportTimeOutError = '(time out thing)';#}

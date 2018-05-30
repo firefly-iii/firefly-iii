@@ -80,13 +80,23 @@ class JobStatusController extends Controller
     {
         $count = \count($importJob->transactions);
         $json  = [
-            'status'     => $importJob->status,
-            'errors'     => $importJob->errors,
-            'count'      => $count,
-            'tag_id'     => $importJob->tag_id,
-            'tag_name'   => null === $importJob->tag_id ? null : $importJob->tag->tag,
-            'report_txt' => trans('import.unknown_import_result'),
+            'status'               => $importJob->status,
+            'errors'               => $importJob->errors,
+            'count'                => $count,
+            'tag_id'               => $importJob->tag_id,
+            'tag_name'             => null === $importJob->tag_id ? null : $importJob->tag->tag,
+            'report_txt'           => trans('import.unknown_import_result'),
+            'download_config'      => false,
+            'download_config_text' => '',
         ];
+
+        if ($importJob->provider === 'file') {
+            $json['download_config'] = true;
+            $json['download_config_text']
+                                     = trans('import.should_download_config', ['route' => route('import.job.download', [$importJob->key])]) . ' '
+                                       . trans('import.share_config_file');
+        }
+
         // if count is zero:
         if (null !== $importJob->tag_id) {
             $count = $importJob->tag->transactionJournals->count();
@@ -114,13 +124,15 @@ class JobStatusController extends Controller
     public function start(ImportJob $importJob): JsonResponse
     {
         // catch impossible status:
-        $allowed = ['ready_to_run', 'need_job_config','error']; // todo remove error
+        $allowed = ['ready_to_run', 'need_job_config', 'error']; // todo remove error
 
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
             Log::error('Job is not ready.');
             $this->repository->setStatus($importJob, 'error');
 
-            return response()->json(['status' => 'NOK', 'message' => sprintf('JobStatusController::start expects status "ready_to_run" instead of "%s".', $importJob->status)]);
+            return response()->json(
+                ['status' => 'NOK', 'message' => sprintf('JobStatusController::start expects status "ready_to_run" instead of "%s".', $importJob->status)]
+            );
         }
         $importProvider = $importJob->provider;
         $key            = sprintf('import.routine.%s', $importProvider);
