@@ -243,6 +243,17 @@ class BudgetController extends Controller
         $days        = 0;
         $daysInMonth = 0;
 
+        // make date if present:
+        if (null !== $moment || '' !== (string)$moment) {
+            try {
+                $start = new Carbon($moment);
+                $end   = app('navigation')->endOfPeriod($start, $range);
+            } catch (Exception $e) {
+                // start and end are already defined.
+                Log::debug('start and end are already defined.');
+            }
+        }
+
         // if today is between start and end, use the diff in days between end and today (days left)
         // otherwise, use diff between start and end.
         $today = new Carbon;
@@ -257,16 +268,7 @@ class BudgetController extends Controller
         $days        = $days === 0 ? 1 : $days;
         $daysInMonth = $daysInMonth === 0 ? 1 : $daysInMonth;
 
-        // make date if present:
-        if (null !== $moment || '' !== (string)$moment) {
-            try {
-                $start = new Carbon($moment);
-                $end   = app('navigation')->endOfPeriod($start, $range);
-            } catch (Exception $e) {
-                // start and end are already defined.
-                Log::debug('start and end are already defined.');
-            }
-        }
+
         $next = clone $end;
         $next->addDay();
         $prev = clone $start;
