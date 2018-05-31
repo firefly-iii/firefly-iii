@@ -50,6 +50,8 @@ class PiggyBankTransformerTest extends TestCase
         $repository = $this->mock(PiggyBankRepositoryInterface::class);
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('getCurrentAmount')->andReturn('12.34')->once();
+        $repository->shouldReceive('getSuggestedMonthlyAmount')->andReturn('12.34')->once();
+
 
         // make new account and piggy
         $account     = Account::create(
@@ -94,10 +96,12 @@ class PiggyBankTransformerTest extends TestCase
         $currencyRepos->shouldReceive('setUser')->once();
         $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->once();
 
+
         // mock repository:
         $repository = $this->mock(PiggyBankRepositoryInterface::class);
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('getCurrentAmount')->andReturn('12.34')->once();
+        $repository->shouldReceive('getSuggestedMonthlyAmount')->andReturn('12.34')->once();
 
         // make new account and piggy
         $account = Account::create(
@@ -155,6 +159,7 @@ class PiggyBankTransformerTest extends TestCase
         $repository = $this->mock(PiggyBankRepositoryInterface::class);
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('getCurrentAmount')->andReturn('12.34')->once();
+        $repository->shouldReceive('getSuggestedMonthlyAmount')->andReturn('12.34')->once();
 
         // make new account and piggy
         $account = Account::create(

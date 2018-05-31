@@ -205,6 +205,7 @@ class PiggyBankControllerTest extends TestCase
         $repository->shouldReceive('getCurrentAmount')->andReturn('10');
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('correctOrder');
+        $repository->shouldReceive('getSuggestedMonthlyAmount')->andReturn('1');
 
 
         Steam::shouldReceive('balance')->twice()->andReturn('1');
@@ -332,8 +333,13 @@ class PiggyBankControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(PiggyBankRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository->shouldReceive('setUser')->once();
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getEvents')->andReturn(new Collection);
+        $repository->shouldReceive('getSuggestedMonthlyAmount')->andReturn('1');
+        $repository->shouldReceive('getCurrentAmount')->andReturn('1');
+
+
 
         $this->be($this->user());
         $response = $this->get(route('piggy-banks.show', [1]));
