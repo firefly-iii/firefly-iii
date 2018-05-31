@@ -143,7 +143,7 @@ class TransactionFactory
         }
 
         // set budget:
-        if ($journal->transactionType->type === TransactionType::TRANSFER) {
+        if ($journal->transactionType->type !== TransactionType::WITHDRAWAL) {
             $data['budget_id']   = null;
             $data['budget_name'] = null;
         }
