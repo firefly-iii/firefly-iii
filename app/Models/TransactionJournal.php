@@ -51,6 +51,7 @@ use FireflyIII\Models\Attachment;
  * Class TransactionJournal.
  *
  * @property User $user
+ * @property int $bill_id
  */
 class TransactionJournal extends Model
 {
