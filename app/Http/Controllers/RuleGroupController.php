@@ -129,11 +129,17 @@ class RuleGroupController extends Controller
     {
         $subTitle = trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
 
+        $preFilled = [
+            'active' => $ruleGroup->active,
+        ];
+
+
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('rule-groups.edit.fromUpdate')) {
             $this->rememberPreviousUri('rule-groups.edit.uri');
         }
         session()->forget('rule-groups.edit.fromUpdate');
+        session()->flash('preFilled', $preFilled);
 
         return view('rules.rule-group.edit', compact('ruleGroup', 'subTitle'));
     }

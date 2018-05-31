@@ -30,6 +30,7 @@ use FireflyIII\Models\Rule;
 
 /**
  * Class RuleGroup.
+ * @property bool $active
  */
 class RuleGroup extends Model
 {
