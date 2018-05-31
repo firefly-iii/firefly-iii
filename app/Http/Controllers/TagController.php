@@ -36,14 +36,6 @@ use View;
 
 /**
  * Class TagController.
- *
- * Remember: a balancingAct takes at most one expense and one transfer.
- *           an advancePayment takes at most one expense, infinite deposits and NO transfers.
- *
- *  transaction can only have one advancePayment OR balancingAct.
- *  Other attempts to put in such a tag are blocked.
- *  also show an error when editing a tag and it becomes either
- *  of these two types. Or rather, block editing of the tag.
  */
 class TagController extends Controller
 {
@@ -79,7 +71,6 @@ class TagController extends Controller
     {
         $subTitle     = trans('firefly.new_tag');
         $subTitleIcon = 'fa-tag';
-        $apiKey       = env('GOOGLE_MAPS_API_KEY', '');
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('tags.create.fromStore')) {
@@ -87,7 +78,7 @@ class TagController extends Controller
         }
         session()->forget('tags.create.fromStore');
 
-        return view('tags.create', compact('subTitle', 'subTitleIcon', 'apiKey'));
+        return view('tags.create', compact('subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -134,7 +125,6 @@ class TagController extends Controller
     {
         $subTitle     = trans('firefly.edit_tag', ['tag' => $tag->tag]);
         $subTitleIcon = 'fa-tag';
-        $apiKey       = env('GOOGLE_MAPS_API_KEY', '');
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('tags.edit.fromUpdate')) {
@@ -142,7 +132,7 @@ class TagController extends Controller
         }
         session()->forget('tags.edit.fromUpdate');
 
-        return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon', 'apiKey'));
+        return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -201,7 +191,6 @@ class TagController extends Controller
         $start        = null;
         $end          = null;
         $periods      = new Collection;
-        $apiKey       = env('GOOGLE_MAPS_API_KEY', '');
         $path         = route('tags.show', [$tag->id]);
 
         // prep for "all" view.
@@ -310,7 +299,8 @@ class TagController extends Controller
         // get first and last tag date from tag:
         $range = Preferences::get('viewRange', '1M')->data;
         $start = app('navigation')->startOfPeriod($this->repository->firstUseDate($tag), $range);
-        $end   = app('navigation')->startOfPeriod($this->repository->lastUseDate($tag), $range);
+        $end   = app('navigation')->endOfPeriod($this->repository->lastUseDate($tag), $range);
+
         // properties for entries with their amounts.
         $cache = new CacheProperties;
         $cache->addProperty($start);

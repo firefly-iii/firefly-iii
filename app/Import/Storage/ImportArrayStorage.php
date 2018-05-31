@@ -144,15 +144,19 @@ class ImportArrayStorage
      */
     private function countTransfers(): void
     {
+        Log::debug('Now in count transfers.');
         /** @var array $array */
         $array = $this->importJob->transactions;
         $count = 0;
-        foreach ($array as $transaction) {
+        foreach ($array as $index => $transaction) {
             if (strtolower(TransactionType::TRANSFER) === $transaction['type']) {
                 $count++;
+                Log::debug(sprintf('Row #%d is a transfer, increase count to %d', ($index + 1), $count));
             }
         }
+        Log::debug('Count is zero.');
         if ($count > 0) {
+            Log::debug(sprintf('Count is %d', $count));
             $this->checkForTransfers = true;
 
             // get users transfers. Needed for comparison.
@@ -199,6 +203,7 @@ class ImportArrayStorage
      */
     private function getTransfers(): void
     {
+        app('preferences')->mark();
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setUser($this->importJob->user);
@@ -408,7 +413,8 @@ class ImportArrayStorage
         $requiredHits = count($transaction['transactions']) * 4;
         $totalHits    = 0;
         Log::debug(sprintf('Required hits for transfer comparison is %d', $requiredHits));
-
+        Log::debug(sprintf('Array has %d transactions.', \count($transaction['transactions'])));
+        Log::debug(sprintf('System has %d existing transfers', \count($this->transfers)));
         // loop over each split:
         foreach ($transaction['transactions'] as $current) {
 

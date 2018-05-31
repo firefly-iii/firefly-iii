@@ -32,6 +32,8 @@ use FireflyIII\Models\RuleAction;
 
 /**
  * Class Rule.
+ * @property bool $stop_processing
+ * @property int $id
  */
 class Rule extends Model
 {

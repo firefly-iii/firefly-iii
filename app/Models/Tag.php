@@ -33,6 +33,8 @@ use FireflyIII\Models\TransactionJournal;
 /**
  * Class Tag.
  * @property Collection $transactionJournals
+ * @property string $tag
+ * @property int $id
  */
 class Tag extends Model
 {
