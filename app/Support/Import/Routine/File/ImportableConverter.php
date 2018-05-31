@@ -130,6 +130,7 @@ class ImportableConverter
      */
     private function convertSingle(ImportTransaction $importable): array
     {
+        Log::debug(sprintf('Description is: "%s"', $importable->description));
         $amount        = $importable->calculateAmount();
         $foreignAmount = $importable->calculateForeignAmount();
         if ('' === $amount) {
@@ -207,6 +208,8 @@ class ImportableConverter
             Log::error($e->getTraceAsString());
             $date = new Carbon;
         }
+
+
 
         $dateStr = $date->format('Y-m-d');
 
