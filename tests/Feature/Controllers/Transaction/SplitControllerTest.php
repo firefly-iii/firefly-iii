@@ -97,9 +97,6 @@ class SplitControllerTest extends TestCase
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('0');
         $journalRepos->shouldReceive('getJournalCategoryName')->andReturn('Some');
 
-        // mock for new account list and for account array
-        $accountRepos->shouldReceive('getAccountsByType')
-                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->twice();
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
@@ -137,10 +134,6 @@ class SplitControllerTest extends TestCase
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-
-        // mock for new account list and for account array
-        $accountRepos->shouldReceive('getAccountsByType')
-                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->twice();
 
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn($deposit);
@@ -270,9 +263,6 @@ class SplitControllerTest extends TestCase
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-        // mock for new account list and for account array
-        $accountRepository->shouldReceive('getAccountsByType')
-                          ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->twice();
 
         $this->be($this->user());
         $response = $this->get(route('transactions.split.edit', [$deposit->id]));
