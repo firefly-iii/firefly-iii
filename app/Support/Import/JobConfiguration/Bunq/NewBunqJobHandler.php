@@ -24,15 +24,19 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Import\JobConfiguration\Bunq;
 
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Support\MessageBag;
 use Log;
 
 /**
- * @codeCoverageIgnore
  * Class NewBunqJobHandler
  */
 class NewBunqJobHandler implements BunqJobConfigurationInterface
 {
+    /** @var ImportJob */
+    private $importJob;
+    /** @var ImportJobRepositoryInterface */
+    private $repository;
 
     /**
      * Return true when this stage is complete.
@@ -41,12 +45,16 @@ class NewBunqJobHandler implements BunqJobConfigurationInterface
      */
     public function configurationComplete(): bool
     {
-        Log::debug('NewBunqJobHandler::configurationComplete always returns true.');
+        // simply set the job configuration "apply-rules" to true.
+        $config                = $this->repository->getConfiguration($this->importJob);
+        $config['apply-rules'] = true;
+        $this->repository->setConfiguration($this->importJob, $config);
 
         return true;
     }
 
     /**
+     * @codeCoverageIgnore
      * Store the job configuration.
      *
      * @param array $data
@@ -61,6 +69,7 @@ class NewBunqJobHandler implements BunqJobConfigurationInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * Get data for config view.
      *
      * @return array
@@ -73,6 +82,7 @@ class NewBunqJobHandler implements BunqJobConfigurationInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * Get the view for this stage.
      *
      * @return string
@@ -91,6 +101,8 @@ class NewBunqJobHandler implements BunqJobConfigurationInterface
      */
     public function setImportJob(ImportJob $importJob): void
     {
-        Log::debug('NewBunqJobHandler::setImportJob does nothing.');
+        $this->importJob  = $importJob;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($importJob->user);
     }
 }
