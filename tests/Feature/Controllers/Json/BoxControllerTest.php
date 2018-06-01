@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers\Json;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -49,13 +50,34 @@ class BoxControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\BoxController::available
+     * @covers \FireflyIII\Http\Controllers\Json\BoxController
      */
     public function testAvailable(): void
     {
         $return     = [
             0 => [
                 'spent' => '-1200', // more than budgeted.
+            ],
+        ];
+        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $repository->shouldReceive('getAvailableBudget')->andReturn('1000');
+        $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
+        $repository->shouldReceive('collectBudgetInformation')->andReturn($return);
+
+        $this->be($this->user());
+        $response = $this->get(route('json.box.available'));
+        $response->assertStatus(200);
+
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Json\BoxController
+     */
+    public function testAvailableDays(): void
+    {
+        $return     = [
+            0 => [
+                'spent' => '-800', // more than budgeted.
             ],
         ];
         $repository = $this->mock(BudgetRepositoryInterface::class);
@@ -91,6 +113,31 @@ class BoxControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\Json\BoxController::balance
+     */
+    public function testBalanceTransactions(): void
+    {
+        $transaction = new Transaction;
+        $transaction->transaction_currency_id = 1;
+        $transaction->transaction_amount ='5';
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
+
+        // try a collector for income:
+        /** @var JournalCollectorInterface $collector */
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
+
+        $this->be($this->user());
+        $response = $this->get(route('json.box.balance'));
+        $response->assertStatus(200);
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\Json\BoxController::bills
      */
     public function testBills(): void
@@ -113,6 +160,42 @@ class BoxControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
+
+        $this->be($this->user());
+        $response = $this->get(route('json.box.net-worth'));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Json\BoxController::netWorth()
+     */
+    public function testNetWorthVirtual(): void
+    {
+        $account = $this->user()->accounts()->first();
+        $account->virtual_balance = '1000';
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$account]));
+        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
+
+        $this->be($this->user());
+        $response = $this->get(route('json.box.net-worth'));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Json\BoxController::netWorth()
+     */
+    public function testNetWorthNoCurrency(): void
+    {
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
+        $currencyRepos->shouldReceive('findNull')->andReturn(null);
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
 

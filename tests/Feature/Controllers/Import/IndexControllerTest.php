@@ -194,6 +194,43 @@ class IndexControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Import\IndexController
      */
+    public function testDownload(): void
+    {
+        // mock stuff:
+        $repository           = $this->mock(ImportJobRepositoryInterface::class);
+        $userRepository       = $this->mock(UserRepositoryInterface::class);
+        $fakePrerequisites    = $this->mock(FakePrerequisites::class);
+        $bunqPrerequisites    = $this->mock(BunqPrerequisites::class);
+        $spectrePrerequisites = $this->mock(SpectrePrerequisites::class);
+        $filePrerequisites    = $this->mock(FilePrerequisites::class);
+
+        $job                = new ImportJob;
+        $job->user_id       = $this->user()->id;
+        $job->key           = 'dc_' . random_int(1, 1000);
+        $job->status        = 'ready_to_run';
+        $job->stage         = 'go-for-import';
+        $job->provider      = 'file';
+        $job->file_type     = '';
+        $job->configuration = [];
+        $job->save();
+
+        $fakeConfig = [
+            'hi'                    => 'there',
+            1                       => true,
+            'column-mapping-config' => ['a', 'b', 'c'],
+        ];
+
+        $repository->shouldReceive('getConfiguration')->andReturn($fakeConfig)->once();
+
+        $this->be($this->user());
+        $response = $this->get(route('import.job.download', [$job->key]));
+        $response->assertStatus(200);
+        $response->assertExactJson(['column-mapping-config' => [], 'delimiter' => ',', 'hi' => 'there', 1 => true]);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Import\IndexController
+     */
     public function testIndex(): void
     {
         $this->be($this->user());

@@ -23,10 +23,12 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use FireflyIII\Models\Rule;
 
 /**
  * Class RuleTrigger.
+ *
+ * @property string $trigger_value
+ * @property string $trigger_type
  */
 class RuleTrigger extends Model
 {

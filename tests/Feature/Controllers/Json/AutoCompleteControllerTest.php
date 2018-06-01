@@ -25,13 +25,17 @@ namespace Tests\Feature\Controllers\Json;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -75,7 +79,7 @@ class AutoCompleteControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::allTransactionJournals
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
      */
     public function testAllTransactionJournals(): void
     {
@@ -90,7 +94,39 @@ class AutoCompleteControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::budgets
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
+     */
+    public function testBills(): void
+    {
+        $repository = $this->mock(BillRepositoryInterface::class);
+        $bills      = factory(Bill::class, 10)->make();
+
+        $repository->shouldReceive('getActiveBills')->andReturn($bills);
+
+        $this->be($this->user());
+        $response = $this->get(route('json.bills'));
+        $response->assertStatus(200);
+    }
+
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
+     */
+    public function testCurrencyNames(): void
+    {
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+
+        $currency = TransactionCurrency::find(1);
+        $repository->shouldReceive('get')->andReturn(new Collection([$currency]))->once();
+
+        $this->be($this->user());
+        $response = $this->get(route('json.currency-names'));
+        $response->assertStatus(200);
+        $response->assertExactJson(['Euro']);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
      */
     public function testBudgets(): void
     {
@@ -107,7 +143,7 @@ class AutoCompleteControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::categories
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
      */
     public function testCategories(): void
     {
@@ -124,7 +160,7 @@ class AutoCompleteControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::expenseAccounts
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
      */
     public function testExpenseAccounts(): void
     {

@@ -71,6 +71,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $description
  * @property bool   $is_split
  * @property int    $attachmentCount
+ * @property int $transaction_currency_id
  */
 class Transaction extends Model
 {

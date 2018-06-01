@@ -25,19 +25,22 @@ namespace Tests\Feature\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
 use FireflyIII\Jobs\Job;
+use FireflyIII\Models\Bill;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use Illuminate\Support\Collection;
+use Log;
 use Queue;
 use Tests\TestCase;
-use Log;
+
 /**
  * Class RuleControllerTest
  *
@@ -58,24 +61,45 @@ class RuleControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::create
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
     public function testCreate(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $billRepos    = $this->mock(BillRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('rules.create', [1]));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
+        $response->assertViewHas('returnToBill', false);
+        $response->assertViewHas('bill', null);
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::create
-     * @covers \FireflyIII\Http\Controllers\RuleController::getPreviousTriggers
-     * @covers \FireflyIII\Http\Controllers\RuleController::getPreviousActions
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     */
+    public function testCreateBill(): void
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $billRepos    = $this->mock(BillRepositoryInterface::class);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $billRepos->shouldReceive('find')->withArgs([1])->andReturn(Bill::find(1))->once();
+
+        $this->be($this->user());
+        $response = $this->get(route('rules.create', [1]) . '?return=true&fromBill=1');
+        $response->assertStatus(200);
+        $response->assertSee('<ol class="breadcrumb">');
+        $response->assertViewHas('returnToBill', true);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
     public function testCreatePreviousInput(): void
     {
@@ -100,7 +124,24 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::delete
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     */
+    public function testCreateReturn(): void
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $billRepos    = $this->mock(BillRepositoryInterface::class);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        $this->be($this->user());
+        $response = $this->get(route('rules.create', [1]) . '?return=true');
+        $response->assertStatus(200);
+        $response->assertSee('<ol class="breadcrumb">');
+        $response->assertViewHas('returnToBill', true);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
     public function testDelete(): void
     {
@@ -115,7 +156,7 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::destroy
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
     public function testDestroy(): void
     {
@@ -134,7 +175,7 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::down
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
     public function testDown(): void
     {
@@ -151,9 +192,9 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::edit
-     * @covers \FireflyIII\Http\Controllers\RuleController::getCurrentActions
-     * @covers \FireflyIII\Http\Controllers\RuleController::getCurrentTriggers
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
     public function testEdit(): void
     {
@@ -172,9 +213,9 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::edit
-     * @covers \FireflyIII\Http\Controllers\RuleController::getPreviousActions
-     * @covers \FireflyIII\Http\Controllers\RuleController::getPreviousTriggers
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
     public function testEditPreviousInput(): void
     {
@@ -203,7 +244,7 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::execute
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
     public function testExecute(): void
     {
@@ -233,10 +274,10 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::index
-     * @covers \FireflyIII\Http\Controllers\RuleController::__construct
-     * @covers \FireflyIII\Http\Controllers\RuleController::createDefaultRule
-     * @covers \FireflyIII\Http\Controllers\RuleController::createDefaultRuleGroup
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
     public function testIndex(): void
     {
@@ -259,7 +300,7 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::reorderRuleActions
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
     public function testReorderRuleActions(): void
     {
@@ -277,7 +318,7 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::reorderRuleTriggers
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
     public function testReorderRuleTriggers(): void
     {
@@ -295,7 +336,7 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::selectTransactions()
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
     public function testSelectTransactions(): void
     {
@@ -309,7 +350,7 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\RuleController::store
+     * @covers       \FireflyIII\Http\Controllers\RuleController
      * @covers       \FireflyIII\Http\Requests\RuleFormRequest
      */
     public function testStore(): void
@@ -349,8 +390,8 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::testTriggers
-     * @covers \FireflyIII\Http\Controllers\RuleController::getValidTriggerList
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
     public function testTestTriggers(): void
     {
@@ -377,7 +418,7 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::testTriggersByRule()
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
     public function testTestTriggersByRule(): void
     {
@@ -398,8 +439,8 @@ class RuleControllerTest extends TestCase
     /**
      * This actually hits an error and not the actually code but OK.
      *
-     * @covers \FireflyIII\Http\Controllers\RuleController::testTriggers
-     * @covers \FireflyIII\Http\Controllers\RuleController::getValidTriggerList
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
     public function testTestTriggersError(): void
     {
@@ -413,8 +454,8 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::testTriggers
-     * @covers \FireflyIII\Http\Controllers\RuleController::getValidTriggerList
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
     public function testTestTriggersMax(): void
     {
@@ -442,7 +483,7 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::up
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
     public function testUp(): void
     {
@@ -459,7 +500,7 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\RuleController::update
+     * @covers       \FireflyIII\Http\Controllers\RuleController
      * @covers       \FireflyIII\Http\Requests\RuleFormRequest
      */
     public function testUpdate(): void

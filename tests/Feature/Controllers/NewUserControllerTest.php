@@ -50,8 +50,7 @@ class NewUserControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\NewUserController::index
-     * @covers \FireflyIII\Http\Controllers\NewUserController::__construct
+     * @covers \FireflyIII\Http\Controllers\NewUserController
      */
     public function testIndex(): void
     {
@@ -68,8 +67,7 @@ class NewUserControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\NewUserController::index
-     * @covers \FireflyIII\Http\Controllers\NewUserController::__construct
+     * @covers \FireflyIII\Http\Controllers\NewUserController
      */
     public function testIndexExisting(): void
     {
@@ -86,9 +84,7 @@ class NewUserControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\NewUserController::submit
-     * @covers \FireflyIII\Http\Controllers\NewUserController::createAssetAccount
-     * @covers \FireflyIII\Http\Controllers\NewUserController::createSavingsAccount
+     * @covers \FireflyIII\Http\Controllers\NewUserController
      */
     public function testSubmit(): void
     {
@@ -114,7 +110,34 @@ class NewUserControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\NewUserController::submit
+     * @covers \FireflyIII\Http\Controllers\NewUserController
+     */
+    public function testSubmitNull(): void
+    {
+        // mock stuff
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $accountRepos->shouldReceive('store')->times(3);
+        $currencyRepos->shouldReceive('findNull')->andReturn(null);
+        $currencyRepos->shouldReceive('findByCodeNull')->withArgs(['EUR'])->andReturn(TransactionCurrency::find(2))->once();
+
+        $data = [
+            'bank_name'                       => 'New bank',
+            'savings_balance'                 => '1000',
+            'bank_balance'                    => '100',
+            'language'                        => 'en_US',
+            'amount_currency_id_bank_balance' => 1,
+        ];
+        $this->be($this->emptyUser());
+        $response = $this->post(route('new-user.submit'), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\NewUserController
      */
     public function testSubmitSingle(): void
     {

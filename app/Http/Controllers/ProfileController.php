@@ -424,7 +424,7 @@ class ProfileController extends Controller
     /**
      *
      */
-    private function createOAuthKeys()
+    private function createOAuthKeys(): void
     {
         $rsa  = new RSA();
         $keys = $rsa->createKey(4096);
@@ -437,11 +437,13 @@ class ProfileController extends Controller
         if (file_exists($publicKey) || file_exists($privateKey)) {
             return;
         }
+        // @codeCoverageIgnoreStart
         Log::alert('NO OAuth keys were found. They have been created.');
 
         file_put_contents($publicKey, array_get($keys, 'publickey'));
         file_put_contents($privateKey, array_get($keys, 'privatekey'));
     }
+    // @codeCoverageIgnoreEnd
 
     /**
      * @return string

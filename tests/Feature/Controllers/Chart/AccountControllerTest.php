@@ -317,13 +317,13 @@ class AccountControllerTest extends TestCase
     public function testReport(): void
     {
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1), null);
         $generator = $this->mock(GeneratorInterface::class);
         $generator->shouldReceive('multiSet')->andReturn([]);
         Steam::shouldReceive('balanceInRange')->andReturn(['2012-01-01' => '0']);
 
         $this->be($this->user());
-        $response = $this->get(route('chart.account.report', ['1', '20120101', '20120131']));
+        $response = $this->get(route('chart.account.report', ['1,2', '20120101', '20120131']));
         $response->assertStatus(200);
     }
 

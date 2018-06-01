@@ -31,6 +31,7 @@ use FireflyIII\Models\TransactionJournal;
  * Class TransactionCurrency.
  *
  * @property string $code
+ * @property int $decimal_places
  *
  */
 class TransactionCurrency extends Model

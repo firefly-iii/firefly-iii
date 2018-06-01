@@ -133,10 +133,12 @@ class HomeController extends Controller
         Log::debug('Call twig:clean...');
         try {
             Artisan::call('twig:clean');
+            // @codeCoverageIgnoreStart
         } catch (Exception $e) {
-            // dont care
+            // don't care
             Log::debug('Called twig:clean.');
         }
+        // @codeCoverageIgnoreEnd
         Log::debug('Call view:clear...');
         Artisan::call('view:clear');
         Log::debug('Done! Redirecting...');

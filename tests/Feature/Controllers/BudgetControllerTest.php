@@ -59,6 +59,7 @@ class BudgetControllerTest extends TestCase
      */
     public function testAmount(): void
     {
+        Log::debug('Now in testAmount()');
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -77,8 +78,31 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\BudgetController::amount
      */
+    public function testAmountLargeDiff(): void
+    {
+        Log::debug('Now in testAmount()');
+        // mock stuff
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
+        $repository->shouldReceive('spentInPeriod')->andReturn('0');
+        $repository->shouldReceive('budgetedPerDay')->andReturn('10');
+
+
+        $data = ['amount' => 20000, 'start' => '2017-01-01', 'end' => '2017-01-31'];
+        $this->be($this->user());
+        $response = $this->post(route('budgets.amount', [1]), $data);
+        $response->assertStatus(200);
+        $response->assertSee('Normally you budget about \u20ac10.00 per day.');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\BudgetController::amount
+     */
     public function testAmountZero(): void
     {
+        Log::debug('Now in testAmountZero()');
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -94,10 +118,34 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\BudgetController::amount
+     */
+    public function testAmountOutOfRange(): void
+    {
+        Log::debug('Now in testAmountOutOfRange()');
+        // mock stuff
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
+        $repository->shouldReceive('spentInPeriod')->andReturn('0');
+        $repository->shouldReceive('budgetedPerDay')->andReturn('10');
+
+        $today = new Carbon;
+        $start = $today->startOfMonth()->format('Y-m-d');
+        $end = $today->endOfMonth()->format('Y-m-d');
+        $data = ['amount' => 200, 'start' => $start, 'end' => $end];
+        $this->be($this->user());
+        $response = $this->post(route('budgets.amount', [1]), $data);
+        $response->assertStatus(200);
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\BudgetController::create
      */
     public function testCreate(): void
     {
+        Log::debug('Now in testCreate()');
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -115,6 +163,7 @@ class BudgetControllerTest extends TestCase
      */
     public function testDelete(): void
     {
+        Log::debug('Now in testDelete()');
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -132,6 +181,7 @@ class BudgetControllerTest extends TestCase
      */
     public function testDestroy(): void
     {
+        Log::debug('Now in testDestroy()');
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
@@ -151,6 +201,7 @@ class BudgetControllerTest extends TestCase
      */
     public function testEdit(): void
     {
+        Log::debug('Now in testEdit()');
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -172,6 +223,7 @@ class BudgetControllerTest extends TestCase
      */
     public function testIndex(string $range): void
     {
+        Log::debug(sprintf('Now in testIndex(%s)', $range));
         // mock stuff
         $budget      = factory(Budget::class)->make();
         $budgetLimit = factory(BudgetLimit::class)->make();
@@ -209,6 +261,7 @@ class BudgetControllerTest extends TestCase
         $response->assertSee('<ol class="breadcrumb">');
     }
 
+
     /**
      * @covers       \FireflyIII\Http\Controllers\BudgetController::index
      * @covers       \FireflyIII\Http\Controllers\BudgetController::__construct
@@ -218,6 +271,7 @@ class BudgetControllerTest extends TestCase
      */
     public function testIndexWithDate(string $range): void
     {
+        Log::debug(sprintf('Now in testIndexWithDate(%s)', $range));
         // mock stuff
         $budget      = factory(Budget::class)->make();
         $budgetLimit = factory(BudgetLimit::class)->make();
@@ -255,6 +309,57 @@ class BudgetControllerTest extends TestCase
         $response->assertSee('<ol class="breadcrumb">');
     }
 
+
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\BudgetController::index
+     * @covers       \FireflyIII\Http\Controllers\BudgetController::__construct
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
+    public function testIndexOutOfRange(string $range): void
+    {
+        Log::debug(sprintf('Now in testIndexOutOfRange(%s)', $range));
+        // mock stuff
+        $budget      = factory(Budget::class)->make();
+        $budgetLimit = factory(BudgetLimit::class)->make();
+        $budgetInfo  = [
+            $budget->id => [
+                'spent'      => '0',
+                'budgeted'   => '0',
+                'currentRep' => false,
+            ],
+        ];
+
+        // set budget limit to current month:
+        $budgetLimit->start_date = Carbon::now()->startOfMonth();
+        $budgetLimit->end_date   = Carbon::now()->endOfMonth();
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
+
+        $repository->shouldReceive('cleanupBudgets');
+        $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]));
+        $repository->shouldReceive('getInactiveBudgets')->andReturn(new Collection);
+        $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
+        $repository->shouldReceive('spentInPeriod')->andReturn('-1');
+        $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
+        $repository->shouldReceive('collectBudgetInformation')->andReturn($budgetInfo);
+
+        $this->be($this->user());
+        $today = new Carbon;
+        $today->startOfMonth();
+        $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('budgets.index', [$today->format('Y-m-d')]));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
     /**
      * @covers       \FireflyIII\Http\Controllers\BudgetController::index
      * @covers       \FireflyIII\Http\Controllers\BudgetController::__construct
@@ -264,6 +369,7 @@ class BudgetControllerTest extends TestCase
      */
     public function testIndexWithInvalidDate(string $range): void
     {
+        Log::debug(sprintf('Now in testIndexWithInvalidDate(%s)', $range));
         // mock stuff
         $budget      = factory(Budget::class)->make();
         $budgetLimit = factory(BudgetLimit::class)->make();
@@ -306,6 +412,7 @@ class BudgetControllerTest extends TestCase
      */
     public function testInfoIncome(): void
     {
+        Log::debug('Now in testInfoIncome()');
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
@@ -327,6 +434,7 @@ class BudgetControllerTest extends TestCase
      */
     public function testInfoIncomeExpanded(string $range): void
     {
+        Log::debug(sprintf('Now in testInfoIncomeExpanded(%s)', $range));
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
@@ -350,11 +458,13 @@ class BudgetControllerTest extends TestCase
      */
     public function testNoBudget(string $range): void
     {
+        Log::debug(sprintf('Now in testNoBudget(%s)', $range));
+
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->andReturn(TransactionJournal::first());
+        $journalRepos->shouldReceive('firstNull')->andReturn(null);
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -385,11 +495,12 @@ class BudgetControllerTest extends TestCase
      */
     public function testNoBudgetAll(string $range): void
     {
+        Log::debug(sprintf('Now in testNoBudgetAll(%s)', $range));
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->andReturn(TransactionJournal::first());
+        $journalRepos->shouldReceive('firstNull')->andReturn(null);
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -422,11 +533,12 @@ class BudgetControllerTest extends TestCase
      */
     public function testNoBudgetDate(string $range): void
     {
+        Log::debug(sprintf('Now in testNoBudgetDate(%s)', $range));
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->andReturn(TransactionJournal::first());
+        $journalRepos->shouldReceive('firstNull')->andReturn(null);
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -454,6 +566,7 @@ class BudgetControllerTest extends TestCase
      */
     public function testPostUpdateIncome(): void
     {
+        Log::debug('Now in testPostUpdateIncome()');
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -476,6 +589,7 @@ class BudgetControllerTest extends TestCase
      */
     public function testShow(string $range): void
     {
+        Log::debug(sprintf('Now in testShow(%s)', $range));
         // mock stuff
 
         $budgetLimit = factory(BudgetLimit::class)->make();
@@ -516,6 +630,7 @@ class BudgetControllerTest extends TestCase
      */
     public function testShowByBadBudgetLimit(): void
     {
+        Log::debug('Now in testShowByBadBudgetLimit()');
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -534,6 +649,7 @@ class BudgetControllerTest extends TestCase
      */
     public function testShowByBudgetLimit(string $range): void
     {
+        Log::debug(sprintf('Now in testShowByBudgetLimit(%s)', $range));
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
@@ -570,6 +686,7 @@ class BudgetControllerTest extends TestCase
      */
     public function testStore(): void
     {
+        Log::debug('Now in testStore()');
         // mock stuff
         $budget       = factory(Budget::class)->make();
         $repository   = $this->mock(BudgetRepositoryInterface::class);
@@ -595,6 +712,7 @@ class BudgetControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
+        Log::debug('Now in testUpdate()');
         // mock stuff
         $budget       = factory(Budget::class)->make();
         $repository   = $this->mock(BudgetRepositoryInterface::class);
@@ -621,6 +739,7 @@ class BudgetControllerTest extends TestCase
      */
     public function testUpdateIncome(): void
     {
+        Log::debug('Now in testUpdateIncome()');
         // must be in list
         $this->be($this->user());
 

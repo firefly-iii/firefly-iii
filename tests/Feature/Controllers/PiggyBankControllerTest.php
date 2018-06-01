@@ -34,6 +34,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Steam;
 use Tests\TestCase;
 
@@ -57,7 +58,7 @@ class PiggyBankControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::add
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController
      */
     public function testAdd(): void
     {
@@ -74,7 +75,7 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::addMobile
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController
      */
     public function testAddMobile(): void
     {
@@ -92,7 +93,7 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::create
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController
      */
     public function testCreate(): void
     {
@@ -124,7 +125,7 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::delete
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController
      */
     public function testDelete(): void
     {
@@ -139,7 +140,7 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::destroy
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController
      */
     public function testDestroy(): void
     {
@@ -159,7 +160,7 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::edit
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController
      */
     public function testEdit(): void
     {
@@ -189,8 +190,8 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::index
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::__construct
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController
      */
     public function testIndex(): void
     {
@@ -217,7 +218,7 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::postAdd
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController
      */
     public function testPostAdd(): void
     {
@@ -239,7 +240,7 @@ class PiggyBankControllerTest extends TestCase
     /**
      * Add way too much
      *
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::postAdd
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController
      */
     public function testPostAddTooMuch(): void
     {
@@ -258,7 +259,7 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::postRemove
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController
      */
     public function testPostRemove(): void
     {
@@ -278,7 +279,7 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::postRemove
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController
      */
     public function testPostRemoveTooMuch(): void
     {
@@ -297,7 +298,7 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::remove
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController
      */
     public function testRemove(): void
     {
@@ -311,7 +312,7 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::removeMobile
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController
      */
     public function testRemoveMobile(): void
     {
@@ -326,7 +327,25 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController::show
+     * Test setting of order/
+     *
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController
+     */
+    public function testSetOrder(): void
+    {
+        // mock stuff
+        $repository = $this->mock(PiggyBankRepositoryInterface::class);
+        $repository->shouldReceive('setOrder')->once()->withArgs([Mockery::any(), 3])->andReturn(false);
+
+        $data = ['order' => '3'];
+        $this->be($this->user());
+        $response = $this->post(route('piggy-banks.set-order', [1]), $data);
+        $response->assertStatus(200);
+        $response->assertExactJson(['data' => 'OK']);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController
      */
     public function testShow(): void
     {
@@ -340,7 +359,6 @@ class PiggyBankControllerTest extends TestCase
         $repository->shouldReceive('getCurrentAmount')->andReturn('1');
 
 
-
         $this->be($this->user());
         $response = $this->get(route('piggy-banks.show', [1]));
         $response->assertStatus(200);
@@ -348,7 +366,7 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\PiggyBankController::store
+     * @covers       \FireflyIII\Http\Controllers\PiggyBankController
      * @covers       \FireflyIII\Http\Requests\PiggyBankFormRequest
      */
     public function testStore(): void
@@ -374,7 +392,7 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\PiggyBankController::update
+     * @covers       \FireflyIII\Http\Controllers\PiggyBankController
      * @covers       \FireflyIII\Http\Requests\PiggyBankFormRequest
      */
     public function testUpdate(): void

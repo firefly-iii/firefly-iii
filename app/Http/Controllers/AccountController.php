@@ -210,18 +210,7 @@ class AccountController extends Controller
 
         $request->session()->flash('preFilled', $preFilled);
 
-        return view(
-            'accounts.edit',
-            compact(
-                'account',
-                'currency',
-                'subTitle',
-                'subTitleIcon',
-                'what',
-                'roles',
-                'preFilled'
-            )
-        );
+        return view('accounts.edit', compact('account', 'currency', 'subTitle', 'subTitleIcon', 'what', 'roles', 'preFilled'));
     }
 
     /**
@@ -340,7 +329,7 @@ class AccountController extends Controller
     public function showAll(Request $request, Account $account)
     {
         if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
-            return $this->redirectToOriginalAccount($account);
+            return $this->redirectToOriginalAccount($account); // @codeCoverageIgnore
         }
         $end          = new Carbon;
         $today        = new Carbon;

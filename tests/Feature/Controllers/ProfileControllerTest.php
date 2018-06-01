@@ -30,6 +30,7 @@ use FireflyIII\User;
 use Google2FA;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Preferences;
 use Tests\TestCase;
 
@@ -108,7 +109,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\ProfileController::confirmEmailChange()
+     * @covers \FireflyIII\Http\Controllers\ProfileController::confirmEmailChange()
      */
     public function testConfirmEmailWithToken(): void
     {
@@ -158,8 +159,112 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::index
-     * @covers \FireflyIII\Http\Controllers\ProfileController::__construct
+     * @covers \FireflyIII\Http\Controllers\ProfileController
+     */
+    public function testEnable2FADemo(): void
+    {
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(true);
+
+        $this->be($this->user());
+        $response = $this->post(route('profile.enable2FA'));
+        $response->assertStatus(302);
+        $response->assertRedirect(route('profile.index'));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\ProfileController
+     */
+    public function testEnable2FANoSecret(): void
+    {
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
+
+        // ask about language:
+        $langPreference       = new Preference;
+        $langPreference->data = 'en_US';
+        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($langPreference)->times(2);
+
+        // ask about twoFactorAuthEnabled
+        $truePref       = new Preference;
+        $truePref->data = true;
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($truePref)->times(1);
+
+        // ask about range
+        $rangePref       = new Preference;
+        $rangePref->data = '1M';
+        Preferences::shouldReceive('get')->withArgs(['viewRange', '1M'])->andReturn($rangePref)->once();
+
+        // ask about list length:
+        $listPref       = new Preference;
+        $listPref->data = '50';
+        Preferences::shouldReceive('get')->withArgs(['list-length', '10'])->andReturn($listPref)->once();
+
+
+        // ask about currency
+        $currencyPref       = new Preference;
+        $currencyPref->data = 'EUR';
+        Preferences::shouldReceive('getForUser')->once()->withArgs([Mockery::any(), 'currencyPreference', 'EUR'])->andReturn($currencyPref);
+        Preferences::shouldReceive('lastActivity')->once();
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->twice()->andReturnNull();
+
+        $this->be($this->user());
+        $response = $this->post(route('profile.enable2FA'));
+        $response->assertStatus(302);
+        $response->assertRedirect(route('profile.code'));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\ProfileController
+     */
+    public function testEnable2FASecret(): void
+    {
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
+
+        // ask about language:
+        $langPreference       = new Preference;
+        $langPreference->data = 'en_US';
+        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($langPreference)->times(2);
+
+        // ask about twoFactorAuthEnabled
+        $truePref       = new Preference;
+        $truePref->data = true;
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($truePref)->times(1);
+
+        // ask about range
+        $rangePref       = new Preference;
+        $rangePref->data = '1M';
+        Preferences::shouldReceive('get')->withArgs(['viewRange', '1M'])->andReturn($rangePref)->once();
+
+        // ask about list length:
+        $listPref       = new Preference;
+        $listPref->data = '50';
+        Preferences::shouldReceive('get')->withArgs(['list-length', '10'])->andReturn($listPref)->once();
+
+        $secretPref= new Preference;
+        $secretPref->data = 'X';
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->twice()->andReturn(null,$secretPref);
+
+        // set pref
+        Preferences::shouldReceive('set')->once()->withArgs(['twoFactorAuthEnabled', 1]);
+
+
+        // ask about currency
+        $currencyPref       = new Preference;
+        $currencyPref->data = 'EUR';
+        Preferences::shouldReceive('getForUser')->once()->withArgs([Mockery::any(), 'currencyPreference', 'EUR'])->andReturn($currencyPref);
+        Preferences::shouldReceive('lastActivity')->once();
+
+
+        $this->be($this->user());
+        $response = $this->post(route('profile.enable2FA'));
+        $response->assertStatus(302);
+        $response->assertRedirect(route('profile.index'));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testIndex(): void
     {

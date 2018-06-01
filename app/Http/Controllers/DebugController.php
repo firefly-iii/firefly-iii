@@ -66,6 +66,7 @@ class DebugController extends Controller
         $userAgent      = $request->header('user-agent');
         $isSandstorm    = var_export(env('IS_SANDSTORM', 'unknown'), true);
         $isDocker       = var_export(env('IS_DOCKER', 'unknown'), true);
+        $toSandbox      = var_export(env('BUNQ_USE_SANDBOX', 'unknown'), true);
         $trustedProxies = env('TRUSTED_PROXIES', '(none)');
         $displayErrors  = ini_get('display_errors');
         $errorReporting = $this->errorReporting((int)ini_get('error_reporting'));
@@ -96,40 +97,24 @@ class DebugController extends Controller
                 if (null !== $logFile) {
                     try {
                         $logContent = file_get_contents($logFile);
+                        // @codeCoverageIgnoreStart
                     } catch (Exception $e) {
                         // don't care
                         Log::debug(sprintf('Could not read log file. %s', $e->getMessage()));
                     }
+                    // @codeCoverageIgnoreEnd
                 }
             }
         }
         // last few lines
-        $logContent = 'Truncated from this point <----|' . substr($logContent, -4096);
+        $logContent = 'Truncated from this point <----|' . substr($logContent, -8192);
 
         return view(
-            'debug',
-            compact(
-                'phpVersion',
-                'extensions', 'localeAttempts',
-                'appEnv',
-                'appDebug',
-                'appLog',
-                'appLogLevel',
-                'now',
-                'packages',
-                'drivers',
-                'currentDriver',
-                'userAgent',
-                'displayErrors',
-                'errorReporting',
-                'phpOs',
-                'interface',
-                'logContent',
-                'cacheDriver',
-                'isDocker',
-                'isSandstorm',
-                'trustedProxies'
-            )
+            'debug', compact(
+            'phpVersion', 'extensions', 'localeAttempts', 'appEnv', 'appDebug', 'appLog', 'appLogLevel', 'now', 'packages', 'drivers', 'currentDriver',
+            'userAgent', 'displayErrors', 'errorReporting', 'phpOs', 'interface', 'logContent', 'cacheDriver', 'isDocker', 'isSandstorm', 'trustedProxies',
+            'toSandbox'
+        )
         );
     }
 

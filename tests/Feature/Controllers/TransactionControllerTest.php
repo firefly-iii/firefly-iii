@@ -54,10 +54,10 @@ class TransactionControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TransactionController::index
-     * @covers \FireflyIII\Http\Controllers\TransactionController::__construct
-     * @covers \FireflyIII\Http\Controllers\TransactionController::getPeriodOverview
-     * @covers \FireflyIII\Http\Controllers\TransactionController::sumPerCurrency
+     * @covers \FireflyIII\Http\Controllers\TransactionController
+     * @covers \FireflyIII\Http\Controllers\TransactionController
+     * @covers \FireflyIII\Http\Controllers\TransactionController
+     * @covers \FireflyIII\Http\Controllers\TransactionController
      */
     public function testIndex(): void
     {
@@ -91,7 +91,7 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TransactionController::index
+     * @covers \FireflyIII\Http\Controllers\TransactionController
      */
     public function testIndexAll(): void
     {
@@ -125,9 +125,9 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TransactionController::index
-     * @covers \FireflyIII\Http\Controllers\TransactionController::getPeriodOverview
-     * @covers \FireflyIII\Http\Controllers\TransactionController::sumPerCurrency
+     * @covers \FireflyIII\Http\Controllers\TransactionController
+     * @covers \FireflyIII\Http\Controllers\TransactionController
+     * @covers \FireflyIII\Http\Controllers\TransactionController
      */
     public function testIndexByDate(): void
     {
@@ -168,10 +168,53 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TransactionController::index
-     * @covers \FireflyIII\Http\Controllers\TransactionController::__construct
-     * @covers \FireflyIII\Http\Controllers\TransactionController::getPeriodOverview
-     * @covers \FireflyIII\Http\Controllers\TransactionController::sumPerCurrency
+     * @covers \FireflyIII\Http\Controllers\TransactionController
+     * @covers \FireflyIII\Http\Controllers\TransactionController
+     * @covers \FireflyIII\Http\Controllers\TransactionController
+     */
+    public function testIndexByDateReversed(): void
+    {
+        $transaction                              = new Transaction;
+        $transaction->transaction_currency_id     = 1;
+        $transaction->transaction_currency_symbol = 'x';
+        $transaction->transaction_currency_code   = 'ABC';
+        $transaction->transaction_currency_dp     = 2;
+        $transaction->transaction_amount          = '5';
+        $collection                               = new Collection([$transaction]);
+
+
+        // mock stuff
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $collector  = $this->mock(JournalCollectorInterface::class);
+        $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
+        $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
+        $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
+
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('addFilter')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+        $collector->shouldReceive('getJournals')->andReturn($collection);
+
+        $this->be($this->user());
+        $response = $this->get(route('transactions.index', ['transfer', '2016-01-01','2015-12-31']));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\TransactionController
+     * @covers \FireflyIII\Http\Controllers\TransactionController
+     * @covers \FireflyIII\Http\Controllers\TransactionController
+     * @covers \FireflyIII\Http\Controllers\TransactionController
      */
     public function testIndexDeposit(): void
     {
@@ -211,10 +254,10 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TransactionController::index
-     * @covers \FireflyIII\Http\Controllers\TransactionController::__construct
-     * @covers \FireflyIII\Http\Controllers\TransactionController::getPeriodOverview
-     * @covers \FireflyIII\Http\Controllers\TransactionController::sumPerCurrency
+     * @covers \FireflyIII\Http\Controllers\TransactionController
+     * @covers \FireflyIII\Http\Controllers\TransactionController
+     * @covers \FireflyIII\Http\Controllers\TransactionController
+     * @covers \FireflyIII\Http\Controllers\TransactionController
      */
     public function testIndexWithdrawal(): void
     {
@@ -254,7 +297,7 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TransactionController::reconcile
+     * @covers \FireflyIII\Http\Controllers\TransactionController
      */
     public function testReconcile(): void
     {
@@ -271,7 +314,7 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TransactionController::reorder
+     * @covers \FireflyIII\Http\Controllers\TransactionController
      */
     public function testReorder(): void
     {
@@ -293,8 +336,8 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TransactionController::show
-     * @covers \FireflyIII\Http\Controllers\Controller::isOpeningBalance
+     * @covers \FireflyIII\Http\Controllers\TransactionController
+     * @covers \FireflyIII\Http\Controllers\Controller
      */
     public function testShow(): void
     {
@@ -316,8 +359,8 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Controller::redirectToAccount
-     * @covers \FireflyIII\Http\Controllers\TransactionController::show
+     * @covers \FireflyIII\Http\Controllers\Controller
+     * @covers \FireflyIII\Http\Controllers\TransactionController
      */
     public function testShowOpeningBalance(): void
     {

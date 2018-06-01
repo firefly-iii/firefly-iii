@@ -80,7 +80,7 @@ class JobStatusControllerTest extends TestCase
         $job->user_id      = $this->user()->id;
         $job->key          = 'Bfake_job_' . random_int(1, 1000);
         $job->status       = 'ready_to_run';
-        $job->provider     = 'fake';
+        $job->provider     = 'file';
         $job->transactions = [];
         $job->file_type    = '';
         $job->save();

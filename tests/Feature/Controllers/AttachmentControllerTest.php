@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use Illuminate\Support\Collection;
 use Log;
 use Tests\TestCase;
 
@@ -45,7 +47,6 @@ class AttachmentControllerTest extends TestCase
         parent::setUp();
         Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
-
 
     /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController::delete
@@ -131,6 +132,23 @@ class AttachmentControllerTest extends TestCase
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\AttachmentController
+     */
+    public function testIndex()
+    {
+        $repository   = $this->mock(AttachmentRepositoryInterface::class);
+        $repository->shouldReceive('get')->andReturn(new Collection([Attachment::first()]))->once();
+        $repository->shouldReceive('exists')->andReturn(true)->once();
+
+        $this->be($this->user());
+        $response = $this->get(route('attachments.index'));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+
     }
 
     /**

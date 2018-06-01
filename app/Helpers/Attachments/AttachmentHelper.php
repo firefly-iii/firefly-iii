@@ -25,6 +25,7 @@ namespace FireflyIII\Helpers\Attachments;
 use Crypt;
 use FireflyIII\Models\Attachment;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
@@ -66,6 +67,8 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param Attachment $attachment
      *
      * @return string
@@ -74,7 +77,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     {
         try {
             $content = Crypt::decrypt($this->uploadDisk->get(sprintf('at-%d.data', $attachment->id)));
-        } catch (DecryptException $e) {
+        } catch (DecryptException|FileNotFoundException $e) {
             Log::error(sprintf('Could not decrypt data of attachment #%d', $attachment->id));
 
             return '';

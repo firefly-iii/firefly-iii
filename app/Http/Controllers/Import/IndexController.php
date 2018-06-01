@@ -156,8 +156,9 @@ class IndexController extends Controller
     public function download(ImportJob $job): LaravelResponse
     {
         Log::debug('Now in download()', ['job' => $job->key]);
-        $config = $job->configuration;
+        $config = $this->repository->getConfiguration($job);
         // This is CSV import specific:
+        $config['delimiter'] = $config['delimiter'] ?? ',';
         $config['delimiter'] = "\t" === $config['delimiter'] ? 'tab' : $config['delimiter'];
 
         // this prevents private information from escaping
