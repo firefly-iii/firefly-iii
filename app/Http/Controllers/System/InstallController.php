@@ -33,6 +33,7 @@ use Log;
 use phpseclib\Crypt\RSA;
 
 /**
+ * @codeCoverageIgnore
  * Class InstallController
  */
 class InstallController extends Controller
