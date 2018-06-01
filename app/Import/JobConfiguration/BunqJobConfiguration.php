@@ -111,6 +111,7 @@ class BunqJobConfiguration implements JobConfigurationInterface
         switch ($this->importJob->stage) {
             case 'new';
                 $handler = app(NewBunqJobHandler::class);
+                $handler->setImportJob($this->importJob);
                 break;
             case 'choose-accounts':
                 /** @var ChooseAccountsHandler $handler */
