@@ -210,7 +210,6 @@ class ImportableConverter
         }
 
 
-
         $dateStr = $date->format('Y-m-d');
 
         return [
@@ -235,7 +234,7 @@ class ImportableConverter
             'due_date'           => $importable->meta['date-due'] ?? null,
             'payment_date'       => $importable->meta['date-payment'] ?? null,
             'invoice_date'       => $importable->meta['date-invoice'] ?? null,
-            // todo external ID
+            'external_id'        => $importable->externalId,
 
             // journal data:
             'description'        => $importable->description,
