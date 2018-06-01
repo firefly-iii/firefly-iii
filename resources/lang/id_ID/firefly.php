@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * firefly.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     // general stuff:
@@ -179,6 +180,7 @@ return [
     'authorization_request_intro'                => '<strong>:client</strong> is requesting permission to access your financial administration. Would you like to authorize <strong>:client</strong> to access these records?',
     'scopes_will_be_able'                        => 'This application will be able to:',
     'button_authorize'                           => 'Authorize',
+    'none_in_select_list'                        => '(none)',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',
@@ -666,6 +668,7 @@ return [
     'bill_will_automatch'                     => 'Tagihan akan secara otomatis terhubung ke transaksi yang sesuai',
     'skips_over'                              => 'melompati',
     'bill_store_error'                        => 'An unexpected error occurred while storing your new bill. Please check the log files',
+    'list_inactive_rule'                      => 'inactive rule',
 
     // accounts:
     'details_for_asset'                       => 'Rincian akun aset ":name"',
@@ -801,6 +804,7 @@ return [
     'opt_group_savingAsset'                   => 'Menyimpan akun',
     'opt_group_sharedAsset'                   => 'Akun aset bersama',
     'opt_group_ccAsset'                       => 'Kartu kredit',
+    'opt_group_cashWalletAsset'               => 'Cash wallets',
     'notes'                                   => 'Notes',
     'unknown_journal_error'                   => 'Could not store the transaction. Please check the log files.',
 
@@ -816,6 +820,7 @@ return [
     'language'                                => 'Language',
     'new_savings_account'                     => ':bank_name savings account',
     'cash_wallet'                             => 'Cash wallet',
+    'currency_not_present' => 'If the currency you normally use is not listed do not worry. You can create your own currencies under Options > Currencies.',
 
     // home page:
     'yourAccounts'                            => 'Akun anda',
@@ -1013,6 +1018,7 @@ return [
     'remove_money_from_piggy_title'           => 'Hapus uang dari celengan ":name"',
     'add'                                     => 'Menambahkan',
     'no_money_for_piggy'                      => 'Anda tidak punya uang untuk dimasukkan ke dalam celengan ini.',
+    'suggested_savings_per_month'             => 'Suggested per month',
 
     'remove'                    => 'Menghapus',
     'max_amount_add'            => 'Jumlah maksimum yang bisa Anda tambahkan adalah',
@@ -1148,27 +1154,9 @@ return [
     'no_edit_multiple_left'                 => 'Anda tidak memilih transaksi yang sah untuk diedit.',
     'cannot_convert_split_journal'          => 'Tidak dapat mengonversi transaksi split',
 
-    // import bread crumbs and titles:
-    'import'                                => 'Impor',
-    'import_data'                           => 'Impor data',
-    'import_general_index_file'             => 'Impor file',
-    'import_from_bunq'                      => 'Impor dari bunq',
-    'import_using_spectre'                  => 'Impor menggunakan momok',
-    'import_using_plaid'                    => 'Impor menggunakan Plaid',
-    'import_config_bread_crumb'             => 'Siapkan impor Anda',
-
-    // import index page:
+    // Import page (general strings only)
     'import_index_title'                    => 'Impor data ke Firefly III',
-    'import_index_sub_title'                => 'Indeks',
-    'import_general_index_intro'            => 'Welcome to Firefly III\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
-    'upload_error'                          => 'The file you have uploaded could not be processed. Possibly it is of an invalid file type or encoding. The log files will have more information.',
-    'reset_import_settings_title'           => 'Reset import configuration',
-    'reset_import_settings_text'            => 'You can use these links to reset your import settings for specific providers. This is useful when bad settings stop you from importing data.',
-    'reset_settings_bunq'                   => 'Remove bunq API key, local external IP address and bunq related RSA keys.',
-    'reset_settings_spectre'                => 'Remove Spectre secrets and ID\'s. This will also remove your Spectre keypair. Remember to update the new one.',
-    'settings_reset_for_bunq'               => 'Bunq settings reset.',
-    'settings_reset_for_spectre'            => 'Spectre settings reset.',
-
+    'import_data'                           => 'Impor data',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Fungsi ini tidak tersedia saat Anda menggunakan Firefly III di dalam lingkungan Sandstorm.io.',
