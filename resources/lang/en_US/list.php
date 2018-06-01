@@ -122,4 +122,5 @@ return [
     'spectre_bank'            => 'Bank',
     'spectre_last_use'        => 'Last login',
     'spectre_status'          => 'Status',
+    'bunq_payment_id'         => 'bunq payment ID',
 ];
