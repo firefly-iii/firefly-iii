@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * form.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     // new user:
@@ -91,7 +92,7 @@ return [
     'type'                        => 'Tipo',
     'convert_Withdrawal'          => 'Converti spesa',
     'convert_Deposit'             => 'Converti entrata',
-    'convert_Transfer'            => 'Converti giroconto',
+    'convert_Transfer'            => 'Converti trasferimento',
 
     'amount'                     => 'Importo',
     'foreign_amount'             => 'Importo estero',
@@ -184,6 +185,13 @@ return [
     'blocked'               => 'È bloccato?',
     'blocked_code'          => 'Motivo del blocco',
 
+    // import
+    'apply_rules'           => 'Applica regole',
+    'artist'                => 'Artista',
+    'album'                 => 'Album',
+    'song'                  => 'Brano',
+
+
     // admin
     'domain'                => 'Dominio',
     'single_user_mode'      => 'Disabilita registrazione utente',
@@ -202,8 +210,8 @@ return [
     'client_id'             => 'ID Client',
     'service_secret'        => 'Servizio segreto',
     'app_secret'            => 'App segreto',
-    'app_id'                => 'App ID',
-    'secret'                => 'Secret',
+    'app_id'                => 'ID dell\'app',
+    'secret'                => 'Segreto',
     'public_key'            => 'Chiave Pubblica',
     'country_code'          => 'Codice Nazione',
     'provider_code'         => 'Banca o fornitore di dati',

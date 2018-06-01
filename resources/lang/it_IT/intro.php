@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * intro.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     // index
@@ -120,7 +121,7 @@ return [
 
     // create rule:
     'rules_create_mandatory'                                  => 'Scegli un titolo descrittivo e imposta quando deve essere attivata la regola.',
-    'rules_create_ruletriggerholder'                          => 'Aggiungi tutti i trigger che desideri, ma ricorda che TUTTI i trigger devono corrispondere prima che vengano attivate azioni.',
+    'rules_create_ruletriggerholder'                          => 'Aggiungi tutti i trigger che desideri, ma ricorda che TUTTI i trigger devono corrispondere prima che vengano attivate le azioni.',
     'rules_create_test_rule_triggers'                         => 'Usa questo pulsante per vedere quali transazioni corrispondono alla tua regola.',
     'rules_create_actions'                                    => 'Imposta tutte le azioni che vuoi.',
 
@@ -132,5 +133,5 @@ return [
     'currencies_index_default'                                => 'Firefly III ha una valuta predefinita. Puoi sempre cambiare valuta usando questi pulsanti.',
 
     // create currency
-    'currencies_create_code'                                  => 'Questo codice dovrebbe essere conforme ISO (Google per la tua nuova valuta).',
+    'currencies_create_code'                                  => 'Questo codice dovrebbe essere conforme ISO (cercalo con Google per la tua nuova valuta).',
 ];
