@@ -336,7 +336,6 @@ class TagRepository implements TagRepositoryInterface
                                    }
                                )
                                ->groupBy(['tags.id', 'tags.tag']);
-
         // add date range (or not):
         if (null === $year) {
             Log::debug('Get tags without a date.');
@@ -464,4 +463,13 @@ class TagRepository implements TagRepositoryInterface
     {
         return $this->user->tags()->find($tagId);
     }
-}
+
+    /**
+     * Will return the newest tag (if known) or NULL.
+     *
+     * @return Tag|null
+     */
+    public function newestTag(): ?Tag
+    {
+        return $this->user->tags()->whereNotNull('date')->orderBy('date', 'DESC')->first();
+}}

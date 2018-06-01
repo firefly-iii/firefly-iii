@@ -116,10 +116,16 @@ interface TagRepositoryInterface
     public function lastUseDate(Tag $tag): Carbon;
 
     /**
+     * Will return the newest tag (if known) or NULL.
      * @return Tag|null
      */
     public function oldestTag(): ?Tag;
 
+    /**
+     * Will return the newest tag (if known) or NULL.
+     * @return Tag|null
+     */
+    public function newestTag(): ?Tag;
     /**
      * @param User $user
      */

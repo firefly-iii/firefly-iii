@@ -130,6 +130,8 @@ class TagControllerTest extends TestCase
         $repository->shouldReceive('count')->andReturn(0);
         $repository->shouldReceive('tagCloud')->andReturn([]);
         $repository->shouldReceive('oldestTag')->andReturn(null)->once();
+        $repository->shouldReceive('newestTag')->andReturn(null)->once();
+
 
         $this->be($this->user());
         $response = $this->get(route('tags.index'));

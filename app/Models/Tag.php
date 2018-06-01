@@ -32,9 +32,11 @@ use FireflyIII\Models\TransactionJournal;
 
 /**
  * Class Tag.
+ *
  * @property Collection $transactionJournals
  * @property string $tag
  * @property int $id
+ * @property \Carbon\Carbon $date
  */
 class Tag extends Model
 {
