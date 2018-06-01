@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * form.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     // new user:
@@ -183,6 +184,13 @@ return [
     'password_confirmation' => 'Wachtwoord (nogmaals)',
     'blocked'               => 'Is geblokkeerd?',
     'blocked_code'          => 'Reden voor blokkade',
+
+    // import
+    'apply_rules'           => 'Regels toepassen',
+    'artist'                => 'Artiest',
+    'album'                 => 'Album',
+    'song'                  => 'Nummer',
+
 
     // admin
     'domain'                => 'Domein',

@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * import.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -21,94 +20,198 @@ declare(strict_types=1);
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 return [
-    // status of import:
+    // ALL breadcrumbs and subtitles:
+    'index_breadcrumb'                     => 'Gegevens importeren in Firefly III',
+    'prerequisites_breadcrumb_fake'        => 'Vereisten voor de nep-importhulp',
+    'prerequisites_breadcrumb_spectre'     => 'Vereisten voor Spectre',
+    'prerequisites_breadcrumb_bunq'        => 'Vereisten voor bunq',
+    'job_configuration_breadcrumb'         => 'Instellingen voor ":key"',
+    'job_status_breadcrumb'                => 'Importstatus voor ":key"',
+    'cannot_create_for_provider'           => 'Firefly III kan niet importeren met behulp van ":provider".',
+
+    // index page:
+    'general_index_title'                  => 'Importeer een bestand',
+    'general_index_intro'                  => 'Dit is de import-routine van Firefly III. Er zijn verschillende manieren om gegevens te importeren in Firefly III, hier als knoppen weergegeven.',
+    // import provider strings (index):
+    'button_fake'                          => 'Nepdata importeren',
+    'button_file'                          => 'Importeer een bestand',
+    'button_bunq'                          => 'Importeer uit bunq',
+    'button_spectre'                       => 'Importeer via Spectre',
+    'button_plaid'                         => 'Importeer via Plaid',
+    'button_yodlee'                        => 'Importeer via Spectre',
+    'button_quovo'                         => 'Importeer via Quovo',
+    // global config box (index)
+    'global_config_title'                  => 'Configuratiebestand',
+    'global_config_text'                   => 'In de toekomst bevat dit vak voorkeuren die van toepassing zijn op ALLE bovenstaande importproviders.',
+    // prerequisites box (index)
+    'need_prereq_title'                    => 'Importvereisten',
+    'need_prereq_intro'                    => 'Sommige importmethoden hebben je aandacht nodig voor ze gebruikt kunnen worden. Ze vereisen bijvoorbeeld speciale API-sleutels of geheime waardes. Je kan ze hier instellen. Het icoontje geeft aan of deze vereisten al ingevuld zijn.',
+    'do_prereq_fake'                       => 'Vereisten voor de nep-importhulp',
+    'do_prereq_file'                       => 'Vereisten voor het importeren van bestanden',
+    'do_prereq_bunq'                       => 'Vereisten voor een import van bunq',
+    'do_prereq_spectre'                    => 'Vereisten voor een import via Spectre',
+    'do_prereq_plaid'                      => 'Vereisten voor een import via Plaid',
+    'do_prereq_yodlee'                     => 'Vereisten voor een import via Yodlee',
+    'do_prereq_quovo'                      => 'Vereisten voor een import via Quovo',
+    // provider config box (index)
+    'can_config_title'                     => 'Importinstellingen',
+    'can_config_intro'                     => 'Sommige importmethodes kunnen ingesteld worden zoals jij dat wilt. Er zijn extra instellingen die je aan kan passen.',
+    'do_config_fake'                       => 'Instellingen voor de nep-importhulp',
+    'do_config_file'                       => 'Instellingen voor importeren van bestanden',
+    'do_config_bunq'                       => 'Instellingen voor importeren uit bunq',
+    'do_config_spectre'                    => 'Instellingen voor importeren uit Spectre',
+    'do_config_plaid'                      => 'Instellingen voor importeren uit Plaid',
+    'do_config_yodlee'                     => 'Instellingen voor importeren uit Yodlee',
+    'do_config_quovo'                      => 'Instellingen voor importeren uit Quovo',
+
+    // prerequisites:
+    'prereq_fake_title'                    => 'Instellingen voor importeren uit de nep-importhulp',
+    'prereq_fake_text'                     => 'Deze nep-provider heeft een neppe API key nodig. Deze moet 32 tekens lang zijn. Je mag deze gebruiken: 123456789012345678901234567890AA',
+    'prereq_spectre_title'                 => 'Vereisten voor een import via Spectre',
+    'prereq_spectre_text'                  => 'Als je gegevens wilt importeren via de Spectre API (v4), moet je een aantal geheime codes bezitten. Ze zijn te vinden op <a href="https://www.saltedge.com/clients/profile/secrets">de secrets pagina</a>.',
+    'prereq_spectre_pub'                   => 'De Spectre API moet de publieke sleutel kennen die je hieronder ziet. Zonder deze sleutel herkent Spectre je niet. Voer deze publieke sleutel in op je <a href="https://www.saltedge.com/clients/profile/secrets">secrets-pagina</a>.',
+    'prereq_bunq_title'                    => 'Vereisten aan een import van bunq',
+    'prereq_bunq_text'                     => 'Om te importeren vanaf bunq moet je een API key hebben. Deze kan je aanvragen in de app. Denk er aan dat deze functie in BETA is. De code is alleen getest op de sandbox API.',
+    'prereq_bunq_ip'                       => 'bunq wilt graag je externe IP-adres weten. Firefly III heeft geprobeerd dit in te vullen met behulp van de <a href="https://www.ipify.org/">ipify-dienst</a>. Zorg dat je zeker weet dat dit IP-adres klopt, want anders zal de import niet werken.',
+    // prerequisites success messages:
+    'prerequisites_saved_for_fake'         => 'Nep API-sleutel is opgeslagen!',
+    'prerequisites_saved_for_spectre'      => 'APP ID en secret opgeslagen!',
+    'prerequisites_saved_for_bunq'         => 'API-sleutel en IP opgeslagen!',
+
+    // job configuration:
+    'job_config_apply_rules_title'         => 'Importinstellingen - regels toepassen?',
+    'job_config_apply_rules_text'          => 'Als de nep-importhulp gedraaid heeft kunnen je regels worden toegepast op de transacties. Dit kost wel tijd.',
+    'job_config_input'                     => 'Je invoer',
+    // job configuration for the fake provider:
+    'job_config_fake_artist_title'         => 'Voer albumnaam in',
+    'job_config_fake_artist_text'          => 'Veel importroutines hebben een paar configuratiestappen die je moet doorlopen. In het geval van de nep-importhulp moet je een aantal rare vragen beantwoorden. Voer \'David Bowie\' in om door te gaan.',
+    'job_config_fake_song_title'           => 'Naam van nummer',
+    'job_config_fake_song_text'            => 'Noem het nummer "Golden years" om door te gaan met de nep import.',
+    'job_config_fake_album_title'          => 'Albumnaam invoeren',
+    'job_config_fake_album_text'           => 'Sommige importroutines vereisen extra gegevens halverwege de import. In het geval van de nep-importhulp moet je een aantal rare vragen beantwoorden. Voer "Station naar station" in om door te gaan.',
+    // job configuration form the file provider
+    'job_config_file_upload_title'         => 'Importinstellingen (1/4) - Upload je bestand',
+    'job_config_file_upload_text'          => 'Met deze routine kan je bestanden van je bank importeren in Firefly III. ',
+    'job_config_file_upload_help'          => 'Selecteer je bestand. Zorg ervoor dat het bestand UTF-8 gecodeerd is.',
+    'job_config_file_upload_config_help'   => 'Als je eerder gegevens hebt geïmporteerd in Firefly III, heb je wellicht een configuratiebestand, dat een aantal zaken alvast voor je kan instellen. Voor bepaalde banken hebben andere gebruikers uit de liefde van hun hart het benodigde <a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand</a> gedeeld',
+    'job_config_file_upload_type_help'     => 'Selecteer het type bestand dat je zal uploaden',
+    'job_config_file_upload_submit'        => 'Bestanden uploaden',
+    'import_file_type_csv'                 => 'CSV (kommagescheiden waardes)',
+    'file_not_utf8'                        => 'Het bestand dat je hebt geüpload, is niet gecodeerd als UTF-8 of ASCII. Firefly III kan dergelijke bestanden niet verwerken. Gebruik Notepad ++ of Sublime om je bestand naar UTF-8 te converteren.',
+    'job_config_uc_title'                  => 'Importinstellingen (2/4) - Algemene importinstellingen',
+    'job_config_uc_text'                   => 'Om je bestand goed te kunnen importeren moet je deze opties verifiëren.',
+    'job_config_uc_header_help'            => 'Vink hier als de eerste rij kolomtitels bevat.',
+    'job_config_uc_date_help'              => 'Datum/tijd formaat in jouw bestand. Volg het formaat zoals ze het <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">op deze pagina</a> uitleggen. Het standaardformaat ziet er zo uit: :dateExample.',
+    'job_config_uc_delimiter_help'         => 'Kies het veldscheidingsteken dat in jouw bestand wordt gebruikt. Als je het niet zeker weet, is de komma de beste optie.',
+    'job_config_uc_account_help'           => 'Als jouw CSV bestand geen referenties bevat naar jouw betaalrekening(en), geef dan hier aan om welke rekening het gaat.',
+    'job_config_uc_apply_rules_title'      => 'Regels toepassen',
+    'job_config_uc_apply_rules_text'       => 'Past je regels toe op elke geïmporteerde transactie. Merk op dat dit de import aanzienlijk vertraagt.',
+    'job_config_uc_specifics_title'        => 'Bank-specifieke opties',
+    'job_config_uc_specifics_txt'          => 'Sommige banken leveren slecht geformatteerde bestanden aan. Firefly III kan deze automatisch corrigeren. Als jouw bank dergelijke bestanden levert, maar deze hier niet wordt vermeld, open dan een issue op GitHub.',
+    'job_config_uc_submit'                 => 'Volgende',
+    'invalid_import_account'               => 'Je hebt een ongeldige betaalrekening geselecteerd om in te importeren.',
+    // job configuration for Spectre:
+    'job_config_spectre_login_title'       => 'Kies je login',
+    'job_config_spectre_login_text'        => 'Firefly III heeft :count bestaande login(s) gevonden in je Spectre-account. Welke wil je gebruiken om van te importeren?',
+    'spectre_login_status_active'          => 'Actief',
+    'spectre_login_status_inactive'        => 'Inactief',
+    'spectre_login_status_disabled'        => 'Uitgeschakeld',
+    'spectre_login_new_login'              => 'Log in via een andere bank, of via een van deze banken met andere inloggegevens.',
+    'job_config_spectre_accounts_title'    => 'Selecteer de rekeningen waaruit je wilt importeren',
+    'job_config_spectre_accounts_text'     => 'Je hebt ":name" (:country) geselecteerd. Je hebt :count rekening(en) bij deze provider. Kies de Firefly III betaalrekening(en) waar je de transacties in wilt opslaan. Denk er aan dat zowel de ":name"-rekeningen als de Firefly III rekeningen dezelfde valuta moeten hebben.',
+    'spectre_no_supported_accounts'        => 'Je kan niet importeren van deze rekening omdat de valuta niet overeen komt.',
+    'spectre_do_not_import'                => '(niet importeren)',
+    'spectre_no_mapping'                   => 'Je hebt geen rekeningen geselecteerd om uit te importeren.',
+    'imported_from_account'                => 'Geïmporteerd uit ":account"',
+    'spectre_account_with_number'          => 'Rekening :number',
+    // job configuration for bunq:
+    'job_config_bunq_accounts_title'       => 'bunq rekeningen',
+    'job_config_bunq_accounts_text'        => 'Deze rekeningen zijn geassocieerd met je bunq-account. Kies de rekeningen waar je van wilt importeren, en geef aan waar de gegevens geïmporteerd moeten worden.',
+    'bunq_no_mapping'                      => 'Je hebt geen rekeningen geselecteerd om uit te importeren.',
+    'should_download_config'               => 'Download <a href=":route">het configuratiebestand</a> voor deze import. Dit maakt toekomstige imports veel eenvoudiger.',
+    'share_config_file'                    => 'Als je gegevens hebt geimporteerd van een gewone bank, <a href="https://github.com/firefly-iii/import-configurations/wiki">deel dan je configuratiebestand</a> zodat het makkelijk is voor andere gebruikers om hun gegevens te importeren. Als je je bestand deelt deel je natuurlijk géén privé-gegevens.',
+
+    // keys from "extra" array:
+    'spectre_extra_key_iban'               => 'IBAN',
+    'spectre_extra_key_swift'              => 'SWIFT',
+    'spectre_extra_key_status'             => 'Status',
+    'spectre_extra_key_card_type'          => 'Kaartsoort',
+    'spectre_extra_key_account_name'       => 'Rekeningnaam',
+    'spectre_extra_key_client_name'        => 'Klantnaam',
+    'spectre_extra_key_account_number'     => 'Rekeningnummer',
+    'spectre_extra_key_blocked_amount'     => 'Geblokkeerd bedrag',
+    'spectre_extra_key_available_amount'   => 'Beschikbaar bedrag',
+    'spectre_extra_key_credit_limit'       => 'Kredietlimiet',
+    'spectre_extra_key_interest_rate'      => 'Rente',
+    'spectre_extra_key_expiry_date'        => 'Vervaldatum',
+    'spectre_extra_key_open_date'          => 'Openingsdatum',
+    'spectre_extra_key_current_time'       => 'Huidige tijd',
+    'spectre_extra_key_current_date'       => 'Huidige datum',
+    'spectre_extra_key_cards'              => 'Kaarten',
+    'spectre_extra_key_units'              => 'Eenheden',
+    'spectre_extra_key_unit_price'         => 'Prijs per eenheid',
+    'spectre_extra_key_transactions_count' => 'Transacties',
+
+    // specifics:
+    'specific_ing_name'                    => 'ING NL',
+    'specific_ing_descr'                   => 'Maak betere beschrijvingen in de export van ING',
+    'specific_sns_name'                    => 'SNS / Volksbank NL',
+    'specific_sns_descr'                   => 'Trim citaten uit exportbestanden van SNS / Volksbank',
+    'specific_abn_name'                    => 'ABN AMRO NL',
+    'specific_abn_descr'                   => 'Lost mogelijke problemen op met ABN AMRO-bestanden',
+    'specific_rabo_name'                   => 'Rabobank NL',
+    'specific_rabo_descr'                  => 'Lost mogelijke problemen op met Rabobank txt-bestanden',
+    'specific_pres_name'                   => 'President\'s Choice Financial CA',
+    'specific_pres_descr'                  => 'Lost mogelijke problemen op met PC bestanden',
+    // job configuration for file provider (stage: roles)
+    'job_config_roles_title'               => 'Importinstellingen (3/4) - rol van elke kolom definiëren',
+    'job_config_roles_text'                => 'Elke kolom in je CSV-bestand bevat bepaalde gegevens. Gelieve aan te geven wat voor soort gegevens de import-routine kan verwachten. De optie "maak een link" betekent dat u elke vermelding in die kolom linkt aan een waarde uit je database. Een vaak gelinkte kolom is die met de IBAN-code van de tegenrekening. Die kan je dan linken aan de IBAN in jouw database.',
+    'job_config_roles_submit'              => 'Volgende',
+    'job_config_roles_column_name'         => 'Kolomnaam',
+    'job_config_roles_column_example'      => 'Voorbeeldgegevens',
+    'job_config_roles_column_role'         => 'Kolomrol',
+    'job_config_roles_do_map_value'        => 'Maak een link',
+    'job_config_roles_no_example'          => 'Geen voorbeeldgegevens',
+    'job_config_roles_fa_warning'          => 'Als je een kolom markeert als "vreemde valuta" moet je ook aangeven in welke kolom de valuta staat.',
+    'job_config_roles_rwarning'            => 'Geef minstens de kolom aan waar het bedrag in staat. Als het even kan, ook een kolom voor de omschrijving, datum en de andere rekening.',
+    'job_config_roles_colum_count'         => 'Kolom',
+    // job config for the file provider (stage: mapping):
+    'job_config_map_title'                 => 'Importinstellingen (4/4) - Link importgegevens aan Firefly III-gegevens',
+    'job_config_map_text'                  => 'In deze tabellen is de linkerwaarde een waarde uit je CSV bestand. Jij moet de link leggen, als mogelijk, met een waarde uit jouw database. Firefly houdt zich hier aan. Als er geen waarde is, selecteer dan ook niets.',
+    'job_config_map_nothing'               => 'Je gaat geen gegevens importeren die te mappen zijn. Klik op "Start import" om verder te gaan.',
+    'job_config_field_value'               => 'Veldwaarde',
+    'job_config_field_mapped'              => 'Gelinkt aan',
+    'map_do_not_map'                       => '(niet linken)',
+    'job_config_map_submit'                => 'Start importeren',
+
+
+    // import status page:
+    'import_with_key'                      => 'Import met code \':key\'',
     'status_wait_title'                    => 'Momentje...',
     'status_wait_text'                     => 'Dit vak verdwijnt zometeen.',
-    'status_fatal_title'                   => 'Er is een fatale fout opgetreden',
-    'status_fatal_text'                    => 'Een fatale fout opgetreden, waar de import-routine niet van terug heeft. Zie de uitleg in het rood hieronder.',
-    'status_fatal_more'                    => 'Als de fout een time-out is, zal de import-routine halverwege gestopt zijn. Bij bepaalde serverconfiguraties is het alleen maar de server die gestopt terwijl de import-routine op de achtergrond doorloopt. Controleer de logboekbestanden om te zien wat er aan de hand is. Als het probleem zich blijft voordoen, gebruik dan de command-line opdracht.',
-    'status_ready_title'                   => 'De import is klaar om te beginnen',
-    'status_ready_text'                    => 'De import kan beginnen. Alle configuratie is opgeslagen. Download dit bestand. Het kan schelen als je de import opnieuw moet doen. Om daadwerkelijk te beginnen, gebruik je of het commando in je console, of de website. Afhankelijk van hoe je Firefly III hebt ingesteld, geeft de console-methode meer feedback.',
-    'status_ready_noconfig_text'           => 'De import kan beginnen. Alle configuratie is opgeslagen. Om daadwerkelijk te beginnen, gebruik je of het commando in je console, of de website. Afhankelijk van hoe je Firefly III hebt ingesteld, geeft de console-methode meer feedback.',
-    'status_ready_config'                  => 'Download importconfiguratie',
-    'status_ready_start'                   => 'Start importeren',
-    'status_ready_share'                   => 'Overweeg om je configuratiebestand te downloaden en te delen op de <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand-wiki</a></strong>. Hiermee kan je het andere Firefly III gebruikers weer makkelijker maken.',
-    'status_job_new'                       => 'De import is gloednieuw.',
-    'status_job_configuring'               => 'De import wordt geconfigureerd.',
-    'status_job_configured'                => 'De import is geconfigureerd.',
-    'status_job_running'                   => 'De import is bezig.. Momentje..',
-    'status_job_error'                     => 'De import heeft een fout gegenereerd.',
-    'status_job_finished'                  => 'Het importeren is voltooid!',
     'status_running_title'                 => 'De import is bezig',
-    'status_running_placeholder'           => 'Wacht even voor een update...',
-    'status_finished_title'                => 'Importeren is klaar',
-    'status_finished_text'                 => 'De import is klaar.',
-    'status_errors_title'                  => 'Fouten tijdens het importeren',
-    'status_errors_single'                 => 'Er is een niet-fatale fout opgetreden tijdens het importeren.',
-    'status_errors_multi'                  => 'Er zijn een aantal niet-fatale fouten opgetreden tijdens het importeren.',
-    'status_bread_crumb'                   => 'Status van importeren',
-    'status_sub_title'                     => 'Status van importeren',
-    'config_sub_title'                     => 'Instellen van je import',
-    'status_finished_job'                  => 'De :count geïmporteerde transacties kan je vinden onder tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
-    'status_finished_no_tag'               => 'Er is niets uit je bestand geïmporteerd.',
-    'import_with_key'                      => 'Import met code \':key\'',
+    'status_job_running'                   => 'Even geduld, de import loopt...',
+    'status_job_storing'                   => 'Even geduld, de gegevens worden opgeslagen...',
+    'status_job_rules'                     => 'Even gedult, je regels worden toegepast...',
+    'status_fatal_title'                   => 'Onherstelbare fout',
+    'status_fatal_text'                    => 'De import is tegen een fout aangelopen waar-ie niet meer van terug kan komen. Excuses!',
+    'status_fatal_more'                    => 'Deze (waarschijnlijk zeer cryptische) foutmelding wordt aangevuld door logbestanden, die je kan vinden op je harde schijf of in de Docker-container waar je Firefly III draait.',
+    'status_finished_title'                => 'Importeren voltooid',
+    'status_finished_text'                 => 'Het importeren is voltooid.',
+    'finished_with_errors'                 => 'Er zijn enkele fouten opgetreden tijdens het importeren. Beoordeel ze zorgvuldig.',
+    'unknown_import_result'                => 'Onbekend importresultaat',
+    'result_no_transactions'               => 'Er zijn geen transacties geïmporteerd. Misschien waren ze allemaal dubbel, of er zijn simpelweg geen transacties gevonden die kunnen worden geïmporteerd. Misschien kunnen de logbestanden je vertellen wat er is gebeurd. Als je regelmatig gegevens importeert, is dit normaal.',
+    'result_one_transaction'               => 'Precies één transactie is geïmporteerd. Je kan deze bekijken onder tag <a href=":route" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+    'result_many_transactions'             => 'Firefly III heeft :count transacties geïmporteerd. Je kan ze inspecteren onder tag <a href=":route" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
 
-    // file, upload something
-    'file_upload_title'                    => 'Importinstellingen (1/4) - Upload je bestand',
-    'file_upload_text'                     => 'Deze pagina\'s helpen je bestanden van je bank te importeren in Firefly III. Gebruik de hulp-pagina\'s linksboven voor meer informatie.',
-    'file_upload_fields'                   => 'Velden',
-    'file_upload_help'                     => 'Selecteer je bestand',
-    'file_upload_config_help'              => 'Als je eerder gegevens hebt geïmporteerd in Firefly III, heb je wellicht een configuratiebestand, dat een aantal zaken alvast voor je kan instellen. Voor bepaalde banken hebben andere gebruikers uit de liefde van hun hart het benodigde <a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand</a> gedeeld',
-    'file_upload_type_help'                => 'Selecteer het type bestand dat je zal uploaden',
-    'file_upload_submit'                   => 'Bestanden uploaden',
 
-    // file, upload types
-    'import_file_type_csv'                 => 'CSV (kommagescheiden waardes)',
+    // general errors and warnings:
+    'bad_job_status'                       => 'Om deze pagina te bekijken mag je import-job niet de status ":status" hebben.',
 
-    // file, initial config for CSV
-    'csv_initial_title'                    => 'Importinstellingen (2/4) - Algemene CVS importinstellingen',
-    'csv_initial_text'                     => 'Om je bestand goed te kunnen importeren moet je deze opties verifiëren.',
-    'csv_initial_box'                      => 'Algemene CVS importinstellingen',
-    'csv_initial_box_title'                => 'Algemene CVS importinstellingen',
-    'csv_initial_header_help'              => 'Vink hier als de eerste rij kolomtitels bevat.',
-    'csv_initial_date_help'                => 'Datum/tijd formaat in jouw CSV bestand. Volg het formaat zoals ze het <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">op deze pagina</a> uitleggen. Het standaardformaat ziet er zo uit: :dateExample.',
-    'csv_initial_delimiter_help'           => 'Kies het veldscheidingsteken dat in jouw bestand wordt gebruikt. Als je het niet zeker weet, is de komma de beste optie.',
-    'csv_initial_import_account_help'      => 'Als jouw CSV bestand geen referenties bevat naar jouw rekening(en), geef dan hier aan om welke rekening het gaat.',
-    'csv_initial_submit'                   => 'Ga verder met stap 3/4',
-
-    // file, new options:
-    'file_apply_rules_title'               => 'Regels toepassen',
-    'file_apply_rules_description'         => 'Past regels toe tijdens de import. Dit vertraagt de import behoorlijk.',
-    'file_match_bills_title'               => 'Match contracten',
-    'file_match_bills_description'         => 'Checkt of bestaande contracten matchen met nieuwe uitgaves. Dit vertraagt de import behoorlijk.',
-
-    // file, roles config
-    'csv_roles_title'                      => 'Importinstellingen (3/4) - rol van elke kolom definiëren',
-    'csv_roles_text'                       => 'Elke kolom in je CSV-bestand bevat bepaalde gegevens. Gelieve aan te geven wat voor soort gegevens de import-routine kan verwachten. De optie "maak een link" betekent dat u elke vermelding in die kolom linkt aan een waarde uit je database. Een vaak gelinkte kolom is die met de IBAN-code van de tegenrekening. Die kan je dan linken aan de IBAN in jouw database.',
-    'csv_roles_table'                      => 'Tabel',
-    'csv_roles_column_name'                => 'Kolomnaam',
-    'csv_roles_column_example'             => 'Voorbeeldgegevens',
-    'csv_roles_column_role'                => 'Kolomrol',
-    'csv_roles_do_map_value'               => 'Maak een link',
-    'csv_roles_column'                     => 'Kolom',
-    'csv_roles_no_example_data'            => 'Geen voorbeeldgegevens',
-    'csv_roles_submit'                     => 'Ga verder met stap 4/4',
-
-    // not csv, but normal warning
-    'roles_warning'                        => 'Geef minstens de kolom aan waar het bedrag in staat. Als het even kan, ook een kolom voor de omschrijving, datum en de andere rekening.',
-    'foreign_amount_warning'               => 'Als je een kolom markeert als "vreemde valuta" moet je ook aangeven in welke kolom de valuta staat.',
-
-    // file, map data
-    'file_map_title'                       => 'Importinstellingen (4/4) - Link importgegevens aan Firefly III-gegevens',
-    'file_map_text'                        => 'In deze tabellen is de linkerwaarde een waarde uit je CSV bestand. Jij moet de link leggen, als mogelijk, met een waarde uit jouw database. Firefly houdt zich hier aan. Als er geen waarde is, selecteer dan ook niets.',
-    'file_map_field_value'                 => 'Veldwaarde',
-    'file_map_field_mapped_to'             => 'Gelinkt aan',
-    'map_do_not_map'                       => '(niet linken)',
-    'file_map_submit'                      => 'Start importeren',
-    'file_nothing_to_map'                  => 'Je gaat geen gegevens importeren die te mappen zijn. Klik op "Start import" om verder te gaan.',
-
-    // map things.
+    // column roles for CSV import:
     'column__ignore'                       => '(negeer deze kolom)',
     'column_account-iban'                  => 'Betaalrekening (IBAN)',
     'column_account-id'                    => 'Betaalrekening (ID gelijk aan FF3)',
@@ -158,48 +261,4 @@ return [
     'column_note'                          => 'Opmerking(en)',
     'column_internal-reference'            => 'Interne referentie',
 
-    // prerequisites
-    'prerequisites'                        => 'Vereisten',
-
-    // bunq
-    'bunq_prerequisites_title'             => 'Voorwaarden voor een import van bunq',
-    'bunq_prerequisites_text'              => 'Om te importeren vanaf bunq moet je een API key hebben. Deze kan je aanvragen in de app. Denk er aan dat deze functie in BETA is. De code is alleen getest op de sandbox API.',
-    'bunq_prerequisites_text_ip'           => 'Bunq wilt graag je externe IP-adres weten. Firefly III heeft geprobeerd dit in te vullen met behulp van de <a href="https://www.ipify.org/">ipify-dienst</a>. Zorg dat je zeker weet dat dit IP-adres klopt, want anders zal de import niet werken.',
-    'bunq_do_import'                       => 'Ja, importeer van deze rekening',
-    'bunq_accounts_title'                  => 'Bunq rekeningen',
-    'bunq_accounts_text'                   => 'Dit zijn de rekeningen uit je bunq-account. Selecteer de rekeningen waaruit je wilt importeren, en welke betaalrekeningen deze transacties op terecht moeten komen.',
-
-    // Spectre
-    'spectre_title'                        => 'Importeer via Spectre',
-    'spectre_prerequisites_title'          => 'Voorwaarden voor een import via Spectre',
-    'spectre_prerequisites_text'           => 'Als je gegevens wilt importeren via de Spectre API (v4), moet je een aantal geheime codes bezitten. Ze zijn te vinden op <a href="https://www.saltedge.com/clients/profile/secrets">de secrets pagina</a>.',
-    'spectre_enter_pub_key'                => 'Het importeren werkt alleen als je deze publieke sleutel op je <a href="https://www.saltedge.com/clients/profile/secrets">secrets-pagina</a> invoert.',
-    'spectre_accounts_title'               => 'Selecteer de accounts waaruit je wilt importeren',
-    'spectre_accounts_text'                => 'Links staan de rekeningen die zijn gevonden door Spectre. Ze kunnen worden geïmporteerd in Firefly III. Selecteer er de juiste betaalrekening bij. Verwijder het vinkje als je toch niet van een bepaalde rekening wilt importeren.',
-    'spectre_do_import'                    => 'Ja, importeer van deze rekening',
-    'spectre_no_supported_accounts'        => 'Je kan helaas niet vanaf deze rekening importeren omdat de valuta niet overeenkomt.',
-
-    // keys from "extra" array:
-    'spectre_extra_key_iban'               => 'IBAN',
-    'spectre_extra_key_swift'              => 'SWIFT',
-    'spectre_extra_key_status'             => 'Status',
-    'spectre_extra_key_card_type'          => 'Kaarttype',
-    'spectre_extra_key_account_name'       => 'Rekeningnaam',
-    'spectre_extra_key_client_name'        => 'Klantnaam',
-    'spectre_extra_key_account_number'     => 'Rekeningnummer',
-    'spectre_extra_key_blocked_amount'     => 'Gereserveerd bedrag',
-    'spectre_extra_key_available_amount'   => 'Beschikbaar bedrag',
-    'spectre_extra_key_credit_limit'       => 'Kredietlimiet',
-    'spectre_extra_key_interest_rate'      => 'Rente',
-    'spectre_extra_key_expiry_date'        => 'Vervaldatum',
-    'spectre_extra_key_open_date'          => 'Openingsdatum',
-    'spectre_extra_key_current_time'       => 'Huidige tijd',
-    'spectre_extra_key_current_date'       => 'Huidige datum',
-    'spectre_extra_key_cards'              => 'Kaarten',
-    'spectre_extra_key_units'              => 'Eenheden',
-    'spectre_extra_key_unit_price'         => 'Prijs per eenheid',
-    'spectre_extra_key_transactions_count' => 'Transacties',
-
-    // various other strings:
-    'imported_from_account'                => 'Geïmporteerd uit ":account"',
 ];
