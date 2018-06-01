@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * validation.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     'iban'                           => 'Il ne s\'agit pas d\'un IBAN valide.',
@@ -109,7 +110,8 @@ return [
     'in_array'                       => 'Le champ :attribute n\'existe pas dans :other.',
     'present'                        => 'Le champs :attribute doit être rempli.',
     'amount_zero'                    => 'Le montant total ne peut pas être zéro',
-    'secure_password'                => 'Ce n’est pas un mot de passe sécurisé. S’il vous plaît essayer de nouveau. Pour plus d’informations, visitez https://goo.gl/NCh2tN',
+    'unique_piggy_bank_for_user'     => 'The name of the piggy bank must be unique.',
+    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit http://bit.ly/FF3-password-security',
     'attributes'                     => [
         'email'                   => 'adresse email',
         'description'             => 'description',

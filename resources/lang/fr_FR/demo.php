@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * demo.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -21,6 +20,8 @@ declare(strict_types=1);
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 return [
     'no_demo_text'           => 'Désolé, il n’y a aucun texte supplémentaire de démonstration ou d\'explication pour <abbr title=":route">cette page</abbr>.',
     'see_help_icon'          => 'Cependant, l\'icône <i class="fa fa-question-circle"></i> située dans le coin supérieur droit peut vous en dire plus.',
@@ -32,5 +33,5 @@ return [
     'currencies-index'       => 'Firefly III prend en charge plusieurs devises. Bien que l\'Euro soit la devise par défaut, cette dernière peut être changée pour le Dollar américain et de nombreuses autres devises. Comme vous pouvez le remarquer une petite sélection des monnaies a été incluse, mais vous pouvez ajouter vos propres devises si vous le souhaitez. Gardez à l\'esprit que la modification de la devise par défaut ne modifie pas la monnaie des transactions existantes : Firefly III prend en charge l’utilisation de plusieurs devises en même temps.',
     'transactions-index'     => 'Ces dépenses, dépôts et transferts ne sont pas particulièrement imaginatifs. Ils ont été générés automatiquement.',
     'piggy-banks-index'      => 'Comme vous pouvez le voir, il y a trois tirelires. Utilisez les boutons plus et moins pour influer sur le montant d’argent dans chaque tirelire. Cliquez sur le nom de la tirelire pour voir l’administration pour chaque tirelire.',
-    'import-index'           => 'Bien sûr, n’importe quel fichier CSV peut être importé dans Firefly III',
+    'import-index'           => 'Any CSV file can be imported into Firefly III. It also supports importing data from bunq and Spectre. Other banks and financial aggregators will be implemented in the future. As a demo-user however, you can only see the "fake"-provider in action. It will generate some random transactions to show you how the process works.',
 ];
