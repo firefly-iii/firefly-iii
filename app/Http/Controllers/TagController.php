@@ -289,8 +289,8 @@ class TagController extends Controller
     {
         // get first and last tag date from tag:
         $range = Preferences::get('viewRange', '1M')->data;
-        $start = app('navigation')->startOfPeriod($this->repository->firstUseDate($tag), $range);
-        $end   = app('navigation')->endOfPeriod($this->repository->lastUseDate($tag), $range);
+        $start = app('navigation')->startOfPeriod($this->repository->firstUseDate($tag), $range)->startOfMonth();
+        $end   = app('navigation')->endOfPeriod($this->repository->lastUseDate($tag), $range)->endOfMonth();
 
         // properties for entries with their amounts.
         $cache = new CacheProperties;

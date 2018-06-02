@@ -190,10 +190,12 @@ class Navigation
             return $currentEnd;
         }
 
+
         if (!isset($functionMap[$repeatFreq])) {
             throw new FireflyException(sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $repeatFreq));
         }
         $function = $functionMap[$repeatFreq];
+
         if (isset($modifierMap[$repeatFreq])) {
             $currentEnd->$function($modifierMap[$repeatFreq]);
 

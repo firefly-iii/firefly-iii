@@ -71,6 +71,7 @@ class TransactionJournalMetaFactory
         }
 
         if (null === $entry) {
+            Log::debug(sprintf('Going to create new meta-data entry to store "%s".', $data['name']));
             $entry = new TransactionJournalMeta();
             $entry->transactionJournal()->associate($data['journal']);
             $entry->name = $data['name'];

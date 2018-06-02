@@ -173,12 +173,15 @@ class ImportArrayStorage
      */
     private function getHash(array $transaction): string
     {
+        unset($transaction['importHashV2']);
         $json = json_encode($transaction);
         if ($json === false) {
             throw new FireflyException('Could not encode import array. Please see the logs.', $transaction); // @codeCoverageIgnore
         }
+        $hash = hash('sha256', $json, false);
+        Log::debug(sprintf('The hash is: %s', $hash));
 
-        return hash('sha256', $json, false);
+        return $hash;
     }
 
     /**
@@ -227,6 +230,8 @@ class ImportArrayStorage
     {
         $entry = $this->journalRepos->findByHash($hash);
         if (null === $entry) {
+            Log::debug(sprintf('Found no transactions with hash %s.', $hash));
+
             return null;
         }
         Log::info(sprintf('Found a transaction journal with an existing hash: %s', $hash));
@@ -380,6 +385,22 @@ class ImportArrayStorage
         // now actually store them:
         $collection = new Collection;
         foreach ($toStore as $index => $store) {
+
+            // do duplicate detection again!
+            $hash       = $this->getHash($store);
+            $existingId = $this->hashExists($hash);
+            if (null !== $existingId) {
+                $this->logDuplicateObject($store, $existingId);
+                $this->repository->addErrorMessage(
+                    $this->importJob, sprintf(
+                                        'Row #%d ("%s") could not be imported. It already exists.',
+                                        $index, $store['description']
+                                    )
+                );
+                continue;
+            }
+
+
             Log::debug(sprintf('Going to store entry %d of %d', $index + 1, $count));
             // convert the date to an object:
             $store['date']        = Carbon::createFromFormat('Y-m-d', $store['date']);

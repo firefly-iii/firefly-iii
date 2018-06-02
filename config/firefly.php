@@ -158,10 +158,6 @@ return [
     'export_formats' => [
         'csv' => CsvExporter::class,
     ],
-    'spectre'        => [
-        'server' => 'https://www.saltedge.com',
-    ],
-
     'default_export_format'    => 'csv',
     'default_import_format'    => 'csv',
     'bill_periods'             => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
