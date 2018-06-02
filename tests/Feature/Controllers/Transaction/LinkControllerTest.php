@@ -95,7 +95,7 @@ class LinkControllerTest extends TestCase
         ];
 
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
-        $journalRepos->shouldReceive('find')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('findNull')->andReturn(new TransactionJournal);
         $repository->shouldReceive('findLink')->andReturn(false);
         $repository->shouldReceive('storeLink')->andReturn(new TransactionJournalLink);
 
@@ -106,6 +106,35 @@ class LinkControllerTest extends TestCase
         $response->assertSessionHas('success');
         $response->assertRedirect(route('transactions.show', [1]));
     }
+
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\Transaction\LinkController::store
+     * @covers       \FireflyIII\Http\Requests\JournalLinkRequest
+     */
+    public function testStoreSame(): void
+    {
+        $repository   = $this->mock(LinkTypeRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $data         = [
+            'link_other' => 8,
+            'link_type'  => '1_inward',
+        ];
+        $journal = $this->user()->transactionJournals()->first();
+
+        $journalRepos->shouldReceive('firstNull')->andReturn($journal);
+        $journalRepos->shouldReceive('findNull')->andReturn($journal);
+        $repository->shouldReceive('findLink')->andReturn(false);
+        $repository->shouldReceive('storeLink')->andReturn(new TransactionJournalLink);
+
+        $this->be($this->user());
+        $response = $this->post(route('transactions.link.store', [$journal->id]), $data);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('error');
+        $response->assertRedirect(route('transactions.show', [1]));
+    }
+
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\LinkController::store
@@ -121,7 +150,7 @@ class LinkControllerTest extends TestCase
         ];
 
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
-        $journalRepos->shouldReceive('find')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('findNull')->andReturn(new TransactionJournal);
         $repository->shouldReceive('findLink')->andReturn(true);
 
         $this->be($this->user());

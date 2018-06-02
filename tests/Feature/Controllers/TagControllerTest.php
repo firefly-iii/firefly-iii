@@ -156,10 +156,10 @@ class TagControllerTest extends TestCase
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('spentInPeriod')->andReturn('-1')->once();
+        $repository->shouldReceive('spentInPeriod')->andReturn('-1')->times(2);
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('lastUseDate')->andReturn(new Carbon)->once();
-        $repository->shouldReceive('earnedInPeriod')->andReturn('1')->once();
+        $repository->shouldReceive('earnedInPeriod')->andReturn('1')->times(2);
         $repository->shouldReceive('sumsOfTag')->andReturn($amounts)->once();
 
         $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
@@ -225,10 +225,10 @@ class TagControllerTest extends TestCase
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('spentInPeriod')->andReturn('-1')->once();
+        $repository->shouldReceive('spentInPeriod')->andReturn('-1')->times(2);
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('lastUseDate')->andReturn(new Carbon)->once();
-        $repository->shouldReceive('earnedInPeriod')->andReturn('1')->once();
+        $repository->shouldReceive('earnedInPeriod')->andReturn('1')->times(2);
 
         $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();

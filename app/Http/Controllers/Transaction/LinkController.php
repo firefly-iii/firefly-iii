@@ -107,7 +107,7 @@ class LinkController extends Controller
 
             return redirect(route('transactions.show', [$journal->id]));
         }
-        $other         = $this->journalRepository->find($linkInfo['transaction_journal_id']);
+        $other         = $this->journalRepository->findNull($linkInfo['transaction_journal_id']);
         $alreadyLinked = $this->repository->findLink($journal, $other);
 
         if ($other->id === $journal->id) {

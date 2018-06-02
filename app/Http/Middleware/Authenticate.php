@@ -104,7 +104,9 @@ class Authenticate
                     }
                 }
             } catch (QueryException $e) {
+                // @codeCoverageIgnoreStart
                 throw new FireflyException('It seems the database has not yet been initialized. Did you run the correct upgrade or installation commands?');
+                // @codeCoverageIgnoreEnd
             }
 
             return $this->auth->authenticate();
