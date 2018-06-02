@@ -93,7 +93,7 @@ return [
     'piggy-banks_show_piggyEvents'                            => 'Hinzufügungen oder Entfernungen sind hier ebenfalls aufgeführt.',
 
     // bill index
-    'bills_index_rules'                                       => 'Hier sehen Sie, welche Regeln prüfen, ob diese Rechnung betroffen ist.',
+    'bills_index_rules'                                       => 'Hier sehen Sie, welche Regeln prüfen, ob diese Rechnung betroffen ist',
     'bills_index_paid_in_period'                              => 'Dieses Feld zeigt an, wann die Rechnung zuletzt bezahlt wurde.',
     'bills_index_expected_in_period'                          => 'Dieses Feld zeigt für jede Rechnung an, ob und wann die nächste Rechnung erwartet wird.',
 

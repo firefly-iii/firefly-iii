@@ -110,7 +110,7 @@ return [
     'in_array'                       => ':attribute existiert nicht in :other.',
     'present'                        => 'Das :attribute Feld muss vorhanden sein.',
     'amount_zero'                    => 'Der Gesamtbetrag darf nicht Null sein',
-    'unique_piggy_bank_for_user'     => 'The name of the piggy bank must be unique.',
+    'unique_piggy_bank_for_user'     => 'Der Name des Sparschweins muss eindeutig sein.',
     'secure_password'                => 'Das ist kein sicheres Passwort. Bitte versuchen Sie es erneut. Weitere Informationen finden Sie unter https://github.com/firefly-iii/help/wiki/Secure-password',
     'attributes'                     => [
         'email'                   => 'E-Mail Adresse',

@@ -122,5 +122,5 @@ return [
     'spectre_bank'            => 'Bank',
     'spectre_last_use'        => 'Letzte Anmeldung',
     'spectre_status'          => 'Status',
-    'bunq_payment_id'         => 'bunq payment ID',
+    'bunq_payment_id'         => 'bunq-Zahlungskennung',
 ];
