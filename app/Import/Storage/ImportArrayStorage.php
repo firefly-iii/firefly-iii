@@ -154,7 +154,9 @@ class ImportArrayStorage
                 Log::debug(sprintf('Row #%d is a transfer, increase count to %d', ($index + 1), $count));
             }
         }
-        Log::debug('Count is zero.');
+        if (0 === $count) {
+            Log::debug('Count is zero.');
+        }
         if ($count > 0) {
             Log::debug(sprintf('Count is %d', $count));
             $this->checkForTransfers = true;
@@ -206,16 +208,19 @@ class ImportArrayStorage
      */
     private function getTransfers(): void
     {
+        Log::debug('Now in getTransfers()');
         app('preferences')->mark();
+
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setUser($this->importJob->user);
         $collector->setAllAssetAccounts()
+                    ->ignoreCache()
                   ->setTypes([TransactionType::TRANSFER])
                   ->withOpposingAccount();
         $collector->removeFilter(InternalTransferFilter::class);
         $this->transfers = $collector->getJournals();
-
+        Log::debug(sprintf('Count of getTransfers() is %d', $this->transfers->count()));
     }
 
     /**

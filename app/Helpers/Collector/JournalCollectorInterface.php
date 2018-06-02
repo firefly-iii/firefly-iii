@@ -79,6 +79,11 @@ interface JournalCollectorInterface
     public function getPaginatedJournals(): LengthAwarePaginator;
 
     /**
+     * @return JournalCollectorInterface
+     */
+    public function ignoreCache(): JournalCollectorInterface;
+
+    /**
      * @param string $filter
      *
      * @return JournalCollectorInterface
