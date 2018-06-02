@@ -505,7 +505,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         // check transactions:
         $query = $category->transactions()
                           ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                          ->orderBy('transaction_journals.date', 'DESC');
+                          ->orderBy('transaction_journals.date', 'ASC');
 
         $lastTransaction = $query->first(['transaction_journals.*']);
         if (null !== $lastTransaction) {
