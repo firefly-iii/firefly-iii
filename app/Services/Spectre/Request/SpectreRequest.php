@@ -53,6 +53,7 @@ abstract class SpectreRequest
     abstract public function call(): void;
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public function getAppId(): string
@@ -61,6 +62,8 @@ abstract class SpectreRequest
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param string $appId
      */
     public function setAppId(string $appId): void
@@ -69,6 +72,7 @@ abstract class SpectreRequest
     }
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public function getSecret(): string
@@ -77,6 +81,8 @@ abstract class SpectreRequest
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param string $secret
      */
     public function setSecret(string $secret): void
@@ -85,6 +91,7 @@ abstract class SpectreRequest
     }
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public function getServer(): string
@@ -93,6 +100,8 @@ abstract class SpectreRequest
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param string $privateKey
      */
     public function setPrivateKey(string $privateKey): void

@@ -26,6 +26,7 @@ namespace FireflyIII\Services\Spectre\Object;
 use Carbon\Carbon;
 
 /**
+ * @codeCoverageIgnore
  * Class TransactionExtra
  */
 class TransactionExtra extends SpectreObject

@@ -27,6 +27,7 @@ use Carbon\Carbon;
 
 
 /**
+ * @codeCoverageIgnore
  * Class Release
  */
 class Release extends GithubObject

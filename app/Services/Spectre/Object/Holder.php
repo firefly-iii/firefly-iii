@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Spectre\Object;
 
 /**
+ * @codeCoverageIgnore
  * Class Holder
  */
 class Holder extends SpectreObject

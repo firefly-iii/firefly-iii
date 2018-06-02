@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Spectre\Object;
 
 /**
+ * @codeCoverageIgnore
  * Class SpectreObject
  */
 class SpectreObject

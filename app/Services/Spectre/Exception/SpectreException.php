@@ -26,6 +26,7 @@ namespace FireflyIII\Services\Spectre\Exception;
 use Exception;
 
 /**
+ * @codeCoverageIgnore
  * Class SpectreException
  */
 class SpectreException extends Exception

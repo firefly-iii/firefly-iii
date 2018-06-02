@@ -26,6 +26,7 @@ namespace FireflyIII\Services\Spectre\Object;
 use Carbon\Carbon;
 
 /**
+ * @codeCoverageIgnore
  * Class Attempt
  */
 class Attempt extends SpectreObject
@@ -58,6 +59,8 @@ class Attempt extends SpectreObject
     private $failErrorClass;
     /** @var string */
     private $failMessage;
+    /** @var array */
+    private $fetchScopes = [];
     /** @var bool */
     private $finished;
     /** @var bool */
@@ -84,12 +87,10 @@ class Attempt extends SpectreObject
     private $successAt;
     /** @var Carbon */
     private $toDate;
-    /** @var Carbon */
-    private $updatedAt;
-    /** @var string */
-    private $userAgent; // undocumented
-    /** @var array  */
-    private $fetchScopes = [];
+        /** @var Carbon */
+    private $updatedAt; // undocumented
+/** @var string */
+    private $userAgent;
 
     /**
      * Attempt constructor.
@@ -114,7 +115,7 @@ class Attempt extends SpectreObject
         $this->failAt                 = new Carbon($data['fail_at']);
         $this->failErrorClass         = $data['fail_error_class'];
         $this->failMessage            = $data['fail_message'];
-        $this->fetchScopes              = $data['fetch_scopes'];
+        $this->fetchScopes            = $data['fetch_scopes'];
         $this->finished               = $data['finished'];
         $this->finishedRecent         = $data['finished_recent'];
         $this->fromDate               = new Carbon($data['from_date']);
@@ -185,7 +186,7 @@ class Attempt extends SpectreObject
             'fail_at'                   => $this->failAt->toIso8601String(),
             'fail_error_class'          => $this->failErrorClass,
             'fail_message'              => $this->failMessage,
-            'fetch_scopes'                => $this->fetchScopes,
+            'fetch_scopes'              => $this->fetchScopes,
             'finished'                  => $this->finished,
             'finished_recent'           => $this->finishedRecent,
             'from_date'                 => $this->fromDate->toIso8601String(),

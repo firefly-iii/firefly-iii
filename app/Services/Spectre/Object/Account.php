@@ -26,6 +26,7 @@ namespace FireflyIII\Services\Spectre\Object;
 use Carbon\Carbon;
 
 /**
+ * @codeCoverageIgnore
  * Class Account
  */
 class Account extends SpectreObject
@@ -50,11 +51,24 @@ class Account extends SpectreObject
     private $updatedAt;
 
     /**
-     * @return string
+     * Account constructor.
+     *
+     * @param array $data
      */
-    public function getNature(): string
+    public function __construct(array $data)
     {
-        return $this->nature;
+        $this->id           = (int)$data['id'];
+        $this->loginId      = $data['login_id'];
+        $this->currencyCode = $data['currency_code'];
+        $this->balance      = $data['balance'];
+        $this->name         = $data['name'];
+        $this->nature       = $data['nature'];
+        $this->createdAt    = new Carbon($data['created_at']);
+        $this->updatedAt    = new Carbon($data['updated_at']);
+
+        foreach ($data['extra'] as $key => $value) {
+            $this->extra[$key] = $value;
+        }
     }
 
     /**
@@ -81,29 +95,6 @@ class Account extends SpectreObject
         return $this->extra;
     }
 
-
-
-    /**
-     * Account constructor.
-     *
-     * @param array $data
-     */
-    public function __construct(array $data)
-    {
-        $this->id           = (int)$data['id'];
-        $this->loginId      = $data['login_id'];
-        $this->currencyCode = $data['currency_code'];
-        $this->balance      = $data['balance'];
-        $this->name         = $data['name'];
-        $this->nature       = $data['nature'];
-        $this->createdAt    = new Carbon($data['created_at']);
-        $this->updatedAt    = new Carbon($data['updated_at']);
-
-        foreach ($data['extra'] as $key => $value) {
-            $this->extra[$key] = $value;
-        }
-    }
-
     /**
      * @return int
      */
@@ -118,6 +109,14 @@ class Account extends SpectreObject
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNature(): string
+    {
+        return $this->nature;
     }
 
     /**

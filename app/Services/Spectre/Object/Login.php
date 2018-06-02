@@ -27,6 +27,7 @@ use Carbon\Carbon;
 
 
 /**
+ * @codeCoverageIgnore
  * Class Login
  */
 class Login extends SpectreObject
@@ -69,11 +70,55 @@ class Login extends SpectreObject
     private $updatedAt;
 
     /**
+     * Login constructor.
+     *
+     * @param array $data
+     */
+    public function __construct(array $data)
+    {
+        $this->consentGivenAt          = new Carbon($data['consent_given_at']);
+        $this->consentTypes            = $data['consent_types'];
+        $this->countryCode             = $data['country_code'];
+        $this->createdAt               = new Carbon($data['created_at']);
+        $this->updatedAt               = new Carbon($data['updated_at']);
+        $this->customerId              = $data['customer_id'];
+        $this->dailyRefresh            = $data['daily_refresh'];
+        $this->holderInfo              = new Holder($data['holder_info']);
+        $this->id                      = (int)$data['id'];
+        $this->lastAttempt             = new Attempt($data['last_attempt']);
+        $this->lastSuccessAt           = new Carbon($data['last_success_at']);
+        $this->nextRefreshPossibleAt   = new Carbon($data['next_refresh_possible_at']);
+        $this->providerCode            = $data['provider_code'];
+        $this->providerId              = $data['provider_id'];
+        $this->providerName            = $data['provider_name'];
+        $this->showConsentConfirmation = $data['show_consent_confirmation'];
+        $this->status                  = $data['status'];
+        $this->storeCredentials        = $data['store_credentials'];
+
+    }
+
+    /**
      * @return string
      */
     public function getCountryCode(): string
     {
         return $this->countryCode;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return Attempt
+     */
+    public function getLastAttempt(): Attempt
+    {
+        return $this->lastAttempt;
     }
 
     /**
@@ -106,53 +151,6 @@ class Login extends SpectreObject
     public function getUpdatedAt(): Carbon
     {
         return $this->updatedAt;
-    }
-
-
-
-
-    /**
-     * Login constructor.
-     *
-     * @param array $data
-     */
-    public function __construct(array $data)
-    {
-        $this->consentGivenAt          = new Carbon($data['consent_given_at']);
-        $this->consentTypes            = $data['consent_types'];
-        $this->countryCode             = $data['country_code'];
-        $this->createdAt               = new Carbon($data['created_at']);
-        $this->updatedAt               = new Carbon($data['updated_at']);
-        $this->customerId              = $data['customer_id'];
-        $this->dailyRefresh            = $data['daily_refresh'];
-        $this->holderInfo              = new Holder($data['holder_info']);
-        $this->id                      = (int)$data['id'];
-        $this->lastAttempt             = new Attempt($data['last_attempt']);
-        $this->lastSuccessAt           = new Carbon($data['last_success_at']);
-        $this->nextRefreshPossibleAt   = new Carbon($data['next_refresh_possible_at']);
-        $this->providerCode            = $data['provider_code'];
-        $this->providerId              = $data['provider_id'];
-        $this->providerName            = $data['provider_name'];
-        $this->showConsentConfirmation = $data['show_consent_confirmation'];
-        $this->status                  = $data['status'];
-        $this->storeCredentials        = $data['store_credentials'];
-
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return Attempt
-     */
-    public function getLastAttempt(): Attempt
-    {
-        return $this->lastAttempt;
     }
 
     /**
