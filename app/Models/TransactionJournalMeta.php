@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionJournal;
 /**
  * Class TransactionJournalMeta.
  * @property string $name
+ * @property int $transaction_journal_id
  */
 class TransactionJournalMeta extends Model
 {
