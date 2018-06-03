@@ -7,6 +7,9 @@
 	<a href="https://packagist.org/packages/grumpydictator/firefly-iii"><img src="https://img.shields.io/packagist/v/grumpydictator/firefly-iii.svg?style=flat-square" alt="Packagist"></a>
 	<!-- license -->
 	<a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square" alt="License"></a>
+	<!-- Patreon -->
+	<a href="http://patreon.com/JC5"><img src="https://img.shields.io/badge/patreon-JC5-brightgreen.svg?longCache=true&style=flat-square" alt="Patreon"></a>
+	
 </p>
 
 <!-- MarkdownTOC autolink="true" depth="4" bracket="round" list_bullets="*" -->
