@@ -210,18 +210,7 @@ class AccountController extends Controller
 
         $request->session()->flash('preFilled', $preFilled);
 
-        return view(
-            'accounts.edit',
-            compact(
-                'account',
-                'currency',
-                'subTitle',
-                'subTitleIcon',
-                'what',
-                'roles',
-                'preFilled'
-            )
-        );
+        return view('accounts.edit', compact('account', 'currency', 'subTitle', 'subTitleIcon', 'what', 'roles', 'preFilled'));
     }
 
     /**
@@ -297,8 +286,10 @@ class AccountController extends Controller
             throw new FireflyException('End is after start!'); // @codeCoverageIgnore
         }
 
+
+        $what         = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type)); // used for menu
         $today        = new Carbon;
-        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
+        $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
         $page         = (int)$request->get('page');
         $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
         $currencyId   = (int)$this->repository->getMetaValue($account, 'currency_id');
@@ -320,7 +311,7 @@ class AccountController extends Controller
 
         return view(
             'accounts.show',
-            compact('account', 'showAll', 'currency', 'today', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end', 'chartUri')
+            compact('account', 'showAll', 'what', 'currency', 'today', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end', 'chartUri')
         );
     }
 
@@ -338,7 +329,7 @@ class AccountController extends Controller
     public function showAll(Request $request, Account $account)
     {
         if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
-            return $this->redirectToOriginalAccount($account);
+            return $this->redirectToOriginalAccount($account); // @codeCoverageIgnore
         }
         $end          = new Carbon;
         $today        = new Carbon;

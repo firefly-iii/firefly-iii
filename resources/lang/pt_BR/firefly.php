@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * firefly.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     // general stuff:
@@ -179,6 +180,7 @@ return [
     'authorization_request_intro'                => '<strong>:client</strong> está pedindo permissão para acessar sua administração financeira. Gostaria de autorizar <strong>:client</strong> para acessar esses registros?',
     'scopes_will_be_able'                        => 'Esta aplicação será capaz de:',
     'button_authorize'                           => 'Autorizar',
+    'none_in_select_list'                        => '(none)',
 
     // check for updates:
     'update_check_title'                         => 'Verificar Atualizações',
@@ -541,7 +543,7 @@ return [
     'attachment_deleted'                      => 'Anexo apagado ":name"',
     'attachment_updated'                      => 'Anexo atualizado ":name"',
     'upload_max_file_size'                    => 'Tamanho máximo do arquivo: :size',
-    'list_all_attachments'                    => 'List of all attachments',
+    'list_all_attachments'                    => 'Lista de todos os anexos',
 
     // transaction index
     'title_expenses'                          => 'Despesas',
@@ -666,6 +668,7 @@ return [
     'bill_will_automatch'                     => 'A fatura será automaticamente vinculada a transações correspondentes',
     'skips_over'                              => 'ignorar',
     'bill_store_error'                        => 'Um erro inesperado ocorreu ao armazenar sua nova fatura. Por favor, verifique os arquivos de log',
+    'list_inactive_rule'                      => 'inactive rule',
 
     // accounts:
     'details_for_asset'                       => 'Detalhes para a conta de ativo ":name"',
@@ -801,6 +804,7 @@ return [
     'opt_group_savingAsset'                   => 'Contas de poupança',
     'opt_group_sharedAsset'                   => 'Contas de ativos compartilhadas',
     'opt_group_ccAsset'                       => 'Cartões de crédito',
+    'opt_group_cashWalletAsset'               => 'Cash wallets',
     'notes'                                   => 'Notas',
     'unknown_journal_error'                   => 'A transação não pôde ser armazenada. Por favor, verifique os arquivos de log.',
 
@@ -816,6 +820,7 @@ return [
     'language'                                => 'Idioma',
     'new_savings_account'                     => 'Conta de poupança :bank_name',
     'cash_wallet'                             => 'Carteira de dinheiro',
+    'currency_not_present' => 'If the currency you normally use is not listed do not worry. You can create your own currencies under Options > Currencies.',
 
     // home page:
     'yourAccounts'                            => 'Suas contas',
@@ -1013,6 +1018,7 @@ return [
     'remove_money_from_piggy_title'           => 'Retire o dinheiro do cofrinho ":name"',
     'add'                                     => 'Adicionar',
     'no_money_for_piggy'                      => 'Você não tem dinheiro para colocar nessa poupança.',
+    'suggested_savings_per_month'             => 'Suggested per month',
 
     'remove'                    => 'Remover',
     'max_amount_add'            => 'É a quantidade máxima que você pode adicionar é',
@@ -1148,27 +1154,9 @@ return [
     'no_edit_multiple_left'                 => 'Você não selecionou nenhuma transação válida para editar.',
     'cannot_convert_split_journal'          => 'Não é possível converter uma transação dividida',
 
-    // import bread crumbs and titles:
-    'import'                                => 'Importar',
-    'import_data'                           => 'Importar dados',
-    'import_general_index_file'             => 'Importar um arquivo',
-    'import_from_bunq'                      => 'Importar de bunq',
-    'import_using_spectre'                  => 'Importar usando Spectre',
-    'import_using_plaid'                    => 'Importar usando Plaid',
-    'import_config_bread_crumb'             => 'Configurar a sua importação',
-
-    // import index page:
+    // Import page (general strings only)
     'import_index_title'                    => 'Importar dados para o Firefly III',
-    'import_index_sub_title'                => 'Índice',
-    'import_general_index_intro'            => 'Bem-vindo à rotina de importação do Firefly III. Existem algumas maneiras de importar dados no Firefly III, exibidos aqui como botões.',
-    'upload_error'                          => 'O arquivo que você enviou não pôde ser processado. Possivelmente trata-se de tipo ou codificação inválidos de arquivo. Os arquivos de log terão mais informações.',
-    'reset_import_settings_title'           => 'Redefinir configuração de importação',
-    'reset_import_settings_text'            => 'You can use these links to reset your import settings for specific providers. This is useful when bad settings stop you from importing data.',
-    'reset_settings_bunq'                   => 'Remove bunq API key, local external IP address and bunq related RSA keys.',
-    'reset_settings_spectre'                => 'Remove Spectre secrets and ID\'s. This will also remove your Spectre keypair. Remember to update the new one.',
-    'settings_reset_for_bunq'               => 'Bunq settings reset.',
-    'settings_reset_for_spectre'            => 'Spectre settings reset.',
-
+    'import_data'                           => 'Importar dados',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Esta função não está disponível quando você está usando o Firefly III dentro de um ambiente Sandstorm.io.',

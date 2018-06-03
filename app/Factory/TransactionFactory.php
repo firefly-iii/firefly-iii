@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+
 /**
  * TransactionFactory.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -20,16 +20,19 @@ declare(strict_types=1);
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Support\TransactionServiceTrait;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class TransactionFactory
@@ -45,10 +48,21 @@ class TransactionFactory
      * @param array $data
      *
      * @return Transaction
+     * @throws FireflyException
      */
-    public function create(array $data): Transaction
+    public function create(array $data): ?Transaction
     {
-        $currencyId = isset($data['currency']) ? $data['currency']->id : $data['currency_id'];
+        Log::debug('Start of TransactionFactory::create()');
+        $currencyId = $data['currency_id'] ?? null;
+        $currencyId = isset($data['currency']) ? $data['currency']->id : $currencyId;
+        if ('' === $data['amount']) {
+            throw new FireflyException('Amount is an empty string, which Firefly III cannot handle. Apologies.'); // @codeCoverageIgnore
+        }
+        if (null === $currencyId) {
+            throw new FireflyException('Cannot store transaction without currency information.'); // @codeCoverageIgnore
+        }
+        $data['foreign_amount'] = '' === (string)$data['foreign_amount'] ? null : $data['foreign_amount'];
+        Log::debug(sprintf('Create transaction for account #%d ("%s") with amount %s', $data['account']->id, $data['account']->name, $data['amount']));
 
         return Transaction::create(
             [
@@ -72,19 +86,23 @@ class TransactionFactory
      * @param array              $data
      *
      * @return Collection
+     * @throws FireflyException
      */
     public function createPair(TransactionJournal $journal, array $data): Collection
     {
+        Log::debug('Start of TransactionFactory::createPair()');
         // all this data is the same for both transactions:
         $currency    = $this->findCurrency($data['currency_id'], $data['currency_code']);
         $description = $journal->description === $data['description'] ? null : $data['description'];
 
         // type of source account depends on journal type:
         $sourceType    = $this->accountType($journal, 'source');
+        Log::debug(sprintf('Expect source account to be of type %s', $sourceType));
         $sourceAccount = $this->findAccount($sourceType, $data['source_id'], $data['source_name']);
 
         // same for destination account:
         $destinationType    = $this->accountType($journal, 'destination');
+        Log::debug(sprintf('Expect source destination to be of type %s', $destinationType));
         $destinationAccount = $this->findAccount($destinationType, $data['destination_id'], $data['destination_name']);
         // first make a "negative" (source) transaction based on the data in the array.
         $source = $this->create(
@@ -125,7 +143,7 @@ class TransactionFactory
         }
 
         // set budget:
-        if ($journal->transactionType->type === TransactionType::TRANSFER) {
+        if ($journal->transactionType->type !== TransactionType::WITHDRAWAL) {
             $data['budget_id']   = null;
             $data['budget_name'] = null;
         }

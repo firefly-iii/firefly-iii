@@ -24,7 +24,6 @@ namespace FireflyIII\Repositories\Bill;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -98,6 +97,24 @@ interface BillRepositoryInterface
      * @return string
      */
     public function getBillsUnpaidInRange(Carbon $start, Carbon $end): string;
+
+    /**
+     * Get all bills with these ID's.
+     *
+     * @param array $billIds
+     *
+     * @return Collection
+     */
+    public function getByIds(array $billIds): Collection;
+
+    /**
+     * Get text or return empty string.
+     *
+     * @param Bill $bill
+     *
+     * @return string
+     */
+    public function getNoteText(Bill $bill): string;
 
     /**
      * @param Bill $bill

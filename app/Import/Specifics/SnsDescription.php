@@ -28,19 +28,21 @@ namespace FireflyIII\Import\Specifics;
 class SnsDescription implements SpecificInterface
 {
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public static function getDescription(): string
     {
-        return 'Trim quotes from SNS descriptions.';
+        return 'import.specific_sns_descr';
     }
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public static function getName(): string
     {
-        return 'SNS description';
+        return 'import.specific_sns_name';
     }
 
     /**

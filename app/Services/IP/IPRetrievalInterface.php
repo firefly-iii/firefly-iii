@@ -26,7 +26,6 @@ namespace FireflyIII\Services\IP;
 /**
  * Interface IPRetrievalInterface
  *
- * @package FireflyIII\Services\IP
  */
 interface IPRetrievalInterface
 {

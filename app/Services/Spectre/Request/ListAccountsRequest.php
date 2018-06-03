@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Spectre\Request;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Services\Spectre\Exception\SpectreException;
 use FireflyIII\Services\Spectre\Object\Account;
 use FireflyIII\Services\Spectre\Object\Login;
 use Log;

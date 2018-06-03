@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * intro.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     // index
@@ -92,7 +93,7 @@ return [
     'piggy-banks_show_piggyEvents'                            => 'Hinzufügungen oder Entfernungen sind hier ebenfalls aufgeführt.',
 
     // bill index
-    'bills_index_rules'                                       => 'Hier sehen Sie, welche Regeln prüfen, ob diese Rechnung betroffen ist.',
+    'bills_index_rules'                                       => 'Hier sehen Sie, welche Regeln prüfen, ob diese Rechnung betroffen ist',
     'bills_index_paid_in_period'                              => 'Dieses Feld zeigt an, wann die Rechnung zuletzt bezahlt wurde.',
     'bills_index_expected_in_period'                          => 'Dieses Feld zeigt für jede Rechnung an, ob und wann die nächste Rechnung erwartet wird.',
 

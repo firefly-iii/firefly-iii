@@ -41,12 +41,10 @@ class BinderTest extends TestCase
 {
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Account::routeBinder
      */
-    public function testAccount()
+    public function testAccount(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{account}', function () {
@@ -60,12 +58,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\AccountList::routeBinder
      */
-    public function testAccountList()
+    public function testAccountList(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{accountList}', function (Collection $accounts) {
@@ -79,12 +75,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\AccountList::routeBinder
      */
-    public function testAccountListEmpty()
+    public function testAccountListEmpty(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{accountList}', function (Collection $accounts) {
@@ -97,12 +91,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\AccountList::routeBinder
      */
-    public function testAccountListInvalid()
+    public function testAccountListInvalid(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{accountList}', function (Collection $accounts) {
@@ -116,12 +108,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\AccountList::routeBinder
      */
-    public function testAccountListNotLoggedIn()
+    public function testAccountListNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{accountList}', function (Collection $accounts) {
@@ -133,12 +123,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Account::routeBinder
      */
-    public function testAccountNotFound()
+    public function testAccountNotFound(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{account}', function () {
@@ -152,12 +140,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Account::routeBinder
      */
-    public function testAccountNotLoggedIn()
+    public function testAccountNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{account}', function () {
@@ -170,12 +156,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Attachment::routeBinder
      */
-    public function testAttachment()
+    public function testAttachment(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{attachment}', function () {
@@ -189,12 +173,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Attachment::routeBinder
      */
-    public function testAttachmentNotFound()
+    public function testAttachmentNotFound(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{attachment}', function () {
@@ -208,12 +190,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Attachment::routeBinder
      */
-    public function testAttachmentNotLoggedIn()
+    public function testAttachmentNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{attachment}', function () {
@@ -226,12 +206,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Bill::routeBinder
      */
-    public function testBill()
+    public function testBill(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{bill}', function () {
@@ -245,12 +223,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Bill::routeBinder
      */
-    public function testBillNotFound()
+    public function testBillNotFound(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{bill}', function () {
@@ -264,12 +240,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Bill::routeBinder
      */
-    public function testBillNotLoggedIn()
+    public function testBillNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{bill}', function () {
@@ -282,12 +256,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Budget::routeBinder
      */
-    public function testBudget()
+    public function testBudget(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{budget}', function () {
@@ -301,12 +273,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\BudgetLimit::routeBinder
      */
-    public function testBudgetLimit()
+    public function testBudgetLimit(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{budgetLimit}', function () {
@@ -320,12 +290,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\BudgetLimit::routeBinder
      */
-    public function testBudgetLimitNotFound()
+    public function testBudgetLimitNotFound(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{budgetLimit}', function () {
@@ -339,12 +307,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\BudgetLimit::routeBinder
      */
-    public function testBudgetLimitNotLoggedIn()
+    public function testBudgetLimitNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{budgetLimit}', function () {
@@ -357,12 +323,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\BudgetList::routeBinder
      */
-    public function testBudgetList()
+    public function testBudgetList(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{budgetList}', function (Collection $budgets) {
@@ -376,12 +340,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\BudgetList::routeBinder
      */
-    public function testBudgetListInvalid()
+    public function testBudgetListInvalid(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{budgetList}', function (Collection $budgets) {
@@ -394,12 +356,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Budget::routeBinder
      */
-    public function testBudgetNotFound()
+    public function testBudgetNotFound(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{budget}', function () {
@@ -413,12 +373,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Budget::routeBinder
      */
-    public function testBudgetNotLoggedIn()
+    public function testBudgetNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{budget}', function () {
@@ -431,12 +389,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Category::routeBinder
      */
-    public function testCategory()
+    public function testCategory(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{category}', function () {
@@ -450,12 +406,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\CategoryList::routeBinder
      */
-    public function testCategoryList()
+    public function testCategoryList(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{categoryList}', function (Collection $categories) {
@@ -469,12 +423,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\CategoryList::routeBinder
      */
-    public function testCategoryListInvalid()
+    public function testCategoryListInvalid(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{categoryList}', function (Collection $categories) {
@@ -487,12 +439,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Category::routeBinder
      */
-    public function testCategoryNotFound()
+    public function testCategoryNotFound(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{category}', function () {
@@ -506,12 +456,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Category::routeBinder
      */
-    public function testCategoryNotLoggedIn()
+    public function testCategoryNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{category}', function () {
@@ -524,12 +472,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\CurrencyCode::routeBinder
      */
-    public function testCurrencyCode()
+    public function testCurrencyCode(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{fromCurrencyCode}', function () {
@@ -543,12 +489,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\CurrencyCode::routeBinder
      */
-    public function testCurrencyCodeNotFound()
+    public function testCurrencyCodeNotFound(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{fromCurrencyCode}', function () {
@@ -562,12 +506,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\CurrencyCode::routeBinder
      */
-    public function testCurrencyCodeNotLoggedIn()
+    public function testCurrencyCodeNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{fromCurrencyCode}', function () {
@@ -580,12 +522,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\Date::routeBinder
      */
-    public function testDate()
+    public function testDate(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
@@ -599,12 +539,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\Date::routeBinder
      */
-    public function testDateCurrentMonthEnd()
+    public function testDateCurrentMonthEnd(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
@@ -620,12 +558,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\Date::routeBinder
      */
-    public function testDateCurrentMonthStart()
+    public function testDateCurrentMonthStart(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
@@ -641,12 +577,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\Date::routeBinder
      */
-    public function testDateCurrentYearEnd()
+    public function testDateCurrentYearEnd(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
@@ -662,12 +596,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\Date::routeBinder
      */
-    public function testDateCurrentYearStart()
+    public function testDateCurrentYearStart(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
@@ -683,12 +615,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\Date::routeBinder
      */
-    public function testDateFiscalYearEnd()
+    public function testDateFiscalYearEnd(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
@@ -711,12 +641,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\Date::routeBinder
      */
-    public function testDateFiscalYearStart()
+    public function testDateFiscalYearStart(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
@@ -739,12 +667,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\Date::routeBinder
      */
-    public function testDateInvalid()
+    public function testDateInvalid(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
@@ -757,12 +683,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\ExportJob::routeBinder
      */
-    public function testExportJob()
+    public function testExportJob(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{exportJob}', function () {
@@ -776,12 +700,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\ExportJob::routeBinder
      */
-    public function testExportJobNotFound()
+    public function testExportJobNotFound(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{exportJob}', function () {
@@ -795,12 +717,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\ExportJob::routeBinder
      */
-    public function testExportJobNotLoggedIn()
+    public function testExportJobNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{exportJob}', function () {
@@ -813,12 +733,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\ImportJob::routeBinder
      */
-    public function testImportJob()
+    public function testImportJob(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{importJob}', function () {
@@ -832,30 +750,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\ImportJob::routeBinder
      */
-    public function testImportJobBadStatus()
-    {
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{importJob}', function () {
-            return 'OK';
-        }
-        );
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/bad-status');
-        $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
-     * @covers \FireflyIII\Models\ImportJob::routeBinder
-     */
-    public function testImportJobNotFound()
+    public function testImportJobNotFound(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{importJob}', function () {
@@ -869,12 +767,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\ImportJob::routeBinder
      */
-    public function testImportJobNotLoggedIn()
+    public function testImportJobNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{importJob}', function () {
@@ -887,12 +783,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\JournalList::routeBinder
      */
-    public function testJournalList()
+    public function testJournalList(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{journalList}', function (Collection $journals) {
@@ -906,12 +800,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\JournalList::routeBinder
      */
-    public function testJournalListEmpty()
+    public function testJournalListEmpty(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{journalList}', function (Collection $journals) {
@@ -924,12 +816,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\LinkType::routeBinder
      */
-    public function testLinkType()
+    public function testLinkType(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{linkType}', function () {
@@ -943,12 +833,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\LinkType::routeBinder
      */
-    public function testLinkTypeNotFound()
+    public function testLinkTypeNotFound(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{linkType}', function () {
@@ -962,12 +850,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\LinkType::routeBinder
      */
-    public function testLinkTypeNotLoggedIn()
+    public function testLinkTypeNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{linkType}', function () {
@@ -980,12 +866,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\PiggyBank::routeBinder
      */
-    public function testPiggyBank()
+    public function testPiggyBank(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{piggyBank}', function () {
@@ -999,12 +883,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\PiggyBank::routeBinder
      */
-    public function testPiggyBankNotFound()
+    public function testPiggyBankNotFound(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{piggyBank}', function () {
@@ -1018,12 +900,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\PiggyBank::routeBinder
      */
-    public function testPiggyBankNotLoggedIn()
+    public function testPiggyBankNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{piggyBank}', function () {
@@ -1036,12 +916,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Rule::routeBinder
      */
-    public function testRule()
+    public function testRule(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{rule}', function () {
@@ -1055,12 +933,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\RuleGroup::routeBinder
      */
-    public function testRuleGroup()
+    public function testRuleGroup(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{ruleGroup}', function () {
@@ -1074,12 +950,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\RuleGroup::routeBinder
      */
-    public function testRuleGroupNotFound()
+    public function testRuleGroupNotFound(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{ruleGroup}', function () {
@@ -1093,12 +967,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\RuleGroup::routeBinder
      */
-    public function testRuleGroupNotLoggedIn()
+    public function testRuleGroupNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{ruleGroup}', function () {
@@ -1111,12 +983,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Rule::routeBinder
      */
-    public function testRuleNotFound()
+    public function testRuleNotFound(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{rule}', function () {
@@ -1130,12 +1000,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Rule::routeBinder
      */
-    public function testRuleNotLoggedIn()
+    public function testRuleNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{rule}', function () {
@@ -1148,12 +1016,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\TransactionJournal::routeBinder
      */
-    public function testTJ()
+    public function testTJ(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{tj}', function () {
@@ -1167,12 +1033,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\TransactionJournal::routeBinder
      */
-    public function testTJNotFound()
+    public function testTJNotFound(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{tj}', function () {
@@ -1186,12 +1050,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\TransactionJournal::routeBinder
      */
-    public function testTJNotLoggedIn()
+    public function testTJNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{tj}', function () {
@@ -1204,12 +1066,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Tag::routeBinder
      */
-    public function testTag()
+    public function testTag(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{tag}', function () {
@@ -1223,12 +1083,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\TagList::routeBinder
      */
-    public function testTagList()
+    public function testTagList(): void
     {
         $tagRepos = $this->mock(TagRepositoryInterface::class);
         $tagRepos->shouldReceive('setUser');
@@ -1251,12 +1109,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\TagList::routeBinder
      */
-    public function testTagListEmpty()
+    public function testTagListEmpty(): void
     {
         $tagRepos = $this->mock(TagRepositoryInterface::class);
         $tagRepos->shouldReceive('setUser');
@@ -1273,12 +1129,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Tag::routeBinder
      */
-    public function testTagNotFound()
+    public function testTagNotFound(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{tag}', function () {
@@ -1292,12 +1146,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Tag::routeBinder
      */
-    public function testTagNotLoggedIn()
+    public function testTagNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{tag}', function () {
@@ -1310,12 +1162,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\TransactionCurrency::routeBinder
      */
-    public function testTransactionCurrency()
+    public function testTransactionCurrency(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{currency}', function () {
@@ -1329,12 +1179,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\TransactionCurrency::routeBinder
      */
-    public function testTransactionCurrencyNotFound()
+    public function testTransactionCurrencyNotFound(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{currency}', function () {
@@ -1348,12 +1196,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\TransactionCurrency::routeBinder
      */
-    public function testTransactionCurrencyNotLoggedIn()
+    public function testTransactionCurrencyNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{currency}', function () {
@@ -1366,12 +1212,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\TransactionJournalLink::routeBinder
      */
-    public function testTransactionJournalLink()
+    public function testTransactionJournalLink(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{journalLink}', function () {
@@ -1385,12 +1229,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\TransactionJournalLink::routeBinder
      */
-    public function testTransactionJournalLinkNotFound()
+    public function testTransactionJournalLinkNotFound(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{journalLink}', function () {
@@ -1404,12 +1246,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\TransactionJournalLink::routeBinder
      */
-    public function testTransactionJournalLinkNotLoggedIn()
+    public function testTransactionJournalLinkNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{journalLink}', function () {
@@ -1422,12 +1262,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\TransactionType::routeBinder
      */
-    public function testTransactionType()
+    public function testTransactionType(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{transactionType}', function () {
@@ -1441,12 +1279,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\TransactionType::routeBinder
      */
-    public function testTransactionTypeNotFound()
+    public function testTransactionTypeNotFound(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{transactionType}', function () {
@@ -1460,12 +1296,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\TransactionType::routeBinder
      */
-    public function testTransactionTypeNotLoggedIn()
+    public function testTransactionTypeNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
             '/_test/binder/{transactionType}', function () {
@@ -1478,12 +1312,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\UnfinishedJournal::routeBinder
      */
-    public function testUnfinishedJournal()
+    public function testUnfinishedJournal(): void
     {
         $journal = $this->user()->transactionJournals()->where('completed', 0)->first();
         Route::middleware(Binder::class)->any(
@@ -1497,12 +1329,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\UnfinishedJournal::routeBinder
      */
-    public function testUnfinishedJournalFinished()
+    public function testUnfinishedJournalFinished(): void
     {
         $journal = $this->user()->transactionJournals()->where('completed', 1)->first();
         Route::middleware(Binder::class)->any(
@@ -1515,12 +1345,10 @@ class BinderTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\Binder::handle
-     * @covers \FireflyIII\Http\Middleware\Binder::__construct
-     * @covers \FireflyIII\Http\Middleware\Binder::performBinding
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\UnfinishedJournal::routeBinder
      */
-    public function testUnfinishedJournalNotLoggedIn()
+    public function testUnfinishedJournalNotLoggedIn(): void
     {
         $journal = $this->user()->transactionJournals()->where('completed', 0)->first();
         Route::middleware(Binder::class)->any(

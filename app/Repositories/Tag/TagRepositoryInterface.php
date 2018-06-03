@@ -69,6 +69,13 @@ interface TagRepositoryInterface
     /**
      * @param int $tagId
      *
+     * @return Tag|null
+     */
+    public function findNull(int $tagId): ?Tag;
+
+    /**
+     * @param int $tagId
+     * @deprecated
      * @return Tag
      */
     public function find(int $tagId): Tag;
@@ -109,10 +116,16 @@ interface TagRepositoryInterface
     public function lastUseDate(Tag $tag): Carbon;
 
     /**
+     * Will return the newest tag (if known) or NULL.
      * @return Tag|null
      */
     public function oldestTag(): ?Tag;
 
+    /**
+     * Will return the newest tag (if known) or NULL.
+     * @return Tag|null
+     */
+    public function newestTag(): ?Tag;
     /**
      * @param User $user
      */

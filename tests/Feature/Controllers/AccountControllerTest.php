@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use Amount;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
@@ -64,7 +65,7 @@ class AccountControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\AccountController::create
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -84,7 +85,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\AccountController::delete
      * @covers \FireflyIII\Http\Controllers\Controller::rememberPreviousUri
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -106,7 +107,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Controller::__construct
      * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
-    public function testDestroy()
+    public function testDestroy(): void
     {
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -128,7 +129,7 @@ class AccountControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\AccountController::edit
      */
-    public function testEdit()
+    public function testEdit(): void
     {
         $note       = new Note();
         $note->text = 'This is a test';
@@ -160,6 +161,41 @@ class AccountControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\AccountController
+     */
+    public function testEditNull(): void
+    {
+        $note       = new Note();
+        $note->text = 'This is a test';
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        Amount::shouldReceive('getDefaultCurrency')->andReturn(TransactionCurrency::find(2));
+        $repository->shouldReceive('findNull')->once()->andReturn(null);
+        $repository->shouldReceive('get')->andReturn(new Collection);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $accountRepos->shouldReceive('getNote')->andReturn($note)->once();
+        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturnNull();
+        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturnNull();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('123');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccType'])->andReturn('');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccMonthlyPaymentDate'])->andReturn('');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
+
+        $this->be($this->user());
+        $account  = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
+        $response = $this->get(route('accounts.edit', [$account->id]));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+        $response->assertSee($note->text);
+    }
+
+    /**
      * @covers       \FireflyIII\Http\Controllers\AccountController::index
      * @covers       \FireflyIII\Http\Controllers\AccountController::__construct
      * @covers       \FireflyIII\Http\Controllers\AccountController::isInArray
@@ -168,7 +204,7 @@ class AccountControllerTest extends TestCase
      * @param string $range
      *
      */
-    public function testIndex(string $range)
+    public function testIndex(string $range): void
     {
         // mock stuff
         $account       = factory(Account::class)->make();
@@ -182,7 +218,7 @@ class AccountControllerTest extends TestCase
         Steam::shouldReceive('balancesByAccounts')->andReturn([$account->id => '100']);
         Steam::shouldReceive('getLastActivities')->andReturn([]);
 
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'accountNumber'])->andReturn('123');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('123');
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -199,7 +235,7 @@ class AccountControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testShow(string $range)
+    public function testShow(string $range): void
     {
         $date = new Carbon;
         $this->session(['start' => $date, 'end' => clone $date]);
@@ -239,11 +275,59 @@ class AccountControllerTest extends TestCase
         $response->assertSee('<ol class="breadcrumb">');
     }
 
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\AccountController
+     * @covers       \FireflyIII\Http\Controllers\AccountController
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
+    public function testShowAll(string $range): void
+    {
+        $date = new Carbon;
+        $this->session(['start' => $date, 'end' => clone $date]);
+
+        // mock stuff:
+        $tasker        = $this->mock(AccountTaskerInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
+        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
+        $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
+
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('oldestJournalDate')->andReturn(clone $date)->once();
+        $repository->shouldReceive('getMetaValue')->andReturn('');
+
+
+        $transaction = factory(Transaction::class)->make();
+        $collector   = $this->mock(JournalCollectorInterface::class);
+        $collector->shouldReceive('setAccounts')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10));
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('accounts.show.all', [1]));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
     /**
      * @covers                   \FireflyIII\Http\Controllers\AccountController::show
      * @expectedExceptionMessage End is after start!
      */
-    public function testShowBrokenBadDates()
+    public function testShowBrokenBadDates(): void
     {
         // mock
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -262,7 +346,7 @@ class AccountControllerTest extends TestCase
      * @covers                   \FireflyIII\Http\Controllers\AccountController::redirectToOriginalAccount
      * @expectedExceptionMessage Expected a transaction
      */
-    public function testShowBrokenInitial()
+    public function testShowBrokenInitial(): void
     {
         // mock
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -283,7 +367,7 @@ class AccountControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testShowByDateEmpty(string $range)
+    public function testShowByDateEmpty(string $range): void
     {
         // mock stuff
         $collector     = $this->mock(JournalCollectorInterface::class);
@@ -318,7 +402,7 @@ class AccountControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\AccountController::show
      * @covers       \FireflyIII\Http\Controllers\AccountController::redirectToOriginalAccount
      */
-    public function testShowInitial()
+    public function testShowInitial(): void
     {
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -339,7 +423,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Http\Requests\AccountFormRequest
      * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
-    public function testStore()
+    public function testStore(): void
     {
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -368,7 +452,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Http\Requests\AccountFormRequest
      * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
-    public function testStoreAnother()
+    public function testStoreAnother(): void
     {
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -395,7 +479,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Http\Requests\AccountFormRequest
      * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -422,7 +506,7 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Http\Requests\AccountFormRequest
      * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
-    public function testUpdateAgain()
+    public function testUpdateAgain(): void
     {
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);

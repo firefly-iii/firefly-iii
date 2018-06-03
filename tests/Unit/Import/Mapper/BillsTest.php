@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Import\Mapper;
 
 use FireflyIII\Import\Mapper\Bills;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -38,13 +37,13 @@ class BillsTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Mapper\Bills::getMap()
      */
-    public function testGetMapBasic()
+    public function testGetMapBasic(): void
     {
-        $one        = new Bill();
+        $one        = new Bill;
         $one->id    = 5;
         $one->name  = 'Something';
         $one->match = 'hi,bye';
-        $two        = new Account;
+        $two        = new Bill;
         $two->id    = 9;
         $two->name  = 'Else';
         $two->match = 'match';
@@ -59,8 +58,8 @@ class BillsTest extends TestCase
         // assert this is what the result looks like:
         $result = [
             0 => (string)trans('import.map_do_not_map'),
-            9 => 'Else [match]',
-            5 => 'Something [hi,bye]',
+            9 => 'Else',
+            5 => 'Something',
         ];
         $this->assertEquals($result, $mapping);
     }

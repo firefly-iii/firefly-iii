@@ -59,7 +59,7 @@ class ConvertControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::__construct
      */
-    public function testIndexDepositTransfer()
+    public function testIndexDepositTransfer(): void
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -92,7 +92,7 @@ class ConvertControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
      */
-    public function testIndexDepositWithdrawal()
+    public function testIndexDepositWithdrawal(): void
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -117,7 +117,7 @@ class ConvertControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
      */
-    public function testIndexSameType()
+    public function testIndexSameType(): void
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -134,7 +134,7 @@ class ConvertControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
      */
-    public function testIndexSplit()
+    public function testIndexSplit(): void
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -163,7 +163,7 @@ class ConvertControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
      */
-    public function testIndexTransferDeposit()
+    public function testIndexTransferDeposit(): void
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -183,7 +183,7 @@ class ConvertControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
      */
-    public function testIndexTransferWithdrawal()
+    public function testIndexTransferWithdrawal(): void
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -207,7 +207,7 @@ class ConvertControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
      */
-    public function testIndexWithdrawalDeposit()
+    public function testIndexWithdrawalDeposit(): void
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -231,7 +231,7 @@ class ConvertControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
      */
-    public function testIndexWithdrawalTransfer()
+    public function testIndexWithdrawalTransfer(): void
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -264,7 +264,7 @@ class ConvertControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
      */
-    public function testPostIndexDepositTransfer()
+    public function testPostIndexDepositTransfer(): void
     {
         // mock stuff
 
@@ -293,7 +293,7 @@ class ConvertControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
      */
-    public function testPostIndexDepositWithdrawal()
+    public function testPostIndexDepositWithdrawal(): void
     {
         // mock stuff
 
@@ -320,7 +320,7 @@ class ConvertControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
      */
-    public function testPostIndexDepositWithdrawalEmptyName()
+    public function testPostIndexDepositWithdrawalEmptyName(): void
     {
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
@@ -348,7 +348,7 @@ class ConvertControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
      */
-    public function testPostIndexErrored()
+    public function testPostIndexErrored(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $account      = $this->user()->accounts()->first();
@@ -381,7 +381,7 @@ class ConvertControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
      */
-    public function testPostIndexSameType()
+    public function testPostIndexSameType(): void
     {
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -404,7 +404,7 @@ class ConvertControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
      */
-    public function testPostIndexSplit()
+    public function testPostIndexSplit(): void
     {
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -432,7 +432,7 @@ class ConvertControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
      */
-    public function testPostIndexTransferDeposit()
+    public function testPostIndexTransferDeposit(): void
     {
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
@@ -459,7 +459,7 @@ class ConvertControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
      */
-    public function testPostIndexWithdrawalDeposit()
+    public function testPostIndexWithdrawalDeposit(): void
     {
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
@@ -486,7 +486,7 @@ class ConvertControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
      */
-    public function testPostIndexWithdrawalDepositEmptyName()
+    public function testPostIndexWithdrawalDepositEmptyName(): void
     {
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
@@ -513,7 +513,7 @@ class ConvertControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
      */
-    public function testPostIndexWithdrawalTransfer()
+    public function testPostIndexWithdrawalTransfer(): void
     {
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);

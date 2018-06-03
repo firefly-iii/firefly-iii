@@ -24,6 +24,7 @@ namespace Tests\Unit\TransactionRules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\BudgetIs;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 /**
@@ -34,7 +35,7 @@ class BudgetIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\BudgetIs::triggered
      */
-    public function testTriggeredJournal()
+    public function testTriggeredJournal(): void
     {
         do {
             $journal = TransactionJournal::inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
@@ -54,7 +55,7 @@ class BudgetIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\BudgetIs::triggered
      */
-    public function testTriggeredNotJournal()
+    public function testTriggeredNotJournal(): void
     {
         do {
             $journal = TransactionJournal::inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
@@ -75,13 +76,14 @@ class BudgetIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\BudgetIs::triggered
      */
-    public function testTriggeredTransaction()
+    public function testTriggeredTransaction(): void
     {
         do {
             $journal = TransactionJournal::inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
             $count   = $journal->transactions()->count();
         } while ($count !== 2);
 
+        /** @var Collection $transactions */
         $transactions = $journal->transactions()->get();
         $budget      = $journal->user->budgets()->first();
 
@@ -101,7 +103,7 @@ class BudgetIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\BudgetIs::willMatchEverything
      */
-    public function testWillMatchEverythingNotNull()
+    public function testWillMatchEverythingNotNull(): void
     {
         $value  = 'x';
         $result = BudgetIs::willMatchEverything($value);
@@ -111,7 +113,7 @@ class BudgetIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\BudgetIs::willMatchEverything
      */
-    public function testWillMatchEverythingNull()
+    public function testWillMatchEverythingNull(): void
     {
         $value  = null;
         $result = BudgetIs::willMatchEverything($value);

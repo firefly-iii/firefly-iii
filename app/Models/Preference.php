@@ -34,6 +34,7 @@ use FireflyIII\User;
  * Class Preference.
  *
  * @property mixed $data
+ * @property string $name
  */
 class Preference extends Model
 {
@@ -49,7 +50,7 @@ class Preference extends Model
         ];
 
     /** @var array */
-    protected $fillable = ['user_id', 'data', 'name', 'data'];
+    protected $fillable = ['user_id', 'data', 'name'];
 
     /**
      * @param $value

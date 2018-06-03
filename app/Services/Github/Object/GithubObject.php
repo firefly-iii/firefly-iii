@@ -23,7 +23,8 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Github\Object;
 
 /**
- * Class SpectreObject
+ * @codeCoverageIgnore
+ * Class GithubObject
  */
 class GithubObject
 {

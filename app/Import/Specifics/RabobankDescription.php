@@ -30,19 +30,21 @@ use Log;
 class RabobankDescription implements SpecificInterface
 {
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public static function getDescription(): string
     {
-        return 'Fixes possible problems with Rabobank descriptions.';
+        return 'import.specific_pres_descr';
     }
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public static function getName(): string
     {
-        return 'Rabobank description';
+        return 'import.specific_rabo_name';
     }
 
     /**

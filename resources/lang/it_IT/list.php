@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * list.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     'buttons'                 => 'Pulsanti',
@@ -68,7 +69,7 @@ return [
     'bill'                    => 'Conto',
     'withdrawal'              => 'Spesa',
     'deposit'                 => 'Deposito',
-    'transfer'                => 'Giroconto',
+    'transfer'                => 'Trasferimento',
     'type'                    => 'Tipo',
     'completed'               => 'Completato',
     'iban'                    => 'IBAN',
@@ -97,24 +98,29 @@ return [
     'number_of_transactions'  => 'Numero transazioni',
     'total_amount'            => 'Importo totale',
     'sum'                     => 'Somma',
-    'sum_excluding_transfers' => 'Somma (esclusi i giroconti)',
+    'sum_excluding_transfers' => 'Somma (esclusi i trasferimenti)',
     'sum_withdrawals'         => 'Somma prelievi',
     'sum_deposits'            => 'Somma versamenti',
-    'sum_transfers'           => 'Somma giroconti',
+    'sum_transfers'           => 'Somma dei trasferimenti',
     'reconcile'               => 'Riconcilia',
     'account_on_spectre'      => 'Conto (Spectre)',
     'do_import'               => 'Importo da questo conto',
-    'sepa-ct-id'              => 'SEPA End to End Identifier',
-    'sepa-ct-op'              => 'SEPA Opposing Account Identifier',
-    'sepa-db'                 => 'SEPA Mandate Identifier',
-    'sepa-country'            => 'SEPA Country',
-    'sepa-cc'                 => 'SEPA Clearing Code',
+    'sepa-ct-id'              => 'Identificativo End-To-End SEPA',
+    'sepa-ct-op'              => 'Identificativo Conto Oppositore SEPA',
+    'sepa-db'                 => 'Identificativo Mandato SEPA',
+    'sepa-country'            => 'Paese SEPA',
+    'sepa-cc'                 => 'Codice Compensazione SEPA',
     'sepa-ep'                 => 'SEPA External Purpose',
-    'sepa-ci'                 => 'SEPA Creditor Identifier',
+    'sepa-ci'                 => 'Identificativo Creditore SEPA',
+    'external_id'             => 'ID esterno',
     'account_at_bunq'         => 'Conto con Bunq',
-    'file_name'               => 'File name',
-    'file_size'               => 'File size',
-    'file_type'               => 'File type',
-    'attached_to'             => 'Attached to',
-    'file_exists'             => 'File exists',
+    'file_name'               => 'Nome del file',
+    'file_size'               => 'Dimensione del file',
+    'file_type'               => 'Tipo del file',
+    'attached_to'             => 'Allegato a',
+    'file_exists'             => 'Il file esiste',
+    'spectre_bank'            => 'Banca',
+    'spectre_last_use'        => 'Ultimo accesso',
+    'spectre_status'          => 'Stato',
+    'bunq_payment_id'         => 'bunq payment ID',
 ];

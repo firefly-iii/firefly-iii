@@ -68,6 +68,11 @@ interface PiggyBankRepositoryInterface
     public function canRemoveAmount(PiggyBank $piggyBank, string $amount): bool;
 
     /**
+     * Correct order of piggies in case of issues.
+     */
+    public function correctOrder(): void;
+
+    /**
      * Create a new event.
      *
      * @param PiggyBank $piggyBank
@@ -169,6 +174,15 @@ interface PiggyBankRepositoryInterface
     public function getRepetition(PiggyBank $piggyBank): ?PiggyBankRepetition;
 
     /**
+     * Returns the suggested amount the user should save per month, or "".
+     *
+     * @param PiggyBank $piggyBank
+     *
+     * @return string
+     */
+    public function getSuggestedMonthlyAmount(PiggyBank $piggyBank): string;
+
+    /**
      * Get for piggy account what is left to put in piggies.
      *
      * @param PiggyBank $piggyBank
@@ -196,12 +210,12 @@ interface PiggyBankRepositoryInterface
     /**
      * Set specific piggy bank to specific order.
      *
-     * @param int $piggyBankId
-     * @param int $order
+     * @param PiggyBank $piggyBank
+     * @param int       $order
      *
      * @return bool
      */
-    public function setOrder(int $piggyBankId, int $order): bool;
+    public function setOrder(PiggyBank $piggyBank, int $order): bool;
 
     /**
      * @param User $user

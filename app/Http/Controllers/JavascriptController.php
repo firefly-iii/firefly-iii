@@ -29,6 +29,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Log;
 use Preferences;
 
@@ -68,9 +69,9 @@ class JavascriptController extends Controller
     /**
      * @param CurrencyRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function currencies(CurrencyRepositoryInterface $repository)
+    public function currencies(CurrencyRepositoryInterface $repository): Response
     {
         $currencies = $repository->get();
         $data       = ['currencies' => []];
@@ -102,7 +103,8 @@ class JavascriptController extends Controller
         }
         /** @var TransactionCurrency $currency */
         $currency = $currencyRepository->findNull($currencyId);
-        if (0 === $currencyId) {
+        if (null === $currency) {
+            /** @var TransactionCurrency $currency */
             $currency = app('amount')->getDefaultCurrency();
         }
 

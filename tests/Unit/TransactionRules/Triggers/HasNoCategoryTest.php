@@ -35,7 +35,7 @@ class HasNoCategoryTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasNoCategory::triggered
      */
-    public function testTriggeredCategory()
+    public function testTriggeredCategory(): void
     {
         $journal  = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $category = $journal->user->categories()->first();
@@ -51,7 +51,7 @@ class HasNoCategoryTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasNoCategory::triggered
      */
-    public function testTriggeredNoCategory()
+    public function testTriggeredNoCategory(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->categories()->detach();
@@ -73,14 +73,18 @@ class HasNoCategoryTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasNoCategory::triggered
      */
-    public function testTriggeredTransaction()
+    public function testTriggeredTransaction(): void
     {
-        $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $count = 0;
+        while ($count === 0) {
+            $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+            $count   = $journal->transactions()->count();
+        }
         $transaction = $journal->transactions()->first();
         $category    = $journal->user->categories()->first();
 
         $journal->categories()->detach();
-        $transaction->categories()->save($category);
+        $transaction->categories()->sync([$category->id]);
         $this->assertEquals(0, $journal->categories()->count());
         $this->assertEquals(1, $transaction->categories()->count());
 
@@ -92,7 +96,7 @@ class HasNoCategoryTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasNoCategory::willMatchEverything
      */
-    public function testWillMatchEverythingNull()
+    public function testWillMatchEverythingNull(): void
     {
         $value  = null;
         $result = HasNoCategory::willMatchEverything($value);

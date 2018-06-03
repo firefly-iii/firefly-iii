@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
 
+use Exception;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
@@ -37,7 +38,7 @@ class ClearNotesTest extends TestCase
      * @covers \FireflyIII\TransactionRules\Actions\ClearNotes::__construct()
      * @covers \FireflyIII\TransactionRules\Actions\ClearNotes::act()
      */
-    public function testAct()
+    public function testAct(): void
     {
         // give journal a note:
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
@@ -54,7 +55,11 @@ class ClearNotesTest extends TestCase
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = null;
         $action                   = new ClearNotes($ruleAction);
-        $result                   = $action->act($journal);
+        try {
+            $result = $action->act($journal);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
         $this->assertTrue($result);
 
         // assert result

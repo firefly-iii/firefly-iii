@@ -26,7 +26,6 @@ namespace FireflyIII\Services\Github\Request;
 /**
  * Interface GithubRequest
  *
- * @package FireflyIII\Services\Github\Request
  */
 interface GithubRequest
 {

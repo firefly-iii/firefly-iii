@@ -26,6 +26,7 @@ namespace FireflyIII\Services\Spectre\Request;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Services\Spectre\Object\Customer;
 use FireflyIII\Services\Spectre\Object\Login;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -64,12 +65,19 @@ class ListLoginsRequest extends SpectreRequest
             } else {
                 Log::debug('No next page.');
             }
-
+            $collection = new Collection;
             // store logins:
             /** @var array $loginArray */
             foreach ($response['data'] as $loginArray) {
-                $this->logins[] = new Login($loginArray);
+                $collection->push(new Login($loginArray));
             }
+            // sort logins by date created:
+            $sorted       = $collection->sortByDesc(
+                function (Login $login) {
+                    return $login->getUpdatedAt()->timestamp;
+                }
+            );
+            $this->logins = $sorted->toArray();
         }
     }
 

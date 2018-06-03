@@ -33,7 +33,7 @@ class AmountDebitTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Converter\AmountDebit::convert()
      */
-    public function testConvert()
+    public function testConvert(): void
     {
         $values = [
             '0'                       => '0',
@@ -161,7 +161,7 @@ class AmountDebitTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Converter\AmountDebit::convert()
      */
-    public function testConvertNull()
+    public function testConvertNull(): void
     {
         $converter = new AmountDebit;
         $result    = $converter->convert(null);

@@ -49,7 +49,7 @@ class DebugControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\DebugController::errorReporting
      * @covers \FireflyIII\Http\Controllers\DebugController::collectPackages
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         $this->be($this->user());
         $response = $this->get(route('debug'));

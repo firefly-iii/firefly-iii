@@ -1,0 +1,24 @@
+<div class="{{ classes }}" id="{{ name }}_holder">
+    <label for="{{ options.id }}" class="col-sm-4 control-label">{{ label }}</label>
+
+    <div class="col-sm-8">
+        {% for groupName, accounts in grouped %}
+            <strong>{{ groupName }}</strong><br />
+            {% for id, account in accounts %}
+                <div class="checkbox" style="margin-left:2em;">
+                    <label>
+                        {% if account in selected or (selected|length == 0 and options.select_all == true) %}
+                            {{ Form.checkbox(name~'[]', id, true, options) }}
+                        {% else %}
+                            {{ Form.checkbox(name~'[]', id, false, options) }}
+                        {% endif %}
+                        {{ account }}
+                    </label>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% include 'form/help' %}
+        {% include 'form/feedback' %}
+
+    </div>
+</div>

@@ -54,7 +54,7 @@ class MassControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\MassController::delete
      * @covers \FireflyIII\Http\Controllers\Transaction\MassController::__construct
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
@@ -72,7 +72,7 @@ class MassControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\MassController::destroy
      */
-    public function testDestroy()
+    public function testDestroy(): void
     {
 
         $deposits   = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->take(2)->get();
@@ -98,7 +98,7 @@ class MassControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\MassController::edit
      */
-    public function testEdit()
+    public function testEdit(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
@@ -135,7 +135,7 @@ class MassControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\MassController::edit
      */
-    public function testEditMultiple()
+    public function testEditMultiple(): void
     {
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
@@ -178,7 +178,7 @@ class MassControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\MassController::update
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)
                                      ->whereNull('deleted_at')

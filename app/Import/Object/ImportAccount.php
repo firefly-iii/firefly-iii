@@ -30,6 +30,8 @@ use FireflyIII\User;
 use Log;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class ImportAccount.
  */
 class ImportAccount

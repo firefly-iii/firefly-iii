@@ -29,6 +29,8 @@ use Log;
 use Steam;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class ImportBill.
  */
 class ImportBill

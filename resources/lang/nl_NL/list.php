@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * list.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     'buttons'                 => 'Knoppen',
@@ -111,10 +112,15 @@ return [
     'sepa-cc'                 => 'SEPA vrijwaringscode',
     'sepa-ep'                 => 'SEPA transactiedoeleinde',
     'sepa-ci'                 => 'SEPA crediteuridentificatie',
+    'external_id'             => 'Externe ID',
     'account_at_bunq'         => 'Bunq-account',
     'file_name'               => 'Bestandsnaam',
     'file_size'               => 'Bestandsgrootte',
     'file_type'               => 'Bestandstype',
     'attached_to'             => 'Bijlage van',
     'file_exists'             => 'Bestand bestaat',
+    'spectre_bank'            => 'Bank',
+    'spectre_last_use'        => 'Laatst ingelogd',
+    'spectre_status'          => 'Status',
+    'bunq_payment_id'         => 'bunq betalings-ID',
 ];

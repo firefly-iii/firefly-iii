@@ -56,7 +56,7 @@ class CategoryReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Chart\CategoryReportController::accountExpense
      * @covers \FireflyIII\Http\Controllers\Chart\CategoryReportController::__construct
      */
-    public function testAccountExpense()
+    public function testAccountExpense(): void
     {
         $generator = $this->mock(GeneratorInterface::class);
         $pieChart  = $this->mock(MetaPieChartInterface::class);
@@ -77,7 +77,7 @@ class CategoryReportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\CategoryReportController::accountIncome
      */
-    public function testAccountIncome()
+    public function testAccountIncome(): void
     {
         $generator = $this->mock(GeneratorInterface::class);
         $pieChart  = $this->mock(MetaPieChartInterface::class);
@@ -98,7 +98,7 @@ class CategoryReportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\CategoryReportController::categoryExpense
      */
-    public function testCategoryExpense()
+    public function testCategoryExpense(): void
     {
         $generator = $this->mock(GeneratorInterface::class);
         $pieChart  = $this->mock(MetaPieChartInterface::class);
@@ -119,7 +119,7 @@ class CategoryReportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\CategoryReportController::categoryIncome
      */
-    public function testCategoryIncome()
+    public function testCategoryIncome(): void
     {
         $generator = $this->mock(GeneratorInterface::class);
         $pieChart  = $this->mock(MetaPieChartInterface::class);
@@ -143,7 +143,7 @@ class CategoryReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Chart\CategoryReportController::getExpenses
      * @covers \FireflyIII\Http\Controllers\Chart\CategoryReportController::getIncome
      */
-    public function testMainChart()
+    public function testMainChart(): void
     {
         $generator    = $this->mock(GeneratorInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);

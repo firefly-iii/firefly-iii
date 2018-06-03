@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * firefly.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     // general stuff:
@@ -179,6 +180,7 @@ return [
     'authorization_request_intro'                => '<strong>:client</strong> bittet um Erlaubnis, auf Ihre Finanzverwaltung zuzugreifen. Möchten Sie <strong>:client</strong> erlauben auf diese Datensätze zuzugreifen?',
     'scopes_will_be_able'                        => 'Diese Anwendung kann:',
     'button_authorize'                           => 'Erlauben',
+    'none_in_select_list'                        => '(Keine)',
 
     // check for updates:
     'update_check_title'                         => 'Nach Updates suchen',
@@ -232,7 +234,7 @@ return [
     'export_status_make_exporter'                => 'Export wird erstellt...',
     'export_status_collecting_journals'          => 'Ihre Überweisungen werden erfasst ...',
     'export_status_collected_journals'           => 'Buchungen erfasst!',
-    'export_status_converting_to_export_format'  => 'Buchungen werden umgewandelt …',
+    'export_status_converting_to_export_format'  => 'Buchungen werden umgewandelt...',
     'export_status_converted_to_export_format'   => 'Ihre Buchungen wurden erfasst!',
     'export_status_creating_journal_file'        => 'Exportdatei wird erstellt...',
     'export_status_created_journal_file'         => 'Exportdatei erstellt!',
@@ -296,7 +298,7 @@ return [
     'delete_rule'                                => 'Lösche Regel ":title"',
     'update_rule'                                => 'Regel bearbeiten',
     'test_rule_triggers'                         => 'Übereinstimmende Buchungen anzeigen',
-    'warning_transaction_subset'                 => 'Aus Geschwindigkeitsgründen beschränkt sich diese Liste auf :max_num_transactions Buchungen und zeigt möglicherweise nur einen Teil dieser an.',
+    'warning_transaction_subset'                 => 'Aus Geschwindigkeitsgründen beschränkt sich diese Liste auf :max_num_transactions Buchungen und zeigt möglicherweise nur einen Teil dieser an',
     'warning_no_matching_transactions'           => 'Keine übereinstimmenden Buchungen gefunden. Aus Geschwindigkeitsgründen werden nur die letzten :num_transactions Buchungen überprüft.',
     'warning_no_valid_triggers'                  => 'Keine gültigen Trigger gefunden.',
     'apply_rule_selection'                       => 'Regel „:title” auf eine Auswahl Ihrer Buchungen anwenden',
@@ -402,15 +404,15 @@ return [
     'rule_action_set_source_account'             => 'Lege Quellkonto als :action_value fest',
     'rule_action_set_destination_account_choice' => 'Zielkonto festlegen...',
     'rule_action_set_destination_account'        => 'Lege Zielkonto als :action_value fest',
-    'rule_action_append_notes_choice'            => 'Notizen anhängen mit …',
+    'rule_action_append_notes_choice'            => 'Notizen anhängen mit..',
     'rule_action_append_notes'                   => 'Notizen mit „:action_value” anhängen',
-    'rule_action_prepend_notes_choice'           => 'Notizen voranstellen mit …',
+    'rule_action_prepend_notes_choice'           => 'Notizen voranstellen mit..',
     'rule_action_prepend_notes'                  => 'Notizen „:action_value” voranstellen',
     'rule_action_clear_notes_choice'             => 'Alle Notizen entfernen',
     'rule_action_clear_notes'                    => 'Alle Notizen entfernen',
-    'rule_action_set_notes_choice'               => 'Notizen festlegen auf …',
-    'rule_action_link_to_bill_choice'            => 'Mit einer Rechnung verknüpfen …',
-    'rule_action_link_to_bill'                   => 'Mit Rechnung „:action_value” verknüpfen …',
+    'rule_action_set_notes_choice'               => 'Notizen festlegen auf..',
+    'rule_action_link_to_bill_choice'            => 'Mit einer Rechnung verknüpfen..',
+    'rule_action_link_to_bill'                   => 'Mit Rechnung „:action_value” verknüpfen',
     'rule_action_set_notes'                      => 'Notizen auf „:action_value” festlegen',
 
     'rules_have_read_warning'                 => 'Haben Sie die Warnung gelesen?',
@@ -667,6 +669,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'bill_will_automatch'                     => 'Rechnung wird automatisch mit passenden Buchungen verknüpft',
     'skips_over'                              => 'überschreitet',
     'bill_store_error'                        => 'Beim Speichern Ihrer neuen Rechnung ist ein unerwarteter Fehler aufgetreten. Bitte überprüfen Sie die Protokolldateien.',
+    'list_inactive_rule'                      => 'Inaktive Regeln',
 
     // accounts:
     'details_for_asset'                       => 'Informationen zum Bestandskonto „:name”',
@@ -802,6 +805,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'opt_group_savingAsset'                   => 'Sparkonten',
     'opt_group_sharedAsset'                   => 'Gemeinsame Bestandskonten',
     'opt_group_ccAsset'                       => 'Kreditkarten',
+    'opt_group_cashWalletAsset'               => 'Geldbörsen',
     'notes'                                   => 'Notizen',
     'unknown_journal_error'                   => 'Die Buchung konnte nicht gespeichert werden. Bitte überprüfen Sie die Protokolldateien.',
 
@@ -817,6 +821,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'language'                                => 'Sprache',
     'new_savings_account'                     => ':bank_name-Sparkonto',
     'cash_wallet'                             => 'Geldbörse',
+    'currency_not_present' => 'Wenn die Währung, die Sie normalerweise verwenden, nicht aufgeführt ist, machen Sie sich keine Sorgen. Unter Optionen ➜ Währungen können Sie eigene Währungen anlegen.',
 
     // home page:
     'yourAccounts'                            => 'Deine Konten',
@@ -1014,6 +1019,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'remove_money_from_piggy_title'           => 'Geld dem Sparschwein „:name” entnehmen',
     'add'                                     => 'Hinzufügen',
     'no_money_for_piggy'                      => 'Sie haben kein Geld, welches Sie in dieses Sparschwein geben können.',
+    'suggested_savings_per_month'             => 'Monatlich empfohlen',
 
     'remove'                    => 'Entfernen',
     'max_amount_add'            => 'Der maximale Betrag, den Sie hinzufügen können ist',
@@ -1149,27 +1155,9 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'no_edit_multiple_left'                 => 'Sie haben keine gültigen Buchungen zur Bearbeitung ausgewählt.',
     'cannot_convert_split_journal'          => 'Eine Splitbuchung konnte nicht umgesetzt werden',
 
-    // import bread crumbs and titles:
-    'import'                                => 'Importieren',
-    'import_data'                           => 'Daten importieren',
-    'import_general_index_file'             => 'Datei importieren',
-    'import_from_bunq'                      => 'Von „bunq” importieren',
-    'import_using_spectre'                  => 'Import mit Spectre',
-    'import_using_plaid'                    => 'Import mit Plaid',
-    'import_config_bread_crumb'             => 'Import einrichten',
-
-    // import index page:
+    // Import page (general strings only)
     'import_index_title'                    => 'Daten in Firefly III importieren',
-    'import_index_sub_title'                => 'Index',
-    'import_general_index_intro'            => 'Willkommen beim Importassistenten von Firefly III. Es gibt einige Möglichkeiten, Daten in Firefly III zu importieren, die hier als Schaltflächen angezeigt werden.',
-    'upload_error'                          => 'Die hochgeladene Datei konnte nicht verarbeitet werden. Möglicherweise handelt es sich um einen ungültigen Dateityp oder eine ungültige Kodierung. Die Protokolldateien enthalten weitere Informationen.',
-    'reset_import_settings_title'           => 'Importeinstellungen zurücksetzen',
-    'reset_import_settings_text'            => 'Über diese Links können Sie Ihre Importeinstellungen für bestimmte Anbieter zurücksetzen. Dies ist nützlich, wenn fehlerhafte Einstellungen den Import von Daten verhindern.',
-    'reset_settings_bunq'                   => 'Bunq-API-Schlüssel entfernen (lokale externe IP-Adresse und Bunq-bezogene RSA-Schlüssel).',
-    'reset_settings_spectre'                => '„Spectre”-Geheimnisse und -IDs entfernen. Dadurch wird auch Ihr „Spectre”-Schlüsselpaar entfernt. Denken Sie daran, die neue Version zu aktualisieren.',
-    'settings_reset_for_bunq'               => 'Bunq-Einstellungen zurückgesetzt',
-    'settings_reset_for_spectre'            => 'Spectre-Einstellungen zurückgesetzt',
-
+    'import_data'                           => 'Daten importieren',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Diese Funktion ist nicht verfügbar, wenn Sie Firefly III in einer Sandstorm.io-Umgebung verwenden.',

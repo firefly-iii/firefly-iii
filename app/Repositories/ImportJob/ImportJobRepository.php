@@ -24,10 +24,14 @@ namespace FireflyIII\Repositories\ImportJob;
 
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
 use Log;
 use SplFileObject;
@@ -39,8 +43,18 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class ImportJobRepository implements ImportJobRepositoryInterface
 {
+    /** @var \Illuminate\Contracts\Filesystem\Filesystem */
+    protected $uploadDisk;
+    /** @var int */
+    private $maxUploadSize;
     /** @var User */
     private $user;
+
+    public function __construct()
+    {
+        $this->maxUploadSize = (int)config('firefly.maxUploadSize');
+        $this->uploadDisk    = Storage::disk('upload');
+    }
 
     /**
      * @param ImportJob $job
@@ -55,6 +69,24 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $extended['errors'][$index][] = $error;
 
         return $this->setExtendedStatus($job, $extended);
+    }
+
+    /**
+     * Add message to job.
+     *
+     * @param ImportJob $job
+     * @param string    $error
+     *
+     * @return ImportJob
+     */
+    public function addErrorMessage(ImportJob $job, string $error): ImportJob
+    {
+        $errors      = $job->errors;
+        $errors[]    = $error;
+        $job->errors = $errors;
+        $job->save();
+
+        return $job;
     }
 
     /**
@@ -108,34 +140,36 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     }
 
     /**
-     * @param string $type
+     * @param string $importProvider
      *
      * @return ImportJob
      *
      * @throws FireflyException
      */
-    public function create(string $type): ImportJob
+    public function create(string $importProvider): ImportJob
     {
-        $count = 0;
-        $type  = strtolower($type);
+        $count          = 0;
+        $importProvider = strtolower($importProvider);
 
         while ($count < 30) {
             $key      = Str::random(12);
             $existing = $this->findByKey($key);
             if (null === $existing->id) {
-                $importJob = new ImportJob;
-                $importJob->user()->associate($this->user);
-                $importJob->file_type       = $type;
-                $importJob->key             = Str::random(12);
-                $importJob->status          = 'new';
-                $importJob->configuration   = [];
-                $importJob->extended_status = [
-                    'steps'  => 0,
-                    'done'   => 0,
-                    'tag'    => 0,
-                    'errors' => [],
-                ];
-                $importJob->save();
+                $importJob = ImportJob::create(
+                    [
+                        'user_id'         => $this->user->id,
+                        'tag_id'          => null,
+                        'provider'        => $importProvider,
+                        'file_type'       => '',
+                        'key'             => Str::random(12),
+                        'status'          => 'new',
+                        'stage'           => 'new',
+                        'configuration'   => [],
+                        'extended_status' => [],
+                        'transactions'    => [],
+                        'errors'          => [],
+                    ]
+                );
 
                 // breaks the loop:
                 return $importJob;
@@ -159,6 +193,18 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Return all attachments for job.
+     *
+     * @param ImportJob $job
+     *
+     * @return Collection
+     */
+    public function getAttachments(ImportJob $job): Collection
+    {
+        return $job->attachments()->get();
     }
 
     /**
@@ -308,12 +354,13 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      */
     public function setConfiguration(ImportJob $job, array $configuration): ImportJob
     {
-        Log::debug(sprintf('Incoming config for job "%s" is: ', $job->key), $configuration);
+        Log::debug('Updating configuration...');
+        //Log::debug(sprintf('Incoming config for job "%s" is: ', $job->key), $configuration);
         $currentConfig      = $job->configuration;
         $newConfig          = array_merge($currentConfig, $configuration);
         $job->configuration = $newConfig;
         $job->save();
-        Log::debug(sprintf('Set config of job "%s" to: ', $job->key), $newConfig);
+        //Log::debug(sprintf('Set config of job "%s" to: ', $job->key), $newConfig);
 
         return $job;
     }
@@ -336,12 +383,27 @@ class ImportJobRepository implements ImportJobRepositoryInterface
 
     /**
      * @param ImportJob $job
+     * @param string    $stage
+     *
+     * @return ImportJob
+     */
+    public function setStage(ImportJob $job, string $stage): ImportJob
+    {
+        $job->stage = $stage;
+        $job->save();
+
+        return $job;
+    }
+
+    /**
+     * @param ImportJob $job
      * @param string    $status
      *
      * @return ImportJob
      */
     public function setStatus(ImportJob $job, string $status): ImportJob
     {
+        Log::debug(sprintf('Set status of job "%s" to "%s"', $job->key, $status));
         $job->status = $status;
         $job->save();
 
@@ -365,6 +427,20 @@ class ImportJobRepository implements ImportJobRepositoryInterface
 
     /**
      * @param ImportJob $job
+     * @param Tag       $tag
+     *
+     * @return ImportJob
+     */
+    public function setTag(ImportJob $job, Tag $tag): ImportJob
+    {
+        $job->tag()->associate($tag);
+        $job->save();
+
+        return $job;
+    }
+
+    /**
+     * @param ImportJob $job
      * @param int       $count
      *
      * @return ImportJob
@@ -379,11 +455,133 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     }
 
     /**
+     * @param ImportJob $job
+     * @param array     $transactions
+     *
+     * @return ImportJob
+     */
+    public function setTransactions(ImportJob $job, array $transactions): ImportJob
+    {
+        $job->transactions = $transactions;
+        $job->save();
+
+        return $job;
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * Handle upload for job.
+     *
+     * @param ImportJob    $job
+     * @param string       $name
+     * @param UploadedFile $file
+     *
+     * @return MessageBag
+     * @throws FireflyException
+     */
+    public function storeCLIUpload(ImportJob $job, string $name, string $fileName): MessageBag
+    {
+        $messages = new MessageBag;
+
+        if (!file_exists($fileName)) {
+            $messages->add('notfound', sprintf('File not found: %s', $fileName));
+
+            return $messages;
+        }
+
+        $count = $job->attachments()->get()->filter(
+            function (Attachment $att) use ($name) {
+                return $att->filename === $name;
+            }
+        )->count();
+
+        if ($count > 0) {
+            // don't upload, but also don't complain about it.
+            Log::error(sprintf('Detected duplicate upload. Will ignore second "%s" file.', $name));
+
+            return new MessageBag;
+        }
+        $content    = file_get_contents($fileName);
+        $attachment = new Attachment; // create Attachment object.
+        $attachment->user()->associate($job->user);
+        $attachment->attachable()->associate($job);
+        $attachment->md5      = md5($content);
+        $attachment->filename = $name;
+        $attachment->mime     = 'plain/txt';
+        $attachment->size     = \strlen($content);
+        $attachment->uploaded = 0;
+        $attachment->save();
+        $encrypted = Crypt::encrypt($content);
+
+        // store it:
+        $this->uploadDisk->put($attachment->fileName(), $encrypted);
+        $attachment->uploaded = 1; // update attachment
+        $attachment->save();
+
+        // return it.
+        return new MessageBag;
+    }
+
+    /**
+     * Handle upload for job.
+     *
+     * @param ImportJob    $job
+     * @param string       $name
+     * @param UploadedFile $file
+     *
+     * @return MessageBag
+     * @throws FireflyException
+     */
+    public function storeFileUpload(ImportJob $job, string $name, UploadedFile $file): MessageBag
+    {
+        $messages = new MessageBag;
+        if ($this->validSize($file)) {
+            $name = e($file->getClientOriginalName());
+            $messages->add('size', (string)trans('validation.file_too_large', ['name' => $name]));
+
+            return $messages;
+        }
+        $count = $job->attachments()->get()->filter(
+            function (Attachment $att) use ($name) {
+                return $att->filename === $name;
+            }
+        )->count();
+
+        if ($count > 0) {
+            // don't upload, but also don't complain about it.
+            Log::error(sprintf('Detected duplicate upload. Will ignore second "%s" file.', $name));
+
+            return new MessageBag;
+        }
+
+        $attachment = new Attachment; // create Attachment object.
+        $attachment->user()->associate($job->user);
+        $attachment->attachable()->associate($job);
+        $attachment->md5      = md5_file($file->getRealPath());
+        $attachment->filename = $name;
+        $attachment->mime     = $file->getMimeType();
+        $attachment->size     = $file->getSize();
+        $attachment->uploaded = 0;
+        $attachment->save();
+        $fileObject = $file->openFile('r');
+        $fileObject->rewind();
+        $content   = $fileObject->fread($file->getSize());
+        $encrypted = Crypt::encrypt($content);
+
+        // store it:
+        $this->uploadDisk->put($attachment->fileName(), $encrypted);
+        $attachment->uploaded = 1; // update attachment
+        $attachment->save();
+
+        // return it.
+        return new MessageBag;
     }
 
     /**
@@ -403,6 +601,8 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     /**
      * Return import file content.
      *
+     * @deprecated
+     *
      * @param ImportJob $job
      *
      * @return string
@@ -411,5 +611,19 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     public function uploadFileContents(ImportJob $job): string
     {
         return $job->uploadFileContents();
+    }
+
+    /**
+     * @codeCoverageIgnore
+     *
+     * @param UploadedFile $file
+     *
+     * @return bool
+     */
+    protected function validSize(UploadedFile $file): bool
+    {
+        $size = $file->getSize();
+
+        return $size > $this->maxUploadSize;
     }
 }

@@ -35,7 +35,7 @@ class NotesEmptyTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesEmpty::triggered
      */
-    public function testTriggered()
+    public function testTriggered(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->notes()->delete();
@@ -47,7 +47,7 @@ class NotesEmptyTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesEmpty::triggered
      */
-    public function testTriggeredEmpty()
+    public function testTriggeredEmpty(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->notes()->delete();
@@ -63,7 +63,7 @@ class NotesEmptyTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesEmpty::triggered
      */
-    public function testTriggeredPartial()
+    public function testTriggeredPartial(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $journal->notes()->delete();
@@ -79,7 +79,7 @@ class NotesEmptyTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesEmpty::willMatchEverything
      */
-    public function testWillMatchEverythingNotNull()
+    public function testWillMatchEverythingNotNull(): void
     {
         $value  = 'x';
         $result = NotesEmpty::willMatchEverything($value);

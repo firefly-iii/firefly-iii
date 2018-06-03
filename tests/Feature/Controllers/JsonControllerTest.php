@@ -49,7 +49,7 @@ class JsonControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\JsonController::action
      * @covers \FireflyIII\Http\Controllers\JsonController::__construct
      */
-    public function testAction()
+    public function testAction(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -63,7 +63,7 @@ class JsonControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\JsonController::trigger
      */
-    public function testTrigger()
+    public function testTrigger(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);

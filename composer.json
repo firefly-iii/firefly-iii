@@ -52,6 +52,7 @@
 		"ext-xml": "*",
 		"ext-zip": "*",
 		"bacon/bacon-qr-code": "1.*",
+		"bunq/sdk_php": "dev-master#8c1faefc111d9b970168a1837ca165d854954941",
 		"davejamesmiller/laravel-breadcrumbs": "5.*",
 		"doctrine/dbal": "2.*",
 		"fideloper/proxy": "4.*",
@@ -68,7 +69,6 @@
 		"twig/twig": "1.*"
 	},
 	"require-dev": {
-		"barryvdh/laravel-debugbar": "^3.1",
 		"barryvdh/laravel-ide-helper": "2.*",
 		"filp/whoops": "2.*",
 		"fzaninotto/faker": "1.*",

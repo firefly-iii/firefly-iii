@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * firefly.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     // general stuff:
@@ -44,7 +45,7 @@ return [
     'asset_account_role_help'                    => 'Qualsiasi opzione aggiuntiva risultante dalla tua scelta può essere impostata in seguito.',
     'Opening balance'                            => 'Saldo di apertura',
     'create_new_stuff'                           => 'Crea nuove cose',
-    'new_withdrawal'                             => 'Nuova uscita',
+    'new_withdrawal'                             => 'Nuovo prelievo',
     'create_new_transaction'                     => 'Crea nuova transazione',
     'go_to_asset_accounts'                       => 'Visualizza i tuoi movimenti',
     'go_to_budgets'                              => 'Vai ai tuoi budget',
@@ -54,8 +55,8 @@ return [
     'go_to_revenue_accounts'                     => 'Vedi i tuoi conti entrate',
     'go_to_piggies'                              => 'Vai ai tuoi salvadanai',
     'new_deposit'                                => 'Nuova entrata',
-    'new_transfer'                               => 'Nuovo giroconto',
-    'new_transfers'                              => 'Nuovi giroconti',
+    'new_transfer'                               => 'Nuovo trasferimento',
+    'new_transfers'                              => 'Nuovo trasferimento',
     'new_asset_account'                          => 'Nuova attività conto',
     'new_expense_account'                        => 'Nuova spesa conto',
     'new_revenue_account'                        => 'Nuova entrata conto',
@@ -117,9 +118,9 @@ return [
     'chart_account_in_period'                    => 'Grafico di tutte le transazioni per Conto ":name" fra :start E :end',
     'chart_category_in_period'                   => 'Grafico di tutte le transazioni per Categorie ":name" fra :start e :end',
     'chart_category_all'                         => 'Grafico di tutte le transazioni per Categoria ":name"',
-    'clone_withdrawal'                           => 'Duplica questo uscita',
+    'clone_withdrawal'                           => 'Duplica questo prelievo',
     'clone_deposit'                              => 'Duplica questa entrata',
-    'clone_transfer'                             => 'Duplica questo giroconto',
+    'clone_transfer'                             => 'Duplica questo trasferimento',
     'multi_select_no_selection'                  => 'Nessuno selezionato',
     'multi_select_select_all'                    => 'Seleziona tutto',
     'multi_select_n_selected'                    => 'selezionato',
@@ -179,6 +180,7 @@ return [
     'authorization_request_intro'                => '<strong>:client</strong> sta richiedendo l\'autorizzazione per accedere alla tua amministrazione finanziaria. Desideri autorizzare <strong>:client</strong> ad accedere a questi record?',
     'scopes_will_be_able'                        => 'Questa applicazione sarà in grado di:',
     'button_authorize'                           => 'Autorizza',
+    'none_in_select_list'                        => '(nessuna)',
 
     // check for updates:
     'update_check_title'                         => 'Controlla aggiornamenti',
@@ -284,9 +286,9 @@ return [
     'default_rule_trigger_from_account'          => 'David Bowie',
     'default_rule_action_prepend'                => 'Comprato il mondo da ',
     'default_rule_action_set_category'           => 'Grandi spese',
-    'trigger'                                    => 'Attivare',
-    'trigger_value'                              => 'Attiva il valore',
-    'stop_processing_other_triggers'             => 'Interrompe l\'elaborazione di altre attivazioni',
+    'trigger'                                    => 'Trigger',
+    'trigger_value'                              => 'Attiva al valore',
+    'stop_processing_other_triggers'             => 'Interrompi l\'elaborazione di altri trigger',
     'add_rule_trigger'                           => 'Aggiungi un nuovo trigger',
     'action'                                     => 'Azione',
     'action_value'                               => 'Valore azione',
@@ -310,25 +312,25 @@ return [
 
     // actions and triggers
     'rule_trigger_user_action'                   => 'L\'azione dell\'utente è ":trigger_value"',
-    'rule_trigger_from_account_starts_choice'    => 'Il conto di origine inizia con..',
+    'rule_trigger_from_account_starts_choice'    => 'Il conto di origine inizia con...',
     'rule_trigger_from_account_starts'           => 'Il conto di origine inizia con ":trigger_value"',
-    'rule_trigger_from_account_ends_choice'      => 'Il conto di origine termina con..',
+    'rule_trigger_from_account_ends_choice'      => 'Il conto di origine termina con...',
     'rule_trigger_from_account_ends'             => 'Il conto di origine termina con ":trigger_value"',
-    'rule_trigger_from_account_is_choice'        => 'L\'account di origine è..',
-    'rule_trigger_from_account_is'               => 'L\'account di origine è ":trigger_value"',
-    'rule_trigger_from_account_contains_choice'  => 'Il conto di origine contiene..',
+    'rule_trigger_from_account_is_choice'        => 'Il conto di origine è...',
+    'rule_trigger_from_account_is'               => 'Il conto di origine è ":trigger_value"',
+    'rule_trigger_from_account_contains_choice'  => 'Il conto di origine contiene...',
     'rule_trigger_from_account_contains'         => 'Il conto di origine contiene ":trigger_value"',
-    'rule_trigger_to_account_starts_choice'      => 'Il conto di destinazione inizia con..',
+    'rule_trigger_to_account_starts_choice'      => 'Il conto di destinazione inizia con...',
     'rule_trigger_to_account_starts'             => 'Il conto di destinazione inizia con ":trigger_value"',
-    'rule_trigger_to_account_ends_choice'        => 'Il conto di destinazione termina con..',
+    'rule_trigger_to_account_ends_choice'        => 'Il conto di destinazione termina con...',
     'rule_trigger_to_account_ends'               => 'Il conto di destinazione termina con ":trigger_value"',
-    'rule_trigger_to_account_is_choice'          => 'Il conto di destinazione è..',
+    'rule_trigger_to_account_is_choice'          => 'Il conto di destinazione è...',
     'rule_trigger_to_account_is'                 => 'Il conto di destinazione è ":trigger_value"',
-    'rule_trigger_to_account_contains_choice'    => 'Il conto di destinazione contiene..',
+    'rule_trigger_to_account_contains_choice'    => 'Il conto di destinazione contiene...',
     'rule_trigger_to_account_contains'           => 'Il conto di destinazione contiene ":trigger_value"',
-    'rule_trigger_transaction_type_choice'       => 'La transazione è di tipo..',
+    'rule_trigger_transaction_type_choice'       => 'La transazione è di tipo...',
     'rule_trigger_transaction_type'              => 'La transazione è di tipo ":trigger_value"',
-    'rule_trigger_category_is_choice'            => 'La categoria è..',
+    'rule_trigger_category_is_choice'            => 'La categoria è...',
     'rule_trigger_category_is'                   => 'La categoria è ":trigger_value"',
     'rule_trigger_amount_less_choice'            => 'L\'importo è inferiore a..',
     'rule_trigger_amount_less'                   => 'L\'importo è inferiore a :trigger_value',
@@ -347,7 +349,7 @@ return [
     'rule_trigger_budget_is_choice'              => 'Il budget è...',
     'rule_trigger_budget_is'                     => 'Il budget è ":trigger_value"',
     'rule_trigger_tag_is_choice'                 => '(A) tag è..',
-    'rule_trigger_tag_is'                        => 'Un tag è ":trigger_value"',
+    'rule_trigger_tag_is'                        => 'Una etichetta è ":trigger_value"',
     'rule_trigger_currency_is_choice'            => 'La valuta della transazione è...',
     'rule_trigger_currency_is'                   => 'La valuta della transazione è ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Ha almeno questo molti allegati',
@@ -360,8 +362,8 @@ return [
     'rule_trigger_has_any_category'              => 'La transazione ha una (qualsiasi) categoria',
     'rule_trigger_has_no_budget_choice'          => 'Non ha un budget',
     'rule_trigger_has_no_budget'                 => 'La transazione non ha un budget',
-    'rule_trigger_has_any_budget_choice'         => 'Ha un budget (qualsiasi)',
-    'rule_trigger_has_any_budget'                => 'La transazione ha un budget (qualsiasi)',
+    'rule_trigger_has_any_budget_choice'         => 'Ha un (qualsiasi) budget',
+    'rule_trigger_has_any_budget'                => 'La transazione ha un (qualsiasi) budget',
     'rule_trigger_has_no_tag_choice'             => 'Non ha etichetta(e)',
     'rule_trigger_has_no_tag'                    => 'La transazione non ha etichetta(e)',
     'rule_trigger_has_any_tag_choice'            => 'Ha una o più etichette (qualsiasi)',
@@ -420,7 +422,7 @@ return [
     'rule_for_bill_title'                     => 'Regole generata automaticamente per la bolletta ":name"',
     'rule_for_bill_description'               => 'Questa regola è generata automaticamente per l\'abbinamento con la bolletta ":name".',
     'create_rule_for_bill'                    => 'Crea una nuova regola per la bolletta ":name"',
-    'create_rule_for_bill_txt'                => 'Contratulazioni, hai appena creato una nuova bolletta chiamata ":name"! Firefly III può automagicamente abbinare le nuove uscite a questa bolletta. Per esempio, ogni volta che paghi l\'affitto la bolletta "affitto" verrà collegata a questa spesa. In questo modo Firefly III può visualizzare con accuratezza quali bollette sono in scadenza e quali no. Per far ciò è necessario creare una nuova regola. Firefly III ha inserito al posto tuo alcuni dettagli ragionevoli. Assicurati che questi siano corretti. Se questi valori sono corretti, Firefly III automaticamente collegherà la spesa giusta alla bolletta giusta. Controlla che i trigger siano corretti e aggiungene altri se sono sbagliati.',
+    'create_rule_for_bill_txt'                => 'Contratulazioni, hai appena creato una nuova bolletta chiamata ":name"! Firefly III può automagicamente abbinare le nuove uscite a questa bolletta. Per esempio, ogni volta che paghi l\'affitto la bolletta "affitto" verrà collegata a questa spesa. In questo modo Firefly III può visualizzare con accuratezza quali bollette sono in scadenza e quali no. Per far ciò è necessario creare una nuova regola. Firefly III ha inserito al posto tuo alcuni dettagli ragionevoli. Assicurati che questi siano corretti. Se questi valori sono corretti, Firefly III automaticamente collegherà il prelievo giusto alla bolletta giusta. Controlla che i trigger siano corretti e aggiungene altri se sono sbagliati.',
     'new_rule_for_bill_title'                 => 'Regola per la bolletta ":name"',
     'new_rule_for_bill_description'           => 'Questa regola contrassegna le transazioni per la bolletta ":name".',
 
@@ -541,7 +543,7 @@ return [
     'attachment_deleted'                      => 'Allegato eliminato ":name"',
     'attachment_updated'                      => 'Allegato aggiornato ":name"',
     'upload_max_file_size'                    => 'Dimensione massima del file: :size',
-    'list_all_attachments'                    => 'List of all attachments',
+    'list_all_attachments'                    => 'Lista di tutti gli allegati',
 
     // transaction index
     'title_expenses'                          => 'Spese',
@@ -554,42 +556,42 @@ return [
     // convert stuff:
     'convert_is_already_type_Withdrawal'      => 'Questa transazione è già un prelievo',
     'convert_is_already_type_Deposit'         => 'Questa transazione è già un deposito',
-    'convert_is_already_type_Transfer'        => 'Questa transazione è già un giroconto',
+    'convert_is_already_type_Transfer'        => 'Questa transazione è già un trasferimento',
     'convert_to_Withdrawal'                   => 'Converti ":description" in un prelievo',
     'convert_to_Deposit'                      => 'Converti ":description" in un deposito',
-    'convert_to_Transfer'                     => 'Converti ":description" in un giroconto',
-    'convert_options_WithdrawalDeposit'       => 'Convertire un prelievo in un deposito',
-    'convert_options_WithdrawalTransfer'      => 'Convertire un prelievo in un giroconto',
-    'convert_options_DepositTransfer'         => 'Convertire un deposito in un giroconto',
+    'convert_to_Transfer'                     => 'Converti ":description" in un trasferimento',
+    'convert_options_WithdrawalDeposit'       => 'Converti un prelievo in un deposito',
+    'convert_options_WithdrawalTransfer'      => 'Converti un prelievo in un trasferimento',
+    'convert_options_DepositTransfer'         => 'Converti un deposito in un trasferimento',
     'convert_options_DepositWithdrawal'       => 'Converti un deposito in un prelievo',
-    'convert_options_TransferWithdrawal'      => 'Convertire un giroconto in un prelievo',
+    'convert_options_TransferWithdrawal'      => 'Converti un trasferimento in un prelievo',
     'convert_options_TransferDeposit'         => 'Converti un bonifico in un deposito',
     'convert_Withdrawal_to_deposit'           => 'Converti questo prelievo in un deposito',
-    'convert_Withdrawal_to_transfer'          => 'Converti questo prelievo in un giroconto',
+    'convert_Withdrawal_to_transfer'          => 'Converti questo prelievo in un trasferimento',
     'convert_Deposit_to_withdrawal'           => 'Converti questo deposito in un prelievo',
-    'convert_Deposit_to_transfer'             => 'Converti questo deposito in un giroconto',
-    'convert_Transfer_to_deposit'             => 'Converti questo giroconto in un deposito',
-    'convert_Transfer_to_withdrawal'          => 'Converti questo giroconto in un prelievo',
+    'convert_Deposit_to_transfer'             => 'Converti questo deposito in un trasferimento',
+    'convert_Transfer_to_deposit'             => 'Converti questo trasferimento in un deposito',
+    'convert_Transfer_to_withdrawal'          => 'Converti questo trasferimento in un prelievo',
     'convert_please_set_revenue_source'       => 'Si prega di scegliere il conto delle entrate da dove verranno i soldi.',
     'convert_please_set_asset_destination'    => 'Si prega di scegliere il conto patrimoniale dove andranno i soldi.',
     'convert_please_set_expense_destination'  => 'Si prega di scegliere il conto spese dove andranno i soldi.',
     'convert_please_set_asset_source'         => 'Si prega di scegliere il conto patrimoniale da dove verranno i soldi.',
     'convert_explanation_withdrawal_deposit'  => 'Se converti questo prelievo in un deposito, l\'importo verrà :amount depositato in <a href=":sourceRoute">:sourceName</a> anziché prelevato da esso.',
-    'convert_explanation_withdrawal_transfer' => 'Se converti questo prelievo in un giroconto, l\'importo verrà :amount trasferito da <a href=":sourceRoute">:sourceName</a> a un nuovo conto attività, invece di essere pagato a <a href=":destinationRoute">:destinationName</a>.',
+    'convert_explanation_withdrawal_transfer' => 'Se converti questo prelievo in un trasferimento, l\'importo verrà :amount trasferito da <a href=":sourceRoute">:sourceName</a> a un nuovo conto attività, invece di essere pagato a <a href=":destinationRoute">:destinationName</a>.',
     'convert_explanation_deposit_withdrawal'  => 'Se converti questo deposito in un prelievo, l\'importo verrà rimosso :amount da <a href=":destinationRoute">:destinationName</a> anziché aggiunto ad esso.',
-    'convert_explanation_deposit_transfer'    => 'Se converti questo deposito in un giroconto, :amount verrà trasferito da un conto attivo di tua scelta in <a href=":destinationRoute">:destinationName</a>.',
-    'convert_explanation_transfer_withdrawal' => 'Se converti questo giroconto in un prelievo, l\'importo :amount andrà da <a href=":sourceRoute">:sourceName</a> a una nuova destinazione a titolo di spesa, anziché a <a href=":destinationRoute">:destinationName</a> come giroconto.',
-    'convert_explanation_transfer_deposit'    => 'Se converti questo giroconto in un deposito, :amount verrà depositato nell\'account <a href=":destinationRoute">:destinationName</a> anziché essere trasferito lì.',
+    'convert_explanation_deposit_transfer'    => 'Se converti questo deposito in un trasferimento, :amount verrà trasferito da un conto attivo di tua scelta in <a href=":destinationRoute">:destinationName</a>.',
+    'convert_explanation_transfer_withdrawal' => 'Se converti questo trasferimento in un prelievo, l\'importo :amount andrà da <a href=":sourceRoute">:sourceName</a> a una nuova destinazione a titolo di spesa, anziché a <a href=":destinationRoute">:destinationName</a> come trasferimento.',
+    'convert_explanation_transfer_deposit'    => 'Se converti questo trasferimento in un deposito, :amount verrà depositato nell\'account <a href=":destinationRoute">:destinationName</a> anziché essere trasferito lì.',
     'converted_to_Withdrawal'                 => 'La transazione è stata convertita in un prelievo',
     'converted_to_Deposit'                    => 'La transazione è stata convertita in un deposito',
-    'converted_to_Transfer'                   => 'La transazione è stata convertita in un giroconto',
+    'converted_to_Transfer'                   => 'La transazione è stata convertita in un trasferimento',
     'invalid_convert_selection'               => 'Tl\'account che hai selezionato è già utilizzato in questa transazione o non esiste.',
     'source_or_dest_invalid'                  => 'Impossibile trovare i dettagli corretti della transazione. Non è possibile effettuare la conversione.',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Crea un nuovo prelievo',
     'create_new_deposit'                      => 'Crea una nuova entrata',
-    'create_new_transfer'                     => 'Crea nuovo giroconto',
+    'create_new_transfer'                     => 'Crea nuovo trasferimento',
     'create_new_asset'                        => 'Crea un nuovo conto attività',
     'create_new_expense'                      => 'Crea un nuovo conto di spesa',
     'create_new_revenue'                      => 'Crea un nuovo conto di entrate',
@@ -666,6 +668,7 @@ return [
     'bill_will_automatch'                     => 'La bolletta verrà automaticamente collegata alle transazioni corrispondenti',
     'skips_over'                              => 'salta sopra',
     'bill_store_error'                        => 'Si è verificato un errore imprevisto durante la memorizzazione della nuova bolletta. Controlla i file di log',
+    'list_inactive_rule'                      => 'regola inattiva',
 
     // accounts:
     'details_for_asset'                       => 'Dettagli per conto attività ":name"',
@@ -765,16 +768,16 @@ return [
     // transactions:
     'update_withdrawal'                       => 'Aggiorna spesa',
     'update_deposit'                          => 'Aggiorna entrata',
-    'update_transfer'                         => 'Aggiorna giroconto',
+    'update_transfer'                         => 'Aggiorna trasferimento',
     'updated_withdrawal'                      => 'Spesa aggiornata ":description"',
     'updated_deposit'                         => 'Entrata aggiornata ":description"',
-    'updated_transfer'                        => 'Giroconto aggiornato ":description"',
+    'updated_transfer'                        => 'Trasferimento ":description" aggiornato',
     'delete_withdrawal'                       => 'Elimina spesa ":description"',
     'delete_deposit'                          => 'Elimina entrata ":description"',
-    'delete_transfer'                         => 'Elimina giroconto ":description"',
+    'delete_transfer'                         => 'Elimina trasferimento ":description"',
     'deleted_withdrawal'                      => 'Spesa eliminata correttamente ":description"',
     'deleted_deposit'                         => 'Entrata eliminata correttamente ":description"',
-    'deleted_transfer'                        => 'Giroconto eliminato correttamente ":description"',
+    'deleted_transfer'                        => 'Trasferimento ":description" eliminato correttamente',
     'stored_journal'                          => 'Nuova transazione creata correttamente ":description"',
     'select_transactions'                     => 'Seleziona transazioni',
     'rule_group_select_transactions'          => 'Applica ":title" a transazioni',
@@ -801,6 +804,7 @@ return [
     'opt_group_savingAsset'                   => 'Conti risparmio',
     'opt_group_sharedAsset'                   => 'Conti risorse condivise',
     'opt_group_ccAsset'                       => 'Carte di credito',
+    'opt_group_cashWalletAsset'               => 'Contanti',
     'notes'                                   => 'Note',
     'unknown_journal_error'                   => 'Impossibile memorizzare la transazione. Controllare i file di log.',
 
@@ -816,6 +820,7 @@ return [
     'language'                                => 'Lingua',
     'new_savings_account'                     => 'Conto di risparmio :bank_name',
     'cash_wallet'                             => 'Contanti',
+    'currency_not_present' => 'If the currency you normally use is not listed do not worry. You can create your own currencies under Options > Currencies.',
 
     // home page:
     'yourAccounts'                            => 'I tuoi conti',
@@ -823,7 +828,7 @@ return [
     'savings'                                 => 'Risparmi',
     'newWithdrawal'                           => 'Nuova uscita',
     'newDeposit'                              => 'Nuovo deposito',
-    'newTransfer'                             => 'Nuovo giroconto',
+    'newTransfer'                             => 'Nuovo trasferimento',
     'bills_to_pay'                            => 'Bollette da pagare',
     'per_day'                                 => 'Al giorno',
     'left_to_spend_per_day'                   => 'Spese al giorno',
@@ -858,10 +863,10 @@ return [
     'opening_balance'                         => 'Saldo di apertura',
     'deposit'                                 => 'Entrata',
     'account'                                 => 'Conto',
-    'transfer'                                => 'Giroconto',
+    'transfer'                                => 'Trasferimento',
     'Withdrawal'                              => 'Spesa',
     'Deposit'                                 => 'Entrata',
-    'Transfer'                                => 'Giroconto',
+    'Transfer'                                => 'Trasferimento',
     'bill'                                    => 'Bolletta',
     'yes'                                     => 'Si',
     'no'                                      => 'No',
@@ -1013,6 +1018,7 @@ return [
     'remove_money_from_piggy_title'           => 'Rimuovi i soldi dal salvadanaio ":name"',
     'add'                                     => 'Aggiungi',
     'no_money_for_piggy'                      => 'non hai soldi da mettere in questo salvadanaio.',
+    'suggested_savings_per_month'             => 'Suggested per month',
 
     'remove'                    => 'Rimuovi',
     'max_amount_add'            => 'L\'importo massimo che puoi aggiungere è',
@@ -1083,7 +1089,7 @@ return [
     'send_test_email'                       => 'Invia un messaggio di posta elettronica di prova',
     'send_test_email_text'                  => 'Per vedere se la tua installazione è in grado di inviare e-mail, ti preghiamo di premere questo pulsante. Qui non vedrai un errore (se presente), <strong>i file di log rifletteranno eventuali errori</strong>. Puoi premere questo pulsante tutte le volte che vuoi. Non c\'è controllo dello spam. Il messaggio verrà inviato a <code>:email</code> e dovrebbe arrivare a breve.',
     'send_message'                          => 'Invia messaggio',
-    'send_test_triggered'                   => 'Il test è stato attivato. Controlla la tua casella di posta e i file di registro.',
+    'send_test_triggered'                   => 'Il test è stato attivato. Controlla la tua casella di posta e i file di log.',
 
     // links
     'journal_link_configuration'            => 'Configurazione dei collegamenti di transazione',
@@ -1115,7 +1121,7 @@ return [
     'journal_links'                         => 'Collegamenti di transazione',
     'this_withdrawal'                       => 'Questa spesa',
     'this_deposit'                          => 'Questa entrata',
-    'this_transfer'                         => 'Questo giroconto',
+    'this_transfer'                         => 'Questo trasferimento',
     'overview_for_link'                     => 'Panoramica per tipo di collegamento ":name"',
     'source_transaction'                    => 'Transazione di origine',
     'link_description'                      => 'Descrizione del collegamento',
@@ -1140,7 +1146,7 @@ return [
     'do_split'                              => 'Fai una divisione',
     'split_this_withdrawal'                 => 'Dividi questa spesa',
     'split_this_deposit'                    => 'Dividi questa entrata',
-    'split_this_transfer'                   => 'Dividi questo giroconto',
+    'split_this_transfer'                   => 'Dividi questo trasferimento',
     'cannot_edit_multiple_source'           => 'Non è possibile modificare la transazione n. #:id con la descrizione ":description" perché contiene più conti di origine.',
     'cannot_edit_multiple_dest'             => 'Non è possibile modificare la transazione n. #:id con la descrizione ":description" perché contiene più conti di destinazione.',
     'cannot_edit_reconciled'                => 'Non è possibile modificare la transazione n. #:id con la descrizione ":description" perché è stata contrassegnata come riconciliata.',
@@ -1148,27 +1154,9 @@ return [
     'no_edit_multiple_left'                 => 'Non hai selezionato transazioni valide da modificare.',
     'cannot_convert_split_journal'          => 'Impossibile convertire una transazione divisa',
 
-    // import bread crumbs and titles:
-    'import'                                => 'Importa',
-    'import_data'                           => 'Importa i dati',
-    'import_general_index_file'             => 'Importa un file',
-    'import_from_bunq'                      => 'Importare dal bunq',
-    'import_using_spectre'                  => 'Importa usando Spettro',
-    'import_using_plaid'                    => 'Importa usando Plaid',
-    'import_config_bread_crumb'             => 'Configura la tua importazione',
-
-    // import index page:
+    // Import page (general strings only)
     'import_index_title'                    => 'Importa i dati in Firefly III',
-    'import_index_sub_title'                => 'Indice',
-    'import_general_index_intro'            => 'Benvenuti nella routine di importazione di Firefly III. Esistono alcuni modi per importare dati in Firefly III, visualizzati qui come pulsanti.',
-    'upload_error'                          => 'Il file che hai caricato non può essere elaborato. Probabilmente è un tipo di file o una codifica non valida. I file di log avranno maggiori informazioni.',
-    'reset_import_settings_title'           => 'Reimposta la configurazione di importazione',
-    'reset_import_settings_text'            => 'Puoi utilizzare questi collegamenti per ripristinare le impostazioni di importazione per specifici fornitori. Ciò è utile quando delle impostazioni errate impediscono l\'importazione dei dati.',
-    'reset_settings_bunq'                   => 'Rimuovi la chiave API di bunq, l\'indirizzo IP locale esterno e le chiavi RSA correlate a bunq.',
-    'reset_settings_spectre'                => 'Rimuovi i segreti e gli ID di Spectre. Questo rimuoverà anche la tua coppia di chiavi di Spectre. Ricordati di aggiornare quella nuova.',
-    'settings_reset_for_bunq'               => 'Ripristina impostazioni bunq.',
-    'settings_reset_for_spectre'            => 'Ripristina impostazioni Spectre.',
-
+    'import_data'                           => 'Importa i dati',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Questa funzione non è disponibile quando si utilizza Firefly III in un ambiente Sandstorm.io.',
@@ -1206,10 +1194,10 @@ return [
     'no_transactions_intro_deposit'         => 'non hai ancora entrate registrate. È necessario creare voci di reddito per iniziare a gestire le tue finanze.',
     'no_transactions_imperative_deposit'    => 'Hai ricevuto dei soldi? Dovresti scriverlo:',
     'no_transactions_create_deposit'        => 'Crea una entrata',
-    'no_transactions_title_transfers'       => 'Creiamo un giroconto!',
-    'no_transactions_intro_transfers'       => 'Non hai ancora giroconti. Quando sposti denaro tra i conti attività, viene registrato come giroconto.',
+    'no_transactions_title_transfers'       => 'Creiamo un trasferimento!',
+    'no_transactions_intro_transfers'       => 'Non hai ancora trasferimenti. Quando sposti denaro tra i conti attività, viene registrato come trasferimento.',
     'no_transactions_imperative_transfers'  => 'Hai spostato dei soldi in giro? Dovresti scriverlo:',
-    'no_transactions_create_transfers'      => 'Crea un giroconto',
+    'no_transactions_create_transfers'      => 'Crea un trasferimento',
     'no_piggies_title_default'              => 'Creiamo un salvadanaio!',
     'no_piggies_intro_default'              => 'Non hai ancora salvadanai. Puoi creare salvadanai per dividere i tuoi risparmi e tenere traccia di ciò per cui stai risparmiando.',
     'no_piggies_imperative_default'         => 'Hai cose per le quali stai risparmiando? Crea un salvadanaio e tieni traccia:',

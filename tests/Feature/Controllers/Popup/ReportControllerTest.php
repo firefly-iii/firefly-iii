@@ -58,7 +58,7 @@ class ReportControllerTest extends TestCase
      * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
      * @expectedExceptionMessage Could not parse end date
      */
-    public function testBadEndDate()
+    public function testBadEndDate(): void
     {
         $this->be($this->user());
         $arguments = [
@@ -82,7 +82,7 @@ class ReportControllerTest extends TestCase
      * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
      * @expectedExceptionMessage Could not parse start date
      */
-    public function testBadStartDate()
+    public function testBadStartDate(): void
     {
         $this->be($this->user());
         $arguments = [
@@ -106,7 +106,7 @@ class ReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
      * @covers \FireflyIII\Http\Controllers\Popup\ReportController::balanceAmount
      */
-    public function testBalanceAmountDefaultNoBudget()
+    public function testBalanceAmountDefaultNoBudget(): void
     {
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -142,7 +142,7 @@ class ReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
      * @covers \FireflyIII\Http\Controllers\Popup\ReportController::balanceAmount
      */
-    public function testBalanceAmountDefaultRole()
+    public function testBalanceAmountDefaultRole(): void
     {
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -178,7 +178,7 @@ class ReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
      * @covers \FireflyIII\Http\Controllers\Popup\ReportController::balanceAmount
      */
-    public function testBalanceAmountDiffRole()
+    public function testBalanceAmountDiffRole(): void
     {
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -216,7 +216,7 @@ class ReportControllerTest extends TestCase
      * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::balanceAmount
      * @expectedExceptionMessage Firefly cannot handle this type of info-button
      */
-    public function testBalanceAmountTagRole()
+    public function testBalanceAmountTagRole(): void
     {
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -251,7 +251,7 @@ class ReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
      * @covers \FireflyIII\Http\Controllers\Popup\ReportController::budgetSpentAmount()
      */
-    public function testBudgetSpentAmount()
+    public function testBudgetSpentAmount(): void
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
@@ -284,7 +284,7 @@ class ReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
      * @covers \FireflyIII\Http\Controllers\Popup\ReportController::categoryEntry()
      */
-    public function testCategoryEntry()
+    public function testCategoryEntry(): void
     {
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -317,7 +317,7 @@ class ReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
      * @covers \FireflyIII\Http\Controllers\Popup\ReportController::expenseEntry()
      */
-    public function testExpenseEntry()
+    public function testExpenseEntry(): void
     {
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -351,7 +351,7 @@ class ReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
      * @covers \FireflyIII\Http\Controllers\Popup\ReportController::incomeEntry()
      */
-    public function testIncomeEntry()
+    public function testIncomeEntry(): void
     {
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -385,7 +385,7 @@ class ReportControllerTest extends TestCase
      * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
      * @expectedExceptionMessage Firefly cannot handle
      */
-    public function testWrongLocation()
+    public function testWrongLocation(): void
     {
         $this->be($this->user());
         $arguments = [

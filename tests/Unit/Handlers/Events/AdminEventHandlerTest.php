@@ -42,7 +42,7 @@ class AdminEventHandlerTest extends TestCase
      * @covers \FireflyIII\Handlers\Events\AdminEventHandler::sendTestMessage
      * @covers \FireflyIII\Events\AdminRequestedTestMessage
      */
-    public function testSendNoMessage()
+    public function testSendNoMessage(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $event      = new AdminRequestedTestMessage($this->user(), '127.0.0.1');
@@ -58,7 +58,7 @@ class AdminEventHandlerTest extends TestCase
      * @covers \FireflyIII\Handlers\Events\AdminEventHandler::sendTestMessage
      * @covers \FireflyIII\Events\AdminRequestedTestMessage
      */
-    public function testSendTestMessage()
+    public function testSendTestMessage(): void
     {
         Mail::fake();
         $repository = $this->mock(UserRepositoryInterface::class);

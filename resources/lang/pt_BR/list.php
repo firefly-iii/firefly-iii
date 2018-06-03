@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * list.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     'buttons'                 => 'Botões',
@@ -104,17 +105,22 @@ return [
     'reconcile'               => 'Pago',
     'account_on_spectre'      => 'Conta (Spectre)',
     'do_import'               => 'Importar desta conta',
-    'sepa-ct-id'              => 'SEPA End to End Identifier',
-    'sepa-ct-op'              => 'SEPA Opposing Account Identifier',
-    'sepa-db'                 => 'SEPA Mandate Identifier',
-    'sepa-country'            => 'SEPA Country',
-    'sepa-cc'                 => 'SEPA Clearing Code',
-    'sepa-ep'                 => 'SEPA External Purpose',
-    'sepa-ci'                 => 'SEPA Creditor Identifier',
-    'account_at_bunq'         => 'Account with bunq',
-    'file_name'               => 'File name',
-    'file_size'               => 'File size',
-    'file_type'               => 'File type',
-    'attached_to'             => 'Attached to',
-    'file_exists'             => 'File exists',
+    'sepa-ct-id'              => 'SEPA Identificador end-to-end',
+    'sepa-ct-op'              => 'SEPA Identificador de conta de contrária',
+    'sepa-db'                 => 'SEPA Identificador de Mandato',
+    'sepa-country'            => 'SEPA País',
+    'sepa-cc'                 => 'SEPA Código de Compensação',
+    'sepa-ep'                 => 'SEPA Finalidade Externa',
+    'sepa-ci'                 => 'SEPA Identificador do Credor',
+    'external_id'             => 'External ID',
+    'account_at_bunq'         => 'Loja com bunq',
+    'file_name'               => 'Nome do arquivo',
+    'file_size'               => 'Tamanho do Arquivo',
+    'file_type'               => 'Tipo do arquivo',
+    'attached_to'             => 'Anexado a',
+    'file_exists'             => 'Arquivo já existe',
+    'spectre_bank'            => 'Bank',
+    'spectre_last_use'        => 'Last login',
+    'spectre_status'          => 'Status',
+    'bunq_payment_id'         => 'bunq payment ID',
 ];

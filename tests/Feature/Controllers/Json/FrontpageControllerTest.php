@@ -48,7 +48,7 @@ class FrontpageControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Json\FrontpageController::piggyBanks
      */
-    public function testPiggyBanks()
+    public function testPiggyBanks(): void
     {
         $piggy      = $this->user()->piggyBanks()->first();
         $repository = $this->mock(PiggyBankRepositoryInterface::class);

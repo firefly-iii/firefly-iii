@@ -45,13 +45,6 @@ class PiggyBank extends Twig_Extension
             }
         );
 
-        $functions[] = new Twig_SimpleFunction(
-            'suggestedMonthlyAmount',
-            function (PB $piggyBank) {
-                return $piggyBank->getSuggestedMonthlyAmount();
-            }
-        );
-
         return $functions;
     }
 

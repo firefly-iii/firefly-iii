@@ -27,6 +27,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -37,6 +38,14 @@ use Illuminate\Support\MessageBag;
  */
 interface JournalRepositoryInterface
 {
+    /**
+     * Find a journal by its hash.
+     *
+     * @param string $hash
+     *
+     * @return TransactionJournalMeta|null
+     */
+    public function findByHash(string $hash): ?TransactionJournalMeta;
 
     /**
      * @param TransactionJournal $journal

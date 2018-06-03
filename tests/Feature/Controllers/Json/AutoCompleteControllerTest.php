@@ -25,13 +25,17 @@ namespace Tests\Feature\Controllers\Json;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -57,7 +61,7 @@ class AutoCompleteControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::allAccounts
      */
-    public function testAllAccounts()
+    public function testAllAccounts(): void
     {
         // mock stuff
         $accountA     = factory(Account::class)->make();
@@ -75,9 +79,9 @@ class AutoCompleteControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::allTransactionJournals
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
      */
-    public function testAllTransactionJournals()
+    public function testAllTransactionJournals(): void
     {
         $collector = $this->mock(JournalCollectorInterface::class);
         $collector->shouldReceive('setLimit')->withArgs([250])->andReturnSelf();
@@ -90,9 +94,41 @@ class AutoCompleteControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::budgets
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
      */
-    public function testBudgets()
+    public function testBills(): void
+    {
+        $repository = $this->mock(BillRepositoryInterface::class);
+        $bills      = factory(Bill::class, 10)->make();
+
+        $repository->shouldReceive('getActiveBills')->andReturn($bills);
+
+        $this->be($this->user());
+        $response = $this->get(route('json.bills'));
+        $response->assertStatus(200);
+    }
+
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
+     */
+    public function testCurrencyNames(): void
+    {
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+
+        $currency = TransactionCurrency::find(1);
+        $repository->shouldReceive('get')->andReturn(new Collection([$currency]))->once();
+
+        $this->be($this->user());
+        $response = $this->get(route('json.currency-names'));
+        $response->assertStatus(200);
+        $response->assertExactJson(['Euro']);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
+     */
+    public function testBudgets(): void
     {
         // mock stuff
         $budget        = factory(Budget::class)->make();
@@ -107,9 +143,9 @@ class AutoCompleteControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::categories
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
      */
-    public function testCategories()
+    public function testCategories(): void
     {
         // mock stuff
         $category      = factory(Category::class)->make();
@@ -124,9 +160,9 @@ class AutoCompleteControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::expenseAccounts
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
      */
-    public function testExpenseAccounts()
+    public function testExpenseAccounts(): void
     {
         // mock stuff
         $accountA         = factory(Account::class)->make();
@@ -148,7 +184,7 @@ class AutoCompleteControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::journalsWithId
      */
-    public function testJournalsWithId()
+    public function testJournalsWithId(): void
     {
         $journal             = $this->user()->transactionJournals()->where('id', '!=', 1)->first();
         $journal->journal_id = $journal->id;
@@ -167,7 +203,7 @@ class AutoCompleteControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::revenueAccounts
      */
-    public function testRevenueAccounts()
+    public function testRevenueAccounts(): void
     {
         // mock stuff
         $accountA         = factory(Account::class)->make();
@@ -189,7 +225,7 @@ class AutoCompleteControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::tags
      */
-    public function testTags()
+    public function testTags(): void
     {
         // mock stuff
         $tag          = factory(Tag::class)->make();
@@ -207,7 +243,7 @@ class AutoCompleteControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::transactionJournals
      */
-    public function testTransactionJournals()
+    public function testTransactionJournals(): void
     {
         // mock stuff
         $collector    = $this->mock(JournalCollectorInterface::class);

@@ -34,7 +34,7 @@ class AmountTest extends TestCase
      * @covers \FireflyIII\Import\Converter\Amount::convert()
      * @covers \FireflyIII\Import\Converter\Amount::stripAmount()
      */
-    public function testConvert()
+    public function testConvert(): void
     {
         $values = [
             '0'                       => '0',
@@ -167,7 +167,7 @@ class AmountTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Converter\Amount::convert()
      */
-    public function testConvertNull()
+    public function testConvertNull(): void
     {
         $converter = new Amount;
         $result    = $converter->convert(null);

@@ -188,7 +188,7 @@
                             <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}" data-spent="{{ budgetInformation[budget.id]['spent'] }}"
                                 data-value="{{ budgetInformation[budget.id]['spent'] }}">
                                 {{ budgetInformation[budget.id]['spent']|formatAmount }}
-                                ({{ (budgetInformation[budget.id]['spent'] / days)|formatAmount }})
+                                ({{ (budgetInformation[budget.id]['spent'] / daysInMonth)|formatAmount }})
                             </td>
                             <td class="left" data-id="{{ budget.id }}"
                                 data-value="{{ (repAmount + budgetInformation[budget.id]['spent']) }}">

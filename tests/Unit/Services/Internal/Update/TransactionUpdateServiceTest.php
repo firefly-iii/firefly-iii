@@ -39,7 +39,7 @@ class TransactionUpdateServiceTest extends TestCase
     /**
      * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
      */
-    public function testReconcile()
+    public function testReconcile(): void
     {
         $transaction = $this->user()->transactions()->inRandomOrder()->first();
 
@@ -55,7 +55,7 @@ class TransactionUpdateServiceTest extends TestCase
      * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
      */
-    public function testReconcileNull()
+    public function testReconcileNull(): void
     {
         /** @var TransactionUpdateService $service */
         $service = app(TransactionUpdateService::class);
@@ -68,7 +68,7 @@ class TransactionUpdateServiceTest extends TestCase
      * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
      */
-    public function testUpdateBudget()
+    public function testUpdateBudget(): void
     {
 
         /** @var Transaction $source */
@@ -92,7 +92,7 @@ class TransactionUpdateServiceTest extends TestCase
      * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
      */
-    public function testUpdateCategory()
+    public function testUpdateCategory(): void
     {
 
         /** @var Transaction $source */
@@ -116,7 +116,7 @@ class TransactionUpdateServiceTest extends TestCase
      * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
      */
-    public function testUpdateDestinationBasic()
+    public function testUpdateDestinationBasic(): void
     {
         /** @var Transaction $source */
         $source = $this->user()->transactions()->where('amount', '>', 0)->inRandomOrder()->first();
@@ -155,7 +155,7 @@ class TransactionUpdateServiceTest extends TestCase
      * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
      */
-    public function testUpdateDestinationForeign()
+    public function testUpdateDestinationForeign(): void
     {
         /** @var Transaction $source */
         $source = $this->user()->transactions()->where('amount', '>', 0)->inRandomOrder()->first();
@@ -198,7 +198,7 @@ class TransactionUpdateServiceTest extends TestCase
      * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
      */
-    public function testUpdateSourceBasic()
+    public function testUpdateSourceBasic(): void
     {
         /** @var Transaction $source */
         $source = $this->user()->transactions()->where('amount', '<', 0)->inRandomOrder()->first();

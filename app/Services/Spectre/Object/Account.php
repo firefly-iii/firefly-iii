@@ -26,6 +26,7 @@ namespace FireflyIII\Services\Spectre\Object;
 use Carbon\Carbon;
 
 /**
+ * @codeCoverageIgnore
  * Class Account
  */
 class Account extends SpectreObject
@@ -71,6 +72,30 @@ class Account extends SpectreObject
     }
 
     /**
+     * @return float
+     */
+    public function getBalance(): float
+    {
+        return $this->balance;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrencyCode(): string
+    {
+        return $this->currencyCode;
+    }
+
+    /**
+     * @return array
+     */
+    public function getExtra(): array
+    {
+        return $this->extra;
+    }
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -84,6 +109,14 @@ class Account extends SpectreObject
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNature(): string
+    {
+        return $this->nature;
     }
 
     /**

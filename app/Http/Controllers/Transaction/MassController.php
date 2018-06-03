@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers\Transaction;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
+use FireflyIII\Helpers\Filter\TransactionViewFilter;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\MassDeleteJournalRequest;
 use FireflyIII\Http\Requests\MassEditJournalRequest;
@@ -145,22 +146,24 @@ class MassController extends Controller
         $collector->setUser(auth()->user());
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setJournals($journals);
-        $collector->addFilter(NegativeAmountFilter::class);
-        $transactions = $collector->getJournals();
+        $collector->addFilter(TransactionViewFilter::class);
+        $collection = $collector->getJournals();
 
         // add some filters:
 
 
         // transform to array
-        $journals = $transactions->map(
+        $transactions = $collection->map(
             function (Transaction $transaction) use ($transformer) {
-                $result = $transformer->transform($transaction);
-
-                return $result;
+                $transaction= $transformer->transform($transaction);
+                // make sure amount is positive:
+                $transaction['amount'] = app('steam')->positive((string)$transaction['amount']);
+                $transaction['foreign_amount'] = app('steam')->positive((string)$transaction['foreign_amount']);
+                return $transaction;
             }
         );
 
-        return view('transactions.mass.edit', compact('journals', 'subTitle', 'accounts', 'budgets'));
+        return view('transactions.mass.edit', compact('transactions', 'subTitle', 'accounts', 'budgets'));
     }
 
     /**

@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * demo.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -21,6 +20,8 @@ declare(strict_types=1);
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 return [
     'no_demo_text'           => 'Desculpe, não há nenhum texto extra de explicação para <abbr title=":route">esta página</abbr>.',
     'see_help_icon'          => 'No entanto, o <i class="fa fa-question-circle"></i>-ícone no canto superior direito pode lhe dizer mais.',
@@ -32,5 +33,5 @@ return [
     'currencies-index'       => 'Firefly III oferece suporte a várias moedas. Embora o padrão seja o Euro, ela pode ser definida para o dólar americano e muitas outras moedas. Como você pode ver uma pequena seleção de moedas foi incluída, mas você pode adicionar suas próprias se desejar. No entanto, alterar a moeda padrão não vai mudar a moeda de transações existentes: Firefly III suporta o uso de várias moedas ao mesmo tempo.',
     'transactions-index'     => 'Estas despesas, depósitos e transferências não são fantasiosas. Elas foram geradas automaticamente.',
     'piggy-banks-index'      => 'Como você pode ver, existem três cofrinhos. Use o sinal de mais e menos botões para influenciar a quantidade de dinheiro em cada cofrinho. Clique no nome do cofrinho para ver a administração de cada cofrinho.',
-    'import-index'           => 'Sim, qualquer arquivo CSV pode ser importado para Firefly III',
+    'import-index'           => 'Qualquer arquivo CSV pode ser importado para o Firefly III. Importações de dados de bunq e Specter também são suportadas. Outros bancos e agregadores financeiros serão implementados futuramente. Como usuário de demonstração, no entanto, você só pode ver o provedor "falso" em ação. Ele irá gerar transações aleatórias para lhe mostrar como funciona o processo.',
 ];

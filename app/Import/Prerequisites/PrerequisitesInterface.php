@@ -46,12 +46,11 @@ interface PrerequisitesInterface
     public function getViewParameters(): array;
 
     /**
-     * Returns if this import method has any special prerequisites such as config
-     * variables or other things.
+     * Indicate if all prerequisites have been met.
      *
      * @return bool
      */
-    public function hasPrerequisites(): bool;
+    public function isComplete(): bool;
 
     /**
      * Set the user for this Prerequisites-routine. Class is expected to implement and save this.
@@ -61,9 +60,13 @@ interface PrerequisitesInterface
     public function setUser(User $user): void;
 
     /**
-     * @param Request $request
+     * This method responds to the user's submission of an API key. Should do nothing but store the value.
+     *
+     * Errors must be returned in the message bag under the field name they are requested by.
+     *
+     * @param array $data
      *
      * @return MessageBag
      */
-    public function storePrerequisites(Request $request): MessageBag;
+    public function storePrerequisites(array $data): MessageBag;
 }

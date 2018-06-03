@@ -28,6 +28,8 @@ use FireflyIII\User;
 use Log;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class ImportBudget.
  */
 class ImportBudget

@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * demo.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -21,6 +20,8 @@ declare(strict_types=1);
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 return [
     'no_demo_text'           => 'Niestety, nie ma dodatkowego tekstu wyjaśniającego demo dla <abbr title=":route">tej strony</abbr>.',
     'see_help_icon'          => 'Jednakże ikona <i class="fa fa-question-circle"></i> w prawym górnym rogu może powiedzieć Ci więcej.',
@@ -32,5 +33,5 @@ return [
     'currencies-index'       => 'Firefly obsługuje wiele walut. Chociaż domyślnie jest to euro, można go ustawić na dolara amerykańskiego i wiele innych walut. Jak widać niewielki wybór walut został uwzględniony, ale możesz dodać własne, jeśli chcesz. Zmiana domyślnej waluty nie zmieni waluty istniejących transakcji, jednak: Firefly III obsługuje korzystanie z wielu walut w tym samym czasie.',
     'transactions-index'     => 'Te wydatki, depozyty i transfery nie są szczególnie pomysłowe. Zostały wygenerowane automatycznie.',
     'piggy-banks-index'      => 'Jak widać, istnieją trzy skarbonki. Użyj przycisków plus i minus, aby wpłynąć na ilość pieniędzy w każdej skarbonce. Kliknij nazwę skarbonki, aby zobaczyć administrację każdej skarbonki.',
-    'import-index'           => 'Oczywiście każdy plik CSV można zaimportować do Firefly III',
+    'import-index'           => 'Any CSV file can be imported into Firefly III. It also supports importing data from bunq and Spectre. Other banks and financial aggregators will be implemented in the future. As a demo-user however, you can only see the "fake"-provider in action. It will generate some random transactions to show you how the process works.',
 ];

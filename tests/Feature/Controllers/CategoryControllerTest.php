@@ -58,7 +58,7 @@ class CategoryControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\CategoryController::create
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         // mock stuff
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
@@ -76,7 +76,7 @@ class CategoryControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\CategoryController::delete
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         // mock stuff
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
@@ -94,7 +94,7 @@ class CategoryControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\CategoryController::destroy
      */
-    public function testDestroy()
+    public function testDestroy(): void
     {
         // mock stuff
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
@@ -114,7 +114,7 @@ class CategoryControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\CategoryController::edit
      */
-    public function testEdit()
+    public function testEdit(): void
     {
         // mock stuff
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
@@ -133,7 +133,7 @@ class CategoryControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\CategoryController::index
      * @covers \FireflyIII\Http\Controllers\CategoryController::__construct
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         // mock stuff
         $category      = factory(Category::class)->make();
@@ -158,7 +158,7 @@ class CategoryControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testNoCategory(string $range)
+    public function testNoCategory(string $range): void
     {
         // mock stuff
         $collector     = $this->mock(JournalCollectorInterface::class);
@@ -195,7 +195,7 @@ class CategoryControllerTest extends TestCase
      * @param string $range
      *
      */
-    public function testNoCategoryAll(string $range)
+    public function testNoCategoryAll(string $range): void
     {
         // mock stuff
         $collector     = $this->mock(JournalCollectorInterface::class);
@@ -231,7 +231,7 @@ class CategoryControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testNoCategoryDate(string $range)
+    public function testNoCategoryDate(string $range): void
     {
         // mock stuff
         $collector     = $this->mock(JournalCollectorInterface::class);
@@ -275,7 +275,7 @@ class CategoryControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testShow(string $range)
+    public function testShow(string $range): void
     {
         $transaction   = factory(Transaction::class)->make();
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
@@ -324,7 +324,7 @@ class CategoryControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testShowAll(string $range)
+    public function testShowAll(string $range): void
     {
         // mock stuff
         $transaction  = factory(Transaction::class)->make();
@@ -362,7 +362,7 @@ class CategoryControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testShowByDate(string $range)
+    public function testShowByDate(string $range): void
     {
         // mock stuff
         $transaction  = factory(Transaction::class)->make();
@@ -370,7 +370,10 @@ class CategoryControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->twice()->andReturn(TransactionJournal::first());
+        $month        = new Carbon();
+        $month->startOfMonth();
+        $journal = TransactionJournal::where('date', '>=', $month->format('Y-m-d') . ' 00:00:00')->first();
+        $journalRepos->shouldReceive('firstNull')->twice()->andReturn($journal);
 
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
 
@@ -407,7 +410,7 @@ class CategoryControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testShowEmpty(string $range)
+    public function testShowEmpty(string $range): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->twice()->andReturn(TransactionJournal::first());
@@ -446,7 +449,7 @@ class CategoryControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\CategoryController::store
      * @covers \FireflyIII\Http\Requests\CategoryFormRequest
      */
-    public function testStore()
+    public function testStore(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(CategoryRepositoryInterface::class);
@@ -470,7 +473,7 @@ class CategoryControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\CategoryController::update
      * @covers \FireflyIII\Http\Requests\CategoryFormRequest
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $category     = Category::first();
         $repository   = $this->mock(CategoryRepositoryInterface::class);

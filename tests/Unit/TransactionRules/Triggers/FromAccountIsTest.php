@@ -34,7 +34,7 @@ class FromAccountIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountIs::triggered
      */
-    public function testTriggered()
+    public function testTriggered(): void
     {
         $count = 0;
         while ($count === 0) {
@@ -52,7 +52,7 @@ class FromAccountIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountIs::triggered
      */
-    public function testTriggeredNot()
+    public function testTriggeredNot(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
 
@@ -64,7 +64,7 @@ class FromAccountIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountIs::willMatchEverything
      */
-    public function testWillMatchEverythingEmpty()
+    public function testWillMatchEverythingEmpty(): void
     {
         $value  = '';
         $result = FromAccountIs::willMatchEverything($value);
@@ -74,7 +74,7 @@ class FromAccountIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountIs::willMatchEverything
      */
-    public function testWillMatchEverythingNotNull()
+    public function testWillMatchEverythingNotNull(): void
     {
         $value  = 'x';
         $result = FromAccountIs::willMatchEverything($value);
@@ -84,7 +84,7 @@ class FromAccountIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountIs::willMatchEverything
      */
-    public function testWillMatchEverythingNull()
+    public function testWillMatchEverythingNull(): void
     {
         $value  = null;
         $result = FromAccountIs::willMatchEverything($value);

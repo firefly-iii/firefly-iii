@@ -87,6 +87,8 @@ class BudgetController extends Controller
         $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
         $largeDiff   = false;
         $warnText    = '';
+        $days        = 0;
+        $daysInMonth = 0;
         if (0 === bccomp($amount, '0')) {
             $budgetLimit = null;
         }
@@ -94,13 +96,17 @@ class BudgetController extends Controller
         // if today is between start and end, use the diff in days between end and today (days left)
         // otherwise, use diff between start and end.
         $today = new Carbon;
+        Log::debug(sprintf('Start is %s, end is %s, today is %s', $start->format('Y-m-d'), $end->format('Y-m-d'),$today->format('Y-m-d')));
         if ($today->gte($start) && $today->lte($end)) {
-            $days = $end->diffInDays($today);
+            $days        = $end->diffInDays($today);
+            $daysInMonth = $start->diffInDays($today);
         }
         if ($today->lte($start) || $today->gte($end)) {
-            $days = $start->diffInDays($end);
+            $days        = $start->diffInDays($end);
+            $daysInMonth = $start->diffInDays($end);
         }
-        $days = $days === 0 ? 1 : $days;
+        $days        = $days === 0 ? 1 : $days;
+        $daysInMonth = $daysInMonth === 0 ? 1 : $daysInMonth;
 
         // calculate left in budget:
         $spent      = $repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
@@ -146,6 +152,7 @@ class BudgetController extends Controller
                 'large_diff'   => $largeDiff,
                 'left_per_day' => $leftPerDay,
                 'warn_text'    => $warnText,
+                'daysInMonth'  => $daysInMonth,
 
             ]
         );
@@ -229,22 +236,13 @@ class BudgetController extends Controller
      */
     public function index(Request $request, string $moment = null)
     {
-        $range    = Preferences::get('viewRange', '1M')->data;
-        $start    = session('start', new Carbon);
-        $end      = session('end', new Carbon);
-        $page     = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize = (int)Preferences::get('listPageSize', 50)->data;
-
-        // if today is between start and end, use the diff in days between end and today (days left)
-        // otherwise, use diff between start and end.
-        $today = new Carbon;
-        if ($today->gte($start) && $today->lte($end)) {
-            $days = $end->diffInDays($today);
-        }
-        if ($today->lte($start) || $today->gte($end)) {
-            $days = $start->diffInDays($end);
-        }
-        $days = $days === 0 ? 1 : $days;
+        $range       = Preferences::get('viewRange', '1M')->data;
+        $start       = session('start', new Carbon);
+        $end         = session('end', new Carbon);
+        $page        = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $pageSize    = (int)Preferences::get('listPageSize', 50)->data;
+        $days        = 0;
+        $daysInMonth = 0;
 
         // make date if present:
         if (null !== $moment || '' !== (string)$moment) {
@@ -256,6 +254,22 @@ class BudgetController extends Controller
                 Log::debug('start and end are already defined.');
             }
         }
+
+        // if today is between start and end, use the diff in days between end and today (days left)
+        // otherwise, use diff between start and end.
+        $today = new Carbon;
+        if ($today->gte($start) && $today->lte($end)) {
+            $days        = $end->diffInDays($today);
+            $daysInMonth = $start->diffInDays($today);
+        }
+        if ($today->lte($start) || $today->gte($end)) {
+            $days        = $start->diffInDays($end);
+            $daysInMonth = $start->diffInDays($end);
+        }
+        $days        = $days === 0 ? 1 : $days;
+        $daysInMonth = $daysInMonth === 0 ? 1 : $daysInMonth;
+
+
         $next = clone $end;
         $next->addDay();
         $prev = clone $start;
@@ -312,7 +326,7 @@ class BudgetController extends Controller
         return view(
             'budgets.index', compact(
                                'available', 'currentMonth', 'next', 'nextText', 'prev', 'allBudgets', 'prevText', 'periodStart', 'periodEnd', 'days', 'page',
-                               'budgetInformation',
+                               'budgetInformation', 'daysInMonth',
                                'inactive', 'budgets', 'spent', 'budgeted', 'previousLoop', 'nextLoop', 'start', 'end'
                            )
         );

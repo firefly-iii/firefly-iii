@@ -36,7 +36,7 @@ class TransactionCurrencyFactoryTest extends TestCase
     /**
      * @covers \FireflyIII\Factory\TransactionCurrencyFactory
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
@@ -48,7 +48,7 @@ class TransactionCurrencyFactoryTest extends TestCase
     /**
      * @covers \FireflyIII\Factory\TransactionCurrencyFactory
      */
-    public function testCreateEmpty()
+    public function testCreateEmpty(): void
     {
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
@@ -59,7 +59,7 @@ class TransactionCurrencyFactoryTest extends TestCase
     /**
      * @covers \FireflyIII\Factory\TransactionCurrencyFactory
      */
-    public function testFindByBadCode()
+    public function testFindByBadCode(): void
     {
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
@@ -70,7 +70,7 @@ class TransactionCurrencyFactoryTest extends TestCase
     /**
      * @covers \FireflyIII\Factory\TransactionCurrencyFactory
      */
-    public function testFindByCode()
+    public function testFindByCode(): void
     {
         // ;
         $currency = TransactionCurrency::inRandomOrder()->whereNull('deleted_at')->first();
@@ -83,7 +83,7 @@ class TransactionCurrencyFactoryTest extends TestCase
     /**
      * @covers \FireflyIII\Factory\TransactionCurrencyFactory
      */
-    public function testFindByID()
+    public function testFindByID(): void
     {
         $currency = TransactionCurrency::inRandomOrder()->whereNull('deleted_at')->first();
         /** @var TransactionCurrencyFactory $factory */
@@ -93,9 +93,23 @@ class TransactionCurrencyFactoryTest extends TestCase
     }
 
     /**
+     * submit ID = 1000
+     *
      * @covers \FireflyIII\Factory\TransactionCurrencyFactory
      */
-    public function testFindNull()
+    public function testFindByBadID(): void
+    {
+        $currency = TransactionCurrency::inRandomOrder()->whereNull('deleted_at')->first();
+        /** @var TransactionCurrencyFactory $factory */
+        $factory = app(TransactionCurrencyFactory::class);
+        $result  = $factory->find(1000, $currency->code);
+        $this->assertEquals($currency->id, $result->id);
+    }
+
+    /**
+     * @covers \FireflyIII\Factory\TransactionCurrencyFactory
+     */
+    public function testFindNull(): void
     {
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);

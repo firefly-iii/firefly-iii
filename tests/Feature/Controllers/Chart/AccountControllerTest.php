@@ -66,7 +66,7 @@ class AccountControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testExpenseAccounts(string $range)
+    public function testExpenseAccounts(string $range): void
     {
         $account       = factory(Account::class)->make();
         $generator     = $this->mock(GeneratorInterface::class);
@@ -90,7 +90,7 @@ class AccountControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testExpenseBudget(string $range)
+    public function testExpenseBudget(string $range): void
     {
         $generator   = $this->mock(GeneratorInterface::class);
         $collector   = $this->mock(JournalCollectorInterface::class);
@@ -118,7 +118,7 @@ class AccountControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testExpenseBudgetAll(string $range)
+    public function testExpenseBudgetAll(string $range): void
     {
         $generator    = $this->mock(GeneratorInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
@@ -148,7 +148,7 @@ class AccountControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testExpenseCategory(string $range)
+    public function testExpenseCategory(string $range): void
     {
         $transaction   = factory(Transaction::class)->make();
         $category      = factory(Category::class)->make();
@@ -177,7 +177,7 @@ class AccountControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testExpenseCategoryAll(string $range)
+    public function testExpenseCategoryAll(string $range): void
     {
         $transaction   = factory(Transaction::class)->make();
         $category      = factory(Category::class)->make();
@@ -210,7 +210,7 @@ class AccountControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testFrontpage(string $range)
+    public function testFrontpage(string $range): void
     {
         $generator     = $this->mock(GeneratorInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -237,7 +237,7 @@ class AccountControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testIncomeCategory(string $range)
+    public function testIncomeCategory(string $range): void
     {
         $transaction   = factory(Transaction::class)->make();
         $account       = factory(Account::class)->make();
@@ -265,7 +265,7 @@ class AccountControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testIncomeCategoryAll(string $range)
+    public function testIncomeCategoryAll(string $range): void
     {
         $transaction   = factory(Transaction::class)->make();
         $account       = factory(Account::class)->make();
@@ -295,7 +295,7 @@ class AccountControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testPeriod(string $range)
+    public function testPeriod(string $range): void
     {
         $generator    = $this->mock(GeneratorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -314,16 +314,16 @@ class AccountControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Chart\AccountController::report
      * @covers \FireflyIII\Http\Controllers\Chart\AccountController::accountBalanceChart
      */
-    public function testReport()
+    public function testReport(): void
     {
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1), null);
         $generator = $this->mock(GeneratorInterface::class);
         $generator->shouldReceive('multiSet')->andReturn([]);
         Steam::shouldReceive('balanceInRange')->andReturn(['2012-01-01' => '0']);
 
         $this->be($this->user());
-        $response = $this->get(route('chart.account.report', ['1', '20120101', '20120131']));
+        $response = $this->get(route('chart.account.report', ['1,2', '20120101', '20120131']));
         $response->assertStatus(200);
     }
 
@@ -333,7 +333,7 @@ class AccountControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testRevenueAccounts(string $range)
+    public function testRevenueAccounts(string $range): void
     {
         $account      = factory(Account::class)->make();
         $generator    = $this->mock(GeneratorInterface::class);

@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+
 /**
  * TransactionJournalMetaFactory.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -20,6 +20,7 @@ declare(strict_types=1);
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
@@ -70,6 +71,7 @@ class TransactionJournalMetaFactory
         }
 
         if (null === $entry) {
+            Log::debug(sprintf('Going to create new meta-data entry to store "%s".', $data['name']));
             $entry = new TransactionJournalMeta();
             $entry->transactionJournal()->associate($data['journal']);
             $entry->name = $data['name'];

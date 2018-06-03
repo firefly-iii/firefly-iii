@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Binder;
 
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Log;
@@ -44,22 +45,35 @@ class AccountList implements BinderInterface
     public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
-            $list     = [];
-            $incoming = explode(',', $value);
-            foreach ($incoming as $entry) {
-                $list[] = (int)$entry;
+
+            $collection = new Collection;
+            if ($value === 'allAssetAccounts') {
+                /** @var \Illuminate\Support\Collection $collection */
+                $collection = auth()->user()->accounts()
+                                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                                    ->where('account_types.type', AccountType::ASSET)
+                                    ->get(['accounts.*']);
             }
-            $list = array_unique($list);
-            if (\count($list) === 0) {
-                Log::error('Account list is empty.');
-                throw new NotFoundHttpException; // @codeCoverageIgnore
+            if ($value !== 'allAssetAccounts') {
+
+                $list     = [];
+                $incoming = explode(',', $value);
+                foreach ($incoming as $entry) {
+                    $list[] = (int)$entry;
+                }
+                $list = array_unique($list);
+                if (\count($list) === 0) {
+                    Log::error('Account list is empty.');
+                    throw new NotFoundHttpException; // @codeCoverageIgnore
+                }
+
+                /** @var \Illuminate\Support\Collection $collection */
+                $collection = auth()->user()->accounts()
+                                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                                    ->whereIn('accounts.id', $list)
+                                    ->get(['accounts.*']);
             }
 
-            /** @var \Illuminate\Support\Collection $collection */
-            $collection = auth()->user()->accounts()
-                                ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                                ->whereIn('accounts.id', $list)
-                                ->get(['accounts.*']);
             if ($collection->count() > 0) {
                 $collection = $collection->sortBy(
                     function (Account $account) {

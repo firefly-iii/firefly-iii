@@ -31,6 +31,7 @@ use FireflyIII\Models\TransactionType;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
+use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -214,6 +215,7 @@ class TransactionTransformer extends TransformerAbstract
         // switch on type for consistency
         switch ($transaction->transaction_type_type) {
             case TransactionType::WITHDRAWAL:
+                Log::debug(sprintf('%d is a withdrawal', $transaction->journal_id));
                 $data['source_id']        = $transaction->account_id;
                 $data['source_name']      = $transaction->account_name;
                 $data['source_iban']      = $transaction->account_iban;
@@ -222,6 +224,8 @@ class TransactionTransformer extends TransformerAbstract
                 $data['destination_name'] = $transaction->opposing_account_name;
                 $data['destination_iban'] = $transaction->opposing_account_iban;
                 $data['destination_type'] = $transaction->opposing_account_type;
+                Log::debug(sprintf('source_id / account_id is %d', $transaction->account_id));
+                Log::debug(sprintf('source_name / account_name is "%s"', $transaction->account_name));
                 break;
             case TransactionType::DEPOSIT:
             case TransactionType::TRANSFER:

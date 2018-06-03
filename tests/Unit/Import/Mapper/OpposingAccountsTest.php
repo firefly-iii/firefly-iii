@@ -38,7 +38,7 @@ class OpposingAccountsTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Mapper\OpposingAccounts::getMap()
      */
-    public function testGetMapBasic()
+    public function testGetMapBasic(): void
     {
         $one        = new Account;
         $one->id    = 13;

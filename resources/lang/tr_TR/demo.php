@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * demo.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -21,6 +20,8 @@ declare(strict_types=1);
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 return [
     'no_demo_text'           => 'Maalesef, <abbr title=":route">bu sayfa</abbr> için daha fazla demo açıklama metni yok.',
     'see_help_icon'          => 'Ancak, sağ üst köşedeki <i class="fa fa-question-circle"></i> simge size daha fazla bilgi verebilir.',
@@ -32,5 +33,5 @@ return [
     'currencies-index'       => 'Firefly III, birden fazla para birimini destekliyor. Euro varsayılan olmasına rağmen, ABD Doları ve diğer birçok para birimine ayarlanabilir. Gördüğünüz gibi küçük bir para birimi seçeneği dedahil edilmiştir ancak isterseniz kendi para biriminizi ekleyebilirsiniz. Varsayılan para birimi değiştirilebilir ancak mevcut işlemlerin para birimi değiştirilemez: Firefly III, aynı anda birden çok para biriminin kullanılmasını destekler.',
     'transactions-index'     => 'Bu masraflar, mevduatlar ve transferler için özellikle yaratıcı değildir. Bunlar otomatik olarak oluşturuldu.',
     'piggy-banks-index'      => 'Gördüğünüz gibi, üç tane banka var. Her domuzcuk bankasındaki para miktarını değiştirmek için artı ve eksi düğmelerini kullanın. Her domuzcuk bankasının yönetimini görmek için domuzcuk\'un üzerine tıklayın.',
-    'import-index'           => 'Elbette, herhangi bir CVS dosyası Firefly III\'e aktarılabilir',
+    'import-index'           => 'Any CSV file can be imported into Firefly III. It also supports importing data from bunq and Spectre. Other banks and financial aggregators will be implemented in the future. As a demo-user however, you can only see the "fake"-provider in action. It will generate some random transactions to show you how the process works.',
 ];

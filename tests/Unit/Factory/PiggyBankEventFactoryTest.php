@@ -39,7 +39,7 @@ class PiggyBankEventFactoryTest extends TestCase
     /**
      * @covers \FireflyIII\Factory\PiggyBankEventFactory
      */
-    public function testCreateAmountZero()
+    public function testCreateAmountZero(): void
     {
         /** @var TransactionJournal $transfer */
         $transfer   = $this->user()->transactionJournals()->where('transaction_type_id', 3)->first();
@@ -60,7 +60,7 @@ class PiggyBankEventFactoryTest extends TestCase
     /**
      * @covers \FireflyIII\Factory\PiggyBankEventFactory
      */
-    public function testCreateNoPiggy()
+    public function testCreateNoPiggy(): void
     {
         /** @var TransactionJournal $transfer */
         $transfer = $this->user()->transactionJournals()->where('transaction_type_id', 3)->first();
@@ -96,7 +96,7 @@ class PiggyBankEventFactoryTest extends TestCase
     /**
      * @covers \FireflyIII\Factory\PiggyBankEventFactory
      */
-    public function testCreateNotTransfer()
+    public function testCreateNotTransfer(): void
     {
         /** @var TransactionJournal $deposit */
         $deposit = $this->user()->transactionJournals()->where('transaction_type_id', 2)->first();
@@ -110,7 +110,7 @@ class PiggyBankEventFactoryTest extends TestCase
     /**
      * @covers \FireflyIII\Factory\PiggyBankEventFactory
      */
-    public function testCreateSuccess()
+    public function testCreateSuccess(): void
     {
         /** @var TransactionJournal $transfer */
         $transfer   = $this->user()->transactionJournals()->where('transaction_type_id', 3)->first();

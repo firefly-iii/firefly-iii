@@ -48,7 +48,7 @@ class OperationsControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Report\OperationsController::expenses
      */
-    public function testExpenses()
+    public function testExpenses(): void
     {
         $return = [
             1 => [
@@ -70,7 +70,7 @@ class OperationsControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Report\OperationsController::income
      */
-    public function testIncome()
+    public function testIncome(): void
     {
         $tasker = $this->mock(AccountTaskerInterface::class);
         $tasker->shouldReceive('getIncomeReport')->andReturn([]);
@@ -83,7 +83,7 @@ class OperationsControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Report\OperationsController::operations
      */
-    public function testOperations()
+    public function testOperations(): void
     {
         $return = [
             1 => [

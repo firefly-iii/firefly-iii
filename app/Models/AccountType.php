@@ -28,6 +28,8 @@ use FireflyIII\Models\Account;
 
 /**
  * Class AccountType.
+ * @property string $type
+ *
  */
 class AccountType extends Model
 {

@@ -36,19 +36,21 @@ class AbnAmroDescription implements SpecificInterface
     public $row;
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public static function getDescription(): string
     {
-        return 'Fixes possible problems with ABN Amro descriptions.';
+        return 'import.specific_abn_descr';
     }
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public static function getName(): string
     {
-        return 'ABN Amro description';
+        return 'import.specific_abn_name';
     }
 
     /**
@@ -81,7 +83,7 @@ class AbnAmroDescription implements SpecificInterface
      *
      * @return bool true if the description is GEA/BEA-format, false otherwise
      */
-    protected function parseABNAMRODescription()
+    protected function parseABNAMRODescription(): bool
     {
         // See if the current description is formatted in ABN AMRO format
         if (preg_match('/ABN AMRO.{24} (.*)/', $this->row[7], $matches)) {
@@ -99,7 +101,7 @@ class AbnAmroDescription implements SpecificInterface
      *
      * @return bool true if the description is GEA/BEAformat, false otherwise
      */
-    protected function parseGEABEADescription()
+    protected function parseGEABEADescription(): bool
     {
         // See if the current description is formatted in GEA/BEA format
         if (preg_match('/([BG]EA) +(NR:[a-zA-Z:0-9]+) +([0-9.\/]+) +([^,]*)/', $this->row[7], $matches)) {
@@ -124,7 +126,7 @@ class AbnAmroDescription implements SpecificInterface
      *
      * @return bool true if the description is SEPA format, false otherwise
      */
-    protected function parseSepaDescription()
+    protected function parseSepaDescription(): bool
     {
         // See if the current description is formatted as a SEPA plain description
         if (preg_match('/^SEPA(.{28})/', $this->row[7], $matches)) {
@@ -178,7 +180,7 @@ class AbnAmroDescription implements SpecificInterface
      *
      * @return bool true if the description is TRTP format, false otherwise
      */
-    protected function parseTRTPDescription()
+    protected function parseTRTPDescription(): bool
     {
         // See if the current description is formatted in TRTP format
         if (preg_match_all('!\/([A-Z]{3,4})\/([^/]*)!', $this->row[7], $matches, PREG_SET_ORDER)) {
@@ -196,7 +198,7 @@ class AbnAmroDescription implements SpecificInterface
 
                     switch (strtoupper($key)) {
                         case 'NAME':
-                            $this->row[8] = $name = $value;
+                            $this->row[8] = $value;
                             break;
                         case 'REMI':
                             $newDescription = $value;

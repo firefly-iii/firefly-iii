@@ -28,19 +28,21 @@ namespace FireflyIII\Import\Specifics;
 class PresidentsChoice implements SpecificInterface
 {
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public static function getDescription(): string
     {
-        return 'Fixes problems with files from Presidents Choice Financial.';
+        return 'import.specific_pres_descr';
     }
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public static function getName(): string
     {
-        return 'Presidents "Choice"';
+        return 'import.specific_pres_name';
     }
 
     /**

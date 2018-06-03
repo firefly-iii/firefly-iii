@@ -1,20 +1,8 @@
 <?php
-declare(strict_types=1);
-
-use FireflyIII\Import\Configuration\BunqConfigurator;
-use FireflyIII\Import\Configuration\FileConfigurator;
-use FireflyIII\Import\Configuration\SpectreConfigurator;
-use FireflyIII\Import\FileProcessor\CsvProcessor;
-use FireflyIII\Import\Prerequisites\BunqPrerequisites;
-use FireflyIII\Import\Prerequisites\FilePrerequisites;
-use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
-use FireflyIII\Import\Routine\BunqRoutine;
-use FireflyIII\Import\Routine\FileRoutine;
-use FireflyIII\Import\Routine\SpectreRoutine;
 
 /**
  * import.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -32,66 +20,128 @@ use FireflyIII\Import\Routine\SpectreRoutine;
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+use FireflyIII\Import\JobConfiguration\BunqJobConfiguration;
+use FireflyIII\Import\JobConfiguration\FakeJobConfiguration;
+use FireflyIII\Import\JobConfiguration\FileJobConfiguration;
+use FireflyIII\Import\JobConfiguration\SpectreJobConfiguration;
+use FireflyIII\Import\Prerequisites\BunqPrerequisites;
+use FireflyIII\Import\Prerequisites\FakePrerequisites;
+use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
+use FireflyIII\Import\Routine\BunqRoutine;
+use FireflyIII\Import\Routine\FakeRoutine;
+use FireflyIII\Import\Routine\FileRoutine;
+use FireflyIII\Import\Routine\SpectreRoutine;
+use FireflyIII\Support\Import\Routine\File\CSVProcessor;
 
 return [
-    'enabled'       => [
+    // these import providers are available:
+    'enabled'          => [
+        'fake'    => true,
         'file'    => true,
         'bunq'    => true,
         'spectre' => true,
         'plaid'   => false,
+        'quovo'   => false,
+        'yodlee'  => false,
+        'bad'     => false, // always disabled
     ],
-    'prerequisites' => [
-        'file'    => FilePrerequisites::class,
+    // demo user can use these import providers (when enabled):
+    'allowed_for_demo' => [
+        'fake'    => true,
+        'file'    => false,
+        'bunq'    => false,
+        'spectre' => false,
+        'plaid'   => false,
+        'quovo'   => false,
+        'yodlee'  => false,
+    ],
+    // a normal user user can use these import providers (when enabled):
+    'allowed_for_user' => [
+        'fake'    => false,
+        'file'    => true,
+        'bunq'    => true,
+        'spectre' => true,
+        'plaid'   => true,
+        'quovo'   => true,
+        'yodlee'  => true,
+    ],
+    // some providers have pre-requisites.
+    'has_prereq'       => [
+        'fake'    => true,
+        'file'    => false,
+        'bunq'    => true,
+        'spectre' => true,
+        'plaid'   => true,
+        'quovo'   => true,
+        'yodlee'  => true,
+    ],
+    // if so, there must be a class to handle them.
+    'prerequisites'    => [
+        'fake'    => FakePrerequisites::class,
+        'file'    => false,
         'bunq'    => BunqPrerequisites::class,
         'spectre' => SpectrePrerequisites::class,
-        'plaid'   => 'FireflyIII\Import\Prerequisites\PlaidPrerequisites',
-
+        'plaid'   => false,
+        'quovo'   => false,
+        'yodlee'  => false,
     ],
-    'configuration' => [
-        'file'    => FileConfigurator::class,
-        'bunq'    => BunqConfigurator::class,
-        'spectre' => SpectreConfigurator::class,
-        'plaid'   => 'FireflyIII\Import\Configuration\PlaidConfigurator',
+    // some providers may need extra configuration per job
+    'has_job_config'   => [
+        'fake'    => true,
+        'file'    => true,
+        'bunq'    => true,
+        'spectre' => true,
+        'plaid'   => false,
+        'quovo'   => false,
+        'yodlee'  => false,
     ],
-    'routine'       => [
+    // if so, this is the class that handles it.
+    'configuration'    => [
+        'fake'    => FakeJobConfiguration::class,
+        'file'    => FileJobConfiguration::class,
+        'bunq'    => BunqJobConfiguration::class,
+        'spectre' => SpectreJobConfiguration::class,
+        'plaid'   => false,
+        'quovo'   => false,
+        'yodlee'  => false,
+    ],
+    // this is the routine that runs the actual import.
+    'routine'          => [
+        'fake'    => FakeRoutine::class,
         'file'    => FileRoutine::class,
         'bunq'    => BunqRoutine::class,
         'spectre' => SpectreRoutine::class,
-        'plaid'   => 'FireflyIII\Import\Routine\PlaidRoutine',
+        'plaid'   => false,
+        'quovo'   => false,
+        'yodlee'  => false,
     ],
 
-    'options'        => [
-        'file' => [
+    'options' => [
+        'fake'    => [],
+        'file'    => [
             'import_formats'        => ['csv'], // mt940
             'default_import_format' => 'csv',
             'processors'            => [
-                'csv' => CsvProcessor::class,
+                'csv' => CSVProcessor::class,
             ],
         ],
-        'bunq' => [
-            'server'  => 'api.bunq.com', // sandbox.public.api.bunq.com - api.bunq.com
-            'version' => 'v1',
+        'bunq'    => [
+            'live'    => [
+                'server'  => 'api.bunq.com',
+                'version' => 'v1',
+            ],
+            'sandbox' => [
+                'server'  => 'sandbox.public.api.bunq.com', // sandbox.public.api.bunq.com - api.bunq.com
+                'version' => 'v1',
+            ],
         ],
         'spectre' => [
             'server' => 'www.saltedge.com',
         ],
-    ],
-    'default_config' => [
-        'file'    => [
-            'has-config-file' => true,
-            'auto-start'      => false,
-        ],
-        'bunq'    => [
-            'has-config-file' => false,
-            'auto-start'      => true,
-        ],
-        'spectre' => [
-            'has-config-file' => false,
-            'auto-start'      => true,
-        ],
-        'plaid'   => [
-            'has-config-file' => false,
-            'auto-start'      => true,
-        ],
+        'plaid'   => [],
+        'quovo'   => [],
+        'yodlee'  => [],
     ],
 ];

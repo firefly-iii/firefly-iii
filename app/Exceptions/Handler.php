@@ -1,8 +1,8 @@
 <?php
-declare(strict_types=1);
+
 /**
  * Handler.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +20,8 @@ declare(strict_types=1);
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Exceptions;
 
 use ErrorException;
@@ -28,6 +30,7 @@ use FireflyIII\Jobs\MailError;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -79,6 +82,11 @@ class Handler extends ExceptionHandler
             return response()->json(['message' => 'Unauthenticated', 'exception' => 'AuthenticationException'], 401);
         }
 
+        if ($exception instanceof OAuthServerException && $request->expectsJson()) {
+            // somehow Laravel handler does not catch this:
+            return response()->json(['message' => $exception->getMessage(), 'exception' => 'OAuthServerException'], 401);
+        }
+
         if ($request->expectsJson()) {
             $isDebug = config('app.debug', false);
             if ($isDebug) {
@@ -96,7 +104,7 @@ class Handler extends ExceptionHandler
             return response()->json(['message' => 'Internal Firefly III Exception. See log files.', 'exception' => \get_class($exception)], 500);
         }
 
-        if ($exception instanceof FireflyException || $exception instanceof ErrorException) {
+        if ($exception instanceof FireflyException || $exception instanceof ErrorException || $exception instanceof OAuthServerException) {
             $isDebug = env('APP_DEBUG', false);
 
             return response()->view('errors.FireflyException', ['exception' => $exception, 'debug' => $isDebug], 500);
@@ -120,8 +128,25 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+
         $doMailError = env('SEND_ERROR_MESSAGE', true);
-        if (($exception instanceof FireflyException || $exception instanceof ErrorException) && $doMailError) {
+        if (
+            // if the user wants us to mail:
+            $doMailError === true &&
+            ((
+                // and if is one of these error instances
+                 $exception instanceof FireflyException
+                 || $exception instanceof ErrorException
+                 || $exception instanceof OAuthServerException
+
+             )
+             || (
+                 // or this one, but it's a JSON exception.
+                 $exception instanceof AuthenticationException
+                 && Request::expectsJson() === true
+             ))
+            ) {
+            // then, send email
             $userData = [
                 'id'    => 0,
                 'email' => 'unknown@example.com',
@@ -139,6 +164,9 @@ class Handler extends ExceptionHandler
                 'line'         => $exception->getLine(),
                 'code'         => $exception->getCode(),
                 'version'      => config('firefly.version'),
+                'url'          => Request::fullUrl(),
+                'userAgent'    => Request::userAgent(),
+                'json'         => Request::acceptsJson(),
             ];
 
             // create job that will mail.

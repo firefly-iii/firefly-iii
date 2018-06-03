@@ -154,6 +154,18 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * Get all categories with ID's.
+     *
+     * @param array $categoryIds
+     *
+     * @return Collection
+     */
+    public function getByIds(array $categoryIds): Collection
+    {
+        return $this->user->categories()->whereIn('id', $categoryIds)->get();
+    }
+
+    /**
      * Returns a list of all the categories belonging to a user.
      *
      * @return Collection
@@ -493,7 +505,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         // check transactions:
         $query = $category->transactions()
                           ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                          ->orderBy('transaction_journals.date', 'DESC');
+                          ->orderBy('transaction_journals.date', 'ASC');
 
         $lastTransaction = $query->first(['transaction_journals.*']);
         if (null !== $lastTransaction) {

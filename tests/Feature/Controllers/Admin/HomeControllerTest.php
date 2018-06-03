@@ -49,7 +49,7 @@ class HomeControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Admin\HomeController::index
      * @covers \FireflyIII\Http\Controllers\Admin\HomeController::__construct
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         $this->be($this->user());
         $response = $this->get(route('admin.index'));
@@ -58,7 +58,7 @@ class HomeControllerTest extends TestCase
         $response->assertSee('<ol class="breadcrumb">');
     }
 
-    public function testTestMessage()
+    public function testTestMessage(): void
     {
         Event::fake();
 

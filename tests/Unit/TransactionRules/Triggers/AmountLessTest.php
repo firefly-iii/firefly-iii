@@ -35,7 +35,7 @@ class AmountLessTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\AmountLess::triggered
      */
-    public function testTriggeredExact()
+    public function testTriggeredExact(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('setUser');
@@ -52,7 +52,7 @@ class AmountLessTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\AmountLess::triggered
      */
-    public function testTriggeredLess()
+    public function testTriggeredLess(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('setUser');
@@ -69,7 +69,7 @@ class AmountLessTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\AmountLess::triggered
      */
-    public function testTriggeredNotLess()
+    public function testTriggeredNotLess(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('setUser');
@@ -86,7 +86,7 @@ class AmountLessTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\AmountLess::willMatchEverything
      */
-    public function testWillMatchEverythingNotNull()
+    public function testWillMatchEverythingNotNull(): void
     {
         $value  = 'x';
         $result = AmountLess::willMatchEverything($value);
@@ -96,7 +96,7 @@ class AmountLessTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\AmountLess::willMatchEverything
      */
-    public function testWillMatchEverythingNull()
+    public function testWillMatchEverythingNull(): void
     {
         $value  = null;
         $result = AmountLess::willMatchEverything($value);

@@ -102,7 +102,6 @@ class RuleController extends Controller
         $preFilled    = [
             'strict' => true,
         ];
-        $groups       = ExpandedForm::makeSelectList($this->ruleGroupRepos->get());
         $oldTriggers  = [];
         $oldActions   = [];
         $returnToBill = false;
@@ -150,7 +149,7 @@ class RuleController extends Controller
         return view(
             'rules.rule.create',
             compact(
-                'subTitleIcon', 'oldTriggers', 'returnToBill', 'groups', 'preFilled', 'bill', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup',
+                'subTitleIcon', 'oldTriggers', 'returnToBill', 'preFilled', 'bill', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup',
                 'subTitle'
             )
         );
@@ -212,7 +211,6 @@ class RuleController extends Controller
      */
     public function edit(Request $request, Rule $rule)
     {
-        $ruleGroups   = ExpandedForm::makeSelectList($this->ruleGroupRepos->get());
         $triggerCount = 0;
         $actionCount  = 0;
         $oldActions   = [];
@@ -243,7 +241,7 @@ class RuleController extends Controller
         }
         session()->forget('rules.edit.fromUpdate');
 
-        return view('rules.rule.edit', compact('rule', 'subTitle', 'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroups'));
+        return view('rules.rule.edit', compact('rule', 'subTitle', 'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount'));
     }
 
     /**
@@ -333,14 +331,11 @@ class RuleController extends Controller
     public function selectTransactions(Rule $rule)
     {
         // does the user have shared accounts?
-        $accounts        = $this->accountRepos->getAccountsByType([AccountType::ASSET]);
-        $accountList     = ExpandedForm::makeSelectList($accounts);
-        $checkedAccounts = array_keys($accountList);
         $first           = session('first')->format('Y-m-d');
         $today           = Carbon::create()->format('Y-m-d');
         $subTitle        = (string)trans('firefly.apply_rule_selection', ['title' => $rule->title]);
 
-        return view('rules.rule.select-transactions', compact('checkedAccounts', 'accountList', 'first', 'today', 'rule', 'subTitle'));
+        return view('rules.rule.select-transactions', compact( 'first', 'today', 'rule', 'subTitle'));
     }
 
     /**
@@ -357,12 +352,12 @@ class RuleController extends Controller
 
         // redirect to show bill.
         if ($request->get('return_to_bill') === 'true' && (int)$request->get('bill_id') > 0) {
-            return redirect(route('bills.show', [(int)$request->get('bill_id')]));
+            return redirect(route('bills.show', [(int)$request->get('bill_id')])); // @codeCoverageIgnore
         }
 
         // redirect to new bill creation.
         if ((int)$request->get('bill_id') > 0) {
-            return redirect($this->getPreviousUri('bills.create.uri'));
+            return redirect($this->getPreviousUri('bills.create.uri')); // @codeCoverageIgnore
         }
 
 
@@ -408,10 +403,12 @@ class RuleController extends Controller
         $matcher->setTriggers($triggers);
         try {
             $matchingTransactions = $matcher->findTransactionsByTriggers();
+            // @codeCoverageIgnoreStart
         } catch (FireflyException $exception) {
             Log::error(sprintf('Could not grab transactions in testTriggers(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());
         }
+        // @codeCoverageIgnoreStart
 
 
         // Warn the user if only a subset of transactions is returned
@@ -427,10 +424,12 @@ class RuleController extends Controller
         $view = 'ERROR, see logs.';
         try {
             $view = view('list.journals-tiny', ['transactions' => $matchingTransactions])->render();
+            // @codeCoverageIgnoreStart
         } catch (Throwable $exception) {
             Log::error(sprintf('Could not render view in testTriggers(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());
         }
+        // @codeCoverageIgnoreEnd
 
         return response()->json(['html' => $view, 'warning' => $warning]);
     }
@@ -466,10 +465,12 @@ class RuleController extends Controller
         $matcher->setRule($rule);
         try {
             $matchingTransactions = $matcher->findTransactionsByRule();
+            // @codeCoverageIgnoreStart
         } catch (FireflyException $exception) {
             Log::error(sprintf('Could not grab transactions in testTriggersByRule(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());
         }
+        // @codeCoverageIgnoreEnd
 
         // Warn the user if only a subset of transactions is returned
         $warning = '';
@@ -484,10 +485,12 @@ class RuleController extends Controller
         $view = 'ERROR, see logs.';
         try {
             $view = view('list.journals-tiny', ['transactions' => $matchingTransactions])->render();
+            // @codeCoverageIgnoreStart
         } catch (Throwable $exception) {
             Log::error(sprintf('Could not render view in testTriggersByRule(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());
         }
+        // @codeCoverageIgnoreEnd
 
         return response()->json(['html' => $view, 'warning' => $warning]);
     }
@@ -592,10 +595,12 @@ class RuleController extends Controller
                     'count'      => 1,
                 ]
             )->render();
+            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Throwable was thrown in getActionsForBill(): %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
         }
+        // @codeCoverageIgnoreEnd
 
         return $actions;
     }
@@ -625,10 +630,12 @@ class RuleController extends Controller
                         'count'      => $count,
                     ]
                 )->render();
+                // @codeCoverageIgnoreStart
             } catch (Throwable $e) {
                 Log::debug(sprintf('Throwable was thrown in getCurrentActions(): %s', $e->getMessage()));
                 Log::error($e->getTraceAsString());
             }
+            // @codeCoverageIgnoreEnd
             ++$index;
         }
 
@@ -660,10 +667,12 @@ class RuleController extends Controller
                             'count'      => $count,
                         ]
                     )->render();
+                    // @codeCoverageIgnoreStart
                 } catch (Throwable $e) {
                     Log::debug(sprintf('Throwable was thrown in getCurrentTriggers(): %s', $e->getMessage()));
                     Log::error($e->getTraceAsString());
                 }
+                // @codeCoverageIgnoreEnd
                 ++$index;
             }
         }
@@ -696,10 +705,12 @@ class RuleController extends Controller
                         'count'      => $count,
                     ]
                 )->render();
+                // @codeCoverageIgnoreStart
             } catch (Throwable $e) {
                 Log::debug(sprintf('Throwable was thrown in getPreviousActions(): %s', $e->getMessage()));
                 Log::error($e->getTraceAsString());
             }
+            // @codeCoverageIgnoreEnd
             ++$newIndex;
         }
 
@@ -732,10 +743,12 @@ class RuleController extends Controller
                         'count'      => $count,
                     ]
                 )->render();
+                // @codeCoverageIgnoreStart
             } catch (Throwable $e) {
                 Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
                 Log::error($e->getTraceAsString());
             }
+            // @codeCoverageIgnoreEnd
             ++$newIndex;
         }
 
@@ -791,10 +804,12 @@ class RuleController extends Controller
                     'count'      => 4,
                 ]
             )->render();
+            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
             Log::debug($e->getTraceAsString());
         }
+        // @codeCoverageIgnoreEnd
 
         return $triggers;
     }

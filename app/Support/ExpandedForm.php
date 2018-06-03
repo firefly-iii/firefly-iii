@@ -27,9 +27,12 @@ use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use Form;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use RuntimeException;
@@ -47,6 +50,7 @@ class ExpandedForm
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Throwable
      */
     public function amount(string $name, $value = null, array $options = []): string
     {
@@ -95,23 +99,52 @@ class ExpandedForm
 
     /**
      * @param string $name
+     * @param        $selected
+     * @param null   $options
+     *
+     * @return string
+     * @throws \Throwable
+     */
+    public function assetAccountCheckList(string $name, $options = null): string
+    {
+        $options  = $options ?? [];
+        $label    = $this->label($name, $options);
+        $options  = $this->expandOptionArray($name, $label, $options);
+        $classes  = $this->getHolderClasses($name);
+        $selected = request()->old($name) ?? [];
+
+        // get all asset accounts:
+        /** @var AccountRepositoryInterface $repository */
+        $repository    = app(AccountRepositoryInterface::class);
+        $assetAccounts = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        $grouped       = [];
+        // group accounts:
+        /** @var Account $account */
+        foreach ($assetAccounts as $account) {
+            $role = $repository->getMetaValue($account, 'accountRole');
+            if (null === $role) {
+                $role = 'no_account_type'; // @codeCoverageIgnore
+            }
+            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $grouped[$key][$account->id] = $account->name;
+        }
+
+        unset($options['class']);
+        $html = view('form.assetAccountCheckList', compact('classes', 'selected', 'name', 'label', 'options', 'grouped'))->render();
+
+        return $html;
+    }
+
+    /**
+     * @param string $name
      * @param null   $value
      * @param array  $options
      *
      * @return string
+     * @throws \Throwable
      */
     public function assetAccountList(string $name, $value = null, array $options = []): string
     {
-        // properties for cache
-        $cache = new CacheProperties;
-        $cache->addProperty('exp-form-asset-list');
-        $cache->addProperty($name);
-        $cache->addProperty($value);
-        $cache->addProperty($options);
-
-        if ($cache->has()) {
-            return $cache->get();
-        }
         // make repositories
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -139,7 +172,6 @@ class ExpandedForm
             $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
         }
         $res = $this->select($name, $grouped, $value, $options);
-        $cache->store($res);
 
         return $res;
     }
@@ -193,19 +225,10 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
+     * @throws \Throwable
      */
     public function currencyList(string $name, $value = null, array $options = []): string
     {
-        // properties for cache
-        $cache = new CacheProperties;
-        $cache->addProperty('exp-form-currency-list');
-        $cache->addProperty($name);
-        $cache->addProperty($value);
-        $cache->addProperty($options);
-
-        if ($cache->has()) {
-            return $cache->get();
-        }
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
 
@@ -217,7 +240,6 @@ class ExpandedForm
             $array[$currency->id] = $currency->name . ' (' . $currency->symbol . ')';
         }
         $res = $this->select($name, $array, $value, $options);
-        $cache->store($res);
 
         return $res;
     }
@@ -349,28 +371,6 @@ class ExpandedForm
         }
 
         return $selectList;
-    }
-
-    /**
-     * @param string $name
-     * @param array  $list
-     * @param null   $selected
-     * @param array  $options
-     *
-     * @return string
-     * @throws \Throwable
-     */
-    public function multiCheckbox(string $name, array $list = [], $selected = null, array $options = []): string
-    {
-        $label    = $this->label($name, $options);
-        $options  = $this->expandOptionArray($name, $label, $options);
-        $classes  = $this->getHolderClasses($name);
-        $selected = $this->fillFieldValue($name, $selected);
-
-        unset($options['class']);
-        $html = view('form.multiCheckbox', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
-
-        return $html;
     }
 
     /**
@@ -514,6 +514,59 @@ class ExpandedForm
         $html    = view('form.password', compact('classes', 'name', 'label', 'options'))->render();
 
         return $html;
+    }
+
+    /**
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
+     *
+     * @return string
+     * @throws \Throwable
+     */
+    public function ruleGroupList(string $name, $value = null, array $options = []): string
+    {
+        /** @var RuleGroupRepositoryInterface $groupRepos */
+        $groupRepos = app(RuleGroupRepositoryInterface::class);
+
+        // get all currencies:
+        $list  = $groupRepos->get();
+        $array = [];
+        /** @var RuleGroup $group */
+        foreach ($list as $group) {
+            $array[$group->id] = $group->title;
+        }
+
+        return $this->select($name, $array, $value, $options);
+    }
+
+    /**
+     * @param string $name
+     * @param null   $value
+     * @param null   $options
+     *
+     * @return \Illuminate\Support\HtmlString
+     */
+    public function ruleGroupListWithEmpty(string $name, $value = null, $options = null)
+    {
+        $options          = $options ?? [];
+        $options['class'] = 'form-control';
+        /** @var RuleGroupRepositoryInterface $groupRepos */
+        $groupRepos = app(RuleGroupRepositoryInterface::class);
+
+        // get all currencies:
+        $list  = $groupRepos->get();
+        $array = [
+            0 => trans('firefly.none_in_select_list'),
+        ];
+        /** @var RuleGroup $group */
+        foreach ($list as $group) {
+            if (isset($options['hidden']) && (int)$options['hidden'] !== $group->id) {
+                $array[$group->id] = $group->title;
+            }
+        }
+
+        return Form::select($name, $array, $value, $options);
     }
 
     /**

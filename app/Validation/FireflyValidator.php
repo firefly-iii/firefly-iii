@@ -472,12 +472,13 @@ class FireflyValidator extends Validator
         $query   = DB::table('piggy_banks')->whereNull('piggy_banks.deleted_at')
                      ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')->where('accounts.user_id', auth()->user()->id);
         if (null !== $exclude) {
-            $query->where('piggy_banks.id', '!=', $exclude);
+            $query->where('piggy_banks.id', '!=', (int)$exclude);
         }
         $set = $query->get(['piggy_banks.*']);
 
         /** @var PiggyBank $entry */
         foreach ($set as $entry) {
+
             $fieldValue = $this->tryDecrypt($entry->name);
             if ($fieldValue === $value) {
                 return false;

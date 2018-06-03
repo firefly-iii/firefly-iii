@@ -27,6 +27,7 @@ use Carbon\Carbon;
 
 
 /**
+ * @codeCoverageIgnore
  * Class Login
  */
 class Login extends SpectreObject
@@ -97,6 +98,14 @@ class Login extends SpectreObject
     }
 
     /**
+     * @return string
+     */
+    public function getCountryCode(): string
+    {
+        return $this->countryCode;
+    }
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -110,6 +119,38 @@ class Login extends SpectreObject
     public function getLastAttempt(): Attempt
     {
         return $this->lastAttempt;
+    }
+
+    /**
+     * @return Carbon
+     */
+    public function getLastSuccessAt(): Carbon
+    {
+        return $this->lastSuccessAt;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProviderName(): string
+    {
+        return $this->providerName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @return Carbon
+     */
+    public function getUpdatedAt(): Carbon
+    {
+        return $this->updatedAt;
     }
 
     /**
@@ -129,7 +170,7 @@ class Login extends SpectreObject
             'id'                        => $this->id,
             'last_attempt'              => $this->lastAttempt->toArray(),
             'last_success_at'           => $this->lastSuccessAt->toIso8601String(),
-            'next_refresh_possible_at'  => $this->nextRefreshPossibleAt,
+            'next_refresh_possible_at'  => $this->nextRefreshPossibleAt->toIso8601String(),
             'provider_code'             => $this->providerCode,
             'provider_id'               => $this->providerId,
             'provider_name'             => $this->providerName,

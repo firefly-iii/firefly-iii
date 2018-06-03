@@ -28,7 +28,6 @@ use FireflyIII\Models\TransactionType;
 /**
  * Interface TransactionTypeRepositoryInterface
  *
- * @package FireflyIII\Repositories\TransactionType
  */
 interface TransactionTypeRepositoryInterface
 {

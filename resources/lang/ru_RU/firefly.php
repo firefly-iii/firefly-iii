@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * firefly.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     // general stuff:
@@ -179,6 +180,7 @@ return [
     'authorization_request_intro'                => '<strong>:client</strong> запрашивает доступ к управлению вашими финансами. Вы хотите разрешить <strong>:client</strong> доступ к этой информации?',
     'scopes_will_be_able'                        => 'Это приложение будет иметь возможность:',
     'button_authorize'                           => 'Авторизация',
+    'none_in_select_list'                        => '(нет)',
 
     // check for updates:
     'update_check_title'                         => 'Проверить обновления',
@@ -666,6 +668,7 @@ return [
     'bill_will_automatch'                     => 'Счёт будет автоматически связан с подходящими транзакциями',
     'skips_over'                              => 'пропустить',
     'bill_store_error'                        => 'При создании вашего нового счёта на оплату произошла неожиданная ошибка. Пожалуйста, проверьте log-файлы',
+    'list_inactive_rule'                      => 'неактивное правило',
 
     // accounts:
     'details_for_asset'                       => 'Детали по основному счёту ":name"',
@@ -801,6 +804,7 @@ return [
     'opt_group_savingAsset'                   => 'Сберегательные счета',
     'opt_group_sharedAsset'                   => 'Общие основные счета',
     'opt_group_ccAsset'                       => 'Кредитные карты',
+    'opt_group_cashWalletAsset'               => 'Кошельки с наличными',
     'notes'                                   => 'Заметки',
     'unknown_journal_error'                   => 'Не удалось сохранить транзакцию. Пожалуйста, проверьте log-файлы.',
 
@@ -816,6 +820,7 @@ return [
     'language'                                => 'Язык',
     'new_savings_account'                     => 'сберегательный счёт в :bank_name',
     'cash_wallet'                             => 'Кошелёк с наличными',
+    'currency_not_present' => 'If the currency you normally use is not listed do not worry. You can create your own currencies under Options > Currencies.',
 
     // home page:
     'yourAccounts'                            => 'Ваши счета',
@@ -1013,6 +1018,7 @@ return [
     'remove_money_from_piggy_title'           => 'Удалить деньги из копилки ":name"',
     'add'                                     => 'Добавить',
     'no_money_for_piggy'                      => 'У вас нет денег, чтобы положить в этот копилку.',
+    'suggested_savings_per_month'             => 'Suggested per month',
 
     'remove'                    => 'Удалить',
     'max_amount_add'            => 'Максимальная сумма, которую вы можете добавить:',
@@ -1148,27 +1154,9 @@ return [
     'no_edit_multiple_left'                 => 'Вы выбрали для редактирования некорректную транзакцию.',
     'cannot_convert_split_journal'          => 'Невозможно преобразовать раздельную транзакцию',
 
-    // import bread crumbs and titles:
-    'import'                                => 'Импорт',
-    'import_data'                           => 'Импорт данных',
-    'import_general_index_file'             => 'Импортировать файл',
-    'import_from_bunq'                      => 'Импорт из bunq',
-    'import_using_spectre'                  => 'Импорт с использованием Spectre',
-    'import_using_plaid'                    => 'Импорт с использованием Plaid',
-    'import_config_bread_crumb'             => 'Настройте свой импорт',
-
-    // import index page:
+    // Import page (general strings only)
     'import_index_title'                    => 'Импорт данных в Firefly III',
-    'import_index_sub_title'                => 'Главная страница',
-    'import_general_index_intro'            => 'Добро пожаловать в инструмент импорта Firefly III. Существует несколько способов импорта данных в Firefly III, отображаемых здесь в виде кнопок.',
-    'upload_error'                          => 'Невозможно обработать загруженный вами файл. Возможно, это неправильный тип файла или кодировка. Дополнительная информация содержится в log-файлах.',
-    'reset_import_settings_title'           => 'Сбросить настройки импорта',
-    'reset_import_settings_text'            => 'Вы можете использовать эти ссылки для сброса настроек импорта для определенных поставщиков. Это полезно, когда плохие настройки не позволяют вам импортировать данные.',
-    'reset_settings_bunq'                   => 'Удалите ключ API bunq, локальный внешний IP-адрес и ключи RSA, связанные с bunq.',
-    'reset_settings_spectre'                => 'Удалить ID клиента Spectre и секретные ключи. Также будет удалён ваш Spectre keypair. Не забудьте обновить его.',
-    'settings_reset_for_bunq'               => 'Сброс настроек Bunq.',
-    'settings_reset_for_spectre'            => 'Сброс настроек Spectre.',
-
+    'import_data'                           => 'Импорт данных',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Эта функция недоступна, если вы используете Firefly III в среде Sandstorm.io.',

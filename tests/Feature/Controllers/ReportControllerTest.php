@@ -66,7 +66,7 @@ class ReportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::accountReport()
      */
-    public function testAccountReport()
+    public function testAccountReport(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepository->shouldReceive('cleanupBudgets');
@@ -90,7 +90,7 @@ class ReportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::auditReport
      */
-    public function testAuditReport()
+    public function testAuditReport(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepository->shouldReceive('cleanupBudgets');
@@ -112,7 +112,7 @@ class ReportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::budgetReport
      */
-    public function testBudgetReport()
+    public function testBudgetReport(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepository->shouldReceive('cleanupBudgets');
@@ -134,7 +134,7 @@ class ReportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::categoryReport
      */
-    public function testCategoryReport()
+    public function testCategoryReport(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepository->shouldReceive('cleanupBudgets');
@@ -156,7 +156,7 @@ class ReportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::defaultReport
      */
-    public function testDefaultReport()
+    public function testDefaultReport(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepository->shouldReceive('cleanupBudgets');
@@ -177,7 +177,7 @@ class ReportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::defaultReport
      */
-    public function testDefaultReportBadDate()
+    public function testDefaultReportBadDate(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepository->shouldReceive('cleanupBudgets');
@@ -195,7 +195,7 @@ class ReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\ReportController::index
      * @covers \FireflyIII\Http\Controllers\ReportController::__construct
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepository->shouldReceive('cleanupBudgets');
@@ -217,7 +217,7 @@ class ReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\ReportController::options
      * @covers \FireflyIII\Http\Controllers\ReportController::noReportOptions
      */
-    public function testOptions()
+    public function testOptions(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
 
@@ -233,7 +233,7 @@ class ReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\ReportController::options
      * @covers \FireflyIII\Http\Controllers\ReportController::accountReportOptions()
      */
-    public function testOptionsAccount()
+    public function testOptionsAccount(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
 
@@ -257,7 +257,7 @@ class ReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\ReportController::options
      * @covers \FireflyIII\Http\Controllers\ReportController::budgetReportOptions
      */
-    public function testOptionsBudget()
+    public function testOptionsBudget(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
 
@@ -277,7 +277,7 @@ class ReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\ReportController::options
      * @covers \FireflyIII\Http\Controllers\ReportController::categoryReportOptions
      */
-    public function testOptionsCategory()
+    public function testOptionsCategory(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
 
@@ -296,7 +296,7 @@ class ReportControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\ReportController::options
      * @covers \FireflyIII\Http\Controllers\ReportController::tagReportOptions
      */
-    public function testOptionsTag()
+    public function testOptionsTag(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
 
@@ -315,7 +315,7 @@ class ReportControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
-    public function testPostIndexAccountOK()
+    public function testPostIndexAccountOK(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos     = $this->mock(AccountRepositoryInterface::class);
@@ -342,7 +342,7 @@ class ReportControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
-    public function testPostIndexAuditOK()
+    public function testPostIndexAuditOK(): void
     {
         $accountRepos     = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
@@ -368,7 +368,7 @@ class ReportControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
-    public function testPostIndexBudgetError()
+    public function testPostIndexBudgetError(): void
     {
         $accountRepos     = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
@@ -397,7 +397,7 @@ class ReportControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
-    public function testPostIndexBudgetOK()
+    public function testPostIndexBudgetOK(): void
     {
         $accountRepos     = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
@@ -426,7 +426,7 @@ class ReportControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
-    public function testPostIndexCategoryError()
+    public function testPostIndexCategoryError(): void
     {
         $accountRepos     = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
@@ -455,7 +455,7 @@ class ReportControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
-    public function testPostIndexCategoryOK()
+    public function testPostIndexCategoryOK(): void
     {
         $accountRepos     = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
@@ -483,7 +483,7 @@ class ReportControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
-    public function testPostIndexDefaultOK()
+    public function testPostIndexDefaultOK(): void
     {
         $accountRepos     = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
@@ -509,7 +509,7 @@ class ReportControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
-    public function testPostIndexDefaultStartEnd()
+    public function testPostIndexDefaultStartEnd(): void
     {
         $accountRepos     = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
@@ -535,7 +535,7 @@ class ReportControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
-    public function testPostIndexTagError()
+    public function testPostIndexTagError(): void
     {
         $accountRepos     = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
@@ -563,7 +563,7 @@ class ReportControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
-    public function testPostIndexTagOK()
+    public function testPostIndexTagOK(): void
     {
         $accountRepos     = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
@@ -592,7 +592,7 @@ class ReportControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
-    public function testPostIndexZeroAccounts()
+    public function testPostIndexZeroAccounts(): void
     {
         $accountRepos     = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
@@ -617,7 +617,7 @@ class ReportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::tagReport
      */
-    public function testTagReport()
+    public function testTagReport(): void
     {
         $accountRepos     = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);

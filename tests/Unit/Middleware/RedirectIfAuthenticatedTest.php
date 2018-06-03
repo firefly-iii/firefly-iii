@@ -36,7 +36,7 @@ class RedirectIfAuthenticatedTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\RedirectIfAuthenticated::handle
      */
-    public function testMiddleware()
+    public function testMiddleware(): void
     {
         $response = $this->get('/_test/authenticate');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
@@ -45,7 +45,7 @@ class RedirectIfAuthenticatedTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\RedirectIfAuthenticated::handle
      */
-    public function testMiddlewareAuthenticated()
+    public function testMiddlewareAuthenticated(): void
     {
         $this->be($this->user());
         $response = $this->get('/_test/authenticate');

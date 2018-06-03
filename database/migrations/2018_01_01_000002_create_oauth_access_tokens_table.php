@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=1);
 
-/*
+/**
  * 2018_01_01_000002_create_oauth_access_tokens_table.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

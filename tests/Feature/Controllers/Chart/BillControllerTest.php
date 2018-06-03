@@ -55,7 +55,7 @@ class BillControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testFrontpage(string $range)
+    public function testFrontpage(string $range): void
     {
         $generator  = $this->mock(GeneratorInterface::class);
         $repository = $this->mock(BillRepositoryInterface::class);
@@ -73,7 +73,7 @@ class BillControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\BillController::single
      */
-    public function testSingle()
+    public function testSingle(): void
     {
         $transaction = factory(Transaction::class)->make();
         $generator   = $this->mock(GeneratorInterface::class);

@@ -53,7 +53,7 @@ class CurrencyControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController::create
      */
-    public function testCannotCreate()
+    public function testCannotCreate(): void
     {
         // mock stuff
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
@@ -72,7 +72,7 @@ class CurrencyControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController::delete
      */
-    public function testCannotDelete()
+    public function testCannotDelete(): void
     {
         // mock stuff
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
@@ -92,7 +92,7 @@ class CurrencyControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController::destroy
      */
-    public function testCannotDestroy()
+    public function testCannotDestroy(): void
     {
         // mock stuff
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
@@ -113,7 +113,7 @@ class CurrencyControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController::create
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         // mock stuff
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
@@ -133,7 +133,7 @@ class CurrencyControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController::defaultCurrency
      */
-    public function testDefaultCurrency()
+    public function testDefaultCurrency(): void
     {
         // mock stuff
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
@@ -151,7 +151,7 @@ class CurrencyControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController::delete
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         // mock stuff
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
@@ -172,7 +172,7 @@ class CurrencyControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController::destroy
      */
-    public function testDestroy()
+    public function testDestroy(): void
     {
         // mock stuff
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
@@ -194,7 +194,7 @@ class CurrencyControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController::edit
      */
-    public function testEdit()
+    public function testEdit(): void
     {
         // mock stuff
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
@@ -215,7 +215,7 @@ class CurrencyControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\CurrencyController::index
      * @covers \FireflyIII\Http\Controllers\CurrencyController::__construct
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         // mock stuff
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
@@ -240,7 +240,7 @@ class CurrencyControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\CurrencyController::index
      * @covers \FireflyIII\Http\Controllers\CurrencyController::__construct
      */
-    public function testIndexNoRights()
+    public function testIndexNoRights(): void
     {
         // mock stuff
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
@@ -264,7 +264,7 @@ class CurrencyControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\CurrencyController::store
      * @covers \FireflyIII\Http\Requests\CurrencyFormRequest
      */
-    public function testStore()
+    public function testStore(): void
     {
         // mock stuff
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
@@ -292,7 +292,7 @@ class CurrencyControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\CurrencyController::store
      * @covers \FireflyIII\Http\Requests\CurrencyFormRequest
      */
-    public function testStoreNoRights()
+    public function testStoreNoRights(): void
     {
         // mock stuff
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
@@ -320,7 +320,7 @@ class CurrencyControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\CurrencyController::update
      * @covers \FireflyIII\Http\Requests\CurrencyFormRequest
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         // mock stuff
         $repository   = $this->mock(CurrencyRepositoryInterface::class);

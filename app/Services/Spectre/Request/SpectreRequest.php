@@ -30,7 +30,7 @@ use Requests;
 use Requests_Response;
 
 /**
- * Class BunqRequest.
+ * Class SpectreRequest
  */
 abstract class SpectreRequest
 {
@@ -48,36 +48,12 @@ abstract class SpectreRequest
     private $user;
 
     /**
-     * SpectreRequest constructor.
-     *
-     * @param User $user
-     *
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \Psr\Container\ContainerExceptionInterface
-     */
-    public function __construct(User $user)
-    {
-        $this->user       = $user;
-        $this->server     = 'https://' . config('import.options.spectre.server');
-        $this->expiresAt  = time() + 180;
-        $privateKey       = app('preferences')->get('spectre_private_key', null);
-        $this->privateKey = $privateKey->data;
-
-        // set client ID
-        $appId       = app('preferences')->get('spectre_app_id', null);
-        $this->appId = $appId->data;
-
-        // set service secret
-        $secret       = app('preferences')->get('spectre_secret', null);
-        $this->secret = $secret->data;
-    }
-
-    /**
      *
      */
     abstract public function call(): void;
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public function getAppId(): string
@@ -86,6 +62,8 @@ abstract class SpectreRequest
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param string $appId
      */
     public function setAppId(string $appId): void
@@ -94,6 +72,7 @@ abstract class SpectreRequest
     }
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public function getSecret(): string
@@ -102,6 +81,8 @@ abstract class SpectreRequest
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param string $secret
      */
     public function setSecret(string $secret): void
@@ -110,6 +91,7 @@ abstract class SpectreRequest
     }
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public function getServer(): string
@@ -118,11 +100,37 @@ abstract class SpectreRequest
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param string $privateKey
      */
     public function setPrivateKey(string $privateKey): void
     {
         $this->privateKey = $privateKey;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user       = $user;
+        $this->server     = 'https://' . config('import.options.spectre.server');
+        $this->expiresAt  = time() + 180;
+        $privateKey       = app('preferences')->getForUser($user, 'spectre_private_key', null);
+        $this->privateKey = $privateKey->data;
+
+        // set client ID
+        $appId = app('preferences')->getForUser($user, 'spectre_app_id', null);
+        if (null !== $appId && '' !== (string)$appId->data) {
+            $this->appId = $appId->data;
+        }
+
+        // set service secret
+        $secret = app('preferences')->getForUser($user, 'spectre_secret', null);
+        if (null !== $secret && '' !== (string)$secret->data) {
+            $this->secret = $secret->data;
+        }
     }
 
     /**

@@ -47,7 +47,7 @@ class AccountControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Report\AccountController::general
      */
-    public function testGeneral()
+    public function testGeneral(): void
     {
         $return = [
             'accounts'   => [],

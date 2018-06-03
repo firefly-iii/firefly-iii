@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * validation.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -21,11 +20,13 @@ declare(strict_types=1);
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 return [
     'iban'                           => 'Este não é um válido IBAN.',
-    'source_equals_destination'      => 'The source account equals the destination account',
+    'source_equals_destination'      => 'A conta de origem é igual à conta de destino',
     'unique_account_number_for_user' => 'Parece que este número de conta já está em uso.',
-    'unique_iban_for_user'           => 'It looks like this IBAN is already in use.',
+    'unique_iban_for_user'           => 'Parece que este IBAN já está em uso.',
     'deleted_user'                   => 'Devido a restrições de segurança, você não pode registrar usando este endereço de e-mail.',
     'rule_trigger_value'             => 'Este valor é inválido para o disparo selecionado.',
     'rule_action_value'              => 'Este valor é inválido para a ação selecionada.',
@@ -109,7 +110,8 @@ return [
     'in_array'                       => 'O campo :attribute não existe em :other.',
     'present'                        => 'O campo :attribute deve estar presente.',
     'amount_zero'                    => 'A quantidade total não pode ser zero',
-    'secure_password'                => 'Esta não é uma senha segura. Por favor, tente novamente. Para mais informações, visite https://goo.gl/NCh2tN',
+    'unique_piggy_bank_for_user'     => 'The name of the piggy bank must be unique.',
+    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit http://bit.ly/FF3-password-security',
     'attributes'                     => [
         'email'                   => 'endereço de e-mail',
         'description'             => 'descrição',

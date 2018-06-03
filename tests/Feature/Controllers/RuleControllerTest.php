@@ -25,19 +25,22 @@ namespace Tests\Feature\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
 use FireflyIII\Jobs\Job;
+use FireflyIII\Models\Bill;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use Illuminate\Support\Collection;
+use Log;
 use Queue;
 use Tests\TestCase;
-use Log;
+
 /**
  * Class RuleControllerTest
  *
@@ -58,26 +61,47 @@ class RuleControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::create
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $billRepos    = $this->mock(BillRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('rules.create', [1]));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
+        $response->assertViewHas('returnToBill', false);
+        $response->assertViewHas('bill', null);
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::create
-     * @covers \FireflyIII\Http\Controllers\RuleController::getPreviousTriggers
-     * @covers \FireflyIII\Http\Controllers\RuleController::getPreviousActions
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
-    public function testCreatePreviousInput()
+    public function testCreateBill(): void
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $billRepos    = $this->mock(BillRepositoryInterface::class);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $billRepos->shouldReceive('find')->withArgs([1])->andReturn(Bill::find(1))->once();
+
+        $this->be($this->user());
+        $response = $this->get(route('rules.create', [1]) . '?return=true&fromBill=1');
+        $response->assertStatus(200);
+        $response->assertSee('<ol class="breadcrumb">');
+        $response->assertViewHas('returnToBill', true);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     */
+    public function testCreatePreviousInput(): void
     {
         $old = [
             'rule-trigger'       => ['description_is'],
@@ -100,9 +124,26 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::delete
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
-    public function testDelete()
+    public function testCreateReturn(): void
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $billRepos    = $this->mock(BillRepositoryInterface::class);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        $this->be($this->user());
+        $response = $this->get(route('rules.create', [1]) . '?return=true');
+        $response->assertStatus(200);
+        $response->assertSee('<ol class="breadcrumb">');
+        $response->assertViewHas('returnToBill', true);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     */
+    public function testDelete(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -115,9 +156,9 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::destroy
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
-    public function testDestroy()
+    public function testDestroy(): void
     {
         // mock stuff
         $repository   = $this->mock(RuleRepositoryInterface::class);
@@ -134,9 +175,9 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::down
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
-    public function testDown()
+    public function testDown(): void
     {
         // mock stuff
         $repository   = $this->mock(RuleRepositoryInterface::class);
@@ -151,11 +192,11 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::edit
-     * @covers \FireflyIII\Http\Controllers\RuleController::getCurrentActions
-     * @covers \FireflyIII\Http\Controllers\RuleController::getCurrentTriggers
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
-    public function testEdit()
+    public function testEdit(): void
     {
         // mock stuff
         $groupRepos   = $this->mock(RuleGroupRepositoryInterface::class);
@@ -172,11 +213,11 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::edit
-     * @covers \FireflyIII\Http\Controllers\RuleController::getPreviousActions
-     * @covers \FireflyIII\Http\Controllers\RuleController::getPreviousTriggers
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
-    public function testEditPreviousInput()
+    public function testEditPreviousInput(): void
     {
         $old = [
             'rule-trigger'       => ['description_is'],
@@ -203,9 +244,9 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::execute
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
-    public function testExecute()
+    public function testExecute(): void
     {
         $account      = $this->user()->accounts()->find(1);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -233,12 +274,12 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::index
-     * @covers \FireflyIII\Http\Controllers\RuleController::__construct
-     * @covers \FireflyIII\Http\Controllers\RuleController::createDefaultRule
-     * @covers \FireflyIII\Http\Controllers\RuleController::createDefaultRuleGroup
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         // mock stuff
         $repository     = $this->mock(RuleRepositoryInterface::class);
@@ -259,9 +300,9 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::reorderRuleActions
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
-    public function testReorderRuleActions()
+    public function testReorderRuleActions(): void
     {
         // mock stuff
         $repository   = $this->mock(RuleRepositoryInterface::class);
@@ -277,9 +318,9 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::reorderRuleTriggers
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
-    public function testReorderRuleTriggers()
+    public function testReorderRuleTriggers(): void
     {
         // mock stuff
         $repository   = $this->mock(RuleRepositoryInterface::class);
@@ -295,9 +336,9 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::selectTransactions()
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
-    public function testSelectTransactions()
+    public function testSelectTransactions(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
@@ -309,10 +350,10 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\RuleController::store
+     * @covers       \FireflyIII\Http\Controllers\RuleController
      * @covers       \FireflyIII\Http\Requests\RuleFormRequest
      */
-    public function testStore()
+    public function testStore(): void
     {
         // mock stuff
         $repository   = $this->mock(RuleRepositoryInterface::class);
@@ -349,10 +390,10 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::testTriggers
-     * @covers \FireflyIII\Http\Controllers\RuleController::getValidTriggerList
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
-    public function testTestTriggers()
+    public function testTestTriggers(): void
     {
         $data = [
             'rule-trigger'       => ['description_is'],
@@ -377,9 +418,9 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::testTriggersByRule()
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
-    public function testTestTriggersByRule()
+    public function testTestTriggersByRule(): void
     {
 
         $matcher = $this->mock(TransactionMatcher::class);
@@ -398,10 +439,10 @@ class RuleControllerTest extends TestCase
     /**
      * This actually hits an error and not the actually code but OK.
      *
-     * @covers \FireflyIII\Http\Controllers\RuleController::testTriggers
-     * @covers \FireflyIII\Http\Controllers\RuleController::getValidTriggerList
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
-    public function testTestTriggersError()
+    public function testTestTriggersError(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
@@ -413,10 +454,10 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::testTriggers
-     * @covers \FireflyIII\Http\Controllers\RuleController::getValidTriggerList
+     * @covers \FireflyIII\Http\Controllers\RuleController
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
-    public function testTestTriggersMax()
+    public function testTestTriggersMax(): void
     {
         $data = [
             'rule-trigger'       => ['description_is'],
@@ -442,9 +483,9 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleController::up
+     * @covers \FireflyIII\Http\Controllers\RuleController
      */
-    public function testUp()
+    public function testUp(): void
     {
         // mock stuff
         $repository   = $this->mock(RuleRepositoryInterface::class);
@@ -459,10 +500,10 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\RuleController::update
+     * @covers       \FireflyIII\Http\Controllers\RuleController
      * @covers       \FireflyIII\Http\Requests\RuleFormRequest
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         // mock stuff
         $repository   = $this->mock(RuleRepositoryInterface::class);

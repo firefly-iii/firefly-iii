@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\File;
 
-use FireflyIII\Exceptions\FireflyException;
 use Crypt;
+use FireflyIII\Exceptions\FireflyException;
 
 /**
  * Class EncryptService

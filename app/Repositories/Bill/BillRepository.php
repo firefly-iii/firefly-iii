@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Factory\BillFactory;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -243,6 +244,36 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * Get all bills with these ID's.
+     *
+     * @param array $billIds
+     *
+     * @return Collection
+     */
+    public function getByIds(array $billIds): Collection
+    {
+        return $this->user->bills()->whereIn('id', $billIds)->get();
+    }
+
+    /**
+     * Get text or return empty string.
+     *
+     * @param Bill $bill
+     *
+     * @return string
+     */
+    public function getNoteText(Bill $bill): string
+    {
+        /** @var Note $note */
+        $note = $bill->notes()->first();
+        if (null !== $note) {
+            return (string)$note->text;
+        }
+
+        return '';
+    }
+
+    /**
      * @param Bill $bill
      *
      * @return string
@@ -374,11 +405,11 @@ class BillRepository implements BillRepositoryInterface
         $rules = $this->user->rules()
                             ->leftJoin('rule_actions', 'rule_actions.rule_id', '=', 'rules.id')
                             ->where('rule_actions.action_type', 'link_to_bill')
-                            ->get(['rules.id', 'rules.title', 'rule_actions.action_value']);
+                            ->get(['rules.id', 'rules.title', 'rule_actions.action_value', 'rules.active']);
         $array = [];
         foreach ($rules as $rule) {
             $array[$rule->action_value]   = $array[$rule->action_value] ?? [];
-            $array[$rule->action_value][] = ['id' => $rule->id, 'title' => $rule->title];
+            $array[$rule->action_value][] = ['id' => $rule->id, 'title' => $rule->title, 'active' => $rule->active];
         }
         $return = [];
         foreach ($collection as $bill) {
@@ -554,5 +585,4 @@ class BillRepository implements BillRepositoryInterface
 
         return $service->update($bill, $data);
     }
-
 }

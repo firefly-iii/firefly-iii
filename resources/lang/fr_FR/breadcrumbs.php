@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * breadcrumbs.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     'home'                => 'Accueil',
@@ -48,9 +49,9 @@ return [
     'edit_journal'        => 'Éditer la transaction ":description"',
     'edit_reconciliation' => 'Éditer ":description"',
     'delete_journal'      => 'Supprimer la transaction ":description"',
-    'tags'                => 'Mots-clés',
+    'tags'                => 'Tags',
     'createTag'           => 'Créer un nouveau mot-clé',
     'edit_tag'            => 'Éditer le mot-clé ":tag"',
-    'delete_tag'          => 'Supprimer le mot-clé ":tag"',
+    'delete_tag'          => 'Supprimer le tag ":tag"',
     'delete_journal_link' => 'Supprimer le lien entre les transactions',
 ];

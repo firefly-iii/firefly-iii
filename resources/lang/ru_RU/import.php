@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * import.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -21,94 +20,198 @@ declare(strict_types=1);
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 return [
-    // status of import:
+    // ALL breadcrumbs and subtitles:
+    'index_breadcrumb'                     => 'Импорт данных в Firefly III',
+    'prerequisites_breadcrumb_fake'        => 'Prerequisites for the fake import provider',
+    'prerequisites_breadcrumb_spectre'     => 'Prerequisites for Spectre',
+    'prerequisites_breadcrumb_bunq'        => 'Prerequisites for bunq',
+    'job_configuration_breadcrumb'         => 'Конфигурация для ":key"',
+    'job_status_breadcrumb'                => 'Статус импорта для ":key"',
+    'cannot_create_for_provider'           => 'Firefly III не может создать задачу для  ":provider"-провайдера.',
+
+    // index page:
+    'general_index_title'                  => 'Импортировать файл',
+    'general_index_intro'                  => 'Добро пожаловать в инструмент импорта Firefly III. Существует несколько способов импорта данных в Firefly III, отображаемых здесь в виде кнопок.',
+    // import provider strings (index):
+    'button_fake'                          => 'Поддельный (демо) импорт',
+    'button_file'                          => 'Импортировать файл',
+    'button_bunq'                          => 'Импорт из bunq',
+    'button_spectre'                       => 'Импорт с использованием Spectre',
+    'button_plaid'                         => 'Импорт с использованием Plaid',
+    'button_yodlee'                        => 'Импорт с использованием Yodlee',
+    'button_quovo'                         => 'Импорт с использованием Quovo',
+    // global config box (index)
+    'global_config_title'                  => 'Глобальные настройки импорта',
+    'global_config_text'                   => 'In the future, this box will feature preferences that apply to ALL import providers above.',
+    // prerequisites box (index)
+    'need_prereq_title'                    => 'Import prerequisites',
+    'need_prereq_intro'                    => 'Some import methods need your attention before they can be used. For example, they might require special API keys or application secrets. You can configure them here. The icon indicates if these prerequisites have been met.',
+    'do_prereq_fake'                       => 'Prerequisites for the fake provider',
+    'do_prereq_file'                       => 'Prerequisites for file imports',
+    'do_prereq_bunq'                       => 'Prerequisites for imports from bunq',
+    'do_prereq_spectre'                    => 'Prerequisites for imports using Spectre',
+    'do_prereq_plaid'                      => 'Prerequisites for imports using Plaid',
+    'do_prereq_yodlee'                     => 'Prerequisites for imports using Yodlee',
+    'do_prereq_quovo'                      => 'Prerequisites for imports using Quovo',
+    // provider config box (index)
+    'can_config_title'                     => 'Импорт конфигурации',
+    'can_config_intro'                     => 'Some import methods can be configured to your liking. They have extra settings you can tweak.',
+    'do_config_fake'                       => 'Configuration for the fake provider',
+    'do_config_file'                       => 'Configuration for file imports',
+    'do_config_bunq'                       => 'Configuration for bunq imports',
+    'do_config_spectre'                    => 'Конфигурация для импорта из Spectre',
+    'do_config_plaid'                      => 'Конфигурация для импорта из Plaid',
+    'do_config_yodlee'                     => 'Конфигурация для импорта из Yodlee',
+    'do_config_quovo'                      => 'Конфигурация для импорта из Quovo',
+
+    // prerequisites:
+    'prereq_fake_title'                    => 'Prerequisites for an import from the fake import provider',
+    'prereq_fake_text'                     => 'This fake provider requires a fake API key. It must be 32 characters long. You can use this one: 123456789012345678901234567890AA',
+    'prereq_spectre_title'                 => 'Prerequisites for an import using the Spectre API',
+    'prereq_spectre_text'                  => 'In order to import data using the Spectre API (v4), you must provide Firefly III with two secret values. They can be found on the <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
+    'prereq_spectre_pub'                   => 'Likewise, the Spectre API needs to know the public key you see below. Without it, it will not recognize you. Please enter this public key on your <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
+    'prereq_bunq_title'                    => 'Prerequisites for an import from bunq',
+    'prereq_bunq_text'                     => 'In order to import from bunq, you need to obtain an API key. You can do this through the app. Please note that the import function for bunq is in BETA. It has only been tested against the sandbox API.',
+    'prereq_bunq_ip'                       => 'bunq requires your externally facing IP address. Firefly III has tried to fill this in using <a href="https://www.ipify.org/">the ipify service</a>. Make sure this IP address is correct, or the import will fail.',
+    // prerequisites success messages:
+    'prerequisites_saved_for_fake'         => 'Ключ Fake API успешно сохранен!',
+    'prerequisites_saved_for_spectre'      => 'App ID and secret stored!',
+    'prerequisites_saved_for_bunq'         => 'API key and IP stored!',
+
+    // job configuration:
+    'job_config_apply_rules_title'         => 'Job configuration - apply your rules?',
+    'job_config_apply_rules_text'          => 'Once the fake provider has run, your rules can be applied to the transactions. This adds time to the import.',
+    'job_config_input'                     => 'Your input',
+    // job configuration for the fake provider:
+    'job_config_fake_artist_title'         => 'Enter album name',
+    'job_config_fake_artist_text'          => 'Many import routines have a few configuration steps you must go through. In the case of the fake import provider, you must answer some weird questions. In this case, enter "David Bowie" to continue.',
+    'job_config_fake_song_title'           => 'Enter song name',
+    'job_config_fake_song_text'            => 'Mention the song "Golden years" to continue with the fake import.',
+    'job_config_fake_album_title'          => 'Enter album name',
+    'job_config_fake_album_text'           => 'Some import routines require extra data halfway through the import. In the case of the fake import provider, you must answer some weird questions. Enter "Station to station" to continue.',
+    // job configuration form the file provider
+    'job_config_file_upload_title'         => 'Import setup (1/4) - Upload your file',
+    'job_config_file_upload_text'          => 'This routine will help you import files from your bank into Firefly III. ',
+    'job_config_file_upload_help'          => 'Select your file. Please make sure the file is UTF-8 encoded.',
+    'job_config_file_upload_config_help'   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration file</a>',
+    'job_config_file_upload_type_help'     => 'Select the type of file you will upload',
+    'job_config_file_upload_submit'        => 'Загрузить файлы',
+    'import_file_type_csv'                 => 'CSV (значения, разделенные запятыми)',
+    'file_not_utf8'                        => 'The file you have uploaded is not encoded as UTF-8 or ASCII. Firefly III cannot handle such files. Please use Notepad++ or Sublime to convert your file to UTF-8.',
+    'job_config_uc_title'                  => 'Import setup (2/4) - Basic file setup',
+    'job_config_uc_text'                   => 'To be able to import your file correctly, please validate the options below.',
+    'job_config_uc_header_help'            => 'Check this box if the first row of your CSV file are the column titles.',
+    'job_config_uc_date_help'              => 'Date time format in your file. Follow the format as <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
+    'job_config_uc_delimiter_help'         => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
+    'job_config_uc_account_help'           => 'If your file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the file belong to.',
+    'job_config_uc_apply_rules_title'      => 'Apply rules',
+    'job_config_uc_apply_rules_text'       => 'Applies your rules to every imported transaction. Note that this slows the import significantly.',
+    'job_config_uc_specifics_title'        => 'Bank-specific options',
+    'job_config_uc_specifics_txt'          => 'Some banks deliver badly formatted files. Firefly III can fix those automatically. If your bank delivers such files but it\'s not listed here, please open an issue on GitHub.',
+    'job_config_uc_submit'                 => 'Продолжить',
+    'invalid_import_account'               => 'You have selected an invalid account to import into.',
+    // job configuration for Spectre:
+    'job_config_spectre_login_title'       => 'Choose your login',
+    'job_config_spectre_login_text'        => 'Firefly III has found :count existing login(s) in your Spectre account. Which one would you like to use to import from?',
+    'spectre_login_status_active'          => 'Active',
+    'spectre_login_status_inactive'        => 'Inactive',
+    'spectre_login_status_disabled'        => 'Disabled',
+    'spectre_login_new_login'              => 'Login with another bank, or one of these banks with different credentials.',
+    'job_config_spectre_accounts_title'    => 'Select accounts to import from',
+    'job_config_spectre_accounts_text'     => 'You have selected ":name" (:country). You have :count account(s) available from this provider. Please select the Firefly III asset account(s) where the transactions from these accounts should be stored. Remember, in order to import data both the Firefly III account and the ":name"-account must have the same currency.',
+    'spectre_no_supported_accounts'        => 'You cannot import from this account due to a currency mismatch.',
+    'spectre_do_not_import'                => '(do not import)',
+    'spectre_no_mapping'                   => 'It seems you have not selected any accounts to import from.',
+    'imported_from_account'                => 'Imported from ":account"',
+    'spectre_account_with_number'          => 'Account :number',
+    // job configuration for bunq:
+    'job_config_bunq_accounts_title'       => 'bunq accounts',
+    'job_config_bunq_accounts_text'        => 'These are the accounts associated with your bunq account. Please select the accounts from which you want to import, and in which account the transactions must be imported.',
+    'bunq_no_mapping'                      => 'It seems you have not selected any accounts.',
+    'should_download_config'               => 'You should download <a href=":route">the configuration file</a> for this job. This will make future imports way easier.',
+    'share_config_file'                    => 'If you have imported data from a public bank, you should <a href="https://github.com/firefly-iii/import-configurations/wiki">share your configuration file</a> so it will be easy for other users to import their data. Sharing your configuration file will not expose your financial details.',
+
+    // keys from "extra" array:
+    'spectre_extra_key_iban'               => 'IBAN',
+    'spectre_extra_key_swift'              => 'SWIFT',
+    'spectre_extra_key_status'             => 'Status',
+    'spectre_extra_key_card_type'          => 'Card type',
+    'spectre_extra_key_account_name'       => 'Account name',
+    'spectre_extra_key_client_name'        => 'Client name',
+    'spectre_extra_key_account_number'     => 'Account number',
+    'spectre_extra_key_blocked_amount'     => 'Blocked amount',
+    'spectre_extra_key_available_amount'   => 'Available amount',
+    'spectre_extra_key_credit_limit'       => 'Credit limit',
+    'spectre_extra_key_interest_rate'      => 'Interest rate',
+    'spectre_extra_key_expiry_date'        => 'Expiry date',
+    'spectre_extra_key_open_date'          => 'Open date',
+    'spectre_extra_key_current_time'       => 'Current time',
+    'spectre_extra_key_current_date'       => 'Current date',
+    'spectre_extra_key_cards'              => 'Cards',
+    'spectre_extra_key_units'              => 'Units',
+    'spectre_extra_key_unit_price'         => 'Unit price',
+    'spectre_extra_key_transactions_count' => 'Transaction count',
+
+    // specifics:
+    'specific_ing_name'                    => 'ING NL',
+    'specific_ing_descr'                   => 'Create better descriptions in ING exports',
+    'specific_sns_name'                    => 'SNS / Volksbank NL',
+    'specific_sns_descr'                   => 'Trim quotes from SNS / Volksbank export files',
+    'specific_abn_name'                    => 'ABN AMRO NL',
+    'specific_abn_descr'                   => 'Fixes potential problems with ABN AMRO files',
+    'specific_rabo_name'                   => 'Rabobank NL',
+    'specific_rabo_descr'                  => 'Fixes potential problems with Rabobank files',
+    'specific_pres_name'                   => 'President\'s Choice Financial CA',
+    'specific_pres_descr'                  => 'Fixes potential problems with PC files',
+    // job configuration for file provider (stage: roles)
+    'job_config_roles_title'               => 'Import setup (3/4) - Define each column\'s role',
+    'job_config_roles_text'                => 'Each column in your CSV file contains certain data. Please indicate what kind of data the importer should expect. The option to "map" data means that you will link each entry found in the column to a value in your database. An often mapped column is the column that contains the IBAN of the opposing account. That can be easily matched to IBAN\'s present in your database already.',
+    'job_config_roles_submit'              => 'Continue',
+    'job_config_roles_column_name'         => 'Name of column',
+    'job_config_roles_column_example'      => 'Column example data',
+    'job_config_roles_column_role'         => 'Column data meaning',
+    'job_config_roles_do_map_value'        => 'Map these values',
+    'job_config_roles_no_example'          => 'No example data available',
+    'job_config_roles_fa_warning'          => 'If you mark a column as containing an amount in a foreign currency, you must also set the column that contains which currency it is.',
+    'job_config_roles_rwarning'            => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
+    'job_config_roles_colum_count'         => 'Column',
+    // job config for the file provider (stage: mapping):
+    'job_config_map_title'                 => 'Import setup (4/4) - Connect import data to Firefly III data',
+    'job_config_map_text'                  => 'In the following tables, the left value shows you information found in your uploaded file. It is your task to map this value, if possible, to a value already present in your database. Firefly will stick to this mapping. If there is no value to map to, or you do not wish to map the specific value, select nothing.',
+    'job_config_map_nothing'               => 'There is no data present in your file that you can map to existing values. Please press "Start the import" to continue.',
+    'job_config_field_value'               => 'Field value',
+    'job_config_field_mapped'              => 'Mapped to',
+    'map_do_not_map'                       => '(не сопоставлено)',
+    'job_config_map_submit'                => 'Start the import',
+
+
+    // import status page:
+    'import_with_key'                      => 'Импорт с ключем \':key\'',
     'status_wait_title'                    => 'Пожалуйста, подождите...',
     'status_wait_text'                     => 'Это сообщение исчезнет через мгновение.',
-    'status_fatal_title'                   => 'Произошла критическая ошибка',
-    'status_fatal_text'                    => 'Произошла фатальная ошибка, из-за которой невозможно восстановить процедуру импорта. Пожалуйста, ознакомьтесь с пояснением в красном блоке ниже.',
-    'status_fatal_more'                    => 'Если ошибка вызывает тайм-аут, импорт остановится на полпути. Для некоторых конфигураций серверов это означает, что сервер остановился, хотя импорт продолжает работать в фоновом режиме. Чтобы проверить, так ли это, проверьте лог-файл. Если проблема не устранена, попробуйте запустить импорт из командной строки.',
-    'status_ready_title'                   => 'Импорт готов к запуску',
-    'status_ready_text'                    => 'Импорт готов к запуску. Все необходимые настройки были сделаны. Пожалуйста, загрузите файл конфигурации. Это поможет повторно запустить импорт, если что-то пойдет не так, как планировалось. Чтобы непосредственно запустить импорт, вы можете либо выполнить следующую команду в консоли, либо запустить веб-импорт. В зависимости от вашей конфигурации импорт с помощью консоли может быть более информативен.',
-    'status_ready_noconfig_text'           => 'Импорт готов к запуску. Все необходимые настройки были сделаны. Чтобы непосредственно запустить импорт, вы можете либо выполнить следующую команду в консоли, либо запустить веб-импорт. В зависимости от вашей конфигурации импорт с помощью консоли может быть более информативен.',
-    'status_ready_config'                  => 'Загрузить конфигурацию',
-    'status_ready_start'                   => 'Начать импорт',
-    'status_ready_share'                   => 'Пожалуйста, рассмотрите возможность загрузки вашей конфигурации в <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">центр импорта конфигураций</a></strong>. Это позволит другим пользователям Firefly III проще импортировать свои файлы.',
-    'status_job_new'                       => 'Новая задача.',
-    'status_job_configuring'               => 'Импорт настроен.',
-    'status_job_configured'                => 'Импорт настроен.',
-    'status_job_running'                   => 'Импорт запущен. Пожалуйста, подождите...',
-    'status_job_error'                     => 'Это задание вызвало ошибку.',
-    'status_job_finished'                  => 'Импорт завершен!',
     'status_running_title'                 => 'Выполняется импорт',
-    'status_running_placeholder'           => 'Пожалуйста, дождитесь, пока страница обновится...',
-    'status_finished_title'                => 'Процедура импорта завершена',
-    'status_finished_text'                 => 'Ваши данные были импортированы.',
-    'status_errors_title'                  => 'Ошибки во время импорта',
-    'status_errors_single'                 => 'Во время импорта произошла ошибка. Однако, она не привела к фатальным последствиям.',
-    'status_errors_multi'                  => 'Во время импорта произошли ошибки. Однако, они не привели к фатальным последствиям.',
-    'status_bread_crumb'                   => 'Статус импорта',
-    'status_sub_title'                     => 'Статус импорта',
-    'config_sub_title'                     => 'Настройте свой импорт',
-    'status_finished_job'                  => 'Всего :count транзакций было импортировано. Они могу быть найдены по метке <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
-    'status_finished_no_tag'               => 'Firefly III не собрал никаких транзакций из вашего файла импорта.',
-    'import_with_key'                      => 'Импорт с ключем \':key\'',
+    'status_job_running'                   => 'Please wait, running the import...',
+    'status_job_storing'                   => 'Please wait, storing data...',
+    'status_job_rules'                     => 'Please wait, running rules...',
+    'status_fatal_title'                   => 'Fatal error',
+    'status_fatal_text'                    => 'The import has suffered from an error it could not recover from. Apologies!',
+    'status_fatal_more'                    => 'This (possibly very cryptic) error message is complemented by log files, which you can find on your hard drive, or in the Docker container where you run Firefly III from.',
+    'status_finished_title'                => 'Import finished',
+    'status_finished_text'                 => 'The import has finished.',
+    'finished_with_errors'                 => 'There were some errors during the import. Please review them carefully.',
+    'unknown_import_result'                => 'Unknown import result',
+    'result_no_transactions'               => 'No transactions have been imported. Perhaps they were all duplicates is simply no transactions where present to be imported. Perhaps the log files can tell you what happened. If you import data regularly, this is normal.',
+    'result_one_transaction'               => 'Exactly one transaction has been imported. It is stored under tag <a href=":route" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a> where you can inspect it further.',
+    'result_many_transactions'             => 'Firefly III has imported :count transactions. They are stored under tag <a href=":route" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a> where you can inspect them further.',
 
-    // file, upload something
-    'file_upload_title'                    => 'Настройка импорта (1/4) - Загрузите ваш файл',
-    'file_upload_text'                     => 'Эта процедура поможет вам импортировать файлы из вашего банка в Firefly III. Пожалуйста, прочитайте справку, доступную в правом верхнем углу этой страницы.',
-    'file_upload_fields'                   => 'Поля',
-    'file_upload_help'                     => 'Выберите файл',
-    'file_upload_config_help'              => 'Если вы ранее импортировали данные в Firefly III, у вас может быть файл конфигурации, который позволит вам загрузить готовые настойки. Для некоторых банков другие пользователи любезно предоставили свои <a href="https://github.com/firefly-iii/import-configurations/wiki">файлы конфигурации</a>',
-    'file_upload_type_help'                => 'Выберите тип загружаемого файла',
-    'file_upload_submit'                   => 'Загрузить файлы',
 
-    // file, upload types
-    'import_file_type_csv'                 => 'CSV (значения, разделенные запятыми)',
+    // general errors and warnings:
+    'bad_job_status'                       => 'To access this page, your import job cannot have status ":status".',
 
-    // file, initial config for CSV
-    'csv_initial_title'                    => 'Настройка импорта (2/4) - Основные настройки CSV-импорта',
-    'csv_initial_text'                     => 'Чтобы импорт данных прошёл успешно, пожалуйста проверьте несколько параметров.',
-    'csv_initial_box'                      => 'Основные параметры импорта CSV',
-    'csv_initial_box_title'                => 'Основные параметры импорта CSV',
-    'csv_initial_header_help'              => 'Установите этот флажок, если первая строка CSV-файла содержит заголовки столбцов.',
-    'csv_initial_date_help'                => 'Формат даты и времени в вашем CSV-файле. Придерживайтесь формата, описанного <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">на этой</a> странице. По умолчанию дату будут анализироваться на соответствие такому формату: :dateExample.',
-    'csv_initial_delimiter_help'           => 'Выберите разделитель полей, который используется в вашем файле. Если вы не уверены, помните, что запятая - это самый безопасный вариант.',
-    'csv_initial_import_account_help'      => 'Если ваш CSV-файл НЕ СОДЕРЖИТ информацию о ваших счетах, используйте этот выпадающий список, чтобы выбрать, к какому счёту относятся транзакции в CVS-файле.',
-    'csv_initial_submit'                   => 'Перейти к шагу 3/4',
-
-    // file, new options:
-    'file_apply_rules_title'               => 'Применить правила',
-    'file_apply_rules_description'         => 'Применить ваши правила. Обратите внимание, что это значительно замедляет импорт.',
-    'file_match_bills_title'               => 'Соответствующие счета к оплате',
-    'file_match_bills_description'         => 'Сопоставление свои счета к оплате с вновь созданными расходами. Помните, что это может существенно замедлить импорт.',
-
-    // file, roles config
-    'csv_roles_title'                      => 'Настройка импорта (3/4). Определите роль каждого столбца',
-    'csv_roles_text'                       => 'Каждый столбец в файле CSV содержит определённые данные. Укажите, какие данные должен ожидать импортер. Опция «сопоставить» данные привяжет каждую запись, найденную в столбце, к значению в вашей базе данных. Часто отображаемый столбец - это столбец, содержащий IBAN спонсорского счёта. Его можно легко сопоставить с существующим в вашей базе данных IBAN.',
-    'csv_roles_table'                      => 'Таблица',
-    'csv_roles_column_name'                => 'Название столбца',
-    'csv_roles_column_example'             => 'Пример данных в столбце',
-    'csv_roles_column_role'                => 'Значение в столбце',
-    'csv_roles_do_map_value'               => 'Сопоставьте эти значения',
-    'csv_roles_column'                     => 'Столбец',
-    'csv_roles_no_example_data'            => 'Нет доступных данных для примера',
-    'csv_roles_submit'                     => 'Перейти к шагу 4/4',
-
-    // not csv, but normal warning
-    'roles_warning'                        => 'Пожалуйста, отметьте хотя бы один столбец как столбец с суммой. Также целесообразно выбрать столбец для описания, даты и спонсорского счёта.',
-    'foreign_amount_warning'               => 'Если вы пометите этот столбец, как содержащий сумму в иностранной валюте, вы также должны указать столбец, который указывает, какая именно это валюта.',
-
-    // file, map data
-    'file_map_title'                       => 'Настройки импорта (4/4) - Сопоставление данных импорта с данными Firefly III',
-    'file_map_text'                        => 'В следующих таблицах значение слева отображает информацию, найденную в загруженном файле. Ваша задача - сопоставить это значение (если это возможно) со значением, уже имеющимся в вашей базе данных. Firefly будет придерживаться этого сопоставления. Если для сопоставления нет значения или вы не хотите отображать определённое значение, ничего не выбирайте.',
-    'file_map_field_value'                 => 'Значение поля',
-    'file_map_field_mapped_to'             => 'Сопоставлено с',
-    'map_do_not_map'                       => '(не сопоставлено)',
-    'file_map_submit'                      => 'Начать импорт',
-    'file_nothing_to_map'                  => 'В вашем файле нет данных, которые можно сопоставить с существующими значениями. Нажмите «Начать импорт», чтобы продолжить.',
-
-    // map things.
+    // column roles for CSV import:
     'column__ignore'                       => '(игнорировать этот столбец)',
     'column_account-iban'                  => 'Счет актива (IBAN)',
     'column_account-id'                    => 'ID основного счёта (соответствующий FF3)',
@@ -158,48 +261,4 @@ return [
     'column_note'                          => 'Примечания',
     'column_internal-reference'            => 'Внутренняя ссылка',
 
-    // prerequisites
-    'prerequisites'                        => 'Требования',
-
-    // bunq
-    'bunq_prerequisites_title'             => 'Требования для импорта из bunq',
-    'bunq_prerequisites_text'              => 'Чтобы импортировать из bunq, вам нужно получить ключ API. Вы можете сделать это через приложение. Обратите внимание, что функция импорта для bunq находится в бета-тестирования. Было протестировано только API песочницы (sandbox).',
-    'bunq_prerequisites_text_ip'           => 'Для работы с Bunq необходимо указать ваш внешний IP-адрес. Firefly III попытался узнать ваш адрес с помощью <a href="https://www.ipify.org/">службы ipify</a>. Убедитесь, что этот IP-адрес верен, иначе импорт не будет выполнен.',
-    'bunq_do_import'                       => 'Да, импортировать с этого счёта',
-    'bunq_accounts_title'                  => 'Счета Bunq',
-    'bunq_accounts_text'                   => 'Эти счета связаны с вашей учётной записью bunq. Выберите счета, данные о о которых вы хотите импортировать, и счёт, на который будут импортированы транзакции.',
-
-    // Spectre
-    'spectre_title'                        => 'Импорт с использованием Spectre',
-    'spectre_prerequisites_title'          => 'Требования для импорта с использованием Spectre',
-    'spectre_prerequisites_text'           => 'Чтобы импортировать данные с помощью Spectre API (v4), вы должны предоставить Firefly III два секретных значения. Их можно найти на странице <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
-    'spectre_enter_pub_key'                => 'Импорт будет работать только если вы введёте этот ключ безопасности на <a href="https://www.saltedge.com/clients/profile/secrets">странице с ключами</a> в своём аккаунте.',
-    'spectre_accounts_title'               => 'Выберите счёта, с которых будет производиться импорт',
-    'spectre_accounts_text'                => 'Каждый счёт в списке слева был найден в в Spectre и может быть импортирован в Firefly III. Выберите основной счёт, на котором нужно сохранить импортируемые транзакции. Если вы не хотите импортировать данные с какого-либо конкретного счёта, снимите соответствующий флажок.',
-    'spectre_do_import'                    => 'Да, импортировать с этого счёта',
-    'spectre_no_supported_accounts'        => 'Вы не можете импортировать с этого счёта из-за несоответствия валюты.',
-
-    // keys from "extra" array:
-    'spectre_extra_key_iban'               => 'IBAN',
-    'spectre_extra_key_swift'              => 'SWIFT',
-    'spectre_extra_key_status'             => 'Статус',
-    'spectre_extra_key_card_type'          => 'Тип карты',
-    'spectre_extra_key_account_name'       => 'Название счёта',
-    'spectre_extra_key_client_name'        => 'Имя клиента',
-    'spectre_extra_key_account_number'     => 'Номер счёта',
-    'spectre_extra_key_blocked_amount'     => 'Заблокированная сумма',
-    'spectre_extra_key_available_amount'   => 'Доступная сумма',
-    'spectre_extra_key_credit_limit'       => 'Кредитный лимит',
-    'spectre_extra_key_interest_rate'      => 'Процентная ставка',
-    'spectre_extra_key_expiry_date'        => 'Дата окончания',
-    'spectre_extra_key_open_date'          => 'Дата открытия',
-    'spectre_extra_key_current_time'       => 'Текущее время',
-    'spectre_extra_key_current_date'       => 'Текущая дата',
-    'spectre_extra_key_cards'              => 'Карты',
-    'spectre_extra_key_units'              => 'Единицы',
-    'spectre_extra_key_unit_price'         => 'Цена за единицу',
-    'spectre_extra_key_transactions_count' => 'Количество транзакций',
-
-    // various other strings:
-    'imported_from_account'                => 'Импортировано со счёта ":account"',
 ];

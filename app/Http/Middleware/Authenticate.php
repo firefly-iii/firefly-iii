@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * Authenticate.php
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
@@ -103,7 +104,9 @@ class Authenticate
                     }
                 }
             } catch (QueryException $e) {
+                // @codeCoverageIgnoreStart
                 throw new FireflyException('It seems the database has not yet been initialized. Did you run the correct upgrade or installation commands?');
+                // @codeCoverageIgnoreEnd
             }
 
             return $this->auth->authenticate();

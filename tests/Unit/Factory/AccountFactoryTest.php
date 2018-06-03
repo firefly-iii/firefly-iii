@@ -42,7 +42,7 @@ class AccountFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\AccountMetaFactory
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      */
-    public function testCreateBasic()
+    public function testCreateBasic(): void
     {
 
         $data = [
@@ -81,7 +81,7 @@ class AccountFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\AccountMetaFactory
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      */
-    public function testCreateBasicEmptyVb()
+    public function testCreateBasicEmptyVb(): void
     {
 
         $data = [
@@ -120,7 +120,7 @@ class AccountFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\AccountMetaFactory
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      */
-    public function testCreateBasicCC()
+    public function testCreateBasicCC(): void
     {
 
         $data = [
@@ -167,7 +167,7 @@ class AccountFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\AccountMetaFactory
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      */
-    public function testCreateBasicExpense()
+    public function testCreateBasicExpense(): void
     {
 
         $data = [
@@ -206,7 +206,7 @@ class AccountFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\AccountMetaFactory
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      */
-    public function testCreateBasicExpenseFullType()
+    public function testCreateBasicExpenseFullType(): void
     {
 
         $data = [
@@ -244,7 +244,7 @@ class AccountFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\AccountMetaFactory
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      */
-    public function testCreateBasicIB()
+    public function testCreateBasicIB(): void
     {
 
         $data = [
@@ -290,7 +290,7 @@ class AccountFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\AccountMetaFactory
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      */
-    public function testCreateBasicIBZero()
+    public function testCreateBasicIBZero(): void
     {
 
         $data = [
@@ -335,7 +335,7 @@ class AccountFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\AccountMetaFactory
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      */
-    public function testCreateBasicIban()
+    public function testCreateBasicIban(): void
     {
 
         $data = [
@@ -374,7 +374,7 @@ class AccountFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\AccountMetaFactory
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      */
-    public function testCreateBasicInvalidIban()
+    public function testCreateBasicInvalidIban(): void
     {
 
         $data = [
@@ -413,7 +413,7 @@ class AccountFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\AccountMetaFactory
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      */
-    public function testCreateBasicNegativeIB()
+    public function testCreateBasicNegativeIB(): void
     {
 
         $data = [
@@ -459,7 +459,7 @@ class AccountFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\AccountMetaFactory
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      */
-    public function testCreateBasicNotes()
+    public function testCreateBasicNotes(): void
     {
 
         $data = [
@@ -500,7 +500,7 @@ class AccountFactoryTest extends TestCase
      *
      * @covers \FireflyIII\Factory\AccountFactory
      */
-    public function testCreateExisting()
+    public function testCreateExisting(): void
     {
         $existing = $this->user()->accounts()->where('account_type_id', 3)->first();
         $data     = [

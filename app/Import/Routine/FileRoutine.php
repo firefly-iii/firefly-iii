@@ -22,15 +22,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Routine;
 
-use Carbon\Carbon;
-use DB;
-use FireflyIII\Import\FileProcessor\FileProcessorInterface;
-use FireflyIII\Import\Storage\ImportStorage;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
-use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use Illuminate\Support\Collection;
+use FireflyIII\Support\Import\Routine\File\FileProcessorInterface;
 use Log;
 
 /**
@@ -38,271 +33,62 @@ use Log;
  */
 class FileRoutine implements RoutineInterface
 {
-    /** @var Collection */
-    public $errors;
-    /** @var Collection */
-    public $journals;
-    /** @var int */
-    public $lines = 0;
     /** @var ImportJob */
-    private $job;
-
+    private $importJob;
     /** @var ImportJobRepositoryInterface */
     private $repository;
 
     /**
-     * ImportRoutine constructor.
-     */
-    public function __construct()
-    {
-        $this->journals = new Collection;
-        $this->errors   = new Collection;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getErrors(): Collection
-    {
-        return $this->errors;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getJournals(): Collection
-    {
-        return $this->journals;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLines(): int
-    {
-        return $this->lines;
-    }
-
-    /**
+     * At the end of each run(), the import routine must set the job to the expected status.
      *
+     * The final status of the routine must be "provider_finished".
+     *
+     * @throws FireflyException
      */
-    public function run(): bool
+    public function run(): void
     {
-        if ('configured' !== $this->getStatus()) {
-            Log::error(sprintf('Job %s is in state "%s" so it cannot be started.', $this->job->key, $this->getStatus()));
+        Log::debug(sprintf('Now in run() for file routine with status: %s', $this->importJob->status));
+        if ($this->importJob->status === 'ready_to_run') {
+            $this->repository->setStatus($this->importJob, 'running');
+            // get processor, depending on file type
+            // is just CSV for now.
+            $processor = $this->getProcessor();
+            $processor->setImportJob($this->importJob);
+            $transactions = $processor->run();
 
-            return false;
+            $this->repository->setStatus($this->importJob, 'provider_finished');
+            $this->repository->setStage($this->importJob, 'final');
+            $this->repository->setTransactions($this->importJob, $transactions);
+
+            return;
         }
-        set_time_limit(0);
-        Log::info(sprintf('Start with import job %s', $this->job->key));
-
-        // total steps: 6
-        $this->setTotalSteps(6);
-
-        $importObjects = $this->getImportObjects();
-        $this->lines   = $importObjects->count();
-        $this->addStep();
-
-        // total steps can now be extended. File has been scanned. 7 steps per line:
-        $this->addTotalSteps(7 * $this->lines);
-
-        // once done, use storage thing to actually store them:
-        Log::info(sprintf('Returned %d valid objects from file processor', $this->lines));
-
-        $storage = $this->storeObjects($importObjects);
-        $this->addStep();
-        Log::debug('Back in run()');
-
-        Log::debug('Updated job...');
-        Log::debug(sprintf('%d journals in $storage->journals', $storage->journals->count()));
-        $this->journals = $storage->journals;
-        $this->errors   = $storage->errors;
-
-        Log::debug('Going to call createImportTag()');
-
-        // create tag, link tag to all journals:
-        $this->createImportTag();
-        $this->addStep();
-
-        // update job:
-        $this->setStatus('finished');
-
-        Log::info(sprintf('Done with import job %s', $this->job->key));
-
-        return true;
+        throw new FireflyException(sprintf('Import routine cannot handle status "%s"', $this->importJob->status)); // @codeCoverageIgnore
     }
 
     /**
-     * @param ImportJob $job
+     * @param ImportJob $importJob
+     *
+     * @return void
      */
-    public function setJob(ImportJob $job)
+    public function setImportJob(ImportJob $importJob): void
     {
-        $this->job        = $job;
+        $this->importJob  = $importJob;
         $this->repository = app(ImportJobRepositoryInterface::class);
-        $this->repository->setUser($job->user);
+        $this->repository->setUser($importJob->user);
     }
 
     /**
-     * @return Collection
-     */
-    protected function getImportObjects(): Collection
-    {
-        $objects  = new Collection;
-        $fileType = $this->getConfig()['file-type'] ?? 'csv';
-        // will only respond to "file"
-        $class = config(sprintf('import.options.file.processors.%s', $fileType));
-        /** @var FileProcessorInterface $processor */
-        $processor = app($class);
-        $processor->setJob($this->job);
-
-        if ('configured' === $this->getStatus()) {
-            // set job as "running"...
-            $this->setStatus('running');
-
-            Log::debug('Job is configured, start with run()');
-            $processor->run();
-            $objects = $processor->getObjects();
-        }
-
-        return $objects;
-    }
-
-    /**
-     * Shorthand method.
-     */
-    private function addStep()
-    {
-        $this->repository->addStepsDone($this->job, 1);
-    }
-
-    /**
-     * Shorthand
+     * Return the appropriate file routine handler for
+     * the file type of the job.
      *
-     * @param int $steps
+     * @return FileProcessorInterface
      */
-    private function addTotalSteps(int $steps)
+    private function getProcessor(): FileProcessorInterface
     {
-        $this->repository->addTotalSteps($this->job, $steps);
-    }
+        $config = $this->repository->getConfiguration($this->importJob);
+        $type   = $config['file-type'] ?? 'csv';
+        $class  = config(sprintf('import.options.file.processors.%s', $type));
 
-    /**
-     *
-     */
-    private function createImportTag(): Tag
-    {
-        Log::debug('Now in createImportTag()');
-
-        if ($this->journals->count() < 1) {
-            Log::info(sprintf('Will not create tag, %d journals imported.', $this->journals->count()));
-
-            return new Tag;
-        }
-        $this->addTotalSteps($this->journals->count() + 2);
-
-        /** @var TagRepositoryInterface $repository */
-        $repository = app(TagRepositoryInterface::class);
-        $repository->setUser($this->job->user);
-        $data = [
-            'tag'         => trans('import.import_with_key', ['key' => $this->job->key]),
-            'date'        => new Carbon,
-            'description' => null,
-            'latitude'    => null,
-            'longitude'   => null,
-            'zoomLevel'   => null,
-            'tagMode'     => 'nothing',
-        ];
-        $tag  = $repository->store($data);
-        $this->addStep();
-        $extended        = $this->getExtendedStatus();
-        $extended['tag'] = $tag->id;
-        $this->setExtendedStatus($extended);
-
-        Log::debug(sprintf('Created tag #%d ("%s")', $tag->id, $tag->tag));
-        Log::debug('Looping journals...');
-        $journalIds = $this->journals->pluck('id')->toArray();
-        $tagId      = $tag->id;
-        foreach ($journalIds as $journalId) {
-            Log::debug(sprintf('Linking journal #%d to tag #%d...', $journalId, $tagId));
-            DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journalId, 'tag_id' => $tagId]);
-            $this->addStep();
-        }
-        Log::info(sprintf('Linked %d journals to tag #%d ("%s")', $this->journals->count(), $tag->id, $tag->tag));
-        $this->addStep();
-
-        return $tag;
-    }
-
-    /**
-     * Shorthand method
-     *
-     * @return array
-     */
-    private function getConfig(): array
-    {
-        return $this->repository->getConfiguration($this->job);
-    }
-
-    /**
-     * @return array
-     */
-    private function getExtendedStatus(): array
-    {
-        return $this->repository->getExtendedStatus($this->job);
-    }
-
-    /**
-     * Shorthand method.
-     *
-     * @return string
-     */
-    private function getStatus(): string
-    {
-        return $this->repository->getStatus($this->job);
-    }
-
-    /**
-     * @param array $extended
-     */
-    private function setExtendedStatus(array $extended): void
-    {
-        $this->repository->setExtendedStatus($this->job, $extended);
-    }
-
-    /**
-     * Shorthand
-     *
-     * @param string $status
-     */
-    private function setStatus(string $status): void
-    {
-        $this->repository->setStatus($this->job, $status);
-    }
-
-    /**
-     * Shorthand
-     *
-     * @param int $steps
-     */
-    private function setTotalSteps(int $steps)
-    {
-        $this->repository->setTotalSteps($this->job, $steps);
-    }
-
-    /**
-     * @param Collection $objects
-     *
-     * @return ImportStorage
-     */
-    private function storeObjects(Collection $objects): ImportStorage
-    {
-        $config  = $this->getConfig();
-        $storage = new ImportStorage;
-        $storage->setJob($this->job);
-        $storage->setDateFormat($config['date-format']);
-        $storage->setObjects($objects);
-        $storage->store();
-        Log::info('Back in storeObjects()');
-
-        return $storage;
+        return app($class);
     }
 }

@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * list.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     'buttons'                 => 'Tuşlar',
@@ -111,10 +112,15 @@ return [
     'sepa-cc'                 => 'SEPA Clearing Code',
     'sepa-ep'                 => 'SEPA External Purpose',
     'sepa-ci'                 => 'SEPA Creditor Identifier',
+    'external_id'             => 'External ID',
     'account_at_bunq'         => 'Account with bunq',
     'file_name'               => 'File name',
     'file_size'               => 'File size',
     'file_type'               => 'File type',
     'attached_to'             => 'Attached to',
     'file_exists'             => 'File exists',
+    'spectre_bank'            => 'Bank',
+    'spectre_last_use'        => 'Last login',
+    'spectre_status'          => 'Status',
+    'bunq_payment_id'         => 'bunq payment ID',
 ];

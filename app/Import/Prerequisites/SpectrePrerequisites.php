@@ -24,10 +24,8 @@ namespace FireflyIII\Import\Prerequisites;
 
 use FireflyIII\Models\Preference;
 use FireflyIII\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 use Log;
-use Preferences;
 
 /**
  * This class contains all the routines necessary to connect to Spectre.
@@ -38,7 +36,7 @@ class SpectrePrerequisites implements PrerequisitesInterface
     private $user;
 
     /**
-     * Returns view name that allows user to fill in prerequisites. Currently asks for the API key.
+     * Returns view name that allows user to fill in prerequisites.
      *
      * @return string
      */
@@ -54,37 +52,29 @@ class SpectrePrerequisites implements PrerequisitesInterface
      */
     public function getViewParameters(): array
     {
-        $publicKey    = $this->getPublicKey();
-        $subTitle     = (string)trans('import.spectre_title');
-        $subTitleIcon = 'fa-archive';
+        /** @var Preference $appIdPreference */
+        $appIdPreference = app('preferences')->getForUser($this->user, 'spectre_app_id', null);
+        $appId           = null === $appIdPreference ? '' : $appIdPreference->data;
+        /** @var Preference $secretPreference */
+        $secretPreference = app('preferences')->getForUser($this->user, 'spectre_secret', null);
+        $secret           = null === $secretPreference ? '' : $secretPreference->data;
+        $publicKey        = $this->getPublicKey();
 
-        return compact('publicKey', 'subTitle', 'subTitleIcon');
+        return [
+            'app_id'     => $appId,
+            'secret'     => $secret,
+            'public_key' => $publicKey,
+        ];
     }
 
     /**
-     * Returns if this import method has any special prerequisites such as config
-     * variables or other things. The only thing we verify is the presence of the API key. Everything else
-     * tumbles into place: no installation token? Will be requested. No device server? Will be created. Etc.
+     * Indicate if all prerequisites have been met.
      *
      * @return bool
      */
-    public function hasPrerequisites(): bool
+    public function isComplete(): bool
     {
-        $values = [
-            Preferences::getForUser($this->user, 'spectre_app_id', false),
-            Preferences::getForUser($this->user, 'spectre_secret', false),
-        ];
-        /** @var Preference $value */
-        foreach ($values as $value) {
-            if (false === $value->data || null === $value->data) {
-                Log::info(sprintf('Config var "%s" is missing.', $value->name));
-
-                return true;
-            }
-        }
-        Log::debug('All prerequisites are here!');
-
-        return false;
+        return $this->hasAppId() && $this->hasSecret();
     }
 
     /**
@@ -95,22 +85,22 @@ class SpectrePrerequisites implements PrerequisitesInterface
     public function setUser(User $user): void
     {
         $this->user = $user;
-
     }
 
     /**
-     * This method responds to the user's submission of an API key. It tries to register this instance as a new Firefly III device.
-     * If this fails, the error is returned in a message bag and the user is notified (this is fairly friendly).
+     * This method responds to the user's submission of an API key. Should do nothing but store the value.
      *
-     * @param Request $request
+     * Errors must be returned in the message bag under the field name they are requested by.
+     *
+     * @param array $data
      *
      * @return MessageBag
      */
-    public function storePrerequisites(Request $request): MessageBag
+    public function storePrerequisites(array $data): MessageBag
     {
         Log::debug('Storing Spectre API keys..');
-        Preferences::setForUser($this->user, 'spectre_app_id', $request->get('app_id'));
-        Preferences::setForUser($this->user, 'spectre_secret', $request->get('secret'));
+        app('preferences')->setForUser($this->user, 'spectre_app_id', $data['app_id'] ?? null);
+        app('preferences')->setForUser($this->user, 'spectre_secret', $data['secret'] ?? null);
         Log::debug('Done!');
 
         return new MessageBag;
@@ -139,8 +129,8 @@ class SpectrePrerequisites implements PrerequisitesInterface
         // Extract the public key from $res to $pubKey
         $pubKey = openssl_pkey_get_details($res);
 
-        Preferences::setForUser($this->user, 'spectre_private_key', $privKey);
-        Preferences::setForUser($this->user, 'spectre_public_key', $pubKey['key']);
+        app('preferences')->setForUser($this->user, 'spectre_private_key', $privKey);
+        app('preferences')->setForUser($this->user, 'spectre_public_key', $pubKey['key']);
         Log::debug('Created key pair');
 
     }
@@ -153,15 +143,47 @@ class SpectrePrerequisites implements PrerequisitesInterface
     private function getPublicKey(): string
     {
         Log::debug('get public key');
-        $preference = Preferences::getForUser($this->user, 'spectre_public_key', null);
+        $preference = app('preferences')->getForUser($this->user, 'spectre_public_key', null);
         if (null === $preference) {
             Log::debug('public key is null');
             // create key pair
             $this->createKeyPair();
         }
-        $preference = Preferences::getForUser($this->user, 'spectre_public_key', null);
+        $preference = app('preferences')->getForUser($this->user, 'spectre_public_key', null);
         Log::debug('Return public key for user');
 
         return $preference->data;
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasAppId(): bool
+    {
+        $appId = app('preferences')->getForUser($this->user, 'spectre_app_id', null);
+        if (null === $appId) {
+            return false;
+        }
+        if ('' === (string)$appId->data) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasSecret(): bool
+    {
+        $secret = app('preferences')->getForUser($this->user, 'spectre_secret', null);
+        if (null === $secret) {
+            return false;
+        }
+        if ('' === (string)$secret->data) {
+            return false;
+        }
+
+        return true;
     }
 }

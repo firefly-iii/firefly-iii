@@ -41,7 +41,7 @@ class AttachmentHelperTest extends TestCase
     /**
      * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::getAttachmentLocation
      */
-    public function testGetAttachmentLocation()
+    public function testGetAttachmentLocation(): void
     {
         $attachment = Attachment::first();
         $helper     = new AttachmentHelper;
@@ -61,7 +61,7 @@ class AttachmentHelperTest extends TestCase
      * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::getMessages
      * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::getErrors
      */
-    public function testInvalidMime()
+    public function testInvalidMime(): void
     {
         $journal = TransactionJournal::first();
         $helper  = new AttachmentHelper;
@@ -90,7 +90,7 @@ class AttachmentHelperTest extends TestCase
      * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::getErrors
      * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::getAttachments
      */
-    public function testSave()
+    public function testSave(): void
     {
         Storage::fake('upload');
 
@@ -118,7 +118,7 @@ class AttachmentHelperTest extends TestCase
      * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::__construct
      * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::saveAttachmentsForModel
      */
-    public function testSaveEmpty()
+    public function testSaveEmpty(): void
     {
         $journal = TransactionJournal::first();
         $helper  = new AttachmentHelper;
@@ -141,7 +141,7 @@ class AttachmentHelperTest extends TestCase
      * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::getErrors
      * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::getAttachments
      */
-    public function testSaveSecond()
+    public function testSaveSecond(): void
     {
         $journal = TransactionJournal::first();
         $helper  = new AttachmentHelper;

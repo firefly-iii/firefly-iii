@@ -28,11 +28,11 @@ use FireflyIII\Factory\TagFactory;
 use FireflyIII\Factory\TransactionJournalMetaFactory;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
+use Log;
 
 /**
  * Trait JournalServiceTrait
  *
- * @package FireflyIII\Services\Internal\Support
  */
 trait JournalServiceTrait
 {
@@ -90,14 +90,20 @@ trait JournalServiceTrait
      */
     protected function storeMeta(TransactionJournal $journal, array $data, string $field): void
     {
+
         if (!isset($data[$field])) {
+            Log::debug(sprintf('Want to store meta-field "%s", but no value.', $field));
+
             return;
         }
         $set = [
             'journal' => $journal,
             'name'    => $field,
-            'data'    => $data[$field],
+            'data'    => (string)$data[$field],
         ];
+
+        Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $field, (string)$data[$field]));
+
         /** @var TransactionJournalMetaFactory $factory */
         $factory = app(TransactionJournalMetaFactory::class);
         $factory->updateOrCreate($set);

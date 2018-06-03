@@ -36,7 +36,7 @@ class SetDescriptionTest extends TestCase
      * @covers \FireflyIII\TransactionRules\Actions\SetDescription::__construct()
      * @covers \FireflyIII\TransactionRules\Actions\SetDescription::act()
      */
-    public function testAct()
+    public function testAct(): void
     {
         // get journal, give fixed description
         $description          = 'text' . random_int(1, 1000);

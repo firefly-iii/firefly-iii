@@ -65,7 +65,7 @@ class SplitControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::updateWithPrevious
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromJournal
      */
-    public function testEdit()
+    public function testEdit(): void
     {
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos       = $this->mock(AccountRepositoryInterface::class);
@@ -97,9 +97,6 @@ class SplitControllerTest extends TestCase
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('0');
         $journalRepos->shouldReceive('getJournalCategoryName')->andReturn('Some');
 
-        // mock for new account list and for account array
-        $accountRepos->shouldReceive('getAccountsByType')
-                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->twice();
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
@@ -118,7 +115,7 @@ class SplitControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::updateWithPrevious
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromJournal
      */
-    public function testEditOldInput()
+    public function testEditOldInput(): void
     {
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos       = $this->mock(AccountRepositoryInterface::class);
@@ -137,10 +134,6 @@ class SplitControllerTest extends TestCase
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-
-        // mock for new account list and for account array
-        $accountRepos->shouldReceive('getAccountsByType')
-                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->twice();
 
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn($deposit);
@@ -218,7 +211,7 @@ class SplitControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
      */
-    public function testEditOpeningBalance()
+    public function testEditOpeningBalance(): void
     {
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepository  = $this->mock(AccountRepositoryInterface::class);
@@ -240,7 +233,7 @@ class SplitControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::updateWithPrevious
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromJournal
      */
-    public function testEditSingle()
+    public function testEditSingle(): void
     {
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepository  = $this->mock(AccountRepositoryInterface::class);
@@ -270,9 +263,6 @@ class SplitControllerTest extends TestCase
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-        // mock for new account list and for account array
-        $accountRepository->shouldReceive('getAccountsByType')
-                          ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->twice();
 
         $this->be($this->user());
         $response = $this->get(route('transactions.split.edit', [$deposit->id]));
@@ -285,7 +275,7 @@ class SplitControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::update
      * @covers       \FireflyIII\Http\Requests\SplitJournalFormRequest
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepository  = $this->mock(AccountRepositoryInterface::class);
@@ -341,7 +331,7 @@ class SplitControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::isOpeningBalance
      * @covers       \FireflyIII\Http\Requests\SplitJournalFormRequest
      */
-    public function testUpdateOpeningBalance()
+    public function testUpdateOpeningBalance(): void
     {
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepository  = $this->mock(AccountRepositoryInterface::class);
@@ -383,7 +373,7 @@ class SplitControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::update
      * @covers       \FireflyIII\Http\Requests\SplitJournalFormRequest
      */
-    public function testUpdateTransfer()
+    public function testUpdateTransfer(): void
     {
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepository  = $this->mock(AccountRepositoryInterface::class);
@@ -439,7 +429,7 @@ class SplitControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::update
      * @covers       \FireflyIII\Http\Requests\SplitJournalFormRequest
      */
-    public function testUpdateWithdrawal()
+    public function testUpdateWithdrawal(): void
     {
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepository  = $this->mock(AccountRepositoryInterface::class);

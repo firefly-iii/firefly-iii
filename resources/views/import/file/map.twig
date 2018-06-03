@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, job) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, importJob) }}
 {% endblock %}
 
 {% block content %}
@@ -11,15 +11,15 @@
         <div class="col-lg-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ trans('import.file_map_title') }}</h3>
+                    <h3 class="box-title">{{ trans('import.job_config_map_title') }}</h3>
                 </div>
                 <div class="box-body">
                     <p>
-                        {{ trans('import.file_map_text') }}
+                        {{ trans('import.job_config_map_text') }}
                     </p>
                     {% if data|length == 0 %}
                         <p class="text-danger">
-                            {{ trans('import.file_nothing_to_map') }}
+                            {{ trans('import.job_config_map_nothing') }}
                         </p>
                     {% endif %}
                 </div>
@@ -27,12 +27,11 @@
 
         </div>
     </div>
-    <form action="{{ route('import.configure.post', job.key) }}" method="post">
+    <form action="{{ route('import.job.configuration.post', importJob.key) }}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
 
-
-        {% for field in data %}
+        {% for index, field in data %}
             <div class="row">
                 <div class="col-lg-12">
                     <div class="box">
@@ -43,8 +42,8 @@
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
-                                    <th style="width:50%;">{{ trans('import.file_map_field_value') }}</th>
-                                    <th>{{ trans('import.file_map_field_mapped_to') }}</th>
+                                    <th style="width:50%;">{{ trans('import.job_config_field_value') }}</th>
+                                    <th>{{ trans('import.job_config_field_mapped') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -54,9 +53,9 @@
                                             <code>{{ option }}</code>
                                         </td>
                                         <td>
-                                            {{ Form.select('mapping['~field.index~']['~option~']',
+                                            {{ Form.select('mapping['~index~']['~option~']',
                                                 field.options,
-                                                job.configuration['column-mapping-config'][field.index][option], {class: 'form-control'}) }}
+                                                importJob.configuration['column-mapping-config'][index][option], {class: 'form-control'}) }}
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -74,7 +73,7 @@
                 <div class="box">
                     <div class="box-body">
                         <button type="submit" class="btn btn-success pull-right">
-                            {{ trans('import.file_map_submit') }} <i class="fa fa-arrow-right"></i>
+                            {{ trans('import.job_config_map_submit') }} <i class="fa fa-arrow-right"></i>
                         </button>
                     </div>
                 </div>

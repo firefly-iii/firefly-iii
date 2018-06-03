@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * firefly.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     // general stuff:
@@ -179,6 +180,7 @@ return [
     'authorization_request_intro'                => '<strong>:client</strong> is requesting permission to access your financial administration. Would you like to authorize <strong>:client</strong> to access these records?',
     'scopes_will_be_able'                        => 'This application will be able to:',
     'button_authorize'                           => 'Authorize',
+    'none_in_select_list'                        => '(none)',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',
@@ -667,6 +669,7 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'bill_will_automatch'                     => 'Fatura uygun işlemlere otomatik olarak bağlandı',
     'skips_over'                              => 'atla',
     'bill_store_error'                        => 'An unexpected error occurred while storing your new bill. Please check the log files',
+    'list_inactive_rule'                      => 'inactive rule',
 
     // accounts:
     'details_for_asset'                       => '":name" Varlık hesabı ayrıntıları',
@@ -802,6 +805,7 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'opt_group_savingAsset'                   => 'Tasarruf Hesapları',
     'opt_group_sharedAsset'                   => 'Paylaşılan varlık hesapları',
     'opt_group_ccAsset'                       => 'Kredi Kartı',
+    'opt_group_cashWalletAsset'               => 'Cash wallets',
     'notes'                                   => 'Notes',
     'unknown_journal_error'                   => 'Could not store the transaction. Please check the log files.',
 
@@ -817,6 +821,7 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'language'                                => 'Language',
     'new_savings_account'                     => ':bank_name savings account',
     'cash_wallet'                             => 'Cash wallet',
+    'currency_not_present' => 'If the currency you normally use is not listed do not worry. You can create your own currencies under Options > Currencies.',
 
     // home page:
     'yourAccounts'                            => 'Hesaplarınız',
@@ -1014,6 +1019,7 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'remove_money_from_piggy_title'           => '":name" kumbarasından para çek',
     'add'                                     => 'Ekle',
     'no_money_for_piggy'                      => 'Bu kumbaraya koyacak paran yok.',
+    'suggested_savings_per_month'             => 'Suggested per month',
 
     'remove'                    => 'Kaldır',
     'max_amount_add'            => 'Ekleyebileceğiniz azami tutar',
@@ -1149,27 +1155,9 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'no_edit_multiple_left'                 => 'Düzenlemek için geçerli İşlemler seçmediniz.',
     'cannot_convert_split_journal'          => 'Bölünmüş bir İşlemi dönüştüremezsiniz',
 
-    // import bread crumbs and titles:
-    'import'                                => 'İçe aktar',
-    'import_data'                           => 'Veriyi içe aktar',
-    'import_general_index_file'             => 'Bir Dosyayı içe aktar',
-    'import_from_bunq'                      => 'Bunq\'dan aktar',
-    'import_using_spectre'                  => 'Spectre kullanarak içe aktar',
-    'import_using_plaid'                    => 'Palid kullanarak içe aktar',
-    'import_config_bread_crumb'             => 'Aktarımınızı oluşturunuz',
-
-    // import index page:
+    // Import page (general strings only)
     'import_index_title'                    => 'Firefly III\'e veri aktarma',
-    'import_index_sub_title'                => 'İndeks',
-    'import_general_index_intro'            => 'Welcome to Firefly III\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
-    'upload_error'                          => 'The file you have uploaded could not be processed. Possibly it is of an invalid file type or encoding. The log files will have more information.',
-    'reset_import_settings_title'           => 'Reset import configuration',
-    'reset_import_settings_text'            => 'You can use these links to reset your import settings for specific providers. This is useful when bad settings stop you from importing data.',
-    'reset_settings_bunq'                   => 'Remove bunq API key, local external IP address and bunq related RSA keys.',
-    'reset_settings_spectre'                => 'Remove Spectre secrets and ID\'s. This will also remove your Spectre keypair. Remember to update the new one.',
-    'settings_reset_for_bunq'               => 'Bunq settings reset.',
-    'settings_reset_for_spectre'            => 'Spectre settings reset.',
-
+    'import_data'                           => 'Veriyi içe aktar',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Bir Sandstorm.io ortamında Firefly III kullanıyorsanız, bu işlev kullanılamaz.',

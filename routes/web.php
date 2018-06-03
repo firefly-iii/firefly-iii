@@ -442,29 +442,52 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'import', 'as' => 'import.'], function () {
 
+    // index
     Route::get('', ['uses' => 'Import\IndexController@index', 'as' => 'index']);
 
+    // create new job
+    Route::get('create/{import_provider}', ['uses' => 'Import\IndexController@create', 'as' => 'create']);
+
+    // set global prerequisites for an import source, possible with a job already attached.
+    Route::get('prerequisites/{import_provider}/{importJob?}', ['uses' => 'Import\PrerequisitesController@index', 'as' => 'prerequisites.index']);
+    Route::post('prerequisites/{import_provider}/{importJob?}', ['uses' => 'Import\PrerequisitesController@post', 'as' => 'prerequisites.post']);
+
+    // configure a job:
+    Route::get('job/configuration/{importJob}', ['uses' => 'Import\JobConfigurationController@index', 'as' => 'job.configuration.index']);
+    Route::post('job/configuration/{importJob}', ['uses' => 'Import\JobConfigurationController@post', 'as' => 'job.configuration.post']);
+
+    // get status of a job. This is also the landing page of a job after job config is complete.
+    Route::get('job/status/{importJob}', ['uses' => 'Import\JobStatusController@index', 'as' => 'job.status.index']);
+    Route::get('job/json/{importJob}', ['uses' => 'Import\JobStatusController@json', 'as' => 'job.status.json']);
+
+    // start the job!
+    Route::any('job/start/{importJob}', ['uses' => 'Import\JobStatusController@start', 'as' => 'job.start']);
+    Route::any('job/store/{importJob}', ['uses' => 'Import\JobStatusController@store', 'as' => 'job.store']);
+
+    // download config:
+    Route::get('download/{importJob}', ['uses' => 'Import\IndexController@download', 'as' => 'job.download']);
+
     // import method prerequisites:
-    Route::get('prerequisites/{bank}', ['uses' => 'Import\PrerequisitesController@index', 'as' => 'prerequisites']);
-    Route::post('prerequisites/{bank}', ['uses' => 'Import\PrerequisitesController@post', 'as' => 'prerequisites.post']);
-    Route::get('reset/{bank}', ['uses' => 'Import\IndexController@reset', 'as' => 'reset']);
+    #
+    #
+    #Route::get('reset/{bank}', ['uses' => 'Import\IndexController@reset', 'as' => 'reset']);
 
     // create the job:
-    Route::get('create/{bank}', ['uses' => 'Import\IndexController@create', 'as' => 'create-job']);
+    #Route::get('create/{bank}', ['uses' => 'Import\IndexController@create', 'as' => 'create-job']);
 
     // configure the job:
-    Route::get('configure/{importJob}', ['uses' => 'Import\ConfigurationController@index', 'as' => 'configure']);
-    Route::post('configure/{importJob}', ['uses' => 'Import\ConfigurationController@post', 'as' => 'configure.post']);
+
+    #Route::post('configure/{importJob}', ['uses' => 'Import\ConfigurationController@post', 'as' => 'configure.post']);
 
     // get status of any job:
-    Route::get('status/{importJob}', ['uses' => 'Import\StatusController@index', 'as' => 'status']);
-    Route::get('json/{importJob}', ['uses' => 'Import\StatusController@json', 'as' => 'status.json']);
+    #Route::get('status/{importJob}', ['uses' => 'Import\StatusController@index', 'as' => 'status']);
+    #Route::get('json/{importJob}', ['uses' => 'Import\StatusController@json', 'as' => 'status.json']);
 
     // start a job
-    Route::any('start/{importJob}', ['uses' => 'Import\IndexController@start', 'as' => 'start']);
+    #Route::any('start/{importJob}', ['uses' => 'Import\IndexController@start', 'as' => 'start']);
 
     // download config
-    Route::get('download/{importJob}', ['uses' => 'Import\IndexController@download', 'as' => 'download']);
+    #Route::get('download/{importJob}', ['uses' => 'Import\IndexController@download', 'as' => 'download']);
 }
 );
 
@@ -495,7 +518,7 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'json', 'as' => 'json.'], function () {
 
-        // for auto complete
+    // for auto complete
     Route::get('expense-accounts', ['uses' => 'Json\AutoCompleteController@expenseAccounts', 'as' => 'expense-accounts']);
     Route::get('all-accounts', ['uses' => 'Json\AutoCompleteController@allAccounts', 'as' => 'all-accounts']);
     Route::get('revenue-accounts', ['uses' => 'Json\AutoCompleteController@revenueAccounts', 'as' => 'revenue-accounts']);
@@ -564,7 +587,8 @@ Route::group(
     Route::post('destroy/{piggyBank}', ['uses' => 'PiggyBankController@destroy', 'as' => 'destroy']);
     Route::post('add/{piggyBank}', ['uses' => 'PiggyBankController@postAdd', 'as' => 'add']);
     Route::post('remove/{piggyBank}', ['uses' => 'PiggyBankController@postRemove', 'as' => 'remove']);
-    Route::post('sort', ['uses' => 'PiggyBankController@order', 'as' => 'order']);
+
+    Route::post('set-order/{piggyBank}', ['uses' => 'PiggyBankController@setOrder', 'as' => 'set-order']);
 
 
 }

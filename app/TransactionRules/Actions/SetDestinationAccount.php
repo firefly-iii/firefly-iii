@@ -102,6 +102,9 @@ class SetDestinationAccount implements ActionInterface
         // update destination transaction with new destination account:
         // get destination transaction:
         $transaction             = $journal->transactions()->where('amount', '>', 0)->first();
+        if(null === $transaction) {
+            return true;
+        }
         $transaction->account_id = $this->newDestinationAccount->id;
         $transaction->save();
         $journal->touch();
@@ -131,7 +134,7 @@ class SetDestinationAccount implements ActionInterface
     /**
      *
      */
-    private function findExpenseAccount()
+    private function findExpenseAccount(): void
     {
         $account = $this->repository->findByName($this->action->action_value, [AccountType::EXPENSE]);
         if (null === $account) {

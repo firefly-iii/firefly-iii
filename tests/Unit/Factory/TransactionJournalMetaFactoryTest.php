@@ -37,7 +37,7 @@ class TransactionJournalMetaFactoryTest extends TestCase
     /**
      * @covers \FireflyIII\Factory\TransactionJournalMetaFactory
      */
-    public function testUpdateOrCreateBasic()
+    public function testUpdateOrCreateBasic(): void
     {
         /** @var TransactionJournal $journal */
         $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
@@ -58,7 +58,7 @@ class TransactionJournalMetaFactoryTest extends TestCase
     /**
      * @covers \FireflyIII\Factory\TransactionJournalMetaFactory
      */
-    public function testUpdateOrCreateDate()
+    public function testUpdateOrCreateDate(): void
     {
         /** @var TransactionJournal $journal */
         $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
@@ -79,7 +79,7 @@ class TransactionJournalMetaFactoryTest extends TestCase
     /**
      * @covers \FireflyIII\Factory\TransactionJournalMetaFactory
      */
-    public function testUpdateOrCreateDeleteExisting()
+    public function testUpdateOrCreateDeleteExisting(): void
     {
         /** @var TransactionJournal $journal */
         $journal = $this->user()->transactionJournals()->where('transaction_type_id', 3)->first();
@@ -90,6 +90,7 @@ class TransactionJournalMetaFactoryTest extends TestCase
                 'data'                   => 'bye!',
             ]
         );
+        $count = $journal->transactionJournalMeta()->count();
 
         $set = [
             'journal' => $journal,
@@ -100,13 +101,13 @@ class TransactionJournalMetaFactoryTest extends TestCase
         $factory = app(TransactionJournalMetaFactory::class);
         $factory->updateOrCreate($set);
 
-        $this->assertEquals(0, $journal->transactionJournalMeta()->count());
+        $this->assertEquals($count-1, $journal->transactionJournalMeta()->count());
     }
 
     /**
      * @covers \FireflyIII\Factory\TransactionJournalMetaFactory
      */
-    public function testUpdateOrCreateEmpty()
+    public function testUpdateOrCreateEmpty(): void
     {
         /** @var TransactionJournal $journal */
         $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
@@ -127,7 +128,7 @@ class TransactionJournalMetaFactoryTest extends TestCase
     /**
      * @covers \FireflyIII\Factory\TransactionJournalMetaFactory
      */
-    public function testUpdateOrCreateExistingEmpty()
+    public function testUpdateOrCreateExistingEmpty(): void
     {
         /** @var TransactionJournal $journal */
         $journal = $this->user()->transactionJournals()->inRandomOrder()->first();

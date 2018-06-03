@@ -50,7 +50,7 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Report\BudgetController::general
      */
-    public function testGeneral()
+    public function testGeneral(): void
     {
         $return = [];
         $helper = $this->mock(BudgetReportHelperInterface::class);
@@ -65,7 +65,7 @@ class BudgetControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Report\BudgetController::period
      * @covers \FireflyIII\Http\Controllers\Report\BudgetController::filterBudgetPeriodReport
      */
-    public function testPeriod()
+    public function testPeriod(): void
     {
         $first      = [1 => ['entries' => ['1', '1']]];
         $second     = ['entries' => ['1', '1']];

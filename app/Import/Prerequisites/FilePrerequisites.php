@@ -22,21 +22,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Prerequisites;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 
 /**
+ * @codeCoverageIgnore
+ *
  * This class contains all the routines necessary to import from a file. Hint: there are none.
  */
 class FilePrerequisites implements PrerequisitesInterface
 {
-    /** @var User */
-    private $user;
-
     /**
-     * Returns view name that allows user to fill in prerequisites. Currently asks for the API key.
+     * Returns view name that allows user to fill in prerequisites.
      *
      * @return string
      */
@@ -56,23 +53,13 @@ class FilePrerequisites implements PrerequisitesInterface
     }
 
     /**
-     * Returns if this import method has any special prerequisites such as config
-     * variables or other things. The only thing we verify is the presence of the API key. Everything else
-     * tumbles into place: no installation token? Will be requested. No device server? Will be created. Etc.
-     *
-     * True if prerequisites. False if not.
+     * Indicate if all prerequisites have been met.
      *
      * @return bool
-     *
-     * @throws FireflyException
      */
-    public function hasPrerequisites(): bool
+    public function isComplete(): bool
     {
-        if ($this->user->hasRole('demo')) {
-            throw new FireflyException('Apologies, the demo user cannot import files.');
-        }
-
-        return false;
+        return true;
     }
 
     /**
@@ -82,19 +69,19 @@ class FilePrerequisites implements PrerequisitesInterface
      */
     public function setUser(User $user): void
     {
-        $this->user = $user;
 
     }
 
     /**
-     * This method responds to the user's submission of an API key. It tries to register this instance as a new Firefly III device.
-     * If this fails, the error is returned in a message bag and the user is notified (this is fairly friendly).
+     * This method responds to the user's submission of an API key. Should do nothing but store the value.
      *
-     * @param Request $request
+     * Errors must be returned in the message bag under the field name they are requested by.
+     *
+     * @param array $data
      *
      * @return MessageBag
      */
-    public function storePrerequisites(Request $request): MessageBag
+    public function storePrerequisites(array $data): MessageBag
     {
         return new MessageBag;
     }

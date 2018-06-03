@@ -68,6 +68,6 @@ class ConfirmEmailChangeMail extends Mailable
     public function build()
     {
         return $this->view('emails.confirm-email-change-html')->text('emails.confirm-email-change-text')
-                    ->subject('Your Firefly III email address has changed.');
+                    ->subject('Your Firefly III email address has changed');
     }
 }

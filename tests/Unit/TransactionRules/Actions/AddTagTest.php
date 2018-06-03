@@ -37,7 +37,7 @@ class AddTagTest extends TestCase
      * @covers \FireflyIII\TransactionRules\Actions\AddTag::__construct
      * @covers \FireflyIII\TransactionRules\Actions\AddTag::act()
      */
-    public function testActExistingTag()
+    public function testActExistingTag(): void
     {
         $tag     = Tag::inRandomOrder()->whereNull('deleted_at')->first();
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
@@ -55,7 +55,7 @@ class AddTagTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Actions\AddTag::act()
      */
-    public function testActNoTag()
+    public function testActNoTag(): void
     {
         $journal                  = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $ruleAction               = new RuleAction;

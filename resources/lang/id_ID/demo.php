@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * demo.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -21,6 +20,8 @@ declare(strict_types=1);
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 return [
     'no_demo_text'           => 'Maaf, tidak ada teks penjelasan-penjelasan tambahan <abbr title=":route">laman halaman</abbr> ini.',
     'see_help_icon'          => 'Namun, ikon <i class="fa fa-question-circle"></i> di pojok kanan atas mungkin memberi tahu Anda lebih banyak.',
@@ -32,5 +33,5 @@ return [
     'currencies-index'       => 'Firefly III mendukung banyak mata uang. Meski default ke Euro itu bisa diatur ke US Dollar dan banyak mata uang lainnya. Seperti yang bisa Anda lihat, sejumlah kecil mata uang telah disertakan namun Anda dapat menambahkannya sendiri jika menginginkannya. Mengubah mata uang default tidak akan mengubah mata uang dari transaksi yang ada namun: Firefly III mendukung penggunaan beberapa mata uang pada saat bersamaan.',
     'transactions-index'     => 'Biaya ini, deposito dan transfer tidak terlalu imajinatif. Mereka telah dihasilkan secara otomatis.',
     'piggy-banks-index'      => 'Seperti yang bisa Anda lihat, ada tiga celengan. Gunakan tombol plus dan minus untuk mempengaruhi jumlah uang di setiap celengan. Klik nama celengan untuk melihat administrasi masing-masing celengan.',
-    'import-index'           => 'Tentu saja, file CSV manapun bisa diimpor ke Firefly III',
+    'import-index'           => 'Any CSV file can be imported into Firefly III. It also supports importing data from bunq and Spectre. Other banks and financial aggregators will be implemented in the future. As a demo-user however, you can only see the "fake"-provider in action. It will generate some random transactions to show you how the process works.',
 ];

@@ -49,7 +49,7 @@ class TwoFactorControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController::index
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         $this->be($this->user());
 
@@ -72,7 +72,7 @@ class TwoFactorControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController::index
      */
-    public function testIndexNo2FA()
+    public function testIndexNo2FA(): void
     {
         $this->be($this->user());
 
@@ -95,7 +95,7 @@ class TwoFactorControllerTest extends TestCase
      * @covers                   \FireflyIII\Http\Controllers\Auth\TwoFactorController::index
      * @expectedExceptionMessage Your two factor authentication secret is empty
      */
-    public function testIndexNoSecret()
+    public function testIndexNoSecret(): void
     {
         $this->be($this->user());
 
@@ -118,7 +118,7 @@ class TwoFactorControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController::lostTwoFactor
      */
-    public function testLostTwoFactor()
+    public function testLostTwoFactor(): void
     {
         $this->be($this->user());
 
@@ -141,7 +141,7 @@ class TwoFactorControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController::postIndex
      */
-    public function testPostIndex()
+    public function testPostIndex(): void
     {
         $data = ['code' => '123456'];
         Google2FA::shouldReceive('verifyKey')->andReturn(true)->once();

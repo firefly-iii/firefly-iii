@@ -66,6 +66,6 @@ class UndoEmailChangeMail extends Mailable
     public function build()
     {
         return $this->view('emails.undo-email-change-html')->text('emails.undo-email-change-text')
-                    ->subject('Your Firefly III email address has changed.');
+                    ->subject('Your Firefly III email address has changed');
     }
 }

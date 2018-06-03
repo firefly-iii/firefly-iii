@@ -32,6 +32,7 @@ use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\OpposingAccountFilter;
 use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Helpers\Filter\SplitIndicatorFilter;
+use FireflyIII\Helpers\Filter\TransactionViewFilter;
 use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
@@ -60,6 +61,7 @@ use Steam;
  */
 class JournalCollector implements JournalCollectorInterface
 {
+
     /** @var array */
     private $accountIds = [];
     /** @var int */
@@ -106,7 +108,8 @@ class JournalCollector implements JournalCollectorInterface
         ];
     /** @var array */
     private $filters = [InternalTransferFilter::class];
-
+    /** @var bool */
+    private $ignoreCache = false;
     /** @var bool */
     private $joinedBudget = false;
     /** @var bool */
@@ -257,12 +260,15 @@ class JournalCollector implements JournalCollectorInterface
         foreach ($this->filters as $filter) {
             $cache->addProperty((string)$filter);
         }
-        if ($cache->has()) {
+        if (false === $this->ignoreCache && $cache->has()) {
             Log::debug(sprintf('Return cache of query with ID "%s".', $key));
 
             return $cache->get(); // @codeCoverageIgnore
-        }
 
+        }
+        if (true === $this->ignoreCache) {
+            Log::debug('Ignore cache in journal collector.');
+        }
         /** @var Collection $set */
         $set = $this->query->get(array_values($this->fields));
 
@@ -313,6 +319,16 @@ class JournalCollector implements JournalCollectorInterface
         $journals = new LengthAwarePaginator($set, $this->count, $this->limit, $this->page);
 
         return $journals;
+    }
+
+    /**
+     * @return JournalCollectorInterface
+     */
+    public function ignoreCache(): JournalCollectorInterface
+    {
+        $this->ignoreCache = true;
+
+        return $this;
     }
 
     /**
@@ -768,6 +784,7 @@ class JournalCollector implements JournalCollectorInterface
             NegativeAmountFilter::class   => new NegativeAmountFilter,
             SplitIndicatorFilter::class   => new SplitIndicatorFilter,
             CountAttachmentsFilter::class => new CountAttachmentsFilter,
+            TransactionViewFilter::class  => new TransactionViewFilter,
         ];
         Log::debug(sprintf('Will run %d filters on the set.', \count($this->filters)));
         foreach ($this->filters as $enabled) {
@@ -784,7 +801,7 @@ class JournalCollector implements JournalCollectorInterface
     /**
      *
      */
-    private function joinBudgetTables()
+    private function joinBudgetTables(): void
     {
         if (!$this->joinedBudget) {
             // join some extra tables:
@@ -809,7 +826,7 @@ class JournalCollector implements JournalCollectorInterface
     /**
      *
      */
-    private function joinCategoryTables()
+    private function joinCategoryTables(): void
     {
         if (!$this->joinedCategory) {
             // join some extra tables:
@@ -839,7 +856,7 @@ class JournalCollector implements JournalCollectorInterface
     /**
      *
      */
-    private function joinOpposingTables()
+    private function joinOpposingTables(): void
     {
         if (!$this->joinedOpposing) {
             Log::debug('joinedOpposing is false');
@@ -871,7 +888,7 @@ class JournalCollector implements JournalCollectorInterface
     /**
      *
      */
-    private function joinTagTables()
+    private function joinTagTables(): void
     {
         if (!$this->joinedTag) {
             // join some extra tables:

@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * validation.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     'iban'                           => 'Questo non è un IBAN valido.',
@@ -109,7 +110,8 @@ return [
     'in_array'                       => ':attribute il campo non esiste in :other.',
     'present'                        => ':attribute il campo deve essere presente.',
     'amount_zero'                    => 'L\'importo totale non può essere zero',
-    'secure_password'                => 'Questa non è una password sicura. Per favore riprova. Per ulteriori informazioni, visitare https://goo.gl/NCh2tN',
+    'unique_piggy_bank_for_user'     => 'The name of the piggy bank must be unique.',
+    'secure_password'                => 'Questa non è una password sicura. Per favore riprova. Per ulteriori informazioni, visitare http://bit.ly/FF3-password-security',
     'attributes'                     => [
         'email'                   => 'indirizzo email',
         'description'             => 'descrizione',
@@ -135,15 +137,15 @@ return [
         'rule-action.3'           => 'regola azione #3',
         'rule-action.4'           => 'regola azione #4',
         'rule-action.5'           => 'regola azione #5',
-        'rule-trigger-value.1'    => 'regola valore trigger #1',
-        'rule-trigger-value.2'    => 'regola valore trigger #2',
-        'rule-trigger-value.3'    => 'regola valore trigger #3',
-        'rule-trigger-value.4'    => 'regola valore trigger #4',
-        'rule-trigger-value.5'    => 'regola valore trigger #5',
-        'rule-trigger.1'          => 'esegui regola #1',
-        'rule-trigger.2'          => 'esegui regola #2',
-        'rule-trigger.3'          => 'esegui regola #3',
-        'rule-trigger.4'          => 'esegui regola #4',
-        'rule-trigger.5'          => 'esegui regola #5',
+        'rule-trigger-value.1'    => 'valore #1 del trigger della regola',
+        'rule-trigger-value.2'    => 'valore #2 del trigger della regola',
+        'rule-trigger-value.3'    => 'valore #3 del trigger della regola',
+        'rule-trigger-value.4'    => 'valore #4 del trigger della regola',
+        'rule-trigger-value.5'    => 'valore #5 del trigger della regola',
+        'rule-trigger.1'          => 'trigger #1 della regola',
+        'rule-trigger.2'          => 'trigger #2 della regola',
+        'rule-trigger.3'          => 'trigger #3 della regola',
+        'rule-trigger.4'          => 'trigger #4 della regola',
+        'rule-trigger.5'          => 'trigger #5 della regola',
     ],
 ];

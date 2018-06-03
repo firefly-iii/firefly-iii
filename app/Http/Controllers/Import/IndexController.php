@@ -24,16 +24,13 @@ namespace FireflyIII\Http\Controllers\Import;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Http\Middleware\IsDemoUser;
-use FireflyIII\Import\Routine\RoutineInterface;
+use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use Illuminate\Http\Request;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Response as LaravelResponse;
 use Log;
-use Preferences;
 use View;
-
 
 /**
  * Class FileController.
@@ -42,6 +39,9 @@ class IndexController extends Controller
 {
     /** @var ImportJobRepositoryInterface */
     public $repository;
+
+    /** @var UserRepositoryInterface */
+    public $userRepository;
 
     /**
      *
@@ -54,33 +54,96 @@ class IndexController extends Controller
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-archive');
                 app('view')->share('title', trans('firefly.import_index_title'));
-                $this->repository = app(ImportJobRepositoryInterface::class);
+                $this->repository     = app(ImportJobRepositoryInterface::class);
+                $this->userRepository = app(UserRepositoryInterface::class);
 
                 return $next($request);
             }
         );
-        $this->middleware(IsDemoUser::class)->except(['index']);
     }
 
     /**
-     * Creates a new import job for $bank with the default (global) job configuration.
+     * Creates a new import job for $importProvider.
      *
-     * @param string $bank
+     * @param string $importProvider
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
      * @throws FireflyException
      */
-    public function create(string $bank)
+    public function create(string $importProvider)
     {
-        if (true === !config(sprintf('import.enabled.%s', $bank))) {
-            throw new FireflyException(sprintf('Cannot import from "%s" at this time.', $bank)); // @codeCoverageIgnore
+        Log::debug(sprintf('Will create job for provider "%s"', $importProvider));
+        // can only create "fake" for demo user.
+        $providers = array_keys($this->getProviders());
+        if (!\in_array($importProvider, $providers, true)) {
+            Log::error(sprintf('%s-provider is disabled. Cannot create job.', $importProvider));
+            session()->flash('warning', trans('import.cannot_create_for_provider', ['provider' => $importProvider]));
+
+            return redirect(route('import.index'));
         }
 
-        $importJob = $this->repository->create($bank);
+        $importJob = $this->repository->create($importProvider);
+        Log::debug(sprintf('Created job #%d for provider %s', $importJob->id, $importProvider));
 
-        // from here, always go to configure step.
-        return redirect(route('import.configure', [$importJob->key]));
+        $hasPreReq = (bool)config(sprintf('import.has_prereq.%s', $importProvider));
+        $hasConfig = (bool)config(sprintf('import.has_job_config.%s', $importProvider));
+        // if job provider has no prerequisites:
+        if ($hasPreReq === false) {
+            Log::debug('Provider has no prerequisites. Continue.');
+            // if job provider also has no configuration:
+            if ($hasConfig === false) {
+                // @codeCoverageIgnoreStart
+                Log::debug('Provider needs no configuration for job. Job is ready to start.');
+                $this->repository->updateStatus($importJob, 'ready_to_run');
+                Log::debug('Redirect to status-page.');
+
+                return redirect(route('import.job.status.index', [$importJob->key]));
+                // @codeCoverageIgnoreEnd
+            }
+
+            // update job to say "has_prereq".
+            $this->repository->setStatus($importJob, 'has_prereq');
+
+            // redirect to job configuration.
+            Log::debug('Redirect to configuration.');
+
+            return redirect(route('import.job.configuration.index', [$importJob->key]));
+        }
+        Log::debug('Job provider has prerequisites.');
+        // if need to set prerequisites, do that first.
+        $class = (string)config(sprintf('import.prerequisites.%s', $importProvider));
+        if (!class_exists($class)) {
+            throw new FireflyException(sprintf('No class to handle prerequisites for "%s".', $importProvider)); // @codeCoverageIgnore
+        }
+        /** @var PrerequisitesInterface $providerPre */
+        $providerPre = app($class);
+        $providerPre->setUser(auth()->user());
+
+        if (!$providerPre->isComplete()) {
+            Log::debug('Job provider prerequisites are not yet filled in. Redirect to prerequisites-page.');
+
+            // redirect to global prerequisites
+            return redirect(route('import.prerequisites.index', [$importProvider, $importJob->key]));
+        }
+        Log::debug('Prerequisites are complete.');
+
+        // update job to say "has_prereq".
+        $this->repository->setStatus($importJob, 'has_prereq');
+        if ($hasConfig === false) {
+            // @codeCoverageIgnoreStart
+            Log::debug('Provider has no configuration. Job is ready to start.');
+            $this->repository->updateStatus($importJob, 'ready_to_run');
+            Log::debug('Redirect to status-page.');
+
+            return redirect(route('import.job.status.index', [$importJob->key]));
+            // @codeCoverageIgnoreEnd
+        }
+        Log::debug('Job has configuration. Redirect to job-config.');
+
+        // Otherwise just redirect to job configuration.
+        return redirect(route('import.job.configuration.index', [$importJob->key]));
+
     }
 
     /**
@@ -90,22 +153,18 @@ class IndexController extends Controller
      *
      * @return LaravelResponse
      */
-    public function download(ImportJob $job)
+    public function download(ImportJob $job): LaravelResponse
     {
         Log::debug('Now in download()', ['job' => $job->key]);
-        $config = $job->configuration;
-
+        $config = $this->repository->getConfiguration($job);
         // This is CSV import specific:
-        $config['column-roles-complete']   = false;
-        $config['column-mapping-complete'] = false;
-        $config['initial-config-complete'] = false;
-        $config['has-file-upload']         = false;
-        $config['delimiter']               = "\t" === $config['delimiter'] ? 'tab' : $config['delimiter'];
-        unset($config['stage']);
+        $config['delimiter'] = $config['delimiter'] ?? ',';
+        $config['delimiter'] = "\t" === $config['delimiter'] ? 'tab' : $config['delimiter'];
 
-        $result = json_encode($config, JSON_PRETTY_PRINT);
-        $name   = sprintf('"%s"', addcslashes('import-configuration-' . date('Y-m-d') . '.json', '"\\'));
-
+        // this prevents private information from escaping
+        $config['column-mapping-config'] = [];
+        $result                          = json_encode($config, JSON_PRETTY_PRINT);
+        $name                            = sprintf('"%s"', addcslashes('import-configuration-' . date('Y-m-d') . '.json', '"\\'));
         /** @var LaravelResponse $response */
         $response = response($result, 200);
         $response->header('Content-disposition', 'attachment; filename=' . $name)
@@ -127,78 +186,60 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $subTitle     = trans('firefly.import_index_sub_title');
+        $providers    = $this->getProviders();
+        $subTitle     = trans('import.index_breadcrumb');
         $subTitleIcon = 'fa-home';
-        $routines     = config('import.enabled');
 
-        return view('import.index', compact('subTitle', 'subTitleIcon', 'routines'));
+        return view('import.index', compact('subTitle', 'subTitleIcon', 'providers'));
     }
 
     /**
-     * @param Request $request
-     * @param string  $bank
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return array
      */
-    public function reset(Request $request, string $bank)
+    private function getProviders(): array
     {
-        if ($bank === 'bunq') {
-            // remove bunq related preferences.
-            Preferences::delete('bunq_api_key');
-            Preferences::delete('bunq_server_public_key');
-            Preferences::delete('bunq_private_key');
-            Preferences::delete('bunq_public_key');
-            Preferences::delete('bunq_installation_token');
-            Preferences::delete('bunq_installation_id');
-            Preferences::delete('bunq_device_server_id');
-            Preferences::delete('external_ip');
+        // get and filter all import routines:
+        /** @var array $config */
+        $providerNames = array_keys(config('import.enabled'));
+        $providers     = [];
+        $isDemoUser    = $this->userRepository->hasRole(auth()->user(), 'demo');
+        $isDebug       = (bool)config('app.debug');
+        foreach ($providerNames as $providerName) {
+            //Log::debug(sprintf('Now with provider %s', $providerName));
+            // only consider enabled providers
+            $enabled        = (bool)config(sprintf('import.enabled.%s', $providerName));
+            $allowedForDemo = (bool)config(sprintf('import.allowed_for_demo.%s', $providerName));
+            $allowedForUser = (bool)config(sprintf('import.allowed_for_user.%s', $providerName));
+            if ($enabled === false) {
+                //Log::debug('Provider is not enabled. NEXT!');
+                continue;
+            }
 
+            if ($isDemoUser === true && $allowedForDemo === false) {
+                //Log::debug('User is demo and this provider is not allowed for demo user. NEXT!');
+                continue;
+            }
+            if ($isDemoUser === false && $allowedForUser === false && $isDebug === false) {
+                //Log::debug('User is not demo and this provider is not allowed for such users. NEXT!');
+                continue; // @codeCoverageIgnore
+            }
+
+            $providers[$providerName] = [
+                'has_prereq' => (bool)config('import.has_prereq.' . $providerName),
+            ];
+            $class                    = (string)config(sprintf('import.prerequisites.%s', $providerName));
+            $result                   = false;
+            if ($class !== '' && class_exists($class)) {
+                //Log::debug('Will not check prerequisites.');
+                /** @var PrerequisitesInterface $object */
+                $object = app($class);
+                $object->setUser(auth()->user());
+                $result = $object->isComplete();
+            }
+            $providers[$providerName]['prereq_complete'] = $result;
         }
+        Log::debug(sprintf('Enabled providers: %s', json_encode(array_keys($providers))));
 
-        if ($bank === 'spectre') {
-            // remove spectre related preferences:
-            Preferences::delete('spectre_client_id');
-            Preferences::delete('spectre_app_secret');
-            Preferences::delete('spectre_service_secret');
-            Preferences::delete('spectre_app_id');
-            Preferences::delete('spectre_secret');
-            Preferences::delete('spectre_private_key');
-            Preferences::delete('spectre_public_key');
-            Preferences::delete('spectre_customer');
-        }
-
-        Preferences::mark();
-        $request->session()->flash('info', (string)trans('firefly.settings_reset_for_' . $bank));
-
-        return redirect(route('import.index'));
-
-    }
-
-    /**
-     * @param ImportJob $job
-     *
-     * @return \Illuminate\Http\JsonResponse
-     *
-     * @throws FireflyException
-     */
-    public function start(ImportJob $job)
-    {
-        $type      = $job->file_type;
-        $key       = sprintf('import.routine.%s', $type);
-        $className = config($key);
-        if (null === $className || !class_exists($className)) {
-            throw new FireflyException(sprintf('Cannot find import routine class for job of type "%s".', $type)); // @codeCoverageIgnore
-        }
-
-        /** @var RoutineInterface $routine */
-        $routine = app($className);
-        $routine->setJob($job);
-        $result = $routine->run();
-
-        if ($result) {
-            return response()->json(['run' => 'ok']);
-        }
-
-        throw new FireflyException('Job did not complete successfully. Please review the log files.');
+        return $providers;
     }
 }

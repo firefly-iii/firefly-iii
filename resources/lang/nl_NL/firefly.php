@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * firefly.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 return [
     // general stuff:
@@ -179,6 +180,7 @@ return [
     'authorization_request_intro'                => '<strong>:client</strong> vraagt ​​toestemming om toegang te krijgen tot je financiële administratie. Wil je <strong>:client</strong> autoriseren om toegang te krijgen tot je gegevens?',
     'scopes_will_be_able'                        => 'Deze applicatie krijgt toegang tot:',
     'button_authorize'                           => 'Toestaan',
+    'none_in_select_list'                        => '(geen)',
 
     // check for updates:
     'update_check_title'                         => 'Op updates controleren',
@@ -666,6 +668,7 @@ return [
     'bill_will_automatch'                     => 'Waar van toepassing wordt dit contract automatisch gekoppeld aan transacties',
     'skips_over'                              => 'slaat over',
     'bill_store_error'                        => 'Er ging wat fout bij het opslaan van het contract. Kijk in de logbestanden',
+    'list_inactive_rule'                      => 'inactieve regel',
 
     // accounts:
     'details_for_asset'                       => 'Overzicht voor betaalrekening ":name"',
@@ -801,6 +804,7 @@ return [
     'opt_group_savingAsset'                   => 'Spaarrekeningen',
     'opt_group_sharedAsset'                   => 'Gedeelde betaalrekeningen',
     'opt_group_ccAsset'                       => 'Creditcards',
+    'opt_group_cashWalletAsset'               => 'Cash portomonees',
     'notes'                                   => 'Notities',
     'unknown_journal_error'                   => 'Kon de transactie niet opslaan. Kijk in de logbestanden.',
 
@@ -816,6 +820,7 @@ return [
     'language'                                => 'Taal',
     'new_savings_account'                     => ':bank_name spaarrekening',
     'cash_wallet'                             => 'Cash-rekening',
+    'currency_not_present' => 'Geen zorgen als de valuta die je gewend bent er niet tussen staat. Je kan je eigen valuta maken onder Opties > Valuta.',
 
     // home page:
     'yourAccounts'                            => 'Je betaalrekeningen',
@@ -1013,6 +1018,7 @@ return [
     'remove_money_from_piggy_title'           => 'Haal geld uit spaarpotje ":name"',
     'add'                                     => 'Toevoegen',
     'no_money_for_piggy'                      => 'Er is geen geld voor dit spaarpotje.',
+    'suggested_savings_per_month'             => 'Voorgesteld per maand',
 
     'remove'                    => 'Verwijderen',
     'max_amount_add'            => 'Hooguit toe te voegen',
@@ -1148,27 +1154,9 @@ return [
     'no_edit_multiple_left'                 => 'Je hebt geen geldige transacties geselecteerd.',
     'cannot_convert_split_journal'          => 'Kan geen gesplitste transactie omzetten',
 
-    // import bread crumbs and titles:
-    'import'                                => 'Import',
-    'import_data'                           => 'Importeer data',
-    'import_general_index_file'             => 'Importeer een bestand',
-    'import_from_bunq'                      => 'Importeer uit bunq',
-    'import_using_spectre'                  => 'Importeer via Spectre',
-    'import_using_plaid'                    => 'Importeer via Plaid',
-    'import_config_bread_crumb'             => 'Instellen van je import',
-
-    // import index page:
+    // Import page (general strings only)
     'import_index_title'                    => 'Gegevens importeren in Firefly III',
-    'import_index_sub_title'                => 'Index',
-    'import_general_index_intro'            => 'Dit is de import-routine van Firefly III. Er zijn verschillende manieren om gegevens te importeren in Firefly III, hier als knoppen weergegeven.',
-    'upload_error'                          => 'Het bestand dat je hebt geüpload kan niet gebruikt worden. Het is wellicht het verkeerde type of de verkeerde encoding. In de logbestanden staat meer info.',
-    'reset_import_settings_title'           => 'Reset importconfiguratie',
-    'reset_import_settings_text'            => 'Gebruik deze links om importinstellingen voor specifieke providers te resetten. Handig als verkeerde instellingen voorkomen dat je verder kan.',
-    'reset_settings_bunq'                   => 'Verwijdert de bunq API key, je externe IP adres zoals Firefly III die kent, en de voor bunq gegenereerde RSA sleutels.',
-    'reset_settings_spectre'                => 'Verwijdert je Spectre secrets en ID\'s. Dit verwijdert ook je Spectre keypair. Vergeet die niet te updaten.',
-    'settings_reset_for_bunq'               => 'Bunq-instellingen zijn gereset.',
-    'settings_reset_for_spectre'            => 'Spectre-instellingen zijn gereset.',
-
+    'import_data'                           => 'Importeer data',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Deze functie werkt niet als je Firefly III gebruikt in combinatie met Sandstorm.IO.',

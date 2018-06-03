@@ -38,7 +38,7 @@ class RangeTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\Range
      */
-    public function testMiddlewareAuthenticated()
+    public function testMiddlewareAuthenticated(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('firstNull')->andReturn(TransactionJournal::first());
@@ -56,7 +56,7 @@ class RangeTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Middleware\Range
      */
-    public function testMiddlewareNotAuthenticated()
+    public function testMiddlewareNotAuthenticated(): void
     {
         $this->withoutExceptionHandling();
         $response = $this->get('/_test/range');

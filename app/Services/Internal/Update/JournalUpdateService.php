@@ -57,7 +57,7 @@ class JournalUpdateService
         $service = app(TransactionUpdateService::class);
         $service->setUser($journal->user);
 
-        // create transactions
+        // create transactions:
         /** @var TransactionFactory $factory */
         $factory = app(TransactionFactory::class);
         $factory->setUser($journal->user);
@@ -104,6 +104,12 @@ class JournalUpdateService
 
         // connect tags:
         $this->connectTags($journal, $data);
+
+        // remove category from journal:
+        $journal->categories()->sync([]);
+
+        // remove budgets from journal:
+        $journal->budgets()->sync([]);
 
         // update or create custom fields:
         // store date meta fields (if present):
@@ -162,6 +168,8 @@ class JournalUpdateService
         foreach ($journal->transactions as $transaction) {
             $service->updateCategory($transaction, $category);
         }
+        // make journal empty:
+        $journal->categories()->sync([]);
 
         return $journal;
     }

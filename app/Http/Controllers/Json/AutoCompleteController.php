@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Http\JsonResponse;
 
 /**
  * Class AutoCompleteController.
@@ -47,7 +48,7 @@ class AutoCompleteController extends Controller
      *
      * @param AccountRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function allAccounts(AccountRepositoryInterface $repository)
     {
@@ -64,9 +65,9 @@ class AutoCompleteController extends Controller
     /**
      * @param JournalCollectorInterface $collector
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function allTransactionJournals(JournalCollectorInterface $collector)
+    public function allTransactionJournals(JournalCollectorInterface $collector): JsonResponse
     {
         $collector->setLimit(250)->setPage(1);
         $return = array_unique($collector->getJournals()->pluck('description')->toArray());
@@ -80,9 +81,9 @@ class AutoCompleteController extends Controller
      *
      * @param BillRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function bills(BillRepositoryInterface $repository)
+    public function bills(BillRepositoryInterface $repository): JsonResponse
     {
         $return = array_unique(
             $repository->getActiveBills()->pluck('name')->toArray()
@@ -95,7 +96,7 @@ class AutoCompleteController extends Controller
     /**
      * @param BudgetRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function budgets(BudgetRepositoryInterface $repository)
     {
@@ -110,7 +111,7 @@ class AutoCompleteController extends Controller
      *
      * @param CategoryRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function categories(CategoryRepositoryInterface $repository)
     {
@@ -123,7 +124,7 @@ class AutoCompleteController extends Controller
     /**
      * @param CurrencyRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function currencyNames(CurrencyRepositoryInterface $repository)
     {
@@ -138,7 +139,7 @@ class AutoCompleteController extends Controller
      *
      * @param AccountRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function expenseAccounts(AccountRepositoryInterface $repository)
     {
@@ -163,7 +164,7 @@ class AutoCompleteController extends Controller
      * @param JournalCollectorInterface $collector
      * @param TransactionJournal        $except
      *
-     * @return \Illuminate\Http\JsonResponse|mixed
+     * @return JsonResponse|mixed
      */
     public function journalsWithId(JournalCollectorInterface $collector, TransactionJournal $except)
     {
@@ -195,7 +196,7 @@ class AutoCompleteController extends Controller
     /**
      * @param AccountRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function revenueAccounts(AccountRepositoryInterface $repository)
     {
@@ -220,7 +221,7 @@ class AutoCompleteController extends Controller
      *
      * @param TagRepositoryInterface $tagRepository
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function tags(TagRepositoryInterface $tagRepository)
     {
@@ -234,7 +235,7 @@ class AutoCompleteController extends Controller
      * @param JournalCollectorInterface $collector
      * @param string                    $what
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function transactionJournals(JournalCollectorInterface $collector, string $what)
     {
@@ -251,7 +252,7 @@ class AutoCompleteController extends Controller
     /**
      * @param JournalRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function transactionTypes(JournalRepositoryInterface $repository)
     {

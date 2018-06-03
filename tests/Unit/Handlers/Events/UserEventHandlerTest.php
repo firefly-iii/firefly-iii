@@ -50,7 +50,7 @@ class UserEventHandlerTest extends TestCase
      * @covers \FireflyIII\Handlers\Events\UserEventHandler::attachUserRole
      * @covers \FireflyIII\Events\RegisteredUser
      */
-    public function testAttachUserRole()
+    public function testAttachUserRole(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $user       = $this->emptyUser();
@@ -66,7 +66,7 @@ class UserEventHandlerTest extends TestCase
     /**
      * @covers \FireflyIII\Handlers\Events\UserEventHandler::checkSingleUserIsAdmin
      */
-    public function testCheckSingleUserIsAdminMulti()
+    public function testCheckSingleUserIsAdminMulti(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $user       = $this->user();
@@ -84,7 +84,7 @@ class UserEventHandlerTest extends TestCase
     /**
      * @covers \FireflyIII\Handlers\Events\UserEventHandler::checkSingleUserIsAdmin
      */
-    public function testCheckSingleUserIsAdminNoRole()
+    public function testCheckSingleUserIsAdminNoRole(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $user       = $this->emptyUser();
@@ -104,7 +104,7 @@ class UserEventHandlerTest extends TestCase
     /**
      * @covers \FireflyIII\Handlers\Events\UserEventHandler::checkSingleUserIsAdmin
      */
-    public function testCheckSingleUserIsAdminNotAdmin()
+    public function testCheckSingleUserIsAdminNotAdmin(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $user       = $this->emptyUser();
@@ -123,7 +123,7 @@ class UserEventHandlerTest extends TestCase
     /**
      * @covers \FireflyIII\Handlers\Events\UserEventHandler::checkSingleUserIsAdmin
      */
-    public function testCheckSingleUserIsAdminSingle()
+    public function testCheckSingleUserIsAdminSingle(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $user       = $this->user();
@@ -141,7 +141,7 @@ class UserEventHandlerTest extends TestCase
      * @covers \FireflyIII\Handlers\Events\UserEventHandler::sendEmailChangeConfirmMail
      * @covers \FireflyIII\Events\UserChangedEmail
      */
-    public function testSendEmailChangeConfirmMail()
+    public function testSendEmailChangeConfirmMail(): void
     {
         Mail::fake();
         $user     = $this->emptyUser();
@@ -164,7 +164,7 @@ class UserEventHandlerTest extends TestCase
      * @covers \FireflyIII\Handlers\Events\UserEventHandler::sendEmailChangeUndoMail
      * @covers \FireflyIII\Events\UserChangedEmail
      */
-    public function testSendEmailChangeUndoMail()
+    public function testSendEmailChangeUndoMail(): void
     {
         Mail::fake();
         $user     = $this->emptyUser();
@@ -188,7 +188,7 @@ class UserEventHandlerTest extends TestCase
      * @covers \FireflyIII\Handlers\Events\UserEventHandler::sendNewPassword
      * @covers \FireflyIII\Events\RequestedNewPassword
      */
-    public function testSendNewPassword()
+    public function testSendNewPassword(): void
     {
         Mail::fake();
         $user     = $this->emptyUser();
@@ -211,7 +211,7 @@ class UserEventHandlerTest extends TestCase
      * @covers \FireflyIII\Handlers\Events\UserEventHandler::sendRegistrationMail
      * @covers \FireflyIII\Events\RegisteredUser
      */
-    public function testSendRegistrationMail()
+    public function testSendRegistrationMail(): void
     {
         Mail::fake();
         $user  = $this->emptyUser();

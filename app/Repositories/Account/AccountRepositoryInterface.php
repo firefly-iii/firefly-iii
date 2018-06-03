@@ -66,10 +66,9 @@ interface AccountRepositoryInterface
      * @param string $number
      * @param array  $types
      *
-     * @deprecated
-     * @return Account
+     * @return Account|null
      */
-    public function findByAccountNumber(string $number, array $types): Account;
+    public function findByAccountNumber(string $number, array $types): ?Account;
 
     /**
      * @param string $iban

@@ -34,7 +34,7 @@ class ToAccountContainsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountContains::triggered
      */
-    public function testTriggered()
+    public function testTriggered(): void
     {
         $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $transaction = $journal->transactions()->where('amount', '>', 0)->first();
@@ -47,7 +47,7 @@ class ToAccountContainsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountContains::triggered
      */
-    public function testTriggeredNot()
+    public function testTriggeredNot(): void
     {
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $trigger = ToAccountContains::makeFromStrings('some name' . random_int(1, 234), false);
@@ -58,7 +58,7 @@ class ToAccountContainsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountContains::willMatchEverything
      */
-    public function testWillMatchEverythingEmpty()
+    public function testWillMatchEverythingEmpty(): void
     {
         $value  = '';
         $result = ToAccountContains::willMatchEverything($value);
@@ -68,7 +68,7 @@ class ToAccountContainsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountContains::willMatchEverything
      */
-    public function testWillMatchEverythingNotNull()
+    public function testWillMatchEverythingNotNull(): void
     {
         $value  = 'x';
         $result = ToAccountContains::willMatchEverything($value);
@@ -78,7 +78,7 @@ class ToAccountContainsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountContains::willMatchEverything
      */
-    public function testWillMatchEverythingNull()
+    public function testWillMatchEverythingNull(): void
     {
         $value  = null;
         $result = ToAccountContains::willMatchEverything($value);

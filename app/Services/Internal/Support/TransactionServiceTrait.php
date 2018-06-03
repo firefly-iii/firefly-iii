@@ -42,7 +42,6 @@ use Log;
 /**
  * Trait TransactionServiceTrait
  *
- * @package FireflyIII\Services\Internal\Support
  */
 trait TransactionServiceTrait
 {
@@ -100,14 +99,16 @@ trait TransactionServiceTrait
      * @param int|null    $accountId
      * @param string|null $accountName
      *
-     * @return Account
+     * @return Account|null
      */
-    public function findAccount(?string $expectedType, ?int $accountId, ?string $accountName): Account
+    public function findAccount(?string $expectedType, ?int $accountId, ?string $accountName): ?Account
     {
         $accountId   = (int)$accountId;
         $accountName = (string)$accountName;
         $repository  = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
+
+        Log::debug(sprintf('Going to find account #%d ("%s")', $accountId, $accountName));
 
         if (null === $expectedType) {
             return $repository->findNull($accountId);
@@ -247,6 +248,7 @@ trait TransactionServiceTrait
      */
     protected function setForeignAmount(Transaction $transaction, ?string $amount): void
     {
+        $amount                      = '' === (string)$amount ? null : $amount;
         $transaction->foreign_amount = $amount;
         $transaction->save();
     }

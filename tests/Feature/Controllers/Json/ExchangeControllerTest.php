@@ -48,7 +48,7 @@ class ExchangeControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Json\ExchangeController::getRate
      */
-    public function testGetRate()
+    public function testGetRate(): void
     {
         $repository = $this->mock(CurrencyRepositoryInterface::class);
 
@@ -63,7 +63,7 @@ class ExchangeControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Json\ExchangeController::getRate
      */
-    public function testGetRateAmount()
+    public function testGetRateAmount(): void
     {
         $repository = $this->mock(CurrencyRepositoryInterface::class);
         $rate       = factory(CurrencyExchangeRate::class)->make();

@@ -29,8 +29,6 @@ use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SplitJournalFormRequest;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -100,22 +98,18 @@ class SplitController extends Controller
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal); // @codeCoverageIgnore
         }
+        // basic fields:
+        $uploadSize   = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
+        $subTitle     = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
+        $subTitleIcon = 'fa-pencil';
 
-        $uploadSize     = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
-        $currencies     = $this->currencies->get();
+        // lists and collections
+        $currencies = $this->currencies->get();
+        $budgets    = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
+
+        // other fields
         $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
-        $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $preFilled      = $this->arrayFromJournal($request, $journal);
-        $subTitle       = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
-        $subTitleIcon   = 'fa-pencil';
-        $accountList    = $this->accounts->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
-        $accountArray   = [];
-        // account array to display currency info:
-        /** @var Account $account */
-        foreach ($accountList as $account) {
-            $accountArray[$account->id]                = $account;
-            $accountArray[$account->id]['currency_id'] = (int)$this->accounts->getMetaValue($account, 'currency_id');
-        }
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('transactions.edit-split.fromUpdate')) {
@@ -126,7 +120,7 @@ class SplitController extends Controller
         return view(
             'transactions.split.edit', compact(
                                          'subTitleIcon', 'currencies', 'optionalFields', 'preFilled', 'subTitle', 'uploadSize', 'budgets',
-                                         'journal', 'accountArray'
+                                         'journal'
                                      )
         );
     }
@@ -146,8 +140,7 @@ class SplitController extends Controller
 
         // keep current bill:
         $data['bill_id'] = $journal->bill_id;
-
-        $journal = $this->repository->update($journal, $data);
+        $journal         = $this->repository->update($journal, $data);
 
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
@@ -283,9 +276,9 @@ class SplitController extends Controller
             }
             // take some info from first transaction, that should at least exist.
             $array[$index]                            = $row;
-            $array[$index]['currency_id']             = $array[0]['transaction_currency_id'];
-            $array[$index]['currency_code']           = $array[0]['transaction_currency_code'] ?? '';
-            $array[$index]['currency_symbol']         = $array[0]['transaction_currency_symbol'] ?? '';
+            $array[$index]['currency_id']             = $array[0]['currency_id'];
+            $array[$index]['currency_code']           = $array[0]['currency_code'] ?? '';
+            $array[$index]['currency_symbol']         = $array[0]['currency_symbol'] ?? '';
             $array[$index]['foreign_amount']          = round($array[0]['foreign_destination_amount'] ?? '0', 12);
             $array[$index]['foreign_currency_id']     = $array[0]['foreign_currency_id'];
             $array[$index]['foreign_currency_code']   = $array[0]['foreign_currency_code'];

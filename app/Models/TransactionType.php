@@ -29,6 +29,7 @@ use FireflyIII\Models\TransactionJournal;
 
 /**
  * Class TransactionType.
+ * @property string $type
  */
 class TransactionType extends Model
 {

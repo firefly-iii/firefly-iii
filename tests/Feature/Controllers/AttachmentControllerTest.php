@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use Illuminate\Support\Collection;
 use Log;
 use Tests\TestCase;
 
@@ -46,11 +48,10 @@ class AttachmentControllerTest extends TestCase
         Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
-
     /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController::delete
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         // mock stuff
         $attachRepository = $this->mock(AttachmentRepositoryInterface::class);
@@ -66,7 +67,7 @@ class AttachmentControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController::destroy
      */
-    public function testDestroy()
+    public function testDestroy(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -84,7 +85,7 @@ class AttachmentControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController::download
      */
-    public function testDownload()
+    public function testDownload(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -104,7 +105,7 @@ class AttachmentControllerTest extends TestCase
      * @covers                   \FireflyIII\Http\Controllers\AttachmentController::download
      * @expectedExceptionMessage Could not find the indicated attachment
      */
-    public function testDownloadFail()
+    public function testDownloadFail(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -120,7 +121,7 @@ class AttachmentControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController::edit
      */
-    public function testEdit()
+    public function testEdit(): void
     {
         $attachRepository = $this->mock(AttachmentRepositoryInterface::class);
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
@@ -134,9 +135,26 @@ class AttachmentControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\AttachmentController
+     */
+    public function testIndex()
+    {
+        $repository   = $this->mock(AttachmentRepositoryInterface::class);
+        $repository->shouldReceive('get')->andReturn(new Collection([Attachment::first()]))->once();
+        $repository->shouldReceive('exists')->andReturn(true)->once();
+
+        $this->be($this->user());
+        $response = $this->get(route('attachments.index'));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController::update
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -161,7 +179,7 @@ class AttachmentControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\AttachmentController::view
      * @covers \FireflyIII\Http\Controllers\AttachmentController::__construct
      */
-    public function testView()
+    public function testView(): void
     {
         $repository = $this->mock(AttachmentRepositoryInterface::class);
         $repository->shouldReceive('exists')->once()->andReturn(true);
@@ -178,7 +196,7 @@ class AttachmentControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\AttachmentController::view
      * @covers \FireflyIII\Http\Controllers\AttachmentController::__construct
      */
-    public function testViewFail()
+    public function testViewFail(): void
     {
         $repository = $this->mock(AttachmentRepositoryInterface::class);
         $repository->shouldReceive('exists')->once()->andReturn(false);

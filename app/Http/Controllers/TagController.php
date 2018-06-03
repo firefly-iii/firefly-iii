@@ -31,19 +31,10 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Preferences;
 use View;
 
 /**
  * Class TagController.
- *
- * Remember: a balancingAct takes at most one expense and one transfer.
- *           an advancePayment takes at most one expense, infinite deposits and NO transfers.
- *
- *  transaction can only have one advancePayment OR balancingAct.
- *  Other attempts to put in such a tag are blocked.
- *  also show an error when editing a tag and it becomes either
- *  of these two types. Or rather, block editing of the tag.
  */
 class TagController extends Controller
 {
@@ -79,7 +70,6 @@ class TagController extends Controller
     {
         $subTitle     = trans('firefly.new_tag');
         $subTitleIcon = 'fa-tag';
-        $apiKey       = env('GOOGLE_MAPS_API_KEY', '');
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('tags.create.fromStore')) {
@@ -87,7 +77,7 @@ class TagController extends Controller
         }
         session()->forget('tags.create.fromStore');
 
-        return view('tags.create', compact('subTitle', 'subTitleIcon', 'apiKey'));
+        return view('tags.create', compact('subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -118,7 +108,7 @@ class TagController extends Controller
         $this->repository->destroy($tag);
 
         session()->flash('success', (string)trans('firefly.deleted_tag', ['tag' => $tagName]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect($this->getPreviousUri('tags.delete.uri'));
     }
@@ -134,7 +124,6 @@ class TagController extends Controller
     {
         $subTitle     = trans('firefly.edit_tag', ['tag' => $tag->tag]);
         $subTitleIcon = 'fa-tag';
-        $apiKey       = env('GOOGLE_MAPS_API_KEY', '');
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('tags.edit.fromUpdate')) {
@@ -142,7 +131,7 @@ class TagController extends Controller
         }
         session()->forget('tags.edit.fromUpdate');
 
-        return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon', 'apiKey'));
+        return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -155,27 +144,18 @@ class TagController extends Controller
     public function index(TagRepositoryInterface $repository)
     {
         // start with oldest tag
-        $oldestTag = $repository->oldestTag();
-        /** @var Carbon $start */
-        $start = new Carbon;
-        if (null !== $oldestTag) {
-            /** @var Carbon $start */
-            $start = $oldestTag->date; // @codeCoverageIgnore
-        }
-        if (null === $oldestTag) {
-            /** @var Carbon $start */
-            $start = clone session('first');
-        }
-
-        $now               = new Carbon;
+        $oldestTagDate = null === $repository->oldestTag() ? clone session('first') : $repository->oldestTag()->date;
+        $newestTagDate = null === $repository->newestTag() ? new Carbon : $repository->newestTag()->date;
+        $oldestTagDate->startOfYear();
+        $newestTagDate->endOfYear();
         $clouds            = [];
         $clouds['no-date'] = $repository->tagCloud(null);
 
-        while ($now > $start) {
-            $year          = $now->year;
+        while ($newestTagDate > $oldestTagDate) {
+            $year          = $newestTagDate->year;
             $clouds[$year] = $repository->tagCloud($year);
 
-            $now->subYear();
+            $newestTagDate->subYear();
         }
         $count = $repository->count();
 
@@ -196,12 +176,11 @@ class TagController extends Controller
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
         $page         = (int)$request->get('page');
-        $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
-        $range        = Preferences::get('viewRange', '1M')->data;
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $range        = app('preferences')->get('viewRange', '1M')->data;
         $start        = null;
         $end          = null;
         $periods      = new Collection;
-        $apiKey       = env('GOOGLE_MAPS_API_KEY', '');
         $path         = route('tags.show', [$tag->id]);
 
         // prep for "all" view.
@@ -213,7 +192,7 @@ class TagController extends Controller
         }
 
         // prep for "specific date" view.
-        if (\strlen($moment) > 0 && 'all' !== $moment) {
+        if ('all' !== $moment && \strlen($moment) > 0) {
             $start    = new Carbon($moment);
             $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
@@ -226,7 +205,7 @@ class TagController extends Controller
         }
 
         // prep for current period
-        if (0 === \strlen($moment)) {
+        if ('' === $moment) {
             /** @var Carbon $start */
             $start = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
             /** @var Carbon $end */
@@ -261,7 +240,7 @@ class TagController extends Controller
         $this->repository->store($data);
 
         session()->flash('success', (string)trans('firefly.created_tag', ['tag' => $data['tag']]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
@@ -286,7 +265,7 @@ class TagController extends Controller
         $this->repository->update($tag, $data);
 
         session()->flash('success', (string)trans('firefly.updated_tag', ['tag' => $data['tag']]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
@@ -308,9 +287,11 @@ class TagController extends Controller
     private function getPeriodOverview(Tag $tag): Collection
     {
         // get first and last tag date from tag:
-        $range = Preferences::get('viewRange', '1M')->data;
-        $start = app('navigation')->startOfPeriod($this->repository->firstUseDate($tag), $range);
-        $end   = app('navigation')->startOfPeriod($this->repository->lastUseDate($tag), $range);
+        $range = app('preferences')->get('viewRange', '1M')->data;
+        $end   = app('navigation')->endOfX($this->repository->lastUseDate($tag), $range, null);
+        $start = $this->repository->firstUseDate($tag);
+
+
         // properties for entries with their amounts.
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -323,22 +304,23 @@ class TagController extends Controller
         }
 
         $collection = new Collection;
-
+        $currentEnd = clone $end;
         // while end larger or equal to start
-        while ($end >= $start) {
-            $currentEnd = app('navigation')->endOfPeriod($end, $range);
+        while ($currentEnd >= $start) {
+            $currentStart = app('navigation')->startOfPeriod($currentEnd, $range);
 
             // get expenses and what-not in this period and this tag.
             $arr = [
                 'string' => $end->format('Y-m-d'),
-                'name'   => app('navigation')->periodShow($end, $range),
+                'name'   => app('navigation')->periodShow($currentEnd, $range),
                 'date'   => clone $end,
-                'spent'  => $this->repository->spentInPeriod($tag, $end, $currentEnd),
-                'earned' => $this->repository->earnedInPeriod($tag, $end, $currentEnd),
+                'spent'  => $this->repository->spentInPeriod($tag, $currentStart, $currentEnd),
+                'earned' => $this->repository->earnedInPeriod($tag, $currentStart, $currentEnd),
             ];
             $collection->push($arr);
 
-            $end = app('navigation')->subtractPeriod($end, $range, 1);
+            $currentEnd = clone $currentStart;
+            $currentEnd->subDay();
         }
         $cache->store($collection);
 

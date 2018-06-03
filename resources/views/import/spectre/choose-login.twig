@@ -1,0 +1,87 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <form class="form-horizontal" action="{{ route('import.job.configuration.post',[importJob.key]) }}" method="post">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ trans('import.job_config_spectre_login_title') }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <p>
+                                    {{ trans('import.job_config_spectre_login_text', {count: data.logins|length}) }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>&nbsp;</th>
+                                        <th>{{ trans('list.spectre_bank') }}</th>
+                                        <th>{{ trans('list.spectre_last_use') }}</th>
+                                        <th>{{ trans('list.spectre_status') }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for login in data.logins %}
+
+                                        <tr>
+                                            <td>
+                                                <input
+                                                        {% if login.getStatus() == 'disabled' %}disabled{% endif %}
+
+                                                        id="{{ login.getId() }}" type="radio" name="spectre_login_id" value="{{ login.getId() }}">
+                                            </td>
+                                            <td>
+                                                <label for="{{ login.getId() }}">
+                                                    {{ login.getProviderName() }} ({{ login.getCountryCode() }})
+                                                </label>
+                                            </td>
+                                            <td>
+                                                {{ login.getLastSuccessAt().formatLocalized(monthAndDayFormat) }}<br>
+                                                {{ login.getUpdatedAt().format("Y-m-d H:i:s") }}<br>
+                                            </td>
+                                            <td>
+                                                {{ trans('import.spectre_login_status_'~login.getStatus()) }}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td>
+                                            <input id="new_login" type="radio" name="spectre_login_id" value="00">
+                                        </td>
+                                        <td colspan="3">
+                                            <label for="new_login"><em>
+                                                    {{ trans('import.spectre_login_new_login') }}
+                                                </em>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <button type="submit" class="btn pull-right btn-success">
+                                {{ ('submit')|_ }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+        </form>
+    </div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}
+{% block styles %}
+{% endblock %}

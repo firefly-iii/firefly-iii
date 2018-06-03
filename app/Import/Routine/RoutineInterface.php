@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Routine;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
-use Illuminate\Support\Collection;
 
 /**
  * Interface RoutineInterface
@@ -31,29 +31,18 @@ use Illuminate\Support\Collection;
 interface RoutineInterface
 {
     /**
-     * @return Collection
-     */
-    public function getErrors(): Collection;
-
-    /**
-     * @return Collection
-     */
-    public function getJournals(): Collection;
-
-    /**
-     * @return int
-     */
-    public function getLines(): int;
-
-    /**
-     * @return bool
-     */
-    public function run(): bool;
-
-    /**
-     * @param ImportJob $job
+     * At the end of each run(), the import routine must set the job to the expected status.
      *
-     * @return mixed
+     * The final status of the routine must be "provider_finished".
+     *
+     * @throws FireflyException
      */
-    public function setJob(ImportJob $job);
+    public function run(): void;
+
+    /**
+     * @param ImportJob $importJob
+     *
+     * @return void
+     */
+    public function setImportJob(ImportJob $importJob): void;
 }

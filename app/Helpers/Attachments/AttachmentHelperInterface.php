@@ -40,6 +40,13 @@ interface AttachmentHelperInterface
     public function getAttachmentLocation(Attachment $attachment): string;
 
     /**
+     * @param Attachment $attachment
+     *
+     * @return string
+     */
+    public function getAttachmentContent(Attachment $attachment): string;
+
+    /**
      * @return Collection
      */
     public function getAttachments(): Collection;

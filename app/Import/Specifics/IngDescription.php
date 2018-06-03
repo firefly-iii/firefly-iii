@@ -38,19 +38,21 @@ class IngDescription implements SpecificInterface
     public $row;
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public static function getDescription(): string
     {
-        return 'Create better descriptions in ING import files.';
+        return 'import.specific_ing_descr';
     }
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public static function getName(): string
     {
-        return 'ING description';
+        return 'import.specific_ing_name';
     }
 
     /**
@@ -84,41 +86,29 @@ class IngDescription implements SpecificInterface
     /**
      * Add the Opposing name from cell 1 in the description for Betaalautomaten
      * Otherwise the description is only: 'Pasvolgnr:<nr> <date> Transactie:<NR> Term:<nr>'.
-     *
-     * @return bool true
      */
-    protected function addNameIngDescription()
+    protected function addNameIngDescription(): void
     {
         $this->row[8] = $this->row[1] . ' ' . $this->row[8];
-
-        return true;
     }
 
     /**
      * Remove IBAN number out of the  description
      * Default description of Description is: Naam: <OPPOS NAME> Omschrijving: <DESCRIPTION> IBAN: <OPPOS IBAN NR>.
-     *
-     * @return bool true
      */
-    protected function removeIBANIngDescription()
+    protected function removeIBANIngDescription(): void
     {
         // Try replace the iban number with nothing. The IBAN nr is found in the third row
         $this->row[8] = preg_replace('/\sIBAN:\s' . $this->row[3] . '/', '', $this->row[8]);
-
-        return true;
     }
 
     /**
      * Remove name from the description (Remove everything before the description incl the word 'Omschrijving' ).
-     *
-     * @return bool true
      */
-    protected function removeNameIngDescription()
+    protected function removeNameIngDescription(): void
     {
         // Try remove everything before the 'Omschrijving'
         $this->row[8] = preg_replace('/.+Omschrijving: /', '', $this->row[8]);
-
-        return true;
     }
 
     /**
@@ -127,7 +117,7 @@ class IngDescription implements SpecificInterface
     private function copyDescriptionToOpposite(): void
     {
         $search = ['Naar Oranje Spaarrekening ', 'Afschrijvingen'];
-        if (0 === \strlen($this->row[3])) {
+        if ('' === (string)$this->row[3]) {
             $this->row[3] = trim(str_ireplace($search, '', $this->row[8]));
         }
     }

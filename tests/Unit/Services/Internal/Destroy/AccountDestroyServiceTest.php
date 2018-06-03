@@ -37,7 +37,7 @@ class AccountDestroyServiceTest extends TestCase
     /**
      * @covers \FireflyIII\Services\Internal\Destroy\AccountDestroyService
      */
-    public function testDestroyBasic()
+    public function testDestroyBasic(): void
     {
         $account = Account::create(
             ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 1000),
@@ -53,7 +53,7 @@ class AccountDestroyServiceTest extends TestCase
     /**
      * @covers \FireflyIII\Services\Internal\Destroy\AccountDestroyService
      */
-    public function testDestroyDontMove()
+    public function testDestroyDontMove(): void
     {
         // create objects:
         $account = Account::create(
@@ -76,7 +76,7 @@ class AccountDestroyServiceTest extends TestCase
     /**
      * @covers \FireflyIII\Services\Internal\Destroy\AccountDestroyService
      */
-    public function testDestroyMove()
+    public function testDestroyMove(): void
     {
         $account     = Account::create(
             ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 1000),

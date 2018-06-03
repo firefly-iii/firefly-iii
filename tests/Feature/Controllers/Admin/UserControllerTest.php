@@ -48,7 +48,7 @@ class UserControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UserController::delete
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $this->be($this->user());
         $response = $this->get(route('admin.users.delete', [1]));
@@ -60,7 +60,7 @@ class UserControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UserController::destroy
      */
-    public function testDestroy()
+    public function testDestroy(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('destroy')->once();
@@ -73,7 +73,7 @@ class UserControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UserController::edit
      */
-    public function testEdit()
+    public function testEdit(): void
     {
         $this->be($this->user());
         $response = $this->get(route('admin.users.edit', [1]));
@@ -86,7 +86,7 @@ class UserControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Admin\UserController::index
      * @covers \FireflyIII\Http\Controllers\Admin\UserController::__construct
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $user       = $this->user();
@@ -102,7 +102,7 @@ class UserControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UserController::show
      */
-    public function testShow()
+    public function testShow(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('getUserData')->andReturn(
@@ -123,7 +123,7 @@ class UserControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UserController::update
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('changePassword')->once();

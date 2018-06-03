@@ -50,7 +50,7 @@ class LinkControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Admin\LinkController::__construct
      * @covers \FireflyIII\Http\Controllers\Admin\LinkController::create
      */
-    public function testCreate()
+    public function testCreate(): void
     {
 
         $this->be($this->user());
@@ -61,7 +61,7 @@ class LinkControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\LinkController::delete
      */
-    public function testDeleteEditable()
+    public function testDeleteEditable(): void
     {
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
         // create editable link type just in case:
@@ -78,7 +78,7 @@ class LinkControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\LinkController::delete
      */
-    public function testDeleteNonEditable()
+    public function testDeleteNonEditable(): void
     {
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
         $linkType   = LinkType::where('editable', 0)->first();
@@ -91,7 +91,7 @@ class LinkControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\LinkController::destroy
      */
-    public function testDestroy()
+    public function testDestroy(): void
     {
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
 
@@ -111,7 +111,7 @@ class LinkControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\LinkController::edit
      */
-    public function testEditEditable()
+    public function testEditEditable(): void
     {
         // create editable link type just in case:
         LinkType::create(['editable' => 1, 'inward' => 'hello Y', 'outward' => 'bye Y', 'name' => 'Test type Y']);
@@ -125,7 +125,7 @@ class LinkControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\LinkController::edit
      */
-    public function testEditNonEditable()
+    public function testEditNonEditable(): void
     {
         $linkType = LinkType::where('editable', 0)->first();
         $this->be($this->user());
@@ -137,7 +137,7 @@ class LinkControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\LinkController::index
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         $linkTypes  = LinkType::inRandomOrder()->take(3)->get();
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
@@ -151,7 +151,7 @@ class LinkControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\LinkController::show
      */
-    public function testShow()
+    public function testShow(): void
     {
         $linkType = LinkType::first();
         $this->be($this->user());
@@ -163,7 +163,7 @@ class LinkControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Admin\LinkController::store
      * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
-    public function testStore()
+    public function testStore(): void
     {
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
         $data       = [
@@ -185,7 +185,7 @@ class LinkControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Admin\LinkController::store
      * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
-    public function testStoreRedirect()
+    public function testStoreRedirect(): void
     {
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
         $data       = [
@@ -206,7 +206,7 @@ class LinkControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Admin\LinkController::update
      * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
 
@@ -230,7 +230,7 @@ class LinkControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Admin\LinkController::update
      * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
-    public function testUpdateNonEditable()
+    public function testUpdateNonEditable(): void
     {
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
         $linkType   = LinkType::where('editable', 0)->first();
@@ -252,7 +252,7 @@ class LinkControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\Admin\LinkController::update
      * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
-    public function testUpdateRedirect()
+    public function testUpdateRedirect(): void
     {
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
         // create editable link type just in case:

@@ -26,6 +26,7 @@ namespace FireflyIII\Services\Spectre\Object;
 use Carbon\Carbon;
 
 /**
+ * @codeCoverageIgnore
  * Class Token
  */
 class Token extends SpectreObject
@@ -71,6 +72,18 @@ class Token extends SpectreObject
     public function getToken(): string
     {
         return $this->token;
+    }
+
+    /**
+     *
+     */
+    public function toArray(): array
+    {
+        return [
+            'connect_url' => $this->connectUrl,
+            'expires_at'  => $this->expiresAt->toW3cString(),
+            'token'       => $this->token,
+        ];
     }
 
 }

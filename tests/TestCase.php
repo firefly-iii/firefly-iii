@@ -47,7 +47,7 @@ abstract class TestCase extends BaseTestCase
      * @param User   $user
      * @param string $range
      */
-    public function changeDateRange(User $user, $range)
+    public function changeDateRange(User $user, $range): void
     {
         $valid = ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'];
         if (\in_array($range, $valid)) {
@@ -55,6 +55,7 @@ abstract class TestCase extends BaseTestCase
                 Preference::where('user_id', $user->id)->where('name', 'viewRange')->delete();
             } catch (Exception $e) {
                 // don't care.
+                $e->getMessage();
             }
 
             Preference::create(
@@ -81,7 +82,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * @return array
      */
-    public function dateRangeProvider()
+    public function dateRangeProvider(): array
     {
         return [
             'one day'      => ['1D'],
@@ -123,7 +124,7 @@ abstract class TestCase extends BaseTestCase
      *
      * @return \Mockery\MockInterface
      */
-    protected function mock($class)
+    protected function mock($class): \Mockery\MockInterface
     {
         Log::debug(sprintf('Will now mock %s', $class));
         $object = Mockery::mock($class);
@@ -137,7 +138,7 @@ abstract class TestCase extends BaseTestCase
      *
      * @return Mockery\MockInterface
      */
-    protected function overload(string $class)
+    protected function overload(string $class): \Mockery\MockInterface
     {
         //$this->app->instance($class, $externalMock);
         return Mockery::mock('overload:' . $class);

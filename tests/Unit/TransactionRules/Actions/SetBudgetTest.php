@@ -39,7 +39,7 @@ class SetBudgetTest extends TestCase
      * @covers \FireflyIII\TransactionRules\Actions\SetBudget::__construct()
      * @covers \FireflyIII\TransactionRules\Actions\SetBudget::act()
      */
-    public function testAct()
+    public function testAct(): void
     {
         // get journal, remove all budgets
         $journal     = TransactionJournal::inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();

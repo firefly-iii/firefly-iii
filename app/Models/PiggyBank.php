@@ -36,6 +36,11 @@ use FireflyIII\Models\Account;
 
 /**
  * Class PiggyBank.
+ *
+ * @property Carbon $targetdate
+ * @property Carbon $startdate
+ * @property string $targetamount
+ *
  */
 class PiggyBank extends Model
 {
@@ -130,32 +135,6 @@ class PiggyBank extends Model
         }
 
         return $value;
-    }
-
-    /**
-     * @deprecated
-     * @return string
-     */
-    public function getSuggestedMonthlyAmount(): string
-    {
-        $savePerMonth = '0';
-        if ($this->targetdate && $this->currentRelevantRep()->currentamount < $this->targetamount) {
-            $now             = Carbon::now();
-            $diffInMonths    = $now->diffInMonths($this->targetdate, false);
-            $remainingAmount = bcsub($this->targetamount, $this->currentRelevantRep()->currentamount);
-
-            // more than 1 month to go and still need money to save:
-            if ($diffInMonths > 0 && 1 === bccomp($remainingAmount, '0')) {
-                $savePerMonth = bcdiv($remainingAmount, (string)$diffInMonths);
-            }
-
-            // less than 1 month to go but still need money to save:
-            if (0 === $diffInMonths && 1 === bccomp($remainingAmount, '0')) {
-                $savePerMonth = $remainingAmount;
-            }
-        }
-
-        return $savePerMonth;
     }
 
     /**

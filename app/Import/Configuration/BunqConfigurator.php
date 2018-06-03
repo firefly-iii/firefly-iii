@@ -29,6 +29,8 @@ use FireflyIII\Support\Import\Configuration\Bunq\HaveAccounts;
 use Log;
 
 /**
+ * @deprecated
+ * @codeCoverageIgnore
  * Class BunqConfigurator.
  */
 class BunqConfigurator implements ConfiguratorInterface

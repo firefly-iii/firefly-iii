@@ -29,10 +29,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Models\Attachment;
 
 /**
  * Class Bill.
+ *
+ * @property bool   $active
+ * @property int    $transaction_currency_id
+ * @property string $amount_min
+ * @property string $amount_max
  */
 class Bill extends Model
 {
