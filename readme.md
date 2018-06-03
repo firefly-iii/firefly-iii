@@ -48,6 +48,7 @@ Most importantly...
 
 * Firefly III runs on your own server, so you are fully in control of your data. It will not contact other sites or servers.
 * You can import from over 2500 financial providers, in 55 countries when you enable the [Spectre API](http://firefly-iii.readthedocs.io/en/latest/import/spectre.html).
+* You can import from [https://www.bunq.com/](bunq).
 * You can import CSV files from practically any bank.
 * Firefly III features an JSON REST API.
 * If you feel you’re missing something you can just ask me and I’ll add it!
