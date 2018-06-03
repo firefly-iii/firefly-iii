@@ -98,7 +98,7 @@ class RuleRepository implements RuleRepositoryInterface
     public function getForImport(): Collection
     {
         return Rule::distinct()
-                   ->where('rules.user_id', $this->user->user_id)
+                   ->where('rules.user_id', $this->user->id)
                    ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
                    ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
                    ->where('rule_groups.active', 1)

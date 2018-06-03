@@ -31,7 +31,6 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Preferences;
 use View;
 
 /**
@@ -109,7 +108,7 @@ class TagController extends Controller
         $this->repository->destroy($tag);
 
         session()->flash('success', (string)trans('firefly.deleted_tag', ['tag' => $tagName]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect($this->getPreviousUri('tags.delete.uri'));
     }
@@ -177,8 +176,8 @@ class TagController extends Controller
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
         $page         = (int)$request->get('page');
-        $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
-        $range        = Preferences::get('viewRange', '1M')->data;
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $range        = app('preferences')->get('viewRange', '1M')->data;
         $start        = null;
         $end          = null;
         $periods      = new Collection;
@@ -193,7 +192,7 @@ class TagController extends Controller
         }
 
         // prep for "specific date" view.
-        if (\strlen($moment) > 0 && 'all' !== $moment) {
+        if ('all' !== $moment && \strlen($moment) > 0) {
             $start    = new Carbon($moment);
             $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
@@ -206,7 +205,7 @@ class TagController extends Controller
         }
 
         // prep for current period
-        if (0 === \strlen($moment)) {
+        if ('' === $moment) {
             /** @var Carbon $start */
             $start = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
             /** @var Carbon $end */
@@ -241,7 +240,7 @@ class TagController extends Controller
         $this->repository->store($data);
 
         session()->flash('success', (string)trans('firefly.created_tag', ['tag' => $data['tag']]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
@@ -266,7 +265,7 @@ class TagController extends Controller
         $this->repository->update($tag, $data);
 
         session()->flash('success', (string)trans('firefly.updated_tag', ['tag' => $data['tag']]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
@@ -288,9 +287,10 @@ class TagController extends Controller
     private function getPeriodOverview(Tag $tag): Collection
     {
         // get first and last tag date from tag:
-        $range = Preferences::get('viewRange', '1M')->data;
-        $start = app('navigation')->startOfPeriod($this->repository->firstUseDate($tag), $range)->startOfMonth();
-        $end   = app('navigation')->endOfPeriod($this->repository->lastUseDate($tag), $range)->endOfMonth();
+        $range = app('preferences')->get('viewRange', '1M')->data;
+        $end   = app('navigation')->endOfX($this->repository->lastUseDate($tag), $range, null);
+        $start = $this->repository->firstUseDate($tag);
+
 
         // properties for entries with their amounts.
         $cache = new CacheProperties;
@@ -304,22 +304,23 @@ class TagController extends Controller
         }
 
         $collection = new Collection;
-
+        $currentEnd = clone $end;
         // while end larger or equal to start
-        while ($end >= $start) {
-            $currentEnd = app('navigation')->endOfPeriod($end, $range);
+        while ($currentEnd >= $start) {
+            $currentStart = app('navigation')->startOfPeriod($currentEnd, $range);
 
             // get expenses and what-not in this period and this tag.
             $arr = [
                 'string' => $end->format('Y-m-d'),
-                'name'   => app('navigation')->periodShow($end, $range),
+                'name'   => app('navigation')->periodShow($currentEnd, $range),
                 'date'   => clone $end,
-                'spent'  => $this->repository->spentInPeriod($tag, $end, $currentEnd),
-                'earned' => $this->repository->earnedInPeriod($tag, $end, $currentEnd),
+                'spent'  => $this->repository->spentInPeriod($tag, $currentStart, $currentEnd),
+                'earned' => $this->repository->earnedInPeriod($tag, $currentStart, $currentEnd),
             ];
             $collection->push($arr);
 
-            $end = app('navigation')->subtractPeriod($end, $range, 1);
+            $currentEnd = clone $currentStart;
+            $currentEnd->subDay();
         }
         $cache->store($collection);
 
