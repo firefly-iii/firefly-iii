@@ -8,7 +8,8 @@ about: Suggest an idea or feature for Firefly III
 Please describe your feature request:
 
 - I would like Firefly III to do X.
-- What if you would add Y?
+- What if you would add feature Y?
+- Firefly III doesn't do Z.
 
 **Solution**
 Describe what your feature would add to Firefly III.
