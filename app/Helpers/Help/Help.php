@@ -24,9 +24,10 @@ namespace FireflyIII\Helpers\Help;
 
 use Cache;
 use Exception;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use League\CommonMark\CommonMarkConverter;
 use Log;
-use Requests;
 use Route;
 
 /**
@@ -64,20 +65,21 @@ class Help implements HelpInterface
     {
         $uri = sprintf('https://raw.githubusercontent.com/firefly-iii/help/master/%s/%s.md', $language, $route);
         Log::debug(sprintf('Trying to get %s...', $uri));
-        $opt     = ['useragent' => $this->userAgent];
+        $opt     = ['headers' => ['User-Agent' => $this->userAgent]];
         $content = '';
         try {
-            $result = Requests::get($uri, [], $opt);
-        } catch (Exception $e) {
+            $client = new Client;
+            $res    = $client->request('GET', $uri, $opt);
+        } catch (GuzzleException|Exception $e) {
             Log::error($e);
 
             return '';
         }
 
-        Log::debug(sprintf('Status code is %d', $result->status_code));
+        Log::debug(sprintf('Status code is %d', $res->getStatusCode()));
 
-        if (200 === $result->status_code) {
-            $content = trim($result->body);
+        if (200 === $res->getStatusCode()) {
+            $content = trim($res->getBody()->getContents());
         }
 
         if (\strlen($content) > 0) {

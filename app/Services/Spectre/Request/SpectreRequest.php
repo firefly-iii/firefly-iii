@@ -25,9 +25,9 @@ namespace FireflyIII\Services\Spectre\Request;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Log;
-use Requests;
-use Requests_Response;
 
 /**
  * Class SpectreRequest
@@ -195,23 +195,24 @@ abstract class SpectreRequest
         }
 
         $headers              = $this->getDefaultHeaders();
-        $body                 = json_encode($data);
+        $sendBody             = json_encode($data); // OK
         $fullUri              = $this->server . $uri;
-        $signature            = $this->generateSignature('get', $fullUri, $body);
+        $signature            = $this->generateSignature('get', $fullUri, $sendBody);
         $headers['Signature'] = $signature;
 
         Log::debug('Final headers for spectre signed get request:', $headers);
         try {
-            $response = Requests::get($fullUri, $headers);
-        } catch (Exception $e) {
-            throw new FireflyException(sprintf('Request Exception: %s', $e->getMessage()));
+            $client = new Client;
+            $res    = $client->request('GET', $fullUri, ['headers' => $headers]);
+        } catch (GuzzleException|Exception $e) {
+            throw new FireflyException(sprintf('Guzzle Exception: %s', $e->getMessage()));
         }
-        $this->detectError($response);
-        $statusCode = (int)$response->status_code;
+        $statusCode = $res->getStatusCode();
+        $returnBody = $res->getBody()->getContents();
+        $this->detectError($returnBody, $statusCode);
 
-        $body                        = $response->body;
-        $array                       = json_decode($body, true);
-        $responseHeaders             = $response->headers->getAll();
+        $array                       = json_decode($returnBody, true);
+        $responseHeaders             = $res->getHeaders();
         $array['ResponseHeaders']    = $responseHeaders;
         $array['ResponseStatusCode'] = $statusCode;
 
@@ -219,6 +220,7 @@ abstract class SpectreRequest
             $message = $array['error_message'] ?? '(no message)';
             throw new FireflyException(sprintf('Error of class %s: %s', $array['error_class'], $message));
         }
+
 
         return $array;
     }
@@ -245,28 +247,32 @@ abstract class SpectreRequest
 
         Log::debug('Final headers for spectre signed POST request:', $headers);
         try {
-            $response = Requests::post($fullUri, $headers, $body);
-        } catch (Exception $e) {
+            $client = new Client;
+            $res    = $client->request('POST', $fullUri, ['headers' => $headers, 'body' => $body]);
+        } catch (GuzzleException|Exception $e) {
             throw new FireflyException(sprintf('Request Exception: %s', $e->getMessage()));
         }
-        $this->detectError($response);
-        $body                        = $response->body;
+        $body       = $res->getBody()->getContents();
+        $statusCode = $res->getStatusCode();
+        $this->detectError($body, $statusCode);
+
         $array                       = json_decode($body, true);
-        $responseHeaders             = $response->headers->getAll();
+        $responseHeaders             = $res->getHeaders();
         $array['ResponseHeaders']    = $responseHeaders;
-        $array['ResponseStatusCode'] = $response->status_code;
+        $array['ResponseStatusCode'] = $statusCode;
 
         return $array;
     }
 
     /**
-     * @param Requests_Response $response
+     * @param string $body
+     *
+     * @param int    $statusCode
      *
      * @throws FireflyException
      */
-    private function detectError(Requests_Response $response): void
+    private function detectError(string $body, int $statusCode): void
     {
-        $body  = $response->body;
         $array = json_decode($body, true);
         if (isset($array['error_class'])) {
             $message    = $array['error_message'] ?? '(no message)';
@@ -279,9 +285,8 @@ abstract class SpectreRequest
             throw new FireflyException(sprintf('Error of class %s: %s', $errorClass, $message));
         }
 
-        $statusCode = (int)$response->status_code;
         if (200 !== $statusCode) {
-            throw new FireflyException(sprintf('Status code %d: %s', $statusCode, $response->body));
+            throw new FireflyException(sprintf('Status code %d: %s', $statusCode, $body));
         }
     }
 }

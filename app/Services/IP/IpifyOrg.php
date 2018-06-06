@@ -24,8 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Services\IP;
 
 use Exception;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Log;
-use Requests;
 
 /**
  * Class IpifyOrg
@@ -42,19 +43,20 @@ class IpifyOrg implements IPRetrievalInterface
     {
         $result = null;
         try {
-            $response = Requests::get('https://api.ipify.org');
-        } catch (Exception $e) {
+            $client = new Client;
+            $res    = $client->request('GET', 'https://api.ipify.org');
+        } catch (GuzzleException|Exception $e) {
             Log::warning(sprintf('The ipify.org service could not retrieve external IP: %s', $e->getMessage()));
             Log::warning($e->getTraceAsString());
 
             return null;
         }
-        if (200 !== $response->status_code) {
-            Log::warning(sprintf('Could not retrieve external IP: %d %s', $response->status_code, $response->body));
+        if (200 !== $res->getStatusCode()) {
+            Log::warning(sprintf('Could not retrieve external IP: %d %s', $res->getStatusCode(), $res->getBody()->getContents()));
 
             return null;
         }
 
-        return (string)$response->body;
+        return (string)$res->getBody()->getContents();
     }
 }
