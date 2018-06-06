@@ -184,7 +184,7 @@ class UpgradeDatabase extends Command
                             ]
                         );
                     }
-                    if($bill->amount_max === $bill->amount_min) {
+                    if ($bill->amount_max === $bill->amount_min) {
                         RuleTrigger::create(
                             [
                                 'rule_id'         => $rule->id,

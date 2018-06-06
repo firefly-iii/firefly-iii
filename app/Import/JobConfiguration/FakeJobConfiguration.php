@@ -106,6 +106,7 @@ class FakeJobConfiguration implements JobConfigurationInterface
 
     /**
      * Return the data required for the next step in the job configuration.
+     *
      * @codeCoverageIgnore
      * @return array
      */
@@ -144,6 +145,7 @@ class FakeJobConfiguration implements JobConfigurationInterface
         if (strtolower($album) !== 'station to station' && $this->importJob->stage !== 'new') {
             return 'import.fake.enter-album';
         }
+
         return 'impossible-view'; // @codeCoverageIgnore
     }
 
@@ -152,7 +154,7 @@ class FakeJobConfiguration implements JobConfigurationInterface
      */
     public function setImportJob(ImportJob $importJob): void
     {
-        $this->importJob = $importJob;
+        $this->importJob  = $importJob;
         $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($importJob->user);
     }

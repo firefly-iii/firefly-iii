@@ -98,8 +98,9 @@ class ConvertController extends Controller
 
         return view(
             'transactions.convert', compact(
-            'sourceType', 'destinationType', 'journal', 'positiveAmount', 'sourceAccount', 'destinationAccount', 'sourceType', 'subTitle', 'subTitleIcon'
-        )
+                                      'sourceType', 'destinationType', 'journal', 'positiveAmount', 'sourceAccount', 'destinationAccount', 'sourceType',
+                                      'subTitle', 'subTitleIcon'
+                                  )
         );
     }
 

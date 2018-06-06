@@ -119,7 +119,7 @@ class BunqPrerequisites implements PrerequisitesInterface
 
         try {
             /** @var ApiContext $object */
-            $object  = app(ApiContext::class);
+            $object     = app(ApiContext::class);
             $apiContext = $object->create($environment, $apiKey, $deviceDescription, $permittedIps);
         } catch (FireflyException $e) {
             $messages = new MessageBag();

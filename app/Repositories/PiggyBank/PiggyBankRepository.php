@@ -334,8 +334,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function getSuggestedMonthlyAmount(PiggyBank $piggyBank): string
     {
         $savePerMonth = '0';
-        $repetition = $this->getRepetition($piggyBank);
-        if(null === $repetition) {
+        $repetition   = $this->getRepetition($piggyBank);
+        if (null === $repetition) {
             return $savePerMonth;
         }
         if (null !== $piggyBank->targetdate && $repetition->currentamount < $piggyBank->targetamount) {

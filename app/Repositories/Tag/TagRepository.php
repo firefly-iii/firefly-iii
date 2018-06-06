@@ -137,6 +137,16 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
+     * @param int $tagId
+     *
+     * @return Tag|null
+     */
+    public function findNull(int $tagId): ?Tag
+    {
+        return $this->user->tags()->find($tagId);
+    }
+
+    /**
      * @param Tag $tag
      *
      * @return Carbon
@@ -190,6 +200,16 @@ class TagRepository implements TagRepositoryInterface
         }
 
         return new Carbon;
+    }
+
+    /**
+     * Will return the newest tag (if known) or NULL.
+     *
+     * @return Tag|null
+     */
+    public function newestTag(): ?Tag
+    {
+        return $this->user->tags()->whereNotNull('date')->orderBy('date', 'DESC')->first();
     }
 
     /**
@@ -453,23 +473,4 @@ class TagRepository implements TagRepositoryInterface
 
         return (int)($range[0] + $extra);
     }
-
-    /**
-     * @param int $tagId
-     *
-     * @return Tag|null
-     */
-    public function findNull(int $tagId): ?Tag
-    {
-        return $this->user->tags()->find($tagId);
-    }
-
-    /**
-     * Will return the newest tag (if known) or NULL.
-     *
-     * @return Tag|null
-     */
-    public function newestTag(): ?Tag
-    {
-        return $this->user->tags()->whereNotNull('date')->orderBy('date', 'DESC')->first();
-}}
+}

@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\PiggyBank;
 
 /**
  * Class PiggyBankEvent.

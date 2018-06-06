@@ -28,7 +28,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
-use Session;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -58,7 +57,7 @@ class SimpleJournalList implements BinderInterface
 
             // prep some vars
             $messages = [];
-            $final      = new Collection;
+            $final    = new Collection;
             /** @var JournalRepositoryInterface $repository */
             $repository = app(JournalRepositoryInterface::class);
 

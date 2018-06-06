@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use FireflyIII\User;
 
 /**
  * Class Role.

@@ -23,13 +23,11 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
@@ -331,11 +329,11 @@ class RuleController extends Controller
     public function selectTransactions(Rule $rule)
     {
         // does the user have shared accounts?
-        $first           = session('first')->format('Y-m-d');
-        $today           = Carbon::create()->format('Y-m-d');
-        $subTitle        = (string)trans('firefly.apply_rule_selection', ['title' => $rule->title]);
+        $first    = session('first')->format('Y-m-d');
+        $today    = Carbon::create()->format('Y-m-d');
+        $subTitle = (string)trans('firefly.apply_rule_selection', ['title' => $rule->title]);
 
-        return view('rules.rule.select-transactions', compact( 'first', 'today', 'rule', 'subTitle'));
+        return view('rules.rule.select-transactions', compact('first', 'today', 'rule', 'subTitle'));
     }
 
     /**
@@ -429,6 +427,7 @@ class RuleController extends Controller
             Log::error(sprintf('Could not render view in testTriggers(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());
         }
+
         // @codeCoverageIgnoreEnd
 
         return response()->json(['html' => $view, 'warning' => $warning]);
@@ -490,6 +489,7 @@ class RuleController extends Controller
             Log::error(sprintf('Could not render view in testTriggersByRule(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());
         }
+
         // @codeCoverageIgnoreEnd
 
         return response()->json(['html' => $view, 'warning' => $warning]);
@@ -600,6 +600,7 @@ class RuleController extends Controller
             Log::error(sprintf('Throwable was thrown in getActionsForBill(): %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
         }
+
         // @codeCoverageIgnoreEnd
 
         return $actions;
@@ -809,6 +810,7 @@ class RuleController extends Controller
             Log::debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
             Log::debug($e->getTraceAsString());
         }
+
         // @codeCoverageIgnoreEnd
 
         return $triggers;

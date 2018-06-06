@@ -22,18 +22,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\User;
-use FireflyIII\Models\RuleTrigger;
-use FireflyIII\Models\RuleGroup;
-use FireflyIII\Models\RuleAction;
 
 /**
  * Class Rule.
- * @property bool $stop_processing
- * @property int $id
+ *
+ * @property bool                           $stop_processing
+ * @property int                            $id
  * @property \Illuminate\Support\Collection $ruleTriggers
  */
 class Rule extends Model
@@ -56,7 +54,7 @@ class Rule extends Model
             'strict'          => 'boolean',
         ];
     /** @var array */
-    protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id','strict'];
+    protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id', 'strict'];
 
     /**
      * @param string $value

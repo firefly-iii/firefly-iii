@@ -24,7 +24,6 @@ namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Models\Budget;
 
 /**
  * Class BudgetLimit.

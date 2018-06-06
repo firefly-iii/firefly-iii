@@ -26,8 +26,6 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
-use FireflyConfig;
-use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;

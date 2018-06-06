@@ -25,10 +25,10 @@ namespace FireflyIII\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
-use FireflyIII\Models\PiggyBank;
 
 /**
  * Class PiggyBankRepetition.
+ *
  * @property string $currentamount
  */
 class PiggyBankRepetition extends Model

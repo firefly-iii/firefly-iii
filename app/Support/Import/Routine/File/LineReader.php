@@ -164,6 +164,7 @@ class LineReader
         } catch (\League\Csv\Exception $e) {
             throw new FireflyException(sprintf('Cannot set delimiter: %s', $e->getMessage()));
         }
+
         // @codeCoverageIgnoreEnd
 
         return $reader;

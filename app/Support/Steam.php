@@ -55,7 +55,7 @@ class Steam
         //
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $currencyId  = (int)$repository->getMetaValue($account, 'currency_id');
+        $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
 
         // use system default currency:
         if (0 === $currencyId) {
@@ -77,9 +77,9 @@ class Steam
                                           ->where('transactions.transaction_currency_id', '!=', $currencyId)
                                           ->sum('transactions.foreign_amount');
 
-        $balance        = bcadd($nativeBalance, $foreignBalance);
-        $virtual        = null === $account->virtual_balance ? '0' : (string)$account->virtual_balance;
-        $balance        = bcadd($balance, $virtual);
+        $balance = bcadd($nativeBalance, $foreignBalance);
+        $virtual = null === $account->virtual_balance ? '0' : (string)$account->virtual_balance;
+        $balance = bcadd($balance, $virtual);
         $cache->store($balance);
 
         return $balance;

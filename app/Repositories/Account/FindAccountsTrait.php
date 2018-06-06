@@ -58,6 +58,7 @@ trait FindAccountsTrait
     /**
      * @param string $number
      * @param array  $types
+     *
      * @return Account|null
      */
     public function findByAccountNumber(string $number, array $types): ?Account

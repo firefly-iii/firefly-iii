@@ -36,52 +36,13 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 interface ImportJobRepositoryInterface
 {
     /**
-     * Return all attachments for job.
-     *
      * @param ImportJob $job
-     *
-     * @return Collection
-     */
-    public function getAttachments(ImportJob $job): Collection;
-
-    /**
-     * Handle upload for job.
-     *
-     * @param ImportJob    $job
-     * @param string       $name
-     * @param UploadedFile $file
-     *
-     * @return MessageBag
-     * @throws FireflyException
-     */
-    public function storeFileUpload(ImportJob $job, string $name, UploadedFile $file): MessageBag;
-
-    /**
-     * Store file.
-     *
-     * @param ImportJob $job
-     * @param string    $name
-     * @param string    $fileName
-     *
-     * @return MessageBag
-     */
-    public function storeCLIUpload(ImportJob $job, string $name, string $fileName): MessageBag;
-
-    /**
-     * @param ImportJob $job
-     * @param array     $transactions
+     * @param int       $index
+     * @param string    $error
      *
      * @return ImportJob
      */
-    public function setTransactions(ImportJob $job, array $transactions): ImportJob;
-
-    /**
-     * @param ImportJob $job
-     * @param Tag       $tag
-     *
-     * @return ImportJob
-     */
-    public function setTag(ImportJob $job, Tag $tag): ImportJob;
+    public function addError(ImportJob $job, int $index, string $error): ImportJob;
 
     /**
      * Add message to job.
@@ -92,15 +53,6 @@ interface ImportJobRepositoryInterface
      * @return ImportJob
      */
     public function addErrorMessage(ImportJob $job, string $error): ImportJob;
-
-    /**
-     * @param ImportJob $job
-     * @param int       $index
-     * @param string    $error
-     *
-     * @return ImportJob
-     */
-    public function addError(ImportJob $job, int $index, string $error): ImportJob;
 
     /**
      * @param ImportJob $job
@@ -140,6 +92,15 @@ interface ImportJobRepositoryInterface
      * @return ImportJob
      */
     public function findByKey(string $key): ImportJob;
+
+    /**
+     * Return all attachments for job.
+     *
+     * @param ImportJob $job
+     *
+     * @return Collection
+     */
+    public function getAttachments(ImportJob $job): Collection;
 
     /**
      * Return configuration of job.
@@ -200,19 +161,19 @@ interface ImportJobRepositoryInterface
 
     /**
      * @param ImportJob $job
-     * @param string    $status
-     *
-     * @return ImportJob
-     */
-    public function setStatus(ImportJob $job, string $status): ImportJob;
-
-    /**
-     * @param ImportJob $job
      * @param string    $stage
      *
      * @return ImportJob
      */
     public function setStage(ImportJob $job, string $stage): ImportJob;
+
+    /**
+     * @param ImportJob $job
+     * @param string    $status
+     *
+     * @return ImportJob
+     */
+    public function setStatus(ImportJob $job, string $status): ImportJob;
 
     /**
      * @param ImportJob $job
@@ -224,6 +185,14 @@ interface ImportJobRepositoryInterface
 
     /**
      * @param ImportJob $job
+     * @param Tag       $tag
+     *
+     * @return ImportJob
+     */
+    public function setTag(ImportJob $job, Tag $tag): ImportJob;
+
+    /**
+     * @param ImportJob $job
      * @param int       $count
      *
      * @return ImportJob
@@ -231,9 +200,40 @@ interface ImportJobRepositoryInterface
     public function setTotalSteps(ImportJob $job, int $count): ImportJob;
 
     /**
+     * @param ImportJob $job
+     * @param array     $transactions
+     *
+     * @return ImportJob
+     */
+    public function setTransactions(ImportJob $job, array $transactions): ImportJob;
+
+    /**
      * @param User $user
      */
     public function setUser(User $user);
+
+    /**
+     * Store file.
+     *
+     * @param ImportJob $job
+     * @param string    $name
+     * @param string    $fileName
+     *
+     * @return MessageBag
+     */
+    public function storeCLIUpload(ImportJob $job, string $name, string $fileName): MessageBag;
+
+    /**
+     * Handle upload for job.
+     *
+     * @param ImportJob    $job
+     * @param string       $name
+     * @param UploadedFile $file
+     *
+     * @return MessageBag
+     * @throws FireflyException
+     */
+    public function storeFileUpload(ImportJob $job, string $name, UploadedFile $file): MessageBag;
 
     /**
      * @param ImportJob $job

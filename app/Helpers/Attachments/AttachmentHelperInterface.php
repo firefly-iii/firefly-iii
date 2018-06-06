@@ -37,14 +37,14 @@ interface AttachmentHelperInterface
      *
      * @return string
      */
-    public function getAttachmentLocation(Attachment $attachment): string;
+    public function getAttachmentContent(Attachment $attachment): string;
 
     /**
      * @param Attachment $attachment
      *
      * @return string
      */
-    public function getAttachmentContent(Attachment $attachment): string;
+    public function getAttachmentLocation(Attachment $attachment): string;
 
     /**
      * @return Collection

@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\User;
-use FireflyIII\Models\Rule;
 
 /**
  * Class RuleGroup.
+ *
  * @property bool $active
  */
 class RuleGroup extends Model

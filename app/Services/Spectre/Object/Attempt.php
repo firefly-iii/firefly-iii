@@ -87,9 +87,9 @@ class Attempt extends SpectreObject
     private $successAt;
     /** @var Carbon */
     private $toDate;
-        /** @var Carbon */
+    /** @var Carbon */
     private $updatedAt; // undocumented
-/** @var string */
+    /** @var string */
     private $userAgent;
 
     /**

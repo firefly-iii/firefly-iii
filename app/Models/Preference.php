@@ -25,15 +25,15 @@ namespace FireflyIII\Models;
 use Crypt;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Model;
 use Log;
-use FireflyIII\User;
 
 /**
  * Class Preference.
  *
- * @property mixed $data
+ * @property mixed  $data
  * @property string $name
  */
 class Preference extends Model

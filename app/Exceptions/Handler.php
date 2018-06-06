@@ -132,20 +132,20 @@ class Handler extends ExceptionHandler
         $doMailError = env('SEND_ERROR_MESSAGE', true);
         if (
             // if the user wants us to mail:
-            $doMailError === true &&
-            ((
-                // and if is one of these error instances
-                 $exception instanceof FireflyException
-                 || $exception instanceof ErrorException
-                 || $exception instanceof OAuthServerException
+            $doMailError === true
+            && ((
+                    // and if is one of these error instances
+                    $exception instanceof FireflyException
+                    || $exception instanceof ErrorException
+                    || $exception instanceof OAuthServerException
 
-             )
-             || (
-                 // or this one, but it's a JSON exception.
-                 $exception instanceof AuthenticationException
-                 && Request::expectsJson() === true
-             ))
-            ) {
+                )
+                || (
+                    // or this one, but it's a JSON exception.
+                    $exception instanceof AuthenticationException
+                    && Request::expectsJson() === true
+                ))
+        ) {
             // then, send email
             $userData = [
                 'id'    => 0,

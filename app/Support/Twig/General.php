@@ -24,12 +24,12 @@ namespace FireflyIII\Support\Twig;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
+use FireflyIII\Support\Twig\Extension\Account as AccountExtension;
 use League\CommonMark\CommonMarkConverter;
 use Route;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
-use FireflyIII\Support\Twig\Extension\Account as AccountExtension;
 
 /**
  * Class TwigSupport.

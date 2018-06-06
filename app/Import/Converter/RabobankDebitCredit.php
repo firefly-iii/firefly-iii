@@ -44,7 +44,7 @@ class RabobankDebitCredit implements ConverterInterface
             return -1;
         }
         // old format:
-        if('A' === $value) {
+        if ('A' === $value) {
             Log::debug('Return -1');
 
             return -1;

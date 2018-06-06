@@ -208,7 +208,7 @@ class Preferences
     /**
      * @param \FireflyIII\User $user
      * @param                  $name
-     * @param mixed           $value
+     * @param mixed            $value
      *
      * @return Preference
      */

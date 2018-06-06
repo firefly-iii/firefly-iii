@@ -86,8 +86,8 @@ class BillRequest extends Request
                 break;
             case 'PUT':
             case 'PATCH':
-                $bill           = $this->route()->parameter('bill');
-                $rules['name']  .= ',' . $bill->id;
+                $bill          = $this->route()->parameter('bill');
+                $rules['name'] .= ',' . $bill->id;
                 break;
         }
 

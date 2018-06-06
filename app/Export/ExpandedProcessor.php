@@ -36,12 +36,12 @@ use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Storage;
 use ZipArchive;
-use FireflyIII\Models\TransactionJournal;
 
 /**
  * Class ExpandedProcessor.

@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\BillRequest;
 use FireflyIII\Api\V1\Requests\CurrencyRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
@@ -178,7 +177,7 @@ class CurrencyController extends Controller
 
 
     /**
-     * @param CurrencyRequest         $request
+     * @param CurrencyRequest     $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse

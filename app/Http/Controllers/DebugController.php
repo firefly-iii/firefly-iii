@@ -111,10 +111,12 @@ class DebugController extends Controller
 
         return view(
             'debug', compact(
-            'phpVersion', 'extensions', 'localeAttempts', 'appEnv', 'appDebug', 'appLog', 'appLogLevel', 'now', 'packages', 'drivers', 'currentDriver',
-            'userAgent', 'displayErrors', 'errorReporting', 'phpOs', 'interface', 'logContent', 'cacheDriver', 'isDocker', 'isSandstorm', 'trustedProxies',
-            'toSandbox'
-        )
+                       'phpVersion', 'extensions', 'localeAttempts', 'appEnv', 'appDebug', 'appLog', 'appLogLevel', 'now', 'packages', 'drivers',
+                       'currentDriver',
+                       'userAgent', 'displayErrors', 'errorReporting', 'phpOs', 'interface', 'logContent', 'cacheDriver', 'isDocker', 'isSandstorm',
+                       'trustedProxies',
+                       'toSandbox'
+                   )
         );
     }
 

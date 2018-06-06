@@ -36,15 +36,6 @@ interface BudgetRepositoryInterface
 {
 
     /**
-     * Get all budgets with these ID's.
-     *
-     * @param array $budgetIds
-     *
-     * @return Collection
-     */
-    public function getByIds(array $budgetIds): Collection;
-
-    /**
      * A method that returns the amount of money budgeted per day for this budget,
      * on average.
      *
@@ -173,6 +164,15 @@ interface BudgetRepositoryInterface
      * @return Collection
      */
     public function getBudgets(): Collection;
+
+    /**
+     * Get all budgets with these ID's.
+     *
+     * @param array $budgetIds
+     *
+     * @return Collection
+     */
+    public function getByIds(array $budgetIds): Collection;
 
     /**
      * @return Collection

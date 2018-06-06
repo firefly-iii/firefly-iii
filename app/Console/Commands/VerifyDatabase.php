@@ -164,7 +164,8 @@ class VerifyDatabase extends Command
             if (isset($results[$key]) && $results[$key] !== $category) {
                 $this->error(
                     sprintf(
-                        'Transaction #%d referred to the wrong category. Was category #%d but is fixed to be category #%d.', $obj->transaction_journal_id, $category, $results[$key]
+                        'Transaction #%d referred to the wrong category. Was category #%d but is fixed to be category #%d.', $obj->transaction_journal_id,
+                        $category, $results[$key]
                     )
                 );
                 DB::table('category_transaction')->where('id', $obj->ct_id)->update(['category_id' => $results[$key]]);
@@ -184,14 +185,15 @@ class VerifyDatabase extends Command
             ->get(['transactions.id', 'transaction_journal_id', 'identifier', 'budget_transaction.budget_id', 'budget_transaction.id as ct_id']);
         $results = [];
         foreach ($set as $obj) {
-            $key      = $obj->transaction_journal_id . '-' . $obj->identifier;
+            $key    = $obj->transaction_journal_id . '-' . $obj->identifier;
             $budget = (int)$obj->budget_id;
 
             // value exists and is not budget:
             if (isset($results[$key]) && $results[$key] !== $budget) {
                 $this->error(
                     sprintf(
-                        'Transaction #%d referred to the wrong budget. Was budget #%d but is fixed to be budget #%d.', $obj->transaction_journal_id, $budget, $results[$key]
+                        'Transaction #%d referred to the wrong budget. Was budget #%d but is fixed to be budget #%d.', $obj->transaction_journal_id, $budget,
+                        $results[$key]
                     )
                 );
                 DB::table('budget_transaction')->where('id', $obj->ct_id)->update(['budget_id' => $results[$key]]);

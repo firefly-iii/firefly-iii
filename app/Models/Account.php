@@ -38,9 +38,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class Account.
  *
- * @property int $id
- * @property string $name
- * @property string $iban
+ * @property int         $id
+ * @property string      $name
+ * @property string      $iban
  * @property AccountType $accountType
  */
 class Account extends Model

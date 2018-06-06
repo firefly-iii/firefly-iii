@@ -215,7 +215,7 @@ class ImportArrayStorage
         $collector = app(JournalCollectorInterface::class);
         $collector->setUser($this->importJob->user);
         $collector->setAllAssetAccounts()
-                    ->ignoreCache()
+                  ->ignoreCache()
                   ->setTypes([TransactionType::TRANSFER])
                   ->withOpposingAccount();
         $collector->removeFilter(InternalTransferFilter::class);

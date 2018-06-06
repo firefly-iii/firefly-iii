@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use FireflyIII\User;
-use FireflyIII\Models\TransactionCurrency;
 
 /**
  * Class AvailableBudget.

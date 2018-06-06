@@ -39,15 +39,6 @@ use Illuminate\Support\MessageBag;
 interface JournalRepositoryInterface
 {
     /**
-     * Find a journal by its hash.
-     *
-     * @param string $hash
-     *
-     * @return TransactionJournalMeta|null
-     */
-    public function findByHash(string $hash): ?TransactionJournalMeta;
-
-    /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
      * @param Account            $source
@@ -77,11 +68,21 @@ interface JournalRepositoryInterface
      * Find a specific journal.
      *
      * @param int $journalId
+     *
      * @deprecated
      *
      * @return TransactionJournal
      */
     public function find(int $journalId): TransactionJournal;
+
+    /**
+     * Find a journal by its hash.
+     *
+     * @param string $hash
+     *
+     * @return TransactionJournalMeta|null
+     */
+    public function findByHash(string $hash): ?TransactionJournalMeta;
 
     /**
      * Find a specific journal.

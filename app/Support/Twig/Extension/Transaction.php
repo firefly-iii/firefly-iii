@@ -26,11 +26,11 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Transaction as TransactionModel;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Lang;
 use Log;
 use Twig_Extension;
-use FireflyIII\Models\TransactionJournal;
 
 /**
  * Class Transaction.

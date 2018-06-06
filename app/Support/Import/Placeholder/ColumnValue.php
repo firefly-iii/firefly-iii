@@ -25,6 +25,7 @@ namespace FireflyIII\Support\Import\Placeholder;
 
 /**
  * Class ColumnValue
+ *
  * @codeCoverageIgnore
  */
 class ColumnValue

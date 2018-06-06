@@ -97,12 +97,12 @@ class TransactionFactory
         $description = $journal->description === $data['description'] ? null : $data['description'];
 
         // type of source account depends on journal type:
-        $sourceType    = $this->accountType($journal, 'source');
+        $sourceType = $this->accountType($journal, 'source');
         Log::debug(sprintf('Expect source account to be of type %s', $sourceType));
         $sourceAccount = $this->findAccount($sourceType, $data['source_id'], $data['source_name']);
 
         // same for destination account:
-        $destinationType    = $this->accountType($journal, 'destination');
+        $destinationType = $this->accountType($journal, 'destination');
         Log::debug(sprintf('Expect source destination to be of type %s', $destinationType));
         $destinationAccount = $this->findAccount($destinationType, $data['destination_id'], $data['destination_name']);
         // first make a "negative" (source) transaction based on the data in the array.
