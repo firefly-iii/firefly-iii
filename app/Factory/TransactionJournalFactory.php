@@ -53,7 +53,7 @@ class TransactionJournalFactory
         $type            = $this->findTransactionType($data['type']);
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser($this->user);
         Log::debug(sprintf('Going to store a %s', $type->type));
-        $journal         = TransactionJournal::create(
+        $journal = TransactionJournal::create(
             [
                 'user_id'                 => $data['user'],
                 'transaction_type_id'     => $type->id,
@@ -66,6 +66,10 @@ class TransactionJournalFactory
                 'completed'               => 0,
             ]
         );
+
+        if (isset($data['transactions'][0]['amount']) && '' === $data['transactions'][0]['amount']) {
+            Log::error('Empty amount in data', $data);
+        }
 
         // store basic transactions:
         /** @var TransactionFactory $factory */
@@ -95,7 +99,7 @@ class TransactionJournalFactory
 
         // store date meta fields (if present):
         $fields = ['sepa-cc', 'sepa-ct-op', 'sepa-ct-id', 'sepa-db', 'sepa-country', 'sepa-ep', 'sepa-ci', 'interest_date', 'book_date', 'process_date',
-                   'due_date', 'payment_date', 'invoice_date', 'internal_reference', 'bunq_payment_id', 'importHash','importHashV2', 'external_id'];
+                   'due_date', 'payment_date', 'invoice_date', 'internal_reference', 'bunq_payment_id', 'importHash', 'importHashV2', 'external_id'];
 
         foreach ($fields as $field) {
             $this->storeMeta($journal, $data, $field);
