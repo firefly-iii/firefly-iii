@@ -65,9 +65,9 @@ const pkgdef :Spk.PackageDefinition = (
         # Sizes are given in device-independent pixels, so if you took these
         # screenshots on a Retina-style high DPI screen, divide each dimension by two.
 
-        (width = 1291, height = 800, png = embed "screenshots/screenshot-1.png"),
-        (width = 1291, height = 800, png = embed "screenshots/screenshot-2.png"),
-        (width = 1291, height = 800, png = embed "screenshots/screenshot-3.png"),
+        (width = 1290, height = 800, png = embed "screenshots/screenshot-1.png"),
+        (width = 1290, height = 800, png = embed "screenshots/screenshot-2.png"),
+        (width = 1290, height = 800, png = embed "screenshots/screenshot-3.png"),
 
       ],
       changeLog = (defaultText = embed "changelog.md"),
