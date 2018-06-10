@@ -60,7 +60,7 @@
                         {{ ExpandedForm.date('date', preFilled.date|default(phpdate('Y-m-d'))) }}
                     </div>
                     <div class="box-footer">
-                        <button type="submit" id="transaction-btn" class="btn btn-success pull-right">
+                        <button type="submit" class="transaction-btn btn btn-success pull-right">
                             {{ trans('form.store_new_'~what) }}
                         </button>
                     </div>
@@ -196,7 +196,7 @@
                         {{ ExpandedForm.optionsList('create','transaction') }}
                     </div>
                     <div class="box-footer">
-                        <button type="submit" id="transaction-btn" class="btn btn-success pull-right">
+                        <button type="submit" class="transaction-btn btn btn-success pull-right">
                             {{ trans('form.store_new_'~what) }}
                         </button>
                     </div>

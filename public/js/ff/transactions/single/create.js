@@ -142,7 +142,7 @@ function updateLayout() {
     $('#subTitle').text(title[what]);
     $('.breadcrumb .active').text(breadcrumbs[what]);
     $('.breadcrumb li:nth-child(2)').html('<a href="' + middleCrumbUrl[what] + '">' + middleCrumbName[what] + '</a>');
-    $('#transaction-btn').text(button[what]);
+    $('.transaction-btn').text(button[what]);
 }
 
 /**
