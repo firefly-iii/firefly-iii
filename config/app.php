@@ -98,6 +98,7 @@ return [
         FireflyIII\Providers\SearchServiceProvider::class,
         FireflyIII\Providers\TagServiceProvider::class,
         FireflyIII\Providers\AdminServiceProvider::class,
+        FireflyIII\Providers\RecurringServiceProvider::class,
 
 
     ],

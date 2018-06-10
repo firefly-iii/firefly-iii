@@ -1,0 +1,84 @@
+<?php
+/**
+ * RecurringRepositoryInterface.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
+ *
+ * This file is part of Firefly III.
+ *
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types=1);
+
+namespace FireflyIII\Repositories\Recurring;
+
+use Carbon\Carbon;
+use FireflyIII\Models\Recurrence;
+use FireflyIII\Models\RecurrenceRepetition;
+use FireflyIII\User;
+use Illuminate\Support\Collection;
+
+
+/**
+ * Interface RecurringRepositoryInterface
+ *
+ * @package FireflyIII\Repositories\Recurring
+ */
+interface RecurringRepositoryInterface
+{
+    /**
+     * Returns all of the user's recurring transactions.
+     *
+     * @return Collection
+     */
+    public function getActive(): Collection;
+
+    /**
+     * Get the notes.
+     *
+     * @param Recurrence $recurrence
+     *
+     * @return string
+     */
+    public function getNoteText(Recurrence $recurrence): string;
+
+    /**
+     * Calculate the next X iterations starting on the date given in $date.
+     * Returns an array of Carbon objects.
+     *
+     * @param RecurrenceRepetition $repetition
+     * @param Carbon               $date
+     * @param int                  $count
+     *
+     * @return array
+     */
+    public function getOccurrences(RecurrenceRepetition $repetition, Carbon $date, int $count = 5): array;
+
+    /**
+     * Parse the repetition in a string that is user readable.
+     *
+     * @param RecurrenceRepetition $repetition
+     *
+     * @return string
+     */
+    public function repetitionDescription(RecurrenceRepetition $repetition): string;
+
+    /**
+     * Set user for in repository.
+     *
+     * @param User $user
+     */
+    public function setUser(User $user): void;
+
+}

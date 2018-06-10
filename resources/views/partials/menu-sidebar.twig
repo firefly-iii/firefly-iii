@@ -98,6 +98,10 @@
                 <a href="{{ route('rules.index') }}">
                     <i class="fa fa-random fa-fw"></i> {{ 'rules'|_ }}</a>
             </li>
+            <li class="{{ activeRoutePartial('recurring') }}">
+                <a href="{{ route('recurring.index') }}">
+                    <i class="fa fa-paint-brush fa-fw"></i> {{ 'recurrences'|_ }}</a>
+            </li>
         </ul>
 
     </li>

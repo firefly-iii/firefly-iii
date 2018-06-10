@@ -466,28 +466,6 @@ Route::group(
 
     // download config:
     Route::get('download/{importJob}', ['uses' => 'Import\IndexController@download', 'as' => 'job.download']);
-
-    // import method prerequisites:
-    #
-    #
-    #Route::get('reset/{bank}', ['uses' => 'Import\IndexController@reset', 'as' => 'reset']);
-
-    // create the job:
-    #Route::get('create/{bank}', ['uses' => 'Import\IndexController@create', 'as' => 'create-job']);
-
-    // configure the job:
-
-    #Route::post('configure/{importJob}', ['uses' => 'Import\ConfigurationController@post', 'as' => 'configure.post']);
-
-    // get status of any job:
-    #Route::get('status/{importJob}', ['uses' => 'Import\StatusController@index', 'as' => 'status']);
-    #Route::get('json/{importJob}', ['uses' => 'Import\StatusController@json', 'as' => 'status.json']);
-
-    // start a job
-    #Route::any('start/{importJob}', ['uses' => 'Import\IndexController@start', 'as' => 'start']);
-
-    // download config
-    #Route::get('download/{importJob}', ['uses' => 'Import\IndexController@download', 'as' => 'download']);
 }
 );
 
@@ -629,6 +607,23 @@ Route::group(
     Route::post('2fa/code', ['uses' => 'ProfileController@postCode', 'as' => 'code.store']);
     Route::get('/delete-code', ['uses' => 'ProfileController@deleteCode', 'as' => 'delete-code']);
 
+}
+);
+
+/**
+ * Recurring Transactions Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Recurring', 'prefix' => 'recurring', 'as' => 'recurring.'], function () {
+
+    Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+    Route::get('suggest', ['uses' => 'IndexController@suggest', 'as' => 'suggest']);
+    Route::get('show/{recurrence}', ['uses' => 'IndexController@show', 'as' => 'show']);
+    Route::get('create', ['uses' => 'CreateController@create', 'as' => 'create']);
+    Route::get('edit/{recurrence}', ['uses' => 'EditController@edit', 'as' => 'edit']);
+    Route::get('delete/{recurrence}', ['uses' => 'DeleteController@delete', 'as' => 'delete']);
+
+    Route::post('store', ['uses' => 'CreateController@store', 'as' => 'store']);
 }
 );
 

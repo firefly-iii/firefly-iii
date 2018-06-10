@@ -820,7 +820,7 @@ return [
     'language'                                => 'Language',
     'new_savings_account'                     => ':bank_name savings account',
     'cash_wallet'                             => 'Cash wallet',
-    'currency_not_present' => 'If the currency you normally use is not listed do not worry. You can create your own currencies under Options > Currencies.',
+    'currency_not_present'                    => 'If the currency you normally use is not listed do not worry. You can create your own currencies under Options > Currencies.',
 
     // home page:
     'yourAccounts'                            => 'Your accounts',
@@ -1206,4 +1206,35 @@ return [
     'no_bills_intro_default'                => 'You have no bills yet. You can create bills to keep track of regular expenses, like your rent or insurance.',
     'no_bills_imperative_default'           => 'Do you have such regular bills? Create a bill and keep track of your payments:',
     'no_bills_create_default'               => 'Create a bill',
+
+    // recurring transactions
+    'recurrences'                           => 'Recurring transactions',
+    'no_recurring_title_default'            => 'Let\'s create a recurring transaction!',
+    'no_recurring_intro_default'            => 'You have no recurring transactions yet. You can use these to make Firefly III automatically create transactions for you.',
+    'no_recurring_imperative_default'       => 'This is a pretty advanced feature but it can be extremely useful. Make sure you read the documentation (?-icon in the top right corner) before you continue.',
+    'no_recurring_create_default'           => 'Create a recurring transaction',
+    'make_new_recurring'                    => 'Create a recurring transaction',
+    'recurring_daily'                       => 'Every day',
+    'recurring_weekly'                      => 'Every week on :weekday',
+    'recurring_monthly'                     => 'Every month on the :dayOfMonth(st/nd/rd/th) day',
+    'recurring_ndom'                        => 'Every month on the :dayOfMonth(st/nd/rd/th) :weekday',
+    'recurring_yearly'                      => 'Every year on :date',
+    'overview_for_recurrence'               => 'Overview for recurring transaction ":title"',
+    'warning_duplicates_repetitions'        => 'In rare instances, dates appear twice in this list. This can happen when multiple repetitions collide. Firefly III will always generate one transaction per day.',
+    'created_transactions'                  => 'Related transactions',
+    'expected_transactions'                 => 'Expected transactions',
+    'recurring_meta_field_tags'             => 'Tags',
+    'recurring_meta_field_notes'            => 'Notes',
+    'recurring_meta_field_bill_id'          => 'Bill',
+    'recurring_meta_field_piggy_bank_id'    => 'Piggy bank',
+    'create_new_recurrence'                 => 'Create new recurring transaction',
+    'help_first_date'                       => 'Indicate the first expected recurrence. This must be in the future.',
+    'mandatory_for_recurring'               => 'Mandatory recurrence information',
+    'mandatory_for_transaction'             => 'Mandatory transaction information',
+    'optional_for_recurring'                => 'Optional recurrence information',
+    'optional_for_transaction'              => 'Optional transaction information',
+    'change_date_other_options'             => 'Change the "first date" to see more options.',
+    'mandatory_fields_for_tranaction'       => 'The values here will end up in the transaction(s) being created',
+
+
 ];
