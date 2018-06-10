@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Note.
+ *
+ * @property string $text
  */
 class Note extends Model
 {

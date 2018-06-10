@@ -36,6 +36,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon $targetdate
  * @property Carbon $startdate
  * @property string $targetamount
+ * @property int $id
+ * @property string $name
  *
  */
 class PiggyBank extends Model

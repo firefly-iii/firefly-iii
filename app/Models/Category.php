@@ -31,6 +31,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Category.
+ *
+ * @property string $name
+ * @property int $id
  */
 class Category extends Model
 {

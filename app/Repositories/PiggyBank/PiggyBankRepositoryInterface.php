@@ -102,10 +102,16 @@ interface PiggyBankRepositoryInterface
 
     /**
      * @param int $piggyBankid
-     *
+     * @deprecated
      * @return PiggyBank
      */
     public function find(int $piggyBankid): PiggyBank;
+
+    /**
+     * @param int $piggyBankId
+     * @return PiggyBank|null
+     */
+    public function findNull(int $piggyBankId): ?PiggyBank;
 
     /**
      * Find by name or return NULL.

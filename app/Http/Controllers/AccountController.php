@@ -34,7 +34,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -52,8 +51,6 @@ class AccountController extends Controller
 {
     /** @var CurrencyRepositoryInterface */
     private $currencyRepos;
-    /** @var JournalRepositoryInterface */
-    private $journalRepos;
     /** @var AccountRepositoryInterface */
     private $repository;
 
@@ -72,7 +69,6 @@ class AccountController extends Controller
 
                 $this->repository    = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
-                $this->journalRepos  = app(JournalRepositoryInterface::class);
 
                 return $next($request);
             }

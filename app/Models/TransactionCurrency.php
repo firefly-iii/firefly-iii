@@ -30,6 +30,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Class TransactionCurrency.
  *
  * @property string $code
+ * @property string $symbol
  * @property int    $decimal_places
  *
  */
