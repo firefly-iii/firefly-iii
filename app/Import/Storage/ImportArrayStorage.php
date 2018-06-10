@@ -108,6 +108,8 @@ class ImportArrayStorage
             $this->setStatus('rules_applied');
         }
 
+        app('preferences')->mark();
+
         return $collection;
     }
 
