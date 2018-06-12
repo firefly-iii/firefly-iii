@@ -40,12 +40,27 @@ $(document).ready(function () {
     $('#calendar-link').on('click', showRepCalendar);
 });
 
+/**
+ *
+ */
 function showRepCalendar() {
-
-    // fill model with calendar:
-
-
-    $('#defaultModal').modal({});
+    $('#recurring_calendar').fullCalendar(
+        {
+            defaultDate: '2018-06-13',
+            editable: false,
+            height: 400,
+            width: 200,
+            contentHeight: 300,
+            aspectRatio: 1.25,
+            eventLimit: true, // allow "more" link when too many events
+            events: [
+                {
+                    title: '',
+                    start: '2018-06-14'
+                }
+            ]
+        });
+    $('#calendarModal').modal('show');
     return false;
 }
 

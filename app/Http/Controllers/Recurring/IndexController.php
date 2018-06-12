@@ -70,10 +70,6 @@ class IndexController extends Controller
      */
     public function calendar(Request $request)
     {
-        $date            = new Carbon;
-        $daysOfWeek      = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-        //$firstDayOfMonth = mktime(0, 0, 0, $month, 1, $year);
-
         return view('recurring.calendar');
     }
 
