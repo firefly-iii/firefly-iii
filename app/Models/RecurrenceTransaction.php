@@ -82,7 +82,7 @@ class RecurrenceTransaction extends Model
      */
     public function recurrenceTransactionMeta(): HasMany
     {
-        return $this->hasMany(recurrenceTransactionMeta::class,'rt_id');
+        return $this->hasMany(RecurrenceTransactionMeta::class,'rt_id');
     }
 
     /**
