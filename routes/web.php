@@ -618,6 +618,7 @@ Route::group(
 
     Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
     Route::get('suggest', ['uses' => 'IndexController@suggest', 'as' => 'suggest']);
+    Route::get('calendar', ['uses' => 'IndexController@calendar', 'as' => 'calendar']);
     Route::get('show/{recurrence}', ['uses' => 'IndexController@show', 'as' => 'show']);
     Route::get('create', ['uses' => 'CreateController@create', 'as' => 'create']);
     Route::get('edit/{recurrence}', ['uses' => 'EditController@edit', 'as' => 'edit']);

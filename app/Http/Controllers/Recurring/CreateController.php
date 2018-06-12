@@ -74,6 +74,13 @@ class CreateController extends Controller
         $tomorrow        = new Carbon;
         $tomorrow->addDay();
 
+        // types of repetitions:
+        $typesOfRepetitions = [
+            'forever'    => trans('firefly.repeat_forever'),
+            'until_date' => trans('firefly.repeat_until_date'),
+            'times'      => trans('firefly.repeat_times'),
+        ];
+
         // flash some data:
         $preFilled = [
             'first_date'       => $tomorrow->format('Y-m-d'),
@@ -83,7 +90,7 @@ class CreateController extends Controller
         ];
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('recurring.create', compact('tomorrow', 'preFilled', 'defaultCurrency','budgets'));
+        return view('recurring.create', compact('tomorrow', 'preFilled','typesOfRepetitions', 'defaultCurrency', 'budgets'));
     }
 
 }

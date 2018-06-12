@@ -44,6 +44,7 @@ class ChangesForV475 extends Migration
             $table->date('first_date');
             $table->date('repeat_until')->nullable();
             $table->date('latest_date')->nullable();
+            $table->smallInteger('repetitions', false, true);
 
             $table->boolean('apply_rules')->default(true);
             $table->boolean('active')->default(true);

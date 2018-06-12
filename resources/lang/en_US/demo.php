@@ -34,4 +34,6 @@ return [
     'transactions-index'     => 'These expenses, deposits and transfers are not particularly imaginative. They have been generated automatically.',
     'piggy-banks-index'      => 'As you can see, there are three piggy banks. Use the plus and minus buttons to influence the amount of money in each piggy bank. Click the name of the piggy bank to see the administration for each piggy bank.',
     'import-index'           => 'Any CSV file can be imported into Firefly III. It also supports importing data from bunq and Spectre. Other banks and financial aggregators will be implemented in the future. As a demo-user however, you can only see the "fake"-provider in action. It will generate some random transactions to show you how the process works.',
+    'recurring-index'        => 'Please note that this feature is under active development and may not work as expected.',
+    'recurring-create'       => 'Please note that this feature is under active development and may not work as expected.',
 ];

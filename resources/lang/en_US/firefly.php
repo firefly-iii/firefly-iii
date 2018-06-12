@@ -1235,6 +1235,10 @@ return [
     'optional_for_transaction'              => 'Optional transaction information',
     'change_date_other_options'             => 'Change the "first date" to see more options.',
     'mandatory_fields_for_tranaction'       => 'The values here will end up in the transaction(s) being created',
+    'click_for_calendar'                    => 'Click here for a calendar that shows you when the transaction would repeat.',
+    'repeat_forever'                        => 'Repeat forever',
+    'repeat_until_date'                     => 'Repeat until date',
+    'repeat_times'                          => 'Repeat a number of times',
 
 
 ];

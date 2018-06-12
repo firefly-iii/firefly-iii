@@ -230,5 +230,8 @@ return [
     'recurring_description'   => 'Recurring transaction description',
     'repetition_type'         => 'Type of repetition',
     'foreign_currency_id'     => 'Foreign currency',
+    'repetition_end'          => 'Repetition ends',
+    'repetitions'             => 'Repetitions',
+    'calendar'                => 'Calendar',
 
 ];

@@ -32,11 +32,43 @@ $(document).ready(function () {
     initializeButtons();
     initializeAutoComplete();
     respondToFirstDateChange();
+    respondToRepetitionEnd();
     $('.switch-button').on('click', switchTransactionType);
+    $('#ffInput_repetition_end').on('change', respondToRepetitionEnd);
     $('#ffInput_first_date').on('change', respondToFirstDateChange);
 
-
+    $('#calendar-link').on('click', showRepCalendar);
 });
+
+function showRepCalendar() {
+
+    // fill model with calendar:
+
+
+    $('#defaultModal').modal({});
+    return false;
+}
+
+function respondToRepetitionEnd() {
+    var obj = $('#ffInput_repetition_end');
+    var value = obj.val();
+    switch (value) {
+        case 'forever':
+            $('#repeat_until_holder').hide();
+            $('#repetitions_holder').hide();
+            break;
+        case 'until_date':
+            $('#repeat_until_holder').show();
+            $('#repetitions_holder').hide();
+            break;
+        case 'times':
+            $('#repeat_until_holder').hide();
+            $('#repetitions_holder').show();
+            break;
+    }
+
+
+}
 
 function respondToFirstDateChange() {
     var obj = $('#ffInput_first_date');
