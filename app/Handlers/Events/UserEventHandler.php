@@ -109,6 +109,27 @@ class UserEventHandler
     }
 
     /**
+     * @param Login $event
+     *
+     * @return bool
+     */
+    function demoUserBackToEnglish(Login $event): bool
+    {
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+
+        /** @var User $user */
+        $user = $event->user;
+        if ($repository->hasRole($user, 'demo')) {
+            // set user back to English.
+            app('preferences')->setForUser($user, 'language', 'en_US');
+            app('preferences')->mark();
+        }
+
+        return true;
+    }
+
+    /**
      * @param UserChangedEmail $event
      *
      * @return bool

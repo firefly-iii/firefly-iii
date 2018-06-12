@@ -64,6 +64,7 @@ class EventServiceProvider extends ServiceProvider
             // is a User related event.
             Login::class                       => [
                 'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
+                'FireflyIII\Handlers\Events\UserEventHandler@demoUserBackToEnglish',
 
             ],
             RequestedVersionCheckStatus::class => [
