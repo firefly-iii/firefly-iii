@@ -26,6 +26,7 @@ namespace FireflyIII\Factory;
 
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -105,6 +106,16 @@ class TransactionFactory
         $destinationType = $this->accountType($journal, 'destination');
         Log::debug(sprintf('Expect source destination to be of type %s', $destinationType));
         $destinationAccount = $this->findAccount($destinationType, $data['destination_id'], $data['destination_name']);
+
+        Log::debug(sprintf('Source type is "%s", destination type is "%s"', $sourceType, $destinationType));
+        // throw big fat error when source type === dest type
+        if ($sourceAccount->accountType->type === $destinationAccount->accountType->type) {
+            throw new FireflyException(sprintf('Source and destination account cannot be both of the type "%s"', $destinationAccount->accountType->type));
+        }
+        if ($sourceAccount->accountType->type !== AccountType::ASSET && $destinationAccount->accountType->type !== AccountType::ASSET) {
+            throw new FireflyException('At least one of the accounts must be an asset account.');
+        }
+
         // first make a "negative" (source) transaction based on the data in the array.
         $source = $this->create(
             [

@@ -179,7 +179,9 @@ class ImportTransaction
                 $this->budgetName = $columnValue->getValue();
                 break;
             case 'category-id':
-                $this->categoryId = $this->getMappedValue($columnValue);
+                $value = $this->getMappedValue($columnValue);
+                Log::debug(sprintf('Set category ID to %d in ImportTransaction object', $value));
+                $this->categoryId = $value;
                 break;
             case 'category-name':
                 $this->categoryName = $columnValue->getValue();

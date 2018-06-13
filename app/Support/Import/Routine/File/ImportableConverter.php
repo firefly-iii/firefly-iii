@@ -279,11 +279,14 @@ class ImportableConverter
      */
     private function verifyObjectId(string $key, int $objectId): ?int
     {
+
         if (isset($this->mappedValues[$key]) && \in_array($objectId, $this->mappedValues[$key], true)) {
+            Log::debug(sprintf('verifyObjectId(%s, %d) is valid!',$key, $objectId));
             return $objectId;
         }
 
-        return null;
+        Log::debug(sprintf('verifyObjectId(%s, %d) is NOT in the list, but it could still be valid.',$key, $objectId));
+        return $objectId;
     }
 
 

@@ -303,7 +303,7 @@ class ImportArrayStorage
                 'existing'    => $existingId,
                 'description' => $transaction['description'] ?? '',
                 'amount'      => $transaction['transactions'][0]['amount'] ?? 0,
-                'date'        => isset($transaction['date']) ? $transaction['date'] : '',
+                'date'        => $transaction['date'] ?? '',
             ]
         );
 
@@ -413,7 +413,14 @@ class ImportArrayStorage
             $store['date']        = Carbon::createFromFormat('Y-m-d', $store['date']);
             $store['description'] = $store['description'] === '' ? '(empty description)' : $store['description'];
             // store the journal.
-            $journal = $this->journalRepos->store($store);
+            try {
+                $journal = $this->journalRepos->store($store);
+            } catch(FireflyException $e) {
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
+                $this->repository->addErrorMessage($this->importJob, sprintf('Row #%d could not be imported. %s', $index, $e->getMessage()));
+                continue;
+            }
             Log::debug(sprintf('Stored as journal #%d', $journal->id));
             $collection->push($journal);
         }
