@@ -91,7 +91,7 @@ class SplitJournalFormRequest extends Request
                 'currency_id'           => $this->integer('journal_currency_id'),
                 'currency_code'         => null,
                 'description'           => $transaction['transaction_description'] ?? '',
-                'amount'                => $transaction['amount'],
+                'amount'                => $transaction['amount'] ?? '',
                 'budget_id'             => (int)($transaction['budget_id'] ?? 0.0),
                 'budget_name'           => null,
                 'category_id'           => null,
