@@ -65,10 +65,10 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-simple-auth', 'namespace' => 'FireflyIII\Http\Controllers'], function () {
-    Route::get('error', ['uses' => 'HomeController@displayError', 'as' => 'error']);
+    Route::get('error', ['uses' => 'DebugController@displayError', 'as' => 'error']);
     Route::any('logout', ['uses' => 'Auth\LoginController@logout', 'as' => 'logout']);
-    Route::get('flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
-    Route::get('routes', ['uses' => 'HomeController@routes', 'as' => 'routes']);
+    Route::get('flush', ['uses' => 'DebugController@flush', 'as' => 'flush']);
+    Route::get('routes', ['uses' => 'DebugController@routes', 'as' => 'routes']);
     Route::get('debug', 'DebugController@index')->name('debug');
 }
 );
@@ -96,7 +96,7 @@ Route::group(
 Route::group(
     ['middleware' => ['user-full-auth'], 'namespace' => 'FireflyIII\Http\Controllers'], function () {
     Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
-    Route::get('/flash', ['uses' => 'HomeController@testFlash', 'as' => 'test-flash']);
+    Route::get('/flash', ['uses' => 'DebugController@testFlash', 'as' => 'test-flash']);
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);
 }

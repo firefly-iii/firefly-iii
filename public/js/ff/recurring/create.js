@@ -44,6 +44,15 @@ $(document).ready(function () {
  *
  */
 function showRepCalendar() {
+
+    // pre-append URL with repetition info:
+    var newEventsUri = eventsUri + '?type=' + $('#ffInput_repetition_type').val();
+    newEventsUri += '&skip=' + $('#ffInput_skip').val();
+    newEventsUri += '&ends=' + $('#ffInput_repetition_end').val();
+    newEventsUri += '&endDate=' + $('#ffInput_repeat_until').val();
+    newEventsUri += '&reps=' + $('#ffInput_repetitions').val();
+
+
     $('#recurring_calendar').fullCalendar(
         {
             defaultDate: '2018-06-13',
@@ -53,12 +62,7 @@ function showRepCalendar() {
             contentHeight: 300,
             aspectRatio: 1.25,
             eventLimit: true, // allow "more" link when too many events
-            events: [
-                {
-                    title: '',
-                    start: '2018-06-14'
-                }
-            ]
+            events: newEventsUri
         });
     $('#calendarModal').modal('show');
     return false;

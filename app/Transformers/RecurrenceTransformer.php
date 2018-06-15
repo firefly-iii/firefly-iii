@@ -141,7 +141,7 @@ class RecurrenceTransformer extends TransformerAbstract
             ];
 
             // get the (future) occurrences for this specific type of repetition:
-            $occurrences = $this->repository->getOccurrences($repetition, $fromDate, 5);
+            $occurrences = $this->repository->getXOccurrences($repetition, $fromDate, 5);
             /** @var Carbon $carbon */
             foreach ($occurrences as $carbon) {
                 $repetitionArray['occurrences'][] = $carbon->format('Y-m-d');

@@ -25,8 +25,10 @@ namespace FireflyIII\Http\Controllers\Recurring;
 
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
+use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Transformers\RecurrenceTransformer;
 use Illuminate\Http\JsonResponse;
@@ -66,12 +68,57 @@ class IndexController extends Controller
     /**
      * @param Request $request
      *
-     * @return string
+     * @throws FireflyException
+     * @return JsonResponse
      */
-    public function calendar(Request $request)
+    function events(RecurringRepositoryInterface $repository, Request $request): JsonResponse
     {
-        return view('recurring.calendar');
+        $return           = [];
+        $start            = Carbon::createFromFormat('Y-m-d', $request->get('start'));
+        $end              = Carbon::createFromFormat('Y-m-d', $request->get('end'));
+        $endsAt           = (string)$request->get('ends');
+        $repetitionType   = explode(',', $request->get('type'))[0];
+        $repetitionMoment = '';
+
+        switch ($repetitionType) {
+            default:
+                throw new FireflyException(sprintf('Cannot handle repetition type "%s"', $repetitionType));
+            case 'daily':
+                break;
+            case 'weekly':
+            case 'monthly':
+                $repetitionMoment = explode(',', $request->get('type'))[1] ?? '1';
+                break;
+            case 'ndom':
+                $repetitionMoment = explode(',', $request->get('type'))[1] ?? '1,1';
+                break;
+            case 'yearly':
+                $repetitionMoment = explode(',', $request->get('type'))[1] ?? '2018-01-01';
+                break;
+        }
+
+        $repetition                    = new RecurrenceRepetition;
+        $repetition->repetition_type   = $repetitionType;
+        $repetition->repetition_moment = $repetitionMoment;
+        $repetition->repetition_skip   = (int)$request->get('skip');
+
+        var_dump($repository->getXOccurrences($repetition, $start, 5));
+        exit;
+
+
+        // calculate events in range, depending on type:
+        switch ($endsAt) {
+            default:
+                throw new FireflyException(sprintf('Cannot generate events for "%s"', $endsAt));
+            case 'forever':
+                break;
+
+        }
+
+
+        return Response::json($return);
     }
+
 
     /**
      * @param Request $request

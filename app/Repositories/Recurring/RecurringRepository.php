@@ -82,7 +82,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @return array
      * @throws FireflyException
      */
-    public function getOccurrences(RecurrenceRepetition $repetition, Carbon $date, int $count = 5): array
+    public function getXOccurrences(RecurrenceRepetition $repetition, Carbon $date, int $count = 5): array
     {
         $return  = [];
         $mutator = clone $date;

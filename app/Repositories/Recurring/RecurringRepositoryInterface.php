@@ -63,7 +63,7 @@ interface RecurringRepositoryInterface
      *
      * @return array
      */
-    public function getOccurrences(RecurrenceRepetition $repetition, Carbon $date, int $count = 5): array;
+    public function getXOccurrences(RecurrenceRepetition $repetition, Carbon $date, int $count = 5): array;
 
     /**
      * Parse the repetition in a string that is user readable.
