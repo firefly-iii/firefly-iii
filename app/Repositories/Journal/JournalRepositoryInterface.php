@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
@@ -325,7 +326,7 @@ interface JournalRepositoryInterface
 
     /**
      * @param array $data
-     *
+     * @throws FireflyException
      * @return TransactionJournal
      */
     public function store(array $data): TransactionJournal;

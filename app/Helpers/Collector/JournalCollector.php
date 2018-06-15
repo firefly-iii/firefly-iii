@@ -769,6 +769,14 @@ class JournalCollector implements JournalCollectorInterface
     }
 
     /**
+     * @return EloquentBuilder
+     */
+    public function getQuery(): EloquentBuilder
+    {
+        return $this->query;
+    }
+
+    /**
      * @param Collection $set
      *
      * @return Collection

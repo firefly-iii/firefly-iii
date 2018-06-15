@@ -36,6 +36,7 @@ use FireflyIII\Models\ExportJob;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
+use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\Role;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
@@ -289,6 +290,17 @@ class User extends Authenticatable
     public function preferences(): HasMany
     {
         return $this->hasMany(Preference::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * Link to recurring transactions.
+     *
+     * @return HasMany
+     */
+    public function recurrences(): HasMany
+    {
+        return $this->hasMany(Recurrence::class);
     }
 
     /**

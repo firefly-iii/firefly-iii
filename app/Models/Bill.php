@@ -37,6 +37,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int    $transaction_currency_id
  * @property string $amount_min
  * @property string $amount_max
+ * @property int    $id
+ * @property string $name
  */
 class Bill extends Model
 {

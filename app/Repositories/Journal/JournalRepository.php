@@ -24,6 +24,7 @@ namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Factory\TransactionJournalMetaFactory;
 use FireflyIII\Models\Account;
@@ -738,8 +739,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return TransactionJournal
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function store(array $data): TransactionJournal
     {

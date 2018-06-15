@@ -101,34 +101,6 @@ class HomeControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\HomeController::displayError
-     */
-    public function testDisplayError(): void
-    {
-        // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
-
-        $this->be($this->user());
-        $response = $this->get(route('error'));
-        $response->assertStatus(500);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\HomeController::flush
-     */
-    public function testFlush(): void
-    {
-        // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
-
-        $this->be($this->user());
-        $response = $this->get(route('flush'));
-        $response->assertStatus(302);
-    }
-
-    /**
      * @covers       \FireflyIII\Http\Controllers\HomeController::index
      * @covers       \FireflyIII\Http\Controllers\HomeController::__construct
      * @covers       \FireflyIII\Http\Controllers\Controller::__construct
@@ -187,31 +159,5 @@ class HomeControllerTest extends TestCase
         $response->assertStatus(302);
     }
 
-    /**
-     * @covers \FireflyIII\Http\Controllers\HomeController::routes()
-     */
-    public function testRoutes(): void
-    {
-        $this->be($this->user());
-        $response = $this->get(route('routes'));
-        $response->assertStatus(200);
-    }
 
-    /**
-     * @covers \FireflyIII\Http\Controllers\HomeController::testFlash
-     */
-    public function testTestFlash(): void
-    {
-        // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-
-        $this->be($this->user());
-        $response = $this->get(route('test-flash'));
-        $response->assertStatus(302);
-        $response->assertSessionHas('success');
-        $response->assertSessionHas('info');
-        $response->assertSessionHas('warning');
-        $response->assertSessionHas('error');
-    }
 }

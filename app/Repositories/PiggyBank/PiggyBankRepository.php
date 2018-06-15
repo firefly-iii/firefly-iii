@@ -204,6 +204,21 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
+     * @param int $piggyBankId
+     *
+     * @return PiggyBank|null
+     */
+    public function findNull(int $piggyBankId): ?PiggyBank
+    {
+        $piggyBank = $this->user->piggyBanks()->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
+        if (null !== $piggyBank) {
+            return $piggyBank;
+        }
+
+        return null;
+    }
+
+    /**
      * Get current amount saved in piggy bank.
      *
      * @param PiggyBank $piggyBank

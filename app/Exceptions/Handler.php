@@ -133,18 +133,13 @@ class Handler extends ExceptionHandler
         if (
             // if the user wants us to mail:
             $doMailError === true
-            && ((
-                    // and if is one of these error instances
-                    $exception instanceof FireflyException
-                    || $exception instanceof ErrorException
-                    || $exception instanceof OAuthServerException
+            && (
+                // and if is one of these error instances
+                $exception instanceof FireflyException
+                || $exception instanceof ErrorException
+                || $exception instanceof OAuthServerException
 
-                )
-                || (
-                    // or this one, but it's a JSON exception.
-                    $exception instanceof AuthenticationException
-                    && Request::expectsJson() === true
-                ))
+            )
         ) {
             // then, send email
             $userData = [

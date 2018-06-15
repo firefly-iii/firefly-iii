@@ -109,6 +109,11 @@ class Amount implements ConverterInterface
      */
     private function stripAmount(string $value): string
     {
+        if (0 === strpos($value, '--')) {
+            $value = substr($value, 2);
+        }
+
+
         $str = preg_replace('/[^\-\(\)\.\,0-9 ]/', '', $value);
         $len = \strlen($str);
         if ('(' === $str[0] && ')' === $str[$len - 1]) {

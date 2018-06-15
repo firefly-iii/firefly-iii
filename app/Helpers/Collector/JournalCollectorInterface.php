@@ -27,6 +27,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -35,6 +36,7 @@ use Illuminate\Support\Collection;
  */
 interface JournalCollectorInterface
 {
+
     /**
      * @param string $filter
      *
@@ -77,6 +79,11 @@ interface JournalCollectorInterface
      * @return LengthAwarePaginator
      */
     public function getPaginatedJournals(): LengthAwarePaginator;
+
+    /**
+     * @return EloquentBuilder
+     */
+    public function getQuery(): EloquentBuilder;
 
     /**
      * @return JournalCollectorInterface

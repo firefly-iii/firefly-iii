@@ -271,6 +271,7 @@ return [
         'piggyBank'         => \FireflyIII\Models\PiggyBank::class,
         'tj'                => \FireflyIII\Models\TransactionJournal::class,
         'tag'               => \FireflyIII\Models\Tag::class,
+        'recurrence'              => \FireflyIII\Models\Recurrence::class,
         'rule'              => \FireflyIII\Models\Rule::class,
         'ruleGroup'         => \FireflyIII\Models\RuleGroup::class,
         'exportJob'         => \FireflyIII\Models\ExportJob::class,

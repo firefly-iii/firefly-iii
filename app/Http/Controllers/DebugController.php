@@ -23,13 +23,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Artisan;
 use Carbon\Carbon;
 use DB;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use Log;
 use Monolog\Handler\RotatingFileHandler;
+use Preferences;
+use Route as RouteFacade;
 
 /**
  * Class DebugController
@@ -45,6 +50,52 @@ class DebugController extends Controller
         $this->middleware(IsDemoUser::class);
     }
 
+    /**
+     * @throws FireflyException
+     */
+    public function displayError()
+    {
+        Log::debug('This is a test message at the DEBUG level.');
+        Log::info('This is a test message at the INFO level.');
+        Log::notice('This is a test message at the NOTICE level.');
+        Log::warning('This is a test message at the WARNING level.');
+        Log::error('This is a test message at the ERROR level.');
+        Log::critical('This is a test message at the CRITICAL level.');
+        Log::alert('This is a test message at the ALERT level.');
+        Log::emergency('This is a test message at the EMERGENCY level.');
+        throw new FireflyException('A very simple test error.');
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function flush(Request $request)
+    {
+        Preferences::mark();
+        $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range']);
+        Log::debug('Call cache:clear...');
+        Artisan::call('cache:clear');
+        Log::debug('Call config:clear...');
+        Artisan::call('config:clear');
+        Log::debug('Call route:clear...');
+        Artisan::call('route:clear');
+        Log::debug('Call twig:clean...');
+        try {
+            Artisan::call('twig:clean');
+            // @codeCoverageIgnoreStart
+        } catch (Exception $e) {
+            // don't care
+            Log::debug('Called twig:clean.');
+        }
+        // @codeCoverageIgnoreEnd
+        Log::debug('Call view:clear...');
+        Artisan::call('view:clear');
+        Log::debug('Done! Redirecting...');
+
+        return redirect(route('index'));
+    }
 
     /**
      * @param Request $request
@@ -121,6 +172,61 @@ class DebugController extends Controller
     }
 
     /**
+     * @return string
+     */
+    public function routes(): string
+    {
+        $set    = RouteFacade::getRoutes();
+        $ignore = ['chart.', 'javascript.', 'json.', 'report-data.', 'popup.', 'debugbar.', 'attachments.download', 'attachments.preview',
+                   'bills.rescan', 'budgets.income', 'currencies.def', 'error', 'flush', 'help.show', 'import.file',
+                   'login', 'logout', 'password.reset', 'profile.confirm-email-change', 'profile.undo-email-change',
+                   'register', 'report.options', 'routes', 'rule-groups.down', 'rule-groups.up', 'rules.up', 'rules.down',
+                   'rules.select', 'search.search', 'test-flash', 'transactions.link.delete', 'transactions.link.switch',
+                   'two-factor.lost', 'reports.options', 'debug', 'import.create-job', 'import.download', 'import.start', 'import.status.json',
+                   'preferences.delete-code', 'rules.test-triggers', 'piggy-banks.remove-money', 'piggy-banks.add-money',
+                   'accounts.reconcile.transactions', 'accounts.reconcile.overview', 'export.download',
+                   'transactions.clone', 'two-factor.index', 'api.v1', 'installer.','attachments.view','import.create',
+                   'import.job.download','import.job.start','import.job.status.json','import.job.store','recurring.events',
+                   'recurring.suggest'
+        ];
+        $return = '&nbsp;';
+        /** @var Route $route */
+        foreach ($set as $route) {
+            $name = $route->getName();
+            if (null !== $name && \strlen($name) > 0 && \in_array('GET', $route->methods(), true)) {
+
+                $found = false;
+                foreach ($ignore as $string) {
+                    if (!(false === stripos($name, $string))) {
+                        $found = true;
+                        break;
+                    }
+                }
+                if ($found === false) {
+                    $return .= 'touch ' . $route->getName() . '.md;';
+                }
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function testFlash(Request $request)
+    {
+        $request->session()->flash('success', 'This is a success message.');
+        $request->session()->flash('info', 'This is an info message.');
+        $request->session()->flash('warning', 'This is a warning.');
+        $request->session()->flash('error', 'This is an error!');
+
+        return redirect(route('home'));
+    }
+
+    /**
      * Some common combinations.
      *
      * @param int $value
@@ -151,7 +257,7 @@ class DebugController extends Controller
     private function collectPackages(): array
     {
         $packages = [];
-        $file     = realpath(__DIR__ . '/../../../vendor/composer/installed.json');
+        $file     = \dirname(__DIR__, 3) . '/vendor/composer/installed.json';
         if (!($file === false) && file_exists($file)) {
             // file exists!
             $content = file_get_contents($file);
