@@ -64,8 +64,7 @@ class Recurrence extends Model
      * @var array
      */
     protected $casts
-                     = [
-
+        = [
             'created_at'  => 'datetime',
             'updated_at'  => 'datetime',
             'first_date'  => 'date',
@@ -73,6 +72,10 @@ class Recurrence extends Model
             'active'      => 'bool',
             'apply_rules' => 'bool',
         ];
+    /** @var array  */
+    protected $fillable
+        = ['user_id', 'transaction_type_id', 'title', 'description', 'first_date', 'repeat_until', 'latest_date', 'repetitions', 'apply_rules', 'active'];
+    /** @var string */
     protected $table = 'recurrences';
 
     /**

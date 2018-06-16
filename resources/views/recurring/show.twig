@@ -42,7 +42,14 @@
 
                     <ul>
                         {% for rep in array.repetitions %}
-                            <li>{{ rep.description }}
+                            <li>
+                                {{ rep.description }}
+                                {% if rep.repetition_skip == 1 %}
+                                    ({{ trans('firefly.recurring_skips_one')|lower }})
+                                {% endif %}
+                                {% if rep.repetition_skip > 1 %}
+                                    ({{ trans('firefly.recurring_skips_more', {count: rep.repetition_skip})|lower }})
+                                {% endif %}
                                 <ul>
                                     {% for occ in rep.occurrences %}
                                         <li>{{ occ.formatLocalized(trans('config.month_and_date_day')) }}</li>

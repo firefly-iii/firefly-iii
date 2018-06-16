@@ -76,9 +76,20 @@ class IndexController extends Controller
         $return           = [];
         $start            = Carbon::createFromFormat('Y-m-d', $request->get('start'));
         $end              = Carbon::createFromFormat('Y-m-d', $request->get('end'));
+        $firstDate        = Carbon::createFromFormat('Y-m-d', $request->get('first_date'));
+        $endDate          = '' !== (string)$request->get('end_date') ? Carbon::createFromFormat('Y-m-d', $request->get('end_date')) : null;
         $endsAt           = (string)$request->get('ends');
         $repetitionType   = explode(',', $request->get('type'))[0];
+        $repetitions      = (int)$request->get('reps');
         $repetitionMoment = '';
+        $start->startOfDay();
+
+        // if $firstDate is beyond $end, simply return an empty array.
+        if ($firstDate->gt($end)) {
+            return Response::json([]);
+        }
+        // if $firstDate is beyond start, use that one:
+        $actualStart = clone $firstDate;
 
         switch ($repetitionType) {
             default:
@@ -90,31 +101,50 @@ class IndexController extends Controller
                 $repetitionMoment = explode(',', $request->get('type'))[1] ?? '1';
                 break;
             case 'ndom':
-                $repetitionMoment = explode(',', $request->get('type'))[1] ?? '1,1';
+                $repetitionMoment = str_ireplace('ndom,', '', $request->get('type'));
                 break;
             case 'yearly':
                 $repetitionMoment = explode(',', $request->get('type'))[1] ?? '2018-01-01';
                 break;
         }
-
         $repetition                    = new RecurrenceRepetition;
         $repetition->repetition_type   = $repetitionType;
         $repetition->repetition_moment = $repetitionMoment;
         $repetition->repetition_skip   = (int)$request->get('skip');
 
-        var_dump($repository->getXOccurrences($repetition, $start, 5));
-        exit;
-
-
-        // calculate events in range, depending on type:
+        $actualEnd = clone $end;
         switch ($endsAt) {
             default:
-                throw new FireflyException(sprintf('Cannot generate events for "%s"', $endsAt));
+                throw new FireflyException(sprintf('Cannot generate events for type that ends at "%s".', $endsAt));
             case 'forever':
+                // simply generate up until $end. No change from default behavior.
+                $occurrences = $repository->getOccurrencesInRange($repetition, $actualStart, $actualEnd);
                 break;
-
+            case 'until_date':
+                $actualEnd   = $endDate ?? clone $end;
+                $occurrences = $repository->getOccurrencesInRange($repetition, $actualStart, $actualEnd);
+                break;
+            case 'times':
+                $occurrences = $repository->getXOccurrences($repetition, $actualStart, $repetitions);
+                break;
         }
 
+
+        /** @var Carbon $current */
+        foreach ($occurrences as $current) {
+            if ($current->gte($start)) {
+                $event    = [
+                    'id'        => $repetitionType . $firstDate->format('Ymd'),
+                    'title'     => 'X',
+                    'allDay'    => true,
+                    'start'     => $current->format('Y-m-d'),
+                    'end'       => $current->format('Y-m-d'),
+                    'editable'  => false,
+                    'rendering' => 'background',
+                ];
+                $return[] = $event;
+            }
+        }
 
         return Response::json($return);
     }

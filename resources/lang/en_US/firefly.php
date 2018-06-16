@@ -1239,6 +1239,7 @@ return [
     'repeat_forever'                        => 'Repeat forever',
     'repeat_until_date'                     => 'Repeat until date',
     'repeat_times'                          => 'Repeat a number of times',
-
-
+    'recurring_skips_one'                   => 'Every other',
+    'recurring_skips_more'                  => 'Skips :count occurrences',
+    'store_new_recurrence'                  => 'Store recurring transaction',
 ];

@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
+use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
 use FireflyIII\User;
 use Log;
 
@@ -36,7 +37,7 @@ use Log;
  */
 class TransactionJournalFactory
 {
-    use JournalServiceTrait;
+    use JournalServiceTrait, TransactionTypeTrait;
     /** @var User */
     private $user;
 
@@ -135,27 +136,6 @@ class TransactionJournalFactory
             $factory = app(PiggyBankEventFactory::class);
             $factory->create($journal, $piggyBank);
         }
-    }
-
-    /**
-     * Get the transaction type. Since this is mandatory, will throw an exception when nothing comes up. Will always
-     * use TransactionType repository.
-     *
-     * @param string $type
-     *
-     * @return TransactionType
-     * @throws FireflyException
-     */
-    protected function findTransactionType(string $type): TransactionType
-    {
-        $factory         = app(TransactionTypeFactory::class);
-        $transactionType = $factory->find($type);
-        if (null === $transactionType) {
-            Log::error(sprintf('Could not find transaction type for "%s"', $type)); // @codeCoverageIgnore
-            throw new FireflyException(sprintf('Could not find transaction type for "%s"', $type)); // @codeCoverageIgnore
-        }
-
-        return $transactionType;
     }
 
 }

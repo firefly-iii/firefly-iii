@@ -83,7 +83,16 @@
                                     <td>
                                         <ul>
                                             {% for rep in rt.repetitions %}
-                                                <li>{{ rep.description }}</li>
+                                                <li>{{ rep.description }}
+                                                {% if rep.repetition_skip == 1 %}
+                                                    ({{ trans('firefly.recurring_skips_one')|lower }})
+                                                {% endif %}
+                                                {% if rep.repetition_skip > 1 %}
+                                                    ({{ trans('firefly.recurring_skips_more', {count: rep.repetition_skip})|lower }})
+                                                {% endif %}
+
+
+                                                </li>
                                             {% endfor %}
                                         </ul>
                                     </td>

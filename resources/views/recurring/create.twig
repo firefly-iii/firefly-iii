@@ -16,7 +16,7 @@
                         <h3 class="box-title">{{ 'mandatory_for_recurring'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.text('name') }}
+                        {{ ExpandedForm.text('title') }}
                         {{ ExpandedForm.date('first_date',null, {helpText: trans('firefly.help_first_date')}) }}
                         {{ ExpandedForm.select('repetition_type', [], null, {helpText: trans('firefly.change_date_other_options')}) }}
                         {{ ExpandedForm.number('skip', 0) }}
@@ -78,6 +78,7 @@
                                 </div>
                             </div>
                         </div>
+                        <input type="hidden" name="transaction_type" value="">
                         {# end of three buttons#}
 
                         {{ ExpandedForm.text('transaction_description') }}
@@ -125,7 +126,7 @@
                         {{ ExpandedForm.text('tags') }}
 
                         {# RELATE THIS TRANSFER TO A PIGGY BANK #}
-                        {{ ExpandedForm.select('piggy_bank_id', [], '0') }}
+                        {{ ExpandedForm.select('piggy_bank_id', piggies, 0) }}
                     </div>
                 </div>
             </div>

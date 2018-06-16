@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Recurring;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\User;
@@ -54,6 +55,19 @@ interface RecurringRepositoryInterface
     public function getNoteText(Recurrence $recurrence): string;
 
     /**
+     * Generate events in the date range.
+     *
+     * @param RecurrenceRepetition $repetition
+     * @param Carbon               $start
+     * @param Carbon               $end
+     *
+     * @throws FireflyException
+     *
+     * @return array
+     */
+    public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array;
+
+    /**
      * Calculate the next X iterations starting on the date given in $date.
      * Returns an array of Carbon objects.
      *
@@ -61,9 +75,10 @@ interface RecurringRepositoryInterface
      * @param Carbon               $date
      * @param int                  $count
      *
+     * @throws FireflyException
      * @return array
      */
-    public function getXOccurrences(RecurrenceRepetition $repetition, Carbon $date, int $count = 5): array;
+    public function getXOccurrences(RecurrenceRepetition $repetition, Carbon $date, int $count): array;
 
     /**
      * Parse the repetition in a string that is user readable.
@@ -80,5 +95,13 @@ interface RecurringRepositoryInterface
      * @param User $user
      */
     public function setUser(User $user): void;
+
+    /**
+     * @param array $data
+     *
+     * @throws FireflyException
+     * @return Recurrence
+     */
+    public function store(array $data): Recurrence;
 
 }

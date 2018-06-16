@@ -37,6 +37,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Log;
 use Preferences;
@@ -218,7 +219,7 @@ class SingleController extends Controller
      *
      * @internal param JournalRepositoryInterface $repository
      */
-    public function destroy(TransactionJournal $transactionJournal)
+    public function destroy(TransactionJournal $transactionJournal): RedirectResponse
     {
         // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($transactionJournal)) {
@@ -329,9 +330,10 @@ class SingleController extends Controller
      * @param JournalFormRequest         $request
      * @param JournalRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
+    public function store(JournalFormRequest $request, JournalRepositoryInterface $repository): RedirectResponse
     {
         $doSplit       = 1 === (int)$request->get('split_journal');
         $createAnother = 1 === (int)$request->get('create_another');

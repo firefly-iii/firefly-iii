@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\Recurring;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\RecurrenceFactory;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Recurrence;
@@ -73,28 +74,35 @@ class RecurringRepository implements RecurringRepositoryInterface
     }
 
     /**
-     * Calculate the next X iterations starting on the date given in $date.
+     * Generate events in the date range.
      *
      * @param RecurrenceRepetition $repetition
-     * @param Carbon               $date
-     * @param int                  $count
+     * @param Carbon               $start
+     * @param Carbon               $end
+     *
+     * @throws FireflyException
      *
      * @return array
-     * @throws FireflyException
      */
-    public function getXOccurrences(RecurrenceRepetition $repetition, Carbon $date, int $count = 5): array
+    public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array
     {
         $return  = [];
-        $mutator = clone $date;
+        $mutator = clone $start;
+        $mutator->startOfDay();
+        $skipMod  = $repetition->repetition_skip + 1;
+        $attempts = 0;
         switch ($repetition->repetition_type) {
             default:
                 throw new FireflyException(
                     sprintf('Cannot calculate occurrences for recurring transaction repetition type "%s"', $repetition->repetition_type)
                 );
             case 'daily':
-                for ($i = 0; $i < $count; $i++) {
+                while ($mutator <= $end) {
+                    if ($attempts % $skipMod === 0) {
+                        $return[] = clone $mutator;
+                    }
                     $mutator->addDay();
-                    $return[] = clone $mutator;
+                    $attempts++;
                 }
                 break;
             case 'weekly':
@@ -110,35 +118,38 @@ class RecurringRepository implements RecurringRepositoryInterface
                 // today is friday (5), expected is monday (1), subtract four days.
                 $dayDifference = $dayOfWeek - $mutator->dayOfWeekIso;
                 $mutator->addDays($dayDifference);
-                for ($i = 0; $i < $count; $i++) {
-                    $return[] = clone $mutator;
+                while ($mutator <= $end) {
+                    if ($attempts % $skipMod === 0) {
+                        $return[] = clone $mutator;
+                    }
+                    $attempts++;
                     $mutator->addWeek();
                 }
                 break;
             case 'monthly':
-                $mutator->addDay(); // always assume today has passed.
                 $dayOfMonth = (int)$repetition->repetition_moment;
                 if ($mutator->day > $dayOfMonth) {
                     // day has passed already, add a month.
                     $mutator->addMonth();
                 }
 
-                for ($i = 0; $i < $count; $i++) {
+                while ($mutator < $end) {
                     $domCorrected = min($dayOfMonth, $mutator->daysInMonth);
                     $mutator->day = $domCorrected;
-                    $return[]     = clone $mutator;
+                    if ($attempts % $skipMod === 0) {
+                        $return[] = clone $mutator;
+                    }
+                    $attempts++;
                     $mutator->endOfMonth()->addDay();
                 }
                 break;
             case 'ndom':
-                $mutator->addDay(); // always assume today has passed.
                 $mutator->startOfMonth();
                 // this feels a bit like a cop out but why reinvent the wheel?
-                $string     = '%s %s of %s %s';
                 $counters   = [1 => 'first', 2 => 'second', 3 => 'third', 4 => 'fourth', 5 => 'fifth',];
                 $daysOfWeek = [1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday',];
                 $parts      = explode(',', $repetition->repetition_moment);
-                for ($i = 0; $i < $count; $i++) {
+                while ($mutator <= $end) {
                     $string    = sprintf('%s %s of %s %s', $counters[$parts[0]], $daysOfWeek[$parts[1]], $mutator->format('F'), $mutator->format('Y'));
                     $newCarbon = new Carbon($string);
                     $return[]  = clone $newCarbon;
@@ -150,11 +161,131 @@ class RecurringRepository implements RecurringRepositoryInterface
                 $date->year = $mutator->year;
                 if ($mutator > $date) {
                     $date->addYear();
+
                 }
-                for ($i = 0; $i < $count; $i++) {
-                    $obj = clone $date;
-                    $obj->addYears($i);
-                    $return[] = $obj;
+
+                // is $date between $start and $end?
+                $obj   = clone $date;
+                $count = 0;
+                while ($obj <= $end && $obj >= $mutator && $count < 10) {
+
+                    $return[] = clone $obj;
+                    $obj->addYears(1);
+                    $count++;
+                }
+                break;
+        }
+
+        return $return;
+    }
+
+    /**
+     * Calculate the next X iterations starting on the date given in $date.
+     *
+     * @param RecurrenceRepetition $repetition
+     * @param Carbon               $date
+     * @param int                  $count
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    public function getXOccurrences(RecurrenceRepetition $repetition, Carbon $date, int $count): array
+    {
+        $return   = [];
+        $mutator  = clone $date;
+        $skipMod  = $repetition->repetition_skip + 1;
+        $total    = 0;
+        $attempts = 0;
+        switch ($repetition->repetition_type) {
+            default:
+                throw new FireflyException(
+                    sprintf('Cannot calculate occurrences for recurring transaction repetition type "%s"', $repetition->repetition_type)
+                );
+            case 'daily':
+                while ($total < $count) {
+                    $mutator->addDay();
+                    if ($attempts % $skipMod === 0) {
+                        $return[] = clone $mutator;
+                        $total++;
+                    }
+                    $attempts++;
+                }
+                break;
+            case 'weekly':
+                // monday = 1
+                // sunday = 7
+                $mutator->addDay(); // always assume today has passed.
+                $dayOfWeek = (int)$repetition->repetition_moment;
+                if ($mutator->dayOfWeekIso > $dayOfWeek) {
+                    // day has already passed this week, add one week:
+                    $mutator->addWeek();
+                }
+                // today is wednesday (3), expected is friday (5): add two days.
+                // today is friday (5), expected is monday (1), subtract four days.
+                $dayDifference = $dayOfWeek - $mutator->dayOfWeekIso;
+                $mutator->addDays($dayDifference);
+
+                while ($total < $count) {
+                    if ($attempts % $skipMod === 0) {
+                        $return[] = clone $mutator;
+                        $total++;
+                    }
+                    $attempts++;
+                    $mutator->addWeek();
+                }
+                break;
+            case 'monthly':
+                $mutator->addDay(); // always assume today has passed.
+                $dayOfMonth = (int)$repetition->repetition_moment;
+                if ($mutator->day > $dayOfMonth) {
+                    // day has passed already, add a month.
+                    $mutator->addMonth();
+                }
+
+                while ($total < $count) {
+                    $domCorrected = min($dayOfMonth, $mutator->daysInMonth);
+                    $mutator->day = $domCorrected;
+                    if ($attempts % $skipMod === 0) {
+                        $return[] = clone $mutator;
+                        $total++;
+                    }
+                    $attempts++;
+                    $mutator->endOfMonth()->addDay();
+                }
+                break;
+            case 'ndom':
+                $mutator->addDay(); // always assume today has passed.
+                $mutator->startOfMonth();
+                // this feels a bit like a cop out but why reinvent the wheel?
+                $counters   = [1 => 'first', 2 => 'second', 3 => 'third', 4 => 'fourth', 5 => 'fifth',];
+                $daysOfWeek = [1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday',];
+                $parts      = explode(',', $repetition->repetition_moment);
+
+                while ($total < $count) {
+                    $string    = sprintf('%s %s of %s %s', $counters[$parts[0]], $daysOfWeek[$parts[1]], $mutator->format('F'), $mutator->format('Y'));
+                    $newCarbon = new Carbon($string);
+                    if ($attempts % $skipMod === 0) {
+                        $return[] = clone $newCarbon;
+                        $total++;
+                    }
+                    $attempts++;
+                    $mutator->endOfMonth()->addDay();
+                }
+                break;
+            case 'yearly':
+                $date       = new Carbon($repetition->repetition_moment);
+                $date->year = $mutator->year;
+                if ($mutator > $date) {
+                    $date->addYear();
+                }
+                $obj = clone $date;
+                while ($total < $count) {
+                    if ($attempts % $skipMod === 0) {
+                        $return[] = clone $obj;
+                        $total++;
+                    }
+                    $obj->addYears(1);
+                    $attempts++;
                 }
                 break;
         }
@@ -222,5 +353,19 @@ class RecurringRepository implements RecurringRepositoryInterface
     public function setUser(User $user): void
     {
         $this->user = $user;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @throws FireflyException
+     * @return Recurrence
+     */
+    public function store(array $data): Recurrence
+    {
+        $factory = new RecurrenceFactory;
+        $factory->setUser($this->user);
+
+        return $factory->create($data);
     }
 }

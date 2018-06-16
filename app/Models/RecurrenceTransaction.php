@@ -47,6 +47,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class RecurrenceTransaction extends Model
 {
+    /** @var array */
+    protected $fillable
+        = ['recurrence_id', 'transaction_currency_id', 'foreign_currency_id', 'source_account_id', 'destination_account_id', 'amount', 'foreign_amount',
+           'description'];
+    /** @var string */
     protected $table = 'recurrences_transactions';
 
     /**
@@ -82,7 +87,7 @@ class RecurrenceTransaction extends Model
      */
     public function recurrenceTransactionMeta(): HasMany
     {
-        return $this->hasMany(RecurrenceTransactionMeta::class,'rt_id');
+        return $this->hasMany(RecurrenceTransactionMeta::class, 'rt_id');
     }
 
     /**

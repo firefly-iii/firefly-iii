@@ -20,6 +20,8 @@
 
 /** global: Modernizr, currencies */
 
+var calendar;
+
 $(document).ready(function () {
     "use strict";
     if (!Modernizr.inputtypes.date) {
@@ -37,6 +39,19 @@ $(document).ready(function () {
     $('#ffInput_repetition_end').on('change', respondToRepetitionEnd);
     $('#ffInput_first_date').on('change', respondToFirstDateChange);
 
+    // create calendar on load:
+    calendar = $('#recurring_calendar').fullCalendar(
+        {
+            defaultDate: '2018-06-13',
+            editable: false,
+            height: 400,
+            width: 200,
+            contentHeight: 400,
+            aspectRatio: 1.25,
+            eventLimit: true,
+            eventSources: [],
+        });
+
     $('#calendar-link').on('click', showRepCalendar);
 });
 
@@ -49,22 +64,17 @@ function showRepCalendar() {
     var newEventsUri = eventsUri + '?type=' + $('#ffInput_repetition_type').val();
     newEventsUri += '&skip=' + $('#ffInput_skip').val();
     newEventsUri += '&ends=' + $('#ffInput_repetition_end').val();
-    newEventsUri += '&endDate=' + $('#ffInput_repeat_until').val();
+    newEventsUri += '&end_date=' + $('#ffInput_repeat_until').val();
     newEventsUri += '&reps=' + $('#ffInput_repetitions').val();
+    newEventsUri += '&first_date=' + $('#ffInput_first_date').val();
 
+    // remove all event sources from calendar:
+    calendar.fullCalendar('removeEventSources');
 
-    $('#recurring_calendar').fullCalendar(
-        {
-            defaultDate: '2018-06-13',
-            editable: false,
-            height: 400,
-            width: 200,
-            contentHeight: 300,
-            aspectRatio: 1.25,
-            eventLimit: true, // allow "more" link when too many events
-            events: newEventsUri
-        });
+    // add a new one:
+    calendar.fullCalendar('addEventSource', newEventsUri);
     $('#calendarModal').modal('show');
+
     return false;
 }
 
@@ -169,6 +179,7 @@ function initializeButtons() {
         console.log('Value is ' + btn.data('value'));
         if (btn.data('value') === transactionType) {
             btn.addClass('btn-info disabled').removeClass('btn-default');
+            $('input[name="transaction_type"]').val(transactionType);
         } else {
             btn.removeClass('btn-info disabled').addClass('btn-default');
         }
