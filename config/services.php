@@ -51,10 +51,12 @@ return [
         'secret' => env('SPARKPOST_SECRET'),
     ],
 
-    'stripe' => [
+    'stripe'   => [
         'model'  => FireflyIII\User::class,
         'key'    => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
-
+    'mandrill' => [
+        'secret' => env('MANDRILL_SECRET'),
+    ],
 ];
