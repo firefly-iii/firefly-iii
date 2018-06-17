@@ -28,7 +28,6 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RecurrenceFormRequest;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use Illuminate\Http\Request;
 
@@ -40,8 +39,6 @@ class CreateController extends Controller
 {
     /** @var BudgetRepositoryInterface */
     private $budgets;
-    /** @var PiggyBankRepositoryInterface */
-    private $piggyBanks;
     /** @var RecurringRepositoryInterface */
     private $recurring;
 
@@ -59,9 +56,8 @@ class CreateController extends Controller
                 app('view')->share('title', trans('firefly.recurrences'));
                 app('view')->share('subTitle', trans('firefly.create_new_recurrence'));
 
-                $this->recurring  = app(RecurringRepositoryInterface::class);
-                $this->budgets    = app(BudgetRepositoryInterface::class);
-                $this->piggyBanks = app(PiggyBankRepositoryInterface::class);
+                $this->recurring = app(RecurringRepositoryInterface::class);
+                $this->budgets   = app(BudgetRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -75,13 +71,17 @@ class CreateController extends Controller
      */
     public function create(Request $request)
     {
-        // todo refactor to expandedform method.
-        $budgets         = app('expandedform')->makeSelectListWithEmpty($this->budgets->getActiveBudgets());
-        $defaultCurrency = app('amount')->getDefaultCurrency();
-        $piggyBanks      = $this->piggyBanks->getPiggyBanksWithAmount();
-        $piggies        = app('expandedform')->makeSelectListWithEmpty($piggyBanks);
-        $tomorrow        = new Carbon;
+        $budgets           = app('expandedform')->makeSelectListWithEmpty($this->budgets->getActiveBudgets());
+        $defaultCurrency   = app('amount')->getDefaultCurrency();
+        $tomorrow          = new Carbon;
+        $oldRepetitionType = $request->old('repetition_type');
         $tomorrow->addDay();
+
+        // put previous url in session if not redirect from store (not "create another").
+        if (true !== session('recurring.create.fromStore')) {
+            $this->rememberPreviousUri('recurring.create.uri');
+        }
+        $request->session()->forget('recurring.create.fromStore');
 
         // types of repetitions:
         $typesOfRepetitions = [
@@ -99,18 +99,33 @@ class CreateController extends Controller
         ];
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('recurring.create', compact('tomorrow', 'preFilled', 'piggies', 'typesOfRepetitions', 'defaultCurrency', 'budgets'));
+        return view('recurring.create', compact('tomorrow', 'oldRepetitionType', 'preFilled', 'piggies', 'typesOfRepetitions', 'defaultCurrency', 'budgets'));
     }
 
     /**
      * @param RecurrenceFormRequest $request
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function store(RecurrenceFormRequest $request)
     {
-        $data = $request->getAll();
-        $this->recurring->store($data);
-        var_dump($data);
-        exit;
+        $data       = $request->getAll();
+        $recurrence = $this->recurring->store($data);
+
+        $request->session()->flash('success', (string)trans('firefly.stored_new_recurrence', ['title' => $recurrence->title]));
+        app('preferences')->mark();
+
+        if (1 === (int)$request->get('create_another')) {
+            // set value so create routine will not overwrite URL:
+            $request->session()->put('recurring.create.fromStore', true);
+
+            return redirect(route('recurring.create'))->withInput();
+        }
+
+        // redirect to previous URL.
+        return redirect($this->getPreviousUri('recurring.create.uri'));
+
     }
 
 }

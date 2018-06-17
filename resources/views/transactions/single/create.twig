@@ -86,8 +86,7 @@
                         {{ ExpandedForm.text('tags') }}
 
                         {# RELATE THIS TRANSFER TO A PIGGY BANK #}
-                        {{ ExpandedForm.select('piggy_bank_id', piggies, '0') }}
-
+                        {{ ExpandedForm.piggyBankList('piggy_bank_id',0) }}
                     </div>
                 </div>
 
@@ -211,7 +210,6 @@
 {% block scripts %}
     <script type="text/javascript">
         var what = "{{ what }}";
-        var piggiesLength = {{ piggies|length }};
 
         // some titles and names:
         var txt = [];

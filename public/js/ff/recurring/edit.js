@@ -1,6 +1,6 @@
 /*
- * create.js
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * edit.js
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -104,7 +104,7 @@ function respondToFirstDateChange() {
     var select = $('#ffInput_repetition_type');
     var date = obj.val();
     select.prop('disabled', true);
-    $.getJSON(suggestUri, {date: date}).fail(function () {
+    $.getJSON(suggestUri, {date: date,past:true}).fail(function () {
         console.error('Could not load repetition suggestions');
         alert('Could not load repetition suggestions');
     }).done(parseRepetitionSuggestions);
@@ -118,7 +118,7 @@ function parseRepetitionSuggestions(data) {
     for (var k in data) {
         if (data.hasOwnProperty(k)) {
             opt = $('<option>').val(k).attr('label', data[k]).text(data[k]);
-            if(k === oldRepetitionType) {
+            if(k === currentRepetitionType) {
                 opt.attr('selected','selected');
             }
             select.append(opt);

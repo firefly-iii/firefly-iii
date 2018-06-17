@@ -27,7 +27,10 @@ namespace FireflyIII\Factory;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Recurrence;
+use FireflyIII\Models\RecurrenceMeta;
+use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
+use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Support\TransactionServiceTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
@@ -51,9 +54,6 @@ class RecurrenceFactory
      */
     public function create(array $data): Recurrence
     {
-        echo '<pre>';
-        print_r($data);
-        echo '</pre>';
         $type       = $this->findTransactionType(ucfirst($data['recurrence']['type']));
         $recurrence = new Recurrence(
             [
@@ -70,10 +70,49 @@ class RecurrenceFactory
             ]
         );
         $recurrence->save();
-        var_dump($recurrence->toArray());
 
-        // create transactions
+        // create recurrence meta (tags)
+        if (\count($data['meta']['tags']) > 0) {
+            // todo move to factory
+            $tags = implode(',', $data['meta']['tags']);
+            if ('' !== $tags) {
+                $metaValue = RecurrenceMeta::create(
+                    [
+                        'recurrence_id' => $recurrence->id,
+                        'name'          => 'tags',
+                        'value'         => $tags,
+                    ]
+                );
+            }
+        }
+        // create recurrence meta (piggy bank ID):
+        if ($data['meta']['piggy_bank_id'] > 0) {
+            // todo move to factory
+            $metaValue = RecurrenceMeta::create(
+                [
+                    'recurrence_id' => $recurrence->id,
+                    'name'          => 'piggy_bank_id',
+                    'value'         => $data['meta']['piggy_bank_id'],
+                ]
+            );
+        }
+
+        // store recurrence repetitions:
+        foreach ($data['repetitions'] as $repArray) {
+            // todo move to factory
+            $repetition = RecurrenceRepetition::create(
+                [
+                    'recurrence_id'     => $recurrence->id,
+                    'repetition_type'   => $repArray['type'],
+                    'repetition_moment' => $repArray['moment'],
+                    'repetition_skip'   => $repArray['skip'],
+                ]
+            );
+        }
+
+        // create recurrence transactions
         foreach ($data['transactions'] as $trArray) {
+            // todo move to factory
             $source      = null;
             $destination = null;
             // search source account, depends on type
@@ -83,6 +122,14 @@ class RecurrenceFactory
                 case TransactionType::WITHDRAWAL:
                     $source      = $this->findAccount(AccountType::ASSET, $trArray['source_account_id'], null);
                     $destination = $this->findAccount(AccountType::EXPENSE, null, $trArray['destination_account_name']);
+                    break;
+                case TransactionType::DEPOSIT:
+                    $source      = $this->findAccount(AccountType::REVENUE, null, $trArray['source_account_name']);
+                    $destination = $this->findAccount(AccountType::ASSET, $trArray['destination_account_id'], null);
+                    break;
+                case TransactionType::TRANSFER:
+                    $source      = $this->findAccount(AccountType::ASSET, $trArray['source_account_id'], null);
+                    $destination = $this->findAccount(AccountType::ASSET, $trArray['destination_account_id'], null);
                     break;
             }
 
@@ -101,16 +148,30 @@ class RecurrenceFactory
                 ]
             );
             $transaction->save();
-            var_dump($transaction->toArray());
+
+            // create recurrence transaction meta:
+            // todo move to factory
+            if ($trArray['budget_id'] > 0) {
+                $trMeta = RecurrenceTransactionMeta::create(
+                    [
+                        'rt_id' => $transaction->id,
+                        'name'  => 'budget_id',
+                        'value' => $trArray['budget_id'],
+                    ]
+                );
+            }
+            if ('' !== (string)$trArray['category_name']) {
+                $trMeta = RecurrenceTransactionMeta::create(
+                    [
+                        'rt_id' => $transaction->id,
+                        'name'  => 'category_name',
+                        'value' => $trArray['category_name'],
+                    ]
+                );
+            }
         }
 
-        // create meta data:
-        if(\count($data['meta']['tags']) > 0) {
-            // todo store tags
-        }
-
-        exit;
-
+        return $recurrence;
     }
 
     /**

@@ -50,14 +50,8 @@ class SingleController extends Controller
 {
     /** @var AttachmentHelperInterface */
     private $attachments;
-
     /** @var BudgetRepositoryInterface */
     private $budgets;
-    /** @var CurrencyRepositoryInterface */
-    private $currency;
-    /** @var PiggyBankRepositoryInterface */
-    private $piggyBanks;
-
     /** @var JournalRepositoryInterface */
     private $repository;
 
@@ -77,9 +71,7 @@ class SingleController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->budgets     = app(BudgetRepositoryInterface::class);
-                $this->piggyBanks  = app(PiggyBankRepositoryInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
-                $this->currency    = app(CurrencyRepositoryInterface::class);
                 $this->repository  = app(JournalRepositoryInterface::class);
 
                 app('view')->share('title', trans('firefly.transactions'));
@@ -101,7 +93,6 @@ class SingleController extends Controller
         $destination  = $this->repository->getJournalDestinationAccounts($journal)->first();
         $budgetId     = $this->repository->getJournalBudgetId($journal);
         $categoryName = $this->repository->getJournalCategoryName($journal);
-
         $tags = implode(',', $this->repository->getTags($journal));
         /** @var Transaction $transaction */
         $transaction   = $journal->transactions()->first();
@@ -156,8 +147,6 @@ class SingleController extends Controller
         $what           = strtolower($what);
         $what           = $request->old('what') ?? $what;
         $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
-        $piggyBanks     = $this->piggyBanks->getPiggyBanksWithAmount();
-        $piggies        = ExpandedForm::makeSelectListWithEmpty($piggyBanks);
         $preFilled      = session()->has('preFilled') ? session('preFilled') : [];
         $subTitle       = trans('form.add_new_' . $what);
         $subTitleIcon   = 'fa-plus';
@@ -179,11 +168,9 @@ class SingleController extends Controller
         }
         session()->forget('transactions.create.fromStore');
 
-        asort($piggies);
-
         return view(
             'transactions.single.create',
-            compact('subTitleIcon', 'budgets', 'what', 'piggies', 'subTitle', 'optionalFields', 'preFilled')
+            compact('subTitleIcon', 'budgets', 'what', 'subTitle', 'optionalFields', 'preFilled')
         );
     }
 

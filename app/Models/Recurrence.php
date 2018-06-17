@@ -65,14 +65,19 @@ class Recurrence extends Model
      */
     protected $casts
         = [
-            'created_at'  => 'datetime',
-            'updated_at'  => 'datetime',
-            'first_date'  => 'date',
-            'latest_date' => 'date',
-            'active'      => 'bool',
-            'apply_rules' => 'bool',
+            'created_at'   => 'datetime',
+            'updated_at'   => 'datetime',
+            'deleted_at'   => 'datetime',
+            'title'        => 'string',
+            'description'  => 'string',
+            'first_date'   => 'date',
+            'repeat_until' => 'date',
+            'latest_date'  => 'date',
+            'repetitions'  => 'int',
+            'active'       => 'bool',
+            'apply_rules'  => 'bool',
         ];
-    /** @var array  */
+    /** @var array */
     protected $fillable
         = ['user_id', 'transaction_type_id', 'title', 'description', 'first_date', 'repeat_until', 'latest_date', 'repetitions', 'apply_rules', 'active'];
     /** @var string */

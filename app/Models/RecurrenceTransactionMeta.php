@@ -35,6 +35,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class RecurrenceTransactionMeta extends Model
 {
+    /** @var array */
+    protected $casts
+        = [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
+            'name'       => 'string',
+            'value'      => 'string',
+        ];
+    protected $fillable = ['rt_id', 'name', 'value'];
+    /** @var string */
     protected $table = 'rt_meta';
 
     /**
@@ -43,7 +54,7 @@ class RecurrenceTransactionMeta extends Model
      */
     public function recurrenceTransaction(): BelongsTo
     {
-        return $this->belongsTo(RecurrenceTransaction::class);
+        return $this->belongsTo(RecurrenceTransaction::class, 'rt_id');
     }
 
 }

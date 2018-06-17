@@ -40,6 +40,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class RecurrenceRepetition extends Model
 {
+    /** @var array */
+    protected $casts
+        = [
+            'created_at'        => 'datetime',
+            'updated_at'        => 'datetime',
+            'deleted_at'        => 'datetime',
+            'repetition_type'   => 'string',
+            'repetition_moment' => 'string',
+            'repetition_skip'   => 'int',
+        ];
+    protected $fillable = ['recurrence_id', 'repetition_type', 'repetition_moment', 'repetition_skip'];
+    /** @var string */
     protected $table = 'recurrences_repetitions';
 
     /**

@@ -26,6 +26,8 @@ namespace FireflyIII\Http\Controllers\Recurring;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
+use FireflyIII\Models\RecurrenceRepetition;
+use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 
 /**
  *
@@ -33,6 +35,9 @@ use FireflyIII\Models\Recurrence;
  */
 class EditController extends Controller
 {
+    /** @var RecurringRepositoryInterface */
+    private $recurring;
+
     /**
      *
      */
@@ -56,10 +61,23 @@ class EditController extends Controller
 
     /**
      * @param Recurrence $recurrence
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit(Recurrence $recurrence) {
+    public function edit(Recurrence $recurrence)
+    {
+        // get recurrence type:
+        // todo move to repository
+        /** @var RecurrenceRepetition $repetition */
+        $repetition            = $recurrence->recurrenceRepetitions()->first();
+        $currentRepetitionType = $repetition->repetition_type;
+        if ('' !== $repetition->repetition_moment) {
+            $currentRepetitionType .= ',' . $repetition->repetition_moment;
+        }
 
-        return view('recurring.edit', compact('recurrence'));
+        // todo handle old repetition type as well.
+
+        return view('recurring.edit', compact('recurrence','currentRepetitionType'));
     }
 
 

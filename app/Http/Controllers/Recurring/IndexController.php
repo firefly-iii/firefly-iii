@@ -71,7 +71,7 @@ class IndexController extends Controller
      * @throws FireflyException
      * @return JsonResponse
      */
-    function events(RecurringRepositoryInterface $repository, Request $request): JsonResponse
+    function events(Request $request): JsonResponse
     {
         $return           = [];
         $start            = Carbon::createFromFormat('Y-m-d', $request->get('start'));
@@ -118,14 +118,14 @@ class IndexController extends Controller
                 throw new FireflyException(sprintf('Cannot generate events for type that ends at "%s".', $endsAt));
             case 'forever':
                 // simply generate up until $end. No change from default behavior.
-                $occurrences = $repository->getOccurrencesInRange($repetition, $actualStart, $actualEnd);
+                $occurrences = $this->recurring->getOccurrencesInRange($repetition, $actualStart, $actualEnd);
                 break;
             case 'until_date':
                 $actualEnd   = $endDate ?? clone $end;
-                $occurrences = $repository->getOccurrencesInRange($repetition, $actualStart, $actualEnd);
+                $occurrences = $this->recurring->getOccurrencesInRange($repetition, $actualStart, $actualEnd);
                 break;
             case 'times':
-                $occurrences = $repository->getXOccurrences($repetition, $actualStart, $repetitions);
+                $occurrences = $this->recurring->getXOccurrences($repetition, $actualStart, $repetitions);
                 break;
         }
 
@@ -210,7 +210,7 @@ class IndexController extends Controller
         $today  = new Carbon;
         $date   = Carbon::createFromFormat('Y-m-d', $request->get('date'));
         $result = [];
-        if ($date > $today) {
+        if ($date > $today || $request->get('past') === 'true') {
             $weekly     = sprintf('weekly,%s', $date->dayOfWeekIso);
             $monthly    = sprintf('monthly,%s', $date->day);
             $dayOfWeek  = trans(sprintf('config.dow_%s', $date->dayOfWeekIso));

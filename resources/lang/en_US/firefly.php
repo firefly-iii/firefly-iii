@@ -1229,6 +1229,7 @@ return [
     'recurring_meta_field_piggy_bank_id'    => 'Piggy bank',
     'create_new_recurrence'                 => 'Create new recurring transaction',
     'help_first_date'                       => 'Indicate the first expected recurrence. This must be in the future.',
+    'help_first_date_no_past'               => 'Indicate the first expected recurrence. Firefly III will not create transactions in the past.',
     'mandatory_for_recurring'               => 'Mandatory recurrence information',
     'mandatory_for_transaction'             => 'Mandatory transaction information',
     'optional_for_recurring'                => 'Optional recurrence information',
@@ -1242,4 +1243,6 @@ return [
     'recurring_skips_one'                   => 'Every other',
     'recurring_skips_more'                  => 'Skips :count occurrences',
     'store_new_recurrence'                  => 'Store recurring transaction',
+    'stored_new_recurrence'                 => 'Recurring transaction ":title" stored successfully.',
+    'edit_recurrence'                       => 'Edit recurring transaction ":title"',
 ];

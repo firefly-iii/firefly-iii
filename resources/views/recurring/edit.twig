@@ -1,10 +1,10 @@
 {% extends "./layout/default" %}
 {% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, recurrence) }}
 {% endblock %}
 {% block content %}
 
-    <form action="{{ route('recurring.store') }}" method="post" id="store" class="form-horizontal">
+    <form action="{{ route('recurring.update') }}" method="post" id="store" class="form-horizontal">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
         {# row with recurrence information #}
         <div class="row">
@@ -16,11 +16,11 @@
                         <h3 class="box-title">{{ 'mandatory_for_recurring'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.text('title') }}
-                        {{ ExpandedForm.date('first_date',null, {helpText: trans('firefly.help_first_date')}) }}
+                        {{ ExpandedForm.text('title',recurrence.title) }}
+                        {{ ExpandedForm.date('first_date',recurrence.first_date.format('Y-m-d'), {helpText: trans('firefly.help_first_date_no_past')}) }}
                         {{ ExpandedForm.select('repetition_type', [], null, {helpText: trans('firefly.change_date_other_options')}) }}
                         {{ ExpandedForm.number('skip', 0) }}
-                        {{ ExpandedForm.select('repetition_end', typesOfRepetitions) }}
+                        {{ ExpandedForm.select('repetition_end', []) }} {#typesOfRepetitions#}
                         {{ ExpandedForm.date('repeat_until',null) }}
                         {{ ExpandedForm.number('repetitions',null) }}
 
@@ -114,9 +114,10 @@
 
                         {# BUDGET ONLY WHEN CREATING A WITHDRAWAL #}
                         {% if budgets|length > 1 %}
-                            {{ ExpandedForm.select('budget_id', budgets, null) }}
+                            {{ ExpandedForm.select('budget_id', [], null) }} {#budgets#}
                         {% else %}
-                            {{ ExpandedForm.select('budget_id', budgets, null, {helpText: trans('firefly.no_budget_pointer')}) }}
+                            {{ ExpandedForm.select('budget_id', [], null, {helpText: trans('firefly.no_budget_pointer')}) }}
+                            {#budgets#}
                         {% endif %}
 
                         {# CATEGORY ALWAYS #}
@@ -126,7 +127,7 @@
                         {{ ExpandedForm.text('tags') }}
 
                         {# RELATE THIS TRANSFER TO A PIGGY BANK #}
-                        {{ ExpandedForm.piggyBankList('piggy_bank_id',0) }}
+                        {{ ExpandedForm.select('piggy_bank_id', [], 0) }} {#piggies#}
                     </div>
                 </div>
             </div>
@@ -200,9 +201,9 @@
         var transactionType = "{{ preFilled.transaction_type }}";
         var suggestUri = "{{ route('recurring.suggest') }}";
         var eventsUri = "{{ route('recurring.events') }}";
-        var oldRepetitionType= "{{ oldRepetitionType }}";
+        var currentRepetitionType= "{{ currentRepetitionType }}";
     </script>
-    <script type="text/javascript" src="js/ff/recurring/create.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/recurring/edit.js?v={{ FF_VERSION }}"></script>
 {% endblock %}
 
 {% block styles %}

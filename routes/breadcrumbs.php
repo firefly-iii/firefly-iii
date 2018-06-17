@@ -779,6 +779,14 @@ try {
     );
 
     Breadcrumbs::register(
+        'recurring.edit',
+        function (BreadCrumbsGenerator $breadcrumbs, Recurrence $recurrence) {
+            $breadcrumbs->parent('recurring.index');
+            $breadcrumbs->push(trans('firefly.edit_recurrence', ['title' => $recurrence->title]), route('recurring.edit', [$recurrence->id]));
+        }
+    );
+
+    Breadcrumbs::register(
         'recurring.create',
         function (BreadCrumbsGenerator $breadcrumbs) {
             $breadcrumbs->parent('recurring.index');

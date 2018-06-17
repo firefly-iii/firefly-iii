@@ -224,7 +224,7 @@ function updateForm() {
 
             // optional piggies
             var showPiggies = 'block';
-            if (piggiesLength === 0) {
+            if ($('#ffInput_piggy_bank_id option').length === 0) {
                 showPiggies = 'none';
             }
             document.getElementById('piggy_bank_id_holder').style.display = showPiggies;

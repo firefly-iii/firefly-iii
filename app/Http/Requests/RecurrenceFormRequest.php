@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Rules\ValidRecurrenceRepetitionType;
+use FireflyIII\Rules\ValidRecurrenceRepetitionValue;
 
 /**
  * Class RecurrenceFormRequest
@@ -49,8 +50,8 @@ class RecurrenceFormRequest extends Request
      */
     public function getAll(): array
     {
-        $data   = $this->all();
-        $return = [
+        $repetitionData = $this->parseRepetitionData();
+        $return         = [
             'recurrence'   => [
                 'type'         => $this->string('transaction_type'),
                 'title'        => $this->string('title'),
@@ -81,7 +82,9 @@ class RecurrenceFormRequest extends Request
             ],
             'repetitions'  => [
                 [
-                    'skip' => $this->integer('skip'),
+                    'type'   => $repetitionData['type'],
+                    'moment' => $repetitionData['moment'],
+                    'skip'   => $this->integer('skip'),
                 ],
             ],
 
@@ -100,6 +103,14 @@ class RecurrenceFormRequest extends Request
             case 'withdrawal':
                 $return['transactions'][0]['source_account_id']        = $this->integer('source_account_id');
                 $return['transactions'][0]['destination_account_name'] = $this->string('destination_account_name');
+                break;
+            case 'deposit':
+                $return['transactions'][0]['source_account_name']    = $this->string('source_account_name');
+                $return['transactions'][0]['destination_account_id'] = $this->integer('destination_account_id');
+                break;
+            case 'transfer':
+                $return['transactions'][0]['source_account_id']      = $this->integer('source_account_id');
+                $return['transactions'][0]['destination_account_id'] = $this->integer('destination_account_id');
                 break;
         }
 
@@ -120,7 +131,7 @@ class RecurrenceFormRequest extends Request
             //'title'                    => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
             'title'                    => 'required|between:1,255',
             'first_date'               => 'required|date|after:' . $today->format('Y-m-d'),
-            'repetition_type'          => ['required', new ValidRecurrenceRepetitionType, 'between:1,20'],
+            'repetition_type'          => ['required', new ValidRecurrenceRepetitionValue, new ValidRecurrenceRepetitionType, 'between:1,20'],
             'skip'                     => 'required|numeric|between:0,31',
 
             // optional for recurrence:
@@ -185,5 +196,39 @@ class RecurrenceFormRequest extends Request
 
 
         return $rules;
+    }
+
+    /**
+     * @return array
+     */
+    private function parseRepetitionData(): array
+    {
+        $value  = $this->string('repetition_type');
+        $return = [
+            'type'   => '',
+            'moment' => '',
+        ];
+
+        if ($value === 'daily') {
+            $return['type'] = $value;
+        }
+        //monthly,17
+        //ndom,3,7
+        if (\in_array(substr($value, 0, 6), ['yearly', 'weekly'])) {
+            $return['type']   = substr($value, 0, 6);
+            $return['moment'] = substr($value, 7);
+        }
+        if (0 === strpos($value, 'monthly')) {
+            $return['type']   = substr($value, 0, 7);
+            $return['moment'] = substr($value, 8);
+        }
+        if (0 === strpos($value, 'ndom')) {
+            $return['type']   = substr($value, 0, 4);
+            $return['moment'] = substr($value, 5);
+        }
+
+        return $return;
+
+
     }
 }

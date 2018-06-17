@@ -35,6 +35,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class RecurrenceMeta extends Model
 {
+    /** @var array */
+    protected $casts
+        = [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
+            'name'       => 'string',
+            'value'      => 'string',
+        ];
+    /** @var array */
+    protected $fillable = ['recurrence_id', 'name', 'value'];
+    /** @var string */
     protected $table = 'recurrences_meta';
 
     /**

@@ -27,10 +27,12 @@ use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Form;
 use Illuminate\Support\Collection;
@@ -183,6 +185,7 @@ class ExpandedForm
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Throwable
      */
     public function balance(string $name, $value = null, array $options = []): string
     {
@@ -506,14 +509,39 @@ class ExpandedForm
      * @return string
      * @throws \Throwable
      */
-    public function password(string $name, array $options = []): string
+    public function password(string $name, array $options = null): string
     {
+        $options = $options ?? [];
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
         $html    = view('form.password', compact('classes', 'name', 'label', 'options'))->render();
 
         return $html;
+    }
+
+    /**
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
+     *
+     * @return string
+     * @throws \Throwable
+     */
+    public function piggyBankList(string $name, $value = null, array $options = null): string
+    {
+        $options = $options ?? [];
+        // make repositories
+        /** @var PiggyBankRepositoryInterface $repository */
+        $repository = app(PiggyBankRepositoryInterface::class);
+        $piggyBanks = $repository->getPiggyBanksWithAmount();
+        $array      = [];
+        /** @var PiggyBank $piggy */
+        foreach ($piggyBanks as $piggy) {
+            $array[$piggy->id] = $piggy->name;
+        }
+
+        return $this->select($name, $array, $value, $options);
     }
 
     /**
