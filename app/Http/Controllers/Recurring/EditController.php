@@ -27,7 +27,11 @@ namespace FireflyIII\Http\Controllers\Recurring;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Transformers\RecurrenceTransformer;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  *
@@ -35,6 +39,8 @@ use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
  */
 class EditController extends Controller
 {
+    /** @var BudgetRepositoryInterface */
+    private $budgets;
     /** @var RecurringRepositoryInterface */
     private $recurring;
 
@@ -53,6 +59,7 @@ class EditController extends Controller
                 app('view')->share('subTitle', trans('firefly.recurrences'));
 
                 $this->recurring = app(RecurringRepositoryInterface::class);
+                $this->budgets   = app(BudgetRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -60,24 +67,52 @@ class EditController extends Controller
     }
 
     /**
+     * @param Request    $request
      * @param Recurrence $recurrence
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function edit(Recurrence $recurrence)
+    public function edit(Request $request, Recurrence $recurrence)
     {
+        // use transformer:
+        $transformer = new RecurrenceTransformer(new ParameterBag);
+        $array       = $transformer->transform($recurrence);
+        $budgets     = app('expandedform')->makeSelectListWithEmpty($this->budgets->getActiveBudgets());
+
         // get recurrence type:
         // todo move to repository
+        // todo handle old repetition type as well.
+
+
         /** @var RecurrenceRepetition $repetition */
         $repetition            = $recurrence->recurrenceRepetitions()->first();
         $currentRepetitionType = $repetition->repetition_type;
         if ('' !== $repetition->repetition_moment) {
             $currentRepetitionType .= ',' . $repetition->repetition_moment;
         }
+        // assume repeats forever:
+        $repetitionEnd = 'forever';
+        // types of repetitions:
+        $repetitionEnds = [
+            'forever'    => trans('firefly.repeat_forever'),
+            'until_date' => trans('firefly.repeat_until_date'),
+            'times'      => trans('firefly.repeat_times'),
+        ];
+        if (null !== $recurrence->repeat_until) {
+            $repetitionEnd = 'until_date';
+        }
+        if ($recurrence->repetitions > 0) {
+            $repetitionEnd = 'times';
+        }
 
-        // todo handle old repetition type as well.
+        // flash some data:
+        $preFilled = [
+            'transaction_type' => strtolower($recurrence->transactionType->type),
+        ];
+        $request->flash('preFilled', $preFilled);
 
-        return view('recurring.edit', compact('recurrence','currentRepetitionType'));
+        return view('recurring.edit', compact('recurrence', 'array','budgets', 'preFilled', 'currentRepetitionType', 'repetitionEnd', 'repetitionEnds'));
     }
 
 

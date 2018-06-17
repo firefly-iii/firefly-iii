@@ -20,7 +20,7 @@
                         {{ ExpandedForm.date('first_date',null, {helpText: trans('firefly.help_first_date')}) }}
                         {{ ExpandedForm.select('repetition_type', [], null, {helpText: trans('firefly.change_date_other_options')}) }}
                         {{ ExpandedForm.number('skip', 0) }}
-                        {{ ExpandedForm.select('repetition_end', typesOfRepetitions) }}
+                        {{ ExpandedForm.select('repetition_end', repetitionEnds) }}
                         {{ ExpandedForm.date('repeat_until',null) }}
                         {{ ExpandedForm.number('repetitions',null) }}
 

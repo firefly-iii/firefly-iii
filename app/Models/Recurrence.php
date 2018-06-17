@@ -47,6 +47,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string                             $repetition_type
  * @property string                             $repetition_moment
  * @property int                                $repetition_skip
+ * @property int                                $repetitions
  * @property bool                               $active
  * @property bool                               $apply_rules
  * @property \FireflyIII\User                   $user

@@ -16,13 +16,13 @@
                         <h3 class="box-title">{{ 'mandatory_for_recurring'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.text('title',recurrence.title) }}
-                        {{ ExpandedForm.date('first_date',recurrence.first_date.format('Y-m-d'), {helpText: trans('firefly.help_first_date_no_past')}) }}
+                        {{ ExpandedForm.text('title',array.title) }}
+                        {{ ExpandedForm.date('first_date',array.first_date, {helpText: trans('firefly.help_first_date_no_past')}) }}
                         {{ ExpandedForm.select('repetition_type', [], null, {helpText: trans('firefly.change_date_other_options')}) }}
-                        {{ ExpandedForm.number('skip', 0) }}
-                        {{ ExpandedForm.select('repetition_end', []) }} {#typesOfRepetitions#}
-                        {{ ExpandedForm.date('repeat_until',null) }}
-                        {{ ExpandedForm.number('repetitions',null) }}
+                        {{ ExpandedForm.number('skip', array.recurrence_repetitions[0].repetition_skip) }}
+                        {{ ExpandedForm.select('repetition_end', repetitionEnds, repetitionEnd) }}
+                        {{ ExpandedForm.date('repeat_until',array.repeat_until) }}
+                        {{ ExpandedForm.number('repetitions', array.repetitions) }}
 
                         {# calendar in popup #}
                         <div class="form-group" id="calendar_holder">
@@ -45,11 +45,11 @@
                         <h3 class="box-title">{{ 'optional_for_recurring'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.textarea('recurring_description') }}
+                        {{ ExpandedForm.textarea('recurring_description',array.description) }}
 
-                        {{ ExpandedForm.checkbox('active',1) }}
+                        {{ ExpandedForm.checkbox('active',1, array.active) }}
 
-                        {{ ExpandedForm.checkbox('apply_rules',1) }}
+                        {{ ExpandedForm.checkbox('apply_rules',1, array.apply_rules) }}
                     </div>
                 </div>
             </div>
@@ -80,23 +80,22 @@
                         </div>
                         <input type="hidden" name="transaction_type" value="">
                         {# end of three buttons#}
-
-                        {{ ExpandedForm.text('transaction_description') }}
+                        {{ ExpandedForm.text('transaction_description', array.transactions[0].description) }}
                         {# transaction information (mandatory) #}
-                        {{ ExpandedForm.currencyList('transaction_currency_id', defaultCurrency.id) }}
-                        {{ ExpandedForm.amountNoCurrency('amount', []) }}
+                        {{ ExpandedForm.currencyList('transaction_currency_id', array.transactions[0].currency_id) }}
+                        {{ ExpandedForm.amountNoCurrency('amount', array.transactions[0].amount) }}
 
                         {# source account if withdrawal, or if transfer: #}
-                        {{ ExpandedForm.assetAccountList('source_account_id', null, {label: trans('form.asset_source_account')}) }}
+                        {{ ExpandedForm.assetAccountList('source_account_id', array.transactions[0].source_account_id, {label: trans('form.asset_source_account')}) }}
 
                         {# source account name for deposits: #}
-                        {{ ExpandedForm.text('source_account_name', null, {label: trans('form.revenue_account')}) }}
+                        {{ ExpandedForm.text('source_account_name', array.transactions[0].source_account_name, {label: trans('form.revenue_account')}) }}
 
                         {# destination if deposit or transfer: #}
-                        {{ ExpandedForm.assetAccountList('destination_account_id', null, {label: trans('form.asset_destination_account')} ) }}
+                        {{ ExpandedForm.assetAccountList('destination_account_id', array.transactions[0].destination_account_id, {label: trans('form.asset_destination_account')} ) }}
 
                         {# destination account name for withdrawals #}
-                        {{ ExpandedForm.text('destination_account_name', null, {label: trans('form.expense_account')}) }}
+                        {{ ExpandedForm.text('destination_account_name', array.transactions[0].destination_account_name, {label: trans('form.expense_account')}) }}
                     </div>
                 </div>
             </div>
@@ -109,25 +108,46 @@
                     </div>
                     <div class="box-body">
                         {# transaction information (optional) #}
-                        {{ ExpandedForm.currencyList('foreign_currency_id', defaultCurrency.id) }}
-                        {{ ExpandedForm.amountNoCurrency('foreign_amount', []) }}
+                        {{ ExpandedForm.currencyList('foreign_currency_id', array.transactions[0].foreign_currency_id) }}
+                        {{ ExpandedForm.amountNoCurrency('foreign_amount', array.transactions[0].foreign_amount) }}
 
                         {# BUDGET ONLY WHEN CREATING A WITHDRAWAL #}
+                        {% set budgetId = 0 %}
+                        {% set categoryName = '' %}
+                        {% for metaValue in array.transactions[0].meta %}
+                            {% if metaValue.name == 'budget_id' %}
+                                {% set budgetId = metaValue.value %}
+                            {% endif %}
+                            {% if metaValue.name == 'category_name' %}
+                                {% set categoryName = metaValue.value %}
+                            {% endif %}
+                        {% endfor %}
+
                         {% if budgets|length > 1 %}
-                            {{ ExpandedForm.select('budget_id', [], null) }} {#budgets#}
+                            {{ ExpandedForm.select('budget_id', budgets, budgetId) }} {##}
                         {% else %}
-                            {{ ExpandedForm.select('budget_id', [], null, {helpText: trans('firefly.no_budget_pointer')}) }}
+                            {{ ExpandedForm.select('budget_id', budgets, budgetId, {helpText: trans('firefly.no_budget_pointer')}) }}
                             {#budgets#}
                         {% endif %}
 
                         {# CATEGORY ALWAYS #}
-                        {{ ExpandedForm.text('category') }}
+                        {{ ExpandedForm.text('category',categoryName) }}
 
                         {# TAGS #}
-                        {{ ExpandedForm.text('tags') }}
+                        {% set tags = '' %}
+                        {% set piggyBankId = 0 %}
+                        {% for metaValue in array.meta %}
+                            {% if metaValue.name == 'tags' %}
+                                {% set tags = metaValue.value %}
+                            {% endif %}
+                            {% if metaValue.name == 'piggy_bank_id' %}
+                                {% set piggyBankId = metaValue.value %}
+                            {% endif %}
+                        {% endfor %}
+                        {{ ExpandedForm.text('tags', tags) }}
 
                         {# RELATE THIS TRANSFER TO A PIGGY BANK #}
-                        {{ ExpandedForm.select('piggy_bank_id', [], 0) }} {#piggies#}
+                        {{ ExpandedForm.piggyBankList('piggy_bank_id',piggyBankId) }}
                     </div>
                 </div>
             </div>

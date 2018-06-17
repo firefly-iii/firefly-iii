@@ -71,6 +71,7 @@ class CreateController extends Controller
      */
     public function create(Request $request)
     {
+        // todo create expandedform thing.
         $budgets           = app('expandedform')->makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $defaultCurrency   = app('amount')->getDefaultCurrency();
         $tomorrow          = new Carbon;
@@ -83,8 +84,8 @@ class CreateController extends Controller
         }
         $request->session()->forget('recurring.create.fromStore');
 
-        // types of repetitions:
-        $typesOfRepetitions = [
+        // when will it end?
+        $repetitionEnds = [
             'forever'    => trans('firefly.repeat_forever'),
             'until_date' => trans('firefly.repeat_until_date'),
             'times'      => trans('firefly.repeat_times'),
@@ -99,7 +100,7 @@ class CreateController extends Controller
         ];
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('recurring.create', compact('tomorrow', 'oldRepetitionType', 'preFilled', 'piggies', 'typesOfRepetitions', 'defaultCurrency', 'budgets'));
+        return view('recurring.create', compact('tomorrow', 'oldRepetitionType', 'preFilled', 'repetitionEnds', 'defaultCurrency', 'budgets'));
     }
 
     /**

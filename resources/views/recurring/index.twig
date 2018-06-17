@@ -81,7 +81,7 @@
                                     </td>
                                     <td>
                                         <ul>
-                                            {% for rep in rt.repetitions %}
+                                            {% for rep in rt.recurrence_repetitions %}
                                                 <li>{{ rep.description }}
                                                 {% if rep.repetition_skip == 1 %}
                                                     ({{ trans('firefly.recurring_skips_one')|lower }})

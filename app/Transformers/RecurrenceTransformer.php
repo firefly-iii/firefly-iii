@@ -99,23 +99,24 @@ class RecurrenceTransformer extends TransformerAbstract
     {
         $this->repository->setUser($recurrence->user);
         $return   = [
-            'id'                  => (int)$recurrence->id,
-            'updated_at'          => $recurrence->updated_at->toAtomString(),
-            'created_at'          => $recurrence->created_at->toAtomString(),
-            'transaction_type_id' => $recurrence->transaction_type_id,
-            'transaction_type'    => $recurrence->transactionType->type,
-            'title'               => $recurrence->title,
-            'description'         => $recurrence->description,
-            'first_date'          => $recurrence->first_date->format('Y-m-d'),
-            'latest_date'         => null === $recurrence->latest_date ? null : $recurrence->latest_date->format('Y-m-d'),
-            'repeat_until'        => null === $recurrence->repeat_until ? null : $recurrence->repeat_until->format('Y-m-d'),
-            'apply_rules'         => $recurrence->apply_rules,
-            'active'              => $recurrence->active,
-            'notes'               => $this->repository->getNoteText($recurrence),
-            'repetitions'         => [],
-            'transactions'        => [],
-            'meta'                => [],
-            'links'               => [
+            'id'                     => (int)$recurrence->id,
+            'updated_at'             => $recurrence->updated_at->toAtomString(),
+            'created_at'             => $recurrence->created_at->toAtomString(),
+            'transaction_type_id'    => $recurrence->transaction_type_id,
+            'transaction_type'       => $recurrence->transactionType->type,
+            'title'                  => $recurrence->title,
+            'description'            => $recurrence->description,
+            'first_date'             => $recurrence->first_date->format('Y-m-d'),
+            'latest_date'            => null === $recurrence->latest_date ? null : $recurrence->latest_date->format('Y-m-d'),
+            'repeat_until'           => null === $recurrence->repeat_until ? null : $recurrence->repeat_until->format('Y-m-d'),
+            'apply_rules'            => $recurrence->apply_rules,
+            'active'                 => $recurrence->active,
+            'repetitions'            => $recurrence->repetitions,
+            'notes'                  => $this->repository->getNoteText($recurrence),
+            'recurrence_repetitions' => [],
+            'transactions'           => [],
+            'meta'                   => [],
+            'links'                  => [
                 [
                     'rel' => 'self',
                     'uri' => '/recurring/' . $recurrence->id,
@@ -147,7 +148,7 @@ class RecurrenceTransformer extends TransformerAbstract
                 $repetitionArray['occurrences'][] = $carbon->format('Y-m-d');
             }
 
-            $return['repetitions'][] = $repetitionArray;
+            $return['recurrence_repetitions'][] = $repetitionArray;
         }
         unset($repetitionArray);
 

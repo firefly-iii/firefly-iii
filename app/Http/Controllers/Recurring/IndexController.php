@@ -189,9 +189,9 @@ class IndexController extends Controller
         $array       = $transformer->transform($recurrence);
 
         // transform dates back to Carbon objects:
-        foreach ($array['repetitions'] as $index => $repetition) {
+        foreach ($array['recurrence_repetitions'] as $index => $repetition) {
             foreach ($repetition['occurrences'] as $item => $occurrence) {
-                $array['repetitions'][$index]['occurrences'][$item] = new Carbon($occurrence);
+                $array['recurrence_repetitions'][$index]['occurrences'][$item] = new Carbon($occurrence);
             }
         }
 
