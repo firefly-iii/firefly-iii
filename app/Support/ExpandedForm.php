@@ -255,6 +255,33 @@ class ExpandedForm
      * @return string
      * @throws \Throwable
      */
+    public function currencyListEmpty(string $name, $value = null, array $options = []): string
+    {
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+
+        // get all currencies:
+        $list  = $currencyRepos->get();
+        $array = [
+            0 => trans('firefly.no_currency')
+        ];
+        /** @var TransactionCurrency $currency */
+        foreach ($list as $currency) {
+            $array[$currency->id] = $currency->name . ' (' . $currency->symbol . ')';
+        }
+        $res = $this->select($name, $array, $value, $options);
+
+        return $res;
+    }
+
+    /**
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
+     *
+     * @return string
+     * @throws \Throwable
+     */
     public function date(string $name, $value = null, array $options = []): string
     {
         $label   = $this->label($name, $options);

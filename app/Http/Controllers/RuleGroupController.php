@@ -121,16 +121,18 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * @param Request   $request
      * @param RuleGroup $ruleGroup
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit(RuleGroup $ruleGroup)
+    public function edit(Request $request, RuleGroup $ruleGroup)
     {
         $subTitle = trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
 
-        $preFilled = [
-            'active' => $ruleGroup->active,
+        $hasOldInput = null !== $request->old('_token');
+        $preFilled   = [
+            'active' => $hasOldInput ? (bool)$request->old('active') : $ruleGroup->active,
         ];
 
 

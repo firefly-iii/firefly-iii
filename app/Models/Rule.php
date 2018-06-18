@@ -33,6 +33,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property bool                           $stop_processing
  * @property int                            $id
  * @property \Illuminate\Support\Collection $ruleTriggers
+ * @property bool                           $active
+ * @property bool                           $strict
  */
 class Rule extends Model
 {

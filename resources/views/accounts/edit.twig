@@ -48,7 +48,9 @@
 
                     {% endif %}
                     {{ ExpandedForm.textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
-                    {{ ExpandedForm.checkbox('active','1', preFilled.active) }}
+
+                    {# only correct way to do active checkbox #}
+                    {{ ExpandedForm.checkbox('active', 1) }}
                 </div>
             </div>
 

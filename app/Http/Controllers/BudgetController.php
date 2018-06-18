@@ -216,11 +216,18 @@ class BudgetController extends Controller
     {
         $subTitle = trans('firefly.edit_budget', ['name' => $budget->name]);
 
+        // code to handle active-checkboxes
+        $hasOldInput = null !== $request->old('_token');
+        $preFilled   = [
+            'active' => $hasOldInput ? (bool)$request->old('active') : $budget->active,
+        ];
+
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('budgets.edit.fromUpdate')) {
             $this->rememberPreviousUri('budgets.edit.uri');
         }
         $request->session()->forget('budgets.edit.fromUpdate');
+        $request->session()->flash('preFilled', $preFilled);
 
         return view('budgets.edit', compact('budget', 'subTitle'));
     }

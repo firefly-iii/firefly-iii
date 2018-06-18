@@ -1230,6 +1230,7 @@ return [
     'create_new_recurrence'                 => 'Create new recurring transaction',
     'help_first_date'                       => 'Indicate the first expected recurrence. This must be in the future.',
     'help_first_date_no_past'               => 'Indicate the first expected recurrence. Firefly III will not create transactions in the past.',
+    'no_currency'                           => '(no currency)',
     'mandatory_for_recurring'               => 'Mandatory recurrence information',
     'mandatory_for_transaction'             => 'Mandatory transaction information',
     'optional_for_recurring'                => 'Optional recurrence information',

@@ -47,7 +47,8 @@
                     <div class="box-body">
                         {{ ExpandedForm.textarea('recurring_description') }}
 
-                        {{ ExpandedForm.checkbox('active',1) }}
+                        {# only correct way to do active checkbox #}
+                        {{ ExpandedForm.checkbox('active', 1) }}
 
                         {{ ExpandedForm.checkbox('apply_rules',1) }}
                     </div>
@@ -109,7 +110,7 @@
                     </div>
                     <div class="box-body">
                         {# transaction information (optional) #}
-                        {{ ExpandedForm.currencyList('foreign_currency_id', defaultCurrency.id) }}
+                        {{ ExpandedForm.currencyListEmpty('foreign_currency_id', 0) }}
                         {{ ExpandedForm.amountNoCurrency('foreign_amount', []) }}
 
                         {# BUDGET ONLY WHEN CREATING A WITHDRAWAL #}

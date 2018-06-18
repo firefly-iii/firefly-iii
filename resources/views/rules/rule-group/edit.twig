@@ -14,7 +14,9 @@
                     <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {{ ExpandedForm.checkbox('active') }}
+                    {# only correct way to do active checkbox #}
+                    {{ ExpandedForm.checkbox('active', 1) }}
+
                     {{ ExpandedForm.text('title') }}
                 </div>
             </div>

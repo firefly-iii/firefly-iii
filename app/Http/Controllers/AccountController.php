@@ -184,7 +184,9 @@ class AccountController extends Controller
             $currency = $default;
         }
 
-        $preFilled = [
+        // code to handle active-checkboxes
+        $hasOldInput = null !== $request->old('_token');
+        $preFilled   = [
             'accountNumber'        => $repository->getMetaValue($account, 'accountNumber'),
             'accountRole'          => $repository->getMetaValue($account, 'accountRole'),
             'ccType'               => $repository->getMetaValue($account, 'ccType'),
@@ -195,14 +197,13 @@ class AccountController extends Controller
             'virtualBalance'       => $account->virtual_balance,
             'currency_id'          => $currency->id,
             'notes'                => '',
-            'active'               => $account->active,
+            'active'               => $hasOldInput ? (bool)$request->old('active') : $account->active,
         ];
         /** @var Note $note */
         $note = $this->repository->getNote($account);
         if (null !== $note) {
             $preFilled['notes'] = $note->text;
         }
-
 
         $request->session()->flash('preFilled', $preFilled);
 

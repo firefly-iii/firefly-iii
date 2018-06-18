@@ -229,6 +229,14 @@ class RuleController extends Controller
             $actionCount  = \count($oldActions);
         }
 
+        $hasOldInput = null !== $request->old('_token');
+        $preFilled = [
+            'active'          => $hasOldInput ? (bool)$request->old('active') : $rule->active,
+            'stop_processing' => $hasOldInput ? (bool)$request->old('stop_processing') : $rule->stop_processing,
+            'strict'          => $hasOldInput ? (bool)$request->old('strict') : $rule->strict,
+
+        ];
+
         // get rule trigger for update / store-journal:
         $primaryTrigger = $this->ruleRepos->getPrimaryTrigger($rule);
         $subTitle       = trans('firefly.edit_rule', ['title' => $rule->title]);
@@ -238,6 +246,8 @@ class RuleController extends Controller
             $this->rememberPreviousUri('rules.edit.uri');
         }
         session()->forget('rules.edit.fromUpdate');
+
+        $request->session()->flash('preFilled', $preFilled);
 
         return view('rules.rule.edit', compact('rule', 'subTitle', 'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount'));
     }

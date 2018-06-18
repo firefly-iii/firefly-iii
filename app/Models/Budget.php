@@ -33,6 +33,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Class Budget.
  * @property int $id
  * @property string $name
+ * @property bool $active
  */
 class Budget extends Model
 {

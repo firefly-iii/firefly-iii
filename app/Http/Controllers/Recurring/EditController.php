@@ -106,13 +106,17 @@ class EditController extends Controller
             $repetitionEnd = 'times';
         }
 
-        // flash some data:
-        $preFilled = [
+        // code to handle active-checkboxes
+        $hasOldInput = null !== $request->old('_token');
+        $preFilled   = [
             'transaction_type' => strtolower($recurrence->transactionType->type),
+            'active'           => $hasOldInput ? (bool)$request->old('active') : $recurrence->active,
+            'apply_rules'      => $hasOldInput ? (bool)$request->old('apply_rules') : $recurrence->apply_rules,
+
         ];
         $request->flash('preFilled', $preFilled);
 
-        return view('recurring.edit', compact('recurrence', 'array','budgets', 'preFilled', 'currentRepetitionType', 'repetitionEnd', 'repetitionEnds'));
+        return view('recurring.edit', compact('recurrence', 'array', 'budgets', 'preFilled', 'currentRepetitionType', 'repetitionEnd', 'repetitionEnds'));
     }
 
 

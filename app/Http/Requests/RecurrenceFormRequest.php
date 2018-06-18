@@ -151,7 +151,6 @@ class RecurrenceFormRequest extends Request
             'destination_account_name' => 'between:1,255|nullable',
 
             // foreign amount data:
-            'foreign_currency_id'      => 'exists:transaction_currencies,id',
             'foreign_amount'           => 'nullable|more:0',
 
             // optional fields:
@@ -159,6 +158,9 @@ class RecurrenceFormRequest extends Request
             'category'                 => 'between:1,255|nullable',
             'tags'                     => 'between:1,255|nullable',
         ];
+        if ($this->integer('foreign_currency_id') > 0) {
+            $rules['foreign_currency_id'] = 'exists:transaction_currencies,id';
+        }
 
         // if ends after X repetitions, set another rule
         if ($this->string('repetition_end') === 'times') {
