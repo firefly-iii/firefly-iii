@@ -1062,7 +1062,7 @@ return [
     'instance_configuration'                => 'Configuration',
     'firefly_instance_configuration'        => 'Configuration options for Firefly III',
     'setting_single_user_mode'              => 'Single user mode',
-    'setting_single_user_mode_explain'      => 'By default, Firefly III only accepts one (1) registration: you. This is a security measure, preventing others from using your instance unless you allow them to. Future registrations are blocked. When you uncheck this box, others can use your instance as wel, assuming they can reach it (when it is connected to the internet).',
+    'setting_single_user_mode_explain'      => 'By default, Firefly III only accepts one (1) registration: you. This is a security measure, preventing others from using your instance unless you allow them to. Future registrations are blocked. When you uncheck this box, others can use your instance as well, assuming they can reach it (when it is connected to the internet).',
     'store_configuration'                   => 'Store configuration',
     'single_user_administration'            => 'User administration for :email',
     'edit_user'                             => 'Edit user :email',
