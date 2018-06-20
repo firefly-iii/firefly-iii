@@ -107,6 +107,9 @@ class TransactionJournalFactory
         }
         Log::debug('End of TransactionJournalFactory::create()');
 
+        // invalidate cache.
+        app('preferences')->mark();
+
         return $journal;
     }
 
