@@ -30,6 +30,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Class TransactionType.
  *
  * @property string $type
+ * @property int $id
  */
 class TransactionType extends Model
 {

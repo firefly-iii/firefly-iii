@@ -26,6 +26,7 @@ namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class RecurrenceTransactionMeta
@@ -35,6 +36,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class RecurrenceTransactionMeta extends Model
 {
+    use SoftDeletes;
     /** @var array */
     protected $casts
         = [

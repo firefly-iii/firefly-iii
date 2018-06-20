@@ -26,6 +26,7 @@ namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class RecurrenceRepetition
@@ -40,6 +41,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class RecurrenceRepetition extends Model
 {
+    use SoftDeletes;
     /** @var array */
     protected $casts
         = [

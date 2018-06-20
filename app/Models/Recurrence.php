@@ -28,6 +28,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -59,6 +60,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Recurrence extends Model
 {
+    use SoftDeletes;
     /**
      * The attributes that should be casted to native types.
      *
