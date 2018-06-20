@@ -40,7 +40,6 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Serializer\JsonApiSerializer;
 use Log;
-use Preferences;
 
 /**
  * Class TransactionController
@@ -92,7 +91,7 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
-        $pageSize = (int)Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // read type from URI
         $type = $request->get('type') ?? 'default';

@@ -37,7 +37,6 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
-use Preferences;
 
 /**
  * Class BillController
@@ -89,7 +88,7 @@ class BillController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $pageSize  = (int)Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize  = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $paginator = $this->repository->getPaginator($pageSize);
         /** @var Collection $bills */
         $bills = $paginator->getCollection();

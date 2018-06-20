@@ -37,7 +37,6 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
-use Preferences;
 
 /**
  * Class AccountController
@@ -104,7 +103,7 @@ class AccountController extends Controller
 
         // types to get, page size:
         $types    = $this->mapTypes($this->parameters->get('type'));
-        $pageSize = (int)Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of accounts. Count it and split it.
         $collection = $this->repository->getAccountsByType($types);

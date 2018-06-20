@@ -38,7 +38,6 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
-use Preferences;
 
 /**
  * Class CurrencyController
@@ -101,7 +100,7 @@ class CurrencyController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $pageSize   = (int)Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection = $this->repository->get();
         $count      = $collection->count();
         // slice them:
@@ -157,8 +156,8 @@ class CurrencyController extends Controller
         $currency = $this->repository->store($request->getAll());
 
         if ($request->boolean('default') === true) {
-            Preferences::set('currencyPreference', $currency->code);
-            Preferences::mark();
+            app('preferences')->set('currencyPreference', $currency->code);
+            app('preferences')->mark();
         }
         if (null !== $currency) {
             $manager = new Manager();
@@ -188,8 +187,8 @@ class CurrencyController extends Controller
         $currency = $this->repository->update($currency, $data);
 
         if ($request->boolean('default') === true) {
-            Preferences::set('currencyPreference', $currency->code);
-            Preferences::mark();
+            app('preferences')->set('currencyPreference', $currency->code);
+            app('preferences')->mark();
         }
 
         $manager = new Manager();
