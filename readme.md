@@ -100,7 +100,12 @@ There are many ways to run Firefly III
 5. You can [deploy to Sandstorm.io](https://apps.sandstorm.io/app/uws252ya9mep4t77tevn85333xzsgrpgth8q4y1rhknn1hammw70)
 6. You can [install it using Softaculous](https://softaculous.com/). These guys even have made [another demo site](http://www.softaculous.com/softaculous/apps/others/Firefly_III)!
 7. You can [install it using AMPPS](https://www.ampps.com/)
-5. *Even more options are on the way!*
+8. Install it on [YunoHost](https://yunohost.org).
+
+   [![Install firefly3 with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=firefly3) 
+
+   See [here.](https://github.com/YunoHost-Apps/firefly3_ynh).
+9. *Even more options are on the way!*
 
 ### Update your instance
 Make sure you check for updates regularly. Your Firefly III instance will ask you to do this. Upgrade instructions can be found with the installation instructions.
