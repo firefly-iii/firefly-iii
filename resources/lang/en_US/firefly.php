@@ -1155,8 +1155,9 @@ return [
     'cannot_convert_split_journal'          => 'Cannot convert a split transaction',
 
     // Import page (general strings only)
-    'import_index_title'                    => 'Import data into Firefly III',
+    'import_index_title'                    => 'Import transactions into Firefly III',
     'import_data'                           => 'Import data',
+    'import_transactions'                   => 'Import transactions',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',

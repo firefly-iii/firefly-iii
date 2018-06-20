@@ -107,7 +107,7 @@ class TransactionFactory
         Log::debug(sprintf('Expect source destination to be of type %s', $destinationType));
         $destinationAccount = $this->findAccount($destinationType, $data['destination_id'], $data['destination_name']);
 
-        Log::debug(sprintf('Source type is "%s", destination type is "%s"', $sourceType, $destinationType));
+        Log::debug(sprintf('Source type is "%s", destination type is "%s"', $sourceAccount->accountType->type, $destinationAccount->accountType->type));
         // throw big fat error when source type === dest type
         if ($sourceAccount->accountType->type === $destinationAccount->accountType->type && $journal->transactionType->type !== TransactionType::TRANSFER) {
             throw new FireflyException(sprintf('Source and destination account cannot be both of the type "%s"', $destinationAccount->accountType->type));

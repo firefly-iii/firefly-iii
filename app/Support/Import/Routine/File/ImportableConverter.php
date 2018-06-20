@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Placeholder\ImportTransaction;
 use InvalidArgumentException;
@@ -39,6 +40,8 @@ use Log;
  */
 class ImportableConverter
 {
+    /** @var AccountRepositoryInterface */
+    private $accountRepository;
     /** @var AssetAccountMapper */
     private $assetMapper;
     /** @var array */
@@ -102,6 +105,10 @@ class ImportableConverter
         $this->assetMapper->setUser($importJob->user);
         $this->assetMapper->setDefaultAccount($this->config['import-account'] ?? 0);
 
+        // asset account repository is used for currency information
+        $this->accountRepository = app(AccountRepositoryInterface::class);
+        $this->accountRepository->setUser($importJob->user);
+
         // opposing account mapper:
         $this->opposingMapper = app(OpposingAccountMapper::class);
         $this->opposingMapper->setUser($importJob->user);
@@ -154,10 +161,6 @@ class ImportableConverter
         $currency        = $this->currencyMapper->map($currencyId, $importable->getCurrencyData());
         $foreignCurrency = $this->currencyMapper->map($foreignCurrencyId, $importable->getForeignCurrencyData());
 
-        if (null === $currency) {
-            Log::debug(sprintf('Could not map currency, use default (%s)', $this->defaultCurrency->code));
-            $currency = $this->defaultCurrency;
-        }
         Log::debug(sprintf('"%s" (#%d) is source and "%s" (#%d) is destination.', $source->name, $source->id, $destination->name, $destination->id));
 
         if (bccomp($amount, '0') === 1) {
@@ -169,6 +172,28 @@ class ImportableConverter
                     $amount, $source->name, $source->id, $destination->name, $destination->id
                 )
             );
+        }
+
+        // get currency preference from source asset account (preferred)
+        // or destination asset account
+        if (null === $currency) {
+            if ($destination->accountType->type === AccountType::ASSET) {
+                // destination is asset, might have currency preference:
+                $destinationCurrencyId = (int)$this->accountRepository->getMetaValue($destination, 'currency_id');
+                $currency              = $destinationCurrencyId === 0 ? $this->defaultCurrency : $this->currencyMapper->map($destinationCurrencyId, []);
+                Log::debug(sprintf('Destination is an asset account, and has currency preference %s', $currency->code));
+            }
+
+            if ($source->accountType->type === AccountType::ASSET) {
+                // source is asset, might have currency preference:
+                $sourceCurrencyId = (int)$this->accountRepository->getMetaValue($source, 'currency_id');
+                $currency         = $sourceCurrencyId === 0 ? $this->defaultCurrency : $this->currencyMapper->map($sourceCurrencyId, []);
+                Log::debug(sprintf('Source is an asset account, and has currency preference %s', $currency->code));
+            }
+        }
+        if (null === $currency) {
+            Log::debug(sprintf('Could not map currency, use default (%s)', $this->defaultCurrency->code));
+            $currency = $this->defaultCurrency;
         }
 
         if ($source->accountType->type === AccountType::ASSET && $destination->accountType->type === AccountType::ASSET) {
@@ -281,11 +306,13 @@ class ImportableConverter
     {
 
         if (isset($this->mappedValues[$key]) && \in_array($objectId, $this->mappedValues[$key], true)) {
-            Log::debug(sprintf('verifyObjectId(%s, %d) is valid!',$key, $objectId));
+            Log::debug(sprintf('verifyObjectId(%s, %d) is valid!', $key, $objectId));
+
             return $objectId;
         }
 
-        Log::debug(sprintf('verifyObjectId(%s, %d) is NOT in the list, but it could still be valid.',$key, $objectId));
+        Log::debug(sprintf('verifyObjectId(%s, %d) is NOT in the list, but it could still be valid.', $key, $objectId));
+
         return $objectId;
     }
 

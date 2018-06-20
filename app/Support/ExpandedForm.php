@@ -562,7 +562,9 @@ class ExpandedForm
         /** @var PiggyBankRepositoryInterface $repository */
         $repository = app(PiggyBankRepositoryInterface::class);
         $piggyBanks = $repository->getPiggyBanksWithAmount();
-        $array      = [];
+        $array      = [
+            0 => trans('firefly.none_in_select_list'),
+        ];
         /** @var PiggyBank $piggy */
         foreach ($piggyBanks as $piggy) {
             $array[$piggy->id] = $piggy->name;
