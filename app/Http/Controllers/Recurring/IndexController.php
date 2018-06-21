@@ -33,7 +33,6 @@ use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Transformers\RecurrenceTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Response;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -86,7 +85,7 @@ class IndexController extends Controller
 
         // if $firstDate is beyond $end, simply return an empty array.
         if ($firstDate->gt($end)) {
-            return Response::json([]);
+            return response()->json([]);
         }
         // if $firstDate is beyond start, use that one:
         $actualStart = clone $firstDate;
@@ -146,7 +145,7 @@ class IndexController extends Controller
             }
         }
 
-        return Response::json($return);
+        return response()->json($return);
     }
 
 
@@ -168,10 +167,11 @@ class IndexController extends Controller
         $recurring   = [];
         /** @var Recurrence $recurrence */
         foreach ($collection as $recurrence) {
-            $array                = $transformer->transform($recurrence);
-            $array['first_date']  = new Carbon($array['first_date']);
-            $array['latest_date'] = null === $array['latest_date'] ? null : new Carbon($array['latest_date']);
-            $recurring[]          = $array;
+            $array                 = $transformer->transform($recurrence);
+            $array['first_date']   = new Carbon($array['first_date']);
+            $array['repeat_until'] = null === $array['repeat_until'] ? null : new Carbon($array['repeat_until']);
+            $array['latest_date']  = null === $array['latest_date'] ? null : new Carbon($array['latest_date']);
+            $recurring[]           = $array;
         }
 
         return view('recurring.index', compact('recurring', 'page', 'pageSize'));
@@ -207,10 +207,11 @@ class IndexController extends Controller
      */
     public function suggest(Request $request): JsonResponse
     {
-        $today  = new Carbon;
-        $date   = Carbon::createFromFormat('Y-m-d', $request->get('date'));
-        $result = [];
-        if ($date > $today || $request->get('past') === 'true') {
+        $today       = new Carbon;
+        $date        = Carbon::createFromFormat('Y-m-d', $request->get('date'));
+        $preSelected = (string)$request->get('pre_select');
+        $result      = [];
+        if ($date > $today || (string)$request->get('past') === 'true') {
             $weekly     = sprintf('weekly,%s', $date->dayOfWeekIso);
             $monthly    = sprintf('monthly,%s', $date->day);
             $dayOfWeek  = trans(sprintf('config.dow_%s', $date->dayOfWeekIso));
@@ -218,16 +219,16 @@ class IndexController extends Controller
             $yearly     = sprintf('yearly,%s', $date->format('Y-m-d'));
             $yearlyDate = $date->formatLocalized(trans('config.month_and_day_no_year'));
             $result     = [
-                'daily'  => trans('firefly.recurring_daily'),
-                $weekly  => trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek]),
-                $monthly => trans('firefly.recurring_monthly', ['dayOfMonth' => $date->day]),
-                $ndom    => trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $date->weekOfMonth]),
-                $yearly  => trans('firefly.recurring_yearly', ['date' => $yearlyDate]),
+                'daily'  => ['label' => trans('firefly.recurring_daily'), 'selected' => 0 === strpos($preSelected, 'daily')],
+                $weekly  => ['label' => trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek]), 'selected' => 0 === strpos($preSelected, 'weekly')],
+                $monthly => ['label' => trans('firefly.recurring_monthly', ['dayOfMonth' => $date->day]), 'selected' => 0 === strpos($preSelected, 'monthly')],
+                $ndom    => ['label' => trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $date->weekOfMonth]),'selected' => 0 === strpos($preSelected, 'ndom')],
+                $yearly  => ['label' => trans('firefly.recurring_yearly', ['date' => $yearlyDate]),'selected' => 0 === strpos($preSelected, 'yearly')],
             ];
         }
 
 
-        return Response::json($result);
+        return response()->json($result);
     }
 
 }

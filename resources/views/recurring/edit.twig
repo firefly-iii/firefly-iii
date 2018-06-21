@@ -4,7 +4,7 @@
 {% endblock %}
 {% block content %}
 
-    <form action="{{ route('recurring.update') }}" method="post" id="store" class="form-horizontal">
+    {{ Form.model(recurrence, {'class' : 'form-horizontal','enctype': 'multipart/form-data','id' : 'update','url' : route('recurring.update', recurrence.id)}) }}
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
         {# row with recurrence information #}
         <div class="row">
@@ -16,7 +16,8 @@
                         <h3 class="box-title">{{ 'mandatory_for_recurring'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.text('title',array.title) }}
+                        <input type="hidden" name="id" value="{{ array.id }}" />
+                        {{ ExpandedForm.text('title') }}
                         {{ ExpandedForm.date('first_date',array.first_date, {helpText: trans('firefly.help_first_date_no_past')}) }}
                         {{ ExpandedForm.select('repetition_type', [], null, {helpText: trans('firefly.change_date_other_options')}) }}
                         {{ ExpandedForm.number('skip', array.recurrence_repetitions[0].repetition_skip) }}
@@ -48,9 +49,8 @@
                         {{ ExpandedForm.textarea('recurring_description',array.description) }}
 
                         {# only correct way to do active checkbox #}
-                        {{ ExpandedForm.checkbox('active', 1) }}
-
-                        {{ ExpandedForm.checkbox('apply_rules',1) }}
+                        {{ ExpandedForm.checkbox('active', 1, preFilled.active) }}
+                        {{ ExpandedForm.checkbox('apply_rules', 1, preFilled.apply_rules) }}
                     </div>
                 </div>
             </div>
@@ -162,11 +162,11 @@
                         <h3 class="box-title">{{ 'options'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.optionsList('create','recurrence') }}
+                        {{ ExpandedForm.optionsList('update','recurrence') }}
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="btn pull-right btn-success">
-                            {{ ('store_new_recurrence')|_ }}
+                            {{ ('update_recurrence')|_ }}
                         </button>
                     </div>
                 </div>

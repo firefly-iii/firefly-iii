@@ -25,13 +25,8 @@ namespace FireflyIII\Factory;
 
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Recurrence;
-use FireflyIII\Models\RecurrenceMeta;
-use FireflyIII\Models\RecurrenceRepetition;
-use FireflyIII\Models\RecurrenceTransaction;
-use FireflyIII\Models\RecurrenceTransactionMeta;
-use FireflyIII\Models\TransactionType;
+use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
 use FireflyIII\Services\Internal\Support\TransactionServiceTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
 use FireflyIII\User;
@@ -41,7 +36,7 @@ use FireflyIII\User;
  */
 class RecurrenceFactory
 {
-    use TransactionTypeTrait, TransactionServiceTrait;
+    use TransactionTypeTrait, TransactionServiceTrait, RecurringTransactionTrait;
 
     /** @var User */
     private $user;
@@ -54,15 +49,16 @@ class RecurrenceFactory
      */
     public function create(array $data): Recurrence
     {
-        $type       = $this->findTransactionType(ucfirst($data['recurrence']['type']));
-        $recurrence = new Recurrence(
+        $type        = $this->findTransactionType(ucfirst($data['recurrence']['type']));
+        $repetitions = (int)$data['recurrence']['repetitions'];
+        $recurrence  = new Recurrence(
             [
                 'user_id'             => $this->user->id,
                 'transaction_type_id' => $type->id,
                 'title'               => $data['recurrence']['title'],
                 'description'         => $data['recurrence']['description'],
                 'first_date'          => $data['recurrence']['first_date']->format('Y-m-d'),
-                'repeat_until'        => $data['recurrence']['repeat_until'],
+                'repeat_until'        => $repetitions > 0 ? null : $data['recurrence']['repeat_until'],
                 'latest_date'         => null,
                 'repetitions'         => $data['recurrence']['repetitions'],
                 'apply_rules'         => $data['recurrence']['apply_rules'],
@@ -71,105 +67,9 @@ class RecurrenceFactory
         );
         $recurrence->save();
 
-        // create recurrence meta (tags)
-        if (\count($data['meta']['tags']) > 0) {
-            // todo move to factory
-            $tags = implode(',', $data['meta']['tags']);
-            if ('' !== $tags) {
-                $metaValue = RecurrenceMeta::create(
-                    [
-                        'recurrence_id' => $recurrence->id,
-                        'name'          => 'tags',
-                        'value'         => $tags,
-                    ]
-                );
-            }
-        }
-        // create recurrence meta (piggy bank ID):
-        if ($data['meta']['piggy_bank_id'] > 0) {
-            // todo move to factory
-            $metaValue = RecurrenceMeta::create(
-                [
-                    'recurrence_id' => $recurrence->id,
-                    'name'          => 'piggy_bank_id',
-                    'value'         => $data['meta']['piggy_bank_id'],
-                ]
-            );
-        }
-
-        // store recurrence repetitions:
-        foreach ($data['repetitions'] as $repArray) {
-            // todo move to factory
-            $repetition = RecurrenceRepetition::create(
-                [
-                    'recurrence_id'     => $recurrence->id,
-                    'repetition_type'   => $repArray['type'],
-                    'repetition_moment' => $repArray['moment'],
-                    'repetition_skip'   => $repArray['skip'],
-                ]
-            );
-        }
-
-        // create recurrence transactions
-        foreach ($data['transactions'] as $trArray) {
-            // todo move to factory
-            $source      = null;
-            $destination = null;
-            // search source account, depends on type
-            switch ($type->type) {
-                default:
-                    throw new FireflyException(sprintf('Cannot create "%s".', $type->type));
-                case TransactionType::WITHDRAWAL:
-                    $source      = $this->findAccount(AccountType::ASSET, $trArray['source_account_id'], null);
-                    $destination = $this->findAccount(AccountType::EXPENSE, null, $trArray['destination_account_name']);
-                    break;
-                case TransactionType::DEPOSIT:
-                    $source      = $this->findAccount(AccountType::REVENUE, null, $trArray['source_account_name']);
-                    $destination = $this->findAccount(AccountType::ASSET, $trArray['destination_account_id'], null);
-                    break;
-                case TransactionType::TRANSFER:
-                    $source      = $this->findAccount(AccountType::ASSET, $trArray['source_account_id'], null);
-                    $destination = $this->findAccount(AccountType::ASSET, $trArray['destination_account_id'], null);
-                    break;
-            }
-
-            // search destination account
-
-            $transaction = new RecurrenceTransaction(
-                [
-                    'recurrence_id'           => $recurrence->id,
-                    'transaction_currency_id' => $trArray['transaction_currency_id'],
-                    'foreign_currency_id'     => '' === (string)$trArray['foreign_amount'] ? null : $trArray['foreign_currency_id'],
-                    'source_account_id'       => $source->id,
-                    'destination_account_id'  => $destination->id,
-                    'amount'                  => $trArray['amount'],
-                    'foreign_amount'          => '' === (string)$trArray['foreign_amount'] ? null : (string)$trArray['foreign_amount'],
-                    'description'             => $trArray['description'],
-                ]
-            );
-            $transaction->save();
-
-            // create recurrence transaction meta:
-            // todo move to factory
-            if ($trArray['budget_id'] > 0) {
-                $trMeta = RecurrenceTransactionMeta::create(
-                    [
-                        'rt_id' => $transaction->id,
-                        'name'  => 'budget_id',
-                        'value' => $trArray['budget_id'],
-                    ]
-                );
-            }
-            if ('' !== (string)$trArray['category_name']) {
-                $trMeta = RecurrenceTransactionMeta::create(
-                    [
-                        'rt_id' => $transaction->id,
-                        'name'  => 'category_name',
-                        'value' => $trArray['category_name'],
-                    ]
-                );
-            }
-        }
+        $this->updateMetaData($recurrence, $data);
+        $this->createRepetitions($recurrence, $data['repetitions'] ?? []);
+        $this->createTransactions($recurrence, $data['transactions'] ?? []);
 
         return $recurrence;
     }

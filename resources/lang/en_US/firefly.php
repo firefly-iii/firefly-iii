@@ -1247,4 +1247,9 @@ return [
     'store_new_recurrence'                  => 'Store recurring transaction',
     'stored_new_recurrence'                 => 'Recurring transaction ":title" stored successfully.',
     'edit_recurrence'                       => 'Edit recurring transaction ":title"',
+    'recurring_repeats_until'               => 'Repeats until :date',
+    'recurring_repeats_forever'             => 'Repeats forever',
+    'recurring_repeats_x_times'             => 'Repeats :count time(s)',
+    'update_recurrence'                     => 'Update recurring transaction',
+    'updated_recurrence'                    => 'Updated recurring transaction ":title"',
 ];

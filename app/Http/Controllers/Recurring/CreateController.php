@@ -71,7 +71,6 @@ class CreateController extends Controller
      */
     public function create(Request $request)
     {
-        // todo create expandedform thing.
         $budgets           = app('expandedform')->makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $defaultCurrency   = app('amount')->getDefaultCurrency();
         $tomorrow          = new Carbon;
@@ -92,11 +91,12 @@ class CreateController extends Controller
         ];
 
         // flash some data:
+        $hasOldInput = null !== $request->old('_token');
         $preFilled = [
             'first_date'       => $tomorrow->format('Y-m-d'),
-            'transaction_type' => 'withdrawal',
-            'active'           => $request->old('active') ?? true,
-            'apply_rules'      => $request->old('apply_rules') ?? true,
+            'transaction_type' => $hasOldInput ? $request->old('transaction_type') : 'withdrawal',
+            'active'           => $hasOldInput ? (bool)$request->old('active') : true,
+            'apply_rules'      => $hasOldInput ? (bool)$request->old('apply_rules') : true,
         ];
         $request->session()->flash('preFilled', $preFilled);
 

@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Requests;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Rules\ValidRecurrenceRepetitionType;
 use FireflyIII\Rules\ValidRecurrenceRepetitionValue;
@@ -53,14 +54,15 @@ class RecurrenceFormRequest extends Request
         $repetitionData = $this->parseRepetitionData();
         $return         = [
             'recurrence'   => [
-                'type'         => $this->string('transaction_type'),
-                'title'        => $this->string('title'),
-                'description'  => $this->string('recurring_description'),
-                'first_date'   => $this->date('first_date'),
-                'repeat_until' => $this->date('repeat_until'),
-                'repetitions'  => $this->integer('repetitions'),
-                'apply_rules'  => $this->boolean('apply_rules'),
-                'active'       => $this->boolean('active'),
+                'type'           => $this->string('transaction_type'),
+                'title'          => $this->string('title'),
+                'description'    => $this->string('recurring_description'),
+                'first_date'     => $this->date('first_date'),
+                'repeat_until'   => $this->date('repeat_until'),
+                'repetitions'    => $this->integer('repetitions'),
+                'apply_rules'    => $this->boolean('apply_rules'),
+                'active'         => $this->boolean('active'),
+                'repetition_end' => $this->string('repetition_end'),
             ],
             'transactions' => [
                 [
@@ -77,7 +79,7 @@ class RecurrenceFormRequest extends Request
             ],
             'meta'         => [
                 // tags and piggy bank ID.
-                'tags'          => explode(',', $this->string('tags')),
+                'tags'          => '' !== $this->string('tags') ? explode(',', $this->string('tags')): [],
                 'piggy_bank_id' => $this->integer('piggy_bank_id'),
             ],
             'repetitions'  => [
@@ -128,8 +130,7 @@ class RecurrenceFormRequest extends Request
         $tomorrow->addDay();
         $rules = [
             // mandatory info for recurrence.
-            //'title'                    => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
-            'title'                    => 'required|between:1,255',
+            'title'                    => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
             'first_date'               => 'required|date|after:' . $today->format('Y-m-d'),
             'repetition_type'          => ['required', new ValidRecurrenceRepetitionValue, new ValidRecurrenceRepetitionType, 'between:1,20'],
             'skip'                     => 'required|numeric|between:0,31',
@@ -194,6 +195,15 @@ class RecurrenceFormRequest extends Request
                 break;
             default:
                 throw new FireflyException(sprintf('Cannot handle transaction type of type "%s"', $this->string('transaction_type'))); // @codeCoverageIgnore
+        }
+
+        // update some rules in case the user is editing a post:
+        /** @var Recurrence $recurrence */
+        $recurrence = $this->route()->parameter('recurrence');
+        if ($recurrence instanceof Recurrence) {
+            $rules['id']         = 'required|numeric|exists:recurrences,id';
+            $rules['title']      = 'required|between:1,255|uniqueObjectForUser:recurrences,title,' . $recurrence->id;
+            $rules['first_date'] = 'required|date';
         }
 
 

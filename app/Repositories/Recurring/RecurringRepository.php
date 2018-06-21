@@ -30,6 +30,7 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
+use FireflyIII\Services\Internal\Update\RecurrenceUpdateService;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
@@ -367,5 +368,21 @@ class RecurringRepository implements RecurringRepositoryInterface
         $factory->setUser($this->user);
 
         return $factory->create($data);
+    }
+
+    /**
+     * Update a recurring transaction.
+     *
+     * @param Recurrence $recurrence
+     * @param array      $data
+     *
+     * @return Recurrence
+     */
+    public function update(Recurrence $recurrence, array $data): Recurrence
+    {
+        /** @var RecurrenceUpdateService $service */
+        $service = app(RecurrenceUpdateService::class);
+
+        return $service->update($recurrence, $data);
     }
 }

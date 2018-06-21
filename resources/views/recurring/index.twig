@@ -94,6 +94,17 @@
                                                 </li>
                                             {% endfor %}
                                         </ul>
+                                        <p>
+                                            {% if null == rt.repeat_until and rt.repetitions == 0 %}
+                                                {{ 'recurring_repeats_forever'|_ }}
+                                            {% endif %}
+                                            {% if null != rt.repeat_until and rt.repetitions == 0 %}
+                                                {{ trans('firefly.recurring_repeats_until', {date: rt.repeat_until.formatLocalized(monthAndDayFormat)}) }}
+                                            {% endif %}
+                                            {% if null == rt.repeat_until and rt.repetitions != 0 %}
+                                                {{ trans('firefly.recurring_repeats_x_times', {count: rt.repetitions}) }}
+                                            {% endif %}
+                                        </p>
                                     </td>
                                 </tr>
                             {% endfor %}

@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers\Recurring;
 
 
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Http\Requests\RecurrenceFormRequest;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -91,6 +92,13 @@ class EditController extends Controller
         if ('' !== $repetition->repetition_moment) {
             $currentRepetitionType .= ',' . $repetition->repetition_moment;
         }
+
+        // put previous url in session if not redirect from store (not "return_to_edit").
+        if (true !== session('recurrences.edit.fromUpdate')) {
+            $this->rememberPreviousUri('recurrences.edit.uri');
+        }
+        $request->session()->forget('recurrences.edit.fromUpdate');
+
         // assume repeats forever:
         $repetitionEnd = 'forever';
         // types of repetitions:
@@ -112,11 +120,37 @@ class EditController extends Controller
             'transaction_type' => strtolower($recurrence->transactionType->type),
             'active'           => $hasOldInput ? (bool)$request->old('active') : $recurrence->active,
             'apply_rules'      => $hasOldInput ? (bool)$request->old('apply_rules') : $recurrence->apply_rules,
-
         ];
         $request->flash('preFilled', $preFilled);
 
+
         return view('recurring.edit', compact('recurrence', 'array', 'budgets', 'preFilled', 'currentRepetitionType', 'repetitionEnd', 'repetitionEnds'));
+    }
+
+    /**
+     * @param RecurrenceFormRequest $request
+     * @param Recurrence            $recurrence
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \FireflyIII\Exceptions\FireflyException
+     */
+    public function update(RecurrenceFormRequest $request, Recurrence $recurrence)
+    {
+        $data = $request->getAll();
+        $this->recurring->update($recurrence, $data);
+
+        $request->session()->flash('success', (string)trans('firefly.updated_recurrence', ['title' => $recurrence->title]));
+        app('preferences')->mark();
+
+        if (1 === (int)$request->get('return_to_edit')) {
+            // set value so edit routine will not overwrite URL:
+            $request->session()->put('recurrences.edit.fromUpdate', true);
+
+            return redirect(route('recurring.edit', [$recurrence->id]))->withInput(['return_to_edit' => 1]);
+        }
+
+        // redirect to previous URL.
+        return redirect($this->getPreviousUri('recurrences.edit.uri'));
     }
 
 

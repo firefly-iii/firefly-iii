@@ -97,11 +97,23 @@ interface RecurringRepositoryInterface
     public function setUser(User $user): void;
 
     /**
+     * Store a new recurring transaction.
+     *
      * @param array $data
      *
      * @throws FireflyException
      * @return Recurrence
      */
     public function store(array $data): Recurrence;
+
+    /**
+     * Update a recurring transaction.
+     *
+     * @param Recurrence $recurrence
+     * @param array      $data
+     *
+     * @return Recurrence
+     */
+    public function update(Recurrence $recurrence, array $data): Recurrence;
 
 }
