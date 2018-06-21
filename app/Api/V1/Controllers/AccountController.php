@@ -30,6 +30,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Transformers\AccountTransformer;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Manager;
@@ -50,8 +51,6 @@ class AccountController extends Controller
 
     /**
      * AccountController constructor.
-     *
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function __construct()
     {
@@ -75,9 +74,9 @@ class AccountController extends Controller
      *
      * @param \FireflyIII\Models\Account $account
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function delete(Account $account)
+    public function delete(Account $account): JsonResponse
     {
         $this->repository->destroy($account, null);
 
@@ -89,9 +88,9 @@ class AccountController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         // create some objects:
         $manager = new Manager();
@@ -128,7 +127,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Request $request, Account $account)
+    public function show(Request $request, Account $account): JsonResponse
     {
         $manager = new Manager();
 
@@ -148,7 +147,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(AccountRequest $request)
+    public function store(AccountRequest $request): JsonResponse
     {
         $data = $request->getAll();
         // if currency ID is 0, find the currency by the code:
@@ -174,7 +173,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(AccountRequest $request, Account $account)
+    public function update(AccountRequest $request, Account $account): JsonResponse
     {
         $data = $request->getAll();
         // if currency ID is 0, find the currency by the code:

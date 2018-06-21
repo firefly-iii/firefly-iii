@@ -48,8 +48,6 @@ class BillController extends Controller
 
     /**
      * BillController constructor.
-     *
-     * @throws FireflyException
      */
     public function __construct()
     {

@@ -135,17 +135,19 @@ class TransactionController extends Controller
     /**
      * @param Request     $request
      * @param Transaction $transaction
+     * @param string      $include
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Request $request, Transaction $transaction)
+    public function show(Request $request, Transaction $transaction, string $include)
     {
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         // add include parameter:
-        $include = $request->get('include') ?? '';
+        $include = $include ?? '';
+        $include = $request->get('include') ?? $include;
         $manager->parseIncludes($include);
 
         // collect transactions using the journal collector
