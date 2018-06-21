@@ -102,9 +102,9 @@ There are many ways to run Firefly III
 7. You can [install it using AMPPS](https://www.ampps.com/)
 8. Install it on [YunoHost](https://yunohost.org).
 
-   [![Install firefly3 with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=firefly3) 
+   [![Install Firefly-III with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=firefly-iii) 
 
-   See [here.](https://github.com/YunoHost-Apps/firefly3_ynh).
+   See [here.](https://github.com/YunoHost-Apps/Firefly-III_ynh).
 9. *Even more options are on the way!*
 
 ### Update your instance
