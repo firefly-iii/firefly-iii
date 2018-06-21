@@ -185,9 +185,9 @@ class DebugController extends Controller
                    'two-factor.lost', 'reports.options', 'debug', 'import.create-job', 'import.download', 'import.start', 'import.status.json',
                    'preferences.delete-code', 'rules.test-triggers', 'piggy-banks.remove-money', 'piggy-banks.add-money',
                    'accounts.reconcile.transactions', 'accounts.reconcile.overview', 'export.download',
-                   'transactions.clone', 'two-factor.index', 'api.v1', 'installer.','attachments.view','import.create',
-                   'import.job.download','import.job.start','import.job.status.json','import.job.store','recurring.events',
-                   'recurring.suggest'
+                   'transactions.clone', 'two-factor.index', 'api.v1', 'installer.', 'attachments.view', 'import.create',
+                   'import.job.download', 'import.job.start', 'import.job.status.json', 'import.job.store', 'recurring.events',
+                   'recurring.suggest',
         ];
         $return = '&nbsp;';
         /** @var Route $route */

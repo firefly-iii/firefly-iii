@@ -42,7 +42,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string      $name
  * @property string      $iban
  * @property AccountType $accountType
- * @property bool $active
+ * @property bool        $active
+ * @property string      $virtual_balance
  */
 class Account extends Model
 {

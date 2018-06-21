@@ -51,9 +51,9 @@ class HomeController extends Controller
     {
         $title         = (string)trans('firefly.administration');
         $mainTitleIcon = 'fa-hand-spock-o';
-        $sandstorm = 1 === (int)getenv('SANDSTORM');
+        $sandstorm     = 1 === (int)getenv('SANDSTORM');
 
-        return view('admin.index', compact('title', 'mainTitleIcon','sandstorm'));
+        return view('admin.index', compact('title', 'mainTitleIcon', 'sandstorm'));
     }
 
     /**

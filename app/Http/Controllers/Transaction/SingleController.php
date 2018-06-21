@@ -34,9 +34,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Log;
@@ -93,7 +91,7 @@ class SingleController extends Controller
         $destination  = $this->repository->getJournalDestinationAccounts($journal)->first();
         $budgetId     = $this->repository->getJournalBudgetId($journal);
         $categoryName = $this->repository->getJournalCategoryName($journal);
-        $tags = implode(',', $this->repository->getTags($journal));
+        $tags         = implode(',', $this->repository->getTags($journal));
         /** @var Transaction $transaction */
         $transaction   = $journal->transactions()->first();
         $amount        = app('steam')->positive($transaction->amount);

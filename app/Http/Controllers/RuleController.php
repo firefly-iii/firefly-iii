@@ -230,7 +230,7 @@ class RuleController extends Controller
         }
 
         $hasOldInput = null !== $request->old('_token');
-        $preFilled = [
+        $preFilled   = [
             'active'          => $hasOldInput ? (bool)$request->old('active') : $rule->active,
             'stop_processing' => $hasOldInput ? (bool)$request->old('stop_processing') : $rule->stop_processing,
             'strict'          => $hasOldInput ? (bool)$request->old('strict') : $rule->strict,

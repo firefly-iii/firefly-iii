@@ -22,11 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Artisan;
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Events\RequestedVersionCheckStatus;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Middleware\Installer;
 use FireflyIII\Http\Middleware\IsDemoUser;
@@ -35,11 +32,9 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Route as RouteFacade;
 use View;
 
 /**
@@ -97,8 +92,6 @@ class HomeController extends Controller
 
         return response()->json(['ok' => 'ok']);
     }
-
-
 
 
     /**
