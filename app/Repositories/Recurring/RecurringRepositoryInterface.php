@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
+use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
@@ -43,7 +44,31 @@ interface RecurringRepositoryInterface
      *
      * @return Collection
      */
-    public function getActive(): Collection;
+    public function get(): Collection;
+
+    /**
+     * Get ALL recurring transactions.
+     * @return Collection
+     */
+    public function getAll(): Collection;
+
+    /**
+     * Get the category from a recurring transaction transaction.
+     *
+     * @param RecurrenceTransaction $recurrenceTransaction
+     *
+     * @return null|string
+     */
+    public function getCategory(RecurrenceTransaction $recurrenceTransaction): ?string;
+
+    /**
+     * Get the budget ID from a recurring transaction transaction.
+     *
+     * @param RecurrenceTransaction $recurrenceTransaction
+     *
+     * @return null|int
+     */
+    public function getBudget(RecurrenceTransaction $recurrenceTransaction): ?int;
 
     /**
      * Get the notes.
@@ -66,6 +91,15 @@ interface RecurringRepositoryInterface
      * @return array
      */
     public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array;
+
+    /**
+     * Get the tags from the recurring transaction.
+     *
+     * @param Recurrence $recurrence
+     *
+     * @return array
+     */
+    public function getTags(Recurrence $recurrence): array;
 
     /**
      * Calculate the next X iterations starting on the date given in $date.
@@ -98,6 +132,7 @@ interface RecurringRepositoryInterface
 
     /**
      * Store a new recurring transaction.
+     *\
      *
      * @param array $data
      *

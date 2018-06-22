@@ -29,11 +29,14 @@ use FireflyIII\Factory\RecurrenceFactory;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Recurrence;
+use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceRepetition;
+use FireflyIII\Models\RecurrenceTransaction;
+use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Services\Internal\Update\RecurrenceUpdateService;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-
+use Log;
 
 /**
  *
@@ -49,11 +52,68 @@ class RecurringRepository implements RecurringRepositoryInterface
      *
      * @return Collection
      */
-    public function getActive(): Collection
+    public function get(): Collection
     {
-        return $this->user->recurrences()->with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])->where(
-            'active', 1
-        )->get();
+        return $this->user->recurrences()
+                          ->with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])
+                          ->orderBy('active', 'DESC')
+                          ->orderBy('title', 'ASC')
+                          ->get();
+    }
+
+    /**
+     * Get ALL recurring transactions.
+     *
+     * @return Collection
+     */
+    public function getAll(): Collection
+    {
+        // grab ALL recurring transactions:
+        return Recurrence
+            ::with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])
+            ->orderBy('active', 'DESC')
+            ->orderBy('title', 'ASC')
+            ->get();
+    }
+
+    /**
+     * Get the budget ID from a recurring transaction transaction.
+     *
+     * @param RecurrenceTransaction $recurrenceTransaction
+     *
+     * @return null|int
+     */
+    public function getBudget(RecurrenceTransaction $recurrenceTransaction): ?int
+    {
+        $return = 0;
+        /** @var RecurrenceTransactionMeta $meta */
+        foreach ($recurrenceTransaction->recurrenceTransactionMeta as $meta) {
+            if ($meta->name === 'budget_id') {
+                $return = (int)$meta->value;
+            }
+        }
+
+        return $return === 0 ? null : $return;
+    }
+
+    /**
+     * Get the category from a recurring transaction transaction.
+     *
+     * @param RecurrenceTransaction $recurrenceTransaction
+     *
+     * @return null|string
+     */
+    public function getCategory(RecurrenceTransaction $recurrenceTransaction): ?string
+    {
+        $return = '';
+        /** @var RecurrenceTransactionMeta $meta */
+        foreach ($recurrenceTransaction->recurrenceTransactionMeta as $meta) {
+            if ($meta->name === 'category_name') {
+                $return = (string)$meta->value;
+            }
+        }
+
+        return $return === '' ? null : $return;
     }
 
     /**
@@ -92,6 +152,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         $mutator->startOfDay();
         $skipMod  = $repetition->repetition_skip + 1;
         $attempts = 0;
+        Log::debug(sprintf('Calculating occurrences for rep type "%s"', $repetition->repetition_type));
         switch ($repetition->repetition_type) {
             default:
                 throw new FireflyException(
@@ -120,7 +181,7 @@ class RecurringRepository implements RecurringRepositoryInterface
                 $dayDifference = $dayOfWeek - $mutator->dayOfWeekIso;
                 $mutator->addDays($dayDifference);
                 while ($mutator <= $end) {
-                    if ($attempts % $skipMod === 0) {
+                    if ($attempts % $skipMod === 0 && $start->lte($mutator) && $end->gte($mutator)) {
                         $return[] = clone $mutator;
                     }
                     $attempts++;
@@ -129,19 +190,31 @@ class RecurringRepository implements RecurringRepositoryInterface
                 break;
             case 'monthly':
                 $dayOfMonth = (int)$repetition->repetition_moment;
+                Log::debug(sprintf('Day of month in repetition is %d', $dayOfMonth));
+                Log::debug(sprintf('Start is %s.', $start->format('Y-m-d')));
+                Log::debug(sprintf('End is %s.', $end->format('Y-m-d')));
                 if ($mutator->day > $dayOfMonth) {
+                    Log::debug('Add a month.');
                     // day has passed already, add a month.
                     $mutator->addMonth();
                 }
-
+                Log::debug(sprintf('Start is now %s.', $mutator->format('Y-m-d')));
+                Log::debug('Start loop.');
                 while ($mutator < $end) {
+                    Log::debug(sprintf('Mutator is now %s.', $mutator->format('Y-m-d')));
                     $domCorrected = min($dayOfMonth, $mutator->daysInMonth);
+                    Log::debug(sprintf('DoM corrected is %d', $domCorrected));
                     $mutator->day = $domCorrected;
-                    if ($attempts % $skipMod === 0) {
+                    Log::debug(sprintf('Mutator is now %s.', $mutator->format('Y-m-d')));
+                    Log::debug(sprintf('$attempts %% $skipMod === 0 is %s', var_export($attempts % $skipMod === 0, true)));
+                    Log::debug(sprintf('$start->lte($mutator) is %s', var_export($start->lte($mutator), true)));
+                    Log::debug(sprintf('$end->gte($mutator) is %s', var_export($end->gte($mutator), true)));
+                    if ($attempts % $skipMod === 0 && $start->lte($mutator) && $end->gte($mutator)) {
+                        Log::debug(sprintf('ADD %s to return!', $mutator->format('Y-m-d')));
                         $return[] = clone $mutator;
                     }
                     $attempts++;
-                    $mutator->endOfMonth()->addDay();
+                    $mutator->endOfMonth()->startOfDay()->addDay();
                 }
                 break;
             case 'ndom':
@@ -178,6 +251,26 @@ class RecurringRepository implements RecurringRepositoryInterface
         }
 
         return $return;
+    }
+
+    /**
+     * Get the tags from the recurring transaction.
+     *
+     * @param Recurrence $recurrence
+     *
+     * @return array
+     */
+    public function getTags(Recurrence $recurrence): array
+    {
+        $tags = [];
+        /** @var RecurrenceMeta $meta */
+        foreach ($recurrence->recurrenceMeta as $meta) {
+            if ($meta->name === 'tags' && '' !== $meta->value) {
+                $tags = explode(',', $meta->value);
+            }
+        }
+
+        return $tags;
     }
 
     /**
@@ -377,6 +470,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param array      $data
      *
      * @return Recurrence
+     * @throws FireflyException
      */
     public function update(Recurrence $recurrence, array $data): Recurrence
     {

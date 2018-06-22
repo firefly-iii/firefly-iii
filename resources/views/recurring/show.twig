@@ -12,10 +12,23 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">
                         {{ array.title }}
+
+                        ({{ array.transaction_type }})
+
+                        {% if array.active == false %}
+                        ({{ 'inactive'|_|lower }})
+                        {% endif %}
                     </h3>
                 </div>
                 <div class="box-body">
                     <p><em>{{ array.description }}</em></p>
+
+                    {% if array.active == false %}
+                        <p>
+                            {{ 'recurrence_is_inactive'|_ }}
+                        </p>
+                    {% endif %}
+
                     <ul>
                         {% for rep in array.repetitions %}
                             <li>{{ rep.description }}</li>
@@ -35,13 +48,13 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        {{ 'expected_transactions'|_ }}
+                        {{ ('expected_'~array.transaction_type~'s')|_ }}
                     </h3>
                 </div>
                 <div class="box-body">
 
                     <ul>
-                        {% for rep in array.repetitions %}
+                        {% for rep in array.recurrence_repetitions %}
                             <li>
                                 {{ rep.description }}
                                 {% if rep.repetition_skip == 1 %}
@@ -128,47 +141,47 @@
 
         <!-- meta data -->
         {% if array.meta|length > 0 %}
-        <div class="col-lg-4 col-md-12 col-sm-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">
-                        {{ 'meta_data'|_ }}
-                    </h3>
-                </div>
-                <div class="box-body no-padding">
-                    <table class="table table-hover sortable">
-                        <thead>
-                        <th style="width:30%;" data-defaultsign="az">{{ trans('list.field') }}</th>
-                        <th data-defaultsign="az">{{ trans('list.value') }}</th>
-                        </thead>
-                        <tbody>
-                        {% for meta in array.meta %}
-                            <tr>
-                                <td>{{ trans('firefly.recurring_meta_field_'~meta.name) }}</td>
-                                <td>
-                                    {% if meta.name == 'tags' %}
-                                        {% for tag in meta.tags %}
-                                            <span class="label label-info">{{ tag }}</span>
-                                        {% endfor %}
-                                    {% endif %}
-                                    {% if meta.name == 'notes' %}
-                                        {{ meta.value|markdown }}
-                                    {% endif %}
-                                    {% if meta.name == 'bill_id'  %}
-                                        <a href="{{ route('bills.show', [meta.bill_id]) }}">{{ meta.bill_name }}</a>
-                                    {% endif %}
-                                    {% if meta.name == 'piggy_bank_id' %}
-                                        <a href="{{ route('piggy-banks.show', [meta.piggy_bank_id]) }}">{{ meta.piggy_bank_name }}</a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
+            <div class="col-lg-4 col-md-12 col-sm-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            {{ 'meta_data'|_ }}
+                        </h3>
+                    </div>
+                    <div class="box-body no-padding">
+                        <table class="table table-hover sortable">
+                            <thead>
+                            <th style="width:30%;" data-defaultsign="az">{{ trans('list.field') }}</th>
+                            <th data-defaultsign="az">{{ trans('list.value') }}</th>
+                            </thead>
+                            <tbody>
+                            {% for meta in array.meta %}
+                                <tr>
+                                    <td>{{ trans('firefly.recurring_meta_field_'~meta.name) }}</td>
+                                    <td>
+                                        {% if meta.name == 'tags' %}
+                                            {% for tag in meta.tags %}
+                                                <span class="label label-info">{{ tag }}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                        {% if meta.name == 'notes' %}
+                                            {{ meta.value|markdown }}
+                                        {% endif %}
+                                        {% if meta.name == 'bill_id' %}
+                                            <a href="{{ route('bills.show', [meta.bill_id]) }}">{{ meta.bill_name }}</a>
+                                        {% endif %}
+                                        {% if meta.name == 'piggy_bank_id' %}
+                                            <a href="{{ route('piggy-banks.show', [meta.piggy_bank_id]) }}">{{ meta.piggy_bank_name }}</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
 
-                    </table>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
         {% endif %}
     </div>
     <div class="row">
@@ -177,11 +190,11 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        {{ 'transactions'|_ }}
+                        {{ ('created_'~array.transaction_type~'s')|_ }}
                     </h3>
                 </div>
                 <div class="box-body">
-                    Bla bla
+                    List be here.
                 </div>
             </div>
         </div>

@@ -515,16 +515,7 @@ class ExpandedForm
      */
     public function optionsList(string $type, string $name): string
     {
-        $previousValue = null;
-
-        try {
-            $previousValue = request()->old('post_submit_action');
-        } catch (RuntimeException $e) {
-            // don't care
-        }
-
-        $previousValue = $previousValue ?? 'store';
-        $html          = view('form.options', compact('type', 'name', 'previousValue'))->render();
+        $html          = view('form.options', compact('type', 'name'))->render();
 
         return $html;
     }

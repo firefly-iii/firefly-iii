@@ -76,6 +76,8 @@ class EditController extends Controller
      */
     public function edit(Request $request, Recurrence $recurrence)
     {
+
+
         // use transformer:
         $transformer = new RecurrenceTransformer(new ParameterBag);
         $array       = $transformer->transform($recurrence);
@@ -84,6 +86,7 @@ class EditController extends Controller
         // get recurrence type:
         // todo move to repository
         // todo handle old repetition type as well.
+
 
 
         /** @var RecurrenceRepetition $repetition */
@@ -116,13 +119,12 @@ class EditController extends Controller
 
         // code to handle active-checkboxes
         $hasOldInput = null !== $request->old('_token');
+       // $hasOldInput = false;
         $preFilled   = [
             'transaction_type' => strtolower($recurrence->transactionType->type),
             'active'           => $hasOldInput ? (bool)$request->old('active') : $recurrence->active,
             'apply_rules'      => $hasOldInput ? (bool)$request->old('apply_rules') : $recurrence->apply_rules,
         ];
-        $request->flash('preFilled', $preFilled);
-
 
         return view('recurring.edit', compact('recurrence', 'array', 'budgets', 'preFilled', 'currentRepetitionType', 'repetitionEnd', 'repetitionEnds'));
     }

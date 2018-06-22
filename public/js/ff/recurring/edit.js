@@ -100,11 +100,19 @@ function respondToRepetitionEnd() {
 }
 
 function respondToFirstDateChange() {
+    //
     var obj = $('#ffInput_first_date');
     var select = $('#ffInput_repetition_type');
     var date = obj.val();
     select.prop('disabled', true);
-    $.getJSON(suggestUri, {date: date,past:true}).fail(function () {
+
+    // preselected value:
+    var preSelected = currentRepetitionType;
+    if(preSelected === '') {
+        preSelected = select.val();
+    }
+
+    $.getJSON(suggestUri, {date: date,pre_select: preSelected,past:true}).fail(function () {
         console.error('Could not load repetition suggestions');
         alert('Could not load repetition suggestions');
     }).done(parseRepetitionSuggestions);
@@ -117,8 +125,9 @@ function parseRepetitionSuggestions(data) {
     var opt;
     for (var k in data) {
         if (data.hasOwnProperty(k)) {
-            opt = $('<option>').val(k).attr('label', data[k]).text(data[k]);
-            if(k === currentRepetitionType) {
+            console.log('label: ' + data[k].label + ', selected: ' + data[k].selected);
+            opt = $('<option>').val(k).attr('label', data[k].label).text(data[k].label);
+            if(data[k].selected) {
                 opt.attr('selected','selected');
             }
             select.append(opt);

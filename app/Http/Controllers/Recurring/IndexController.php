@@ -159,7 +159,7 @@ class IndexController extends Controller
     {
         $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
         $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
-        $collection = $this->recurring->getActive();
+        $collection = $this->recurring->get();
 
         // TODO: split collection into pages
 

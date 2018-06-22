@@ -54,12 +54,15 @@
                                         </div>
                                     </td>
                                     <td data-value="{{ rt.title }}">
+                                        {% if rt.active == false %}<s>{% endif %}
                                         {{ rt.transaction_type|_ }}:
-
                                         <a href="{{ route('recurring.show',rt.id) }}">{{ rt.title }}</a>
+                                        {% if rt.active == false %}</s> ({{ 'inactive'|_|lower }}){% endif %}
                                         {% if rt.description|length > 0 %}
                                             <small><br>{{ rt.description }}</small>
                                         {% endif %}
+
+
                                     </td>
                                     <td data-value="0">
                                         <ol>
