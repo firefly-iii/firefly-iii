@@ -34,4 +34,6 @@ return [
     'transactions-index'     => 'Diese Ausgaben, Einnahmen und Umbuchungen sind nicht besonders einfallsreich. Sie wurden automatisch generiert.',
     'piggy-banks-index'      => 'Hier wurden bereits drei Sparschweine angelegt. Der Betrag in den Sparschweinen kann über die Plus-/Minus-Buttons angepasst werden. Klicken Sie auf den Namen des Sparschweins um weitere Informationen einzusehen.',
     'import-index'           => 'Jede CSV-Datei kann in Firefly III importiert werden. Es wird auch der Import von Daten aus Bunq und Spectre unterstützt. Weitere Banken und Finanzaggregatoren werden in Zukunft implementiert. Als Demo-Anwender können Sie jedoch nur einen „Schein”-Anbieter in Aktion erleben. Es werden einige zufällige Transaktionen generiert, um Ihnen zu zeigen, wie der Prozess funktioniert.',
+    'recurring-index'        => 'Please note that this feature is under active development and may not work as expected.',
+    'recurring-create'       => 'Please note that this feature is under active development and may not work as expected.',
 ];

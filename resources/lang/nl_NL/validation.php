@@ -112,6 +112,7 @@ return [
     'amount_zero'                    => 'Het totaalbedrag kan niet nul zijn',
     'unique_piggy_bank_for_user'     => 'De naam van de spaarpot moet uniek zijn.',
     'secure_password'                => 'Dit is geen sterk wachtwoord. Probeer het nog een keer. Zie ook: http://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'      => 'Dit is geen geldige herhaling voor periodieke transacties',
     'attributes'                     => [
         'email'                   => 'e-mailadres',
         'description'             => 'omschrijving',

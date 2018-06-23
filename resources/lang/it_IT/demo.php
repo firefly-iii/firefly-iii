@@ -34,4 +34,6 @@ return [
     'transactions-index'     => 'Queste spese, depositi e trasferimenti non sono particolarmente fantasiosi. Sono stati generati automaticamente.',
     'piggy-banks-index'      => 'Come puoi vedere, ci sono tre salvadanai. Utilizzare i pulsanti più e meno per influenzare la quantità di denaro in ogni salvadanaio. Fare clic sul nome del salvadanaio per visualizzare la gestione per ciascun salvadanaio.',
     'import-index'           => 'Qualsiasi file CSV può essere importato in Firefly III. Supporta anche l\'importazione di dati da bunq e Spectre. Altre banche e aggregatori finanziari saranno implementati in futuro. Tuttavia, come utente demo, puoi vedere solo il provider "fittizio" in azione. Genererà alcune transazioni casuali per mostrarti come funziona il processo.',
+    'recurring-index'        => 'Please note that this feature is under active development and may not work as expected.',
+    'recurring-create'       => 'Please note that this feature is under active development and may not work as expected.',
 ];

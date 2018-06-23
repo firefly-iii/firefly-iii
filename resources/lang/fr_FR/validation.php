@@ -110,8 +110,9 @@ return [
     'in_array'                       => 'Le champ :attribute n\'existe pas dans :other.',
     'present'                        => 'Le champs :attribute doit être rempli.',
     'amount_zero'                    => 'Le montant total ne peut pas être zéro',
-    'unique_piggy_bank_for_user'     => 'The name of the piggy bank must be unique.',
-    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit http://bit.ly/FF3-password-security',
+    'unique_piggy_bank_for_user'     => 'Le nom de la tirelire doit être unique.',
+    'secure_password'                => 'Ce n’est pas un mot de passe sécurisé. Veuillez essayer à nouveau. Pour plus d’informations, visitez http://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'      => 'Invalid repetition type for recurring transactions',
     'attributes'                     => [
         'email'                   => 'adresse email',
         'description'             => 'description',

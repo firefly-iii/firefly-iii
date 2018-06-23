@@ -34,4 +34,6 @@ return [
     'transactions-index'     => 'Estas despesas, depósitos e transferências não são fantasiosas. Elas foram geradas automaticamente.',
     'piggy-banks-index'      => 'Como você pode ver, existem três cofrinhos. Use o sinal de mais e menos botões para influenciar a quantidade de dinheiro em cada cofrinho. Clique no nome do cofrinho para ver a administração de cada cofrinho.',
     'import-index'           => 'Qualquer arquivo CSV pode ser importado para o Firefly III. Importações de dados de bunq e Specter também são suportadas. Outros bancos e agregadores financeiros serão implementados futuramente. Como usuário de demonstração, no entanto, você só pode ver o provedor "falso" em ação. Ele irá gerar transações aleatórias para lhe mostrar como funciona o processo.',
+    'recurring-index'        => 'Please note that this feature is under active development and may not work as expected.',
+    'recurring-create'       => 'Please note that this feature is under active development and may not work as expected.',
 ];

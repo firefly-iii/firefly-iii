@@ -24,5 +24,5 @@ declare(strict_types=1);
 
 return [
     'failed'   => 'Ces identifiants n\'ont aucune correspondance.',
-    'throttle' => 'Trop de tentatives de connexion. Veuillez essayer à nouveau dans :seconds secondes.',
+    'throttle' => 'Trop de tentatives de connexion. Veuillez réessayer dans :seconds secondes.',
 ];

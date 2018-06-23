@@ -112,6 +112,7 @@ return [
     'amount_zero'                    => 'Jumlah total tidak boleh nol',
     'unique_piggy_bank_for_user'     => 'The name of the piggy bank must be unique.',
     'secure_password'                => 'This is not a secure password. Please try again. For more information, visit http://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'      => 'Invalid repetition type for recurring transactions',
     'attributes'                     => [
         'email'                   => 'email address',
         'description'             => 'description',

@@ -112,6 +112,7 @@ return [
     'amount_zero'                    => 'Der Gesamtbetrag darf nicht Null sein',
     'unique_piggy_bank_for_user'     => 'Der Name des Sparschweins muss eindeutig sein.',
     'secure_password'                => 'Das ist kein sicheres Passwort. Bitte versuchen Sie es erneut. Weitere Informationen finden Sie unter https://github.com/firefly-iii/help/wiki/Secure-password',
+    'valid_recurrence_rep_type'      => 'Invalid repetition type for recurring transactions',
     'attributes'                     => [
         'email'                   => 'E-Mail Adresse',
         'description'             => 'Beschreibung',

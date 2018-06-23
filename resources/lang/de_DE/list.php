@@ -123,4 +123,9 @@ return [
     'spectre_last_use'        => 'Letzte Anmeldung',
     'spectre_status'          => 'Status',
     'bunq_payment_id'         => 'bunq-Zahlungskennung',
+    'repetitions'             => 'Repetitions',
+    'title'                   => 'Title',
+    'transaction_s'           => 'Transaction(s)',
+    'field'                   => 'Field',
+    'value'                   => 'Value',
 ];

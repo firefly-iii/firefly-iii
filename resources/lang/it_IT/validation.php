@@ -110,8 +110,9 @@ return [
     'in_array'                       => ':attribute il campo non esiste in :other.',
     'present'                        => ':attribute il campo deve essere presente.',
     'amount_zero'                    => 'L\'importo totale non può essere zero',
-    'unique_piggy_bank_for_user'     => 'The name of the piggy bank must be unique.',
+    'unique_piggy_bank_for_user'     => 'Il nome del salvadanaio deve essere unico.',
     'secure_password'                => 'Questa non è una password sicura. Per favore riprova. Per ulteriori informazioni, visitare http://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'      => 'Invalid repetition type for recurring transactions',
     'attributes'                     => [
         'email'                   => 'indirizzo email',
         'description'             => 'descrizione',

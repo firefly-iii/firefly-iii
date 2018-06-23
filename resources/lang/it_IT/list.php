@@ -122,5 +122,10 @@ return [
     'spectre_bank'            => 'Banca',
     'spectre_last_use'        => 'Ultimo accesso',
     'spectre_status'          => 'Stato',
-    'bunq_payment_id'         => 'bunq payment ID',
+    'bunq_payment_id'         => 'ID pagamento bunq',
+    'repetitions'             => 'Repetitions',
+    'title'                   => 'Title',
+    'transaction_s'           => 'Transaction(s)',
+    'field'                   => 'Field',
+    'value'                   => 'Value',
 ];
