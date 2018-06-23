@@ -37,33 +37,6 @@ use Illuminate\Support\Collection;
 class PopupReport implements PopupReportInterface
 {
     /**
-     * @param $account
-     * @param $attributes
-     *
-     * @return Collection
-     */
-    public function balanceDifference($account, $attributes): Collection
-    {
-        // row that displays difference
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector
-            ->setAccounts(new Collection([$account]))
-            ->setTypes([TransactionType::WITHDRAWAL])
-            ->setRange($attributes['startDate'], $attributes['endDate'])
-            ->withoutBudget();
-        $journals = $collector->getJournals();
-
-        return $journals->filter(
-            function (Transaction $transaction) {
-                $tags = $transaction->transactionJournal->tags()->where('tagMode', 'balancingAct')->count();
-
-                return 0 === $tags;
-            }
-        );
-    }
-
-    /**
      * @param Budget  $budget
      * @param Account $account
      * @param array   $attributes

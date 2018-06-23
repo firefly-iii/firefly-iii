@@ -33,14 +33,6 @@ use Illuminate\Support\Collection;
 interface PopupReportInterface
 {
     /**
-     * @param $account
-     * @param $attributes
-     *
-     * @return Collection
-     */
-    public function balanceDifference($account, $attributes): Collection;
-
-    /**
      * @param Budget  $budget
      * @param Account $account
      * @param array   $attributes

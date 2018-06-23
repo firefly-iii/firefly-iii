@@ -40,10 +40,6 @@ class BalanceLine
      *
      */
     public const ROLE_TAGROLE = 2;
-    /**
-     *
-     */
-    public const ROLE_DIFFROLE = 3;
 
     /** @var Collection */
     protected $balanceEntries;
@@ -166,9 +162,6 @@ class BalanceLine
         }
         if (self::ROLE_TAGROLE === $this->getRole()) {
             return (string)trans('firefly.coveredWithTags');
-        }
-        if (self::ROLE_DIFFROLE === $this->getRole()) {
-            return (string)trans('firefly.leftUnbalanced');
         }
 
         return '';

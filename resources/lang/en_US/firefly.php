@@ -900,7 +900,6 @@ return [
     'balanceEnd'                              => 'Balance at end of period',
     'splitByAccount'                          => 'Split by account',
     'coveredWithTags'                         => 'Covered with tags',
-    'leftUnbalanced'                          => 'Left unbalanced',
     'leftInBudget'                            => 'Left in budget',
     'sumOfSums'                               => 'Sum of sums',
     'noCategory'                              => '(no category)',

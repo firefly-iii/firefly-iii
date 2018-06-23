@@ -56,7 +56,7 @@ class BalanceController extends Controller
 
         $balance = $helper->getBalanceReport($accounts, $start, $end);
 
-        $result = view('reports.partials.balance', compact('balance'))->render();
+        $result = view('reports.partials.balance', compact( 'balance'))->render();
         $cache->store($result);
 
         return $result;
