@@ -76,10 +76,11 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
      */
     public function configureJob(array $data): MessageBag
     {
-        $config   = $this->repository->getConfiguration($this->importJob);
-        $accounts = $config['accounts'] ?? [];
-        $mapping  = $data['account_mapping'] ?? [];
-        $final    = [];
+        $config     = $this->repository->getConfiguration($this->importJob);
+        $accounts   = $config['accounts'] ?? [];
+        $mapping    = $data['account_mapping'] ?? [];
+        $applyRules = (int)$data['apply_rules'] === 1;
+        $final      = [];
         if (\count($accounts) === 0) {
             throw new FireflyException('No bunq accounts found. Import cannot continue.'); // @codeCoverageIgnore
         }
@@ -98,7 +99,8 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
             $accountId      = $this->validLocalAccount($localId);
             $final[$bunqId] = $accountId;
         }
-        $config['mapping'] = $final;
+        $config['mapping']     = $final;
+        $config['apply-rules'] = $applyRules;
         $this->repository->setConfiguration($this->importJob, $config);
 
         return new MessageBag;

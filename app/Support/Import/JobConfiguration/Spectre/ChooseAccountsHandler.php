@@ -83,9 +83,10 @@ class ChooseAccountsHandler implements SpectreJobConfigurationInterface
     public function configureJob(array $data): MessageBag
     {
         Log::debug('Now in ChooseAccountsHandler::configureJob()', $data);
-        $config  = $this->importJob->configuration;
-        $mapping = $data['account_mapping'] ?? [];
-        $final   = [];
+        $config     = $this->importJob->configuration;
+        $mapping    = $data['account_mapping'] ?? [];
+        $final      = [];
+        $applyRules = (int)$data['apply_rules'] === 1;
         foreach ($mapping as $spectreId => $localId) {
             // validate each
             $spectreId         = $this->validSpectreAccount((int)$spectreId);
@@ -96,7 +97,7 @@ class ChooseAccountsHandler implements SpectreJobConfigurationInterface
         Log::debug('Final mapping is:', $final);
         $messages                  = new MessageBag;
         $config['account_mapping'] = $final;
-
+        $config['apply-rules']     = $applyRules;
         $this->repository->setConfiguration($this->importJob, $config);
         if ($final === [0 => 0] || \count($final) === 0) {
             $messages->add('count', trans('import.spectre_no_mapping'));
