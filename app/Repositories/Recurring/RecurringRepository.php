@@ -33,6 +33,7 @@ use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RecurrenceTransactionMeta;
+use FireflyIII\Services\Internal\Destroy\RecurrenceDestroyService;
 use FireflyIII\Services\Internal\Update\RecurrenceUpdateService;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -46,6 +47,18 @@ class RecurringRepository implements RecurringRepositoryInterface
 {
     /** @var User */
     private $user;
+
+    /**
+     * Destroy a recurring transaction.
+     *
+     * @param Recurrence $recurrence
+     */
+    public function destroy(Recurrence $recurrence): void
+    {
+        /** @var RecurrenceDestroyService $service */
+        $service = app(RecurrenceDestroyService::class);
+        $service->destroy($recurrence);
+    }
 
     /**
      * Returns all of the user's recurring transactions.

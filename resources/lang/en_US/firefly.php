@@ -1260,4 +1260,6 @@ return [
     'update_recurrence'                  => 'Update recurring transaction',
     'updated_recurrence'                 => 'Updated recurring transaction ":title"',
     'recurrence_is_inactive'             => 'This recurring transaction is not active and will not generate new transactions.',
+    'delete_recurring'                   => 'Delete recurring transaction ":title"',
+    'recurrence_deleted'                 => 'Recurring transaction ":title" deleted',
 ];

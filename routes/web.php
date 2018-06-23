@@ -626,6 +626,7 @@ Route::group(
 
     Route::post('store', ['uses' => 'CreateController@store', 'as' => 'store']);
     Route::post('update/{recurrence}', ['uses' => 'EditController@update', 'as' => 'update']);
+    Route::post('destroy/{recurrence}', ['uses' => 'DeleteController@destroy', 'as' => 'destroy']);
 }
 );
 

@@ -101,6 +101,7 @@ class SpectreRoutine implements RoutineInterface
                     $handler = app(StageImportDataHandler::class);
                     $handler->setImportJob($this->importJob);
                     $handler->run();
+                    // todo apply rules.
                     $this->repository->setStatus($this->importJob, 'provider_finished');
                     $this->repository->setStage($this->importJob, 'final');
             }

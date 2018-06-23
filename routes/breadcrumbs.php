@@ -779,6 +779,14 @@ try {
     );
 
     Breadcrumbs::register(
+        'recurring.delete',
+        function (BreadCrumbsGenerator $breadcrumbs, Recurrence $recurrence) {
+            $breadcrumbs->parent('recurring.index');
+            $breadcrumbs->push(trans('firefly.delete_recurring', ['title' => $recurrence->title]), route('recurring.delete', [$recurrence->id]));
+        }
+    );
+
+    Breadcrumbs::register(
         'recurring.edit',
         function (BreadCrumbsGenerator $breadcrumbs, Recurrence $recurrence) {
             $breadcrumbs->parent('recurring.index');

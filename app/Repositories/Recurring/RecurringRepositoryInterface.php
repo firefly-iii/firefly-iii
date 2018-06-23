@@ -40,6 +40,13 @@ use Illuminate\Support\Collection;
 interface RecurringRepositoryInterface
 {
     /**
+     * Destroy a recurring transaction.
+     *
+     * @param Recurrence $recurrence
+     */
+    public function destroy(Recurrence $recurrence): void;
+
+    /**
      * Returns all of the user's recurring transactions.
      *
      * @return Collection
@@ -48,18 +55,10 @@ interface RecurringRepositoryInterface
 
     /**
      * Get ALL recurring transactions.
+     *
      * @return Collection
      */
     public function getAll(): Collection;
-
-    /**
-     * Get the category from a recurring transaction transaction.
-     *
-     * @param RecurrenceTransaction $recurrenceTransaction
-     *
-     * @return null|string
-     */
-    public function getCategory(RecurrenceTransaction $recurrenceTransaction): ?string;
 
     /**
      * Get the budget ID from a recurring transaction transaction.
@@ -69,6 +68,15 @@ interface RecurringRepositoryInterface
      * @return null|int
      */
     public function getBudget(RecurrenceTransaction $recurrenceTransaction): ?int;
+
+    /**
+     * Get the category from a recurring transaction transaction.
+     *
+     * @param RecurrenceTransaction $recurrenceTransaction
+     *
+     * @return null|string
+     */
+    public function getCategory(RecurrenceTransaction $recurrenceTransaction): ?string;
 
     /**
      * Get the notes.

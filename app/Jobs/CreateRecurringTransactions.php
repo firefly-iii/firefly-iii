@@ -56,6 +56,8 @@ class CreateRecurringTransactions implements ShouldQueue
         $recurrences = $this->repository->getAll();
         Log::debug(sprintf('Count of collection is %d', $recurrences->count()));
 
+        $result = [];
+
         /** @var Collection $filtered */
         $filtered = $recurrences->filter(
             function (Recurrence $recurrence) {
@@ -66,12 +68,24 @@ class CreateRecurringTransactions implements ShouldQueue
         Log::debug(sprintf('Left after filtering is %d', $filtered->count()));
         /** @var Recurrence $recurrence */
         foreach ($filtered as $recurrence) {
+            if (!isset($result[$recurrence->user_id])) {
+                $result[$recurrence->user_id] = new Collection;
+            }
+
             $this->repository->setUser($recurrence->user);
             $this->journalRepository->setUser($recurrence->user);
             Log::debug(sprintf('Now at recurrence #%d', $recurrence->id));
-            $this->handleRepetitions($recurrence);
+            $created = $this->handleRepetitions($recurrence);
             Log::debug(sprintf('Done with recurrence #%c', $recurrence->id));
+
+            $result[$recurrence->user_id] = $result[$recurrence->user_id]->merge($created);
         }
+
+        // will now send email to users.
+        foreach($result as $userId => $journals) {
+            $this->sendReport($userId, $journals);
+        }
+
         Log::debug('Done with handle()');
     }
 
@@ -160,10 +174,12 @@ class CreateRecurringTransactions implements ShouldQueue
      * @param Recurrence $recurrence
      * @param array      $occurrences
      *
+     * @return Collection
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    private function handleOccurrences(Recurrence $recurrence, array $occurrences): void
+    private function handleOccurrences(Recurrence $recurrence, array $occurrences): Collection
     {
+        $collection = new Collection;
         /** @var Carbon $date */
         foreach ($occurrences as $date) {
             Log::debug(sprintf('Now at date %s.', $date->format('Y-m-d')));
@@ -195,21 +211,29 @@ class CreateRecurringTransactions implements ShouldQueue
             ];
             $journal = $this->journalRepository->store($array);
             Log::info(sprintf('Created new journal #%d', $journal->id));
+            // todo fire rules
+            $collection->push($journal);
             // update recurring thing:
             $recurrence->latest_date = $date;
             $recurrence->save();
         }
+
+        return $collection;
     }
 
     /**
-     * Separate method that will loop all repetitions and do something with it:
+     * Separate method that will loop all repetitions and do something with it. Will return
+     * all created transaction journals.
      *
      * @param Recurrence $recurrence
      *
+     * @return Collection
+     *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    private function handleRepetitions(Recurrence $recurrence): void
+    private function handleRepetitions(Recurrence $recurrence): Collection
     {
+        $collection = new Collection;
         /** @var RecurrenceRepetition $repetition */
         foreach ($recurrence->recurrenceRepetitions as $repetition) {
             Log::debug(
@@ -227,8 +251,11 @@ class CreateRecurringTransactions implements ShouldQueue
                 ), $this->debugArray($occurrences)
             );
 
-            $this->handleOccurrences($recurrence, $occurrences);
+            $result     = $this->handleOccurrences($recurrence, $occurrences);
+            $collection = $collection->merge($result);
         }
+
+        return $collection;
     }
 
     /**
