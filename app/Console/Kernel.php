@@ -25,12 +25,11 @@ declare(strict_types=1);
 namespace FireflyIII\Console;
 
 use Carbon\Carbon;
+use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Jobs\CreateRecurringTransactions;
-use FireflyIII\Models\RecurrenceRepetition;
-use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Log;
 
 /**
  * File to make sure commnds work.
@@ -65,41 +64,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        // create recurring transactions.
+        $schedule->job(new CreateRecurringTransactions(new Carbon))->daily();
+
+        // send test email.
         $schedule->call(
             function () {
-                // run for the entirety of 2018, just to see what happens
-                $start = new Carbon('2018-01-01');
-                $end   = new Carbon('2018-12-31');
-                while ($start <= $end) {
-                    Log::info(sprintf('Now at %s', $start->format('D Y-m-d')));
-                    $job = new CreateRecurringTransactions(clone $start);
-                    $job->handle();
-                    $start->addDay();
-                }
-
+                $ipAddress = '127.0.0.1';
+                /** @var User $user */
+                $user = User::find(1);
+                event(new AdminRequestedTestMessage($user, $ipAddress));
             }
-        )->everyMinute();
-
-        //$schedule->job(new CreateRecurringTransactions(new Carbon))->everyMinute();
-
-        //$schedule->job(new CreateRecurringTransactions(new Carbon))->everyMinute();
-
-
-        //        $schedule->call(
-        //            function () {
-        //                // command to do something
-        //                Log::debug('Schedule creation of transactions yaay!');
-        //            }
-        //        )->daily();
-        //
-        //        $schedule->call(
-        //            function () {
-        //                // command to do something
-        //                Log::debug('Every minute!');
-        //            }
-        //        )->everyMinute()
-        //            ->emailOutputTo('thege');
-
-
+        )->daily();
     }
 }
