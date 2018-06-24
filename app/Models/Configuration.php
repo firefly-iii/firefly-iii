@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Configuration.
+ *
+ * @property string $data
  */
 class Configuration extends Model
 {

@@ -124,6 +124,15 @@ Route::group(
     }
 );
 
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'configuration', 'as' => 'api.v1.configuration.'],
+    function () {
+
+        // Configuration API routes:
+        Route::get('', ['uses' => 'ConfigurationController@index', 'as' => 'index']);
+        Route::put('', ['uses' => 'ConfigurationController@update', 'as' => 'update']);
+    }
+);
 
 Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'currencies', 'as' => 'api.v1.currencies.'],
