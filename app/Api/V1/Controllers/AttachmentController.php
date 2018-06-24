@@ -69,13 +69,15 @@ class AttachmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param Attachment $attachment
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function delete(Attachment $attachment): JsonResponse
     {
-        //
+        $this->repository->destroy($attachment);
+
+        return response()->json([], 204);
     }
 
     /**

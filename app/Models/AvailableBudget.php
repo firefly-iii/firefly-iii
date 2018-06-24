@@ -22,13 +22,25 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class AvailableBudget.
+ *
+ * @property int                 $id
+ * @property Carbon              $created_at
+ * @property Carbon              $updated_at
+ * @property User                $user
+ * @property TransactionCurrency $transactionCurrency
+ * @property int                 $transaction_currency_id
+ * @property Carbon              $start_date
+ * @property Carbon              $end_date
+ * @property string              $amount
  */
 class AvailableBudget extends Model
 {
@@ -50,10 +62,28 @@ class AvailableBudget extends Model
     protected $fillable = ['user_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date'];
 
     /**
+     * @param string $value
+     *
+     * @return AvailableBudget
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public static function routeBinder(string $value): AvailableBudget
+    {
+        if (auth()->check()) {
+            $availableBudgetId = (int)$value;
+            $availableBudget   = auth()->user()->availableBudgets()->find($availableBudgetId);
+            if (null !== $availableBudget) {
+                return $availableBudget;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
+
+    /**
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function transactionCurrency()
+    public function transactionCurrency(): BelongsTo
     {
         return $this->belongsTo(TransactionCurrency::class);
     }

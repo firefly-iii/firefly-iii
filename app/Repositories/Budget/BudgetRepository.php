@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
+use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\AvailableBudget;
@@ -156,13 +158,28 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Budget $budget
      *
      * @return bool
-     * @throws \Exception
      */
     public function destroy(Budget $budget): bool
     {
-        $budget->delete();
+        try {
+            $budget->delete();
+        } catch (Exception $e) {
+            Log::error(sprintf('Could not delete budget: %s', $e->getMessage()));
+        }
 
         return true;
+    }
+
+    /**
+     * @param AvailableBudget $availableBudget
+     */
+    public function destroyAvailableBudget(AvailableBudget $availableBudget): void
+    {
+        try {
+            $availableBudget->delete();
+        } catch (Exception $e) {
+            Log::error(sprintf('Could not delete available budget: %s', $e->getMessage()));
+        }
     }
 
     /**
@@ -356,6 +373,16 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * Returns all available budget objects.
+     *
+     * @return Collection
+     */
+    public function getAvailableBudgets(): Collection
+    {
+        return $this->user->availableBudgets()->get();
+    }
+
+    /**
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
@@ -527,9 +554,9 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Carbon              $end
      * @param string              $amount
      *
-     * @return bool
+     * @return AvailableBudget
      */
-    public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): bool
+    public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): AvailableBudget
     {
         $availableBudget = $this->user->availableBudgets()
                                       ->where('transaction_currency_id', $currency->id)
@@ -545,7 +572,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $availableBudget->amount = $amount;
         $availableBudget->save();
 
-        return true;
+        return $availableBudget;
     }
 
     /**
@@ -650,6 +677,35 @@ class BudgetRepository implements BudgetRepositoryInterface
         $budget->save();
 
         return $budget;
+    }
+
+    /**
+     * @param AvailableBudget $availableBudget
+     * @param array           $data
+     *
+     * @return AvailableBudget
+     * @throws FireflyException
+     */
+    public function updateAvailableBudget(AvailableBudget $availableBudget, array $data): AvailableBudget
+    {
+        $existing = $this->user->availableBudgets()
+                               ->where('transaction_currency_id', $data['transaction_currency_id'])
+                               ->where('start_date', $data['start_date']->format('Y-m-d 00:00:00'))
+                               ->where('end_date', $data['end_date']->format('Y-m-d 00:00:00'))
+                               ->where('id', '!=', $availableBudget->id)
+                               ->first();
+
+        if (null !== $existing) {
+            throw new FireflyException(sprintf('An entry already exists for these parameters: available budget object with ID #%d', $existing->id));
+        }
+        $availableBudget->transaction_currency_id = $data['transaction_currency_id'];
+        $availableBudget->start_date              = $data['start_date'];
+        $availableBudget->end_date                = $data['end_date'];
+        $availableBudget->amount                  = $data['amount'];
+        $availableBudget->save();
+
+        return $availableBudget;
+
     }
 
     /**

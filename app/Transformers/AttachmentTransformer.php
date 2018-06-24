@@ -74,7 +74,7 @@ class AttachmentTransformer extends TransformerAbstract
      */
     public function includeUser(Attachment $attachment): Item
     {
-        return $this->item($attachment->user, new UserTransformer($this->parameters), 'user');
+        return $this->item($attachment->user, new UserTransformer($this->parameters), 'users');
     }
 
     /**

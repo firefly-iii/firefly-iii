@@ -47,7 +47,7 @@ Route::group(
         ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'attachments', 'as' => 'api.v1.attachments.'],
     function () {
 
-        // Accounts API routes:
+        // Attachment API routes:
         Route::get('', ['uses' => 'AttachmentController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'AttachmentController@store', 'as' => 'store']);
         Route::get('{attachment}', ['uses' => 'AttachmentController@show', 'as' => 'show']);
@@ -55,6 +55,21 @@ Route::group(
         Route::post('{attachment}/upload', ['uses' => 'AttachmentController@upload', 'as' => 'upload']);
         Route::put('{attachment}', ['uses' => 'AttachmentController@update', 'as' => 'update']);
         Route::delete('{attachment}', ['uses' => 'AttachmentController@delete', 'as' => 'delete']);
+    }
+);
+
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'available_budgets', 'as' => 'api.v1.available_budgets.'],
+    function () {
+
+        // Available Budget API routes:
+        Route::get('', ['uses' => 'AvailableBudgetController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'AvailableBudgetController@store', 'as' => 'store']);
+        Route::get('{availableBudget}', ['uses' => 'AvailableBudgetController@show', 'as' => 'show']);
+        Route::get('{availableBudget}/download', ['uses' => 'AvailableBudgetController@download', 'as' => 'download']);
+        Route::post('{availableBudget}/upload', ['uses' => 'AvailableBudgetController@upload', 'as' => 'upload']);
+        Route::put('{availableBudget}', ['uses' => 'AvailableBudgetController@update', 'as' => 'update']);
+        Route::delete('{availableBudget}', ['uses' => 'AvailableBudgetController@delete', 'as' => 'delete']);
     }
 );
 

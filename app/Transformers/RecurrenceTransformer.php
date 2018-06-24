@@ -84,7 +84,7 @@ class RecurrenceTransformer extends TransformerAbstract
      */
     public function includeUser(Recurrence $recurrence): Item
     {
-        return $this->item($recurrence->user, new UserTransformer($this->parameters), 'user');
+        return $this->item($recurrence->user, new UserTransformer($this->parameters), 'users');
     }
 
     /**

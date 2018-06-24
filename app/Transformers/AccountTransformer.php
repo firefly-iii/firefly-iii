@@ -132,7 +132,7 @@ class AccountTransformer extends TransformerAbstract
      */
     public function includeUser(Account $account): Item
     {
-        return $this->item($account->user, new UserTransformer($this->parameters), 'user');
+        return $this->item($account->user, new UserTransformer($this->parameters), 'users');
     }
 
     /**

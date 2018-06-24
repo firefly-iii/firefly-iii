@@ -83,16 +83,16 @@ use FireflyIII\TransactionRules\Triggers\UserAction;
  */
 
 return [
-    'configuration'  => [
+    'configuration'            => [
         'single_user_mode' => true,
         'is_demo_site'     => false,
     ],
-    'encryption'     => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
-    'version'        => '4.7.4',
-    'api_version'    => '0.3',
-    'db_version'     => 4,
-    'maxUploadSize'  => 15242880,
-    'allowedMimes'   => [
+    'encryption'               => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
+    'version'                  => '4.7.4',
+    'api_version'              => '0.3',
+    'db_version'               => 4,
+    'maxUploadSize'            => 15242880,
+    'allowedMimes'             => [
         /* plain files */
         'text/plain',
 
@@ -154,8 +154,8 @@ return [
         'application/vnd.oasis.opendocument.database',
         'application/vnd.oasis.opendocument.image',
     ],
-    'list_length'    => 10,
-    'export_formats' => [
+    'list_length'              => 10,
+    'export_formats'           => [
         'csv' => CsvExporter::class,
     ],
     'default_export_format'    => 'csv',
@@ -260,6 +260,7 @@ return [
         // models
         'account'           => \FireflyIII\Models\Account::class,
         'attachment'        => \FireflyIII\Models\Attachment::class,
+        'availableBudget'   => \FireflyIII\Models\AvailableBudget::class,
         'bill'              => \FireflyIII\Models\Bill::class,
         'budget'            => \FireflyIII\Models\Budget::class,
         'budgetLimit'       => \FireflyIII\Models\BudgetLimit::class,
@@ -271,7 +272,7 @@ return [
         'piggyBank'         => \FireflyIII\Models\PiggyBank::class,
         'tj'                => \FireflyIII\Models\TransactionJournal::class,
         'tag'               => \FireflyIII\Models\Tag::class,
-        'recurrence'              => \FireflyIII\Models\Recurrence::class,
+        'recurrence'        => \FireflyIII\Models\Recurrence::class,
         'rule'              => \FireflyIII\Models\Rule::class,
         'ruleGroup'         => \FireflyIII\Models\RuleGroup::class,
         'exportJob'         => \FireflyIII\Models\ExportJob::class,
@@ -280,7 +281,7 @@ return [
         'user'              => \FireflyIII\User::class,
 
         // strings
-        'import_provider'        => \FireflyIII\Support\Binder\ImportProvider::class,
+        'import_provider'   => \FireflyIII\Support\Binder\ImportProvider::class,
 
         // dates
         'start_date'        => \FireflyIII\Support\Binder\Date::class,
