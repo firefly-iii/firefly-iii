@@ -130,6 +130,28 @@ class ImportableConverter
     }
 
     /**
+     * @param string|null $date
+     *
+     * @return string|null
+     */
+    private function convertDateValue(string $date = null): ?string
+    {
+        if (null === $date) {
+            return null;
+        }
+        try {
+            $object = Carbon::createFromFormat($this->config['date-format'] ?? 'Ymd', $date);
+        } catch (InvalidDateException|InvalidArgumentException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+
+            return null;
+        }
+
+        return $object->format('Y-m-d');
+    }
+
+    /**
      * @param ImportTransaction $importable
      *
      * @throws FireflyException
@@ -224,18 +246,12 @@ class ImportableConverter
             throw new FireflyException($message);
         }
 
-        // throw error when both are he same
-
-        try {
-            $date = Carbon::createFromFormat($this->config['date-format'] ?? 'Ymd', $importable->date);
-        } catch (InvalidDateException|InvalidArgumentException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            $date = new Carbon;
+        $dateStr = $this->convertDateValue($importable->date);
+        if (null === $dateStr) {
+            $date    = new Carbon;
+            $dateStr = $date->format('Y-m-d');
+            unset($date);
         }
-
-
-        $dateStr = $date->format('Y-m-d');
 
         return [
             'type'               => $transactionType,
@@ -253,12 +269,12 @@ class ImportableConverter
             'sepa-country'       => $importable->meta['sepa-countru'] ?? null,
             'sepa-ep'            => $importable->meta['sepa-ep'] ?? null,
             'sepa-ci'            => $importable->meta['sepa-ci'] ?? null,
-            'interest_date'      => $importable->meta['date-interest'] ?? null,
-            'book_date'          => $importable->meta['date-book'] ?? null,
-            'process_date'       => $importable->meta['date-process'] ?? null,
-            'due_date'           => $importable->meta['date-due'] ?? null,
-            'payment_date'       => $importable->meta['date-payment'] ?? null,
-            'invoice_date'       => $importable->meta['date-invoice'] ?? null,
+            'interest_date'      => $this->convertDateValue($importable->meta['date-interest'] ?? null),
+            'book_date'          => $this->convertDateValue($importable->meta['date-book'] ?? null),
+            'process_date'       => $this->convertDateValue($importable->meta['date-process'] ?? null),
+            'due_date'           => $this->convertDateValue($importable->meta['date-due'] ?? null),
+            'payment_date'       => $this->convertDateValue($importable->meta['date-payment'] ?? null),
+            'invoice_date'       => $this->convertDateValue($importable->meta['date-invoice'] ?? null),
             'external_id'        => $importable->externalId,
 
             // journal data:
