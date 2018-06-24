@@ -66,10 +66,21 @@ Route::group(
         Route::get('', ['uses' => 'AvailableBudgetController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'AvailableBudgetController@store', 'as' => 'store']);
         Route::get('{availableBudget}', ['uses' => 'AvailableBudgetController@show', 'as' => 'show']);
-        Route::get('{availableBudget}/download', ['uses' => 'AvailableBudgetController@download', 'as' => 'download']);
-        Route::post('{availableBudget}/upload', ['uses' => 'AvailableBudgetController@upload', 'as' => 'upload']);
         Route::put('{availableBudget}', ['uses' => 'AvailableBudgetController@update', 'as' => 'update']);
         Route::delete('{availableBudget}', ['uses' => 'AvailableBudgetController@delete', 'as' => 'delete']);
+    }
+);
+
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'budget_limits', 'as' => 'api.v1.budget_limits.'],
+    function () {
+
+        // Budget Limit API routes:
+        Route::get('', ['uses' => 'BudgetLimitController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'BudgetLimitController@store', 'as' => 'store']);
+        Route::get('{budgetLimit}', ['uses' => 'BudgetLimitController@show', 'as' => 'show']);
+        Route::put('{budgetLimit}', ['uses' => 'BudgetLimitController@update', 'as' => 'update']);
+        Route::delete('{budgetLimit}', ['uses' => 'BudgetLimitController@delete', 'as' => 'delete']);
     }
 );
 

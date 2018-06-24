@@ -97,7 +97,7 @@ class AvailableBudgetController extends Controller
         // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
-        // get list of accounts. Count it and split it.
+        // get list of available budgets. Count it and split it.
         $collection       = $this->repository->getAvailableBudgets();
         $count            = $collection->count();
         $availableBudgets = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);

@@ -1,6 +1,6 @@
 <?php
 /**
- * AvailableBudgetTransformer.php
+ * BudgetLimitTransformer.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -22,30 +22,28 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
-
-
-use FireflyIII\Models\AvailableBudget;
+use FireflyIII\Models\BudgetLimit;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * Class AvailableBudgetTransformer
+ * Class BudgetLimitTransformer
  */
-class AvailableBudgetTransformer extends TransformerAbstract
+class BudgetLimitTransformer extends TransformerAbstract
 {
     /**
      * List of resources possible to include
      *
      * @var array
      */
-    protected $availableIncludes = ['transaction_currency', 'user'];
+    protected $availableIncludes = ['budget'];
     /**
      * List of resources to automatically include
      *
      * @var array
      */
-    protected $defaultIncludes = ['transaction_currency'];
+    protected $defaultIncludes = ['budget'];
 
     /** @var ParameterBag */
     protected $parameters;
@@ -63,58 +61,43 @@ class AvailableBudgetTransformer extends TransformerAbstract
     }
 
     /**
-     * Attach the currency.
+     * Attach the budget.
      *
      * @codeCoverageIgnore
      *
-     * @param AvailableBudget $availableBudget
+     * @param BudgetLimit $budgetLimit
      *
      * @return Item
      */
-    public function includeTransactionCurrency(AvailableBudget $availableBudget): Item
+    public function includeBudget(BudgetLimit $budgetLimit): Item
     {
-        return $this->item($availableBudget->transactionCurrency, new CurrencyTransformer($this->parameters), 'transaction_currencies');
-    }
-
-    /**
-     * Attach the user.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param AvailableBudget $availableBudget
-     *
-     * @return Item
-     */
-    public function includeUser(AvailableBudget $availableBudget): Item
-    {
-        return $this->item($availableBudget->user, new UserTransformer($this->parameters), 'users');
+        return $this->item($budgetLimit->budget, new BudgetTransformer($this->parameters), 'budgets');
     }
 
     /**
      * Transform the note.
      *
-     * @param AvailableBudget $availableBudget
+     * @param BudgetLimit $budgetLimit
      *
      * @return array
      */
-    public function transform(AvailableBudget $availableBudget): array
+    public function transform(BudgetLimit $budgetLimit): array
     {
         $data = [
-            'id'         => (int)$availableBudget->id,
-            'updated_at' => $availableBudget->updated_at->toAtomString(),
-            'created_at' => $availableBudget->created_at->toAtomString(),
-            'start_date' => $availableBudget->start_date->format('Y-m-d'),
-            'end_date'   => $availableBudget->end_date->format('Y-m-d'),
-            'amount'     => round($availableBudget->amount, $availableBudget->transactionCurrency->decimal_places),
+            'id'         => (int)$budgetLimit->id,
+            'updated_at' => $budgetLimit->updated_at->toAtomString(),
+            'created_at' => $budgetLimit->created_at->toAtomString(),
+            'start_date' => $budgetLimit->start_date->format('Y-m-d'),
+            'end_date'   => $budgetLimit->end_date->format('Y-m-d'),
+            'amount'     => $budgetLimit->amount,
             'links'      => [
                 [
                     'rel' => 'self',
-                    'uri' => '/available_budgets/' . $availableBudget->id,
+                    'uri' => '/budget_limits/' . $budgetLimit->id,
                 ],
             ],
         ];
 
         return $data;
     }
-
 }

@@ -64,6 +64,13 @@ interface BudgetRepositoryInterface
     public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array;
 
     /**
+     * Deletes a budget limit.
+     *
+     * @param BudgetLimit $budgetLimit
+     */
+    public function deleteBudgetLimit(BudgetLimit $budgetLimit): void;
+
+    /**
      * @param Budget $budget
      *
      * @return bool
@@ -136,7 +143,7 @@ interface BudgetRepositoryInterface
      *
      * @return Collection
      */
-    public function getAllBudgetLimits(Carbon $start, Carbon $end): Collection;
+    public function getAllBudgetLimits(Carbon $start = null, Carbon $end = null): Collection;
 
     /**
      * @param TransactionCurrency $currency
@@ -161,7 +168,7 @@ interface BudgetRepositoryInterface
      *
      * @return Collection
      */
-    public function getBudgetLimits(Budget $budget, Carbon $start, Carbon $end): Collection;
+    public function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection;
 
     /**
      * @param Collection $budgets
@@ -258,6 +265,21 @@ interface BudgetRepositoryInterface
      * @return AvailableBudget
      */
     public function updateAvailableBudget(AvailableBudget $availableBudget, array $data): AvailableBudget;
+
+    /**
+     * @param BudgetLimit $budgetLimit
+     * @param array       $data
+     *
+     * @return BudgetLimit
+     */
+    public function updateBudgetLimit(BudgetLimit $budgetLimit, array $data): BudgetLimit;
+
+    /**
+     * @param array $data
+     *
+     * @return BudgetLimit
+     */
+    public function storeBudgetLimit(array $data): BudgetLimit;
 
     /**
      * @param Budget $budget

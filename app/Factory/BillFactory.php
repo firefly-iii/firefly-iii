@@ -58,8 +58,8 @@ class BillFactory
                 'date'                    => $data['date'],
                 'repeat_freq'             => $data['repeat_freq'],
                 'skip'                    => $data['skip'],
-                'automatch'               => true,
-                'active'                  => $data['active'],
+                'automatch'               => $data['automatch'] ?? true,
+                'active'                  => $data['active'] ?? true,
             ]
         );
 
