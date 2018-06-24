@@ -97,6 +97,19 @@ Route::group(
 }
 );
 
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'budgets', 'as' => 'api.v1.budgets.'],
+    function () {
+
+        // Budget API routes:
+        Route::get('', ['uses' => 'BudgetController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'BudgetController@store', 'as' => 'store']);
+        Route::get('{budget}', ['uses' => 'BudgetController@show', 'as' => 'show']);
+        Route::put('{budget}', ['uses' => 'BudgetController@update', 'as' => 'update']);
+        Route::delete('{budget}', ['uses' => 'BudgetController@delete', 'as' => 'delete']);
+    }
+);
+
 
 Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'currencies', 'as' => 'api.v1.currencies.'], function () {
@@ -122,6 +135,8 @@ Route::group(
         Route::delete('{transaction}', ['uses' => 'TransactionController@delete', 'as' => 'delete']);
     }
 );
+
+
 
 Route::group(
     ['middleware' => ['auth:api', 'bindings', \FireflyIII\Http\Middleware\IsAdmin::class], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'users', 'as' => 'api.v1.users.'],
