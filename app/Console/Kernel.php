@@ -74,15 +74,5 @@ class Kernel extends ConsoleKernel
                 event(new AdminRequestedTestMessage($user, $ipAddress));
             }
         )->daily();
-
-        // send test email.
-        $schedule->call(
-            function () {
-                $ipAddress = '127.0.0.2';
-                /** @var User $user */
-                $user = User::find(1);
-                event(new AdminRequestedTestMessage($user, $ipAddress));
-            }
-        )->hourly();
     }
 }

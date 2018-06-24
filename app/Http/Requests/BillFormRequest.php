@@ -50,6 +50,7 @@ class BillFormRequest extends Request
             'repeat_freq'             => $this->string('repeat_freq'),
             'skip'                    => $this->integer('skip'),
             'notes'                   => $this->string('notes'),
+            'active'                  => $this->boolean('active'),
         ];
     }
 
@@ -72,6 +73,7 @@ class BillFormRequest extends Request
             'date'                    => 'required|date',
             'repeat_freq'             => 'required|in:weekly,monthly,quarterly,half-year,yearly',
             'skip'                    => 'required|between:0,31',
+            'active'                  => 'boolean',
         ];
 
         return $rules;
