@@ -62,6 +62,16 @@ interface AttachmentHelperInterface
     public function getMessages(): MessageBag;
 
     /**
+     * Uploads a file as a string.
+     *
+     * @param Attachment $attachment
+     * @param string     $content
+     *
+     * @return bool
+     */
+    public function saveAttachmentFromApi(Attachment $attachment, string $content): bool;
+
+    /**
      * @param Model      $model
      * @param null|array $files
      *

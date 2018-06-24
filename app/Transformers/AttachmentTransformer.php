@@ -28,6 +28,7 @@ use FireflyIII\Models\Attachment;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use League\Fractal\Resource\Collection as FractalCollection;
 
 /**
  * Class AttachmentTransformer
@@ -39,13 +40,13 @@ class AttachmentTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = ['user'];
+    protected $availableIncludes = ['user','notes'];
     /**
      * List of resources to automatically include
      *
      * @var array
      */
-    protected $defaultIncludes = ['user'];
+    protected $defaultIncludes = ['user','notes'];
 
     /** @var ParameterBag */
     protected $parameters;
@@ -77,6 +78,20 @@ class AttachmentTransformer extends TransformerAbstract
     }
 
     /**
+     * Attach the notes.
+     *
+     * @codeCoverageIgnore
+     *
+     * @param Attachment $attachment
+     *
+     * @return FractalCollection
+     */
+    public function includeNotes(Attachment $attachment): FractalCollection
+    {
+        return $this->collection($attachment->notes, new NoteTransformer($this->parameters), 'notes');
+    }
+
+    /**
      * Transform attachment.
      *
      * @param Attachment $attachment
@@ -92,11 +107,11 @@ class AttachmentTransformer extends TransformerAbstract
             'attachable_type' => $attachment->attachable_type,
             'md5'             => $attachment->md5,
             'filename'        => $attachment->filename,
+            'download_uri'    => route('api.v1.attachments.download', [$attachment->id]),
+            'upload_uri'      => route('api.v1.attachments.upload', [$attachment->id]),
             'title'           => $attachment->title,
-            'description'     => $attachment->description,
-            'notes'           => $attachment->notes,
             'mime'            => $attachment->mime,
-            'size'            => $attachment->size,
+            'size'            => (int)$attachment->size,
             'links'           => [
                 [
                     'rel' => 'self',

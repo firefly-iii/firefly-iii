@@ -153,7 +153,7 @@ class AccountTransformer extends TransformerAbstract
         }
         $currencyId     = (int)$this->repository->getMetaValue($account, 'currency_id');
         $currencyCode   = null;
-        $currencySymbol = 'x';
+        $currencySymbol = null;
         $decimalPlaces  = 2;
         if ($currencyId > 0) {
             $currency       = TransactionCurrency::find($currencyId);

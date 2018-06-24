@@ -22,10 +22,20 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class RuleAction.
+ *
+ * @property string $action_value
+ * @property string $action_type
+ * @property int    $id
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property int    $order
+ * @property bool   $active
+ * @property bool   $stop_processing
  */
 class RuleAction extends Model
 {

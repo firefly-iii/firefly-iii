@@ -22,19 +22,30 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Rule.
  *
- * @property bool                           $stop_processing
- * @property int                            $id
- * @property \Illuminate\Support\Collection $ruleTriggers
- * @property bool                           $active
- * @property bool                           $strict
+ * @property bool       $stop_processing
+ * @property int        $id
+ * @property Collection $ruleTriggers
+ * @property Collection $ruleActions
+ * @property bool       $active
+ * @property bool       $strict
+ * @property User       $user
+ * @property Carbon     $created_at
+ * @property Carbon     $updated_at
+ * @property string     $title
+ * @property string     $text
+ * @property int        $order
+ * @property RuleGroup  $ruleGroup
  */
 class Rule extends Model
 {
@@ -78,9 +89,9 @@ class Rule extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function ruleActions()
+    public function ruleActions(): HasMany
     {
         return $this->hasMany(RuleAction::class);
     }

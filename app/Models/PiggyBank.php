@@ -38,6 +38,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $targetamount
  * @property int $id
  * @property string $name
+ * @property Account $account
  *
  */
 class PiggyBank extends Model

@@ -43,6 +43,21 @@ Route::group(
     }
 );
 
+Route::group(
+        ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'attachments', 'as' => 'api.v1.attachments.'],
+    function () {
+
+        // Accounts API routes:
+        Route::get('', ['uses' => 'AttachmentController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'AttachmentController@store', 'as' => 'store']);
+        Route::get('{attachment}', ['uses' => 'AttachmentController@show', 'as' => 'show']);
+        Route::get('{attachment}/download', ['uses' => 'AttachmentController@download', 'as' => 'download']);
+        Route::post('{attachment}/upload', ['uses' => 'AttachmentController@upload', 'as' => 'upload']);
+        Route::put('{attachment}', ['uses' => 'AttachmentController@update', 'as' => 'update']);
+        Route::delete('{attachment}', ['uses' => 'AttachmentController@delete', 'as' => 'delete']);
+    }
+);
+
 
 Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'bills', 'as' => 'api.v1.bills.'], function () {

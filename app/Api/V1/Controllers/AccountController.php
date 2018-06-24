@@ -30,6 +30,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Transformers\AccountTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -57,12 +58,14 @@ class AccountController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
+                /** @var User $user */
+                $user = auth()->user();
                 // @var AccountRepositoryInterface repository
                 $this->repository = app(AccountRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+                $this->repository->setUser($user);
 
                 $this->currencyRepository = app(CurrencyRepositoryInterface::class);
-                $this->currencyRepository->setUser(auth()->user());
+                $this->currencyRepository->setUser($user);
 
                 return $next($request);
             }
@@ -93,7 +96,7 @@ class AccountController extends Controller
     public function index(Request $request): JsonResponse
     {
         // create some objects:
-        $manager = new Manager();
+        $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
 
         // read type from URI
@@ -129,7 +132,7 @@ class AccountController extends Controller
      */
     public function show(Request $request, Account $account): JsonResponse
     {
-        $manager = new Manager();
+        $manager = new Manager;
 
         // add include parameter:
         $include = $request->get('include') ?? '';
@@ -156,7 +159,7 @@ class AccountController extends Controller
             $data['currency_id'] = null === $currency ? 0 : $currency->id;
         }
         $account = $this->repository->store($data);
-        $manager = new Manager();
+        $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
@@ -184,7 +187,7 @@ class AccountController extends Controller
         // set correct type:
         $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $this->repository->update($account, $data);
-        $manager = new Manager();
+        $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 

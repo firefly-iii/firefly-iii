@@ -22,12 +22,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Note.
  *
+ * @property int    $id
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property string $text
+ * @property string $title
  */
 class Note extends Model
 {

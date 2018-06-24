@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -30,7 +31,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class RuleGroup.
  *
- * @property bool $active
+ * @property bool   $active
+ * @property User   $user
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property string $title
+ * @property string $text
+ * @property int $id
+ * @property int $order
  */
 class RuleGroup extends Model
 {
