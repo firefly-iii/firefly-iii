@@ -48,7 +48,7 @@ class CategoryTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [];
+    protected $defaultIncludes = ['user'];
 
     /** @var ParameterBag */
     protected $parameters;

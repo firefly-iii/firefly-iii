@@ -1,6 +1,6 @@
 <?php
 /**
- * BudgetController.php
+ * CategoryController.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -23,11 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\BudgetRequest;
+use FireflyIII\Api\V1\Requests\CategoryRequest;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Budget;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Transformers\BudgetTransformer;
+use FireflyIII\Models\Category;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Transformers\CategoryTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -38,23 +38,23 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
- * Class BudgetController
+ * Class CategoryController
  */
-class BudgetController extends Controller
+class CategoryController extends Controller
 {
-    /** @var BudgetRepositoryInterface */
+    /** @var CategoryRepositoryInterface */
     private $repository;
 
     /**
-     * BudgetController constructor.
+     * CategoryController constructor.
      */
     public function __construct()
     {
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var BudgetRepositoryInterface repository */
-                $this->repository = app(BudgetRepositoryInterface::class);
+                /** @var CategoryRepositoryInterface repository */
+                $this->repository = app(CategoryRepositoryInterface::class);
                 $this->repository->setUser(auth()->user());
 
                 return $next($request);
@@ -65,13 +65,13 @@ class BudgetController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Budget $budget
+     * @param Category $category
      *
      * @return JsonResponse
      */
-    public function delete(Budget $budget): JsonResponse
+    public function delete(Category $category): JsonResponse
     {
-        $this->repository->destroy($budget);
+        $this->repository->destroy($category);
 
         return response()->json([], 204);
     }
@@ -93,17 +93,17 @@ class BudgetController extends Controller
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
-        $collection = $this->repository->getBudgets();
+        $collection = $this->repository->getCategories();
         $count      = $collection->count();
-        $budgets    = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $categories = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($budgets, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.budgets.index') . $this->buildParams());
+        $paginator = new LengthAwarePaginator($categories, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.categories.index') . $this->buildParams());
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($budgets, new BudgetTransformer($this->parameters), 'budgets');
+        $resource = new FractalCollection($categories, new CategoryTransformer($this->parameters), 'categories');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -111,12 +111,12 @@ class BudgetController extends Controller
 
 
     /**
-     * @param Request $request
-     * @param Budget  $budget
+     * @param Request  $request
+     * @param Category $category
      *
      * @return JsonResponse
      */
-    public function show(Request $request, Budget $budget): JsonResponse
+    public function show(Request $request, Category $category): JsonResponse
     {
         $manager = new Manager();
         // add include parameter:
@@ -126,48 +126,48 @@ class BudgetController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($budget, new BudgetTransformer($this->parameters), 'budgets');
+        $resource = new Item($category, new CategoryTransformer($this->parameters), 'categories');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**
-     * @param BudgetRequest $request
+     * @param CategoryRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function store(BudgetRequest $request): JsonResponse
+    public function store(CategoryRequest $request): JsonResponse
     {
-        $budget = $this->repository->store($request->getAll());
-        if (null !== $budget) {
+        $category = $this->repository->store($request->getAll());
+        if (null !== $category) {
             $manager = new Manager();
             $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
             $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-            $resource = new Item($budget, new BudgetTransformer($this->parameters), 'budgets');
+            $resource = new Item($category, new CategoryTransformer($this->parameters), 'categories');
 
             return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
         }
-        throw new FireflyException('Could not store new budget.'); // @codeCoverageIgnore
+        throw new FireflyException('Could not store new category.'); // @codeCoverageIgnore
     }
 
 
     /**
-     * @param BudgetRequest $request
-     * @param Budget        $budget
+     * @param CategoryRequest $request
+     * @param Category        $category
      *
      * @return JsonResponse
      */
-    public function update(BudgetRequest $request, Budget $budget): JsonResponse
+    public function update(CategoryRequest $request, Category $category): JsonResponse
     {
         $data    = $request->getAll();
-        $bill    = $this->repository->update($budget, $data);
+        $bill    = $this->repository->update($category, $data);
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($bill, new BudgetTransformer($this->parameters), 'budgets');
+        $resource = new Item($bill, new CategoryTransformer($this->parameters), 'categories');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

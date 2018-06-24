@@ -44,7 +44,7 @@ Route::group(
 );
 
 Route::group(
-        ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'attachments', 'as' => 'api.v1.attachments.'],
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'attachments', 'as' => 'api.v1.attachments.'],
     function () {
 
         // Attachment API routes:
@@ -59,7 +59,8 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'available_budgets', 'as' => 'api.v1.available_budgets.'],
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'available_budgets',
+     'as'         => 'api.v1.available_budgets.'],
     function () {
 
         // Available Budget API routes:
@@ -110,17 +111,31 @@ Route::group(
     }
 );
 
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'categories', 'as' => 'api.v1.categories.'],
+    function () {
+
+        // Category API routes:
+        Route::get('', ['uses' => 'CategoryController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'CategoryController@store', 'as' => 'store']);
+        Route::get('{category}', ['uses' => 'CategoryController@show', 'as' => 'show']);
+        Route::put('{category}', ['uses' => 'CategoryController@update', 'as' => 'update']);
+        Route::delete('{category}', ['uses' => 'CategoryController@delete', 'as' => 'delete']);
+    }
+);
+
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'currencies', 'as' => 'api.v1.currencies.'], function () {
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'currencies', 'as' => 'api.v1.currencies.'],
+    function () {
 
-    // Transaction currency API routes:
-    Route::get('', ['uses' => 'CurrencyController@index', 'as' => 'index']);
-    Route::post('', ['uses' => 'CurrencyController@store', 'as' => 'store']);
-    Route::get('{currency}', ['uses' => 'CurrencyController@show', 'as' => 'show']);
-    Route::put('{currency}', ['uses' => 'CurrencyController@update', 'as' => 'update']);
-    Route::delete('{currency}', ['uses' => 'CurrencyController@delete', 'as' => 'delete']);
-}
+        // Transaction currency API routes:
+        Route::get('', ['uses' => 'CurrencyController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'CurrencyController@store', 'as' => 'store']);
+        Route::get('{currency}', ['uses' => 'CurrencyController@show', 'as' => 'show']);
+        Route::put('{currency}', ['uses' => 'CurrencyController@update', 'as' => 'update']);
+        Route::delete('{currency}', ['uses' => 'CurrencyController@delete', 'as' => 'delete']);
+    }
 );
 
 Route::group(
@@ -137,9 +152,9 @@ Route::group(
 );
 
 
-
 Route::group(
-    ['middleware' => ['auth:api', 'bindings', \FireflyIII\Http\Middleware\IsAdmin::class], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'users', 'as' => 'api.v1.users.'],
+    ['middleware' => ['auth:api', 'bindings', \FireflyIII\Http\Middleware\IsAdmin::class], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'users',
+     'as'         => 'api.v1.users.'],
     function () {
 
         // Users API routes:
