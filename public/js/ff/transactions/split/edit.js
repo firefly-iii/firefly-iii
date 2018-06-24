@@ -100,6 +100,12 @@ function removeDivRow(e) {
     }
     var row = $(e.target);
     var index = row.data('split');
+    if (typeof index === 'undefined') {
+        var parent = row.parent();
+        index = parent.data('split');
+        console.log('Parent. ' + parent.className);
+    }
+    console.log('Split index is "' + index + '"');
     $('div.split_row[data-split="' + index + '"]').remove();
 
 
