@@ -41,6 +41,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * @property User $user
  * @property int  $bill_id
+ * @property Collection $categories
  */
 class TransactionJournal extends Model
 {

@@ -157,7 +157,7 @@ class SplitController extends Controller
 
         $type = strtolower($this->repository->getTransactionType($journal));
         session()->flash('success', (string)trans('firefly.updated_' . $type, ['description' => $journal->description]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         // @codeCoverageIgnoreStart
         if (1 === (int)$request->get('return_to_edit')) {

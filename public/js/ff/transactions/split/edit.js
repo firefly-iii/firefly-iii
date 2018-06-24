@@ -188,12 +188,12 @@ function resetDivSplits() {
     // ends with ][destination_account_name]
     $.each($('input[name$="][destination_name]"]'), function (i, v) {
         var input = $(v);
-        input.attr('name', 'transactions[' + i + '][destination_account_name]');
+        input.attr('name', 'transactions[' + i + '][destination_name]');
     });
     // ends with ][source_account_name]
     $.each($('input[name$="][source_name]"]'), function (i, v) {
         var input = $(v);
-        input.attr('name', 'transactions[' + i + '][source_account_name]');
+        input.attr('name', 'transactions[' + i + '][source_name]');
     });
     // ends with ][amount]
     $.each($('input[name$="][amount]"]'), function (i, v) {

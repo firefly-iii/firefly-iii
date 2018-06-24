@@ -163,14 +163,17 @@ class Preferences
     {
         $lastActivity = microtime();
         $preference   = $this->get('lastActivity', microtime());
+
         if (null !== $preference && null !== $preference->data) {
             $lastActivity = $preference->data;
         }
         if (\is_array($lastActivity)) {
             $lastActivity = implode(',', $lastActivity);
         }
+        $hash = md5($lastActivity);
+        Log::debug(sprintf('Value of last activity is %s, hash is %s', $lastActivity, $hash));
 
-        return md5($lastActivity);
+        return $hash;
     }
 
     /**
