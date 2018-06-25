@@ -26,6 +26,7 @@ use Exception;
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
+use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Events\StoredTransactionJournal;
 use FireflyIII\Events\UpdatedTransactionJournal;
@@ -69,6 +70,9 @@ class EventServiceProvider extends ServiceProvider
             ],
             RequestedVersionCheckStatus::class => [
                 'FireflyIII\Handlers\Events\VersionCheckEventHandler@checkForUpdates',
+            ],
+            RequestedReportOnJournals::class   => [
+                'FireflyIII\Handlers\Events\AutomationHandler@reportJournals',
             ],
 
             // is a User related event.

@@ -113,7 +113,7 @@ class UserEventHandler
      *
      * @return bool
      */
-    function demoUserBackToEnglish(Login $event): bool
+    public function demoUserBackToEnglish(Login $event): bool
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);

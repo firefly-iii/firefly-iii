@@ -3,11 +3,14 @@
 namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
+use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -29,6 +32,8 @@ class CreateRecurringTransactions implements ShouldQueue
     private $journalRepository;
     /** @var RecurringRepositoryInterface */
     private $repository;
+    /** @var UserRepositoryInterface */
+    private $userRepository;
 
     /**
      * Create a new job instance.
@@ -41,6 +46,7 @@ class CreateRecurringTransactions implements ShouldQueue
         $this->date              = $date;
         $this->repository        = app(RecurringRepositoryInterface::class);
         $this->journalRepository = app(JournalRepositoryInterface::class);
+        $this->userRepository    = app(UserRepositoryInterface::class);
     }
 
     /**
@@ -76,14 +82,16 @@ class CreateRecurringTransactions implements ShouldQueue
             $this->journalRepository->setUser($recurrence->user);
             Log::debug(sprintf('Now at recurrence #%d', $recurrence->id));
             $created = $this->handleRepetitions($recurrence);
-            Log::debug(sprintf('Done with recurrence #%c', $recurrence->id));
-
+            Log::debug(sprintf('Done with recurrence #%d', $recurrence->id));
             $result[$recurrence->user_id] = $result[$recurrence->user_id]->merge($created);
         }
 
+        Log::debug('Now running report thing.');
         // will now send email to users.
-        foreach($result as $userId => $journals) {
-            $this->sendReport($userId, $journals);
+        foreach ($result as $userId => $journals) {
+            // random bunch to make mail.
+            $journals = TransactionJournal::where('user_id', $userId)->inRandomOrder()->take(1)->get();
+            event(new RequestedReportOnJournals($userId, $journals));
         }
 
         Log::debug('Done with handle()');
