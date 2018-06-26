@@ -79,6 +79,7 @@ class Journal extends Twig_Extension
     {
         $filters = [
             new Twig_SimpleFilter('journalTotalAmount', [TransactionJournalExtension::class, 'totalAmount'], ['is_safe' => ['html']]),
+            new Twig_SimpleFilter('journalTotalAmountPlain', [TransactionJournalExtension::class, 'totalAmountPlain'], ['is_safe' => ['html']]),
         ];
 
         return $filters;
