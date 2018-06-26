@@ -7,10 +7,8 @@ use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -32,8 +30,6 @@ class CreateRecurringTransactions implements ShouldQueue
     private $journalRepository;
     /** @var RecurringRepositoryInterface */
     private $repository;
-    /** @var UserRepositoryInterface */
-    private $userRepository;
 
     /**
      * Create a new job instance.
@@ -46,13 +42,10 @@ class CreateRecurringTransactions implements ShouldQueue
         $this->date              = $date;
         $this->repository        = app(RecurringRepositoryInterface::class);
         $this->journalRepository = app(JournalRepositoryInterface::class);
-        $this->userRepository    = app(UserRepositoryInterface::class);
     }
 
     /**
      * Execute the job.
-     *
-     * TODO check number of repetitions.
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
@@ -198,6 +191,13 @@ class CreateRecurringTransactions implements ShouldQueue
             }
             Log::debug(sprintf('%s IS today (%s)', $date->format('Y-m-d'), $this->date->format('Y-m-d')));
 
+            // count created journals on THIS day.
+            $created = $this->repository->getJournals($recurrence, $date, $date);
+            if ($created->count() > 0) {
+                Log::info(sprintf('Already created %d journal(s) for date %s', $created->count(), $date->format('Y-m-d')));
+                continue;
+            }
+
             // create transaction array and send to factory.
             $array   = [
                 'type'            => $recurrence->transactionType->type,
@@ -212,7 +212,7 @@ class CreateRecurringTransactions implements ShouldQueue
                 'piggy_bank_name' => null,
                 'bill_id'         => null,
                 'bill_name'       => null,
-                'recurrence_id'   => $recurrence->id,
+                'recurrence_id'   => (int)$recurrence->id,
 
                 // transaction data:
                 'transactions'    => $this->getTransactionData($recurrence),
@@ -311,6 +311,14 @@ class CreateRecurringTransactions implements ShouldQueue
         // is not active.
         if (!$this->active($recurrence)) {
             Log::info(sprintf('Recurrence #%d is not active. Skipped.', $recurrence->id));
+
+            return false;
+        }
+
+        // has repeated X times.
+        $journals = $this->repository->getJournals($recurrence, null, null);
+        if ($recurrence->repetitions !== 0 && $journals->count() >= $recurrence->repetitions) {
+            Log::info(sprintf('Recurrence #%d has run %d times, so will run no longer.', $recurrence->id, $recurrence->repetitions));
 
             return false;
         }

@@ -137,6 +137,7 @@ class RecurrenceTransformer extends TransformerAbstract
                 'repetition_type'   => $repetition->repetition_type,
                 'repetition_moment' => $repetition->repetition_moment,
                 'repetition_skip'   => (int)$repetition->repetition_skip,
+                'weekend'           => (int)$repetition->weekend,
                 'description'       => $this->repository->repetitionDescription($repetition),
                 'occurrences'       => [],
             ];

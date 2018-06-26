@@ -33,6 +33,7 @@ use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RecurrenceTransactionMeta;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\RecurrenceDestroyService;
 use FireflyIII\Services\Internal\Update\RecurrenceUpdateService;
 use FireflyIII\User;
@@ -127,6 +128,34 @@ class RecurringRepository implements RecurringRepositoryInterface
         }
 
         return $return === '' ? null : $return;
+    }
+
+    /**
+     * Returns the journals created for this recurrence, possibly limited by time.
+     *
+     * @param Recurrence  $recurrence
+     * @param Carbon|null $start
+     * @param Carbon|null $end
+     *
+     * @return Collection
+     */
+    public function getJournals(Recurrence $recurrence, Carbon $start = null, Carbon $end = null): Collection
+    {
+        $query = TransactionJournal
+            ::leftJoin('journal_meta', 'journal_meta.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transaction_journals.user_id', $recurrence->user_id)
+            ->whereNull('transaction_journals.deleted_at')
+            ->where('journal_meta.name', 'recurrence_id')
+            ->where('journal_meta.data', '"' . $recurrence->id . '"');
+        if (null !== $start) {
+            $query->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'));
+        }
+        if (null !== $end) {
+            $query->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'));
+        }
+        $result = $query->get(['transaction_journals.*']);
+
+        return $result;
     }
 
     /**
@@ -398,6 +427,8 @@ class RecurringRepository implements RecurringRepositoryInterface
                 }
                 break;
         }
+        // filter out all the weekend days:
+        $return = $this->filterWeekends($repetition, $return);
 
         return $return;
     }
@@ -512,12 +543,16 @@ class RecurringRepository implements RecurringRepositoryInterface
         /** @var Carbon $date */
         foreach ($dates as $date) {
             $isWeekend = $date->isWeekend();
+            if (!$isWeekend) {
+                $return[] = clone $date;
+                continue;
+            }
 
-            // set back to Friday?
+            // is weekend and must set back to Friday?
             if ($isWeekend && $repetition->weekend === RecurrenceRepetition::WEEKEND_TO_FRIDAY) {
                 $clone = clone $date;
-                $clone->subDays(7 - $date->dayOfWeekIso);
-                $return[] = $clone;
+                $clone->addDays(5 - $date->dayOfWeekIso);
+                $return[] = clone $clone;
             }
 
             // postpone to Monday?
@@ -526,10 +561,12 @@ class RecurringRepository implements RecurringRepositoryInterface
                 $clone->addDays(8 - $date->dayOfWeekIso);
                 $return[] = $clone;
             }
-            // otherwise, ignore the date!
         }
 
-        // filter unique dates?
+        // filter unique dates
+        $collection = new Collection($return);
+        $filtered   = $collection->unique();
+        $return     = $filtered->toArray();
 
         return $return;
     }

@@ -67,6 +67,7 @@ function showRepCalendar() {
     newEventsUri += '&end_date=' + $('#ffInput_repeat_until').val();
     newEventsUri += '&reps=' + $('#ffInput_repetitions').val();
     newEventsUri += '&first_date=' + $('#ffInput_first_date').val();
+    newEventsUri += '&weekend=' + $('#ffInput_weekend').val();
 
     // remove all event sources from calendar:
     calendar.fullCalendar('removeEventSources');

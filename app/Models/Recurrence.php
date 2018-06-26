@@ -72,6 +72,7 @@ class Recurrence extends Model
             'updated_at'   => 'datetime',
             'deleted_at'   => 'datetime',
             'title'        => 'string',
+            'id'           => 'int',
             'description'  => 'string',
             'first_date'   => 'date',
             'repeat_until' => 'date',
