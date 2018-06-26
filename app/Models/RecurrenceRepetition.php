@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string         $repetition_type
  * @property string         $repetition_moment
  * @property int            $repetition_skip
+ * @property int            $weekend
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $deleted_at
  * @property \Carbon\Carbon $updated_at
@@ -41,10 +42,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class RecurrenceRepetition extends Model
 {
+    /** @var int */
+    public const WEEKEND_DO_NOTHING = 1;
+    /** @var int */
+    public const WEEKEND_SKIP_CREATION = 2;
+    /** @var int */
+    public const WEEKEND_TO_FRIDAY = 3;
+    /** @var int */
+    public const WEEKEND_TO_MONDAY = 4;
     use SoftDeletes;
     /** @var array */
     protected $casts
-        = [
+                        = [
             'created_at'        => 'datetime',
             'updated_at'        => 'datetime',
             'deleted_at'        => 'datetime',
@@ -52,7 +61,7 @@ class RecurrenceRepetition extends Model
             'repetition_moment' => 'string',
             'repetition_skip'   => 'int',
         ];
-    protected $fillable = ['recurrence_id', 'repetition_type', 'repetition_moment', 'repetition_skip'];
+    protected $fillable = ['recurrence_id', 'weekend', 'repetition_type', 'repetition_moment', 'repetition_skip'];
     /** @var string */
     protected $table = 'recurrences_repetitions';
 

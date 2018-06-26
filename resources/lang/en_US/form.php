@@ -236,5 +236,6 @@ return [
     'repetition_end'          => 'Repetition ends',
     'repetitions'             => 'Repetitions',
     'calendar'                => 'Calendar',
+    'weekend'                 => 'Weekend',
 
 ];

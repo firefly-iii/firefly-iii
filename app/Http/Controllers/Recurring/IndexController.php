@@ -110,6 +110,7 @@ class IndexController extends Controller
         $repetition->repetition_type   = $repetitionType;
         $repetition->repetition_moment = $repetitionMoment;
         $repetition->repetition_skip   = (int)$request->get('skip');
+        $repetition->weekend           = (int)$request->get('weekend');
 
         $actualEnd = clone $end;
         switch ($endsAt) {
@@ -222,8 +223,9 @@ class IndexController extends Controller
                 'daily'  => ['label' => trans('firefly.recurring_daily'), 'selected' => 0 === strpos($preSelected, 'daily')],
                 $weekly  => ['label' => trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek]), 'selected' => 0 === strpos($preSelected, 'weekly')],
                 $monthly => ['label' => trans('firefly.recurring_monthly', ['dayOfMonth' => $date->day]), 'selected' => 0 === strpos($preSelected, 'monthly')],
-                $ndom    => ['label' => trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $date->weekOfMonth]),'selected' => 0 === strpos($preSelected, 'ndom')],
-                $yearly  => ['label' => trans('firefly.recurring_yearly', ['date' => $yearlyDate]),'selected' => 0 === strpos($preSelected, 'yearly')],
+                $ndom    => ['label'    => trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $date->weekOfMonth]),
+                             'selected' => 0 === strpos($preSelected, 'ndom')],
+                $yearly  => ['label' => trans('firefly.recurring_yearly', ['date' => $yearlyDate]), 'selected' => 0 === strpos($preSelected, 'yearly')],
             ];
         }
 

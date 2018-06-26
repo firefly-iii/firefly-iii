@@ -21,6 +21,7 @@
                         {{ ExpandedForm.select('repetition_type', [], null, {helpText: trans('firefly.change_date_other_options')}) }}
                         {{ ExpandedForm.number('skip', 0) }}
                         {{ ExpandedForm.select('repetition_end', repetitionEnds) }}
+                        {{ ExpandedForm.select('weekend', weekendResponses, null, {helpText: trans('firefly.help_weekend')}) }}
                         {{ ExpandedForm.date('repeat_until',null) }}
                         {{ ExpandedForm.number('repetitions',null) }}
 

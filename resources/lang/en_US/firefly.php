@@ -1261,5 +1261,11 @@ return [
     'updated_recurrence'                 => 'Updated recurring transaction ":title"',
     'recurrence_is_inactive'             => 'This recurring transaction is not active and will not generate new transactions.',
     'delete_recurring'                   => 'Delete recurring transaction ":title"',
+    'new_recurring_transaction'          => 'New recurring transaction',
+    'help_weekend'                       => 'What should Firefly III do when the recurring transaction falls on a Saturday or Sunday?',
+    'do_nothing'                         => 'Just create the transaction',
+    'skip_transaction'                   => 'Skip the occurence',
+    'jump_to_friday'                     => 'Create the transaction on the previous Friday instead',
+    'jump_to_monday'                     => 'Create the transaction on the next Monday instead',
     'recurrence_deleted'                 => 'Recurring transaction ":title" deleted',
 ];

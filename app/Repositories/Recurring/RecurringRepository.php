@@ -262,6 +262,8 @@ class RecurringRepository implements RecurringRepositoryInterface
                 }
                 break;
         }
+        // filter out all the weekend days:
+        $return = $this->filterWeekends($repetition, $return);
 
         return $return;
     }
@@ -491,5 +493,44 @@ class RecurringRepository implements RecurringRepositoryInterface
         $service = app(RecurrenceUpdateService::class);
 
         return $service->update($recurrence, $data);
+    }
+
+    /**
+     * Filters out all weekend entries, if necessary.
+     *
+     * @param RecurrenceRepetition $repetition
+     * @param array                $dates
+     *
+     * @return array
+     */
+    protected function filterWeekends(RecurrenceRepetition $repetition, array $dates): array
+    {
+        if ($repetition->weekend === RecurrenceRepetition::WEEKEND_DO_NOTHING) {
+            return $dates;
+        }
+        $return = [];
+        /** @var Carbon $date */
+        foreach ($dates as $date) {
+            $isWeekend = $date->isWeekend();
+
+            // set back to Friday?
+            if ($isWeekend && $repetition->weekend === RecurrenceRepetition::WEEKEND_TO_FRIDAY) {
+                $clone = clone $date;
+                $clone->subDays(7 - $date->dayOfWeekIso);
+                $return[] = $clone;
+            }
+
+            // postpone to Monday?
+            if ($isWeekend && $repetition->weekend === RecurrenceRepetition::WEEKEND_TO_MONDAY) {
+                $clone = clone $date;
+                $clone->addDays(8 - $date->dayOfWeekIso);
+                $return[] = $clone;
+            }
+            // otherwise, ignore the date!
+        }
+
+        // filter unique dates?
+
+        return $return;
     }
 }

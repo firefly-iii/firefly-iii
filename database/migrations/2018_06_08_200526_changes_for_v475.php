@@ -92,6 +92,7 @@ class ChangesForV475 extends Migration
             $table->string('repetition_type', 50);
             $table->string('repetition_moment', 50);
             $table->smallInteger('repetition_skip', false, true);
+            $table->smallInteger('weekend', false, true);
 
             $table->foreign('recurrence_id')->references('id')->on('recurrences')->onDelete('cascade');
         }

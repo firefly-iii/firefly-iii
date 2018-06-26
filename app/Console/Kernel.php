@@ -64,15 +64,5 @@ class Kernel extends ConsoleKernel
     {
         // create recurring transactions.
         $schedule->job(new CreateRecurringTransactions(new Carbon))->daily();
-
-        // send test email.
-        $schedule->call(
-            function () {
-                $ipAddress = '127.0.0.1';
-                /** @var User $user */
-                $user = User::find(1);
-                event(new AdminRequestedTestMessage($user, $ipAddress));
-            }
-        )->daily();
     }
 }

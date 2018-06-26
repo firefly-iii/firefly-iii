@@ -27,6 +27,7 @@ namespace FireflyIII\Http\Controllers\Recurring;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RecurrenceFormRequest;
+use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use Illuminate\Http\Request;
@@ -89,10 +90,17 @@ class CreateController extends Controller
             'until_date' => trans('firefly.repeat_until_date'),
             'times'      => trans('firefly.repeat_times'),
         ];
+        // what to do in the weekend?
+        $weekendResponses = [
+            RecurrenceRepetition::WEEKEND_DO_NOTHING    => trans('firefly.do_nothing'),
+            RecurrenceRepetition::WEEKEND_SKIP_CREATION => trans('firefly.skip_transaction'),
+            RecurrenceRepetition::WEEKEND_TO_FRIDAY     => trans('firefly.jump_to_friday'),
+            RecurrenceRepetition::WEEKEND_TO_MONDAY     => trans('firefly.jump_to_monday'),
+        ];
 
         // flash some data:
         $hasOldInput = null !== $request->old('_token');
-        $preFilled = [
+        $preFilled   = [
             'first_date'       => $tomorrow->format('Y-m-d'),
             'transaction_type' => $hasOldInput ? $request->old('transaction_type') : 'withdrawal',
             'active'           => $hasOldInput ? (bool)$request->old('active') : true,
@@ -100,7 +108,9 @@ class CreateController extends Controller
         ];
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('recurring.create', compact('tomorrow', 'oldRepetitionType', 'preFilled', 'repetitionEnds', 'defaultCurrency', 'budgets'));
+        return view(
+            'recurring.create', compact('tomorrow', 'oldRepetitionType', 'weekendResponses', 'preFilled', 'repetitionEnds', 'defaultCurrency', 'budgets')
+        );
     }
 
     /**
