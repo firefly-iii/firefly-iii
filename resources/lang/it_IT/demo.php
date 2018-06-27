@@ -25,8 +25,8 @@ declare(strict_types=1);
 return [
     'no_demo_text'           => 'Spiacenti, non esiste un testo dimostrativo aggiuntivo per <abbr title=":route">questa pagina</abbr>.',
     'see_help_icon'          => 'Tuttavia, l\'icona <i class = "fa fa-question-circle"> </ i> in alto a destra potrebbe dirti di più.',
-    'index'                  => 'Benvenuto in <strong>Firefly III</strong>! In questa pagina ottieni una rapida panoramica delle tue finanze. Per ulteriori informazioni, controlla Account e &rarr; <a href=":asset">Account asset</a> e, naturalmente, i <a href=":budgets">budget</a> e i <a href=":reports">resoconti</a>. O semplicemente dai un\'occhiata in giro e vedi dove finisci.',
-    'accounts-index'         => 'I conti degli asset sono i tuoi conti bancari personali. I conti spese sono gli account a cui si spendono soldi, come negozi e amici. I conti delle entrate sono conti da cui ricevi denaro, come il tuo lavoro, il governo o altre fonti di reddito. In questa pagina puoi modificarli o rimuoverli.',
+    'index'                  => 'Benvenuto in <strong>Firefly III</strong>! In questa pagina ottieni una rapida panoramica delle tue finanze. Per ulteriori informazioni, controlla Conti &rarr; <a href=":asset">Conti attività</a> e, naturalmente, le pagine <a href=":budgets">Budget</a> e <a href=":reports">Resoconti</a>. O semplicemente dai un\'occhiata in giro e vedi dove finisci.',
+    'accounts-index'         => 'I conti attività sono i conti bancari personali. I conti spese sono i conti verso cui si spendono soldi, come negozi e amici. I conti entrate sono conti da cui ricevi denaro, come il tuo lavoro, il governo o altre fonti di reddito. In questa pagina puoi modificarli o rimuoverli.',
     'budgets-index'          => 'Questa pagina ti mostra una panoramica dei tuoi budget. La barra in alto mostra l\'importo disponibile per essere preventivato. Questo può essere personalizzato per qualsiasi periodo facendo clic sull\'importo a destra. La quantità che hai effettivamente speso è mostrata nella barra sottostante. Di seguito sono indicate le spese per budget e ciò che hai preventivato per loro.',
     'reports-index-start'    => 'Firefly III supporta un certo numero di tipi di resoconto. Leggi facendo clic sull\'icona <i class="fa fa-question-circle"></i> in alto a destra.',
     'reports-index-examples' => 'Assicurati di dare un occhiata a questi esempi: <a href=":one"> una panoramica finanziaria mensile </a>, <a href=":two"> una panoramica finanziaria annuale </a> e <a href = ": tre "> una panoramica del budget </a>.',
@@ -34,6 +34,6 @@ return [
     'transactions-index'     => 'Queste spese, depositi e trasferimenti non sono particolarmente fantasiosi. Sono stati generati automaticamente.',
     'piggy-banks-index'      => 'Come puoi vedere, ci sono tre salvadanai. Utilizzare i pulsanti più e meno per influenzare la quantità di denaro in ogni salvadanaio. Fare clic sul nome del salvadanaio per visualizzare la gestione per ciascun salvadanaio.',
     'import-index'           => 'Qualsiasi file CSV può essere importato in Firefly III. Supporta anche l\'importazione di dati da bunq e Spectre. Altre banche e aggregatori finanziari saranno implementati in futuro. Tuttavia, come utente demo, puoi vedere solo il provider "fittizio" in azione. Genererà alcune transazioni casuali per mostrarti come funziona il processo.',
-    'recurring-index'        => 'Please note that this feature is under active development and may not work as expected.',
-    'recurring-create'       => 'Please note that this feature is under active development and may not work as expected.',
+    'recurring-index'        => 'Questa caratteristica è in corso di sviluppo e potrebbe non funzionare come ci si aspetta.',
+    'recurring-create'       => 'Questa caratteristica è in corso di sviluppo e potrebbe non funzionare come ci si aspetta.',
 ];

@@ -125,7 +125,7 @@ return [
     'bunq_payment_id'         => 'bunq payment ID',
     'repetitions'             => 'Repetitions',
     'title'                   => 'Title',
-    'transaction_s'           => 'Transaction(s)',
-    'field'                   => 'Field',
-    'value'                   => 'Value',
+    'transaction_s'           => 'Transakcja(e)',
+    'field'                   => 'Pole',
+    'value'                   => 'Wartość',
 ];

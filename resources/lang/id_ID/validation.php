@@ -44,6 +44,8 @@ return [
     'belongs_to_user'                => 'Nilai dari :attribute tidak diketahui',
     'accepted'                       => ':attribute harus diterima.',
     'bic'                            => 'Ini bukan BIC yang valid.',
+    'base64'                         => 'This is not valid base64 encoded data.',
+    'model_id_invalid'               => 'The given ID seems invalid for this model.',
     'more'                           => ':attribute harus lebih besar dari nol.',
     'active_url'                     => ':attribute bukan URL yang valid.',
     'after'                          => ':attribute harus tanggal setelah :date.',

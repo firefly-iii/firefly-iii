@@ -44,6 +44,8 @@ return [
     'belongs_to_user'                => 'De waarde van :attribute is onbekend',
     'accepted'                       => ':attribute moet geaccepteerd zijn.',
     'bic'                            => 'Dit is geen geldige BIC.',
+    'base64'                         => 'Dit is geen geldige base64 gecodeerde data.',
+    'model_id_invalid'               => 'Dit ID past niet bij dit object.',
     'more'                           => ':attribute moet groter zijn dan nul.',
     'active_url'                     => ':attribute is geen geldige URL.',
     'after'                          => ':attribute moet een datum na :date zijn.',

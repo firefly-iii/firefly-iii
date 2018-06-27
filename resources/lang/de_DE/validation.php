@@ -44,6 +44,8 @@ return [
     'belongs_to_user'                => 'Der Wert von :attribute ist nicht bekannt',
     'accepted'                       => ':attribute muss akzeptiert werden.',
     'bic'                            => 'Dies ist kein gültiger BIC.',
+    'base64'                         => 'This is not valid base64 encoded data.',
+    'model_id_invalid'               => 'The given ID seems invalid for this model.',
     'more'                           => ':attribute muss größer als Null sein.',
     'active_url'                     => ':attribute ist keine gültige URL.',
     'after'                          => ':attribute muss ein Datum nach :date sein.',
@@ -112,7 +114,7 @@ return [
     'amount_zero'                    => 'Der Gesamtbetrag darf nicht Null sein',
     'unique_piggy_bank_for_user'     => 'Der Name des Sparschweins muss eindeutig sein.',
     'secure_password'                => 'Das ist kein sicheres Passwort. Bitte versuchen Sie es erneut. Weitere Informationen finden Sie unter https://github.com/firefly-iii/help/wiki/Secure-password',
-    'valid_recurrence_rep_type'      => 'Invalid repetition type for recurring transactions',
+    'valid_recurrence_rep_type'      => 'Ungültige Wiederholungsart für Daueraufträge',
     'attributes'                     => [
         'email'                   => 'E-Mail Adresse',
         'description'             => 'Beschreibung',

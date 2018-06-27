@@ -44,6 +44,8 @@ return [
     'belongs_to_user'                => 'O valor de :attribute é desconhecido',
     'accepted'                       => 'O campo :attribute deve ser aceito.',
     'bic'                            => 'Este não é um BIC válido.',
+    'base64'                         => 'This is not valid base64 encoded data.',
+    'model_id_invalid'               => 'The given ID seems invalid for this model.',
     'more'                           => ':attribute deve ser maior que zero.',
     'active_url'                     => 'O campo :attribute não contém um URL válido.',
     'after'                          => 'O campo :attribute deverá conter uma data posterior a :date.',

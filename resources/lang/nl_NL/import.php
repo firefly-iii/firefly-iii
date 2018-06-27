@@ -127,13 +127,16 @@ return [
     'spectre_no_mapping'                   => 'Je hebt geen rekeningen geselecteerd om uit te importeren.',
     'imported_from_account'                => 'Geïmporteerd uit ":account"',
     'spectre_account_with_number'          => 'Rekening :number',
+    'job_config_spectre_apply_rules'       => 'Regels toepassen',
+    'job_config_spectre_apply_rules_text'  => 'Standaard worden je regels toegepast op de transacties die je tijdens deze routine importeert. Als je wilt dat dat niet gebeurt, zet dan het vinkje uit.',
     // job configuration for bunq:
     'job_config_bunq_accounts_title'       => 'bunq rekeningen',
     'job_config_bunq_accounts_text'        => 'Deze rekeningen zijn geassocieerd met je bunq-account. Kies de rekeningen waar je van wilt importeren, en geef aan waar de gegevens geïmporteerd moeten worden.',
     'bunq_no_mapping'                      => 'Je hebt geen rekeningen geselecteerd om uit te importeren.',
     'should_download_config'               => 'Download <a href=":route">het configuratiebestand</a> voor deze import. Dit maakt toekomstige imports veel eenvoudiger.',
     'share_config_file'                    => 'Als je gegevens hebt geimporteerd van een gewone bank, <a href="https://github.com/firefly-iii/import-configurations/wiki">deel dan je configuratiebestand</a> zodat het makkelijk is voor andere gebruikers om hun gegevens te importeren. Als je je bestand deelt deel je natuurlijk géén privé-gegevens.',
-
+    'job_config_bunq_apply_rules'          => 'Regels toepassen',
+    'job_config_bunq_apply_rules_text'     => 'Standaard worden je regels toegepast op de transacties die je tijdens deze routine importeert. Als je wilt dat dat niet gebeurt, zet dan het vinkje uit.',
     // keys from "extra" array:
     'spectre_extra_key_iban'               => 'IBAN',
     'spectre_extra_key_swift'              => 'SWIFT',

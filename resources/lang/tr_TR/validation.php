@@ -44,6 +44,8 @@ return [
     'belongs_to_user'                => ':attribute\'nin değeri bilinmiyor',
     'accepted'                       => ':attribute kabul edilmek zorunda.',
     'bic'                            => 'Bu BIC geçerli değilrdir.',
+    'base64'                         => 'This is not valid base64 encoded data.',
+    'model_id_invalid'               => 'The given ID seems invalid for this model.',
     'more'                           => ':attribute sıfırdan büyük olmak zorundadır.',
     'active_url'                     => ':attribute geçerli bir URL değil.',
     'after'                          => ':attribute :date tarihinden sonrası için tarihlendirilmelidir.',
