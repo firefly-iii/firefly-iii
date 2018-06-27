@@ -56,6 +56,7 @@ trait RecurringTransactionTrait
                     'repetition_type'   => $array['type'],
                     'repetition_moment' => $array['moment'],
                     'repetition_skip'   => $array['skip'],
+                    'weekend'           => $array['weekend'] ?? 1,
                 ]
             );
 

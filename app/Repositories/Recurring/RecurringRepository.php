@@ -195,14 +195,18 @@ class RecurringRepository implements RecurringRepositoryInterface
         $skipMod  = $repetition->repetition_skip + 1;
         $attempts = 0;
         Log::debug(sprintf('Calculating occurrences for rep type "%s"', $repetition->repetition_type));
+        Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
         switch ($repetition->repetition_type) {
             default:
                 throw new FireflyException(
                     sprintf('Cannot calculate occurrences for recurring transaction repetition type "%s"', $repetition->repetition_type)
                 );
             case 'daily':
+                Log::debug('Rep is daily. Start of loop.');
                 while ($mutator <= $end) {
+                    Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
                     if ($attempts % $skipMod === 0) {
+                        Log::debug(sprintf('Attempts modulo skipmod is zero, include %s', $mutator->format('Y-m-d')));
                         $return[] = clone $mutator;
                     }
                     $mutator->addDay();
@@ -210,9 +214,10 @@ class RecurringRepository implements RecurringRepositoryInterface
                 }
                 break;
             case 'weekly':
+                Log::debug('Rep is weekly.');
                 // monday = 1
                 // sunday = 7
-                $mutator->addDay(); // always assume today has passed.
+                $mutator->addDay(); // always assume today has passed. TODO why?
                 $dayOfWeek = (int)$repetition->repetition_moment;
                 if ($mutator->dayOfWeekIso > $dayOfWeek) {
                     // day has already passed this week, add one week:

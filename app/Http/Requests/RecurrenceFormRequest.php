@@ -79,14 +79,15 @@ class RecurrenceFormRequest extends Request
             ],
             'meta'         => [
                 // tags and piggy bank ID.
-                'tags'          => '' !== $this->string('tags') ? explode(',', $this->string('tags')): [],
+                'tags'          => '' !== $this->string('tags') ? explode(',', $this->string('tags')) : [],
                 'piggy_bank_id' => $this->integer('piggy_bank_id'),
             ],
             'repetitions'  => [
                 [
-                    'type'   => $repetitionData['type'],
-                    'moment' => $repetitionData['moment'],
-                    'skip'   => $this->integer('skip'),
+                    'type'    => $repetitionData['type'],
+                    'moment'  => $repetitionData['moment'],
+                    'skip'    => $this->integer('skip'),
+                    'weekend' => $this->integer('weekend'),
                 ],
             ],
 
