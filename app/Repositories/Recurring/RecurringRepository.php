@@ -217,8 +217,6 @@ class RecurringRepository implements RecurringRepositoryInterface
                 Log::debug('Rep is weekly.');
                 // monday = 1
                 // sunday = 7
-                $mutator->addDay(); // always assume today has passed. TODO why?
-                Log::debug(sprintf('Add a day (not sure why), so mutator is now: %s', $mutator->format('Y-m-d')));
                 $dayOfWeek = (int)$repetition->repetition_moment;
                 Log::debug(sprintf('DoW in repetition is %d, in mutator is %d', $dayOfWeek, $mutator->dayOfWeekIso));
                 if ($mutator->dayOfWeekIso > $dayOfWeek) {
@@ -228,14 +226,18 @@ class RecurringRepository implements RecurringRepositoryInterface
                 }
                 // today is wednesday (3), expected is friday (5): add two days.
                 // today is friday (5), expected is monday (1), subtract four days.
+                Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
                 $dayDifference = $dayOfWeek - $mutator->dayOfWeekIso;
                 $mutator->addDays($dayDifference);
+                Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
                 while ($mutator <= $end) {
                     if ($attempts % $skipMod === 0 && $start->lte($mutator) && $end->gte($mutator)) {
+                        Log::debug('Date is in range of start+end, add to set.');
                         $return[] = clone $mutator;
                     }
                     $attempts++;
                     $mutator->addWeek();
+                    Log::debug(sprintf('Mutator is now (end of loop): %s', $mutator->format('Y-m-d')));
                 }
                 break;
             case 'monthly':

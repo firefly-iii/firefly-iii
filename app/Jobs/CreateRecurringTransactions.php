@@ -82,8 +82,6 @@ class CreateRecurringTransactions implements ShouldQueue
         Log::debug('Now running report thing.');
         // will now send email to users.
         foreach ($result as $userId => $journals) {
-            //// random bunch to make mail.
-            //$journals = TransactionJournal::where('user_id', $userId)->inRandomOrder()->take(1)->get();
             event(new RequestedReportOnJournals($userId, $journals));
         }
 

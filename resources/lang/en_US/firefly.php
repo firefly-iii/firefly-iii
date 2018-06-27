@@ -1267,5 +1267,8 @@ return [
     'skip_transaction'                   => 'Skip the occurence',
     'jump_to_friday'                     => 'Create the transaction on the previous Friday instead',
     'jump_to_monday'                     => 'Create the transaction on the next Monday instead',
+    'will_jump_friday'                   => 'Will be created on Friday instead of the weekends.',
+    'will_jump_monday'                   => 'Will be created on Monday instead of the weekends.',
+    'except_weekends'                    => 'Except weekends',
     'recurrence_deleted'                 => 'Recurring transaction ":title" deleted',
 ];

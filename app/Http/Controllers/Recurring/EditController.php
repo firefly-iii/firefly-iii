@@ -88,7 +88,6 @@ class EditController extends Controller
         // todo handle old repetition type as well.
 
 
-
         /** @var RecurrenceRepetition $repetition */
         $repetition            = $recurrence->recurrenceRepetitions()->first();
         $currentRepetitionType = $repetition->repetition_type;
@@ -117,16 +116,27 @@ class EditController extends Controller
             $repetitionEnd = 'times';
         }
 
+        // what to do in the weekend?
+        $weekendResponses = [
+            RecurrenceRepetition::WEEKEND_DO_NOTHING    => trans('firefly.do_nothing'),
+            RecurrenceRepetition::WEEKEND_SKIP_CREATION => trans('firefly.skip_transaction'),
+            RecurrenceRepetition::WEEKEND_TO_FRIDAY     => trans('firefly.jump_to_friday'),
+            RecurrenceRepetition::WEEKEND_TO_MONDAY     => trans('firefly.jump_to_monday'),
+        ];
+
         // code to handle active-checkboxes
         $hasOldInput = null !== $request->old('_token');
-       // $hasOldInput = false;
-        $preFilled   = [
+        // $hasOldInput = false;
+        $preFilled = [
             'transaction_type' => strtolower($recurrence->transactionType->type),
             'active'           => $hasOldInput ? (bool)$request->old('active') : $recurrence->active,
             'apply_rules'      => $hasOldInput ? (bool)$request->old('apply_rules') : $recurrence->apply_rules,
         ];
 
-        return view('recurring.edit', compact('recurrence', 'array', 'budgets', 'preFilled', 'currentRepetitionType', 'repetitionEnd', 'repetitionEnds'));
+        return view(
+            'recurring.edit',
+            compact('recurrence', 'array', 'weekendResponses', 'budgets', 'preFilled', 'currentRepetitionType', 'repetitionEnd', 'repetitionEnds')
+        );
     }
 
     /**

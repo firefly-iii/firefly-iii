@@ -87,26 +87,34 @@
                                             {% for rep in rt.recurrence_repetitions %}
                                                 <li>{{ rep.description }}
                                                 {% if rep.repetition_skip == 1 %}
-                                                    ({{ trans('firefly.recurring_skips_one')|lower }})
+                                                    ({{ trans('firefly.recurring_skips_one')|lower }}).
                                                 {% endif %}
                                                 {% if rep.repetition_skip > 1 %}
-                                                    ({{ trans('firefly.recurring_skips_more', {count: rep.repetition_skip})|lower }})
+                                                    ({{ trans('firefly.recurring_skips_more', {count: rep.repetition_skip})|lower }}).
                                                 {% endif %}
-
-
+                                                    {% if rep.weekend == 3 %}
+                                                        {{ 'will_jump_friday'|_ }}
+                                                    {% endif %}
+                                                    {% if rep.weekend == 4 %}
+                                                        {{ 'will_jump_monday'|_ }}
+                                                    {% endif %}
+                                                    {% if rep.weekend == 2 %}
+                                                        {{ 'except_weekends'|_ }}
+                                                    {% endif %}
                                                 </li>
                                             {% endfor %}
                                         </ul>
                                         <p>
                                             {% if null == rt.repeat_until and rt.repetitions == 0 %}
-                                                {{ 'recurring_repeats_forever'|_ }}
+                                                {{ 'recurring_repeats_forever'|_ }}.
                                             {% endif %}
                                             {% if null != rt.repeat_until and rt.repetitions == 0 %}
-                                                {{ trans('firefly.recurring_repeats_until', {date: rt.repeat_until.formatLocalized(monthAndDayFormat)}) }}
+                                                {{ trans('firefly.recurring_repeats_until', {date: rt.repeat_until.formatLocalized(monthAndDayFormat)}) }}.
                                             {% endif %}
                                             {% if null == rt.repeat_until and rt.repetitions != 0 %}
-                                                {{ trans('firefly.recurring_repeats_x_times', {count: rt.repetitions}) }}
+                                                {{ trans('firefly.recurring_repeats_x_times', {count: rt.repetitions}) }}.
                                             {% endif %}
+
                                         </p>
                                     </td>
                                 </tr>
