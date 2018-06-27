@@ -218,10 +218,13 @@ class RecurringRepository implements RecurringRepositoryInterface
                 // monday = 1
                 // sunday = 7
                 $mutator->addDay(); // always assume today has passed. TODO why?
+                Log::debug(sprintf('Add a day (not sure why), so mutator is now: %s', $mutator->format('Y-m-d')));
                 $dayOfWeek = (int)$repetition->repetition_moment;
+                Log::debug(sprintf('DoW in repetition is %d, in mutator is %d', $dayOfWeek, $mutator->dayOfWeekIso));
                 if ($mutator->dayOfWeekIso > $dayOfWeek) {
                     // day has already passed this week, add one week:
                     $mutator->addWeek();
+                    Log::debug(sprintf('Jump to next week, so mutator is now: %s', $mutator->format('Y-m-d')));
                 }
                 // today is wednesday (3), expected is friday (5): add two days.
                 // today is friday (5), expected is monday (1), subtract four days.
