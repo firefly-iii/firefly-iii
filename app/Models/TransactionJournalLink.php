@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Crypt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,6 +30,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class TransactionJournalLink.
+ *
+ * @property int                $id
+ * @property Carbon             $created_at
+ * @property Carbon             $updated_at
+ * @property string             $comment
+ * @property TransactionJournal $source
+ * @property TransactionJournal $destination
+ * @property LinkType           $linkType
+ * @property int                $link_type_id
+ * @property int                $source_id
+ * @property int                $destination_id
  */
 class TransactionJournalLink extends Model
 {

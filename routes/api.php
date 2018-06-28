@@ -144,6 +144,19 @@ Route::group(
 );
 
 Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'journal_links', 'as' => 'api.v1.journal_links.'],
+    function () {
+
+        // Journal Link API routes:
+        Route::get('', ['uses' => 'JournalLinkController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'JournalLinkController@store', 'as' => 'store']);
+        Route::get('{journalLink}', ['uses' => 'JournalLinkController@show', 'as' => 'show']);
+        Route::put('{journalLink}', ['uses' => 'JournalLinkController@update', 'as' => 'update']);
+        Route::delete('{journalLink}', ['uses' => 'JournalLinkController@delete', 'as' => 'delete']);
+    }
+);
+
+Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'currencies', 'as' => 'api.v1.currencies.'],
     function () {
 

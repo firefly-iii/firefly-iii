@@ -22,12 +22,21 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @property int $journalCount
+ * @property int    $journalCount
+ * @property string $inward
+ * @property string $outward
+ * @property string $name
+ * @property bool   $editable
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property int $id
  * Class LinkType
+ *
  */
 class LinkType extends Model
 {

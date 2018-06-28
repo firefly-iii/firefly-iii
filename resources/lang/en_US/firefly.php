@@ -1134,6 +1134,8 @@ return [
     'is (partially) refunded by_inward'     => 'is (partially) refunded by',
     'is (partially) paid for by_inward'     => 'is (partially) paid for by',
     'is (partially) reimbursed by_inward'   => 'is (partially) reimbursed by',
+    'inward_transaction'                    => 'Inward transaction',
+    'outward_transaction'                   => 'Outward transaction',
     'relates to_outward'                    => 'relates to',
     '(partially) refunds_outward'           => '(partially) refunds',
     '(partially) pays for_outward'          => '(partially) pays for',
