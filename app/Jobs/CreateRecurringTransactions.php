@@ -51,7 +51,7 @@ class CreateRecurringTransactions implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::debug('Now at start of CreateRecurringTransactions() job.');
+        Log::debug(sprintf('Now at start of CreateRecurringTransactions() job for %s.', $this->date->format('D d M Y')));
         $recurrences = $this->repository->getAll();
         Log::debug(sprintf('Count of collection is %d', $recurrences->count()));
 
@@ -125,9 +125,6 @@ class CreateRecurringTransactions implements ShouldQueue
         $startDate = clone $recurrence->first_date;
         if (null !== $recurrence->latest_date && $recurrence->latest_date->gte($startDate)) {
             $startDate = clone $recurrence->latest_date;
-            // jump to a day later.
-            $startDate->addDay();
-
         }
 
         return $startDate;
@@ -250,12 +247,19 @@ class CreateRecurringTransactions implements ShouldQueue
             );
 
             // start looping from $startDate to today perhaps we have a hit?
-            $occurrences = $this->repository->getOccurrencesInRange($repetition, $recurrence->first_date, $this->date);
+            // add two days to $this->date so we always include the weekend.
+            $includeWeekend = clone $this->date;
+            $includeWeekend->addDays(2);
+            $occurrences = $this->repository->getOccurrencesInRange($repetition, $recurrence->first_date, $includeWeekend);
             Log::debug(
                 sprintf(
-                    'Calculated %d occurrences between %s and %s', \count($occurrences), $recurrence->first_date->format('Y-m-d'), $this->date->format('Y-m-d')
+                    'Calculated %d occurrences between %s and %s',
+                    \count($occurrences),
+                    $recurrence->first_date->format('Y-m-d'),
+                    $includeWeekend->format('Y-m-d')
                 ), $this->debugArray($occurrences)
             );
+            unset($includeWeekend);
 
             $result     = $this->handleOccurrences($recurrence, $occurrences);
             $collection = $collection->merge($result);

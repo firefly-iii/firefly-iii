@@ -24,7 +24,8 @@ class RequestedReportOnJournals
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param int        $userId
+     * @param Collection $journals
      */
     public function __construct(int $userId, Collection $journals)
     {

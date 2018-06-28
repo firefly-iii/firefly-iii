@@ -25,9 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console;
 
 use Carbon\Carbon;
-use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Jobs\CreateRecurringTransactions;
-use FireflyIII\User;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -62,7 +60,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // create recurring transactions.
         $schedule->job(new CreateRecurringTransactions(new Carbon))->daily();
     }
 }
