@@ -47,6 +47,45 @@ class ExpandedForm
 {
     /**
      * @param string $name
+     * @param null   $options
+     *
+     * @return string
+     * @throws \Throwable
+     */
+    public function activeAssetAccountList(string $name, $value = null, array $options = []): string
+    {
+        // make repositories
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+
+        $assetAccounts   = $repository->getActiveAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $grouped         = [];
+        // group accounts:
+        /** @var Account $account */
+        foreach ($assetAccounts as $account) {
+            $balance    = app('steam')->balance($account, new Carbon);
+            $currencyId = (int)$account->getMeta('currency_id');
+            $currency   = $currencyRepos->findNull($currencyId);
+            $role       = $account->getMeta('accountRole');
+            if ('' === $role) {
+                $role = 'no_account_type'; // @codeCoverageIgnore
+            }
+            if (null === $currency) {
+                $currency = $defaultCurrency;
+            }
+
+            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
+        }
+
+        return $this->select($name, $grouped, $value, $options);
+    }
+
+    /**
+     * @param string $name
      * @param null   $value
      * @param array  $options
      *
@@ -101,7 +140,6 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param        $selected
      * @param null   $options
      *
      * @return string
@@ -263,7 +301,7 @@ class ExpandedForm
         // get all currencies:
         $list  = $currencyRepos->get();
         $array = [
-            0 => trans('firefly.no_currency')
+            0 => trans('firefly.no_currency'),
         ];
         /** @var TransactionCurrency $currency */
         foreach ($list as $currency) {
@@ -515,7 +553,7 @@ class ExpandedForm
      */
     public function optionsList(string $type, string $name): string
     {
-        $html          = view('form.options', compact('type', 'name'))->render();
+        $html = view('form.options', compact('type', 'name'))->render();
 
         return $html;
     }

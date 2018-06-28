@@ -42,12 +42,12 @@
 
                         {# show source if withdrawal or transfer #}
                         {% if preFilled.what == 'withdrawal' or preFilled.what == 'transfer' %}
-                            {{ ExpandedForm.assetAccountList('journal_source_account_id', preFilled.journal_source_account_id) }}
+                            {{ ExpandedForm.activeAssetAccountList('journal_source_account_id', preFilled.journal_source_account_id) }}
                         {% endif %}
 
                         {# show destination account id, if deposit (is asset): #}
                         {% if preFilled.what == 'deposit' or preFilled.what == 'transfer' %}
-                            {{ ExpandedForm.assetAccountList('journal_destination_account_id', preFilled.journal_destination_account_id) }}
+                            {{ ExpandedForm.activeAssetAccountList('journal_destination_account_id', preFilled.journal_destination_account_id) }}
                         {% endif %}
 
                         {# show amount and some helper text when making splits: #}
