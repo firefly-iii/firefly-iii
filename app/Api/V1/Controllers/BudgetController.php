@@ -162,12 +162,12 @@ class BudgetController extends Controller
     public function update(BudgetRequest $request, Budget $budget): JsonResponse
     {
         $data    = $request->getAll();
-        $bill    = $this->repository->update($budget, $data);
+        $budget  = $this->repository->update($budget, $data);
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($bill, new BudgetTransformer($this->parameters), 'budgets');
+        $resource = new Item($budget, new BudgetTransformer($this->parameters), 'budgets');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

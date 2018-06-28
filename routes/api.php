@@ -135,6 +135,15 @@ Route::group(
 );
 
 Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'cer', 'as' => 'api.v1.cer.'],
+    function () {
+
+        // Currency Exchange Rate API routes:
+        Route::get('', ['uses' => 'CurrencyExchangeRateController@index', 'as' => 'index']);
+    }
+);
+
+Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'currencies', 'as' => 'api.v1.currencies.'],
     function () {
 

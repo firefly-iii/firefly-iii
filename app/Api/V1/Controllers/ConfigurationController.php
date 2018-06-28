@@ -50,6 +50,7 @@ class ConfigurationController extends Controller
     /**
      * @param Request $request
      *
+     * @return JsonResponse
      * @throws FireflyException
      */
     public function update(Request $request): JsonResponse

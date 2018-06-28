@@ -161,13 +161,13 @@ class CategoryController extends Controller
      */
     public function update(CategoryRequest $request, Category $category): JsonResponse
     {
-        $data    = $request->getAll();
-        $bill    = $this->repository->update($category, $data);
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $data     = $request->getAll();
+        $category = $this->repository->update($category, $data);
+        $manager  = new Manager();
+        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($bill, new CategoryTransformer($this->parameters), 'categories');
+        $resource = new Item($category, new CategoryTransformer($this->parameters), 'categories');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

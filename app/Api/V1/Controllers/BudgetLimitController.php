@@ -191,9 +191,9 @@ class BudgetLimitController extends Controller
             throw new FireflyException('Unknown budget.');
         }
         $data['budget'] = $budget;
-        $budgetLimit = $this->repository->storeBudgetLimit($data);
-        $manager     = new Manager;
-        $baseUrl     = $request->getSchemeAndHttpHost() . '/api/v1';
+        $budgetLimit    = $this->repository->storeBudgetLimit($data);
+        $manager        = new Manager;
+        $baseUrl        = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         $resource = new Item($budgetLimit, new BudgetLimitTransformer($this->parameters), 'budget_limits');

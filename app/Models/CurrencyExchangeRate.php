@@ -22,12 +22,21 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class CurrencyExchange.
+ *
+ * @property int                 $id
+ * @property Carbon              $created_at
+ * @property Carbon              $updated_at
+ * @property TransactionCurrency $fromCurrency
+ * @property TransactionCurrency $toCurrency
+ * @property float               $rate
+ *
  */
 class CurrencyExchangeRate extends Model
 {
