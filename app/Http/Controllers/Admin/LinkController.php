@@ -112,7 +112,7 @@ class LinkController extends Controller
     public function destroy(Request $request, LinkTypeRepositoryInterface $repository, LinkType $linkType)
     {
         $name   = $linkType->name;
-        $moveTo = $repository->find((int)$request->get('move_link_type_before_delete'));
+        $moveTo = $repository->findNull((int)$request->get('move_link_type_before_delete'));
         $repository->destroy($linkType, $moveTo);
 
         $request->session()->flash('success', (string)trans('firefly.deleted_link_type', ['name' => $name]));

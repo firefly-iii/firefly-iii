@@ -157,6 +157,32 @@ Route::group(
 );
 
 Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'link_types', 'as' => 'api.v1.link_types.'],
+    function () {
+
+        // Link Type API routes:
+        Route::get('', ['uses' => 'LinkTypeController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'LinkTypeController@store', 'as' => 'store']);
+        Route::get('{linkType}', ['uses' => 'LinkTypeController@show', 'as' => 'show']);
+        Route::put('{linkType}', ['uses' => 'LinkTypeController@update', 'as' => 'update']);
+        Route::delete('{linkType}', ['uses' => 'LinkTypeController@delete', 'as' => 'delete']);
+    }
+);
+
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'piggy_banks', 'as' => 'api.v1.piggy_banks.'],
+    function () {
+
+        // Piggy Bank API routes:
+        Route::get('', ['uses' => 'PiggyBankController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'PiggyBankController@store', 'as' => 'store']);
+        Route::get('{piggyBank}', ['uses' => 'PiggyBankController@show', 'as' => 'show']);
+        Route::put('{piggyBank}', ['uses' => 'PiggyBankController@update', 'as' => 'update']);
+        Route::delete('{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'delete']);
+    }
+);
+
+Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'currencies', 'as' => 'api.v1.currencies.'],
     function () {
 

@@ -45,7 +45,7 @@ interface LinkTypeRepositoryInterface
      *
      * @return bool
      */
-    public function destroy(LinkType $linkType, LinkType $moveTo): bool;
+    public function destroy(LinkType $linkType, LinkType $moveTo = null): bool;
 
     /**
      * @param TransactionJournalLink $link
@@ -61,6 +61,13 @@ interface LinkTypeRepositoryInterface
      * @return LinkType
      */
     public function find(int $id): LinkType;
+
+    /**
+     * @param int $id
+     *
+     * @return LinkType|null
+     */
+    public function findNull(int $id): ?LinkType;
 
     /**
      * Find link type by name.

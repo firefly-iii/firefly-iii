@@ -57,9 +57,9 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      * @return bool
      * @throws \Exception
      */
-    public function destroy(LinkType $linkType, LinkType $moveTo): bool
+    public function destroy(LinkType $linkType, LinkType $moveTo = null): bool
     {
-        if (null !== $moveTo->id) {
+        if (null !== $moveTo) {
             TransactionJournalLink::where('link_type_id', $linkType->id)->update(['link_type_id' => $moveTo->id]);
         }
         $linkType->delete();
@@ -123,6 +123,16 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $opposingCount = TransactionJournalLink::whereDestinationId($two->id)->whereSourceId($one->id)->count();
 
         return $count + $opposingCount > 0;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return LinkType|null
+     */
+    public function findNull(int $id): ?LinkType
+    {
+        return LinkType::find($id);
     }
 
     /**
