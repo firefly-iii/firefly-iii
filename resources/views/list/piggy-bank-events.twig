@@ -23,10 +23,11 @@
             </td>
 
             <td style="text-align: right;">
+
                 {% if event.amount < 0 %}
-                    <span class="text-danger">{{ trans('firefly.removed_amount', {amount: (event.amount)|formatAmountPlain})|raw }}</span>
+                    <span class="text-danger">{{ trans('firefly.removed_amount', {amount: formatAmountByAccount(event.piggyBank.account, event.amount, false)})|raw }}</span>
                 {% else %}
-                    <span class="text-success">{{ trans('firefly.added_amount', {amount: (event.amount)|formatAmountPlain})|raw }}</span>
+                    <span class="text-success">{{ trans('firefly.added_amount', {amount: formatAmountByAccount(event.piggyBank.account, event.amount, false)})|raw }}</span>
                 {% endif %}
             </td>
         </tr>
