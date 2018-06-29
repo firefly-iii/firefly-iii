@@ -160,14 +160,22 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param string  $object
+     * @param PiggyBankRequest $request
+     * @param PiggyBank        $piggyBank
      *
      * @return JsonResponse
      */
-    public function update(Request $request, string $object): JsonResponse
+    public function update(PiggyBankRequest $request, PiggyBank $piggyBank): JsonResponse
     {
-        // todo replace code and replace request object.
+        $data    = $request->getAll();
+        $budget  = $this->repository->update($piggyBank, $data);
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $resource = new Item($budget, new PiggyBankTransformer($this->parameters), 'piggy_banks');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
     }
 }

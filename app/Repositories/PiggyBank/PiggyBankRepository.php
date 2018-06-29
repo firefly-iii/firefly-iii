@@ -478,7 +478,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         /** @var PiggyBank $piggyBank */
         $piggyBank = PiggyBank::create($data);
 
-        $this->updateNote($piggyBank, $data['note']);
+        $this->updateNote($piggyBank, $data['note']); // todo rename to 'notes'
 
         // repetition is auto created.
         $repetition = $this->getRepetition($piggyBank);
@@ -500,9 +500,9 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     {
         $piggyBank->name         = $data['name'];
         $piggyBank->account_id   = (int)$data['account_id'];
-        $piggyBank->targetamount = round($data['targetamount'], 2);
-        $piggyBank->targetdate   = $data['targetdate'];
-        $piggyBank->startdate    = $data['startdate'];
+        $piggyBank->targetamount = $data['targetamount'];
+        $piggyBank->targetdate   = $data['targetdate'] ?? $piggyBank->targetdate;
+        $piggyBank->startdate    = $data['startdate'] ?? $piggyBank->startdate;
 
         $piggyBank->save();
 

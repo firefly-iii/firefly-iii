@@ -78,8 +78,8 @@ class PiggyBankRequest extends Request
             case 'PUT':
             case 'PATCH':
                 /** @var PiggyBank $piggyBank */
-                $piggyBank     = $this->route()->parameter('piggyBank');
-                $rules['name'] = 'required|between:1,255|uniquePiggyBankForUser:' . $piggyBank->id;
+                $piggyBank               = $this->route()->parameter('piggyBank');
+                $rules['name']           = 'required|between:1,255|uniquePiggyBankForUser:' . $piggyBank->id;
                 break;
         }
 
