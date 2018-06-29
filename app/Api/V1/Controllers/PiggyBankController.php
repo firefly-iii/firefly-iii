@@ -23,8 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
+use FireflyIII\Api\V1\Requests\PiggyBankRequest;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
-use FireflyIII\Transformers\BudgetTransformer;
 use FireflyIII\Transformers\PiggyBankTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -33,8 +35,13 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
+use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
+/**
+ * TODO order up and down.
+ * Class PiggyBankController
+ */
 class PiggyBankController extends Controller
 {
 
@@ -59,13 +66,13 @@ class PiggyBankController extends Controller
     /**
      * Delete the resource.
      *
-     * @param string $object
+     * @param PiggyBank $piggyBank
      *
      * @return JsonResponse
      */
-    public function delete(string $object): JsonResponse
+    public function delete(PiggyBank $piggyBank): JsonResponse
     {
-        // todo delete object.
+        $this->repository->destroy($piggyBank);
 
         return response()->json([], 204);
     }
@@ -89,7 +96,7 @@ class PiggyBankController extends Controller
         // get list of budgets. Count it and split it.
         $collection = $this->repository->getPiggyBanks();
         $count      = $collection->count();
-        $piggyBanks= $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $piggyBanks = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
         $paginator = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
@@ -107,27 +114,48 @@ class PiggyBankController extends Controller
     /**
      * List single resource.
      *
-     * @param Request $request
-     * @param string  $object
+     * @param Request   $request
+     * @param PiggyBank $piggyBank
      *
      * @return JsonResponse
      */
-    public function show(Request $request, string $object): JsonResponse
+    public function show(Request $request, PiggyBank $piggyBank): JsonResponse
     {
-        // todo implement me.
+        $manager = new Manager();
+        // add include parameter:
+        $include = $request->get('include') ?? '';
+        $manager->parseIncludes($include);
+
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $resource = new Item($piggyBank, new PiggyBankTransformer($this->parameters), 'piggy_banks');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
     }
 
     /**
      * Store new object.
      *
-     * @param Request $request
+     * @param PiggyBankRequest $request
      *
      * @return JsonResponse
+     * @throws FireflyException
      */
-    public function store(Request $request): JsonResponse
+    public function store(PiggyBankRequest $request): JsonResponse
     {
-        // todo replace code and replace request object.
+        $piggyBank = $this->repository->store($request->getAll());
+        if (null !== $piggyBank) {
+            $manager = new Manager();
+            $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+            $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+            $resource = new Item($piggyBank, new PiggyBankTransformer($this->parameters), 'piggy_banks');
+
+            return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        }
+        throw new FireflyException('Could not store new piggy bank.'); // @codeCoverageIgnore
 
     }
 

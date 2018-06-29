@@ -33,12 +33,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class PiggyBank.
  *
- * @property Carbon $targetdate
- * @property Carbon $startdate
- * @property string $targetamount
- * @property int $id
- * @property string $name
+ * @property Carbon  $targetdate
+ * @property Carbon  $startdate
+ * @property string  $targetamount
+ * @property int     $id
+ * @property string  $name
  * @property Account $account
+ * @property Carbon  $updated_at
+ * @property Carbon  $created_at
+ * @property int     $order
+ * @property bool    $active
+ * @property int     $account_id
  *
  */
 class PiggyBank extends Model

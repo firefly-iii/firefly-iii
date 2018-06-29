@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\Model;
  * Class PiggyBankRepetition.
  *
  * @property string $currentamount
+ * @property Carbon $startdate
+ * @property Carbon $targetdate
  */
 class PiggyBankRepetition extends Model
 {

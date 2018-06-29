@@ -49,7 +49,10 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function addAmount(PiggyBank $piggyBank, string $amount): bool
     {
-        $repetition                = $piggyBank->currentRelevantRep();
+        $repetition = $this->getRepetition($piggyBank);
+        if (null === $repetition) {
+            return false;
+        }
         $currentAmount             = $repetition->currentamount ?? '0';
         $repetition->currentamount = bcadd($currentAmount, $amount);
         $repetition->save();
@@ -99,7 +102,11 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function canRemoveAmount(PiggyBank $piggyBank, string $amount): bool
     {
-        $savedSoFar = $piggyBank->currentRelevantRep()->currentamount;
+        $repetition = $this->getRepetition($piggyBank);
+        if (null === $repetition) {
+            return false;
+        }
+        $savedSoFar = $repetition->currentamount;
 
         return bccomp($amount, $savedSoFar) <= 0;
     }
@@ -171,6 +178,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     /**
      * @param int $piggyBankid
      *
+     * @deprecated
      * @return PiggyBank
      */
     public function find(int $piggyBankid): PiggyBank
@@ -268,7 +276,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         Log::debug(sprintf('Will add/remove %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
 
         // if piggy account matches source account, the amount is positive
-        if (\in_array($piggyBank->account_id, $sources)) {
+        if (\in_array($piggyBank->account_id, $sources, true)) {
             $amount = bcmul($amount, '-1');
             Log::debug(sprintf('Account #%d is the source, so will remove amount from piggy bank.', $piggyBank->account_id));
         }
@@ -438,8 +446,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     /**
      * set id of piggy bank.
      *
-     * @param int $piggyBankId
-     * @param int $order
+     * @param PiggyBank $piggyBank
+     * @param int       $order
      *
      * @return bool
      */
@@ -454,7 +462,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
@@ -471,6 +479,13 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         $piggyBank = PiggyBank::create($data);
 
         $this->updateNote($piggyBank, $data['note']);
+
+        // repetition is auto created.
+        $repetition = $this->getRepetition($piggyBank);
+        if (null !== $repetition && isset($data['current_amount'])) {
+            $repetition->currentamount = $data['current_amount'];
+            $repetition->save();
+        }
 
         return $piggyBank;
     }
@@ -495,7 +510,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
         // if the piggy bank is now smaller than the current relevant rep,
         // remove money from the rep.
-        $repetition = $piggyBank->currentRelevantRep();
+        $repetition = $this->getRepetition($piggyBank);
         if ($repetition->currentamount > $piggyBank->targetamount) {
             $diff = bcsub($piggyBank->targetamount, $repetition->currentamount);
             $this->createEvent($piggyBank, $diff);
