@@ -186,12 +186,23 @@ Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'preferences', 'as' => 'api.v1.preferences.'],
     function () {
 
-        // Piggy Bank API routes:
+        // Preference API routes:
         Route::get('', ['uses' => 'PreferenceController@index', 'as' => 'index']);
         Route::get('{preference}', ['uses' => 'PreferenceController@show', 'as' => 'show']);
         Route::put('{preference}', ['uses' => 'PreferenceController@update', 'as' => 'update']);
-        //        Route::post('', ['uses' => 'PiggyBankController@store', 'as' => 'store']);
-        //        Route::delete('{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'delete']);
+    }
+);
+
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'recurrences', 'as' => 'api.v1.recurrences.'],
+    function () {
+
+        // Recurrence API routes:
+        Route::get('', ['uses' => 'RecurrenceController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'RecurrenceController@store', 'as' => 'store']);
+        Route::get('{recurrence}', ['uses' => 'RecurrenceController@show', 'as' => 'show']);
+        Route::put('{recurrence}', ['uses' => 'RecurrenceController@update', 'as' => 'update']);
+        Route::delete('{recurrence}', ['uses' => 'RecurrenceController@delete', 'as' => 'delete']);
     }
 );
 
