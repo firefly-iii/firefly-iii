@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
+use FireflyIII\Api\V1\Requests\PreferenceRequest;
 use FireflyIII\Models\Preference;
 use FireflyIII\Transformers\PreferenceTransformer;
 use FireflyIII\User;
@@ -109,7 +110,7 @@ class PreferenceController extends Controller
     /**
      * List single resource.
      *
-     * @param Request $request
+     * @param Request    $request
      * @param Preference $preference
      *
      * @return JsonResponse
@@ -129,27 +130,42 @@ class PreferenceController extends Controller
     }
 
     /**
-     * Store new object.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function store(Request $request): JsonResponse
-    {
-        // todo replace code and replace request object.
-
-    }
-
-    /**
-     * @param Request $request
-     * @param string  $object
+     * @param PreferenceRequest $request
+     * @param Preference        $preference
      *
      * @return JsonResponse
      */
-    public function update(Request $request, string $object): JsonResponse
+    public function update(PreferenceRequest $request, Preference $preference): JsonResponse
     {
-        // todo replace code and replace request object.
+
+        $data     = $request->getAll();
+        $newValue = $data['data'];
+        switch ($preference->name) {
+            default:
+                break;
+            case 'transaction_journal_optional_fields':
+            case 'frontPageAccounts':
+                $newValue = explode(',', $data['data']);
+                break;
+            case 'listPageSize':
+                $newValue = (int)$data['data'];
+                break;
+            case 'customFiscalYear':
+            case 'twoFactorAuthEnabled':
+                $newValue = (int)$data['data'] === 1;
+                break;
+        }
+        $result = Preferences::set($preference->name, $newValue);
+
+        // create some objects:
+        $manager = new Manager;
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+
+        // present to user.
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $resource = new Item($result, new PreferenceTransformer($this->parameters), 'preferences');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
     }
 }

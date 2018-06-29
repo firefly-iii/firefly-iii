@@ -189,9 +189,8 @@ Route::group(
         // Piggy Bank API routes:
         Route::get('', ['uses' => 'PreferenceController@index', 'as' => 'index']);
         Route::get('{preference}', ['uses' => 'PreferenceController@show', 'as' => 'show']);
+        Route::put('{preference}', ['uses' => 'PreferenceController@update', 'as' => 'update']);
         //        Route::post('', ['uses' => 'PiggyBankController@store', 'as' => 'store']);
-
-        //        Route::put('{piggyBank}', ['uses' => 'PiggyBankController@update', 'as' => 'update']);
         //        Route::delete('{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'delete']);
     }
 );
