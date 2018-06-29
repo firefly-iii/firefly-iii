@@ -183,6 +183,20 @@ Route::group(
 );
 
 Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'preferences', 'as' => 'api.v1.preferences.'],
+    function () {
+
+        // Piggy Bank API routes:
+        Route::get('', ['uses' => 'PreferenceController@index', 'as' => 'index']);
+        Route::get('{preference}', ['uses' => 'PreferenceController@show', 'as' => 'show']);
+        //        Route::post('', ['uses' => 'PiggyBankController@store', 'as' => 'store']);
+
+        //        Route::put('{piggyBank}', ['uses' => 'PiggyBankController@update', 'as' => 'update']);
+        //        Route::delete('{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'delete']);
+    }
+);
+
+Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'currencies', 'as' => 'api.v1.currencies.'],
     function () {
 

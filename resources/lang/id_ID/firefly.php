@@ -1134,6 +1134,8 @@ return [
     'is (partially) refunded by_inward'     => '(sebagian) dikembalikan oleh',
     'is (partially) paid for by_inward'     => 'adalah (sebagian) dibayar oleh',
     'is (partially) reimbursed by_inward'   => '(sebagian) diganti oleh',
+    'inward_transaction'                    => 'Inward transaction',
+    'outward_transaction'                   => 'Outward transaction',
     'relates to_outward'                    => 'berhubungan dengan',
     '(partially) refunds_outward'           => '(sebagian) pengembalian uang',
     '(partially) pays for_outward'          => '(sebagian) membayar',

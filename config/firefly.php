@@ -270,6 +270,7 @@ return [
         'journalLink'       => \FireflyIII\Models\TransactionJournalLink::class,
         'currency'          => \FireflyIII\Models\TransactionCurrency::class,
         'piggyBank'         => \FireflyIII\Models\PiggyBank::class,
+        'preference'         => \FireflyIII\Models\Preference::class,
         'tj'                => \FireflyIII\Models\TransactionJournal::class,
         'tag'               => \FireflyIII\Models\Tag::class,
         'recurrence'        => \FireflyIII\Models\Recurrence::class,

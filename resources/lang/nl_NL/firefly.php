@@ -1134,6 +1134,8 @@ return [
     'is (partially) refunded by_inward'     => 'wordt (deels) terugbetaald door',
     'is (partially) paid for by_inward'     => 'wordt (deels) betaald door',
     'is (partially) reimbursed by_inward'   => 'wordt (deels) vergoed door',
+    'inward_transaction'                    => 'Actieve transactie',
+    'outward_transaction'                   => 'Passieve transactie',
     'relates to_outward'                    => 'gerelateerd aan',
     '(partially) refunds_outward'           => 'is een (gedeeltelijke) terugbetaling voor',
     '(partially) pays for_outward'          => 'betaalt (deels) voor',

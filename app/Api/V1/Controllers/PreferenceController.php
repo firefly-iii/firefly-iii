@@ -23,11 +23,22 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
+use FireflyIII\Models\Preference;
+use FireflyIII\Transformers\PreferenceTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use League\Fractal\Manager;
+use League\Fractal\Resource\Collection as FractalCollection;
+use League\Fractal\Resource\Item;
+use League\Fractal\Serializer\JsonApiSerializer;
+use Preferences;
 
-
+/**
+ *
+ * Class PreferenceController
+ */
 class PreferenceController extends Controller
 {
     public function __construct()
@@ -67,7 +78,31 @@ class PreferenceController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        // todo implement.
+        /** @var User $user */
+        $user        = auth()->user();
+        $available   = [
+            'language', 'customFiscalYear', 'fiscalYearStart', 'currencyPreference',
+            'transaction_journal_optional_fields', 'frontPageAccounts', 'viewRange',
+            'listPageSize, twoFactorAuthEnabled',
+        ];
+        $preferences = new Collection;
+        foreach ($available as $name) {
+            $pref = Preferences::getForUser($user, $name);
+            if (null !== $pref) {
+                $preferences->push($pref);
+            }
+        }
+
+        // create some objects:
+        $manager = new Manager;
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+
+        // present to user.
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $resource = new FractalCollection($preferences, new PreferenceTransformer($this->parameters), 'preferences');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+
 
     }
 
@@ -75,13 +110,21 @@ class PreferenceController extends Controller
      * List single resource.
      *
      * @param Request $request
-     * @param string  $object
+     * @param Preference $preference
      *
      * @return JsonResponse
      */
-    public function show(Request $request, string $object): JsonResponse
+    public function show(Request $request, Preference $preference): JsonResponse
     {
-        // todo implement me.
+        // create some objects:
+        $manager = new Manager;
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+
+        // present to user.
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $resource = new Item($preference, new PreferenceTransformer($this->parameters), 'preferences');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
     }
 
