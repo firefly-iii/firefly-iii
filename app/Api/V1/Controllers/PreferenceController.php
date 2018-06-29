@@ -57,20 +57,6 @@ class PreferenceController extends Controller
     }
 
     /**
-     * Delete the resource.
-     *
-     * @param string $object
-     *
-     * @return JsonResponse
-     */
-    public function delete(string $object): JsonResponse
-    {
-        // todo delete object.
-
-        return response()->json([], 204);
-    }
-
-    /**
      * List all of them.
      *
      * @param Request $request

@@ -75,9 +75,9 @@
                                                     {% if null != rtt['foreign_amount'] %}
                                                         ({{ formatAmountBySymbol(rtt['foreign_amount'],rtt['foreign_currency_symbol'],rtt['foreign_currency_dp']) }}),
                                                     {% endif %}
-                                                    <a href="{{ route('accounts.show', rtt['source_account_id']) }}">{{ rtt['source_account_name'] }}</a>
+                                                    <a href="{{ route('accounts.show', rtt['source_id']) }}">{{ rtt['source_name'] }}</a>
                                                     &rarr;
-                                                    <a href="{{ route('accounts.show', rtt['destination_account_id']) }}">{{ rtt['destination_account_name'] }}</a>
+                                                    <a href="{{ route('accounts.show', rtt['destination_id']) }}">{{ rtt['destination_name'] }}</a>
                                                 </li>
                                             {% endfor %}
                                         </ol>

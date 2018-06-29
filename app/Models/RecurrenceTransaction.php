@@ -35,8 +35,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property int                                    $transaction_currency_id,
  * @property int                                    $foreign_currency_id
- * @property int                                    $source_account_id
- * @property int                                    $destination_account_id
+ * @property int                                    $source_id
+ * @property int                                    $destination_id
  * @property string                                 $amount
  * @property string                                 $foreign_amount
  * @property string                                 $description
@@ -62,7 +62,7 @@ class RecurrenceTransaction extends Model
         ];
     /** @var array */
     protected $fillable
-        = ['recurrence_id', 'transaction_currency_id', 'foreign_currency_id', 'source_account_id', 'destination_account_id', 'amount', 'foreign_amount',
+        = ['recurrence_id', 'transaction_currency_id', 'foreign_currency_id', 'source_id', 'destination_id', 'amount', 'foreign_amount',
            'description'];
     /** @var string */
     protected $table = 'recurrences_transactions';

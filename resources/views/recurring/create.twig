@@ -89,16 +89,16 @@
                         {{ ExpandedForm.amountNoCurrency('amount', []) }}
 
                         {# source account if withdrawal, or if transfer: #}
-                        {{ ExpandedForm.activeAssetAccountList('source_account_id', null, {label: trans('form.asset_source_account')}) }}
+                        {{ ExpandedForm.activeAssetAccountList('source_id', null, {label: trans('form.asset_source_account')}) }}
 
                         {# source account name for deposits: #}
-                        {{ ExpandedForm.text('source_account_name', null, {label: trans('form.revenue_account')}) }}
+                        {{ ExpandedForm.text('source_name', null, {label: trans('form.revenue_account')}) }}
 
                         {# destination if deposit or transfer: #}
-                        {{ ExpandedForm.activeAssetAccountList('destination_account_id', null, {label: trans('form.asset_destination_account')} ) }}
+                        {{ ExpandedForm.activeAssetAccountList('destination_id', null, {label: trans('form.asset_destination_account')} ) }}
 
                         {# destination account name for withdrawals #}
-                        {{ ExpandedForm.text('destination_account_name', null, {label: trans('form.expense_account')}) }}
+                        {{ ExpandedForm.text('destination_name', null, {label: trans('form.expense_account')}) }}
                     </div>
                 </div>
             </div>

@@ -30,6 +30,7 @@ use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
 use FireflyIII\Services\Internal\Support\TransactionServiceTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
 use FireflyIII\User;
+use Log;
 
 /**
  * Class RecurrenceFactory
@@ -44,12 +45,17 @@ class RecurrenceFactory
     /**
      * @param array $data
      *
-     * @throws FireflyException
      * @return Recurrence
      */
-    public function create(array $data): Recurrence
+    public function create(array $data): ?Recurrence
     {
-        $type        = $this->findTransactionType(ucfirst($data['recurrence']['type']));
+        try {
+            $type = $this->findTransactionType(ucfirst($data['recurrence']['type']));
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+
+            return null;
+        }
         $repetitions = (int)$data['recurrence']['repetitions'];
         $recurrence  = new Recurrence(
             [

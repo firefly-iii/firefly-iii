@@ -156,15 +156,15 @@ function initializeAutoComplete() {
         );
     });
 
-    if ($('input[name="destination_account_name"]').length > 0) {
+    if ($('input[name="destination_name"]').length > 0) {
         $.getJSON('json/expense-accounts').done(function (data) {
-            $('input[name="destination_account_name"]').typeahead({source: data, autoSelect: false});
+            $('input[name="destination_name"]').typeahead({source: data, autoSelect: false});
         });
     }
 
-    if ($('input[name="source_account_name"]').length > 0) {
+    if ($('input[name="source_name"]').length > 0) {
         $.getJSON('json/revenue-accounts').done(function (data) {
-            $('input[name="source_account_name"]').typeahead({source: data, autoSelect: false});
+            $('input[name="source_name"]').typeahead({source: data, autoSelect: false});
         });
     }
 
@@ -209,16 +209,16 @@ function updateFormFields() {
 
     if (transactionType === 'withdrawal') {
         // hide source account name:
-        $('#source_account_name_holder').hide();
+        $('#source_name_holder').hide();
 
         // show source account ID:
-        $('#source_account_id_holder').show();
+        $('#source_id_holder').show();
 
         // show destination name:
-        $('#destination_account_name_holder').show();
+        $('#destination_name_holder').show();
 
         // hide destination ID:
-        $('#destination_account_id_holder').hide();
+        $('#destination_id_holder').hide();
 
         // show budget
         $('#budget_id_holder').show();
@@ -228,19 +228,19 @@ function updateFormFields() {
     }
 
     if (transactionType === 'deposit') {
-        $('#source_account_name_holder').show();
-        $('#source_account_id_holder').hide();
-        $('#destination_account_name_holder').hide();
-        $('#destination_account_id_holder').show();
+        $('#source_name_holder').show();
+        $('#source_id_holder').hide();
+        $('#destination_name_holder').hide();
+        $('#destination_id_holder').show();
         $('#budget_id_holder').hide();
         $('#piggy_bank_id_holder').hide();
     }
 
     if (transactionType === 'transfer') {
-        $('#source_account_name_holder').hide();
-        $('#source_account_id_holder').show();
-        $('#destination_account_name_holder').hide();
-        $('#destination_account_id_holder').show();
+        $('#source_name_holder').hide();
+        $('#source_id_holder').show();
+        $('#destination_name_holder').hide();
+        $('#destination_id_holder').show();
         $('#budget_id_holder').hide();
         $('#piggy_bank_id_holder').show();
     }

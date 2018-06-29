@@ -101,11 +101,11 @@
                         <tbody>
                         {% for transaction in array.transactions %}
                             <tr>
-                                <td data-value="{{ transaction.source_account_name }}">
-                                    <a href="{{ route('accounts.show', [transaction.source_account_id]) }}">{{ transaction.source_account_name }}</a>
+                                <td data-value="{{ transaction.source_name }}">
+                                    <a href="{{ route('accounts.show', [transaction.source_id]) }}">{{ transaction.source_name }}</a>
                                 </td>
-                                <td data-value="{{ transaction.destination_account_name }}">
-                                    <a href="{{ route('accounts.show', [transaction.destination_account_id]) }}">{{ transaction.destination_account_name }}</a>
+                                <td data-value="{{ transaction.destination_name }}">
+                                    <a href="{{ route('accounts.show', [transaction.destination_id]) }}">{{ transaction.destination_name }}</a>
                                 </td>
                                 <td>
                                     {{ formatAmountBySymbol(transaction.amount,transaction.currency_symbol,transaction.currency_dp) }}

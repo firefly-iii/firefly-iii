@@ -1,7 +1,6 @@
 <?php
-
 /**
- * TransactionRequest.php
+ * RecurrenceRequest.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -24,19 +23,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-use FireflyIII\Exceptions\FireflyException;
+use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Rules\BelongsUser;
 use Illuminate\Validation\Validator;
-
+use InvalidArgumentException;
 
 /**
- * Class TransactionRequest
+ * Class RecurrenceRequest
  */
-class TransactionRequest extends Request
+class RecurrenceRequest extends Request
 {
     /**
      * @return bool
@@ -52,55 +50,68 @@ class TransactionRequest extends Request
      */
     public function getAll(): array
     {
-        $data = [
-            // basic fields for journal:
-            'type'               => $this->string('type'),
-            'date'               => $this->date('date'),
-            'description'        => $this->string('description'),
-            'piggy_bank_id'      => $this->integer('piggy_bank_id'),
-            'piggy_bank_name'    => $this->string('piggy_bank_name'),
-            'bill_id'            => $this->integer('bill_id'),
-            'bill_name'          => $this->string('bill_name'),
-            'tags'               => explode(',', $this->string('tags')),
-
-            // then, custom fields for journal
-            'interest_date'      => $this->date('interest_date'),
-            'book_date'          => $this->date('book_date'),
-            'process_date'       => $this->date('process_date'),
-            'due_date'           => $this->date('due_date'),
-            'payment_date'       => $this->date('payment_date'),
-            'invoice_date'       => $this->date('invoice_date'),
-            'internal_reference' => $this->string('internal_reference'),
-            'notes'              => $this->string('notes'),
-
-            // then, transactions (see below).
-            'transactions'       => [],
-
+        $return = [
+            'recurrence'   => [
+                'type'         => $this->string('type'),
+                'title'        => $this->string('title'),
+                'description'  => $this->string('description'),
+                'first_date'   => $this->date('first_date'),
+                'repeat_until' => $this->date('repeat_until'),
+                'repetitions'  => $this->integer('nr_of_repetitions'),
+                'apply_rules'  => $this->boolean('apply_rules'),
+                'active'       => $this->boolean('active'),
+            ],
+            'meta'         => [
+                'piggy_bank_id'   => $this->integer('piggy_bank_id'),
+                'piggy_bank_name' => $this->string('piggy_bank_name'),
+                'tags'               => explode(',', $this->string('tags')),
+            ],
+            'transactions' => [],
+            'repetitions'  => [],
         ];
-        foreach ($this->get('transactions') as $index => $transaction) {
-            $array                  = [
-                'description'           => $transaction['description'] ?? null,
+
+        // repetition data:
+        /** @var array $repetitions */
+        $repetitions = $this->get('repetitions');
+        /** @var array $repetition */
+        foreach ($repetitions as $repetition) {
+            $return['repetitions'][] = [
+                'type'    => $repetition['type'],
+                'moment'  => $repetition['moment'],
+                'skip'    => (int)$repetition['skip'],
+                'weekend' => (int)$repetition['weekend'],
+            ];
+        }
+        // transaction data:
+        /** @var array $transactions */
+        $transactions = $this->get('transactions');
+        /** @var array $transaction */
+        foreach ($transactions as $transaction) {
+            $return['transactions'][] = [
                 'amount'                => $transaction['amount'],
+
                 'currency_id'           => isset($transaction['currency_id']) ? (int)$transaction['currency_id'] : null,
                 'currency_code'         => $transaction['currency_code'] ?? null,
+
                 'foreign_amount'        => $transaction['foreign_amount'] ?? null,
                 'foreign_currency_id'   => isset($transaction['foreign_currency_id']) ? (int)$transaction['foreign_currency_id'] : null,
                 'foreign_currency_code' => $transaction['foreign_currency_code'] ?? null,
+
                 'budget_id'             => isset($transaction['budget_id']) ? (int)$transaction['budget_id'] : null,
                 'budget_name'           => $transaction['budget_name'] ?? null,
                 'category_id'           => isset($transaction['category_id']) ? (int)$transaction['category_id'] : null,
                 'category_name'         => $transaction['category_name'] ?? null,
+
                 'source_id'             => isset($transaction['source_id']) ? (int)$transaction['source_id'] : null,
                 'source_name'           => isset($transaction['source_name']) ? (string)$transaction['source_name'] : null,
                 'destination_id'        => isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null,
                 'destination_name'      => isset($transaction['destination_name']) ? (string)$transaction['destination_name'] : null,
-                'reconciled'            => $transaction['reconciled'] ?? false,
-                'identifier'            => $index,
+
+                'description'               => $transaction['description'],
             ];
-            $data['transactions'][] = $array;
         }
 
-        return $data;
+        return $return;
     }
 
     /**
@@ -108,59 +119,44 @@ class TransactionRequest extends Request
      */
     public function rules(): array
     {
-        $rules = [
-            // basic fields for journal:
-            'type'                                 => 'required|in:withdrawal,deposit,transfer',
-            'date'                                 => 'required|date',
-            'description'                          => 'between:1,255',
-            'piggy_bank_id'                        => ['numeric', 'nullable', 'mustExist:piggy_banks,id', new BelongsUser],
-            'piggy_bank_name'                      => ['between:1,255', 'nullable', new BelongsUser],
-            'bill_id'                              => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser],
-            'bill_name'                            => ['between:1,255', 'nullable', new BelongsUser],
-            'tags'                                 => 'between:1,255',
+        $today = new Carbon;
+        $today->addDay();
 
-            // then, custom fields for journal
-            'interest_date'                        => 'date|nullable',
-            'book_date'                            => 'date|nullable',
-            'process_date'                         => 'date|nullable',
-            'due_date'                             => 'date|nullable',
-            'payment_date'                         => 'date|nullable',
-            'invoice_date'                         => 'date|nullable',
-            'internal_reference'                   => 'min:1,max:255|nullable',
-            'notes'                                => 'min:1,max:50000|nullable',
+        return [
+            'type'                                 => 'required|in:withdrawal,transfer,deposit',
+            'title'                                => 'required|between:1,255',
+            'description'                          => 'between:1,65000',
+            'first_date'                           => sprintf('required|date|after:%s', $today->format('Y-m-d')),
+            'repeat_until'                         => sprintf('date|after:%s', $today->format('Y-m-d')),
+            'nr_of_repetitions'                    => 'numeric|between:1,31',
+            'apply_rules'                          => 'required|boolean',
+            'active'                               => 'required|boolean',
 
-            // transaction rules (in array for splits):
-            'transactions.*.description'           => 'nullable|between:1,255',
-            'transactions.*.amount'                => 'required|numeric|more:0',
+            // rules for meta values:
+            'tags'                                 => 'between:1,64000',
+            'piggy_bank_id'                        => 'numeric',
+
+            // rules for repetitions.
+            'repetitions.*.type'                   => 'required|in:daily,weekly,ndom,monthly,yearly',
+            'repetitions.*.moment'                 => 'between:0,10',
+            'repetitions.*.skip'                   => 'required|between:0,31',
+            'repetitions.*.weekend'                => 'required|between:1,4',
+
+            // rules for transactions.
             'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id|required_without:transactions.*.currency_code',
             'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code|required_without:transactions.*.currency_id',
             'transactions.*.foreign_amount'        => 'numeric|more:0',
             'transactions.*.foreign_currency_id'   => 'numeric|exists:transaction_currencies,id',
             'transactions.*.foreign_currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
             'transactions.*.budget_id'             => ['mustExist:budgets,id', new BelongsUser],
-            'transactions.*.budget_name'           => ['between:1,255', 'nullable', new BelongsUser],
-            'transactions.*.category_id'           => ['mustExist:categories,id', new BelongsUser],
             'transactions.*.category_name'         => 'between:1,255|nullable',
-            'transactions.*.reconciled'            => 'boolean|nullable',
-            // basic rules will be expanded later.
             'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser],
             'transactions.*.source_name'           => 'between:1,255|nullable',
             'transactions.*.destination_id'        => ['numeric', 'nullable', new BelongsUser],
             'transactions.*.destination_name'      => 'between:1,255|nullable',
+            'transactions.*.amount'                => 'required|numeric|more:0',
+            'transactions.*.description'           => 'required|between:1,255',
         ];
-
-        switch ($this->method()) {
-            default:
-                break;
-            case 'PUT':
-            case 'PATCH':
-                unset($rules['type'], $rules['piggy_bank_id'], $rules['piggy_bank_name']);
-                break;
-        }
-
-        return $rules;
-
-
     }
 
     /**
@@ -175,12 +171,11 @@ class TransactionRequest extends Request
         $validator->after(
             function (Validator $validator) {
                 $this->atLeastOneTransaction($validator);
-                $this->checkValidDescriptions($validator);
-                $this->equalToJournalDescription($validator);
-                $this->emptySplitDescriptions($validator);
+                $this->atLeastOneRepetition($validator);
+                $this->validRepeatsUntil($validator);
+                $this->validRepetitionMoment($validator);
                 $this->foreignCurrencyInformation($validator);
                 $this->validateAccountInformation($validator);
-                $this->validateSplitAccounts($validator);
             }
         );
     }
@@ -200,11 +195,10 @@ class TransactionRequest extends Request
      */
     protected function assetAccountExists(Validator $validator, ?int $accountId, ?string $accountName, string $idField, string $nameField): ?Account
     {
-
         $accountId   = (int)$accountId;
         $accountName = (string)$accountName;
         // both empty? hard exit.
-        if ($accountId < 1 && \strlen($accountName) === 0) {
+        if ($accountId < 1 && '' === $accountName) {
             $validator->errors()->add($idField, trans('validation.filled', ['attribute' => $idField]));
 
             return null;
@@ -238,6 +232,21 @@ class TransactionRequest extends Request
     }
 
     /**
+     * Adds an error to the validator when there are no repetitions in the array of data.
+     *
+     * @param Validator $validator
+     */
+    protected function atLeastOneRepetition(Validator $validator): void
+    {
+        $data        = $validator->getData();
+        $repetitions = $data['repetitions'] ?? [];
+        // need at least one transaction
+        if (\count($repetitions) === 0) {
+            $validator->errors()->add('description', trans('validation.at_least_one_repetition'));
+        }
+    }
+
+    /**
      * Adds an error to the validator when there are no transactions in the array of data.
      *
      * @param Validator $validator
@@ -253,74 +262,7 @@ class TransactionRequest extends Request
     }
 
     /**
-     * Adds an error to the "description" field when the user has submitted no descriptions and no
-     * journal description.
-     *
-     * @param Validator $validator
-     */
-    protected function checkValidDescriptions(Validator $validator): void
-    {
-        $data               = $validator->getData();
-        $transactions       = $data['transactions'] ?? [];
-        $journalDescription = (string)($data['description'] ?? '');
-        $validDescriptions  = 0;
-        foreach ($transactions as $index => $transaction) {
-            if (\strlen((string)($transaction['description'] ?? '')) > 0) {
-                $validDescriptions++;
-            }
-        }
-
-        // no valid descriptions and empty journal description? error.
-        if ($validDescriptions === 0 && \strlen($journalDescription) === 0) {
-            $validator->errors()->add('description', trans('validation.filled', ['attribute' => trans('validation.attributes.description')]));
-        }
-
-    }
-
-    /**
-     * Adds an error to the validator when the user submits a split transaction (more than 1 transactions)
-     * but does not give them a description.
-     *
-     * @param Validator $validator
-     */
-    protected function emptySplitDescriptions(Validator $validator): void
-    {
-        $data         = $validator->getData();
-        $transactions = $data['transactions'] ?? [];
-        foreach ($transactions as $index => $transaction) {
-            $description = (string)($transaction['description'] ?? '');
-            // filled description is mandatory for split transactions.
-            if (\count($transactions) > 1 && \strlen($description) === 0) {
-                $validator->errors()->add(
-                    'transactions.' . $index . '.description',
-                    trans('validation.filled', ['attribute' => trans('validation.attributes.transaction_description')])
-                );
-            }
-        }
-    }
-
-    /**
-     * Adds an error to the validator when any transaction descriptions are equal to the journal description.
-     *
-     * @param Validator $validator
-     */
-    protected function equalToJournalDescription(Validator $validator): void
-    {
-        $data               = $validator->getData();
-        $transactions       = $data['transactions'] ?? [];
-        $journalDescription = (string)($data['description'] ?? '');
-        foreach ($transactions as $index => $transaction) {
-            $description = (string)($transaction['description'] ?? '');
-            // description cannot be equal to journal description.
-            if ($description === $journalDescription) {
-                $validator->errors()->add('transactions.' . $index . '.description', trans('validation.equal_description'));
-            }
-        }
-    }
-
-    /**
      * TODO can be made a rule?
-     *
      * If the transactions contain foreign amounts, there must also be foreign currency information.
      *
      * @param Validator $validator
@@ -389,25 +331,18 @@ class TransactionRequest extends Request
     }
 
     /**
+     * TODO can be a rule?
+     *
      * Validates the given account information. Switches on given transaction type.
      *
      * @param Validator $validator
-     *
-     * @throws FireflyException
      */
     protected function validateAccountInformation(Validator $validator): void
     {
-        $data         = $validator->getData();
-        $transactions = $data['transactions'] ?? [];
-        if (!isset($data['type'])) {
-            // the journal may exist in the request:
-            /** @var Transaction $transaction */
-            $transaction = $this->route()->parameter('transaction');
-            if (null === $transaction) {
-                return; // @codeCoverageIgnore
-            }
-            $data['type'] = strtolower($transaction->transactionJournal->transactionType->type);
-        }
+        $data            = $validator->getData();
+        $transactions    = $data['transactions'] ?? [];
+        $idField         = 'description';
+        $transactionType = $data['type'] ?? 'false';
         foreach ($transactions as $index => $transaction) {
             $sourceId           = isset($transaction['source_id']) ? (int)$transaction['source_id'] : null;
             $sourceName         = $transaction['source_name'] ?? null;
@@ -415,7 +350,7 @@ class TransactionRequest extends Request
             $destinationName    = $transaction['destination_name'] ?? null;
             $sourceAccount      = null;
             $destinationAccount = null;
-            switch ($data['type']) {
+            switch ($transactionType) {
                 case 'withdrawal':
                     $idField            = 'transactions.' . $index . '.source_id';
                     $nameField          = 'transactions.' . $index . '.source_name';
@@ -441,11 +376,9 @@ class TransactionRequest extends Request
                     $destinationAccount = $this->assetAccountExists($validator, $destinationId, $destinationName, $idField, $nameField);
                     break;
                 default:
-                    // @codeCoverageIgnoreStart
-                    throw new FireflyException(
-                        sprintf('The validator cannot handle transaction type "%s" in validateAccountInformation().', $data['type'])
-                    );
-                // @codeCoverageIgnoreEnd
+                    $validator->errors()->add($idField, trans('validation.invalid_account_info'));
+
+                    return;
 
             }
             // add some errors in case of same account submitted:
@@ -457,64 +390,91 @@ class TransactionRequest extends Request
 
     /**
      * @param Validator $validator
-     *
-     * @throws FireflyException
      */
-    protected function validateSplitAccounts(Validator $validator): void
+    private function validRepeatsUntil(Validator $validator): void
     {
-        $data  = $validator->getData();
-        $count = isset($data['transactions']) ? \count($data['transactions']) : 0;
-        if ($count < 2) {
+        $data        = $validator->getData();
+        $repetitions = $data['nr_of_repetitions'] ?? null;
+        $repeatUntil = $data['repeat_until'] ?? null;
+        if (null !== $repetitions && null !== $repeatUntil) {
+            // expect a date OR count:
+            $validator->errors()->add('repeat_until', trans('validation.require_repeat_until'));
+            $validator->errors()->add('repetitions', trans('validation.require_repeat_until'));
+
             return;
-        }
-        // this is pretty much impossible:
-        // @codeCoverageIgnoreStart
-        if (!isset($data['type'])) {
-            // the journal may exist in the request:
-            /** @var Transaction $transaction */
-            $transaction = $this->route()->parameter('transaction');
-            if (null === $transaction) {
-                return;
-            }
-            $data['type'] = strtolower($transaction->transactionJournal->transactionType->type);
-        }
-        // @codeCoverageIgnoreEnd
-
-        // collect all source ID's and destination ID's, if present:
-        $sources      = [];
-        $destinations = [];
-
-        foreach ($data['transactions'] as $transaction) {
-            $sources[]      = isset($transaction['source_id']) ? (int)$transaction['source_id'] : 0;
-            $destinations[] = isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : 0;
-        }
-        $destinations = array_unique($destinations);
-        $sources      = array_unique($sources);
-        // switch on type:
-        switch ($data['type']) {
-            case 'withdrawal':
-                if (\count($sources) > 1) {
-                    $validator->errors()->add('transactions.0.source_id', trans('validation.all_accounts_equal'));
-                }
-                break;
-            case 'deposit':
-                if (\count($destinations) > 1) {
-                    $validator->errors()->add('transactions.0.destination_id', trans('validation.all_accounts_equal'));
-                }
-                break;
-            case 'transfer':
-                if (\count($sources) > 1 || \count($destinations) > 1) {
-                    $validator->errors()->add('transactions.0.source_id', trans('validation.all_accounts_equal'));
-                    $validator->errors()->add('transactions.0.destination_id', trans('validation.all_accounts_equal'));
-                }
-                break;
-            default:
-                // @codeCoverageIgnoreStart
-                throw new FireflyException(
-                    sprintf('The validator cannot handle transaction type "%s" in validateSplitAccounts().', $data['type'])
-                );
-            // @codeCoverageIgnoreEnd
         }
     }
 
+    /**
+     * TODO merge this in a rule somehow.
+     *
+     * @param Validator $validator
+     */
+    private function validRepetitionMoment(Validator $validator): void
+    {
+        $data        = $validator->getData();
+        $repetitions = $data['repetitions'] ?? [];
+        /**
+         * @var int   $index
+         * @var array $repetition
+         */
+        foreach ($repetitions as $index => $repetition) {
+            switch ($repetition['type']) {
+                default:
+                    $validator->errors()->add(sprintf('repetitions.%d.type', $index), trans('validation.valid_recurrence_rep_type'));
+
+                    return;
+                case 'daily':
+                    if ('' !== (string)$repetition['moment']) {
+                        $validator->errors()->add(sprintf('repetitions.%d.moment', $index), trans('validation.valid_recurrence_rep_moment'));
+                    }
+
+                    return;
+                case 'monthly':
+                    $dayOfMonth = (int)$repetition['moment'];
+                    if ($dayOfMonth < 1 || $dayOfMonth > 31) {
+                        $validator->errors()->add(sprintf('repetitions.%d.moment', $index), trans('validation.valid_recurrence_rep_moment'));
+                    }
+
+                    return;
+                case 'ndom':
+                    $parameters = explode(',', $repetition['moment']);
+                    if (\count($parameters) !== 2) {
+                        $validator->errors()->add(sprintf('repetitions.%d.moment', $index), trans('validation.valid_recurrence_rep_moment'));
+
+                        return;
+                    }
+                    $nthDay    = (int)($parameters[0] ?? 0.0);
+                    $dayOfWeek = (int)($parameters[1] ?? 0.0);
+                    if ($nthDay < 1 || $nthDay > 5) {
+                        $validator->errors()->add(sprintf('repetitions.%d.moment', $index), trans('validation.valid_recurrence_rep_moment'));
+
+                        return;
+                    }
+                    if ($dayOfWeek < 1 || $dayOfWeek > 7) {
+                        $validator->errors()->add(sprintf('repetitions.%d.moment', $index), trans('validation.valid_recurrence_rep_moment'));
+
+                        return;
+                    }
+
+                    return;
+                case 'weekly':
+                    $dayOfWeek = (int)$repetition['moment'];
+                    if ($dayOfWeek < 1 || $dayOfWeek > 7) {
+                        $validator->errors()->add(sprintf('repetitions.%d.moment', $index), trans('validation.valid_recurrence_rep_moment'));
+
+                        return;
+                    }
+                    break;
+                case 'yearly':
+                    try {
+                        Carbon::createFromFormat('Y-m-d', $repetition['moment']);
+                    } catch (InvalidArgumentException $e) {
+                        $validator->errors()->add(sprintf('repetitions.%d.moment', $index), trans('validation.valid_recurrence_rep_moment'));
+
+                        return;
+                    }
+            }
+        }
+    }
 }

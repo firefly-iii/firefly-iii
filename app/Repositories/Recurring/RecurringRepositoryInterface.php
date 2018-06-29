@@ -155,7 +155,6 @@ interface RecurringRepositoryInterface
      *
      * @param array $data
      *
-     * @throws FireflyException
      * @return Recurrence
      */
     public function store(array $data): Recurrence;

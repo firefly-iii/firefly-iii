@@ -66,8 +66,6 @@ trait RecurringTransactionTrait
     /**
      * @param Recurrence $recurrence
      * @param array      $transactions
-     *
-     * @throws FireflyException
      */
     public function createTransactions(Recurrence $recurrence, array $transactions): void
     {
@@ -76,19 +74,17 @@ trait RecurringTransactionTrait
             $source      = null;
             $destination = null;
             switch ($recurrence->transactionType->type) {
-                default:
-                    throw new FireflyException(sprintf('Cannot create "%s".', $recurrence->transactionType->type));
                 case TransactionType::WITHDRAWAL:
-                    $source      = $this->findAccount(AccountType::ASSET, $array['source_account_id'], null);
-                    $destination = $this->findAccount(AccountType::EXPENSE, null, $array['destination_account_name']);
+                    $source      = $this->findAccount(AccountType::ASSET, $array['source_id'], $array['source_name'] ?? null);
+                    $destination = $this->findAccount(AccountType::EXPENSE, $array['destination_id'] ?? null, $array['destination_name']);
                     break;
                 case TransactionType::DEPOSIT:
-                    $source      = $this->findAccount(AccountType::REVENUE, null, $array['source_account_name']);
-                    $destination = $this->findAccount(AccountType::ASSET, $array['destination_account_id'], null);
+                    $source      = $this->findAccount(AccountType::REVENUE, $array['source_id'] ?? null, $array['source_name']);
+                    $destination = $this->findAccount(AccountType::ASSET, $array['destination_id'], $array['destination_name'] ?? null);
                     break;
                 case TransactionType::TRANSFER:
-                    $source      = $this->findAccount(AccountType::ASSET, $array['source_account_id'], null);
-                    $destination = $this->findAccount(AccountType::ASSET, $array['destination_account_id'], null);
+                    $source      = $this->findAccount(AccountType::ASSET, $array['source_id'], $array['source_name'] ?? null);
+                    $destination = $this->findAccount(AccountType::ASSET, $array['destination_id'], $array['destination_name'] ?? null);
                     break;
             }
 
@@ -96,9 +92,9 @@ trait RecurringTransactionTrait
                 [
                     'recurrence_id'           => $recurrence->id,
                     'transaction_currency_id' => $array['transaction_currency_id'],
-                    'foreign_currency_id'     => '' === (string)$array['foreign_amount'] ? null : $array['foreign_currency_id'],
-                    'source_account_id'       => $source->id,
-                    'destination_account_id'  => $destination->id,
+                    'foreign_currency_id'     => '' === (string)$array['foreign_currency_id'] ? null : $array['foreign_currency_id'],
+                    'source_id'       => $source->id,
+                    'destination_id'  => $destination->id,
                     'amount'                  => $array['amount'],
                     'foreign_amount'          => '' === (string)$array['foreign_amount'] ? null : (string)$array['foreign_amount'],
                     'description'             => $array['description'],

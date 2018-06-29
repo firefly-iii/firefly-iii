@@ -66,8 +66,8 @@ class ChangesForV475 extends Migration
             $table->integer('recurrence_id', false, true);
             $table->integer('transaction_currency_id', false, true);
             $table->integer('foreign_currency_id', false, true)->nullable();
-            $table->integer('source_account_id', false, true);
-            $table->integer('destination_account_id', false, true);
+            $table->integer('source_id', false, true);
+            $table->integer('destination_id', false, true);
 
             $table->decimal('amount', 22, 12);
             $table->decimal('foreign_amount', 22, 12)->nullable();
@@ -77,8 +77,8 @@ class ChangesForV475 extends Migration
             $table->foreign('recurrence_id')->references('id')->on('recurrences')->onDelete('cascade');
             $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
             $table->foreign('foreign_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
-            $table->foreign('source_account_id')->references('id')->on('accounts')->onDelete('cascade');
-            $table->foreign('destination_account_id')->references('id')->on('accounts')->onDelete('cascade');
+            $table->foreign('source_id')->references('id')->on('accounts')->onDelete('cascade');
+            $table->foreign('destination_id')->references('id')->on('accounts')->onDelete('cascade');
         }
         );
 

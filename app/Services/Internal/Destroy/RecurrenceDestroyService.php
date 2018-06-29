@@ -25,6 +25,7 @@ namespace FireflyIII\Services\Internal\Destroy;
 
 use Exception;
 use FireflyIII\Models\Recurrence;
+use FireflyIII\Models\RecurrenceTransaction;
 use Log;
 
 /**
@@ -39,6 +40,19 @@ class RecurrenceDestroyService
     public function destroy(Recurrence $recurrence): void
     {
         try {
+            // delete all meta data
+            $recurrence->recurrenceMeta()->delete();
+
+            // delete all transactions.
+            /** @var RecurrenceTransaction $transaction */
+            foreach($recurrence->recurrenceTransactions as $transaction) {
+                $transaction->recurrenceTransactionMeta()->delete();
+                $transaction->delete();
+            }
+            // delete all repetitions
+            $recurrence->recurrenceRepetitions()->delete();
+
+            // delete recurrence
             $recurrence->delete();
         } catch (Exception $e) { // @codeCoverageIgnore
             Log::error(sprintf('Could not delete recurrence: %s', $e->getMessage())); // @codeCoverageIgnore

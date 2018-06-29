@@ -23,8 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
+use FireflyIII\Api\V1\Requests\RecurrenceRequest;
+use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
-use FireflyIII\Transformers\PiggyBankTransformer;
 use FireflyIII\Transformers\RecurrenceTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -33,6 +34,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
+use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
@@ -68,9 +70,9 @@ class RecurrenceController extends Controller
      *
      * @return JsonResponse
      */
-    public function delete(string $object): JsonResponse
+    public function delete(Recurrence $recurrence): JsonResponse
     {
-        // todo delete object.
+        $this->repository->destroy($recurrence);
 
         return response()->json([], 204);
     }
@@ -112,28 +114,44 @@ class RecurrenceController extends Controller
     /**
      * List single resource.
      *
-     * @param Request $request
-     * @param string  $object
+     * @param Request    $request
+     * @param Recurrence $recurrence
      *
      * @return JsonResponse
      */
-    public function show(Request $request, string $object): JsonResponse
+    public function show(Request $request, Recurrence $recurrence): JsonResponse
     {
-        // todo implement me.
+        $manager = new Manager();
+        // add include parameter:
+        $include = $request->get('include') ?? '';
+        $manager->parseIncludes($include);
+
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $resource = new Item($recurrence, new RecurrenceTransformer($this->parameters), 'recurrences');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+
 
     }
 
     /**
      * Store new object.
      *
-     * @param Request $request
+     * @param RecurrenceRequest $request
      *
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(RecurrenceRequest $request): JsonResponse
     {
-        // todo replace code and replace request object.
+        $recurrence = $this->repository->store($request->getAll());
+        $manager    = new Manager();
+        $baseUrl    = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $resource = new Item($recurrence, new RecurrenceTransformer($this->parameters), 'recurrences');
 
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**
