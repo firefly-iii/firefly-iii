@@ -225,6 +225,8 @@ class FireflyValidator extends Validator
     }
 
     /**
+     * TODO lots of if-else because of API calls.
+     *
      * @param $attribute
      *
      * @return bool
@@ -234,12 +236,27 @@ class FireflyValidator extends Validator
         // get the index from a string like "rule-action-value.2".
         $parts = explode('.', $attribute);
         $index = $parts[\count($parts) - 1];
+        if ($index === 'value') {
+            // user is coming from API.
+            $index = $parts[\count($parts) - 2];
+        }
+        $index = (int)$index;
+
+        // get actions from $this->data
+        $actions = [];
+        if (isset($this->data['rule-action']) && \is_array($this->data['rule-action'])) {
+            $actions = $this->data['rule-action'];
+        }
+        if (isset($this->data['rule-actions']) && \is_array($this->data['rule-actions'])) {
+            $actions = $this->data['rule-actions'];
+        }
+
+
         // loop all rule-actions.
         // check if rule-action-value matches the thing.
-
-        if (\is_array($this->data['rule-action'])) {
-            $name  = $this->data['rule-action'][$index] ?? 'invalid';
-            $value = $this->data['rule-action-value'][$index] ?? false;
+        if (\is_array($actions)) {
+            $name  = $this->getRuleActionName($index);
+            $value = $this->getRuleActionValue($index);
             switch ($name) {
                 default:
 
@@ -271,6 +288,8 @@ class FireflyValidator extends Validator
     }
 
     /**
+     * TODO This method uses a lot of if-then to handle the API calls as well. Fix.
+     *
      * @param $attribute
      *
      * @return bool
@@ -280,20 +299,60 @@ class FireflyValidator extends Validator
         // get the index from a string like "rule-trigger-value.2".
         $parts = explode('.', $attribute);
         $index = $parts[\count($parts) - 1];
+        // if the index is not a number, then we might be dealing with an API $attribute
+        // which is formatted "rule-triggers.0.value"
+        if ($index === 'value') {
+            $index = $parts[\count($parts) - 2];
+        }
+        $index = (int)$index;
+
+        // get triggers from $this->data
+        $triggers = [];
+        if (isset($this->data['rule-trigger']) && \is_array($this->data['rule-trigger'])) {
+            $triggers = $this->data['rule-trigger'];
+        }
+        if (isset($this->data['rule-triggers']) && \is_array($this->data['rule-triggers'])) {
+            $triggers = $this->data['rule-triggers'];
+        }
 
         // loop all rule-triggers.
         // check if rule-value matches the thing.
-        if (\is_array($this->data['rule-trigger'])) {
+        if (\is_array($triggers)) {
             $name  = $this->getRuleTriggerName($index);
             $value = $this->getRuleTriggerValue($index);
 
             // break on some easy checks:
             switch ($name) {
                 case 'amount_less':
+                case 'amount_more':
+                case 'amount_exactly':
                     $result = is_numeric($value);
                     if (false === $result) {
                         return false;
                     }
+                    break;
+                case 'from_account_starts':
+                case 'from_account_ends':
+                case 'from_account_is':
+                case 'from_account_contains':
+                case 'to_account_starts':
+                case 'to_account_ends':
+                case 'to_account_is':
+                case 'to_account_contains':
+                case 'description_starts':
+                case 'description_ends':
+                case 'description_contains':
+                case 'description_is':
+                case 'category_is':
+                case 'budget_is':
+                case 'tag_is':
+                case 'currency_is':
+                case 'notes_contain':
+                case 'notes_start':
+                case 'notes_end':
+                case 'notes_are':
+                    return \strlen($value) > 0;
+
                     break;
                 case 'transaction_type':
                     $count = TransactionType::where('type', $value)->count();
@@ -489,23 +548,71 @@ class FireflyValidator extends Validator
     }
 
     /**
+     * TODO this method needs a lot of logic to be able to handle API calls. Fix that.
+     *
      * @param int $index
      *
      * @return string
      */
-    private function getRuleTriggerName($index): string
+    private function getRuleActionName(int $index): string
     {
-        return $this->data['rule-trigger'][$index] ?? 'invalid';
+        $name = $this->data['rule-action'][$index] ?? 'invalid';
+        if (!isset($this->data['rule-action'][$index])) {
+            $name = $this->data['rule-actions'][$index]['name'] ?? 'invalid';
+        }
+
+        return $name;
     }
 
     /**
+     * TODO this method needs a lot of logic to be able to handle API calls. Fix that.
+     *
      * @param int $index
      *
      * @return string
      */
-    private function getRuleTriggerValue($index): string
+    private function getRuleActionValue(int $index): string
     {
-        return $this->data['rule-trigger-value'][$index] ?? '';
+        $value = $this->data['rule-action-value'][$index] ?? '';
+        if (!isset($this->data['rule-action-value'][$index])) {
+            $value = $this->data['rule-actions'][$index]['value'] ?? '';
+        }
+
+        return $value;
+    }
+
+    /**
+     * TODO this method needs a lot of logic to be able to handle API calls. Fix that.
+     *
+     * @param int $index
+     *
+     * @return string
+     */
+    private function getRuleTriggerName(int $index): string
+    {
+        $name = $this->data['rule-trigger'][$index] ?? 'invalid';
+        if (!isset($this->data['rule-trigger'][$index])) {
+            $name = $this->data['rule-triggers'][$index]['name'] ?? 'invalid';
+        }
+
+        return $name;
+    }
+
+    /**
+     * TODO this method needs a lot of logic to be able to handle API calls. Fix that.
+     *
+     * @param int $index
+     *
+     * @return string
+     */
+    private function getRuleTriggerValue(int $index): string
+    {
+        $value = $this->data['rule-trigger-value'][$index] ?? '';
+        if (!isset($this->data['rule-trigger-value'][$index])) {
+            $value = $this->data['rule-triggers'][$index]['value'] ?? '';
+        }
+
+        return $value;
     }
 
     /**

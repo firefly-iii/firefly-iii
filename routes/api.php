@@ -207,6 +207,19 @@ Route::group(
 );
 
 Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'rules', 'as' => 'api.v1.rules.'],
+    function () {
+
+        // Rules API routes:
+        Route::get('', ['uses' => 'RuleController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'RuleController@store', 'as' => 'store']);
+        Route::get('{rule}', ['uses' => 'RuleController@show', 'as' => 'show']);
+        Route::put('{rule}', ['uses' => 'RuleController@update', 'as' => 'update']);
+        Route::delete('{rule}', ['uses' => 'RuleController@delete', 'as' => 'delete']);
+    }
+);
+
+Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'currencies', 'as' => 'api.v1.currencies.'],
     function () {
 

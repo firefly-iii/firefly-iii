@@ -81,6 +81,16 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
+     * Get all the users rules.
+     *
+     * @return Collection
+     */
+    public function getAll(): Collection
+    {
+        return $this->user->rules()->with(['ruleGroup'])->get();
+    }
+
+    /**
      * FIxXME can return null.
      *
      * @return RuleGroup

@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 use Carbon\Carbon;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
@@ -64,6 +65,7 @@ class Rule extends Model
             'active'          => 'boolean',
             'order'           => 'int',
             'stop_processing' => 'boolean',
+            'id'              => 'int',
             'strict'          => 'boolean',
         ];
     /** @var array */
@@ -98,18 +100,18 @@ class Rule extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function ruleGroup()
+    public function ruleGroup(): BelongsTo
     {
         return $this->belongsTo(RuleGroup::class);
     }
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function ruleTriggers()
+    public function ruleTriggers(): HasMany
     {
         return $this->hasMany(RuleTrigger::class);
     }
@@ -117,16 +119,16 @@ class Rule extends Model
     /**
      * @param $value
      */
-    public function setDescriptionAttribute($value)
+    public function setDescriptionAttribute($value): void
     {
         $this->attributes['description'] = e($value);
     }
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

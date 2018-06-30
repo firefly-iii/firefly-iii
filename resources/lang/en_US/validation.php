@@ -46,6 +46,8 @@ return [
     'belongs_to_user'                => 'The value of :attribute is unknown.',
     'accepted'                       => 'The :attribute must be accepted.',
     'bic'                            => 'This is not a valid BIC.',
+    'at_least_one_trigger'           => 'Rule must have at least one trigger',
+    'at_least_one_action'            => 'Rule must have at least one action',
     'base64'                         => 'This is not valid base64 encoded data.',
     'model_id_invalid'               => 'The given ID seems invalid for this model.',
     'more'                           => ':attribute must be larger than zero.',

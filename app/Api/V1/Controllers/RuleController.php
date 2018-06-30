@@ -23,13 +23,30 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
+use FireflyIII\Api\V1\Requests\RuleRequest;
+use FireflyIII\Models\Rule;
+use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
+use FireflyIII\Transformers\PiggyBankTransformer;
+use FireflyIII\Transformers\RuleTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Validation\Validator;
+use League\Fractal\Manager;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use League\Fractal\Resource\Collection as FractalCollection;
+use League\Fractal\Resource\Item;
+use League\Fractal\Serializer\JsonApiSerializer;
 
-
+/**
+ * Class RuleController
+ */
 class RuleController extends Controller
 {
+    /** @var RuleRepositoryInterface */
+    private $ruleRepository;
+
     public function __construct()
     {
         parent::__construct();
@@ -38,7 +55,9 @@ class RuleController extends Controller
                 /** @var User $user */
                 $user = auth()->user();
 
-                // todo add local repositories.
+                $this->ruleRepository = app(RuleRepositoryInterface::class);
+                $this->ruleRepository->setUser($user);
+
                 return $next($request);
             }
         );
@@ -67,7 +86,28 @@ class RuleController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        // todo implement.
+        // create some objects:
+        $manager = new Manager;
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+
+        // types to get, page size:
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+
+        // get list of budgets. Count it and split it.
+        $collection = $this->ruleRepository->getAll();
+        $count      = $collection->count();
+        $rules = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+
+        // make paginator:
+        $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.piggy_banks.index') . $this->buildParams());
+
+        // present to user.
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $resource = new FractalCollection($rules, new RuleTransformer($this->parameters), 'rules');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
     }
 
@@ -75,13 +115,23 @@ class RuleController extends Controller
      * List single resource.
      *
      * @param Request $request
-     * @param string  $object
+     * @param Rule $rule
      *
      * @return JsonResponse
      */
-    public function show(Request $request, string $object): JsonResponse
+    public function show(Request $request, Rule $rule): JsonResponse
     {
-        // todo implement me.
+        $manager = new Manager();
+        // add include parameter:
+        $include = $request->get('include') ?? '';
+        $manager->parseIncludes($include);
+
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $resource = new Item($rule, new RuleTransformer($this->parameters), 'rules');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
     }
 
@@ -92,10 +142,11 @@ class RuleController extends Controller
      *
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(RuleRequest $request): JsonResponse
     {
-        // todo replace code and replace request object.
-
+        print_r($request->getAll());
+        print_r($request->all());
+        exit;
     }
 
     /**
