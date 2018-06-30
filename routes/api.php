@@ -220,6 +220,19 @@ Route::group(
 );
 
 Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'rule_groups', 'as' => 'api.v1.rule_groups.'],
+    function () {
+
+        // Rules API routes:
+        Route::get('', ['uses' => 'RuleGroupController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'RuleGroupController@store', 'as' => 'store']);
+        Route::get('{ruleGroup}', ['uses' => 'RuleGroupController@show', 'as' => 'show']);
+        Route::put('{ruleGroup}', ['uses' => 'RuleGroupController@update', 'as' => 'update']);
+        Route::delete('{ruleGroup}', ['uses' => 'RuleGroupController@delete', 'as' => 'delete']);
+    }
+);
+
+Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'currencies', 'as' => 'api.v1.currencies.'],
     function () {
 

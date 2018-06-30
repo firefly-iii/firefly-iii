@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
 
-
 use FireflyIII\Models\RuleGroup;
+use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -62,6 +62,10 @@ class RuleGroupTransformer extends TransformerAbstract
         $this->parameters = $parameters;
     }
 
+    public function includeRules(RuleGroup $ruleGroup): FractalCollection
+    {
+        return $this->collection($ruleGroup->rules, new RuleTransformer($this->parameters), 'rules');
+    }
 
     /**
      * Include the user.

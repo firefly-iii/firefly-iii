@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -39,6 +40,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $text
  * @property int    $id
  * @property int    $order
+ * @property Collection $rules
  */
 class RuleGroup extends Model
 {

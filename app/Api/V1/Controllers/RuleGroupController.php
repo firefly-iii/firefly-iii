@@ -23,13 +23,26 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
+use FireflyIII\Api\V1\Requests\RuleGroupRequest;
+use FireflyIII\Models\RuleGroup;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\Transformers\RuleGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use League\Fractal\Manager;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use League\Fractal\Resource\Collection as FractalCollection;
+use League\Fractal\Resource\Item;
+use League\Fractal\Serializer\JsonApiSerializer;
 
 
 class RuleGroupController extends Controller
 {
+    /** @var RuleGroupRepositoryInterface */
+    private $ruleGroupRepository;
+
     public function __construct()
     {
         parent::__construct();
@@ -38,7 +51,9 @@ class RuleGroupController extends Controller
                 /** @var User $user */
                 $user = auth()->user();
 
-                // todo add local repositories.
+                $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
+                $this->ruleGroupRepository->setUser($user);
+
                 return $next($request);
             }
         );
@@ -67,34 +82,71 @@ class RuleGroupController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        // todo implement.
+        // create some objects:
+        $manager = new Manager;
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
 
+        // types to get, page size:
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+
+        // get list of budgets. Count it and split it.
+        $collection = $this->ruleGroupRepository->get();
+        $count      = $collection->count();
+        $ruleGroups = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+
+        // make paginator:
+        $paginator = new LengthAwarePaginator($ruleGroups, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.rule_groups.index') . $this->buildParams());
+
+        // present to user.
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $resource = new FractalCollection($ruleGroups, new RuleGroupTransformer($this->parameters), 'rule_groups');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**
      * List single resource.
      *
-     * @param Request $request
-     * @param string  $object
+     * @param Request   $request
+     * @param RuleGroup $ruleGroup
      *
      * @return JsonResponse
      */
-    public function show(Request $request, string $object): JsonResponse
+    public function show(Request $request, RuleGroup $ruleGroup): JsonResponse
     {
-        // todo implement me.
+        $manager = new Manager();
+        // add include parameter:
+        $include = $request->get('include') ?? '';
+        $manager->parseIncludes($include);
+
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $resource = new Item($ruleGroup, new RuleGroupTransformer($this->parameters), 'rule_groups');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
     }
 
     /**
      * Store new object.
      *
-     * @param Request $request
+     * @param RuleGroupRequest $request
      *
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(RuleGroupRequest $request): JsonResponse
     {
-        // todo replace code and replace request object.
+        $ruleGroup = $this->ruleGroupRepository->store($request->getAll());
+        $manager   = new Manager();
+        $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $resource = new Item($ruleGroup, new RuleGroupTransformer($this->parameters), 'rule_groups');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
     }
 
@@ -104,9 +156,16 @@ class RuleGroupController extends Controller
      *
      * @return JsonResponse
      */
-    public function update(Request $request, string $object): JsonResponse
+    public function update(RuleGroupRequest $request, RuleGroup $ruleGroup): JsonResponse
     {
-        // todo replace code and replace request object.
+        $ruleGroup = $this->ruleGroupRepository->update($ruleGroup, $request->getAll());
+        $manager   = new Manager();
+        $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $resource = new Item($ruleGroup, new RuleGroupTransformer($this->parameters), 'rule_groups');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
     }
 }
