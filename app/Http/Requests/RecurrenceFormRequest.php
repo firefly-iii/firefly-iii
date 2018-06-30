@@ -66,21 +66,26 @@ class RecurrenceFormRequest extends Request
             ],
             'transactions' => [
                 [
-                    'transaction_currency_id' => $this->integer('transaction_currency_id'),
-                    'type'                    => $this->string('transaction_type'),
-                    'description'             => $this->string('transaction_description'),
-                    'amount'                  => $this->string('amount'),
-                    'foreign_amount'          => null,
-                    'foreign_currency_id'     => null,
-                    'budget_id'               => $this->integer('budget_id'),
-                    'category_name'           => $this->string('category'),
+                    'currency_id'           => $this->integer('transaction_currency_id'),
+                    'currency_code'         => null,
+                    'type'                  => $this->string('transaction_type'),
+                    'description'           => $this->string('transaction_description'),
+                    'amount'                => $this->string('amount'),
+                    'foreign_amount'        => null,
+                    'foreign_currency_id'   => null,
+                    'foreign_currency_code' => null,
+                    'budget_id'             => $this->integer('budget_id'),
+                    'budget_name'           => null,
+                    'category_id'           => null,
+                    'category_name'         => $this->string('category'),
 
                 ],
             ],
             'meta'         => [
                 // tags and piggy bank ID.
-                'tags'          => '' !== $this->string('tags') ? explode(',', $this->string('tags')) : [],
-                'piggy_bank_id' => $this->integer('piggy_bank_id'),
+                'tags'            => '' !== $this->string('tags') ? explode(',', $this->string('tags')) : [],
+                'piggy_bank_id'   => $this->integer('piggy_bank_id'),
+                'piggy_bank_name' => null,
             ],
             'repetitions'  => [
                 [
@@ -98,7 +103,11 @@ class RecurrenceFormRequest extends Request
             $return['transactions'][0]['foreign_amount']      = $this->string('foreign_amount');
             $return['transactions'][0]['foreign_currency_id'] = $this->integer('foreign_currency_id');
         }
-
+        // default values:
+        $return['transactions'][0]['source_id']        = null;
+        $return['transactions'][0]['source_name']      = null;
+        $return['transactions'][0]['destination_id']   = null;
+        $return['transactions'][0]['destination_name'] = null;
         // fill in source and destination account data
         switch ($this->string('transaction_type')) {
             default:

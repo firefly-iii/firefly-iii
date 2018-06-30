@@ -65,11 +65,13 @@ class RecurrenceUpdateService
         $recurrence->apply_rules         = $data['recurrence']['apply_rules'] ?? $recurrence->apply_rules;
         $recurrence->active              = $data['recurrence']['active'] ?? $recurrence->active;
 
-        if (\in_array($data['recurrence']['repetition_end'], ['forever ', 'until_date'])) {
-            $recurrence->repetitions = 0;
-        }
-        if (\in_array($data['recurrence']['repetition_end'], ['forever ', 'times'])) {
-            $recurrence->repeat_until = null;
+        if(isset($data['recurrence']['repetition_end'])) {
+            if (\in_array($data['recurrence']['repetition_end'], ['forever ', 'until_date'])) {
+                $recurrence->repetitions = 0;
+            }
+            if (\in_array($data['recurrence']['repetition_end'], ['forever ', 'times'])) {
+                $recurrence->repeat_until = null;
+            }
         }
         $recurrence->save();
 

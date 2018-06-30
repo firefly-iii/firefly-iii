@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Log;
 use Preferences;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -42,6 +43,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property User       $user
  * @property int        $bill_id
  * @property Collection $categories
+ * @property bool       $completed
  */
 class TransactionJournal extends Model
 {

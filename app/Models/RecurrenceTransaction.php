@@ -73,7 +73,7 @@ class RecurrenceTransaction extends Model
      */
     public function destinationAccount(): BelongsTo
     {
-        return $this->belongsTo(Account::class);
+        return $this->belongsTo(Account::class,'destination_id');
     }
 
     /**
@@ -109,7 +109,7 @@ class RecurrenceTransaction extends Model
      */
     public function sourceAccount(): BelongsTo
     {
-        return $this->belongsTo(Account::class);
+        return $this->belongsTo(Account::class,'source_id');
     }
 
     /**

@@ -124,7 +124,7 @@ class RecurrenceRequest extends Request
 
         return [
             'type'                                 => 'required|in:withdrawal,transfer,deposit',
-            'title'                                => 'required|between:1,255',
+            'title'                                => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
             'description'                          => 'between:1,65000',
             'first_date'                           => sprintf('required|date|after:%s', $today->format('Y-m-d')),
             'repeat_until'                         => sprintf('date|after:%s', $today->format('Y-m-d')),
@@ -139,8 +139,8 @@ class RecurrenceRequest extends Request
             // rules for repetitions.
             'repetitions.*.type'                   => 'required|in:daily,weekly,ndom,monthly,yearly',
             'repetitions.*.moment'                 => 'between:0,10',
-            'repetitions.*.skip'                   => 'required|between:0,31',
-            'repetitions.*.weekend'                => 'required|between:1,4',
+            'repetitions.*.skip'                   => 'required|numeric|between:0,31',
+            'repetitions.*.weekend'                => 'required|numeric|min:1|max:4',
 
             // rules for transactions.
             'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id|required_without:transactions.*.currency_code',

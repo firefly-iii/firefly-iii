@@ -155,14 +155,25 @@ class RecurrenceController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param string  $object
+     * @param RecurrenceRequest $request
+     * @param Recurrence        $recurrence
      *
      * @return JsonResponse
      */
-    public function update(Request $request, string $object): JsonResponse
+    public function update(RecurrenceRequest $request, Recurrence $recurrence): JsonResponse
     {
-        // todo replace code and replace request object.
+        $data     = $request->getAll();
+
+        //
+
+        $category = $this->repository->update($recurrence, $data);
+        $manager  = new Manager();
+        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $resource = new Item($category, new RecurrenceTransformer($this->parameters), 'recurrences');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
     }
 }
