@@ -37,6 +37,8 @@ return [
     'invalid_selection'              => 'Ongeldige selectie',
     'belongs_user'                   => 'Deze waarde is ongeldig voor dit veld.',
     'at_least_one_transaction'       => 'Er is op zijn minst één transactie nodig.',
+    'at_least_one_repetition'        => 'Need at least one repetition.',
+    'require_repeat_until'           => 'Require either a number of repetitions, or an end date (repeats_until). Not both.',
     'require_currency_info'          => 'De inhoud van dit veld is ongeldig zonder valutagegevens.',
     'equal_description'              => 'Transactiebeschrijving mag niet gelijk zijn aan globale beschrijving.',
     'file_invalid_mime'              => 'Bestand ":name" is van het type ":mime", en die kan je niet uploaden.',
@@ -115,6 +117,8 @@ return [
     'unique_piggy_bank_for_user'     => 'De naam van de spaarpot moet uniek zijn.',
     'secure_password'                => 'Dit is geen sterk wachtwoord. Probeer het nog een keer. Zie ook: http://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Dit is geen geldige herhaling voor periodieke transacties',
+    'valid_recurrence_rep_moment'    => 'Invalid repetition moment for this type of repetition.',
+    'invalid_account_info'           => 'Invalid account information',
     'attributes'                     => [
         'email'                   => 'e-mailadres',
         'description'             => 'omschrijving',

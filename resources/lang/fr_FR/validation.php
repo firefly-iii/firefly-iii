@@ -37,6 +37,8 @@ return [
     'invalid_selection'              => 'Votre sélection est invalide',
     'belongs_user'                   => 'Cette valeur n\'est pas valide pour ce champ.',
     'at_least_one_transaction'       => 'Besoin d\'au moins une transaction.',
+    'at_least_one_repetition'        => 'Need at least one repetition.',
+    'require_repeat_until'           => 'Require either a number of repetitions, or an end date (repeats_until). Not both.',
     'require_currency_info'          => 'Le contenu de ce champ n\'est pas valide sans informations sur la devise.',
     'equal_description'              => 'La description de la transaction ne doit pas être égale à la description globale.',
     'file_invalid_mime'              => 'Le fichier ":name" est du type ":mime" ce qui n\'est pas accepté pour un nouvel envoi.',
@@ -115,6 +117,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Le nom de la tirelire doit être unique.',
     'secure_password'                => 'Ce n’est pas un mot de passe sécurisé. Veuillez essayer à nouveau. Pour plus d’informations, visitez http://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Invalid repetition type for recurring transactions',
+    'valid_recurrence_rep_moment'    => 'Invalid repetition moment for this type of repetition.',
+    'invalid_account_info'           => 'Invalid account information',
     'attributes'                     => [
         'email'                   => 'adresse email',
         'description'             => 'description',

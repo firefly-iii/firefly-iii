@@ -37,6 +37,8 @@ return [
     'invalid_selection'              => 'Die Auswahl ist ungültig',
     'belongs_user'                   => 'Dieser Wert ist für dieses Feld ungültig.',
     'at_least_one_transaction'       => 'Sie brauchen mindestens eine Transaktion.',
+    'at_least_one_repetition'        => 'Need at least one repetition.',
+    'require_repeat_until'           => 'Require either a number of repetitions, or an end date (repeats_until). Not both.',
     'require_currency_info'          => 'Der Inhalt dieses Feldes ist ohne Währungsinformationen ungültig.',
     'equal_description'              => 'Die Transaktionsbeschreibung darf nicht der globalen Beschreibung entsprechen.',
     'file_invalid_mime'              => 'Die Datei „:name” ist vom Typ „:mime”, welcher nicht zum Hochladen zugelassen ist.',
@@ -115,6 +117,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Der Name des Sparschweins muss eindeutig sein.',
     'secure_password'                => 'Das ist kein sicheres Passwort. Bitte versuchen Sie es erneut. Weitere Informationen finden Sie unter https://github.com/firefly-iii/help/wiki/Secure-password',
     'valid_recurrence_rep_type'      => 'Ungültige Wiederholungsart für Daueraufträge',
+    'valid_recurrence_rep_moment'    => 'Invalid repetition moment for this type of repetition.',
+    'invalid_account_info'           => 'Invalid account information',
     'attributes'                     => [
         'email'                   => 'E-Mail Adresse',
         'description'             => 'Beschreibung',

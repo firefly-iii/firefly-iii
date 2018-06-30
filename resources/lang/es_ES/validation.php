@@ -37,6 +37,8 @@ return [
     'invalid_selection'              => 'Your selection is invalid',
     'belongs_user'                   => 'Este valor no es válido para este campo.',
     'at_least_one_transaction'       => 'Se necesita al menos una transacción.',
+    'at_least_one_repetition'        => 'Need at least one repetition.',
+    'require_repeat_until'           => 'Require either a number of repetitions, or an end date (repeats_until). Not both.',
     'require_currency_info'          => 'El contenido de este campo no es válido sin la información montearia.',
     'equal_description'              => 'Transaction description should not equal global description.',
     'file_invalid_mime'              => 'El archivo ":name" es de tipo ":mime", el cual no se acepta.',
@@ -115,6 +117,8 @@ return [
     'unique_piggy_bank_for_user'     => 'The name of the piggy bank must be unique.',
     'secure_password'                => 'This is not a secure password. Please try again. For more information, visit http://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Invalid repetition type for recurring transactions',
+    'valid_recurrence_rep_moment'    => 'Invalid repetition moment for this type of repetition.',
+    'invalid_account_info'           => 'Invalid account information',
     'attributes'                     => [
         'email'                   => 'dirección de correo electrónico',
         'description'             => 'descripcion',

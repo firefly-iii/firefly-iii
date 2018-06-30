@@ -37,6 +37,8 @@ return [
     'invalid_selection'              => 'Вы сделали неправильный выбор',
     'belongs_user'                   => 'Данное значение недопустимо для этого поля.',
     'at_least_one_transaction'       => 'Необходима как минимум одна транзакция.',
+    'at_least_one_repetition'        => 'Need at least one repetition.',
+    'require_repeat_until'           => 'Require either a number of repetitions, or an end date (repeats_until). Not both.',
     'require_currency_info'          => 'Содержимое этого поля недействительно без информации о валюте.',
     'equal_description'              => 'Описание транзакции не должно совпадать с глобальным описанием.',
     'file_invalid_mime'              => 'Файл ":name" имеет тип ":mime". Загрузка файлов такого типа невозможна.',
@@ -115,6 +117,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Название копилки должно быть уникальным.',
     'secure_password'                => 'Это не безопасный пароль. Попробуйте еще раз. Подробнее можно узнать по ссылке http://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Недопустимый тип для повторяющихся транзакций',
+    'valid_recurrence_rep_moment'    => 'Invalid repetition moment for this type of repetition.',
+    'invalid_account_info'           => 'Invalid account information',
     'attributes'                     => [
         'email'                   => '"Адрес электронной почты"',
         'description'             => '"Описание"',
