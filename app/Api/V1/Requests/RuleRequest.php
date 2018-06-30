@@ -47,11 +47,12 @@ class RuleRequest extends Request
     {
         $data = [
             'title'            => $this->string('title'),
+            'description'      => $this->string('description'),
             'rule_group_id'    => $this->integer('rule_group_id'),
             'rule_group_title' => $this->string('rule_group_title'),
             'trigger'          => $this->string('trigger'),
             'strict'           => $this->boolean('strict'),
-            'stop_processing'  => $this->boolean('stop_processing'),
+            'stop-processing'  => $this->boolean('stop_processing'),
             'active'           => $this->boolean('active'),
             'rule-triggers'    => [],
             'rule-actions'     => [],
@@ -59,11 +60,20 @@ class RuleRequest extends Request
 
         foreach ($this->get('rule-triggers') as $trigger) {
             $data['rule-triggers'][] = [
-                'name'  => $trigger['name'],
-                'value' => $trigger['value'],
+                'name'            => $trigger['name'],
+                'value'           => $trigger['value'],
+                'stop-processing' => (int)($trigger['stop-processing'] ?? 0) === 1,
+            ];
+        }
+        foreach ($this->get('rule-actions') as $action) {
+            $data['rule-actions'][] = [
+                'name'            => $action['name'],
+                'value'           => $action['value'],
+                'stop-processing' => (int)($action['stop-processing'] ?? 0) === 1,
             ];
         }
 
+        return $data;
     }
 
     /**
@@ -78,18 +88,20 @@ class RuleRequest extends Request
         $contextActions = implode(',', config('firefly.rule-actions-text'));
 
         $rules = [
-            'title'                 => 'required|between:1,100|uniqueObjectForUser:rules,title',
-            'description'           => 'between:1,5000|nullable',
-            'rule_group_id'         => 'required|belongsToUser:rule_groups|required_without:rule_group_title',
-            'rule_group_title'      => 'nullable|between:1,255|required_without:rule_group_id|belongsToUser:rule_groups,title',
-            'trigger'               => 'required|in:store-journal,update-journal',
-            'rule-triggers.*.name'  => 'required|in:' . implode(',', $validTriggers),
-            'rule-triggers.*.value' => 'required|min:1|ruleTriggerValue', //
-            'rule-actions.*.name'   => 'required|in:' . implode(',', $validActions),
-            'rule-actions.*.value'  => 'required_if:rule-action.*.type,' . $contextActions . '|ruleActionValue',
-            'strict'                => 'required|boolean',
-            'stop_processing'       => 'required|boolean',
-            'active'                => 'required|boolean',
+            'title'                           => 'required|between:1,100|uniqueObjectForUser:rules,title',
+            'description'                     => 'between:1,5000|nullable',
+            'rule_group_id'                   => 'required|belongsToUser:rule_groups|required_without:rule_group_title',
+            'rule_group_title'                => 'nullable|between:1,255|required_without:rule_group_id|belongsToUser:rule_groups,title',
+            'trigger'                         => 'required|in:store-journal,update-journal',
+            'rule-triggers.*.name'            => 'required|in:' . implode(',', $validTriggers),
+            'rule-triggers.*.stop-processing' => 'boolean',
+            'rule-triggers.*.value'           => 'required|min:1|ruleTriggerValue', //
+            'rule-actions.*.name'             => 'required|in:' . implode(',', $validActions),
+            'rule-actions.*.value'            => 'required_if:rule-action.*.type,' . $contextActions . '|ruleActionValue',
+            'rule-actions.*.stop-processing'  => 'boolean',
+            'strict'                          => 'required|boolean',
+            'stop_processing'                 => 'required|boolean',
+            'active'                          => 'required|boolean',
         ];
 
         return $rules;

@@ -26,13 +26,11 @@ namespace FireflyIII\Api\V1\Controllers;
 use FireflyIII\Api\V1\Requests\RuleRequest;
 use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
-use FireflyIII\Transformers\PiggyBankTransformer;
 use FireflyIII\Transformers\RuleTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Validation\Validator;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -96,7 +94,7 @@ class RuleController extends Controller
         // get list of budgets. Count it and split it.
         $collection = $this->ruleRepository->getAll();
         $count      = $collection->count();
-        $rules = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $rules      = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
         $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
@@ -115,7 +113,7 @@ class RuleController extends Controller
      * List single resource.
      *
      * @param Request $request
-     * @param Rule $rule
+     * @param Rule    $rule
      *
      * @return JsonResponse
      */
@@ -144,20 +142,32 @@ class RuleController extends Controller
      */
     public function store(RuleRequest $request): JsonResponse
     {
-        print_r($request->getAll());
-        print_r($request->all());
-        exit;
+        $rule    = $this->ruleRepository->store($request->getAll());
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $resource = new Item($rule, new RuleTransformer($this->parameters), 'rules');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**
-     * @param Request $request
-     * @param string  $object
+     * @param RuleRequest $request
+     * @param Rule        $rule
      *
      * @return JsonResponse
      */
-    public function update(Request $request, string $object): JsonResponse
+    public function update(RuleRequest $request, Rule $rule): JsonResponse
     {
-        // todo replace code and replace request object.
+        $rule = $this->ruleRepository->update($rule, $request->getAll());
+        $manager   = new Manager();
+        $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $resource = new Item($rule, new RuleTransformer($this->parameters), 'rules');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
     }
 }

@@ -47,6 +47,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string     $text
  * @property int        $order
  * @property RuleGroup  $ruleGroup
+ * @property int        $rule_group_id
+ * @property string     $description
  */
 class Rule extends Model
 {
