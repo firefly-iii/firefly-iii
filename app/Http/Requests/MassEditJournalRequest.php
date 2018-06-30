@@ -45,11 +45,11 @@ class MassEditJournalRequest extends Request
         // fixed
 
         return [
-            'description.*'            => 'required|min:1,max:255',
-            'source_account_id.*'      => 'numeric|belongsToUser:accounts,id',
-            'destination_account_id.*' => 'numeric|belongsToUser:accounts,id',
-            'revenue_account'          => 'max:255',
-            'expense_account'          => 'max:255',
+            'description.*'    => 'required|min:1,max:255',
+            'source_id.*'      => 'numeric|belongsToUser:accounts,id',
+            'destination_id.*' => 'numeric|belongsToUser:accounts,id',
+            'revenue_account'  => 'max:255',
+            'expense_account'  => 'max:255',
         ];
     }
 }

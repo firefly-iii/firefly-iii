@@ -49,10 +49,12 @@ class AutomationHandler
         $user       = $repository->findNull($event->userId);
         if (null === $user) {
             Log::debug('User is NULL');
+
             return true;
         }
         if ($event->journals->count() === 0) {
             Log::debug('No journals.');
+
             return true;
         }
 

@@ -25,10 +25,10 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\Rule;
+use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use League\Fractal\Resource\Collection as FractalCollection;
 
 /**
  * Class RuleTransformer
@@ -68,8 +68,22 @@ class RuleTransformer extends TransformerAbstract
      *
      * @return FractalCollection
      */
-    public function includeRuleTriggers(Rule $rule): FractalCollection {
-        return $this->collection($rule->ruleTriggers, new RuleTriggerTransformer($this->parameters), 'rule_triggers');
+    public function includeRuleActions(Rule $rule): FractalCollection
+    {
+        return $this->collection($rule->ruleActions, new RuleActionTransformer($this->parameters), 'rule_actions');
+    }
+
+    /**
+     * Include the rule group.
+     *
+     * @param Rule $rule
+     *
+     * @codeCoverageIgnore
+     * @return Item
+     */
+    public function includeRuleGroup(Rule $rule): Item
+    {
+        return $this->item($rule->ruleGroup, new RuleGroupTransformer($this->parameters), 'rule_groups');
     }
 
     /**
@@ -77,8 +91,9 @@ class RuleTransformer extends TransformerAbstract
      *
      * @return FractalCollection
      */
-    public function includeRuleActions(Rule $rule): FractalCollection {
-        return $this->collection($rule->ruleActions, new RuleActionTransformer($this->parameters), 'rule_actions');
+    public function includeRuleTriggers(Rule $rule): FractalCollection
+    {
+        return $this->collection($rule->ruleTriggers, new RuleTriggerTransformer($this->parameters), 'rule_triggers');
     }
 
     /**
@@ -92,20 +107,6 @@ class RuleTransformer extends TransformerAbstract
     public function includeUser(Rule $rule): Item
     {
         return $this->item($rule->user, new UserTransformer($this->parameters), 'users');
-    }
-
-
-    /**
-     * Include the rule group.
-     *
-     * @param Rule $rule
-     *
-     * @codeCoverageIgnore
-     * @return Item
-     */
-    public function includeRuleGroup(Rule $rule): Item
-    {
-        return $this->item($rule->ruleGroup, new RuleGroupTransformer($this->parameters), 'rule_groups');
     }
 
     /**

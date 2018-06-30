@@ -63,13 +63,6 @@ interface LinkTypeRepositoryInterface
     public function find(int $id): LinkType;
 
     /**
-     * @param int $id
-     *
-     * @return LinkType|null
-     */
-    public function findNull(int $id): ?LinkType;
-
-    /**
      * Find link type by name.
      *
      * @param string|null $name
@@ -87,6 +80,13 @@ interface LinkTypeRepositoryInterface
      * @return bool
      */
     public function findLink(TransactionJournal $one, TransactionJournal $two): bool;
+
+    /**
+     * @param int $id
+     *
+     * @return LinkType|null
+     */
+    public function findNull(int $id): ?LinkType;
 
     /**
      * See if such a link already exists (and get it).

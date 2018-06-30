@@ -64,16 +64,16 @@ class SplitJournalFormRequest extends Request
         foreach ($this->get('transactions') as $index => $transaction) {
             switch ($data['type']) {
                 case 'withdrawal':
-                    $sourceId        = $this->integer('journal_source_account_id');
+                    $sourceId        = $this->integer('journal_source_id');
                     $destinationName = $transaction['destination_name'] ?? '';
                     break;
                 case 'deposit':
                     $sourceName    = $transaction['source_name'] ?? '';
-                    $destinationId = $this->integer('journal_destination_account_id');
+                    $destinationId = $this->integer('journal_destination_id');
                     break;
                 case 'transfer':
-                    $sourceId      = $this->integer('journal_source_account_id');
-                    $destinationId = $this->integer('journal_destination_account_id');
+                    $sourceId      = $this->integer('journal_source_id');
+                    $destinationId = $this->integer('journal_destination_id');
                     break;
             }
             $foreignAmount          = $transaction['foreign_amount'] ?? null;
@@ -112,20 +112,20 @@ class SplitJournalFormRequest extends Request
             'what'                                   => 'required|in:withdrawal,deposit,transfer',
             'journal_description'                    => 'required|between:1,255',
             'id'                                     => 'numeric|belongsToUser:transaction_journals,id',
-            'journal_source_account_id'              => 'numeric|belongsToUser:accounts,id',
-            'journal_source_account_name.*'          => 'between:1,255',
+            'journal_source_id'                      => 'numeric|belongsToUser:accounts,id',
+            'journal_source_name.*'                  => 'between:1,255',
             'journal_currency_id'                    => 'required|exists:transaction_currencies,id',
             'date'                                   => 'required|date',
             'interest_date'                          => 'date|nullable',
             'book_date'                              => 'date|nullable',
             'process_date'                           => 'date|nullable',
             'transactions.*.transaction_description' => 'required|between:1,255',
-            'transactions.*.destination_account_id'  => 'numeric|belongsToUser:accounts,id',
+            'transactions.*.destination_id'          => 'numeric|belongsToUser:accounts,id',
             'transactions.*.destination_name'        => 'between:1,255|nullable',
             'transactions.*.amount'                  => 'required|numeric',
             'transactions.*.budget_id'               => 'belongsToUser:budgets,id',
             'transactions.*.category_name'           => 'between:1,255|nullable',
-            'transactions.*.piggy_bank_id'           => 'between:1,255|nullable',
+            'transactions.*.piggy_bank_id'           => 'numeric|nullable',
         ];
     }
 
@@ -155,8 +155,8 @@ class SplitJournalFormRequest extends Request
         /** @var array $array */
         foreach ($transactions as $array) {
             if ($array['destination_id'] !== null && $array['source_id'] !== null && $array['destination_id'] === $array['source_id']) {
-                $validator->errors()->add('journal_source_account_id', trans('validation.source_equals_destination'));
-                $validator->errors()->add('journal_destination_account_id', trans('validation.source_equals_destination'));
+                $validator->errors()->add('journal_source_id', trans('validation.source_equals_destination'));
+                $validator->errors()->add('journal_destination_id', trans('validation.source_equals_destination'));
             }
         }
 

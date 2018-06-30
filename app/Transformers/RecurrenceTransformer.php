@@ -157,19 +157,19 @@ class RecurrenceTransformer extends TransformerAbstract
         /** @var RecurrenceTransaction $transaction */
         foreach ($recurrence->recurrenceTransactions as $transaction) {
             $transactionArray = [
-                'currency_id'              => $transaction->transaction_currency_id,
-                'currency_code'            => $transaction->transactionCurrency->code,
-                'currency_symbol'          => $transaction->transactionCurrency->symbol,
-                'currency_dp'              => $transaction->transactionCurrency->decimal_places,
-                'foreign_currency_id'      => $transaction->foreign_currency_id,
-                'source_account_id'        => $transaction->source_account_id,
-                'source_account_name'      => $transaction->sourceAccount->name,
-                'destination_account_id'   => $transaction->destination_account_id,
-                'destination_account_name' => $transaction->destinationAccount->name,
-                'amount'                   => $transaction->amount,
-                'foreign_amount'           => $transaction->foreign_amount,
-                'description'              => $transaction->description,
-                'meta'                     => [],
+                'currency_id'         => $transaction->transaction_currency_id,
+                'currency_code'       => $transaction->transactionCurrency->code,
+                'currency_symbol'     => $transaction->transactionCurrency->symbol,
+                'currency_dp'         => $transaction->transactionCurrency->decimal_places,
+                'foreign_currency_id' => $transaction->foreign_currency_id,
+                'source_id'           => $transaction->source_id,
+                'source_name'         => $transaction->sourceAccount->name,
+                'destination_id'      => $transaction->destination_id,
+                'destination_name'    => $transaction->destinationAccount->name,
+                'amount'              => $transaction->amount,
+                'foreign_amount'      => $transaction->foreign_amount,
+                'description'         => $transaction->description,
+                'meta'                => [],
             ];
             if (null !== $transaction->foreign_currency_id) {
                 $transactionArray['foreign_currency_code']   = $transaction->foreignCurrency->code;

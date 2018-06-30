@@ -81,10 +81,10 @@ class JournalFormRequest extends Request
                     'budget_name'           => null,
                     'category_id'           => null,
                     'category_name'         => $this->string('category'),
-                    'source_id'             => $this->integer('source_account_id'),
-                    'source_name'           => $this->string('source_account_name'),
-                    'destination_id'        => $this->integer('destination_account_id'),
-                    'destination_name'      => $this->string('destination_account_name'),
+                    'source_id'             => $this->integer('source_id'),
+                    'source_name'           => $this->string('source_name'),
+                    'destination_id'        => $this->integer('destination_id'),
+                    'destination_name'      => $this->string('destination_name'),
                     'foreign_currency_id'   => null,
                     'foreign_currency_code' => null,
                     'foreign_amount'        => null,
@@ -161,11 +161,11 @@ class JournalFormRequest extends Request
             'amount'                    => 'numeric|required|more:0',
             'budget_id'                 => 'mustExist:budgets,id|belongsToUser:budgets,id|nullable',
             'category'                  => 'between:1,255|nullable',
-            'source_account_id'         => 'numeric|belongsToUser:accounts,id|nullable',
-            'source_account_name'       => 'between:1,255|nullable',
-            'destination_account_id'    => 'numeric|belongsToUser:accounts,id|nullable',
-            'destination_account_name'  => 'between:1,255|nullable',
-            'piggy_bank_id'             => 'between:1,255|nullable',
+            'source_id'                 => 'numeric|belongsToUser:accounts,id|nullable',
+            'source_name'               => 'between:1,255|nullable',
+            'destination_id'            => 'numeric|belongsToUser:accounts,id|nullable',
+            'destination_name'          => 'between:1,255|nullable',
+            'piggy_bank_id'             => 'numeric|nullable',
 
             // foreign currency amounts
             'native_amount'             => 'numeric|more:0|nullable',
@@ -193,17 +193,17 @@ class JournalFormRequest extends Request
     {
         switch ($what) {
             case strtolower(TransactionType::WITHDRAWAL):
-                $rules['source_account_id']        = 'required|exists:accounts,id|belongsToUser:accounts';
-                $rules['destination_account_name'] = 'between:1,255|nullable';
+                $rules['source_id']        = 'required|exists:accounts,id|belongsToUser:accounts';
+                $rules['destination_name'] = 'between:1,255|nullable';
                 break;
             case strtolower(TransactionType::DEPOSIT):
-                $rules['source_account_name']    = 'between:1,255|nullable';
-                $rules['destination_account_id'] = 'required|exists:accounts,id|belongsToUser:accounts';
+                $rules['source_name']    = 'between:1,255|nullable';
+                $rules['destination_id'] = 'required|exists:accounts,id|belongsToUser:accounts';
                 break;
             case strtolower(TransactionType::TRANSFER):
                 // this may not work:
-                $rules['source_account_id']      = 'required|exists:accounts,id|belongsToUser:accounts|different:destination_account_id';
-                $rules['destination_account_id'] = 'required|exists:accounts,id|belongsToUser:accounts|different:source_account_id';
+                $rules['source_id']      = 'required|exists:accounts,id|belongsToUser:accounts|different:destination_id';
+                $rules['destination_id'] = 'required|exists:accounts,id|belongsToUser:accounts|different:source_id';
 
                 break;
             default:

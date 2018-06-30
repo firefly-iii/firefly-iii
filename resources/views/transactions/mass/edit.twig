@@ -70,7 +70,7 @@
                                     <td>
                                         {# SOURCE ACCOUNT ID FOR TRANSFER OR WITHDRAWAL #}
                                         {% if transaction.type == 'Transfer' or transaction.type == 'Withdrawal' %}
-                                            <select class="form-control input-sm" name="source_account_id[{{ transaction.journal_id }}]">
+                                            <select class="form-control input-sm" name="source_id[{{ transaction.journal_id }}]">
                                                 {% for account in accounts %}
                                                     <!-- {{ transaction.type }}: {{ transaction.source_name }} -->
                                                     <option value="{{ account.id }}"{% if account.id == transaction.source_id %} selected{% endif %} label="{{ account.name }}">{{ account.name }}</option>
@@ -79,13 +79,13 @@
                                         {% else %}
                                             {# SOURCE ACCOUNT NAME FOR DEPOSIT #}
                                             <input class="form-control input-sm" placeholder="{% if transaction.source_type != 'Cash account' %}{{ transaction.source_name }}{% endif %}" autocomplete="off"
-                                                   name="source_account_name[{{ transaction.journal_id }}]" type="text" value="{% if transaction.source_type != 'Cash account' %}{{ transaction.source_name }}{% endif %}">
+                                                   name="source_name[{{ transaction.journal_id }}]" type="text" value="{% if transaction.source_type != 'Cash account' %}{{ transaction.source_name }}{% endif %}">
                                         {% endif %}
                                     </td>
                                     <td>
                                         {% if transaction.type == 'Transfer' or transaction.type == 'Deposit' %}
                                             {# DESTINATION ACCOUNT NAME FOR TRANSFER AND DEPOSIT #}
-                                            <select class="form-control input-sm" name="destination_account_id[{{ transaction.journal_id }}]">
+                                            <select class="form-control input-sm" name="destination_id[{{ transaction.journal_id }}]">
                                                 {% for account in accounts %}
                                                     <option value="{{ account.id }}"{% if account.id == transaction.destination_id %} selected="selected"{% endif %}
                                                             label="{{ account.name }}">{{ account.name }}</option>
@@ -95,7 +95,7 @@
 
                                             {# DESTINATION ACCOUNT NAME FOR EXPENSE #}
                                             <input class="form-control input-sm" placeholder="{% if transaction.destination_type != 'Cash account' %}{{ transaction.destination_name }}{% endif %}"
-                                                   name="destination_account_name[{{ transaction.journal_id }}]" type="text" autocomplete="off"
+                                                   name="destination_name[{{ transaction.journal_id }}]" type="text" autocomplete="off"
                                                    value="{% if transaction.destination_type != 'Cash account' %}{{ transaction.destination_name }}{% endif %}">
                                         {% endif %}
                                     </td>

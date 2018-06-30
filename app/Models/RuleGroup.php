@@ -37,8 +37,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon $updated_at
  * @property string $title
  * @property string $text
- * @property int $id
- * @property int $order
+ * @property int    $id
+ * @property int    $order
  */
 class RuleGroup extends Model
 {

@@ -44,7 +44,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property AccountType $accountType
  * @property bool        $active
  * @property string      $virtual_balance
- * @property User $user
+ * @property User        $user
  */
 class Account extends Model
 {

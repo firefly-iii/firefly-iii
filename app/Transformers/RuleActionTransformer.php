@@ -25,7 +25,6 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\RuleTrigger;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -75,8 +74,8 @@ class RuleActionTransformer extends TransformerAbstract
             'id'              => (int)$ruleAction->id,
             'updated_at'      => $ruleAction->updated_at->toAtomString(),
             'created_at'      => $ruleAction->created_at->toAtomString(),
-            'action_type'    => $ruleAction->action_type,
-            'action_value'   => $ruleAction->action_value,
+            'action_type'     => $ruleAction->action_type,
+            'action_value'    => $ruleAction->action_value,
             'order'           => $ruleAction->order,
             'active'          => $ruleAction->active,
             'stop_processing' => $ruleAction->stop_processing,

@@ -326,6 +326,7 @@ interface JournalRepositoryInterface
 
     /**
      * @param array $data
+     *
      * @throws FireflyException
      * @return TransactionJournal
      */

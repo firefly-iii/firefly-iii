@@ -45,11 +45,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property TransactionCurrency $transactionCurrency
  * @property Carbon              $created_at
  * @property Carbon              $updated_at
- * @property Carbon $date
- * @property string $repeat_freq
- * @property int $skip
- * @property bool $automatch
- * @property User $user
+ * @property Carbon              $date
+ * @property string              $repeat_freq
+ * @property int                 $skip
+ * @property bool                $automatch
+ * @property User                $user
  */
 class Bill extends Model
 {

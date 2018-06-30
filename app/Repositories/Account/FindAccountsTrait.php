@@ -158,7 +158,7 @@ trait FindAccountsTrait
                 Log::debug(sprintf('Found #%d (%s) with type id %d', $account->id, $account->name, $account->account_type_id));
 
                 return $account;
-            } else{
+            } else {
                 Log::debug(sprintf('"%s" does not equal "%s"', $account->name, $name));
             }
         }

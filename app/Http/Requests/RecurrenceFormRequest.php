@@ -104,16 +104,16 @@ class RecurrenceFormRequest extends Request
             default:
                 throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->string('transaction_type')));
             case 'withdrawal':
-                $return['transactions'][0]['source_account_id']        = $this->integer('source_account_id');
-                $return['transactions'][0]['destination_account_name'] = $this->string('destination_account_name');
+                $return['transactions'][0]['source_id']        = $this->integer('source_id');
+                $return['transactions'][0]['destination_name'] = $this->string('destination_name');
                 break;
             case 'deposit':
-                $return['transactions'][0]['source_account_name']    = $this->string('source_account_name');
-                $return['transactions'][0]['destination_account_id'] = $this->integer('destination_account_id');
+                $return['transactions'][0]['source_name']    = $this->string('source_name');
+                $return['transactions'][0]['destination_id'] = $this->integer('destination_id');
                 break;
             case 'transfer':
-                $return['transactions'][0]['source_account_id']      = $this->integer('source_account_id');
-                $return['transactions'][0]['destination_account_id'] = $this->integer('destination_account_id');
+                $return['transactions'][0]['source_id']      = $this->integer('source_id');
+                $return['transactions'][0]['destination_id'] = $this->integer('destination_id');
                 break;
         }
 
@@ -131,34 +131,34 @@ class RecurrenceFormRequest extends Request
         $tomorrow->addDay();
         $rules = [
             // mandatory info for recurrence.
-            'title'                    => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
-            'first_date'               => 'required|date|after:' . $today->format('Y-m-d'),
-            'repetition_type'          => ['required', new ValidRecurrenceRepetitionValue, new ValidRecurrenceRepetitionType, 'between:1,20'],
-            'skip'                     => 'required|numeric|between:0,31',
+            'title'                   => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
+            'first_date'              => 'required|date|after:' . $today->format('Y-m-d'),
+            'repetition_type'         => ['required', new ValidRecurrenceRepetitionValue, new ValidRecurrenceRepetitionType, 'between:1,20'],
+            'skip'                    => 'required|numeric|between:0,31',
 
             // optional for recurrence:
-            'recurring_description'    => 'between:0,65000',
-            'active'                   => 'numeric|between:0,1',
-            'apply_rules'              => 'numeric|between:0,1',
+            'recurring_description'   => 'between:0,65000',
+            'active'                  => 'numeric|between:0,1',
+            'apply_rules'             => 'numeric|between:0,1',
 
             // mandatory for transaction:
-            'transaction_description'  => 'required|between:1,255',
-            'transaction_type'         => 'required|in:withdrawal,deposit,transfer',
-            'transaction_currency_id'  => 'required|exists:transaction_currencies,id',
-            'amount'                   => 'numeric|required|more:0',
+            'transaction_description' => 'required|between:1,255',
+            'transaction_type'        => 'required|in:withdrawal,deposit,transfer',
+            'transaction_currency_id' => 'required|exists:transaction_currencies,id',
+            'amount'                  => 'numeric|required|more:0',
             // mandatory account info:
-            'source_account_id'        => 'numeric|belongsToUser:accounts,id|nullable',
-            'source_account_name'      => 'between:1,255|nullable',
-            'destination_account_id'   => 'numeric|belongsToUser:accounts,id|nullable',
-            'destination_account_name' => 'between:1,255|nullable',
+            'source_id'               => 'numeric|belongsToUser:accounts,id|nullable',
+            'source_name'             => 'between:1,255|nullable',
+            'destination_id'          => 'numeric|belongsToUser:accounts,id|nullable',
+            'destination_name'        => 'between:1,255|nullable',
 
             // foreign amount data:
-            'foreign_amount'           => 'nullable|more:0',
+            'foreign_amount'          => 'nullable|more:0',
 
             // optional fields:
-            'budget_id'                => 'mustExist:budgets,id|belongsToUser:budgets,id|nullable',
-            'category'                 => 'between:1,255|nullable',
-            'tags'                     => 'between:1,255|nullable',
+            'budget_id'               => 'mustExist:budgets,id|belongsToUser:budgets,id|nullable',
+            'category'                => 'between:1,255|nullable',
+            'tags'                    => 'between:1,255|nullable',
         ];
         if ($this->integer('foreign_currency_id') > 0) {
             $rules['foreign_currency_id'] = 'exists:transaction_currencies,id';
@@ -181,17 +181,17 @@ class RecurrenceFormRequest extends Request
         // switchc on type to expand rules for source and destination accounts:
         switch ($this->string('transaction_type')) {
             case strtolower(TransactionType::WITHDRAWAL):
-                $rules['source_account_id']        = 'required|exists:accounts,id|belongsToUser:accounts';
-                $rules['destination_account_name'] = 'between:1,255|nullable';
+                $rules['source_id']        = 'required|exists:accounts,id|belongsToUser:accounts';
+                $rules['destination_name'] = 'between:1,255|nullable';
                 break;
             case strtolower(TransactionType::DEPOSIT):
-                $rules['source_account_name']    = 'between:1,255|nullable';
-                $rules['destination_account_id'] = 'required|exists:accounts,id|belongsToUser:accounts';
+                $rules['source_name']    = 'between:1,255|nullable';
+                $rules['destination_id'] = 'required|exists:accounts,id|belongsToUser:accounts';
                 break;
             case strtolower(TransactionType::TRANSFER):
                 // this may not work:
-                $rules['source_account_id']      = 'required|exists:accounts,id|belongsToUser:accounts|different:destination_account_id';
-                $rules['destination_account_id'] = 'required|exists:accounts,id|belongsToUser:accounts|different:source_account_id';
+                $rules['source_id']      = 'required|exists:accounts,id|belongsToUser:accounts|different:destination_id';
+                $rules['destination_id'] = 'required|exists:accounts,id|belongsToUser:accounts|different:source_id';
 
                 break;
             default:

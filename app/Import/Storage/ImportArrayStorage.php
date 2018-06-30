@@ -415,7 +415,7 @@ class ImportArrayStorage
             // store the journal.
             try {
                 $journal = $this->journalRepos->store($store);
-            } catch(FireflyException $e) {
+            } catch (FireflyException $e) {
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
                 $this->repository->addErrorMessage($this->importJob, sprintf('Row #%d could not be imported. %s', $index, $e->getMessage()));

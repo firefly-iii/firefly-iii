@@ -73,7 +73,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property bool   $is_split
  * @property int    $attachmentCount
  * @property int    $transaction_currency_id
- * @property int $foreign_currency_id
+ * @property int    $foreign_currency_id
  */
 class Transaction extends Model
 {

@@ -181,11 +181,11 @@ class MassController extends Controller
                 if (null !== $journal) {
                     // get optional fields:
                     $what              = strtolower($this->repository->getTransactionType($journal));
-                    $sourceAccountId   = $request->get('source_account_id')[$journal->id] ?? null;
+                    $sourceAccountId   = $request->get('source_id')[$journal->id] ?? null;
                     $currencyId        = $request->get('transaction_currency_id')[$journal->id] ?? 1;
-                    $sourceAccountName = $request->get('source_account_name')[$journal->id] ?? null;
-                    $destAccountId     = $request->get('destination_account_id')[$journal->id] ?? null;
-                    $destAccountName   = $request->get('destination_account_name')[$journal->id] ?? null;
+                    $sourceAccountName = $request->get('source_name')[$journal->id] ?? null;
+                    $destAccountId     = $request->get('destination_id')[$journal->id] ?? null;
+                    $destAccountName   = $request->get('destination_name')[$journal->id] ?? null;
                     $budgetId          = (int)($request->get('budget_id')[$journal->id] ?? 0.0);
                     $category          = $request->get('category')[$journal->id];
                     $tags              = $journal->tags->pluck('tag')->toArray();

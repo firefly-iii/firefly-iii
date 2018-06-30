@@ -49,7 +49,7 @@ class FixerIOv2 implements ExchangeRateInterface
     public function getRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): CurrencyExchangeRate
     {
         // create new exchange rate with default values.
-        $rate = 0;
+        $rate         = 0;
         $exchangeRate = new CurrencyExchangeRate;
         $exchangeRate->user()->associate($this->user);
         $exchangeRate->fromCurrency()->associate($fromCurrency);

@@ -38,19 +38,16 @@ $(document).ready(function () {
 
 
     // when user changes source account or destination, native currency may be different.
-    $('select[name="source_account_id"]').on('change', function() {
+    $('select[name="source_id"]').on('change', function() {
         selectsDifferentSource();
         // do something for transfers:
         validateCurrencyForTransfer();
     });
-    $('select[name="destination_account_id"]').on('change', function() {
+    $('select[name="destination_id"]').on('change', function() {
         selectsDifferentDestination();
         // do something for transfers:
         validateCurrencyForTransfer();
     });
-
-    //$('select[name="source_account_id"]').on('change', updateNativeCurrency);
-    //$('select[name="destination_account_id"]').on('change', updateNativeCurrency);
 
     // convert foreign currency to native currency (when input changes, exchange rate)
     $('#ffInput_amount').on('change', convertForeignToNative);
@@ -74,7 +71,7 @@ function selectsDifferentSource() {
         return;
     }
     // store original currency ID of the selected account in a separate var:
-    var sourceId = $('select[name="source_account_id"]').val();
+    var sourceId = $('select[name="source_id"]').val();
     var sourceCurrency = accountInfo[sourceId].preferredCurrency;
     $('input[name="source_account_currency"]').val(sourceCurrency);
     console.log('selectsDifferenctSource(): Set source account currency to ' + sourceCurrency);
@@ -82,7 +79,7 @@ function selectsDifferentSource() {
     // change input thing:
     $('.currency-option[data-id="' + sourceCurrency + '"]').click();
     $('[data-toggle="dropdown"]').parent().removeClass('open');
-    $('select[name="source_account_id"]').focus();
+    $('select[name="source_id"]').focus();
 }
 
 /**
@@ -96,7 +93,7 @@ function selectsDifferentDestination() {
         return;
     }
     // store original currency ID of the selected account in a separate var:
-    var destinationId = $('select[name="destination_account_id"]').val();
+    var destinationId = $('select[name="destination_id"]').val();
     var destinationCurrency = accountInfo[destinationId].preferredCurrency;
     $('input[name="destination_account_currency"]').val(destinationCurrency);
     console.log('selectsDifferentDestination(): Set destinationId account currency to ' + destinationCurrency);
@@ -104,7 +101,7 @@ function selectsDifferentDestination() {
     // change input thing:
     $('.currency-option[data-id="' + destinationCurrency + '"]').click();
     $('[data-toggle="dropdown"]').parent().removeClass('open');
-    $('select[name="destination_account_id"]').focus();
+    $('select[name="destination_id"]').focus();
 }
 
 
@@ -153,19 +150,19 @@ function updateForm() {
 
     $('input[name="what"]').val(what);
 
-    var destName = $('#ffInput_destination_account_name');
-    var srcName = $('#ffInput_source_account_name');
+    var destName = $('#ffInput_destination_name');
+    var srcName = $('#ffInput_source_name');
 
     switch (what) {
 
         case 'withdrawal':
             // show source_id and dest_name
-            document.getElementById('source_account_id_holder').style.display = 'block';
-            document.getElementById('destination_account_name_holder').style.display = 'block';
+            document.getElementById('source_id_holder').style.display = 'block';
+            document.getElementById('destination_name_holder').style.display = 'block';
 
             // hide others:
-            document.getElementById('source_account_name_holder').style.display = 'none';
-            document.getElementById('destination_account_id_holder').style.display = 'none';
+            document.getElementById('source_name_holder').style.display = 'none';
+            document.getElementById('destination_id_holder').style.display = 'none';
             document.getElementById('budget_id_holder').style.display = 'block';
 
             // hide piggy bank:
@@ -185,12 +182,12 @@ function updateForm() {
             break;
         case 'deposit':
             // show source_name and dest_id:
-            document.getElementById('source_account_name_holder').style.display = 'block';
-            document.getElementById('destination_account_id_holder').style.display = 'block';
+            document.getElementById('source_name_holder').style.display = 'block';
+            document.getElementById('destination_id_holder').style.display = 'block';
 
             // hide others:
-            document.getElementById('source_account_id_holder').style.display = 'none';
-            document.getElementById('destination_account_name_holder').style.display = 'none';
+            document.getElementById('source_id_holder').style.display = 'none';
+            document.getElementById('destination_name_holder').style.display = 'none';
 
             // hide budget
             document.getElementById('budget_id_holder').style.display = 'none';
@@ -212,12 +209,12 @@ function updateForm() {
             break;
         case 'transfer':
             // show source_id and dest_id:
-            document.getElementById('source_account_id_holder').style.display = 'block';
-            document.getElementById('destination_account_id_holder').style.display = 'block';
+            document.getElementById('source_id_holder').style.display = 'block';
+            document.getElementById('destination_id_holder').style.display = 'block';
 
             // hide others:
-            document.getElementById('source_account_name_holder').style.display = 'none';
-            document.getElementById('destination_account_name_holder').style.display = 'none';
+            document.getElementById('source_name_holder').style.display = 'none';
+            document.getElementById('destination_name_holder').style.display = 'none';
 
             // hide budget
             document.getElementById('budget_id_holder').style.display = 'none';
@@ -288,10 +285,10 @@ function clickButton(e) {
  */
 function getAccountId() {
     if (what === "withdrawal") {
-        return $('select[name="source_account_id"]').val();
+        return $('select[name="source_id"]').val();
     }
     if (what === "deposit" || what === "transfer") {
-        return $('select[name="destination_account_id"]').val();
+        return $('select[name="destination_id"]').val();
     }
     return undefined;
 }

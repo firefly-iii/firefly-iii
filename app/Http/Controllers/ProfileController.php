@@ -110,7 +110,7 @@ class ProfileController extends Controller
 
         $image = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret, 200);
 
-        return view('profile.code', compact('image','secret'));
+        return view('profile.code', compact('image', 'secret'));
     }
 
     /**

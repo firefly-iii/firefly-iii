@@ -251,6 +251,13 @@ interface BudgetRepositoryInterface
     public function store(array $data): Budget;
 
     /**
+     * @param array $data
+     *
+     * @return BudgetLimit
+     */
+    public function storeBudgetLimit(array $data): BudgetLimit;
+
+    /**
      * @param Budget $budget
      * @param array  $data
      *
@@ -273,13 +280,6 @@ interface BudgetRepositoryInterface
      * @return BudgetLimit
      */
     public function updateBudgetLimit(BudgetLimit $budgetLimit, array $data): BudgetLimit;
-
-    /**
-     * @param array $data
-     *
-     * @return BudgetLimit
-     */
-    public function storeBudgetLimit(array $data): BudgetLimit;
 
     /**
      * @param Budget $budget

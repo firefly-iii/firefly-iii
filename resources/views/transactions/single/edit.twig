@@ -39,22 +39,22 @@
 
                         {# SELECTABLE SOURCE ACCOUNT ONLY FOR WITHDRAWALS AND TRANSFERS #}
                         {% if what == 'transfer' or what == 'withdrawal' %}
-                            {{ ExpandedForm.assetAccountList('source_account_id', data.source_account_id, {label: trans('form.asset_source_account')}) }}
+                            {{ ExpandedForm.assetAccountList('source_id', data.source_id, {label: trans('form.asset_source_account')}) }}
                         {% endif %}
 
                         {# FREE FORMAT SOURCE ACCOUNT ONLY FOR DEPOSITS #}
                         {% if what == 'deposit' %}
-                            {{ ExpandedForm.text('source_account_name',data.source_account_name, {label: trans('form.revenue_account')}) }}
+                            {{ ExpandedForm.text('source_name',data.source_name, {label: trans('form.revenue_account')}) }}
                         {% endif %}
 
                         {# FREE FORMAT DESTINATION ACCOUNT ONLY FOR EXPENSES #}
                         {% if what == 'withdrawal' %}
-                            {{ ExpandedForm.text('destination_account_name',data.destination_account_name, {label: trans('form.expense_account')}) }}
+                            {{ ExpandedForm.text('destination_name',data.destination_name, {label: trans('form.expense_account')}) }}
                         {% endif %}
 
                         {# SELECTABLE DESTINATION ACCOUNT ONLY FOR TRANSFERS AND DEPOSITS #}
                         {% if what == 'transfer' or what == 'deposit' %}
-                            {{ ExpandedForm.assetAccountList('destination_account_id', data.destination_account_id, {label: trans('form.asset_destination_account')} ) }}
+                            {{ ExpandedForm.assetAccountList('destination_id', data.destination_id, {label: trans('form.asset_destination_account')} ) }}
                         {% endif %}
 
                         {# ALWAYS SHOW AMOUNT #}

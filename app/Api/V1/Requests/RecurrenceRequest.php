@@ -64,7 +64,7 @@ class RecurrenceRequest extends Request
             'meta'         => [
                 'piggy_bank_id'   => $this->integer('piggy_bank_id'),
                 'piggy_bank_name' => $this->string('piggy_bank_name'),
-                'tags'               => explode(',', $this->string('tags')),
+                'tags'            => explode(',', $this->string('tags')),
             ],
             'transactions' => [],
             'repetitions'  => [],
@@ -88,26 +88,26 @@ class RecurrenceRequest extends Request
         /** @var array $transaction */
         foreach ($transactions as $transaction) {
             $return['transactions'][] = [
-                'amount'                => $transaction['amount'],
+                'amount' => $transaction['amount'],
 
-                'currency_id'           => isset($transaction['currency_id']) ? (int)$transaction['currency_id'] : null,
-                'currency_code'         => $transaction['currency_code'] ?? null,
+                'currency_id'   => isset($transaction['currency_id']) ? (int)$transaction['currency_id'] : null,
+                'currency_code' => $transaction['currency_code'] ?? null,
 
                 'foreign_amount'        => $transaction['foreign_amount'] ?? null,
                 'foreign_currency_id'   => isset($transaction['foreign_currency_id']) ? (int)$transaction['foreign_currency_id'] : null,
                 'foreign_currency_code' => $transaction['foreign_currency_code'] ?? null,
 
-                'budget_id'             => isset($transaction['budget_id']) ? (int)$transaction['budget_id'] : null,
-                'budget_name'           => $transaction['budget_name'] ?? null,
-                'category_id'           => isset($transaction['category_id']) ? (int)$transaction['category_id'] : null,
-                'category_name'         => $transaction['category_name'] ?? null,
+                'budget_id'     => isset($transaction['budget_id']) ? (int)$transaction['budget_id'] : null,
+                'budget_name'   => $transaction['budget_name'] ?? null,
+                'category_id'   => isset($transaction['category_id']) ? (int)$transaction['category_id'] : null,
+                'category_name' => $transaction['category_name'] ?? null,
 
-                'source_id'             => isset($transaction['source_id']) ? (int)$transaction['source_id'] : null,
-                'source_name'           => isset($transaction['source_name']) ? (string)$transaction['source_name'] : null,
-                'destination_id'        => isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null,
-                'destination_name'      => isset($transaction['destination_name']) ? (string)$transaction['destination_name'] : null,
+                'source_id'        => isset($transaction['source_id']) ? (int)$transaction['source_id'] : null,
+                'source_name'      => isset($transaction['source_name']) ? (string)$transaction['source_name'] : null,
+                'destination_id'   => isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null,
+                'destination_name' => isset($transaction['destination_name']) ? (string)$transaction['destination_name'] : null,
 
-                'description'               => $transaction['description'],
+                'description' => $transaction['description'],
             ];
         }
 

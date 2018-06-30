@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
+
 use FireflyIII\Models\BudgetLimit;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;

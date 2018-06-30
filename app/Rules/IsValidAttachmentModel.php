@@ -79,7 +79,7 @@ class IsValidAttachmentModel implements Rule
                 /** @var JournalRepositoryInterface $repository */
                 $repository = app(JournalRepositoryInterface::class);
                 $repository->setUser($user);
-                $result     = $repository->findNull((int)$value);
+                $result = $repository->findNull((int)$value);
 
                 return null !== $result;
                 break;

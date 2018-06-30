@@ -48,7 +48,7 @@ class DeleteController extends Controller
         // todo actual number.
         $journalsCreated = 5;
 
-        return view('recurring.delete', compact('recurrence', 'subTitle','journalsCreated'));
+        return view('recurring.delete', compact('recurrence', 'subTitle', 'journalsCreated'));
     }
 
     /**

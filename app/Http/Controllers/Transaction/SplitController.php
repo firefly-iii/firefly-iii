@@ -184,30 +184,30 @@ class SplitController extends Controller
         $sourceAccounts      = $this->repository->getJournalSourceAccounts($journal);
         $destinationAccounts = $this->repository->getJournalDestinationAccounts($journal);
         $array               = [
-            'journal_description'            => $request->old('journal_description', $journal->description),
-            'journal_amount'                 => '0',
-            'journal_foreign_amount'         => '0',
-            'sourceAccounts'                 => $sourceAccounts,
-            'journal_source_account_id'      => $request->old('journal_source_account_id', $sourceAccounts->first()->id),
-            'journal_source_account_name'    => $request->old('journal_source_account_name', $sourceAccounts->first()->name),
-            'journal_destination_account_id' => $request->old('journal_destination_account_id', $destinationAccounts->first()->id),
-            'destinationAccounts'            => $destinationAccounts,
-            'what'                           => strtolower($this->repository->getTransactionType($journal)),
-            'date'                           => $request->old('date', $this->repository->getJournalDate($journal, null)),
-            'tags'                           => implode(',', $journal->tags->pluck('tag')->toArray()),
+            'journal_description'    => $request->old('journal_description', $journal->description),
+            'journal_amount'         => '0',
+            'journal_foreign_amount' => '0',
+            'sourceAccounts'         => $sourceAccounts,
+            'journal_source_id'      => $request->old('journal_source_id', $sourceAccounts->first()->id),
+            'journal_source_name'    => $request->old('journal_source_name', $sourceAccounts->first()->name),
+            'journal_destination_id' => $request->old('journal_destination_id', $destinationAccounts->first()->id),
+            'destinationAccounts'    => $destinationAccounts,
+            'what'                   => strtolower($this->repository->getTransactionType($journal)),
+            'date'                   => $request->old('date', $this->repository->getJournalDate($journal, null)),
+            'tags'                   => implode(',', $journal->tags->pluck('tag')->toArray()),
 
             // all custom fields:
-            'interest_date'                  => $request->old('interest_date', $this->repository->getMetaField($journal, 'interest_date')),
-            'book_date'                      => $request->old('book_date', $this->repository->getMetaField($journal, 'book_date')),
-            'process_date'                   => $request->old('process_date', $this->repository->getMetaField($journal, 'process_date')),
-            'due_date'                       => $request->old('due_date', $this->repository->getMetaField($journal, 'due_date')),
-            'payment_date'                   => $request->old('payment_date', $this->repository->getMetaField($journal, 'payment_date')),
-            'invoice_date'                   => $request->old('invoice_date', $this->repository->getMetaField($journal, 'invoice_date')),
-            'internal_reference'             => $request->old('internal_reference', $this->repository->getMetaField($journal, 'internal_reference')),
-            'notes'                          => $request->old('notes', $this->repository->getNoteText($journal)),
+            'interest_date'          => $request->old('interest_date', $this->repository->getMetaField($journal, 'interest_date')),
+            'book_date'              => $request->old('book_date', $this->repository->getMetaField($journal, 'book_date')),
+            'process_date'           => $request->old('process_date', $this->repository->getMetaField($journal, 'process_date')),
+            'due_date'               => $request->old('due_date', $this->repository->getMetaField($journal, 'due_date')),
+            'payment_date'           => $request->old('payment_date', $this->repository->getMetaField($journal, 'payment_date')),
+            'invoice_date'           => $request->old('invoice_date', $this->repository->getMetaField($journal, 'invoice_date')),
+            'internal_reference'     => $request->old('internal_reference', $this->repository->getMetaField($journal, 'internal_reference')),
+            'notes'                  => $request->old('notes', $this->repository->getNoteText($journal)),
 
             // transactions.
-            'transactions'                   => $this->getTransactionDataFromJournal($journal),
+            'transactions'           => $this->getTransactionDataFromJournal($journal),
         ];
         // update transactions array with old request data.
         $array['transactions'] = $this->updateWithPrevious($array['transactions'], $request->old());

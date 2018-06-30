@@ -38,12 +38,12 @@ $(document).ready(function () {
     $('#ffInput_amount').on('change', convertForeignToNative);
 
     // respond to transfer changes:
-    $('#ffInput_source_account_id').on('change', function () {
+    $('#ffInput_source_id').on('change', function () {
         validateCurrencyForTransfer();
         // update the two source account currency ID fields (initial value):
         initCurrencyIdValues();
     });
-    $('#ffInput_destination_account_id').on('change', function () {
+    $('#ffInput_destination_id').on('change', function () {
         validateCurrencyForTransfer();
         // update the two source account currency ID fields (initial value):
         initCurrencyIdValues();
@@ -77,9 +77,9 @@ function initCurrencyIdValues() {
         $('input[name="destination_account_currency"]').val(currencyId);
         return;
     }
-    var sourceAccount = $('select[name="source_account_id"]').val();
+    var sourceAccount = $('select[name="source_id"]').val();
     console.log('Source account is ' + sourceAccount);
-    var destAccount = $('select[name="destination_account_id"]').val();
+    var destAccount = $('select[name="destination_id"]').val();
     console.log('Destination account is ' + destAccount);
 
     var sourceCurrency = parseInt(accountInfo[sourceAccount].preferredCurrency);
@@ -134,10 +134,10 @@ function updateInitialPage() {
 function getAccountId() {
     console.log('in getAccountId()');
     if (journal.transaction_type.type === "Withdrawal") {
-        return $('select[name="source_account_id"]').val();
+        return $('select[name="source_id"]').val();
     }
     if (journal.transaction_type.type === "Deposit") {
-        return $('select[name="destination_account_id"]').val();
+        return $('select[name="destination_id"]').val();
     }
 
     alert('Cannot handle ' + journal.transaction_type.type);

@@ -39,7 +39,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $name
  * @property Carbon $updated_at
  * @property Carbon $created_at
- * @property int $id
+ * @property int    $id
  */
 class Preference extends Model
 {

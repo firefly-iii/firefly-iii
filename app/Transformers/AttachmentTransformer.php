@@ -25,10 +25,10 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\Attachment;
+use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use League\Fractal\Resource\Collection as FractalCollection;
 
 /**
  * Class AttachmentTransformer
@@ -40,13 +40,13 @@ class AttachmentTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = ['user','notes'];
+    protected $availableIncludes = ['user', 'notes'];
     /**
      * List of resources to automatically include
      *
      * @var array
      */
-    protected $defaultIncludes = ['user','notes'];
+    protected $defaultIncludes = ['user', 'notes'];
 
     /** @var ParameterBag */
     protected $parameters;
@@ -64,20 +64,6 @@ class AttachmentTransformer extends TransformerAbstract
     }
 
     /**
-     * Attach the user.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Attachment $attachment
-     *
-     * @return Item
-     */
-    public function includeUser(Attachment $attachment): Item
-    {
-        return $this->item($attachment->user, new UserTransformer($this->parameters), 'users');
-    }
-
-    /**
      * Attach the notes.
      *
      * @codeCoverageIgnore
@@ -89,6 +75,20 @@ class AttachmentTransformer extends TransformerAbstract
     public function includeNotes(Attachment $attachment): FractalCollection
     {
         return $this->collection($attachment->notes, new NoteTransformer($this->parameters), 'notes');
+    }
+
+    /**
+     * Attach the user.
+     *
+     * @codeCoverageIgnore
+     *
+     * @param Attachment $attachment
+     *
+     * @return Item
+     */
+    public function includeUser(Attachment $attachment): Item
+    {
+        return $this->item($attachment->user, new UserTransformer($this->parameters), 'users');
     }
 
     /**

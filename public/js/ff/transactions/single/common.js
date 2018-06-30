@@ -65,15 +65,15 @@ function setCommonAutocomplete() {
     });
 
 
-    if ($('input[name="destination_account_name"]').length > 0) {
+    if ($('input[name="destination_name"]').length > 0) {
         $.getJSON('json/expense-accounts').done(function (data) {
-            $('input[name="destination_account_name"]').typeahead({source: data, autoSelect: false});
+            $('input[name="destination_name"]').typeahead({source: data, autoSelect: false});
         });
     }
 
-    if ($('input[name="source_account_name"]').length > 0) {
+    if ($('input[name="source_name"]').length > 0) {
         $.getJSON('json/revenue-accounts').done(function (data) {
-            $('input[name="source_account_name"]').typeahead({source: data, autoSelect: false});
+            $('input[name="source_name"]').typeahead({source: data, autoSelect: false});
         });
     }
 
@@ -160,8 +160,8 @@ function updateNativeAmount(data) {
  * Instructions for transfers
  */
 function getTransferExchangeInstructions() {
-    var sourceAccount = $('select[name="source_account_id"]').val();
-    var destAccount = $('select[name="destination_account_id"]').val();
+    var sourceAccount = $('select[name="source_id"]').val();
+    var destAccount = $('select[name="destination_id"]').val();
 
     var sourceCurrency = accountInfo[sourceAccount].preferredCurrency;
     var destinationCurrency = accountInfo[destAccount].preferredCurrency;
@@ -180,8 +180,8 @@ function validateCurrencyForTransfer() {
         return;
     }
     $('#source_amount_holder').show();
-    var sourceAccount = $('select[name="source_account_id"]').val();
-    var destAccount = $('select[name="destination_account_id"]').val();
+    var sourceAccount = $('select[name="source_id"]').val();
+    var destAccount = $('select[name="destination_id"]').val();
     var sourceCurrency = accountInfo[sourceAccount].preferredCurrency;
     var sourceSymbol = currencyInfo[sourceCurrency].symbol;
     var destinationCurrency = accountInfo[destAccount].preferredCurrency;
@@ -208,8 +208,8 @@ function validateCurrencyForTransfer() {
  *
  */
 function convertSourceToDestination() {
-    var sourceAccount = $('select[name="source_account_id"]').val();
-    var destAccount = $('select[name="destination_account_id"]').val();
+    var sourceAccount = $('select[name="source_id"]').val();
+    var destAccount = $('select[name="destination_id"]').val();
 
     var sourceCurrency = accountInfo[sourceAccount].preferredCurrency;
     var destinationCurrency = accountInfo[destAccount].preferredCurrency;

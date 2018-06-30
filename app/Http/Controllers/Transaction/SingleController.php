@@ -99,10 +99,10 @@ class SingleController extends Controller
 
         $preFilled = [
             'description'               => $journal->description,
-            'source_account_id'         => $source->id,
-            'source_account_name'       => $source->name,
-            'destination_account_id'    => $destination->id,
-            'destination_account_name'  => $destination->name,
+            'source_id'                 => $source->id,
+            'source_name'               => $source->name,
+            'destination_id'            => $destination->id,
+            'destination_name'          => $destination->name,
             'amount'                    => $amount,
             'source_amount'             => $amount,
             'destination_amount'        => $foreignAmount,
@@ -152,10 +152,10 @@ class SingleController extends Controller
         $source         = (int)$request->get('source');
 
         if (($what === 'withdrawal' || $what === 'transfer') && $source > 0) {
-            $preFilled['source_account_id'] = $source;
+            $preFilled['source_id'] = $source;
         }
         if ($what === 'deposit' && $source > 0) {
-            $preFilled['destination_account_id'] = $source;
+            $preFilled['destination_id'] = $source;
         }
 
         session()->put('preFilled', $preFilled);
@@ -259,35 +259,35 @@ class SingleController extends Controller
         $pTransaction        = $repository->getFirstPosTransaction($journal);
         $foreignCurrency     = $pTransaction->foreignCurrency ?? $pTransaction->transactionCurrency;
         $preFilled           = [
-            'date'                     => $repository->getJournalDate($journal, null), //  $journal->dateAsString()
-            'interest_date'            => $repository->getJournalDate($journal, 'interest_date'),
-            'book_date'                => $repository->getJournalDate($journal, 'book_date'),
-            'process_date'             => $repository->getJournalDate($journal, 'process_date'),
-            'category'                 => $repository->getJournalCategoryName($journal),
-            'budget_id'                => $repository->getJournalBudgetId($journal),
-            'tags'                     => implode(',', $repository->getTags($journal)),
-            'source_account_id'        => $sourceAccounts->first()->id,
-            'source_account_name'      => $sourceAccounts->first()->edit_name,
-            'destination_account_id'   => $destinationAccounts->first()->id,
-            'destination_account_name' => $destinationAccounts->first()->edit_name,
+            'date'                 => $repository->getJournalDate($journal, null), //  $journal->dateAsString()
+            'interest_date'        => $repository->getJournalDate($journal, 'interest_date'),
+            'book_date'            => $repository->getJournalDate($journal, 'book_date'),
+            'process_date'         => $repository->getJournalDate($journal, 'process_date'),
+            'category'             => $repository->getJournalCategoryName($journal),
+            'budget_id'            => $repository->getJournalBudgetId($journal),
+            'tags'                 => implode(',', $repository->getTags($journal)),
+            'source_id'            => $sourceAccounts->first()->id,
+            'source_name'          => $sourceAccounts->first()->edit_name,
+            'destination_id'       => $destinationAccounts->first()->id,
+            'destination_name'     => $destinationAccounts->first()->edit_name,
 
             // new custom fields:
-            'due_date'                 => $repository->getJournalDate($journal, 'due_date'),
-            'payment_date'             => $repository->getJournalDate($journal, 'payment_date'),
-            'invoice_date'             => $repository->getJournalDate($journal, 'invoice_date'),
-            'interal_reference'        => $repository->getMetaField($journal, 'internal_reference'),
-            'notes'                    => $repository->getNoteText($journal),
+            'due_date'             => $repository->getJournalDate($journal, 'due_date'),
+            'payment_date'         => $repository->getJournalDate($journal, 'payment_date'),
+            'invoice_date'         => $repository->getJournalDate($journal, 'invoice_date'),
+            'interal_reference'    => $repository->getMetaField($journal, 'internal_reference'),
+            'notes'                => $repository->getNoteText($journal),
 
             // amount fields
-            'amount'                   => $pTransaction->amount,
-            'source_amount'            => $pTransaction->amount,
-            'native_amount'            => $pTransaction->amount,
-            'destination_amount'       => $pTransaction->foreign_amount,
-            'currency'                 => $pTransaction->transactionCurrency,
-            'source_currency'          => $pTransaction->transactionCurrency,
-            'native_currency'          => $pTransaction->transactionCurrency,
-            'foreign_currency'         => $foreignCurrency,
-            'destination_currency'     => $foreignCurrency,
+            'amount'               => $pTransaction->amount,
+            'source_amount'        => $pTransaction->amount,
+            'native_amount'        => $pTransaction->amount,
+            'destination_amount'   => $pTransaction->foreign_amount,
+            'currency'             => $pTransaction->transactionCurrency,
+            'source_currency'      => $pTransaction->transactionCurrency,
+            'native_currency'      => $pTransaction->transactionCurrency,
+            'foreign_currency'     => $foreignCurrency,
+            'destination_currency' => $foreignCurrency,
         ];
 
         // amounts for withdrawals and deposits:
