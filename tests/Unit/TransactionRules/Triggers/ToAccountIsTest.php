@@ -36,13 +36,15 @@ class ToAccountIsTest extends TestCase
      */
     public function testTriggered(): void
     {
-        $count = 0;
+        $count            = 0;
+        $transactionCount = 0;
         do {
-            $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $transaction = $journal->transactions()->where('amount', '>', 0)->first();
-            $account     = $transaction->account;
+            $journal          = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+            $transaction      = $journal->transactions()->where('amount', '>', 0)->first();
+            $transactionCount = $journal->transactions()->count();
+            $account          = $transaction->account;
             $count++;
-        } while ($account === null && $count < 30);
+        } while ($account === null && $count < 30 && $transactionCount !== 2);
 
         $trigger = ToAccountIs::makeFromStrings($account->name, false);
         $result  = $trigger->triggered($journal);
@@ -54,13 +56,15 @@ class ToAccountIsTest extends TestCase
      */
     public function testTriggeredNot(): void
     {
-        $count = 0;
+        $count            = 0;
+        $transactionCount = 0;
         do {
-            $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $transaction = $journal->transactions()->where('amount', '>', 0)->first();
-            $account     = $transaction->account;
+            $journal          = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+            $transaction      = $journal->transactions()->where('amount', '>', 0)->first();
+            $transactionCount = $journal->transactions()->count();
+            $account          = $transaction->account;
             $count++;
-        } while ($account === null && $count < 30);
+        } while ($account === null && $count < 30 && $transactionCount !== 2);
 
         $trigger = ToAccountIs::makeFromStrings('some name' . random_int(1, 234), false);
         $result  = $trigger->triggered($journal);
