@@ -37,7 +37,7 @@ class AmountCreditTest extends TestCase
     {
         $values = [
             '0'                       => '0.000000000000',
-            '0.0'                     => '0',
+            '0.0'                     => '0.000000000000',
             '0.1'                     => '0.1',
             '.2'                      => '0.2',
             '0.01'                    => '0.01',
@@ -154,7 +154,7 @@ class AmountCreditTest extends TestCase
         foreach ($values as $value => $expected) {
             $converter = new AmountCredit;
             $result    = $converter->convert($value);
-            $this->assertEquals($expected, $result, sprintf('The original value was %s', $value));
+            $this->assertEquals($expected, $result, sprintf('The original value was %s, expected was %s', $value, $expected));
         }
     }
 
