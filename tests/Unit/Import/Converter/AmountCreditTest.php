@@ -36,8 +36,8 @@ class AmountCreditTest extends TestCase
     public function testConvert(): void
     {
         $values = [
-            '0'                       => '0.000000000000',
-            '0.0'                     => '0.000000000000',
+            '0'                       => '0',
+            '0.0'                     => '0',
             '0.1'                     => '0.1',
             '.2'                      => '0.2',
             '0.01'                    => '0.01',
