@@ -90,7 +90,9 @@ class ChartJsGenerator implements GeneratorInterface
             if (isset($set['currency_symbol'])) {
                 $currentSet['currency_symbol'] = $set['currency_symbol'];
             }
-
+            if(isset($set['backgroundColor'])) {
+                $currentSet['backgroundColor'] = $set['backgroundColor'];
+            }
             $chartData['datasets'][] = $currentSet;
         }
 

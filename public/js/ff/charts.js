@@ -26,12 +26,12 @@ var allCharts = {};
  */
 var colourSet = [
     [53, 124, 165],
-    [0, 141, 76],
+    [0, 141, 76], // green
     [219, 139, 11],
-    [202, 25, 90],
+    [202, 25, 90], // paars rood-ish #CA195A
     [85, 82, 153],
     [66, 133, 244],
-    [219, 68, 55],
+    [219, 68, 55], // red #DB4437
     [244, 180, 0],
     [15, 157, 88],
     [171, 71, 188],
@@ -198,6 +198,21 @@ function doubleYNonStackedChart(URI, container) {
 function columnChart(URI, container) {
     "use strict";
     var colorData = true;
+    var options = $.extend(true, {}, defaultChartOptions);
+    var chartType = 'bar';
+
+    drawAChart(URI, container, chartType, options, colorData);
+
+}
+
+/**
+ *
+ * @param URI
+ * @param container
+ */
+function columnChartCustomColours(URI, container) {
+    "use strict";
+    var colorData = false;
     var options = $.extend(true, {}, defaultChartOptions);
     var chartType = 'bar';
 

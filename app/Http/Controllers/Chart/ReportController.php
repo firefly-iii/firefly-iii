@@ -112,14 +112,16 @@ class ReportController extends Controller
         $source    = $this->getChartData($accounts, $start, $end);
         $chartData = [
             [
-                'label'   => trans('firefly.income'),
-                'type'    => 'bar',
-                'entries' => [],
+                'label'           => trans('firefly.income'),
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
+                'entries'         => [],
             ],
             [
-                'label'   => trans('firefly.expenses'),
-                'type'    => 'bar',
-                'entries' => [],
+                'label'           => trans('firefly.expenses'),
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
+                'entries'         => [],
             ],
         ];
 
@@ -189,17 +191,19 @@ class ReportController extends Controller
 
         $chartData = [
             [
-                'label'   => (string)trans('firefly.income'),
-                'type'    => 'bar',
-                'entries' => [
+                'label'           => (string)trans('firefly.income'),
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
+                'entries'         => [
                     (string)trans('firefly.sum_of_period')     => $numbers['sum_earned'],
                     (string)trans('firefly.average_in_period') => $numbers['avg_earned'],
                 ],
             ],
             [
-                'label'   => trans('firefly.expenses'),
-                'type'    => 'bar',
-                'entries' => [
+                'label'           => trans('firefly.expenses'),
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
+                'entries'         => [
                     (string)trans('firefly.sum_of_period')     => $numbers['sum_spent'],
                     (string)trans('firefly.average_in_period') => $numbers['avg_spent'],
                 ],
