@@ -62,7 +62,7 @@ class BillControllerTest extends TestCase
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('destroy')->once()->andReturn(true);
 
-        // get account:
+        // get bill:
         $bill = $this->user()->bills()->first();
 
         // call API
