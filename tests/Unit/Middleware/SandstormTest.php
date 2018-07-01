@@ -76,6 +76,7 @@ class SandstormTest extends TestCase
 
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('count')->twice()->andReturn(1);
+        $repository->shouldReceive('hasRole')->andReturn(true);
 
         $response = $this->get('/_test/sandstorm');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
@@ -128,6 +129,7 @@ class SandstormTest extends TestCase
         $repository->shouldReceive('store')->once()->andReturn($this->user());
         $repository->shouldReceive('attachRole')->twice()->andReturn(true);
         $repository->shouldReceive('getRole')->once()->andReturn(new Role);
+        $repository->shouldReceive('hasRole')->andReturn(false);
 
         $response = $this->get('/_test/sandstorm', ['X-Sandstorm-User-Id' => 'abcd']);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
@@ -156,6 +158,7 @@ class SandstormTest extends TestCase
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('count')->twice()->andReturn(1);
         $repository->shouldReceive('first')->once()->andReturn($this->user());
+        $repository->shouldReceive('hasRole')->andReturn(true);
 
         $response = $this->get('/_test/sandstorm', ['X-Sandstorm-User-Id' => 'abcd']);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());

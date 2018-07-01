@@ -43,10 +43,6 @@ use Tests\TestCase;
 
 /**
  * Class AccountControllerTest
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AccountControllerTest extends TestCase
 {
@@ -60,8 +56,8 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseAccounts
-     * @covers       \FireflyIII\Generator\Chart\Basic\GeneratorInterface::singleSet
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController
+     * @covers       \FireflyIII\Generator\Chart\Basic\GeneratorInterface
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -84,8 +80,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseBudget
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::getBudgetNames
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -112,8 +107,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseBudgetAll
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::getBudgetNames
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -142,8 +136,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseCategory
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::getCategoryNames
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -171,8 +164,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseCategoryAll
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::getCategoryNames
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -202,10 +194,8 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::frontpage
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::__construct
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::accountBalanceChart
-     * @covers       \FireflyIII\Generator\Chart\Basic\GeneratorInterface::multiSet
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController
+     * @covers       \FireflyIII\Generator\Chart\Basic\GeneratorInterface
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -232,7 +222,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::incomeCategory
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -260,7 +250,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::incomeCategoryAll
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -290,7 +280,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::period
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -311,8 +301,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\AccountController::report
-     * @covers \FireflyIII\Http\Controllers\Chart\AccountController::accountBalanceChart
+     * @covers \FireflyIII\Http\Controllers\Chart\AccountController
      */
     public function testReport(): void
     {
@@ -328,7 +317,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::revenueAccounts
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController
      * @dataProvider dateRangeProvider
      *
      * @param string $range

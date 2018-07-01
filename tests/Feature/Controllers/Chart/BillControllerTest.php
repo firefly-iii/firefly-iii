@@ -32,10 +32,6 @@ use Tests\TestCase;
 
 /**
  * Class BillControllerTest
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BillControllerTest extends TestCase
 {
@@ -49,8 +45,7 @@ class BillControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\BillController::frontpage
-     * @covers       \FireflyIII\Http\Controllers\Chart\BillController::__construct
+     * @covers       \FireflyIII\Http\Controllers\Chart\BillController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -71,7 +66,7 @@ class BillControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\BillController::single
+     * @covers \FireflyIII\Http\Controllers\Chart\BillController
      */
     public function testSingle(): void
     {

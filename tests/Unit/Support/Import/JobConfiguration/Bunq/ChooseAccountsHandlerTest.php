@@ -127,12 +127,14 @@ class ChooseAccountsHandlerTest extends TestCase
             'account_mapping' => [
                 '1234' => '456',
             ],
+            'apply_rules'     => true,
         ];
 
         $config                    = [
-            'accounts' => [
+            'accounts'    => [
                 0 => ['id' => 1234, 'name' => 'bunq'],
             ],
+            'apply-rules' => true,
         ];
         $expected                  = $config;
         $expected['mapping'][1234] = 456;
@@ -179,12 +181,14 @@ class ChooseAccountsHandlerTest extends TestCase
             'account_mapping' => [
                 '1234' => '456',
             ],
+            'apply_rules'     => true,
         ];
 
         $config                 = [
-            'accounts' => [
+            'accounts'    => [
                 0 => ['id' => 1235, 'name' => 'bunq'],
             ],
+            'apply-rules' => true,
         ];
         $expected               = $config;
         $expected['mapping'][0] = 456;
@@ -231,12 +235,14 @@ class ChooseAccountsHandlerTest extends TestCase
             'account_mapping' => [
                 '1234' => '456',
             ],
+            'apply_rules'     => true,
         ];
 
         $config                    = [
-            'accounts' => [
+            'accounts'    => [
                 0 => ['id' => 1234, 'name' => 'bunq'],
             ],
+            'apply-rules' => true,
         ];
         $expected                  = $config;
         $expected['mapping'][1234] = 0;
@@ -279,11 +285,13 @@ class ChooseAccountsHandlerTest extends TestCase
         $job->save();
 
         // data:
-        $data   = ['account_mapping' => []];
+        $data   = ['account_mapping' => [], 'apply_rules' => true,];
         $config = [
             'accounts' => [
                 0 => ['id' => 1234, 'name' => 'bunq'],
             ],
+            'apply-rules'     => true,
+
         ];
 
         // mock stuff

@@ -139,7 +139,7 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Request $request, Transaction $transaction, string $include)
+    public function show(Request $request, Transaction $transaction, string $include = null)
     {
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';

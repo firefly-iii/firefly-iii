@@ -696,7 +696,7 @@ class TransactionFactoryTest extends TestCase
     }
 
     /**
-     * Create transfer using minimal data.
+     * Create reconciliation using minimal data.
      *
      * @covers \FireflyIII\Factory\TransactionFactory
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait

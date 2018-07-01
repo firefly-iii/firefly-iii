@@ -29,10 +29,6 @@ use Tests\TestCase;
 
 /**
  * Class HomeControllerTest
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class HomeControllerTest extends TestCase
 {
@@ -46,8 +42,7 @@ class HomeControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\HomeController::index
-     * @covers \FireflyIII\Http\Controllers\Admin\HomeController::__construct
+     * @covers \FireflyIII\Http\Controllers\Admin\HomeController
      */
     public function testIndex(): void
     {
@@ -58,6 +53,9 @@ class HomeControllerTest extends TestCase
         $response->assertSee('<ol class="breadcrumb">');
     }
 
+    /**
+     * @covers \FireflyIII\Http\Controllers\Admin\HomeController
+     */
     public function testTestMessage(): void
     {
         Event::fake();

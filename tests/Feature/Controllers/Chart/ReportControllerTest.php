@@ -30,10 +30,6 @@ use Tests\TestCase;
 
 /**
  * Class ReportControllerTest
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReportControllerTest extends TestCase
 {
@@ -47,9 +43,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\ReportController::netWorth
-     * @covers \FireflyIII\Http\Controllers\Chart\ReportController::arraySum
-     * @covers \FireflyIII\Http\Controllers\Chart\ReportController::__construct
+     * @covers \FireflyIII\Http\Controllers\Chart\ReportController
      */
     public function testNetWorth(): void
     {
@@ -64,8 +58,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\ReportController::operations
-     * @covers \FireflyIII\Http\Controllers\Chart\ReportController::getChartData
+     * @covers \FireflyIII\Http\Controllers\Chart\ReportController
      */
     public function testOperations(): void
     {
@@ -83,8 +76,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\ReportController::sum
-     * @covers \FireflyIII\Http\Controllers\Chart\ReportController::getChartData
+     * @covers \FireflyIII\Http\Controllers\Chart\ReportController
      */
     public function testSum(): void
     {

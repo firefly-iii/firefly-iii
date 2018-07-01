@@ -97,6 +97,7 @@ class StageNewHandlerTest extends TestCase
         // create new customer:
         $ncRequest->shouldReceive('setUser')->once();
         $ncRequest->shouldReceive('getCustomer')->once()->andReturn($fakeCustomer);
+        $ncRequest->shouldReceive('call')->once();
 
         // mock calls for repository:
         $repository->shouldReceive('setUser')->once();

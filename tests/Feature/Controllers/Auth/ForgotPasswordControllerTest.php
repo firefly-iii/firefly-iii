@@ -28,10 +28,6 @@ use Tests\TestCase;
 
 /**
  * Class ForgotPasswordControllerTest
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ForgotPasswordControllerTest extends TestCase
 {
@@ -45,8 +41,7 @@ class ForgotPasswordControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Auth\ForgotPasswordController::__construct
-     * @covers \FireflyIII\Http\Controllers\Auth\ForgotPasswordController::sendResetLinkEmail
+     * @covers \FireflyIII\Http\Controllers\Auth\ForgotPasswordController
      */
     public function testSendResetLinkEmail(): void
     {
@@ -62,8 +57,7 @@ class ForgotPasswordControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Auth\ForgotPasswordController::__construct
-     * @covers \FireflyIII\Http\Controllers\Auth\ForgotPasswordController::sendResetLinkEmail
+     * @covers \FireflyIII\Http\Controllers\Auth\ForgotPasswordController
      */
     public function testSendResetLinkEmailDemo(): void
     {

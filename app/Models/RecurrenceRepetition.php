@@ -60,6 +60,7 @@ class RecurrenceRepetition extends Model
             'repetition_type'   => 'string',
             'repetition_moment' => 'string',
             'repetition_skip'   => 'int',
+            'weekend'           => 'int',
         ];
     protected $fillable = ['recurrence_id', 'weekend', 'repetition_type', 'repetition_moment', 'repetition_skip'];
     /** @var string */

@@ -35,10 +35,6 @@ use Tests\TestCase;
 
 /**
  * Class CategoryControllerTest
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CategoryControllerTest extends TestCase
 {
@@ -52,8 +48,7 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::all
-     * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::__construct
+     * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -80,7 +75,7 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::frontpage
+     * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -106,7 +101,7 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\CategoryController::reportPeriod
+     * @covers \FireflyIII\Http\Controllers\Chart\CategoryController
      */
     public function testReportPeriod(): void
     {
@@ -123,7 +118,7 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\CategoryController::reportPeriodNoCategory
+     * @covers \FireflyIII\Http\Controllers\Chart\CategoryController
      */
     public function testReportPeriodNoCategory(): void
     {
@@ -140,8 +135,7 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::specificPeriod
-     * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::makePeriodChart
+     * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController
      * @dataProvider dateRangeProvider
      *
      * @param string $range

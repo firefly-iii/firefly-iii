@@ -282,7 +282,7 @@ class ImportableConverter
             'piggy_bank_id'      => null,
             'piggy_bank_name'    => null,
             'bill_id'            => $billId,
-            'bill_name'          => null === $billId ? $importable->billName : null,
+            'bill_name'          => $importable->billName,
 
             // transaction data:
             'transactions'       => [

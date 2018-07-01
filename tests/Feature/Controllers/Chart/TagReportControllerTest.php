@@ -40,10 +40,6 @@ use Tests\TestCase;
 
 /**
  * Class TagReportControllerTest
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TagReportControllerTest extends TestCase
 {
@@ -57,8 +53,7 @@ class TagReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::accountExpense
-     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::__construct
+     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController
      */
     public function testAccountExpense(): void
     {
@@ -86,7 +81,7 @@ class TagReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::accountIncome
+     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController
      */
     public function testAccountIncome(): void
     {
@@ -113,7 +108,7 @@ class TagReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::budgetExpense()
+     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController
      */
     public function testBudgetExpense(): void
     {
@@ -139,7 +134,7 @@ class TagReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::categoryExpense()
+     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController
      */
     public function testCategoryExpense(): void
     {
@@ -165,10 +160,7 @@ class TagReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::mainChart()
-     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::getExpenses
-     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::getIncome
-     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::groupByTag
+     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController
      */
     public function testMainChart(): void
     {
@@ -207,7 +199,7 @@ class TagReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::tagExpense()
+     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController
      */
     public function testTagExpense(): void
     {
@@ -233,7 +225,7 @@ class TagReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::tagIncome
+     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController
      */
     public function testTagIncome(): void
     {

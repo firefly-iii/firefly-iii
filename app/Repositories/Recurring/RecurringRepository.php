@@ -545,7 +545,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      */
     protected function filterWeekends(RecurrenceRepetition $repetition, array $dates): array
     {
-        if ($repetition->weekend === RecurrenceRepetition::WEEKEND_DO_NOTHING) {
+        if ((int)$repetition->weekend === RecurrenceRepetition::WEEKEND_DO_NOTHING) {
             Log::debug('Repetition will not be filtered on weekend days.');
 
             return $dates;
