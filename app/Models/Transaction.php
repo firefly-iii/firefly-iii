@@ -77,6 +77,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $amount
  * @property string $foreign_amount
  * @property TransactionJournal $transactionJournal
+ * @property Account $account
  */
 class Transaction extends Model
 {

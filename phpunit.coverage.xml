@@ -30,12 +30,9 @@
                 <file>app/Http/breadcrumbs.php</file>
             </exclude>
         </whitelist>
-        <blacklist>
-            <directory>vendor/</directory>
-        </blacklist>
     </filter>
     <logging>
-        <log type="coverage-clover" target="./storage/build/clover-all.xml" charset="UTF-8"/>
+        <log type="coverage-clover" target="./storage/build/clover-all.xml" />
     </logging>
     <php>
         <env name="APP_ENV" value="testing"/>
