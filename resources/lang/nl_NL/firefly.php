@@ -1268,9 +1268,9 @@ return [
     'do_nothing'                         => 'Gewoon transactie maken',
     'skip_transaction'                   => 'Transactie overslaan',
     'jump_to_friday'                     => 'Transactie maken op de vrijdag ervoor',
-    'jump_to_monday'                     => 'Transactie maken op de zaterdag erna',
+    'jump_to_monday'                     => 'Transactie maken op de maandag erna',
     'will_jump_friday'                   => 'Wordt op de vrijdag ervoor gemaakt i.p.v. in het weekend.',
-    'will_jump_monday'                   => 'Wordt op de maandag ervoor gemaakt i.p.v. in het weekend.',
+    'will_jump_monday'                   => 'Wordt op de maandag erna gemaakt i. p. v. in het weekend.',
     'except_weekends'                    => 'Behalve de weekenden',
     'recurrence_deleted'                 => 'Periodieke transactie ":title" verwijderd',
 ];
