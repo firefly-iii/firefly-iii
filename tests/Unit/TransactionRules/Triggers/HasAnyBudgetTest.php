@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
 
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\HasAnyBudget;
 use Tests\TestCase;
@@ -52,9 +53,21 @@ class HasAnyBudgetTest extends TestCase
      */
     public function testTriggeredNot(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+            $count   = $journal->transactions()->count();
+        } while ($count !== 0);
+
         $journal->budgets()->detach();
         $this->assertEquals(0, $journal->budgets()->count());
+
+        // also detach all transactions:
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions()->get() as $transaction) {
+            $transaction->budgets()->detach();
+        }
+
         $trigger = HasAnyBudget::makeFromStrings('', false);
         $result  = $trigger->triggered($journal);
         $this->assertFalse($result);

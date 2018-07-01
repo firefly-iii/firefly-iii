@@ -51,8 +51,8 @@ class BudgetLimit extends Model
             'updated_at' => 'datetime',
             'start_date' => 'date',
             'end_date'   => 'date',
-            'repeats'    => 'boolean',
         ];
+    protected $fillable = ['budget_id', 'start_date', 'end_date', 'amount'];
 
     /**
      * @param string $value
