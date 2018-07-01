@@ -181,7 +181,7 @@ class UserControllerTest extends TestCase
     /**
      * Update user.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\UserController:
+     * @covers \FireflyIII\Api\V1\Controllers\UserController
      * @covers \FireflyIII\Api\V1\Requests\UserRequest
      */
     public function testUpdate(): void
