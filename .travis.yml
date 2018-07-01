@@ -1,6 +1,6 @@
 language: php
 php:
-  - 7.1
+  - 7.1.18
 
 cache:
     directories:
