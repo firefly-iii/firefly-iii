@@ -172,9 +172,9 @@ class AttachmentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param AttachmentRequest $request
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      * @throws FireflyException
      */
     public function store(AttachmentRequest $request): JsonResponse
@@ -214,16 +214,16 @@ class AttachmentController extends Controller
      * @param Request    $request
      * @param Attachment $attachment
      *
-     * @return LaravelResponse
+     * @return JsonResponse
      */
-    public function upload(Request $request, Attachment $attachment): LaravelResponse
+    public function upload(Request $request, Attachment $attachment): JsonResponse
     {
         /** @var AttachmentHelperInterface $helper */
         $helper = app(AttachmentHelperInterface::class);
         $body   = $request->getContent();
         $helper->saveAttachmentFromApi($attachment, $body);
 
-        return response('', 200);
+        return response()->json([], 204);
     }
 
 }
