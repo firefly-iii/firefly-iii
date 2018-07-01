@@ -121,7 +121,7 @@ class AttachmentControllerTest extends TestCase
     }
 
     /**
-     * Download attachment
+     * Download attachment but no file uploaded
      *
      * @covers \FireflyIII\Api\V1\Controllers\AttachmentController
      */
@@ -279,16 +279,22 @@ class AttachmentControllerTest extends TestCase
 
     }
 
+    /**
+     * Upload file for attachment.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\AttachmentController
+     *
+     */
     public function testUpload(): void
     {
         /** @var Attachment $attachment */
         $attachment = $this->user()->attachments()->first();
-        $content = 'Hello there';
+        $content    = 'Hello there';
         // mock helper:
-        $helper  = $this->mock(AttachmentHelperInterface::class);
+        $helper = $this->mock(AttachmentHelperInterface::class);
         $helper->shouldReceive('saveAttachmentFromApi')->once();
 
-        $response = $this->call('POST', '/api/v1/attachments/' . $attachment->id . '/upload',[],[],[],[], $content);
+        $response = $this->call('POST', '/api/v1/attachments/' . $attachment->id . '/upload', [], [], [], [], $content);
         //$response = $this->post('/api/v1/attachments/' . $attachment->id . '/upload',$content, ['Accept' => 'application/json']);
         $response->assertStatus(204);
     }
