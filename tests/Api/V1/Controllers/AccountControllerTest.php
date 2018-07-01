@@ -229,7 +229,7 @@ class AccountControllerTest extends TestCase
     /**
      * Show an account.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\AccountController:
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
      */
 
     public function testShow(): void
