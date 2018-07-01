@@ -71,7 +71,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         return $this->user->recurrences()
                           ->with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])
                           ->orderBy('active', 'DESC')
-                          ->orderBy('transaction_type_id', 'DESC')
+                          ->orderBy('transaction_type_id', 'ASC')
                           ->orderBy('title', 'ASC')
                           ->get();
     }
