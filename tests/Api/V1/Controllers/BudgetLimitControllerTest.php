@@ -249,6 +249,7 @@ class BudgetLimitControllerTest extends TestCase
         // call API
         $response = $this->post('/api/v1/budget_limits', $data);
         $response->assertStatus(500);
+        $response->assertSee('Unknown budget.');
     }
 
     /**
@@ -324,6 +325,7 @@ class BudgetLimitControllerTest extends TestCase
         // call API
         $response = $this->put('/api/v1/budget_limits/' . $budgetLimit->id, $data);
         $response->assertStatus(500);
+        $response->assertSee('Unknown budget.');
     }
 
 }
