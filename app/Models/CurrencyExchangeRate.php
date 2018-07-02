@@ -36,6 +36,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property TransactionCurrency $fromCurrency
  * @property TransactionCurrency $toCurrency
  * @property float               $rate
+ * @property Carbon              $date
+ * @property int                 $from_currency_id
+ * @property int                 $to_currency_id
  *
  */
 class CurrencyExchangeRate extends Model
