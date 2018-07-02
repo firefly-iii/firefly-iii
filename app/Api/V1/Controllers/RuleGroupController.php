@@ -66,9 +66,9 @@ class RuleGroupController extends Controller
      *
      * @return JsonResponse
      */
-    public function delete(string $object): JsonResponse
+    public function delete(RuleGroup $ruleGroup): JsonResponse
     {
-        // todo delete object.
+        $this->ruleGroupRepository->destroy($ruleGroup, null);
 
         return response()->json([], 204);
     }

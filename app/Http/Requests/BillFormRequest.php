@@ -57,7 +57,7 @@ class BillFormRequest extends Request
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         $nameRule = 'required|between:1,255|uniqueObjectForUser:bills,name';
         if ($this->integer('id') > 0) {

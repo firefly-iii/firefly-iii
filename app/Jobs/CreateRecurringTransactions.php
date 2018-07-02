@@ -7,8 +7,13 @@ use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
+use FireflyIII\Models\Rule;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
+use FireflyIII\TransactionRules\Processor;
+use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -30,6 +35,8 @@ class CreateRecurringTransactions implements ShouldQueue
     private $journalRepository;
     /** @var RecurringRepositoryInterface */
     private $repository;
+    /** @var array */
+    private $rules = [];
 
     /**
      * Create a new job instance.
@@ -42,6 +49,7 @@ class CreateRecurringTransactions implements ShouldQueue
         $this->date              = $date;
         $this->repository        = app(RecurringRepositoryInterface::class);
         $this->journalRepository = app(JournalRepositoryInterface::class);
+
     }
 
     /**
@@ -77,6 +85,9 @@ class CreateRecurringTransactions implements ShouldQueue
             $created = $this->handleRepetitions($recurrence);
             Log::debug(sprintf('Done with recurrence #%d', $recurrence->id));
             $result[$recurrence->user_id] = $result[$recurrence->user_id]->merge($created);
+
+            // apply rules:
+            $this->applyRules($recurrence->user, $created);
         }
 
         Log::debug('Now running report thing.');
@@ -101,6 +112,34 @@ class CreateRecurringTransactions implements ShouldQueue
     }
 
     /**
+     * @param User       $user
+     * @param Collection $journals
+     */
+    private function applyRules(User $user, Collection $journals): void
+    {
+        $userId = $user->id;
+        if (!isset($this->rules[$userId])) {
+            $this->rules[$userId] = $this->getRules($user);
+        }
+        // run the rules:
+        if ($this->rules[$userId]->count() > 0) {
+            /** @var TransactionJournal $journal */
+            foreach ($journals as $journal) {
+                $this->rules[$userId]->each(
+                    function (Rule $rule) use ($journal) {
+                        Log::debug(sprintf('Going to apply rule #%d to journal %d.', $rule->id, $journal->id));
+                        $processor = Processor::make($rule);
+                        $processor->handleTransactionJournal($journal);
+                        if ($rule->stop_processing) {
+                            return;
+                        }
+                    }
+                );
+            }
+        }
+    }
+
+    /**
      * @param array $occurrences
      *
      * @return array
@@ -113,6 +152,23 @@ class CreateRecurringTransactions implements ShouldQueue
         }
 
         return $return;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return Collection
+     */
+    private function getRules(User $user): Collection
+    {
+        /** @var RuleRepositoryInterface $repository */
+        $repository = app(RuleRepositoryInterface::class);
+        $repository->setUser($user);
+        $set = $repository->getForImport();
+
+        Log::debug(sprintf('Found %d user rules.', $set->count()));
+
+        return $set;
     }
 
     /**
@@ -214,7 +270,7 @@ class CreateRecurringTransactions implements ShouldQueue
             ];
             $journal = $this->journalRepository->store($array);
             Log::info(sprintf('Created new journal #%d', $journal->id));
-            // todo fire rules
+
             $collection->push($journal);
             // update recurring thing:
             $recurrence->latest_date = $date;

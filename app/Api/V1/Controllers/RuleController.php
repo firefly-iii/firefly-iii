@@ -64,13 +64,13 @@ class RuleController extends Controller
     /**
      * Delete the resource.
      *
-     * @param string $object
+     * @param Rule $rule
      *
      * @return JsonResponse
      */
-    public function delete(string $object): JsonResponse
+    public function delete(Rule $rule): JsonResponse
     {
-        // todo delete object.
+        $this->ruleRepository->destroy($rule);
 
         return response()->json([], 204);
     }
