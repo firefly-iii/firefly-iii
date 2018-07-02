@@ -179,15 +179,19 @@ class IndexController extends Controller
     }
 
     /**
+     * @param Request    $request
      * @param Recurrence $recurrence
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
-    public function show(Recurrence $recurrence)
+    public function show(Request $request, Recurrence $recurrence)
     {
         $transformer = new RecurrenceTransformer(new ParameterBag);
         $array       = $transformer->transform($recurrence);
+        $page         = (int)$request->get('page');
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $transactions = $this->recurring->getTransactions($recurrence, $page, $pageSize);
 
         // transform dates back to Carbon objects:
         foreach ($array['recurrence_repetitions'] as $index => $repetition) {
@@ -198,7 +202,7 @@ class IndexController extends Controller
 
         $subTitle = trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
 
-        return view('recurring.show', compact('recurrence', 'subTitle', 'array'));
+        return view('recurring.show', compact('recurrence', 'subTitle', 'array','transactions'));
     }
 
     /**

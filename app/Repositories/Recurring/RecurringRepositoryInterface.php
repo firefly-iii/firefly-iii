@@ -29,6 +29,7 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\User;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 
@@ -45,6 +46,16 @@ interface RecurringRepositoryInterface
      * @param Recurrence $recurrence
      */
     public function destroy(Recurrence $recurrence): void;
+
+    /**
+     * @param Recurrence $recurrence
+     *
+     * @param int        $page
+     * @param int        $pageSize
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getTransactions(Recurrence $recurrence, int $page, int $pageSize): LengthAwarePaginator;
 
     /**
      * Returns all of the user's recurring transactions.

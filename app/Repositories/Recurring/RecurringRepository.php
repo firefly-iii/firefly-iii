@@ -26,6 +26,7 @@ namespace FireflyIII\Repositories\Recurring;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\RecurrenceFactory;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Recurrence;
@@ -34,9 +35,11 @@ use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Services\Internal\Destroy\RecurrenceDestroyService;
 use FireflyIII\Services\Internal\Update\RecurrenceUpdateService;
 use FireflyIII\User;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -326,6 +329,39 @@ class RecurringRepository implements RecurringRepositoryInterface
         }
 
         return $tags;
+    }
+
+    /**
+     * @param Recurrence $recurrence
+     *
+     * @param int        $page
+     * @param int        $pageSize
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getTransactions(Recurrence $recurrence, int $page, int $pageSize): LengthAwarePaginator
+    {
+        $journalMeta = TransactionJournalMeta
+            ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+            ->whereNull('transaction_journals.deleted_at')
+            ->where('transaction_journals.user_id', $this->user->id)
+            ->where('name', 'recurrence_id')
+            ->where('data', json_encode((string)$recurrence->id))
+            ->get()->pluck('transaction_journal_id')->toArray();
+        $search      = [];
+        foreach ($journalMeta as $journalId) {
+            $search[] = ['id' => (int)$journalId];
+        }
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser($recurrence->user);
+        $collector->withOpposingAccount()->setAllAssetAccounts()->
+
+        withCategoryInformation()->withBudgetInformation()->setLimit($pageSize)->setPage($page);
+        // filter on specific journals.
+        $collector->setJournals(new Collection($search));
+
+        return $collector->getPaginatedJournals();
     }
 
     /**

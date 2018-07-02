@@ -194,7 +194,7 @@
                     </h3>
                 </div>
                 <div class="box-body">
-                    List be here.
+                    {% include 'list.journals' with {sorting:false, hideBills:true, hideBudgets: true, hideCategories: true, showReconcile: false} %}
                 </div>
             </div>
         </div>
