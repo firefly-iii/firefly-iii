@@ -68,13 +68,13 @@ class JournalLinkController extends Controller
     /**
      * Delete the resource.
      *
-     * @param string $object
+     * @param TransactionJournalLink $link
      *
      * @return JsonResponse
      */
-    public function delete(string $object): JsonResponse
+    public function delete(TransactionJournalLink $link): JsonResponse
     {
-        // todo delete object.
+        $this->repository->destroyLink($link);
 
         return response()->json([], 204);
     }
@@ -88,8 +88,6 @@ class JournalLinkController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-
-
         // create some objects:
         $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';

@@ -66,7 +66,7 @@ class RecurrenceController extends Controller
     /**
      * Delete the resource.
      *
-     * @param string $object
+     * @param Recurrence $recurrence
      *
      * @return JsonResponse
      */

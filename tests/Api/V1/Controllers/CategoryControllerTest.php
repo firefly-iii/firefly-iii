@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 
-use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Laravel\Passport\Passport;
 use Log;
@@ -87,6 +87,7 @@ class CategoryControllerTest extends TestCase
         $response = $this->get('/api/v1/categories');
         $response->assertStatus(200);
         $response->assertSee($categories->first()->name);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
     /**
@@ -107,6 +108,7 @@ class CategoryControllerTest extends TestCase
         $response = $this->get('/api/v1/categories/' . $category->id);
         $response->assertStatus(200);
         $response->assertSee($category->name);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
     /**
@@ -116,7 +118,7 @@ class CategoryControllerTest extends TestCase
      */
     public function testStore(): void
     {
-        /** @var Budget $category */
+        /** @var Category $category */
         $category = $this->user()->categories()->first();
 
         // mock stuff:
@@ -150,7 +152,7 @@ class CategoryControllerTest extends TestCase
         // mock repositories
         $repository = $this->mock(CategoryRepositoryInterface::class);
 
-        /** @var Budget $category */
+        /** @var Category $category */
         $category = $this->user()->categories()->first();
 
         // mock calls:

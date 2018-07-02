@@ -30,6 +30,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Rules\BelongsUser;
 use Illuminate\Validation\Validator;
 use InvalidArgumentException;
+use Log;
 
 /**
  * Class RecurrenceRequest
@@ -208,6 +209,7 @@ class RecurrenceRequest extends Request
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser(auth()->user());
         $set = $repository->getAccountsById([$accountId]);
+        Log::debug(sprintf('Count of accounts found by ID %d is: %d', $accountId, $set->count()));
         if ($set->count() === 1) {
             /** @var Account $first */
             $first = $set->first();
@@ -399,7 +401,7 @@ class RecurrenceRequest extends Request
         if (null !== $repetitions && null !== $repeatUntil) {
             // expect a date OR count:
             $validator->errors()->add('repeat_until', trans('validation.require_repeat_until'));
-            $validator->errors()->add('repetitions', trans('validation.require_repeat_until'));
+            $validator->errors()->add('nr_of_repetitions', trans('validation.require_repeat_until'));
 
             return;
         }
