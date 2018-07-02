@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\RecurrenceFactory;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Recurrence;
@@ -356,9 +357,9 @@ class RecurringRepository implements RecurringRepositoryInterface
         $collector = app(JournalCollectorInterface::class);
         $collector->setUser($recurrence->user);
         $collector->withOpposingAccount()->setAllAssetAccounts()->
-
         withCategoryInformation()->withBudgetInformation()->setLimit($pageSize)->setPage($page);
         // filter on specific journals.
+        $collector->removeFilter(InternalTransferFilter::class);
         $collector->setJournals(new Collection($search));
 
         return $collector->getPaginatedJournals();
