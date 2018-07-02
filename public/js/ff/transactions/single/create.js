@@ -38,12 +38,12 @@ $(document).ready(function () {
 
 
     // when user changes source account or destination, native currency may be different.
-    $('select[name="source_id"]').on('change', function() {
+    $('select[name="source_id"]').on('change', function () {
         selectsDifferentSource();
         // do something for transfers:
         validateCurrencyForTransfer();
     });
-    $('select[name="destination_id"]').on('change', function() {
+    $('select[name="destination_id"]').on('change', function () {
         selectsDifferentDestination();
         // do something for transfers:
         validateCurrencyForTransfer();
@@ -57,6 +57,15 @@ $(document).ready(function () {
 
     // when user selects different currency,
     $('.currency-option').on('click', selectsForeignCurrency);
+
+
+    // overrule click on currency:
+    if(useAccountCurrency === false) {
+        $('.currency-option[data-id="' + overruleCurrency + '"]').click();
+        $('[data-toggle="dropdown"]').parent().removeClass('open');
+    }
+
+
     $('#ffInput_description').focus();
 });
 
@@ -65,6 +74,7 @@ $(document).ready(function () {
  * and transfers.
  */
 function selectsDifferentSource() {
+    console.log('Now in selectsDifferentSource()');
     if (what === "deposit") {
         console.log('User is making a deposit. Don\'t bother with source.');
         $('input[name="source_account_currency"]').val("0");
@@ -77,6 +87,7 @@ function selectsDifferentSource() {
     console.log('selectsDifferenctSource(): Set source account currency to ' + sourceCurrency);
 
     // change input thing:
+    console.log('Emulate click on .currency-option[data-id="' + sourceCurrency + '"]');
     $('.currency-option[data-id="' + sourceCurrency + '"]').click();
     $('[data-toggle="dropdown"]').parent().removeClass('open');
     $('select[name="source_id"]').focus();
@@ -147,6 +158,7 @@ function updateLayout() {
  */
 function updateForm() {
     "use strict";
+    console.log('Now in updateForm()');
 
     $('input[name="what"]').val(what);
 
@@ -230,7 +242,6 @@ function updateForm() {
             break;
     }
     // get instructions all the time.
-    //updateNativeCurrency(useAccountCurrency);
     console.log('End of update form');
     selectsDifferentSource();
     selectsDifferentDestination();

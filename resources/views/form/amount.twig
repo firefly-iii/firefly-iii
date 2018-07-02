@@ -28,6 +28,6 @@
 
         {% include 'form/feedback' %}
     </div>
-
-    <input type="hidden" name="amount_currency_id_{{ name }}" value="{{ defaultCurrency.id }}"/>
+    <!-- Going to put in this value: {{ defaultCurrency.id }} -->
+    <input type="hidden" name="amount_currency_id_{{ name }}" value="{{ defaultCurrency.id }}" data-backup="{{ defaultCurrency.id }}"/>
 </div>

@@ -92,11 +92,14 @@ function setCommonAutocomplete() {
 function selectsForeignCurrency() {
     console.log('In selectsForeignCurrency()');
     var foreignCurrencyId = parseInt($('input[name="amount_currency_id_amount"]').val());
+    console.log('Foreign currency ID is ' + foreignCurrencyId);
     var selectedAccountId = getAccountId();
     var nativeCurrencyId = parseInt(accountInfo[selectedAccountId].preferredCurrency);
 
-    if (foreignCurrencyId !== nativeCurrencyId) {
+    console.log('Native currency ID is ' + nativeCurrencyId);
 
+    if (foreignCurrencyId !== nativeCurrencyId) {
+        console.log('These are not the same.');
         // the input where the native amount is entered gets the symbol for the native currency:
         $('.non-selectable-currency-symbol').text(currencyInfo[nativeCurrencyId].symbol);
 
@@ -105,18 +108,24 @@ function selectsForeignCurrency() {
 
         // both holders are shown to the user:
         $('#exchange_rate_instruction_holder').show();
+        if(what !== 'transfer') {
+            console.log('Show native amount holder.');
         $('#native_amount_holder').show();
+        }
 
         // if possible the amount is already exchanged for the foreign currency
         convertForeignToNative();
 
     }
     if (foreignCurrencyId === nativeCurrencyId) {
+        console.log('These are the same.');
         $('#exchange_rate_instruction_holder').hide();
+        console.log('Hide native amount holder (a)');
         $('#native_amount_holder').hide();
 
         // make all other inputs empty
-        $('input[name="destination_amount"]').val("");
+        //console.log('Make destination_amount empty!');
+        //$('input[name="destination_amount"]').val("");
         $('input[name="native_amount"]').val("");
     }
 

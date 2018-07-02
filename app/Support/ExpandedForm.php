@@ -37,6 +37,7 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Form;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
+use Log;
 use RuntimeException;
 use Session;
 
@@ -859,10 +860,13 @@ class ExpandedForm
         $key            = 'amount_currency_id_' . $name;
         $sentCurrencyId = isset($preFilled[$key]) ? (int)$preFilled[$key] : $defaultCurrency->id;
 
+        Log::debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
+
         // find this currency in set of currencies:
         foreach ($currencies as $currency) {
             if ($currency->id === $sentCurrencyId) {
                 $defaultCurrency = $currency;
+                Log::debug(sprintf('default currency is now %s', $defaultCurrency->code));
                 break;
             }
         }

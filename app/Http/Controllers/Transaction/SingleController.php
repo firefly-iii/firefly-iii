@@ -151,6 +151,10 @@ class SingleController extends Controller
         $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
         $source         = (int)$request->get('source');
 
+        // grab old currency ID from old data:
+        $currencyID = (int)$request->old('amount_currency_id_amount');
+        $preFilled['amount_currency_id_amount'] = $currencyID;
+
         if (($what === 'withdrawal' || $what === 'transfer') && $source > 0) {
             $preFilled['source_id'] = $source;
         }

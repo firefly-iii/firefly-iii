@@ -24,6 +24,7 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionType;
+use Illuminate\Validation\Validator;
 
 /**
  * Class JournalFormRequest.
@@ -180,6 +181,22 @@ class JournalFormRequest extends Request
     }
 
     /**
+     * Configure the validator instance.
+     *
+     * @param  Validator $validator
+     *
+     * @return void
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(
+            function (Validator $validator) {
+                $this->validNativeAmount($validator);
+            }
+        );
+    }
+
+    /**
      * Inspired by https://www.youtube.com/watch?v=WwnI0RS6J5A.
      *
      * @param string $what
@@ -211,5 +228,52 @@ class JournalFormRequest extends Request
         }
 
         return $rules;
+    }
+
+    /**
+     * @param Validator $validator
+     */
+    private function validNativeAmount(Validator $validator): void
+    {
+        $data = $validator->getData();
+        $type = $data['what'] ?? 'invalid';
+        if ($type === 'withdrawal') {
+            $selectedCurrency = (int)($data['amount_currency_id_amount'] ?? 0);
+            $accountCurrency  = (int)($data['source_account_currency'] ?? 0);
+            $nativeAmount     = (string)$data['native_amount'];
+            if ($selectedCurrency !== $accountCurrency && '' === $nativeAmount) {
+                $validator->errors()->add('native_amount', trans('validation.numeric', ['attribute' => 'native_amount']));
+
+                return;
+            }
+        }
+
+        // same thing for deposits:
+        if ($type === 'deposit') {
+            $selectedCurrency = (int)($data['amount_currency_id_amount'] ?? 0);
+            $accountCurrency  = (int)($data['destination_account_currency'] ?? 0);
+            $nativeAmount     = (string)$data['native_amount'];
+            if ($selectedCurrency !== $accountCurrency && '' === $nativeAmount) {
+                $validator->errors()->add('native_amount', trans('validation.numeric', ['attribute' => 'native_amount']));
+
+                return;
+            }
+        }
+
+        // and for transfers
+        if ($type === 'transfer') {
+            $sourceCurrency      = (int)($data['source_account_currency'] ?? 0);
+            $destinationCurrency = (int)($data['destination_account_currency'] ?? 0);
+            $sourceAmount        = (string)$data['source_amount'];
+            $destinationAmount          = (string)$data['destination_amount'];
+            if ($sourceCurrency !== $destinationCurrency && '' === $sourceAmount) {
+                $validator->errors()->add('source_amount', trans('validation.numeric', ['attribute' => 'source_amount']));
+            }
+
+            if ($sourceCurrency !== $destinationCurrency && '' === $destinationAmount) {
+                $validator->errors()->add('destination_amount', trans('validation.numeric', ['attribute' => 'destination_amount']));
+            }
+            return;
+        }
     }
 }
