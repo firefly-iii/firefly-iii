@@ -810,6 +810,8 @@ class SingleControllerTest extends TestCase
         $data     = [
             'what'                         => 'transfer',
             'amount'                       => '10',
+            'source_amount'                => '10',
+            'destination_amount'           => '10',
             'amount_currency_id_amount'    => 1,
             'source_account_currency'      => 1,
             'destination_account_currency' => 2,
