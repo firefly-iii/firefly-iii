@@ -92,6 +92,7 @@
                 <div class="box-body no-padding">
                     <table class="table table-hover sortable">
                         <thead>
+                        <th data-defaultsign="az">{{ trans('list.description') }}</th>
                         <th data-defaultsign="az">{{ trans('list.source') }}</th>
                         <th data-defaultsign="az">{{ trans('list.destination') }}</th>
                         <th data-defaultsign="_19">{{ trans('list.amount') }}</th>
@@ -101,6 +102,9 @@
                         <tbody>
                         {% for transaction in array.transactions %}
                             <tr>
+                                <td data-value="{{ transaction.description }}">
+                                    {{ transaction.description }}
+                                </td>
                                 <td data-value="{{ transaction.source_name }}">
                                     <a href="{{ route('accounts.show', [transaction.source_id]) }}">{{ transaction.source_name }}</a>
                                 </td>
