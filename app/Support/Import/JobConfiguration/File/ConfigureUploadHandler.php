@@ -35,61 +35,12 @@ use Log;
  */
 class ConfigureUploadHandler implements FileConfigurationInterface
 {
-    /** @var ImportJob */
-    private $importJob;
-
-    /** @var ImportJobRepositoryInterface */
-    private $repository;
-
     /** @var AccountRepositoryInterface */
     private $accountRepos;
-
-    /**
-     * Get the data necessary to show the configuration screen.
-     *
-     * @return array
-     */
-    public function getNextData(): array
-    {
-        $delimiters            = [
-            ','   => trans('form.csv_comma'),
-            ';'   => trans('form.csv_semicolon'),
-            'tab' => trans('form.csv_tab'),
-        ];
-        $config                = $this->importJob->configuration;
-        $config['date-format'] = $config['date-format'] ?? 'Ymd';
-        $specifics             = [];
-        $this->repository->setConfiguration($this->importJob, $config);
-
-        // collect specifics.
-        foreach (config('csv.import_specifics') as $name => $className) {
-            $specifics[$name] = [
-                'name'        => trans($className::getName()),
-                'description' => trans($className::getDescription()),
-            ];
-        }
-
-        $data = [
-            'accounts'   => [],
-            'delimiters' => $delimiters,
-            'specifics'  => $specifics,
-        ];
-
-        return $data;
-    }
-
-    /**
-     * @param ImportJob $importJob
-     */
-    public function setImportJob(ImportJob $importJob): void
-    {
-        $this->importJob  = $importJob;
-        $this->repository = app(ImportJobRepositoryInterface::class);
-        $this->repository->setUser($importJob->user);
-        $this->accountRepos = app(AccountRepositoryInterface::class);
-        $this->accountRepos->setUser($importJob->user);
-
-    }
+    /** @var ImportJob */
+    private $importJob;
+    /** @var ImportJobRepositoryInterface */
+    private $repository;
 
     /**
      * Store data associated with current stage.
@@ -138,6 +89,40 @@ class ConfigureUploadHandler implements FileConfigurationInterface
     }
 
     /**
+     * Get the data necessary to show the configuration screen.
+     *
+     * @return array
+     */
+    public function getNextData(): array
+    {
+        $delimiters            = [
+            ','   => trans('form.csv_comma'),
+            ';'   => trans('form.csv_semicolon'),
+            'tab' => trans('form.csv_tab'),
+        ];
+        $config                = $this->importJob->configuration;
+        $config['date-format'] = $config['date-format'] ?? 'Ymd';
+        $specifics             = [];
+        $this->repository->setConfiguration($this->importJob, $config);
+
+        // collect specifics.
+        foreach (config('csv.import_specifics') as $name => $className) {
+            $specifics[$name] = [
+                'name'        => trans($className::getName()),
+                'description' => trans($className::getDescription()),
+            ];
+        }
+
+        $data = [
+            'accounts'   => [],
+            'delimiters' => $delimiters,
+            'specifics'  => $specifics,
+        ];
+
+        return $data;
+    }
+
+    /**
      * @param array $data
      *
      * @return array
@@ -158,5 +143,18 @@ class ConfigureUploadHandler implements FileConfigurationInterface
         }
 
         return $return;
+    }
+
+    /**
+     * @param ImportJob $importJob
+     */
+    public function setImportJob(ImportJob $importJob): void
+    {
+        $this->importJob  = $importJob;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($importJob->user);
+        $this->accountRepos = app(AccountRepositoryInterface::class);
+        $this->accountRepos->setUser($importJob->user);
+
     }
 }

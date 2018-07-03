@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -71,7 +72,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $description
  * @property bool   $is_split
  * @property int    $attachmentCount
- * @property int $transaction_currency_id
+ * @property int    $transaction_currency_id
+ * @property int    $foreign_currency_id
+ * @property string $amount
+ * @property string $foreign_amount
+ * @property TransactionJournal $transactionJournal
+ * @property Account $account
  */
 class Transaction extends Model
 {
@@ -252,18 +258,18 @@ class Transaction extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function transactionCurrency()
+    public function transactionCurrency(): BelongsTo
     {
         return $this->belongsTo(TransactionCurrency::class);
     }
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function transactionJournal()
+    public function transactionJournal(): BelongsTo
     {
         return $this->belongsTo(TransactionJournal::class);
     }

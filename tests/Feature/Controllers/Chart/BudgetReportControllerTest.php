@@ -39,10 +39,6 @@ use Tests\TestCase;
 
 /**
  * Class BudgetReportControllerTest
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BudgetReportControllerTest extends TestCase
 {
@@ -56,8 +52,7 @@ class BudgetReportControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController::accountExpense
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController::__construct
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController
      */
     public function testAccountExpense(): void
     {
@@ -80,7 +75,7 @@ class BudgetReportControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController::budgetExpense
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController
      */
     public function testBudgetExpense(): void
     {
@@ -102,10 +97,7 @@ class BudgetReportControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController::mainChart
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController::filterBudgetLimits
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController::getExpenses
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController::groupByBudget
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController
      */
     public function testMainChart(): void
     {

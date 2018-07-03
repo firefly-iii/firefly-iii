@@ -40,10 +40,6 @@ use Tests\TestCase;
 
 /**
  * Class BudgetControllerTest
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BudgetControllerTest extends TestCase
 {
@@ -57,8 +53,7 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::budget
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::__construct
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -79,7 +74,7 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::budgetLimit
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -99,7 +94,7 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\Chart\BudgetController::budgetLimit
+     * @covers                   \FireflyIII\Http\Controllers\Chart\BudgetController
      * @expectedExceptionMessage This budget limit is not part of this budget.
      */
     public function testBudgetLimitWrongLimit(): void
@@ -113,8 +108,7 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::expenseAsset
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::getAccountNames
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -142,8 +136,7 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::expenseCategory
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::getCategoryNames
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -176,8 +169,7 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::expenseExpense
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::getAccountNames
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -210,10 +202,7 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::frontpage
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::getExpensesForBudget
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::spentInPeriodWithout
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::spentInPeriodMulti
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -247,10 +236,7 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::frontpage
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::getExpensesForBudget
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::spentInPeriodWithout
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::spentInPeriodMulti
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -286,10 +272,7 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::frontpage
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::getExpensesForBudget
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::spentInPeriodWithout
-     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::spentInPeriodMulti
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -321,8 +304,7 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\BudgetController::period
-     * @covers \FireflyIII\Http\Controllers\Chart\BudgetController::getBudgetedInPeriod
+     * @covers \FireflyIII\Http\Controllers\Chart\BudgetController
      */
     public function testPeriod(): void
     {
@@ -342,7 +324,7 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\BudgetController::periodNoBudget
+     * @covers \FireflyIII\Http\Controllers\Chart\BudgetController
      */
     public function testPeriodNoBudget(): void
     {

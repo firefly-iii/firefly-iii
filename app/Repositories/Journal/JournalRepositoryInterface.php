@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
@@ -38,15 +39,6 @@ use Illuminate\Support\MessageBag;
  */
 interface JournalRepositoryInterface
 {
-    /**
-     * Find a journal by its hash.
-     *
-     * @param string $hash
-     *
-     * @return TransactionJournalMeta|null
-     */
-    public function findByHash(string $hash): ?TransactionJournalMeta;
-
     /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
@@ -77,11 +69,21 @@ interface JournalRepositoryInterface
      * Find a specific journal.
      *
      * @param int $journalId
+     *
      * @deprecated
      *
      * @return TransactionJournal
      */
     public function find(int $journalId): TransactionJournal;
+
+    /**
+     * Find a journal by its hash.
+     *
+     * @param string $hash
+     *
+     * @return TransactionJournalMeta|null
+     */
+    public function findByHash(string $hash): ?TransactionJournalMeta;
 
     /**
      * Find a specific journal.
@@ -325,6 +327,7 @@ interface JournalRepositoryInterface
     /**
      * @param array $data
      *
+     * @throws FireflyException
      * @return TransactionJournal
      */
     public function store(array $data): TransactionJournal;

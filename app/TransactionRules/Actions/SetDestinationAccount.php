@@ -101,8 +101,8 @@ class SetDestinationAccount implements ActionInterface
 
         // update destination transaction with new destination account:
         // get destination transaction:
-        $transaction             = $journal->transactions()->where('amount', '>', 0)->first();
-        if(null === $transaction) {
+        $transaction = $journal->transactions()->where('amount', '>', 0)->first();
+        if (null === $transaction) {
             return true;
         }
         $transaction->account_id = $this->newDestinationAccount->id;

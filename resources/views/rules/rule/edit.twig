@@ -17,7 +17,10 @@
                     {{ ExpandedForm.text('title') }}
                     {{ ExpandedForm.ruleGroupList('rule_group_id', ruleGroup.id) }}
                     {{ ExpandedForm.select('trigger',allJournalTriggers(), primaryTrigger) }}
-                    {{ ExpandedForm.checkbox('active',1,rule.active, {helpText: trans('firefly.rule_help_active')}) }}
+
+                    {# only correct way to do active checkbox #}
+                    {{ ExpandedForm.checkbox('active', 1, null, {helpText: trans('firefly.rule_help_active')}) }}
+
                     {{ ExpandedForm.checkbox('stop_processing',1,rule.stop_processing, {helpText: trans('firefly.rule_help_stop_processing')}) }}
                     {{ ExpandedForm.checkbox('strict',1,rule.strict, {helpText: trans('firefly.rule_help_strict')}) }}
                 </div>

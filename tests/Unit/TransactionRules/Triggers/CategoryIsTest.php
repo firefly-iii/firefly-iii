@@ -36,7 +36,11 @@ class CategoryIsTest extends TestCase
      */
     public function testTriggeredJournal(): void
     {
-        $journal  = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        do {
+            $journal      = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+            $transactions = $journal->transactions()->count();
+        } while ($transactions === 0);
+
         $category = $journal->user->categories()->first();
         $journal->categories()->detach();
         $journal->categories()->save($category);
@@ -52,7 +56,11 @@ class CategoryIsTest extends TestCase
      */
     public function testTriggeredNotJournal(): void
     {
-        $journal       = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        do {
+            $journal      = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+            $transactions = $journal->transactions()->count();
+        } while ($transactions === 0);
+
         $category      = $journal->user->categories()->first();
         $otherCategory = $journal->user->categories()->where('id', '!=', $category->id)->first();
         $journal->categories()->detach();
@@ -69,7 +77,11 @@ class CategoryIsTest extends TestCase
      */
     public function testTriggeredTransaction(): void
     {
-        $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        do {
+            $journal      = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+            $transactions = $journal->transactions()->count();
+        } while ($transactions === 0);
+
         $transaction = $journal->transactions()->first();
         $category    = $journal->user->categories()->first();
 

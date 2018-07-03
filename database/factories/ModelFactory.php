@@ -46,6 +46,24 @@ $factory->define(
     }
 );
 
+
+$factory->define(
+    FireflyIII\Models\Attachment::class,
+    function (Faker\Generator $faker) {
+        return [
+            'user_id'         => 1,
+            'attachable_id'   => 1,
+            'attachable_type' => \FireflyIII\Models\TransactionJournal::class,
+            'md5'             => md5($faker->words(6, true)),
+            'mime'            => 'text/plain',
+            'size'            => 1,
+            'filename'        => 'ok',
+            'uploaded'        => true,
+
+        ];
+    }
+);
+
 $factory->define(
     FireflyIII\Models\CurrencyExchangeRate::class,
     function (Faker\Generator $faker) {
@@ -245,13 +263,13 @@ $factory->define(
             'transaction_amount'          => (string)$faker->randomFloat(2, -100, 100),
             'destination_amount'          => (string)$faker->randomFloat(2, -100, 100),
             'opposing_account_id'         => $faker->numberBetween(1, 10),
-            'source_account_id'           => $faker->numberBetween(1, 10),
+            'source_id'                   => $faker->numberBetween(1, 10),
             'opposing_account_name'       => $faker->words(3, true),
             'description'                 => $faker->words(3, true),
-            'source_account_name'         => $faker->words(3, true),
-            'destination_account_id'      => $faker->numberBetween(1, 10),
+            'source_name'                 => $faker->words(3, true),
+            'destination_id'              => $faker->numberBetween(1, 10),
             'date'                        => new Carbon,
-            'destination_account_name'    => $faker->words(3, true),
+            'destination_name'            => $faker->words(3, true),
             'amount'                      => (string)$faker->randomFloat(2, -100, 100),
             'budget_id'                   => 0,
             'category'                    => $faker->words(3, true),

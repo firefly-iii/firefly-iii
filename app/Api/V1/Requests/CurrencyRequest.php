@@ -41,7 +41,7 @@ class CurrencyRequest extends Request
     /**
      * @return array
      */
-    public function getAll()
+    public function getAll(): array
     {
         return [
             'name'           => $this->string('name'),

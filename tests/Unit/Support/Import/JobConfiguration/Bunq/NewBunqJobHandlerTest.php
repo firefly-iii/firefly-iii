@@ -48,16 +48,14 @@ class NewBunqJobHandlerTest extends TestCase
         $job->save();
 
         // expected config:
-        $expected = [
-            'apply-rules' => true,
-        ];
+        //$expected = [];
 
         // mock stuff
         $repository = $this->mock(ImportJobRepositoryInterface::class);
         // mock calls
         $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('getConfiguration')->andReturn([])->once();
-        $repository->shouldReceive('setConfiguration')->withArgs([Mockery::any(), $expected])->once();
+        //$repository->shouldReceive('getConfiguration')->andReturn([])->once();
+        //$repository->shouldReceive('setConfiguration')->withArgs([Mockery::any(), $expected])->once();
 
         $handler = new NewBunqJobHandler();
         $handler->setImportJob($job);

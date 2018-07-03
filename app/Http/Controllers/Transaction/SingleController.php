@@ -34,9 +34,8 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Log;
 use Preferences;
@@ -49,14 +48,8 @@ class SingleController extends Controller
 {
     /** @var AttachmentHelperInterface */
     private $attachments;
-
     /** @var BudgetRepositoryInterface */
     private $budgets;
-    /** @var CurrencyRepositoryInterface */
-    private $currency;
-    /** @var PiggyBankRepositoryInterface */
-    private $piggyBanks;
-
     /** @var JournalRepositoryInterface */
     private $repository;
 
@@ -76,9 +69,7 @@ class SingleController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->budgets     = app(BudgetRepositoryInterface::class);
-                $this->piggyBanks  = app(PiggyBankRepositoryInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
-                $this->currency    = app(CurrencyRepositoryInterface::class);
                 $this->repository  = app(JournalRepositoryInterface::class);
 
                 app('view')->share('title', trans('firefly.transactions'));
@@ -100,8 +91,7 @@ class SingleController extends Controller
         $destination  = $this->repository->getJournalDestinationAccounts($journal)->first();
         $budgetId     = $this->repository->getJournalBudgetId($journal);
         $categoryName = $this->repository->getJournalCategoryName($journal);
-
-        $tags = implode(',', $this->repository->getTags($journal));
+        $tags         = implode(',', $this->repository->getTags($journal));
         /** @var Transaction $transaction */
         $transaction   = $journal->transactions()->first();
         $amount        = app('steam')->positive($transaction->amount);
@@ -109,10 +99,10 @@ class SingleController extends Controller
 
         $preFilled = [
             'description'               => $journal->description,
-            'source_account_id'         => $source->id,
-            'source_account_name'       => $source->name,
-            'destination_account_id'    => $destination->id,
-            'destination_account_name'  => $destination->name,
+            'source_id'                 => $source->id,
+            'source_name'               => $source->name,
+            'destination_id'            => $destination->id,
+            'destination_name'          => $destination->name,
             'amount'                    => $amount,
             'source_amount'             => $amount,
             'destination_amount'        => $foreignAmount,
@@ -155,19 +145,21 @@ class SingleController extends Controller
         $what           = strtolower($what);
         $what           = $request->old('what') ?? $what;
         $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
-        $piggyBanks     = $this->piggyBanks->getPiggyBanksWithAmount();
-        $piggies        = ExpandedForm::makeSelectListWithEmpty($piggyBanks);
         $preFilled      = session()->has('preFilled') ? session('preFilled') : [];
         $subTitle       = trans('form.add_new_' . $what);
         $subTitleIcon   = 'fa-plus';
         $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
         $source         = (int)$request->get('source');
 
+        // grab old currency ID from old data:
+        $currencyID = (int)$request->old('amount_currency_id_amount');
+        $preFilled['amount_currency_id_amount'] = $currencyID;
+
         if (($what === 'withdrawal' || $what === 'transfer') && $source > 0) {
-            $preFilled['source_account_id'] = $source;
+            $preFilled['source_id'] = $source;
         }
         if ($what === 'deposit' && $source > 0) {
-            $preFilled['destination_account_id'] = $source;
+            $preFilled['destination_id'] = $source;
         }
 
         session()->put('preFilled', $preFilled);
@@ -178,11 +170,9 @@ class SingleController extends Controller
         }
         session()->forget('transactions.create.fromStore');
 
-        asort($piggies);
-
         return view(
             'transactions.single.create',
-            compact('subTitleIcon', 'budgets', 'what', 'piggies', 'subTitle', 'optionalFields', 'preFilled')
+            compact('subTitleIcon', 'budgets', 'what', 'subTitle', 'optionalFields', 'preFilled')
         );
     }
 
@@ -218,7 +208,7 @@ class SingleController extends Controller
      *
      * @internal param JournalRepositoryInterface $repository
      */
-    public function destroy(TransactionJournal $transactionJournal)
+    public function destroy(TransactionJournal $transactionJournal): RedirectResponse
     {
         // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($transactionJournal)) {
@@ -273,35 +263,35 @@ class SingleController extends Controller
         $pTransaction        = $repository->getFirstPosTransaction($journal);
         $foreignCurrency     = $pTransaction->foreignCurrency ?? $pTransaction->transactionCurrency;
         $preFilled           = [
-            'date'                     => $repository->getJournalDate($journal, null), //  $journal->dateAsString()
-            'interest_date'            => $repository->getJournalDate($journal, 'interest_date'),
-            'book_date'                => $repository->getJournalDate($journal, 'book_date'),
-            'process_date'             => $repository->getJournalDate($journal, 'process_date'),
-            'category'                 => $repository->getJournalCategoryName($journal),
-            'budget_id'                => $repository->getJournalBudgetId($journal),
-            'tags'                     => implode(',', $repository->getTags($journal)),
-            'source_account_id'        => $sourceAccounts->first()->id,
-            'source_account_name'      => $sourceAccounts->first()->edit_name,
-            'destination_account_id'   => $destinationAccounts->first()->id,
-            'destination_account_name' => $destinationAccounts->first()->edit_name,
+            'date'                 => $repository->getJournalDate($journal, null), //  $journal->dateAsString()
+            'interest_date'        => $repository->getJournalDate($journal, 'interest_date'),
+            'book_date'            => $repository->getJournalDate($journal, 'book_date'),
+            'process_date'         => $repository->getJournalDate($journal, 'process_date'),
+            'category'             => $repository->getJournalCategoryName($journal),
+            'budget_id'            => $repository->getJournalBudgetId($journal),
+            'tags'                 => implode(',', $repository->getTags($journal)),
+            'source_id'            => $sourceAccounts->first()->id,
+            'source_name'          => $sourceAccounts->first()->edit_name,
+            'destination_id'       => $destinationAccounts->first()->id,
+            'destination_name'     => $destinationAccounts->first()->edit_name,
 
             // new custom fields:
-            'due_date'                 => $repository->getJournalDate($journal, 'due_date'),
-            'payment_date'             => $repository->getJournalDate($journal, 'payment_date'),
-            'invoice_date'             => $repository->getJournalDate($journal, 'invoice_date'),
-            'interal_reference'        => $repository->getMetaField($journal, 'internal_reference'),
-            'notes'                    => $repository->getNoteText($journal),
+            'due_date'             => $repository->getJournalDate($journal, 'due_date'),
+            'payment_date'         => $repository->getJournalDate($journal, 'payment_date'),
+            'invoice_date'         => $repository->getJournalDate($journal, 'invoice_date'),
+            'interal_reference'    => $repository->getMetaField($journal, 'internal_reference'),
+            'notes'                => $repository->getNoteText($journal),
 
             // amount fields
-            'amount'                   => $pTransaction->amount,
-            'source_amount'            => $pTransaction->amount,
-            'native_amount'            => $pTransaction->amount,
-            'destination_amount'       => $pTransaction->foreign_amount,
-            'currency'                 => $pTransaction->transactionCurrency,
-            'source_currency'          => $pTransaction->transactionCurrency,
-            'native_currency'          => $pTransaction->transactionCurrency,
-            'foreign_currency'         => $foreignCurrency,
-            'destination_currency'     => $foreignCurrency,
+            'amount'               => $pTransaction->amount,
+            'source_amount'        => $pTransaction->amount,
+            'native_amount'        => $pTransaction->amount,
+            'destination_amount'   => $pTransaction->foreign_amount,
+            'currency'             => $pTransaction->transactionCurrency,
+            'source_currency'      => $pTransaction->transactionCurrency,
+            'native_currency'      => $pTransaction->transactionCurrency,
+            'foreign_currency'     => $foreignCurrency,
+            'destination_currency' => $foreignCurrency,
         ];
 
         // amounts for withdrawals and deposits:
@@ -329,9 +319,10 @@ class SingleController extends Controller
      * @param JournalFormRequest         $request
      * @param JournalRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
+    public function store(JournalFormRequest $request, JournalRepositoryInterface $repository): RedirectResponse
     {
         $doSplit       = 1 === (int)$request->get('split_journal');
         $createAnother = 1 === (int)$request->get('create_another');

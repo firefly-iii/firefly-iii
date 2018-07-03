@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Attachment;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -94,6 +95,14 @@ interface AttachmentRepositoryInterface
      * @param User $user
      */
     public function setUser(User $user);
+
+    /**
+     * @param array $data
+     *
+     * @return Attachment
+     * @throws FireflyException
+     */
+    public function store(array $data): Attachment;
 
     /**
      * @param Attachment $attachment

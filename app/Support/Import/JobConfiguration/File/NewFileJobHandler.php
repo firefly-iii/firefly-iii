@@ -80,6 +80,7 @@ class NewFileJobHandler implements FileConfigurationInterface
     /**
      *
      * Get the data necessary to show the configuration screen.
+     *
      * @codeCoverageIgnore
      * @return array
      */

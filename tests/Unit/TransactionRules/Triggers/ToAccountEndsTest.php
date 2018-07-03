@@ -36,14 +36,15 @@ class ToAccountEndsTest extends TestCase
      */
     public function testTriggered(): void
     {
-        $count = 0;
-        while ($count === 0) {
+        $count   = 0;
+        $account = null;
+        while ($count === 0 && $account === null) {
             $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
             $count       = $journal->transactions()->where('amount', '>', 0)->count();
             $transaction = $journal->transactions()->where('amount', '>', 0)->first();
+            $account     = $transaction->account;
         }
 
-        $account = $transaction->account;
         $trigger = ToAccountEnds::makeFromStrings(substr($account->name, -3), false);
         $result  = $trigger->triggered($journal);
         $this->assertTrue($result);
@@ -60,7 +61,7 @@ class ToAccountEndsTest extends TestCase
             $count       = $journal->transactions()->where('amount', '>', 0)->count();
             $transaction = $journal->transactions()->where('amount', '>', 0)->first();
         }
-        $account     = $transaction->account;
+        $account = $transaction->account;
 
         $trigger = ToAccountEnds::makeFromStrings('bla-bla-bla' . $account->name, false);
         $result  = $trigger->triggered($journal);
@@ -74,8 +75,8 @@ class ToAccountEndsTest extends TestCase
     {
         $count = 0;
         while ($count === 0) {
-            $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $count       = $journal->transactions()->where('amount', '>', 0)->count();
+            $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+            $count   = $journal->transactions()->where('amount', '>', 0)->count();
         }
 
         $trigger = ToAccountEnds::makeFromStrings((string)random_int(1, 1234), false);

@@ -34,6 +34,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Transformers\TransactionTransformer;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
@@ -96,6 +97,9 @@ class TransactionController extends Controller
         if ($end < $start) {
             [$start, $end] = [$end, $start];
         }
+
+        $path = route('transactions.index', [$what, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+
         $startStr = $start->formatLocalized($this->monthAndDayFormat);
         $endStr   = $end->formatLocalized($this->monthAndDayFormat);
         $subTitle = trans('firefly.title_' . $what . '_between', ['start' => $startStr, 'end' => $endStr]);
@@ -150,9 +154,9 @@ class TransactionController extends Controller
     /**
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function reconcile(Request $request)
+    public function reconcile(Request $request): JsonResponse
     {
         $transactionIds = $request->get('transactions');
         foreach ($transactionIds as $transactionId) {

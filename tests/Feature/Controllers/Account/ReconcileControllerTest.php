@@ -37,10 +37,6 @@ use Mockery;
 
 /**
  * Class ConfigurationControllerTest
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReconcileControllerTest extends TestCase
 {
@@ -54,7 +50,9 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::edit
+     * Test editing a reconciliation.
+     *
+     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
      */
     public function testEdit(): void
     {
@@ -76,7 +74,9 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::edit
+     * Test the redirect if journal is not a reconciliation.
+     *
+     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
      */
     public function testEditRedirect(): void
     {
@@ -88,7 +88,9 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::overview()
+     * Test overview of reconciliation.
+     *
+     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
      */
     public function testOverview(): void
     {
@@ -109,7 +111,9 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\Account\ReconcileController::overview()
+     * Test overview when it's not an asset.
+     *
+     * @covers                   \FireflyIII\Http\Controllers\Account\ReconcileController
      * @expectedExceptionMessage is not an asset account
      */
     public function testOverviewNotAsset(): void
@@ -127,9 +131,9 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::__construct
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::reconcile()
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::redirectToOriginalAccount()
+     * Test showing the reconciliation.
+     *
+     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
      */
     public function testReconcile(): void
     {
@@ -144,9 +148,9 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::__construct
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::reconcile()
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::redirectToOriginalAccount()
+     * Test showing the reconciliation (its a initial balance).
+     *
+     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
      */
     public function testReconcileInitialBalance(): void
     {
@@ -158,9 +162,9 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::__construct
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::reconcile()
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::redirectToOriginalAccount()
+     * Test reconcile view (without date info).
+     *
+     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
      */
     public function testReconcileNoDates(): void
     {
@@ -176,9 +180,9 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::__construct
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::reconcile()
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::redirectToOriginalAccount()
+     * Test reconcile view (without end date).
+     *
+     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
      */
     public function testReconcileNoEndDate(): void
     {
@@ -194,9 +198,9 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::__construct
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::reconcile()
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::redirectToOriginalAccount()
+     * Test reconcile view when account is not an asset.
+     *
+     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
      */
     public function testReconcileNotAsset(): void
     {
@@ -207,7 +211,9 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::show()
+     * Test show for actual reconciliation.
+     *
+     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
      */
     public function testShow(): void
     {
@@ -225,7 +231,9 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::show()
+     * Test show for actual reconciliation, but its not a reconciliation.
+     *
+     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
      */
     public function testShowSomethingElse(): void
     {
@@ -237,7 +245,9 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Account\ReconcileController::submit()
+     * Submit reconciliation.
+     *
+     * @covers       \FireflyIII\Http\Controllers\Account\ReconcileController
      * @covers       \FireflyIII\Http\Requests\ReconciliationStoreRequest
      */
     public function testSubmit(): void
@@ -266,7 +276,9 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::transactions()
+     * List transactions for reconciliation view.
+     *
+     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
      */
     public function testTransactions(): void
     {
@@ -279,7 +291,7 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController::transactions()
+     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
      */
     public function testTransactionsInitialBalance(): void
     {
@@ -291,7 +303,7 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Account\ReconcileController::update
+     * @covers       \FireflyIII\Http\Controllers\Account\ReconcileController
      * @covers       \FireflyIII\Http\Requests\ReconciliationUpdateRequest
      */
     public function testUpdate(): void
@@ -314,7 +326,7 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Account\ReconcileController::update
+     * @covers       \FireflyIII\Http\Controllers\Account\ReconcileController
      * @covers       \FireflyIII\Http\Requests\ReconciliationUpdateRequest
      */
     public function testUpdateNotReconcile(): void
@@ -331,7 +343,7 @@ class ReconcileControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Account\ReconcileController::update
+     * @covers       \FireflyIII\Http\Controllers\Account\ReconcileController
      * @covers       \FireflyIII\Http\Requests\ReconciliationUpdateRequest
      */
     public function testUpdateZero(): void

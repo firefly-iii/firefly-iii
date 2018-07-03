@@ -30,10 +30,6 @@ use Tests\TestCase;
 
 /**
  * Class LinkControllerTest
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class LinkControllerTest extends TestCase
 {
@@ -47,8 +43,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\LinkController::__construct
-     * @covers \FireflyIII\Http\Controllers\Admin\LinkController::create
+     * @covers \FireflyIII\Http\Controllers\Admin\LinkController
      */
     public function testCreate(): void
     {
@@ -59,7 +54,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\LinkController::delete
+     * @covers \FireflyIII\Http\Controllers\Admin\LinkController
      */
     public function testDeleteEditable(): void
     {
@@ -76,7 +71,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\LinkController::delete
+     * @covers \FireflyIII\Http\Controllers\Admin\LinkController
      */
     public function testDeleteNonEditable(): void
     {
@@ -89,7 +84,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\LinkController::destroy
+     * @covers \FireflyIII\Http\Controllers\Admin\LinkController
      */
     public function testDestroy(): void
     {
@@ -99,7 +94,7 @@ class LinkControllerTest extends TestCase
         LinkType::create(['editable' => 1, 'inward' => 'hellox', 'outward' => 'byex', 'name' => 'Test typeX']);
 
         $linkType = LinkType::where('editable', 1)->first();
-        $repository->shouldReceive('find')->andReturn($linkType);
+        $repository->shouldReceive('findNull')->andReturn($linkType);
         $repository->shouldReceive('destroy');
         $this->be($this->user());
         $this->session(['link_types.delete.uri' => 'http://localhost']);
@@ -109,7 +104,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\LinkController::edit
+     * @covers \FireflyIII\Http\Controllers\Admin\LinkController
      */
     public function testEditEditable(): void
     {
@@ -123,7 +118,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\LinkController::edit
+     * @covers \FireflyIII\Http\Controllers\Admin\LinkController
      */
     public function testEditNonEditable(): void
     {
@@ -135,7 +130,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\LinkController::index
+     * @covers \FireflyIII\Http\Controllers\Admin\LinkController
      */
     public function testIndex(): void
     {
@@ -149,7 +144,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\LinkController::show
+     * @covers \FireflyIII\Http\Controllers\Admin\LinkController
      */
     public function testShow(): void
     {
@@ -160,7 +155,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Admin\LinkController::store
+     * @covers       \FireflyIII\Http\Controllers\Admin\LinkController
      * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
     public function testStore(): void
@@ -172,7 +167,7 @@ class LinkControllerTest extends TestCase
             'outward' => 'test outward' . random_int(1, 1000),
         ];
         $repository->shouldReceive('store')->once()->andReturn(LinkType::first());
-        $repository->shouldReceive('find')->andReturn(LinkType::first());
+        $repository->shouldReceive('findNull')->andReturn(LinkType::first());
 
         $this->session(['link_types.create.uri' => 'http://localhost']);
         $this->be($this->user());
@@ -182,7 +177,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Admin\LinkController::store
+     * @covers       \FireflyIII\Http\Controllers\Admin\LinkController
      * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
     public function testStoreRedirect(): void
@@ -203,7 +198,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Admin\LinkController::update
+     * @covers       \FireflyIII\Http\Controllers\Admin\LinkController
      * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
     public function testUpdate(): void
@@ -227,7 +222,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Admin\LinkController::update
+     * @covers       \FireflyIII\Http\Controllers\Admin\LinkController
      * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
     public function testUpdateNonEditable(): void
@@ -249,7 +244,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Admin\LinkController::update
+     * @covers       \FireflyIII\Http\Controllers\Admin\LinkController
      * @covers       \FireflyIII\Http\Requests\LinkTypeFormRequest
      */
     public function testUpdateRedirect(): void

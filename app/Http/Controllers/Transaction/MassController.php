@@ -24,7 +24,6 @@ namespace FireflyIII\Http\Controllers\Transaction;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
-use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\TransactionViewFilter;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\MassDeleteJournalRequest;
@@ -37,10 +36,9 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Support\Collection;
+use Illuminate\View\View as IlluminateView;
 use Preferences;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use View;
-use Illuminate\View\View as IlluminateView;
 
 /**
  * Class MassController.
@@ -155,10 +153,11 @@ class MassController extends Controller
         // transform to array
         $transactions = $collection->map(
             function (Transaction $transaction) use ($transformer) {
-                $transaction= $transformer->transform($transaction);
+                $transaction = $transformer->transform($transaction);
                 // make sure amount is positive:
-                $transaction['amount'] = app('steam')->positive((string)$transaction['amount']);
+                $transaction['amount']         = app('steam')->positive((string)$transaction['amount']);
                 $transaction['foreign_amount'] = app('steam')->positive((string)$transaction['foreign_amount']);
+
                 return $transaction;
             }
         );
@@ -182,11 +181,11 @@ class MassController extends Controller
                 if (null !== $journal) {
                     // get optional fields:
                     $what              = strtolower($this->repository->getTransactionType($journal));
-                    $sourceAccountId   = $request->get('source_account_id')[$journal->id] ?? null;
+                    $sourceAccountId   = $request->get('source_id')[$journal->id] ?? null;
                     $currencyId        = $request->get('transaction_currency_id')[$journal->id] ?? 1;
-                    $sourceAccountName = $request->get('source_account_name')[$journal->id] ?? null;
-                    $destAccountId     = $request->get('destination_account_id')[$journal->id] ?? null;
-                    $destAccountName   = $request->get('destination_account_name')[$journal->id] ?? null;
+                    $sourceAccountName = $request->get('source_name')[$journal->id] ?? null;
+                    $destAccountId     = $request->get('destination_id')[$journal->id] ?? null;
+                    $destAccountName   = $request->get('destination_name')[$journal->id] ?? null;
                     $budgetId          = (int)($request->get('budget_id')[$journal->id] ?? 0.0);
                     $category          = $request->get('category')[$journal->id];
                     $tags              = $journal->tags->pluck('tag')->toArray();

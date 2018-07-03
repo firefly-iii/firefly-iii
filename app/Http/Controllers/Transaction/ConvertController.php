@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\Request;
+use Log;
 use View;
 
 /**
@@ -70,6 +71,8 @@ class ConvertController extends Controller
     {
         // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($journal)) {
+            Log::debug('This is an opening balance.');
+
             return $this->redirectToAccount($journal);
         }
         // @codeCoverageIgnoreEnd
@@ -80,6 +83,7 @@ class ConvertController extends Controller
 
         // cannot convert to its own type.
         if ($sourceType->type === $destinationType->type) {
+            Log::debug('This is already a transaction of the expected type..');
             session()->flash('info', trans('firefly.convert_is_already_type_' . $destinationType->type));
 
             return redirect(route('transactions.show', [$journal->id]));
@@ -87,6 +91,7 @@ class ConvertController extends Controller
 
         // cannot convert split.
         if ($journal->transactions()->count() > 2) {
+            Log::info('This journal has more than two transactions.');
             session()->flash('error', trans('firefly.cannot_convert_split_journal'));
 
             return redirect(route('transactions.show', [$journal->id]));
@@ -98,8 +103,9 @@ class ConvertController extends Controller
 
         return view(
             'transactions.convert', compact(
-            'sourceType', 'destinationType', 'journal', 'positiveAmount', 'sourceAccount', 'destinationAccount', 'sourceType', 'subTitle', 'subTitleIcon'
-        )
+                                      'sourceType', 'destinationType', 'journal', 'positiveAmount', 'sourceAccount', 'destinationAccount', 'sourceType',
+                                      'subTitle', 'subTitleIcon'
+                                  )
         );
     }
 
@@ -117,6 +123,7 @@ class ConvertController extends Controller
     {
         // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($journal)) {
+            Log::debug('Journal is opening balance, return to account.');
             return $this->redirectToAccount($journal);
         }
         // @codeCoverageIgnoreEnd
@@ -124,12 +131,14 @@ class ConvertController extends Controller
         $data = $request->all();
 
         if ($journal->transactionType->type === $destinationType->type) {
+            Log::info('Journal is already of the desired type.');
             session()->flash('error', trans('firefly.convert_is_already_type_' . $destinationType->type));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
 
         if ($journal->transactions()->count() > 2) {
+            Log::info('Journal has more than two transactions.');
             session()->flash('error', trans('firefly.cannot_convert_split_journal'));
 
             return redirect(route('transactions.show', [$journal->id]));

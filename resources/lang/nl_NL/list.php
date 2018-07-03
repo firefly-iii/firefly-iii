@@ -123,4 +123,9 @@ return [
     'spectre_last_use'        => 'Laatst ingelogd',
     'spectre_status'          => 'Status',
     'bunq_payment_id'         => 'bunq betalings-ID',
+    'repetitions'             => 'Herhalingen',
+    'title'                   => 'Titel',
+    'transaction_s'           => 'Transactie(s)',
+    'field'                   => 'Veld',
+    'value'                   => 'Waarde',
 ];

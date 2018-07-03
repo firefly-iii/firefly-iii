@@ -23,13 +23,11 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
@@ -231,6 +229,14 @@ class RuleController extends Controller
             $actionCount  = \count($oldActions);
         }
 
+        $hasOldInput = null !== $request->old('_token');
+        $preFilled   = [
+            'active'          => $hasOldInput ? (bool)$request->old('active') : $rule->active,
+            'stop_processing' => $hasOldInput ? (bool)$request->old('stop_processing') : $rule->stop_processing,
+            'strict'          => $hasOldInput ? (bool)$request->old('strict') : $rule->strict,
+
+        ];
+
         // get rule trigger for update / store-journal:
         $primaryTrigger = $this->ruleRepos->getPrimaryTrigger($rule);
         $subTitle       = trans('firefly.edit_rule', ['title' => $rule->title]);
@@ -240,6 +246,8 @@ class RuleController extends Controller
             $this->rememberPreviousUri('rules.edit.uri');
         }
         session()->forget('rules.edit.fromUpdate');
+
+        $request->session()->flash('preFilled', $preFilled);
 
         return view('rules.rule.edit', compact('rule', 'subTitle', 'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount'));
     }
@@ -331,11 +339,11 @@ class RuleController extends Controller
     public function selectTransactions(Rule $rule)
     {
         // does the user have shared accounts?
-        $first           = session('first')->format('Y-m-d');
-        $today           = Carbon::create()->format('Y-m-d');
-        $subTitle        = (string)trans('firefly.apply_rule_selection', ['title' => $rule->title]);
+        $first    = session('first')->format('Y-m-d');
+        $today    = Carbon::create()->format('Y-m-d');
+        $subTitle = (string)trans('firefly.apply_rule_selection', ['title' => $rule->title]);
 
-        return view('rules.rule.select-transactions', compact( 'first', 'today', 'rule', 'subTitle'));
+        return view('rules.rule.select-transactions', compact('first', 'today', 'rule', 'subTitle'));
     }
 
     /**
@@ -429,6 +437,7 @@ class RuleController extends Controller
             Log::error(sprintf('Could not render view in testTriggers(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());
         }
+
         // @codeCoverageIgnoreEnd
 
         return response()->json(['html' => $view, 'warning' => $warning]);
@@ -490,6 +499,7 @@ class RuleController extends Controller
             Log::error(sprintf('Could not render view in testTriggersByRule(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());
         }
+
         // @codeCoverageIgnoreEnd
 
         return response()->json(['html' => $view, 'warning' => $warning]);
@@ -539,23 +549,39 @@ class RuleController extends Controller
     {
         if (0 === $this->ruleRepos->count()) {
             $data = [
-                'rule_group_id'       => $this->ruleRepos->getFirstRuleGroup()->id,
-                'stop_processing'     => 0,
-                'title'               => trans('firefly.default_rule_name'),
-                'description'         => trans('firefly.default_rule_description'),
-                'trigger'             => 'store-journal',
-                'strict'              => true,
-                'rule-trigger-values' => [
-                    trans('firefly.default_rule_trigger_description'),
-                    trans('firefly.default_rule_trigger_from_account'),
-                ],
-                'rule-action-values'  => [
-                    trans('firefly.default_rule_action_prepend'),
-                    trans('firefly.default_rule_action_set_category'),
-                ],
+                'rule_group_id'   => $this->ruleRepos->getFirstRuleGroup()->id,
+                'stop-processing' => 0,
+                'title'           => trans('firefly.default_rule_name'),
+                'description'     => trans('firefly.default_rule_description'),
+                'trigger'         => 'store-journal',
+                'strict'          => true,
+                'rule-triggers'   => [
+                    [
+                        'name'            => 'description_is',
+                        'value'           => trans('firefly.default_rule_trigger_description'),
+                        'stop-processing' => false,
 
-                'rule-triggers' => ['description_is', 'from_account_is'],
-                'rule-actions'  => ['prepend_description', 'set_category'],
+                    ],
+                    [
+                        'name'            => 'from_account_is',
+                        'value'           => trans('firefly.default_rule_trigger_from_account'),
+                        'stop-processing' => false,
+
+                    ],
+
+                ],
+                'rule-actions'    => [
+                    [
+                        'name'            => 'prepend_description',
+                        'value'           => trans('firefly.default_rule_action_prepend'),
+                        'stop-processing' => false,
+                    ],
+                    [
+                        'name'            => 'set_category',
+                        'value'           => trans('firefly.default_rule_action_set_category'),
+                        'stop-processing' => false,
+                    ],
+                ],
             ];
 
             $this->ruleRepos->store($data);
@@ -600,6 +626,7 @@ class RuleController extends Controller
             Log::error(sprintf('Throwable was thrown in getActionsForBill(): %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
         }
+
         // @codeCoverageIgnoreEnd
 
         return $actions;
@@ -809,6 +836,7 @@ class RuleController extends Controller
             Log::debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
             Log::debug($e->getTraceAsString());
         }
+
         // @codeCoverageIgnoreEnd
 
         return $triggers;

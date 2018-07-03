@@ -45,8 +45,7 @@ class AboutControllerTest extends TestCase
     /**
      * Test the about endpoint
      *
-     * @covers \FireflyIII\Api\V1\Controllers\AboutController::__construct
-     * @covers \FireflyIII\Api\V1\Controllers\AboutController::about
+     * @covers \FireflyIII\Api\V1\Controllers\AboutController
      */
     public function testAbout(): void
     {
@@ -65,7 +64,7 @@ class AboutControllerTest extends TestCase
     /**
      * Test user end point
      *
-     * @covers \FireflyIII\Api\V1\Controllers\AboutController::user
+     * @covers \FireflyIII\Api\V1\Controllers\AboutController
      */
     public function testUser(): void
     {

@@ -69,44 +69,6 @@ class BillTransformerTest extends TestCase
     }
 
     /**
-     * Basic coverage with a note.
-     *
-     * @covers \FireflyIII\Transformers\BillTransformer::transform
-     */
-    public function testNote(): void
-    {
-
-        $bill     = Bill::create(
-            [
-                'user_id'                 => $this->user()->id,
-                'name'                    => 'Some bill ' . random_int(1, 10000),
-                'match'                   => 'word,' . random_int(1, 10000),
-                'amount_min'              => 12.34,
-                'amount_max'              => 45.67,
-                'date'                    => '2018-01-02',
-                'transaction_currency_id' => 1,
-                'repeat_freq'             => 'weekly',
-                'skip'                    => 0,
-                'active'                  => 1,
-            ]
-        );
-        $noteText = 'I are a note ' . random_int(1, 10000);
-        Note::create(
-            [
-                'noteable_id'   => $bill->id,
-                'noteable_type' => Bill::class,
-                'text'          => $noteText,
-            ]
-        );
-        $transformer = new BillTransformer(new ParameterBag);
-        $result      = $transformer->transform($bill);
-
-        $this->assertEquals($bill->name, $result['name']);
-        $this->assertEquals($noteText, $result['notes']);
-        $this->assertTrue($result['active']);
-    }
-
-    /**
      * Coverage for dates.
      *
      * @covers \FireflyIII\Transformers\BillTransformer::transform

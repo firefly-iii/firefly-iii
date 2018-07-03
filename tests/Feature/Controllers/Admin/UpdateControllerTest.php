@@ -34,10 +34,6 @@ use Tests\TestCase;
 
 /**
  * Class UpdateControllerTest
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class UpdateControllerTest extends TestCase
 {
@@ -51,8 +47,7 @@ class UpdateControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::index
-     * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::__construct
+     * @covers \FireflyIII\Http\Controllers\Admin\UpdateController
      */
     public function testIndex(): void
     {
@@ -75,7 +70,7 @@ class UpdateControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::post
+     * @covers \FireflyIII\Http\Controllers\Admin\UpdateController
      */
     public function testPost(): void
     {
@@ -93,7 +88,7 @@ class UpdateControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::updateCheck
+     * @covers \FireflyIII\Http\Controllers\Admin\UpdateController
      */
     public function testUpdateCheck(): void
     {
@@ -122,7 +117,7 @@ class UpdateControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::updateCheck
+     * @covers \FireflyIII\Http\Controllers\Admin\UpdateController
      */
     public function testUpdateCheckCurrent(): void
     {
@@ -149,7 +144,7 @@ class UpdateControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::updateCheck
+     * @covers \FireflyIII\Http\Controllers\Admin\UpdateController
      */
     public function testUpdateCheckError(): void
     {
@@ -172,7 +167,7 @@ class UpdateControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\UpdateController::updateCheck
+     * @covers \FireflyIII\Http\Controllers\Admin\UpdateController
      */
     public function testUpdateCheckNewer(): void
     {

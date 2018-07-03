@@ -41,7 +41,7 @@ class VersionCheckEventHandler
     /**
      * @param RequestedVersionCheckStatus $event
      */
-    public function checkForUpdates(RequestedVersionCheckStatus $event)
+    public function checkForUpdates(RequestedVersionCheckStatus $event): void
     {
         // in Sandstorm, cannot check for updates:
         $sandstorm = 1 === (int)getenv('SANDSTORM');

@@ -49,15 +49,15 @@ class BillFormRequest extends Request
             'date'                    => $this->date('date'),
             'repeat_freq'             => $this->string('repeat_freq'),
             'skip'                    => $this->integer('skip'),
-            'active'                  => $this->boolean('active'),
             'notes'                   => $this->string('notes'),
+            'active'                  => $this->boolean('active'),
         ];
     }
 
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         $nameRule = 'required|between:1,255|uniqueObjectForUser:bills,name';
         if ($this->integer('id') > 0) {
@@ -73,8 +73,7 @@ class BillFormRequest extends Request
             'date'                    => 'required|date',
             'repeat_freq'             => 'required|in:weekly,monthly,quarterly,half-year,yearly',
             'skip'                    => 'required|between:0,31',
-            'automatch'               => 'in:1',
-            'active'                  => 'in:1',
+            'active'                  => 'boolean',
         ];
 
         return $rules;

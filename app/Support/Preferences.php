@@ -125,14 +125,14 @@ class Preferences
      *
      * @return \FireflyIII\Models\Preference|null
      */
-    public function getForUser(User $user, $name, $default = null)
+    public function getForUser(User $user, $name, $default = null): ?Preference
     {
         $fullName = sprintf('preference%s%s', $user->id, $name);
         if (Cache::has($fullName)) {
             return Cache::get($fullName);
         }
 
-        $preference = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data']);
+        $preference = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
         if (null !== $preference && null === $preference->data) {
             try {
                 $preference->delete();
@@ -163,14 +163,17 @@ class Preferences
     {
         $lastActivity = microtime();
         $preference   = $this->get('lastActivity', microtime());
+
         if (null !== $preference && null !== $preference->data) {
             $lastActivity = $preference->data;
         }
         if (\is_array($lastActivity)) {
             $lastActivity = implode(',', $lastActivity);
         }
+        $hash = md5($lastActivity);
+        Log::debug(sprintf('Value of last activity is %s, hash is %s', $lastActivity, $hash));
 
-        return md5($lastActivity);
+        return $hash;
     }
 
     /**
@@ -208,7 +211,7 @@ class Preferences
     /**
      * @param \FireflyIII\User $user
      * @param                  $name
-     * @param mixed           $value
+     * @param mixed            $value
      *
      * @return Preference
      */
@@ -216,7 +219,7 @@ class Preferences
     {
         $fullName = sprintf('preference%s%s', $user->id, $name);
         Cache::forget($fullName);
-        $pref = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data']);
+        $pref = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
 
         if (null !== $pref) {
             $pref->data = $value;

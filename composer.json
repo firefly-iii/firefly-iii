@@ -1,128 +1,129 @@
 {
-	"name": "grumpydictator/firefly-iii",
-	"description": "Firefly III: a personal finances manager.",
-	"keywords": [
-		"finance",
-		"finances",
-		"manager",
-		"management",
-		"euro",
-		"dollar",
-		"laravel",
-		"money",
-		"currency",
-		"financials",
-		"financial",
-		"budgets",
-		"administration",
-		"tool",
-		"tooling",
-		"help",
-		"helper",
-		"assistant",
-		"planning",
-		"organizing",
-		"bills",
-		"personal finance",
-		"budgets",
-		"budgeting",
-		"budgeting tool",
-		"budgeting application",
-		"transactions",
-		"self hosted",
-		"self-hosted",
-		"transfers",
-		"management"
-	],
-	"license": "GPL-3.0-or-later",
-	"homepage": "https://github.com/firefly-iii/firefly-iii",
-	"type": "project",
-	"authors": [{
-		"name": "James Cole",
-		"email": "thegrumpydictator@gmail.com",
-		"homepage": "https://github.com/firefly-iii",
-		"role": "Developer"
-	}],
-	"require": {
-		"php": ">=7.1.0",
-		"ext-bcmath": "*",
-		"ext-curl": "*",
-		"ext-gd": "*",
-		"ext-intl": "*",
-		"ext-xml": "*",
-		"ext-zip": "*",
-		"bacon/bacon-qr-code": "1.*",
-		"bunq/sdk_php": "dev-master#8c1faefc111d9b970168a1837ca165d854954941",
-		"davejamesmiller/laravel-breadcrumbs": "5.*",
-		"doctrine/dbal": "2.*",
-		"fideloper/proxy": "4.*",
-		"laravel/framework": "5.6.*",
-		"laravel/passport": "^5.0",
-		"laravelcollective/html": "5.6.*",
-		"league/commonmark": "0.*",
-		"league/csv": "9.*",
-		"league/fractal": "^0.17.0",
-		"pragmarx/google2fa": "3.*",
-		"pragmarx/google2fa-laravel": "0.*",
-		"rcrowe/twigbridge": "0.9.*",
-		"rmccue/requests": "1.*",
-		"twig/twig": "1.*"
-	},
-	"require-dev": {
-		"barryvdh/laravel-ide-helper": "2.*",
-		"filp/whoops": "2.*",
-		"fzaninotto/faker": "1.*",
-		"johnkary/phpunit-speedtrap": "^3.0",
-		"mockery/mockery": "^1.0",
-		"php-coveralls/php-coveralls": "^2.0",
-		"phpunit/phpunit": "~7.0",
-		"roave/security-advisories": "dev-master"
-	},
-	"autoload": {
-		"classmap": [
-			"database/seeds",
-			"database/factories"
-		],
-		"psr-4": {
-			"FireflyIII\\": "app/"
-		}
-	},
-	"autoload-dev": {
-		"psr-4": {
-			"Tests\\": "tests/"
-		}
-	},
-	"extra": {
-		"laravel": {
-			"dont-discover": []
-		}
-	},
-	"scripts": {
-		"pre-install-cmd": [
-			"@php -r \"if (!(getenv('DYNO'))===false){file_exists('.env') || copy('.env.heroku', '.env');}\""
-		],
-		"post-root-package-install": [
-			"@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-		],
-		"post-create-project-cmd": [
-			"@php artisan key:generate"
-		],
-		"post-autoload-dump": [
-			"Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
-		],
-		"post-update-cmd": [
-			"php artisan firefly:upgrade-database",
-			"php artisan firefly:verify",
-			"php artisan firefly:instructions update",
-			"php artisan passport:install"
-		],
-		"post-install-cmd": [
-			"php artisan firefly:instructions install"
-		]
-	},
-	"config": {
-		"preferred-install": "dist",
-		"sort-packages": true,
-		"optimize-autoloader": true
-	}
+  "name": "grumpydictator/firefly-iii",
+  "description": "Firefly III: a personal finances manager.",
+  "keywords": [
+    "finance",
+    "finances",
+    "manager",
+    "management",
+    "euro",
+    "dollar",
+    "laravel",
+    "money",
+    "currency",
+    "financials",
+    "financial",
+    "budgets",
+    "administration",
+    "tool",
+    "tooling",
+    "help",
+    "helper",
+    "assistant",
+    "planning",
+    "organizing",
+    "bills",
+    "personal finance",
+    "budgets",
+    "budgeting",
+    "budgeting tool",
+    "budgeting application",
+    "transactions",
+    "self hosted",
+    "self-hosted",
+    "transfers",
+    "management"
+  ],
+  "license": "GPL-3.0-or-later",
+  "homepage": "https://github.com/firefly-iii/firefly-iii",
+  "type": "project",
+  "authors": [
+    {
+      "name": "James Cole",
+      "email": "thegrumpydictator@gmail.com",
+      "homepage": "https://github.com/firefly-iii",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.1.0",
+    "ext-bcmath": "*",
+    "ext-curl": "*",
+    "ext-gd": "*",
+    "ext-intl": "*",
+    "ext-xml": "*",
+    "ext-zip": "*",
+    "bacon/bacon-qr-code": "1.*",
+    "bunq/sdk_php": "dev-master#8c1faefc111d9b970168a1837ca165d854954941",
+    "davejamesmiller/laravel-breadcrumbs": "5.*",
+    "doctrine/dbal": "2.*",
+    "fideloper/proxy": "4.*",
+    "laravel/framework": "5.6.*",
+    "laravel/passport": "^5.0",
+    "laravelcollective/html": "5.6.*",
+    "league/commonmark": "0.*",
+    "league/csv": "9.*",
+    "league/fractal": "^0.17.0",
+    "pragmarx/google2fa": "3.*",
+    "pragmarx/google2fa-laravel": "0.*",
+    "rcrowe/twigbridge": "0.9.*",
+    "twig/twig": "1.*"
+  },
+  "require-dev": {
+    "barryvdh/laravel-ide-helper": "2.*",
+    "filp/whoops": "2.*",
+    "fzaninotto/faker": "1.*",
+    "johnkary/phpunit-speedtrap": "^3.0",
+    "mockery/mockery": "^1.0",
+    "php-coveralls/php-coveralls": "^2.0",
+    "phpunit/phpunit": "~7.0",
+    "roave/security-advisories": "dev-master"
+  },
+  "autoload": {
+    "classmap": [
+      "database/seeds",
+      "database/factories"
+    ],
+    "psr-4": {
+      "FireflyIII\\": "app/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "dont-discover": []
+    }
+  },
+  "scripts": {
+    "pre-install-cmd": [
+      "@php -r \"if (!(getenv('DYNO'))===false){file_exists('.env') || copy('.env.heroku', '.env');}\""
+    ],
+    "post-root-package-install": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ],
+    "post-create-project-cmd": [
+      "@php artisan key:generate"
+    ],
+    "post-autoload-dump": [
+      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
+    ],
+    "post-update-cmd": [
+      "php artisan firefly:upgrade-database",
+      "php artisan firefly:verify",
+      "php artisan firefly:instructions update",
+      "php artisan passport:install"
+    ],
+    "post-install-cmd": [
+      "php artisan firefly:instructions install"
+    ]
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true
+  }
 }

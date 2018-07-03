@@ -27,14 +27,17 @@ use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Form;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
+use Log;
 use RuntimeException;
 use Session;
 
@@ -43,6 +46,45 @@ use Session;
  */
 class ExpandedForm
 {
+    /**
+     * @param string $name
+     * @param null   $options
+     *
+     * @return string
+     * @throws \Throwable
+     */
+    public function activeAssetAccountList(string $name, $value = null, array $options = []): string
+    {
+        // make repositories
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+
+        $assetAccounts   = $repository->getActiveAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $grouped         = [];
+        // group accounts:
+        /** @var Account $account */
+        foreach ($assetAccounts as $account) {
+            $balance    = app('steam')->balance($account, new Carbon);
+            $currencyId = (int)$account->getMeta('currency_id');
+            $currency   = $currencyRepos->findNull($currencyId);
+            $role       = $account->getMeta('accountRole');
+            if ('' === $role) {
+                $role = 'no_account_type'; // @codeCoverageIgnore
+            }
+            if (null === $currency) {
+                $currency = $defaultCurrency;
+            }
+
+            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
+        }
+
+        return $this->select($name, $grouped, $value, $options);
+    }
+
     /**
      * @param string $name
      * @param null   $value
@@ -99,7 +141,6 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param        $selected
      * @param null   $options
      *
      * @return string
@@ -183,6 +224,7 @@ class ExpandedForm
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Throwable
      */
     public function balance(string $name, $value = null, array $options = []): string
     {
@@ -235,6 +277,33 @@ class ExpandedForm
         // get all currencies:
         $list  = $currencyRepos->get();
         $array = [];
+        /** @var TransactionCurrency $currency */
+        foreach ($list as $currency) {
+            $array[$currency->id] = $currency->name . ' (' . $currency->symbol . ')';
+        }
+        $res = $this->select($name, $array, $value, $options);
+
+        return $res;
+    }
+
+    /**
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
+     *
+     * @return string
+     * @throws \Throwable
+     */
+    public function currencyListEmpty(string $name, $value = null, array $options = []): string
+    {
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+
+        // get all currencies:
+        $list  = $currencyRepos->get();
+        $array = [
+            0 => trans('firefly.no_currency'),
+        ];
         /** @var TransactionCurrency $currency */
         foreach ($list as $currency) {
             $array[$currency->id] = $currency->name . ' (' . $currency->symbol . ')';
@@ -485,16 +554,7 @@ class ExpandedForm
      */
     public function optionsList(string $type, string $name): string
     {
-        $previousValue = null;
-
-        try {
-            $previousValue = request()->old('post_submit_action');
-        } catch (RuntimeException $e) {
-            // don't care
-        }
-
-        $previousValue = $previousValue ?? 'store';
-        $html          = view('form.options', compact('type', 'name', 'previousValue'))->render();
+        $html = view('form.options', compact('type', 'name'))->render();
 
         return $html;
     }
@@ -506,14 +566,41 @@ class ExpandedForm
      * @return string
      * @throws \Throwable
      */
-    public function password(string $name, array $options = []): string
+    public function password(string $name, array $options = null): string
     {
+        $options = $options ?? [];
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
         $html    = view('form.password', compact('classes', 'name', 'label', 'options'))->render();
 
         return $html;
+    }
+
+    /**
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
+     *
+     * @return string
+     * @throws \Throwable
+     */
+    public function piggyBankList(string $name, $value = null, array $options = null): string
+    {
+        $options = $options ?? [];
+        // make repositories
+        /** @var PiggyBankRepositoryInterface $repository */
+        $repository = app(PiggyBankRepositoryInterface::class);
+        $piggyBanks = $repository->getPiggyBanksWithAmount();
+        $array      = [
+            0 => trans('firefly.none_in_select_list'),
+        ];
+        /** @var PiggyBank $piggy */
+        foreach ($piggyBanks as $piggy) {
+            $array[$piggy->id] = $piggy->name;
+        }
+
+        return $this->select($name, $array, $value, $options);
     }
 
     /**
@@ -773,10 +860,13 @@ class ExpandedForm
         $key            = 'amount_currency_id_' . $name;
         $sentCurrencyId = isset($preFilled[$key]) ? (int)$preFilled[$key] : $defaultCurrency->id;
 
+        Log::debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
+
         // find this currency in set of currencies:
         foreach ($currencies as $currency) {
             if ($currency->id === $sentCurrencyId) {
                 $defaultCurrency = $currency;
+                Log::debug(sprintf('default currency is now %s', $defaultCurrency->code));
                 break;
             }
         }

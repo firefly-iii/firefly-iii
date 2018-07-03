@@ -27,8 +27,9 @@ use Exception;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Log;
-use Requests;
 
 /**
  * Class FixerIOv2.
@@ -48,19 +49,21 @@ class FixerIOv2 implements ExchangeRateInterface
     public function getRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): CurrencyExchangeRate
     {
         // create new exchange rate with default values.
-        // create new currency exchange rate object:
+        $rate         = 0;
         $exchangeRate = new CurrencyExchangeRate;
         $exchangeRate->user()->associate($this->user);
         $exchangeRate->fromCurrency()->associate($fromCurrency);
         $exchangeRate->toCurrency()->associate($toCurrency);
         $exchangeRate->date = $date;
-        $exchangeRate->rate = 0;
+        $exchangeRate->rate = $rate;
 
         // get API key
         $apiKey = env('FIXER_API_KEY', '');
 
         // if no API key, return unsaved exchange rate.
-        if (\strlen($apiKey) === 0) {
+        if ('' === $apiKey) {
+            Log::warning('No fixer.IO API key, will not do conversion.');
+
             return $exchangeRate;
         }
 
@@ -72,31 +75,36 @@ class FixerIOv2 implements ExchangeRateInterface
         $statusCode = -1;
         Log::debug(sprintf('Going to request exchange rate using URI %s', str_replace($apiKey, 'xxxx', $uri)));
         try {
-            $result     = Requests::get($uri);
-            $statusCode = $result->status_code;
-            $body       = $result->body;
+            $client     = new Client;
+            $res        = $client->request('GET', $uri);
+            $statusCode = $res->getStatusCode();
+            $body       = $res->getBody()->getContents();
             Log::debug(sprintf('Result status code is %d', $statusCode));
-        } catch (Exception $e) {
+            Log::debug(sprintf('Result body is: %s', $body));
+        } catch (GuzzleException|Exception $e) {
             // don't care about error
-            $body = sprintf('Requests_Exception: %s', $e->getMessage());
+            $body = sprintf('Guzzle exception: %s', $e->getMessage());
         }
 
-        // Requests_Exception
         $content = null;
         if (200 !== $statusCode) {
             Log::error(sprintf('Something went wrong. Received error code %d and body "%s" from FixerIO.', $statusCode, $body));
         }
+        $success = false;
         // get rate from body:
         if (200 === $statusCode) {
             $content = json_decode($body, true);
+            $success = $content['success'] ?? false;
         }
-        if (null !== $content) {
+        if (null !== $content && true === $success) {
             $code = $toCurrency->code;
             $rate = (float)($content['rates'][$code] ?? 0);
+            Log::debug('Got the following rates from Fixer: ', $content['rates'] ?? []);
         }
-        Log::debug('Got the following rates from Fixer: ', $content['rates'] ?? []);
+
         $exchangeRate->rate = $rate;
         if ($rate !== 0.0) {
+            Log::debug('Rate is not zero, save it!');
             $exchangeRate->save();
         }
 

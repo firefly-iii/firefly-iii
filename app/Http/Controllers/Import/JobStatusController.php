@@ -127,7 +127,7 @@ class JobStatusController extends Controller
     public function start(ImportJob $importJob): JsonResponse
     {
         // catch impossible status:
-        $allowed = ['ready_to_run', 'need_job_config', 'error']; // todo remove error
+        $allowed = ['ready_to_run', 'need_job_config'];
 
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
             Log::error('Job is not ready.');

@@ -174,43 +174,6 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::general
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::balanceAmount
-     */
-    public function testBalanceAmountDiffRole(): void
-    {
-        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
-        $popupHelper   = $this->mock(PopupReportInterface::class);
-
-        $budget  = factory(Budget::class)->make();
-        $account = factory(Account::class)->make();
-
-        $budgetRepos->shouldReceive('findNull')->andReturn($budget)->once()->withArgs([1]);
-        $accountRepos->shouldReceive('findNull')->andReturn($account)->once()->withArgs([1]);
-        $popupHelper->shouldReceive('balanceDifference')->once()->andReturn(new Collection);
-
-        $this->be($this->user());
-        $arguments = [
-            'attributes' => [
-                'location'   => 'balance-amount',
-                'startDate'  => Carbon::now()->startOfMonth()->format('Ymd'),
-                'endDate'    => Carbon::now()->endOfMonth()->format('Ymd'),
-                'accounts'   => 1,
-                'accountId'  => 1,
-                'categoryId' => 1,
-                'budgetId'   => 1,
-                'role'       => 3, // diff role, is complicated.
-            ],
-        ];
-        $uri       = route('popup.general') . '?' . http_build_query($arguments);
-        $response  = $this->get($uri);
-        $response->assertStatus(200);
-    }
-
-    /**
      * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::general
      * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
      * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::balanceAmount

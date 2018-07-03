@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 return [
     'password' => 'Le password devono contenere almeno sei caratteri e devono corrispondere alla conferma.',
-    'user'     => 'Non possiamo trovare un utente con questo indirizzo e-mail.',
+    'user'     => 'Non riusciamo a trovare un utente con questo indirizzo e-mail.',
     'token'    => 'Questo token di reimpostazione della password non è valido.',
-    'sent'     => 'Abbiamo inviato via e-mail il tuo link per la reimpostazione della password!',
+    'sent'     => 'Abbiamo inviato via e-mail il link per la reimpostazione della password!',
     'reset'    => 'La tua password è stata resettata!',
     'blocked'  => 'Riprova.',
 ];

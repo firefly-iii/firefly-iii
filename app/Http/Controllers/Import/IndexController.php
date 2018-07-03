@@ -161,10 +161,8 @@ class IndexController extends Controller
         $config['delimiter'] = $config['delimiter'] ?? ',';
         $config['delimiter'] = "\t" === $config['delimiter'] ? 'tab' : $config['delimiter'];
 
-        // this prevents private information from escaping
-        $config['column-mapping-config'] = [];
-        $result                          = json_encode($config, JSON_PRETTY_PRINT);
-        $name                            = sprintf('"%s"', addcslashes('import-configuration-' . date('Y-m-d') . '.json', '"\\'));
+        $result = json_encode($config, JSON_PRETTY_PRINT);
+        $name   = sprintf('"%s"', addcslashes('import-configuration-' . date('Y-m-d') . '.json', '"\\'));
         /** @var LaravelResponse $response */
         $response = response($result, 200);
         $response->header('Content-disposition', 'attachment; filename=' . $name)

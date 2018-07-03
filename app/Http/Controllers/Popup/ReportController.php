@@ -127,6 +127,7 @@ class ReportController extends Controller
         $budget  = $this->budgetRepository->findNull((int)$attributes['budgetId']);
         $account = $this->accountRepository->findNull((int)$attributes['accountId']);
 
+
         switch (true) {
             case BalanceLine::ROLE_DEFAULTROLE === $role && null !== $budget->id:
                 // normal row with a budget:
@@ -136,10 +137,6 @@ class ReportController extends Controller
                 // normal row without a budget:
                 $journals     = $this->popupHelper->balanceForNoBudget($account, $attributes);
                 $budget->name = (string)trans('firefly.no_budget');
-                break;
-            case BalanceLine::ROLE_DIFFROLE === $role:
-                $journals     = $this->popupHelper->balanceDifference($account, $attributes);
-                $budget->name = (string)trans('firefly.leftUnbalanced');
                 break;
             case BalanceLine::ROLE_TAGROLE === $role:
                 // row with tag info.

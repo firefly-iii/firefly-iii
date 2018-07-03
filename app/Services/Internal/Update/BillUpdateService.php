@@ -51,7 +51,7 @@ class BillUpdateService
         $bill->repeat_freq             = $data['repeat_freq'];
         $bill->skip                    = $data['skip'];
         $bill->automatch               = true;
-        $bill->active                  = $data['active'];
+        $bill->active                  = $data['active']??true;
         $bill->save();
 
         // update note:

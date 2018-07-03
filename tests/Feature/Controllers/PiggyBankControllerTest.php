@@ -109,8 +109,6 @@ class PiggyBankControllerTest extends TestCase
         $currencyRepos->shouldReceive('findNull')->andReturn($currency);
 
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('getAccountsByType')
-                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->once();
 
         Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
         Amount::shouldReceive('balance')->andReturn('0');
@@ -196,13 +194,12 @@ class PiggyBankControllerTest extends TestCase
     public function testIndex(): void
     {
         // mock stuff
-        $repository      = $this->mock(PiggyBankRepositoryInterface::class);
-        $journalRepos    = $this->mock(JournalRepositoryInterface::class);
-        $one             = factory(PiggyBank::class)->make();
-        $two             = factory(PiggyBank::class)->make();
-        $two->account_id = $one->account_id;
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('getPiggyBanks')->andReturn(new Collection([$one, $two]));
+        $first        = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $repository   = $this->mock(PiggyBankRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $piggies      = $this->user()->piggyBanks()->take(2)->get();
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn($first);
+        $repository->shouldReceive('getPiggyBanks')->andReturn($piggies);
         $repository->shouldReceive('getCurrentAmount')->andReturn('10');
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('correctOrder');
@@ -350,10 +347,11 @@ class PiggyBankControllerTest extends TestCase
     public function testShow(): void
     {
         // mock stuff
+        $first        = $this->user()->transactionJournals()->inRandomOrder()->first();
         $repository   = $this->mock(PiggyBankRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('setUser')->once();
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn($first);
         $repository->shouldReceive('getEvents')->andReturn(new Collection);
         $repository->shouldReceive('getSuggestedMonthlyAmount')->andReturn('1');
         $repository->shouldReceive('getCurrentAmount')->andReturn('1');

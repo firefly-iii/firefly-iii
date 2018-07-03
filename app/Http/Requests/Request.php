@@ -50,6 +50,16 @@ class Request extends FormRequest
     /**
      * @param string $field
      *
+     * @return float
+     */
+    public function float(string $field): float
+    {
+        return (float)$this->get($field);
+    }
+
+    /**
+     * @param string $field
+     *
      * @return int
      */
     public function integer(string $field): int

@@ -25,6 +25,7 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\Attachment;
+use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -39,13 +40,13 @@ class AttachmentTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = ['user'];
+    protected $availableIncludes = ['user', 'notes'];
     /**
      * List of resources to automatically include
      *
      * @var array
      */
-    protected $defaultIncludes = ['user'];
+    protected $defaultIncludes = ['user', 'notes'];
 
     /** @var ParameterBag */
     protected $parameters;
@@ -63,6 +64,20 @@ class AttachmentTransformer extends TransformerAbstract
     }
 
     /**
+     * Attach the notes.
+     *
+     * @codeCoverageIgnore
+     *
+     * @param Attachment $attachment
+     *
+     * @return FractalCollection
+     */
+    public function includeNotes(Attachment $attachment): FractalCollection
+    {
+        return $this->collection($attachment->notes, new NoteTransformer($this->parameters), 'notes');
+    }
+
+    /**
      * Attach the user.
      *
      * @codeCoverageIgnore
@@ -73,7 +88,7 @@ class AttachmentTransformer extends TransformerAbstract
      */
     public function includeUser(Attachment $attachment): Item
     {
-        return $this->item($attachment->user, new UserTransformer($this->parameters), 'user');
+        return $this->item($attachment->user, new UserTransformer($this->parameters), 'users');
     }
 
     /**
@@ -92,11 +107,11 @@ class AttachmentTransformer extends TransformerAbstract
             'attachable_type' => $attachment->attachable_type,
             'md5'             => $attachment->md5,
             'filename'        => $attachment->filename,
+            'download_uri'    => route('api.v1.attachments.download', [$attachment->id]),
+            'upload_uri'      => route('api.v1.attachments.upload', [$attachment->id]),
             'title'           => $attachment->title,
-            'description'     => $attachment->description,
-            'notes'           => $attachment->notes,
             'mime'            => $attachment->mime,
-            'size'            => $attachment->size,
+            'size'            => (int)$attachment->size,
             'links'           => [
                 [
                     'rel' => 'self',

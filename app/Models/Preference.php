@@ -22,19 +22,24 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Crypt;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Model;
 use Log;
-use FireflyIII\User;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Preference.
  *
- * @property mixed $data
+ * @property mixed  $data
  * @property string $name
+ * @property Carbon $updated_at
+ * @property Carbon $created_at
+ * @property int    $id
  */
 class Preference extends Model
 {
@@ -51,6 +56,25 @@ class Preference extends Model
 
     /** @var array */
     protected $fillable = ['user_id', 'data', 'name'];
+
+    /**
+     * @param string $value
+     *
+     * @return Account
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public static function routeBinder(string $value): Preference
+    {
+        if (auth()->check()) {
+            $preferenceId = (int)$value;
+            $preference   = auth()->user()->preferences()->find($preferenceId);
+            if (null !== $preference) {
+                return $preference;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
+
 
     /**
      * @param $value

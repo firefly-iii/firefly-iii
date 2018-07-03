@@ -87,7 +87,7 @@ class BulkController extends Controller
 
 
     /**
-     * @param BulkEditJournalRequest     $request
+     * @param BulkEditJournalRequest $request
      *
      * @return mixed
      */

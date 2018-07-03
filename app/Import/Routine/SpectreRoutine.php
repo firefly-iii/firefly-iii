@@ -25,8 +25,8 @@ namespace FireflyIII\Import\Routine;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\Routine\Spectre\StageImportDataHandler;
 use FireflyIII\Support\Import\Routine\Spectre\StageAuthenticatedHandler;
+use FireflyIII\Support\Import\Routine\Spectre\StageImportDataHandler;
 use FireflyIII\Support\Import\Routine\Spectre\StageNewHandler;
 use Log;
 

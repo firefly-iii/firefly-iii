@@ -77,7 +77,7 @@
         </ul>
 
     </li>
-    <li class="{{ activeRoutePartial('bills') }} {{ activeRoutePartial('piggy-banks') }} {{ activeRoutePartial('rules') }} treeview">
+    <li class="{{ activeRoutePartial('bills') }} {{ activeRoutePartial('recurring') }}  {{ activeRoutePartial('piggy-banks') }} {{ activeRoutePartial('rules') }} treeview">
         <a href="#">
             <i class="fa fa-euro fa-fw"></i>
             <span>{{ 'moneyManagement'|_ }}</span>
@@ -98,6 +98,10 @@
                 <a href="{{ route('rules.index') }}">
                     <i class="fa fa-random fa-fw"></i> {{ 'rules'|_ }}</a>
             </li>
+            <li class="{{ activeRoutePartial('recurring') }}">
+                <a href="{{ route('recurring.index') }}">
+                    <i class="fa fa-paint-brush fa-fw"></i> {{ 'recurrences'|_ }}</a>
+            </li>
         </ul>
 
     </li>
@@ -113,7 +117,7 @@
         </a>
         <ul class="treeview-menu">
             <li class="{{ activeRoutePartial('import') }}">
-                <a href="{{ route('import.index') }}"><i class="fa fa-archive fa-fw"></i> {{ 'import_data'|_ }}</a>
+                <a href="{{ route('import.index') }}"><i class="fa fa-archive fa-fw"></i> {{ 'import_transactions'|_ }}</a>
             </li>
             <li class="{{ activeRoutePartial('export') }}">
                 <a href="{{ route('export.index') }}"><i class="fa fa-file-archive-o fa-fw"></i> {{ 'export_and_backup_data'|_ }}</a>
@@ -132,12 +136,11 @@
         </a>
 
         <ul class="treeview-menu">
-            {% if not SANDSTORM %}
-                <li class="{{ activeRoutePartial('profile') }}">
-                    <a class="{{ activeRouteStrict('profile.index') }}" href="{{ route('profile.index') }}"><i class="fa fa-user fa-fw"></i> {{ 'profile'|_ }}
-                    </a>
-                </li>
-            {% endif %}
+
+            <li class="{{ activeRoutePartial('profile') }}">
+                <a class="{{ activeRouteStrict('profile.index') }}" href="{{ route('profile.index') }}"><i class="fa fa-user fa-fw"></i> {{ 'profile'|_ }}
+                </a>
+            </li>
             <li class="{{ activeRoutePartial('preferences') }}">
                 <a class="{{ activeRouteStrict('preferences.index') }}" href="{{ route('preferences.index') }}"><i
                             class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a>

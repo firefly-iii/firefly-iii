@@ -30,10 +30,6 @@ use Tests\TestCase;
 
 /**
  * Class TwoFactorControllerTest
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TwoFactorControllerTest extends TestCase
 {
@@ -47,7 +43,7 @@ class TwoFactorControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController::index
+     * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController
      */
     public function testIndex(): void
     {
@@ -70,7 +66,7 @@ class TwoFactorControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController::index
+     * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController
      */
     public function testIndexNo2FA(): void
     {
@@ -92,7 +88,7 @@ class TwoFactorControllerTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\Auth\TwoFactorController::index
+     * @covers                   \FireflyIII\Http\Controllers\Auth\TwoFactorController
      * @expectedExceptionMessage Your two factor authentication secret is empty
      */
     public function testIndexNoSecret(): void
@@ -116,7 +112,7 @@ class TwoFactorControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController::lostTwoFactor
+     * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController
      */
     public function testLostTwoFactor(): void
     {
@@ -139,7 +135,7 @@ class TwoFactorControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController::postIndex
+     * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController
      */
     public function testPostIndex(): void
     {

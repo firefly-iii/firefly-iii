@@ -33,16 +33,16 @@
                         {{ ExpandedForm.text('description') }}
 
                         {# SELECTABLE SOURCE ACCOUNT ONLY FOR WITHDRAWALS AND TRANSFERS #}
-                        {{ ExpandedForm.assetAccountList('source_account_id', null, {label: trans('form.asset_source_account')}) }}
+                        {{ ExpandedForm.activeAssetAccountList('source_id', null, {label: trans('form.asset_source_account')}) }}
 
                         {# FREE FORMAT SOURCE ACCOUNT ONLY FOR DEPOSITS #}
-                        {{ ExpandedForm.text('source_account_name', null, {label: trans('form.revenue_account')}) }}
+                        {{ ExpandedForm.text('source_name', null, {label: trans('form.revenue_account')}) }}
 
                         {# FREE FORMAT DESTINATION ACCOUNT ONLY FOR EXPENSES #}
-                        {{ ExpandedForm.text('destination_account_name', null, {label: trans('form.expense_account')}) }}
+                        {{ ExpandedForm.text('destination_name', null, {label: trans('form.expense_account')}) }}
 
                         {# SELECTABLE DESTINATION ACCOUNT ONLY FOR TRANSFERS AND DEPOSITS #}
-                        {{ ExpandedForm.assetAccountList('destination_account_id', null, {label: trans('form.asset_destination_account')} ) }}
+                        {{ ExpandedForm.activeAssetAccountList('destination_id', null, {label: trans('form.asset_destination_account')} ) }}
 
                         {# ALWAYS SHOW AMOUNT #}
                         {{ ExpandedForm.amount('amount') }}
@@ -60,7 +60,7 @@
                         {{ ExpandedForm.date('date', preFilled.date|default(phpdate('Y-m-d'))) }}
                     </div>
                     <div class="box-footer">
-                        <button type="submit" id="transaction-btn" class="btn btn-success pull-right">
+                        <button type="submit" class="transaction-btn btn btn-success pull-right">
                             {{ trans('form.store_new_'~what) }}
                         </button>
                     </div>
@@ -86,8 +86,7 @@
                         {{ ExpandedForm.text('tags') }}
 
                         {# RELATE THIS TRANSFER TO A PIGGY BANK #}
-                        {{ ExpandedForm.select('piggy_bank_id', piggies, '0') }}
-
+                        {{ ExpandedForm.piggyBankList('piggy_bank_id',0) }}
                     </div>
                 </div>
 
@@ -196,7 +195,7 @@
                         {{ ExpandedForm.optionsList('create','transaction') }}
                     </div>
                     <div class="box-footer">
-                        <button type="submit" id="transaction-btn" class="btn btn-success pull-right">
+                        <button type="submit" class="transaction-btn btn btn-success pull-right">
                             {{ trans('form.store_new_'~what) }}
                         </button>
                     </div>
@@ -211,7 +210,6 @@
 {% block scripts %}
     <script type="text/javascript">
         var what = "{{ what }}";
-        var piggiesLength = {{ piggies|length }};
 
         // some titles and names:
         var txt = [];

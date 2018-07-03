@@ -34,4 +34,6 @@ return [
     'transactions-index'     => 'Biaya ini, deposito dan transfer tidak terlalu imajinatif. Mereka telah dihasilkan secara otomatis.',
     'piggy-banks-index'      => 'Seperti yang bisa Anda lihat, ada tiga celengan. Gunakan tombol plus dan minus untuk mempengaruhi jumlah uang di setiap celengan. Klik nama celengan untuk melihat administrasi masing-masing celengan.',
     'import-index'           => 'Any CSV file can be imported into Firefly III. It also supports importing data from bunq and Spectre. Other banks and financial aggregators will be implemented in the future. As a demo-user however, you can only see the "fake"-provider in action. It will generate some random transactions to show you how the process works.',
+    'recurring-index'        => 'Please note that this feature is under active development and may not work as expected.',
+    'recurring-create'       => 'Please note that this feature is under active development and may not work as expected.',
 ];

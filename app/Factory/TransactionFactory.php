@@ -26,6 +26,7 @@ namespace FireflyIII\Factory;
 
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -56,6 +57,7 @@ class TransactionFactory
         $currencyId = $data['currency_id'] ?? null;
         $currencyId = isset($data['currency']) ? $data['currency']->id : $currencyId;
         if ('' === $data['amount']) {
+            Log::error('Empty string in data.', $data);
             throw new FireflyException('Amount is an empty string, which Firefly III cannot handle. Apologies.'); // @codeCoverageIgnore
         }
         if (null === $currencyId) {
@@ -96,14 +98,27 @@ class TransactionFactory
         $description = $journal->description === $data['description'] ? null : $data['description'];
 
         // type of source account depends on journal type:
-        $sourceType    = $this->accountType($journal, 'source');
+        $sourceType = $this->accountType($journal, 'source');
         Log::debug(sprintf('Expect source account to be of type %s', $sourceType));
         $sourceAccount = $this->findAccount($sourceType, $data['source_id'], $data['source_name']);
 
         // same for destination account:
-        $destinationType    = $this->accountType($journal, 'destination');
+        $destinationType = $this->accountType($journal, 'destination');
         Log::debug(sprintf('Expect source destination to be of type %s', $destinationType));
         $destinationAccount = $this->findAccount($destinationType, $data['destination_id'], $data['destination_name']);
+
+        Log::debug(sprintf('Source type is "%s", destination type is "%s"', $sourceAccount->accountType->type, $destinationAccount->accountType->type));
+        // throw big fat error when source type === dest type
+        if ($sourceAccount->accountType->type === $destinationAccount->accountType->type
+            && ($journal->transactionType->type !== TransactionType::TRANSFER
+                && $journal->transactionType->type !== TransactionType::RECONCILIATION)
+        ) {
+            throw new FireflyException(sprintf('Source and destination account cannot be both of the type "%s"', $destinationAccount->accountType->type));
+        }
+        if ($sourceAccount->accountType->type !== AccountType::ASSET && $destinationAccount->accountType->type !== AccountType::ASSET) {
+            throw new FireflyException('At least one of the accounts must be an asset account.');
+        }
+
         // first make a "negative" (source) transaction based on the data in the array.
         $source = $this->create(
             [

@@ -23,17 +23,18 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Crypt;
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\User;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\BudgetLimit;
 
 /**
  * Class Budget.
+ *
+ * @property int    $id
+ * @property string $name
+ * @property bool   $active
  */
 class Budget extends Model
 {

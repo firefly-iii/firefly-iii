@@ -98,8 +98,31 @@ class Amount implements ConverterInterface
             $value  = str_replace($search, '', $value);
             Log::debug(sprintf('No decimal character found. Converted amount from "%s" to "%s".', $original, $value));
         }
+        if ($value{0} === '.') {
+            $value = '0' . $value;
+        }
 
-        return (string)number_format(round(floatval($value), 12), 12, '.', '');
+        if (is_numeric($value)) {
+            Log::debug(sprintf('Final NUMERIC value is: "%s"', $value));
+
+            return $value;
+        }
+        Log::debug(sprintf('Final value is: "%s"', $value));
+        $formatted = sprintf('%01.12f', $value);
+        Log::debug(sprintf('Is formatted to : "%s"', $formatted));
+
+        return $formatted;
+    }
+
+    private function bcround($number, $scale = 0)
+    {
+        $fix = "5";
+        for ($i = 0; $i < $scale; $i++) {
+            $fix = "0$fix";
+        }
+        $number = bcadd($number, "0.$fix", $scale + 1);
+
+        return bcdiv($number, "1.0", $scale);
     }
 
     /**
@@ -109,6 +132,11 @@ class Amount implements ConverterInterface
      */
     private function stripAmount(string $value): string
     {
+        if (0 === strpos($value, '--')) {
+            $value = substr($value, 2);
+        }
+
+
         $str = preg_replace('/[^\-\(\)\.\,0-9 ]/', '', $value);
         $len = \strlen($str);
         if ('(' === $str[0] && ')' === $str[$len - 1]) {

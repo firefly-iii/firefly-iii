@@ -54,10 +54,9 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * Destroy account over API.
+     * Destroy journal over API.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::__construct
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::delete
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      */
     public function testDelete(): void
     {
@@ -80,7 +79,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit with bad currency code
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testFailCurrencyCode(): void
@@ -127,7 +126,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit with bad currency ID.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testFailCurrencyId(): void
@@ -173,7 +172,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Empty descriptions
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testFailEmptyDescriptions(): void
@@ -225,7 +224,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit all empty descriptions for transactions.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testFailEmptySplitDescriptions(): void
@@ -282,7 +281,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submitted expense account instead of asset account.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      * @covers \FireflyIII\Rules\BelongsUser
      */
@@ -331,7 +330,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submitted expense account name instead of asset account name.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testFailExpenseName(): void
@@ -378,7 +377,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit no asset account info at all.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testFailNoAsset(): void
@@ -422,7 +421,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit no transactions.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testFailNoData(): void
@@ -459,7 +458,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit foreign currency without foreign currency info.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testFailNoForeignCurrencyInfo(): void
@@ -507,7 +506,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit revenue ID instead of expense ID.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testFailOpposingRevenueID(): void
@@ -559,9 +558,9 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit journal with a bill ID that is not yours.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
-     * @covers \FireflyiII\Rules\BelongsUser
+     * @covers \FireflyIII\Rules\BelongsUser
      */
     public function testFailOwnershipBillId(): void
     {
@@ -616,11 +615,11 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * Submit journal with a bill ID that is not yours.
+     * Submit journal with a bill name that is not yours.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
-     * @covers \FireflyiII\Rules\BelongsUser
+     * @covers \FireflyIII\Rules\BelongsUser
      */
     public function testFailOwnershipBillName(): void
     {
@@ -676,9 +675,9 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit journal with a budget ID that is not yours.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
-     * @covers \FireflyiII\Rules\BelongsUser
+     * @covers \FireflyIII\Rules\BelongsUser
      */
     public function testFailOwnershipBudgetId(): void
     {
@@ -734,9 +733,9 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit journal with a budget name that is not yours.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
-     * @covers \FireflyiII\Rules\BelongsUser
+     * @covers \FireflyIII\Rules\BelongsUser
      */
     public function testFailOwnershipBudgetName(): void
     {
@@ -792,9 +791,9 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit journal with a category ID that is not yours.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
-     * @covers \FireflyiII\Rules\BelongsUser
+     * @covers \FireflyIII\Rules\BelongsUser
      */
     public function testFailOwnershipCategoryId(): void
     {
@@ -850,9 +849,9 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit journal with a piggy bank that is not yours.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
-     * @covers \FireflyiII\Rules\BelongsUser
+     * @covers \FireflyIII\Rules\BelongsUser
      */
     public function testFailOwnershipPiggyBankID(): void
     {
@@ -916,9 +915,9 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit journal with a piggy bank that is not yours.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
-     * @covers \FireflyiII\Rules\BelongsUser
+     * @covers \FireflyIII\Rules\BelongsUser
      */
     public function testFailOwnershipPiggyBankName(): void
     {
@@ -982,7 +981,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submitted revenue account instead of asset account in deposit.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      * @covers \FireflyIII\Rules\BelongsUser
      */
@@ -1029,7 +1028,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Try to store a withdrawal with different source accounts.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testFailSplitDeposit(): void
@@ -1086,7 +1085,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Try to store a withdrawal with different source accounts.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testFailSplitTransfer(): void
@@ -1139,7 +1138,7 @@ class TransactionControllerTest extends TestCase
                         'All accounts in this field must be equal.',
                     ],
                     'transactions.1.destination_id' => [
-                        'The source account equals the destination account',
+                        'The source account equals the destination account.',
                     ],
                 ],
             ]
@@ -1150,7 +1149,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Try to store a withdrawal with different source accounts.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testFailSplitWithdrawal(): void
@@ -1206,11 +1205,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Show index.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::__construct
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::index
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::mapTypes
-     *
-     * throws \FireflyIII\Exceptions\FireflyException
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      */
     public function testIndex(): void
     {
@@ -1261,10 +1256,9 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::__construct
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::index
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::mapTypes
-     * throws \FireflyIII\Exceptions\FireflyException
+     * Show index with range.
+     * 
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      */
     public function testIndexWithRange(): void
     {
@@ -1329,7 +1323,9 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::show
+     * Show a deposit.
+     * 
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      */
     public function testShowDeposit(): void
     {
@@ -1390,7 +1386,9 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::show
+     * Show a withdrawal.
+     * 
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      */
     public function testShowWithdrawal(): void
     {
@@ -1460,7 +1458,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit a transaction (withdrawal) with attached bill ID
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessBillId(): void
@@ -1501,7 +1499,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit a transaction (withdrawal) with attached bill ID
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessBillName(): void
@@ -1542,7 +1540,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Add opposing account by a new name.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessNewStoreOpposingName(): void
@@ -1582,7 +1580,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit the minimum amount of data required to create a withdrawal.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStoreAccountName(): void
@@ -1621,7 +1619,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit the minimum amount of data required to create a withdrawal.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStoreBasic(): void
@@ -1660,7 +1658,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit the minimum amount of data required to create a withdrawal.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStoreBasicByName(): void
@@ -1701,7 +1699,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit the minimum amount of data required to create a deposit.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStoreBasicDeposit(): void
@@ -1740,7 +1738,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit with existing budget ID, see it reflected in output.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStoreBudgetId(): void
@@ -1779,7 +1777,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit with existing budget name, see it reflected in output.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStoreBudgetName(): void
@@ -1819,7 +1817,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit with existing category ID, see it reflected in output.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStoreCategoryID(): void
@@ -1858,7 +1856,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit with existing category name, see it reflected in output.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStoreCategoryName(): void
@@ -1897,7 +1895,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Add foreign amount information.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStoreForeignAmount(): void
@@ -1938,7 +1936,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Add all available meta data fields.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStoreMetaData(): void
@@ -1983,7 +1981,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit with NEW category name, see it reflected in output.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStoreNewCategoryName(): void
@@ -2023,7 +2021,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Add opposing account by name.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStoreNewOpposingName(): void
@@ -2063,7 +2061,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit the minimum amount of data required to create a withdrawal.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStoreNotes(): void
@@ -2102,7 +2100,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Add opposing account by ID.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStoreOpposingID(): void
@@ -2141,7 +2139,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Add opposing account by name.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStoreOpposingName(): void
@@ -2182,7 +2180,7 @@ class TransactionControllerTest extends TestCase
      * Submit the minimum amount of data required to create a withdrawal.
      * When sending a piggy bank by name, this must be reflected in the output.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStorePiggyDeposit(): void
@@ -2221,7 +2219,7 @@ class TransactionControllerTest extends TestCase
      * Submit the minimum amount of data required to create a withdrawal.
      * When sending a piggy bank by name, this must be reflected in the output.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStorePiggyId(): void
@@ -2261,7 +2259,7 @@ class TransactionControllerTest extends TestCase
      * Submit the minimum amount of data required to create a withdrawal.
      * When sending a piggy bank by name, this must be reflected in the output.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStorePiggyName(): void
@@ -2300,7 +2298,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Set a different reconciled var
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStoreReconciled(): void
@@ -2338,7 +2336,7 @@ class TransactionControllerTest extends TestCase
     /**
      * Submit the data required for a split withdrawal.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStoreSplit(): void
@@ -2385,7 +2383,7 @@ class TransactionControllerTest extends TestCase
      * Submit the minimum amount of data required to create a withdrawal.
      * Add some tags as well. Expect to see them in the result.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::store
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testSuccessStoreTags(): void
@@ -2429,7 +2427,7 @@ class TransactionControllerTest extends TestCase
      * Fire enough to trigger an update. Since the create code already fires on the Request, no
      * need to verify all of that.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::update
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testUpdateBasicDeposit(): void
@@ -2470,7 +2468,7 @@ class TransactionControllerTest extends TestCase
      * Fire enough to trigger an update. Since the create code already fires on the Request, no
      * need to verify all of that.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController::update
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      * @covers \FireflyIII\Api\V1\Requests\TransactionRequest
      */
     public function testUpdateBasicWithdrawal(): void

@@ -23,19 +23,18 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Crypt;
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\User;
-use FireflyIII\Models\TransactionJournal;
 
 /**
  * Class Tag.
  *
- * @property Collection $transactionJournals
- * @property string $tag
- * @property int $id
+ * @property Collection     $transactionJournals
+ * @property string         $tag
+ * @property int            $id
  * @property \Carbon\Carbon $date
  */
 class Tag extends Model

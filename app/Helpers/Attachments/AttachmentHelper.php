@@ -123,6 +123,46 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
+     * Uploads a file as a string.
+     *
+     * @param Attachment $attachment
+     * @param string     $content
+     *
+     * @return bool
+     */
+    public function saveAttachmentFromApi(Attachment $attachment, string $content): bool
+    {
+        $resource = tmpfile();
+        if (false === $resource) {
+            Log::error('Cannot create temp-file for file upload.');
+
+            return false;
+        }
+        $path = stream_get_meta_data($resource)['uri'];
+        fwrite($resource, $content);
+        $finfo       = finfo_open(FILEINFO_MIME_TYPE);
+        $mime        = finfo_file($finfo, $path);
+        $allowedMime = config('firefly.allowedMimes');
+        if (!\in_array($mime, $allowedMime, true)) {
+            Log::error(sprintf('Mime type %s is not allowed for API file upload.', $mime));
+
+            return false;
+        }
+        // is allowed? Save the file!
+        $encrypted = Crypt::encrypt($content);
+        $this->uploadDisk->put($attachment->fileName(), $encrypted);
+
+        // update attachment.
+        $attachment->md5      = md5_file($path);
+        $attachment->mime     = $mime;
+        $attachment->size     = \strlen($content);
+        $attachment->uploaded = 1;
+        $attachment->save();
+
+        return true;
+    }
+
+    /**
      * @param Model      $model
      * @param array|null $files
      *
@@ -232,7 +272,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         Log::debug(sprintf('Name is %s, and mime is %s', $name, $mime));
         Log::debug('Valid mimes are', $this->allowedMimes);
 
-        if (!\in_array($mime, $this->allowedMimes)) {
+        if (!\in_array($mime, $this->allowedMimes, true)) {
             $msg = (string)trans('validation.file_invalid_mime', ['name' => $name, 'mime' => $mime]);
             $this->errors->add('attachments', $msg);
             Log::error($msg);

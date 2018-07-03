@@ -24,16 +24,16 @@ $(document).ready(function () {
     "use strict";
 
     // destination account names:
-    if ($('input[name^="destination_account_name["]').length > 0) {
+    if ($('input[name^="destination_name["]').length > 0) {
         $.getJSON('json/expense-accounts').done(function (data) {
-            $('input[name^="destination_account_name["]').typeahead({source: data, autoSelect: false});
+            $('input[name^="destination_name["]').typeahead({source: data, autoSelect: false});
         });
     }
 
     // source account name
-    if ($('input[name^="source_account_name["]').length > 0) {
+    if ($('input[name^="source_name["]').length > 0) {
         $.getJSON('json/revenue-accounts').done(function (data) {
-            $('input[name^="source_account_name["]').typeahead({source: data, autoSelect: false});
+            $('input[name^="source_name["]').typeahead({source: data, autoSelect: false});
         });
     }
 

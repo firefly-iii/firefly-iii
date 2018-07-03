@@ -28,7 +28,6 @@ use Exception;
 use FireflyIII\Mail\AccessTokenCreatedMail;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Laravel\Passport\Events\AccessTokenCreated;
-use Laravel\Passport\Token;
 use Log;
 use Mail;
 use Request;

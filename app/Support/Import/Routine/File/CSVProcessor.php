@@ -62,7 +62,7 @@ class CSVProcessor implements FileProcessorInterface
 
         // validate mapped values:
         /** @var MappedValuesValidator $validator */
-        $validator    = app(MappedValuesValidator::class);
+        $validator = app(MappedValuesValidator::class);
         $validator->setImportJob($this->importJob);
         $mappedValues = $validator->validate($mappingConverger->getMappedValues());
 

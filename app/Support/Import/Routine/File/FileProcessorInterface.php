@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Routine\File;
+
 use FireflyIII\Models\ImportJob;
 
 

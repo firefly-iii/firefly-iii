@@ -13,7 +13,7 @@ I am running Firefly III version x.x.x
 What do you need to do to trigger this bug?
 
 **Extra info**
-Please add extra info here, such as OS, browser, and the output from the `/debug`-page of your Firefly III installation (click the version at the bottom).
+Please add extra info here, such as OS, browser, and the output from the /debug page of your Firefly III installation (click the version at the bottom).
 
 **Bonus points**
 Earn bonus points by:

@@ -190,6 +190,7 @@ trait TransactionServiceTrait
      */
     protected function findCategory(?int $categoryId, ?string $categoryName): ?Category
     {
+        Log::debug(sprintf('Going to find or create category #%d, with name "%s"', $categoryId, $categoryName));
         /** @var CategoryFactory $factory */
         $factory = app(CategoryFactory::class);
         $factory->setUser($this->user);

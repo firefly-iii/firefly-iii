@@ -188,6 +188,8 @@ class TransactionRequest extends Request
     /**
      * Throws an error when this asset account is invalid.
      *
+     * @noinspection MoreThanThreeArgumentsInspection
+     *
      * @param Validator   $validator
      * @param int|null    $accountId
      * @param null|string $accountName
@@ -256,7 +258,7 @@ class TransactionRequest extends Request
      *
      * @param Validator $validator
      */
-    protected function checkValidDescriptions(Validator $validator)
+    protected function checkValidDescriptions(Validator $validator): void
     {
         $data               = $validator->getData();
         $transactions       = $data['transactions'] ?? [];
@@ -317,6 +319,8 @@ class TransactionRequest extends Request
     }
 
     /**
+     * TODO can be made a rule?
+     *
      * If the transactions contain foreign amounts, there must also be foreign currency information.
      *
      * @param Validator $validator
@@ -341,6 +345,8 @@ class TransactionRequest extends Request
     /**
      * Throws an error when the given opposing account (of type $type) is invalid.
      * Empty data is allowed, system will default to cash.
+     *
+     * @noinspection MoreThanThreeArgumentsInspection
      *
      * @param Validator   $validator
      * @param string      $type
@@ -454,7 +460,7 @@ class TransactionRequest extends Request
      *
      * @throws FireflyException
      */
-    protected function validateSplitAccounts(Validator $validator)
+    protected function validateSplitAccounts(Validator $validator): void
     {
         $data  = $validator->getData();
         $count = isset($data['transactions']) ? \count($data['transactions']) : 0;

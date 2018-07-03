@@ -29,10 +29,6 @@ use Tests\TestCase;
 
 /**
  * Class UserControllerTest
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class UserControllerTest extends TestCase
 {
@@ -46,7 +42,7 @@ class UserControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\UserController::delete
+     * @covers \FireflyIII\Http\Controllers\Admin\UserController
      */
     public function testDelete(): void
     {
@@ -58,7 +54,7 @@ class UserControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\UserController::destroy
+     * @covers \FireflyIII\Http\Controllers\Admin\UserController
      */
     public function testDestroy(): void
     {
@@ -71,7 +67,7 @@ class UserControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\UserController::edit
+     * @covers \FireflyIII\Http\Controllers\Admin\UserController
      */
     public function testEdit(): void
     {
@@ -83,8 +79,7 @@ class UserControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\UserController::index
-     * @covers \FireflyIII\Http\Controllers\Admin\UserController::__construct
+     * @covers \FireflyIII\Http\Controllers\Admin\UserController
      */
     public function testIndex(): void
     {
@@ -100,7 +95,7 @@ class UserControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\UserController::show
+     * @covers \FireflyIII\Http\Controllers\Admin\UserController
      */
     public function testShow(): void
     {
@@ -121,7 +116,7 @@ class UserControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\UserController::update
+     * @covers \FireflyIII\Http\Controllers\Admin\UserController
      */
     public function testUpdate(): void
     {

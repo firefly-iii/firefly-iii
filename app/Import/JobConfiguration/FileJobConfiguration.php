@@ -28,10 +28,10 @@ namespace FireflyIII\Import\JobConfiguration;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\JobConfiguration\File\FileConfigurationInterface;
 use FireflyIII\Support\Import\JobConfiguration\File\ConfigureMappingHandler;
 use FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler;
 use FireflyIII\Support\Import\JobConfiguration\File\ConfigureUploadHandler;
+use FireflyIII\Support\Import\JobConfiguration\File\FileConfigurationInterface;
 use FireflyIII\Support\Import\JobConfiguration\File\NewFileJobHandler;
 use Illuminate\Support\MessageBag;
 
@@ -120,7 +120,7 @@ class FileJobConfiguration implements JobConfigurationInterface
      */
     public function setImportJob(ImportJob $importJob): void
     {
-        $this->importJob = $importJob;
+        $this->importJob  = $importJob;
         $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($importJob->user);
     }

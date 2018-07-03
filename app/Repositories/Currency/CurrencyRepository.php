@@ -265,13 +265,15 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * Get currency exchange rate.
+     *
      * @param TransactionCurrency $fromCurrency
      * @param TransactionCurrency $toCurrency
      * @param Carbon              $date
      *
-     * @return CurrencyExchangeRate
+     * @return CurrencyExchangeRate|null
      */
-    public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): CurrencyExchangeRate
+    public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): ?CurrencyExchangeRate
     {
         if ($fromCurrency->id === $toCurrency->id) {
             $rate       = new CurrencyExchangeRate;
@@ -280,7 +282,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
             return $rate;
         }
-
+        /** @var CurrencyExchangeRate $rate */
         $rate = $this->user->currencyExchangeRates()
                            ->where('from_currency_id', $fromCurrency->id)
                            ->where('to_currency_id', $toCurrency->id)
@@ -291,7 +293,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
             return $rate;
         }
 
-        return new CurrencyExchangeRate;
+        return null;
     }
 
     /**

@@ -34,4 +34,6 @@ return [
     'transactions-index'     => 'Te wydatki, depozyty i transfery nie są szczególnie pomysłowe. Zostały wygenerowane automatycznie.',
     'piggy-banks-index'      => 'Jak widać, istnieją trzy skarbonki. Użyj przycisków plus i minus, aby wpłynąć na ilość pieniędzy w każdej skarbonce. Kliknij nazwę skarbonki, aby zobaczyć administrację każdej skarbonki.',
     'import-index'           => 'Any CSV file can be imported into Firefly III. It also supports importing data from bunq and Spectre. Other banks and financial aggregators will be implemented in the future. As a demo-user however, you can only see the "fake"-provider in action. It will generate some random transactions to show you how the process works.',
+    'recurring-index'        => 'Please note that this feature is under active development and may not work as expected.',
+    'recurring-create'       => 'Please note that this feature is under active development and may not work as expected.',
 ];

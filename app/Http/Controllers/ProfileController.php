@@ -107,9 +107,10 @@ class ProfileController extends Controller
         $domain = $this->getDomain();
         $secret = Google2FA::generateSecretKey();
         session()->flash('two-factor-secret', $secret);
+
         $image = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret, 200);
 
-        return view('profile.code', compact('image'));
+        return view('profile.code', compact('image', 'secret'));
     }
 
     /**

@@ -50,8 +50,7 @@ class UserControllerTest extends TestCase
     /**
      * Delete a user.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\UserController::__construct
-     * @covers \FireflyIII\Api\V1\Controllers\UserController::delete
+     * @covers \FireflyIII\Api\V1\Controllers\UserController
      * @covers \FireflyIII\Api\V1\Requests\UserRequest
      */
     public function testDelete(): void
@@ -68,8 +67,7 @@ class UserControllerTest extends TestCase
     /**
      * Delete a user as non admin
      *
-     * @covers \FireflyIII\Api\V1\Controllers\UserController::__construct
-     * @covers \FireflyIII\Api\V1\Controllers\UserController::delete
+     * @covers \FireflyIII\Api\V1\Controllers\UserController
      * @covers \FireflyIII\Api\V1\Requests\UserRequest
      */
     public function testDeleteNoAdmin(): void
@@ -86,8 +84,9 @@ class UserControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\UserController::__construct
-     * @covers \FireflyIII\Api\V1\Controllers\UserController::index
+     * Show list of users.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\UserController
      */
     public function testIndex(): void
     {
@@ -111,7 +110,9 @@ class UserControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\UserController::show
+     * Show single user.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\UserController
      */
     public function testShow(): void
     {
@@ -124,7 +125,9 @@ class UserControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\UserController::store
+     * Store new user.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\UserController
      * @covers \FireflyIII\Api\V1\Requests\UserRequest
      */
     public function testStoreBasic(): void
@@ -145,7 +148,9 @@ class UserControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\UserController::store
+     * Store user with info already used.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\UserController
      * @covers \FireflyIII\Api\V1\Requests\UserRequest
      */
     public function testStoreNotUnique(): void
@@ -174,7 +179,9 @@ class UserControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\UserController::update
+     * Update user.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\UserController
      * @covers \FireflyIII\Api\V1\Requests\UserRequest
      */
     public function testUpdate(): void

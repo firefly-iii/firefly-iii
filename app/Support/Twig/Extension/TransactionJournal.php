@@ -97,9 +97,50 @@ class TransactionJournal extends Twig_Extension
      */
     public function totalAmount(JournalModel $journal): string
     {
+        $type   = $journal->transactionType->type;
+        $totals = $this->getTotalAmount($journal);
+        $array  = [];
+        foreach ($totals as $total) {
+            if (TransactionType::WITHDRAWAL === $type) {
+                $total['amount'] = bcmul($total['amount'], '-1');
+            }
+            $array[] = app('amount')->formatAnything($total['currency'], $total['amount']);
+        }
+
+        return implode(' / ', $array);
+    }
+
+    /**
+     * @param JournalModel $journal
+     *
+     * @return string
+     */
+    public function totalAmountPlain(JournalModel $journal): string
+    {
+        $type   = $journal->transactionType->type;
+        $totals = $this->getTotalAmount($journal);
+        $array  = [];
+
+        foreach ($totals as $total) {
+            if (TransactionType::WITHDRAWAL === $type) {
+                $total['amount'] = bcmul($total['amount'], '-1');
+            }
+            $array[] = app('amount')->formatAnything($total['currency'], $total['amount'], false);
+        }
+
+        return implode(' / ', $array);
+    }
+
+    /**
+     * @param JournalModel $journal
+     *
+     * @return string
+     */
+    private function getTotalAmount(JournalModel $journal): array
+    {
         $transactions = $journal->transactions()->where('amount', '>', 0)->get();
         $totals       = [];
-        $type         = $journal->transactionType->type;
+
         /** @var TransactionModel $transaction */
         foreach ($transactions as $transaction) {
             $currencyId = $transaction->transaction_currency_id;
@@ -128,14 +169,7 @@ class TransactionJournal extends Twig_Extension
                 );
             }
         }
-        $array = [];
-        foreach ($totals as $total) {
-            if (TransactionType::WITHDRAWAL === $type) {
-                $total['amount'] = bcmul($total['amount'], '-1');
-            }
-            $array[] = app('amount')->formatAnything($total['currency'], $total['amount']);
-        }
 
-        return implode(' / ', $array);
+        return $totals;
     }
 }

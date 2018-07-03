@@ -153,6 +153,12 @@ class BoxController extends Controller
             $incomes[$currencyId]  = Amount::formatAnything($currency, $incomes[$currencyId] ?? '0', false);
             $expenses[$currencyId] = Amount::formatAnything($currency, $expenses[$currencyId] ?? '0', false);
         }
+        if (\count($sums) === 0) {
+            $currency                = app('amount')->getDefaultCurrency();
+            $sums[$currency->id]     = Amount::formatAnything($currency, '0', false);
+            $incomes[$currency->id]  = Amount::formatAnything($currency, '0', false);
+            $expenses[$currency->id] = Amount::formatAnything($currency, '0', false);
+        }
 
         $response = [
             'incomes'  => $incomes,
@@ -160,6 +166,7 @@ class BoxController extends Controller
             'sums'     => $sums,
             'size'     => \count($sums),
         ];
+
 
         $cache->store($response);
 

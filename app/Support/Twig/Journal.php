@@ -79,6 +79,7 @@ class Journal extends Twig_Extension
     {
         $filters = [
             new Twig_SimpleFilter('journalTotalAmount', [TransactionJournalExtension::class, 'totalAmount'], ['is_safe' => ['html']]),
+            new Twig_SimpleFilter('journalTotalAmountPlain', [TransactionJournalExtension::class, 'totalAmountPlain'], ['is_safe' => ['html']]),
         ];
 
         return $filters;
@@ -198,6 +199,7 @@ class Journal extends Twig_Extension
                                    ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                                    ->where('categories.user_id', $journal->user_id)
                                    ->where('transaction_journals.id', $journal->id)
+                                   ->whereNull('transactions.deleted_at')
                                    ->get(['categories.*']);
                     /** @var Category $category */
                     foreach ($set as $category) {

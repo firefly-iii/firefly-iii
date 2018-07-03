@@ -45,11 +45,6 @@ class NewBunqJobHandler implements BunqJobConfigurationInterface
      */
     public function configurationComplete(): bool
     {
-        // simply set the job configuration "apply-rules" to true.
-        $config                = $this->repository->getConfiguration($this->importJob);
-        $config['apply-rules'] = true;
-        $this->repository->setConfiguration($this->importJob, $config);
-
         return true;
     }
 

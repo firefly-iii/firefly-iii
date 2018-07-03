@@ -30,6 +30,8 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Transformers\AccountTransformer;
+use FireflyIII\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Manager;
@@ -37,7 +39,6 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
-use Preferences;
 
 /**
  * Class AccountController
@@ -51,20 +52,20 @@ class AccountController extends Controller
 
     /**
      * AccountController constructor.
-     *
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function __construct()
     {
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
+                /** @var User $user */
+                $user = auth()->user();
                 // @var AccountRepositoryInterface repository
                 $this->repository = app(AccountRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+                $this->repository->setUser($user);
 
                 $this->currencyRepository = app(CurrencyRepositoryInterface::class);
-                $this->currencyRepository->setUser(auth()->user());
+                $this->currencyRepository->setUser($user);
 
                 return $next($request);
             }
@@ -76,9 +77,9 @@ class AccountController extends Controller
      *
      * @param \FireflyIII\Models\Account $account
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function delete(Account $account)
+    public function delete(Account $account): JsonResponse
     {
         $this->repository->destroy($account, null);
 
@@ -90,12 +91,12 @@ class AccountController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         // create some objects:
-        $manager = new Manager();
+        $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
 
         // read type from URI
@@ -104,7 +105,7 @@ class AccountController extends Controller
 
         // types to get, page size:
         $types    = $this->mapTypes($this->parameters->get('type'));
-        $pageSize = (int)Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of accounts. Count it and split it.
         $collection = $this->repository->getAccountsByType($types);
@@ -129,9 +130,9 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Request $request, Account $account)
+    public function show(Request $request, Account $account): JsonResponse
     {
-        $manager = new Manager();
+        $manager = new Manager;
 
         // add include parameter:
         $include = $request->get('include') ?? '';
@@ -149,7 +150,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(AccountRequest $request)
+    public function store(AccountRequest $request): JsonResponse
     {
         $data = $request->getAll();
         // if currency ID is 0, find the currency by the code:
@@ -158,7 +159,7 @@ class AccountController extends Controller
             $data['currency_id'] = null === $currency ? 0 : $currency->id;
         }
         $account = $this->repository->store($data);
-        $manager = new Manager();
+        $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
@@ -175,7 +176,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(AccountRequest $request, Account $account)
+    public function update(AccountRequest $request, Account $account): JsonResponse
     {
         $data = $request->getAll();
         // if currency ID is 0, find the currency by the code:
@@ -186,7 +187,7 @@ class AccountController extends Controller
         // set correct type:
         $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $this->repository->update($account, $data);
-        $manager = new Manager();
+        $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 

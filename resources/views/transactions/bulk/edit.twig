@@ -40,18 +40,8 @@
                                                 {{ journal.description }}</a></td>
                                             <td>{{ journal|journalTotalAmount }}</td>
                                             <td>{{ journal.date.formatLocalized(monthAndDayFormat) }}</td>
-                                            <td>
-                                                {% set cat = journal.categories.first %}
-                                                {% if cat %}
-                                                    <a href="{{ route('categories.show', [cat.id]) }}">{{ cat.name }}</a>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                {% set bud = journal.budgets.first %}
-                                                {% if bud %}
-                                                    <a href="{{ route('budgets.show', [bud.id]) }}">{{ bud.name }}</a>
-                                                {% endif %}
-                                            </td>
+                                            <td>{{ journalCategories(journal)|raw }}</td>
+                                            <td>{{ journalBudgets(journal)|raw }}</td>
                                             <td>
                                                 {% for tag in journal.tags %}
                                                     <a class="label label-success" href="{{ route('tags.show', [tag.id]) }}">

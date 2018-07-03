@@ -50,7 +50,7 @@ class ExchangeController extends Controller
         $rate       = $repository->getExchangeRate($fromCurrency, $toCurrency, $date);
 
 
-        if (null === $rate->id) {
+        if (null === $rate) {
             Log::debug(sprintf('No cached exchange rate in database for %s to %s on %s', $fromCurrency->code, $toCurrency->code, $date->format('Y-m-d')));
 
             // create service:

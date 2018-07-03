@@ -25,13 +25,14 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Models\TransactionJournal;
 
 /**
  * Class TransactionCurrency.
  *
  * @property string $code
- * @property int $decimal_places
+ * @property string $symbol
+ * @property int    $decimal_places
+ * @property int    $id
  *
  */
 class TransactionCurrency extends Model

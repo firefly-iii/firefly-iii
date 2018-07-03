@@ -238,15 +238,7 @@
                                     {% for tag in journal.tags %}
 
                                         <h4 style="display: inline;"><a class="label label-success" href="{{ route('tags.show',tag) }}">
-                                                {% if tag.tagMode == 'nothing' %}
-                                                    <i class="fa fa-fw fa-tag"></i>
-                                                {% endif %}
-                                                {% if tag.tagMode == 'balancingAct' %}
-                                                    <i class="fa fa-fw fa-refresh"></i>
-                                                {% endif %}
-                                                {% if tag.tagMode == 'advancePayment' %}
-                                                    <i class="fa fa-fw fa-sort-numeric-desc"></i>
-                                                {% endif %}
+                                                <i class="fa fa-fw fa-tag"></i>
                                                 {{ tag.tag }}</a>
                                         </h4>
                                     {% endfor %}

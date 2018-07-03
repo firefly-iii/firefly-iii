@@ -22,21 +22,34 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Crypt;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Bill.
  *
- * @property bool   $active
- * @property int    $transaction_currency_id
- * @property string $amount_min
- * @property string $amount_max
+ * @property bool                $active
+ * @property int                 $transaction_currency_id
+ * @property string              $amount_min
+ * @property string              $amount_max
+ * @property int                 $id
+ * @property string              $name
+ * @property Collection          $notes
+ * @property TransactionCurrency $transactionCurrency
+ * @property Carbon              $created_at
+ * @property Carbon              $updated_at
+ * @property Carbon              $date
+ * @property string              $repeat_freq
+ * @property int                 $skip
+ * @property bool                $automatch
+ * @property User                $user
  */
 class Bill extends Model
 {

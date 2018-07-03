@@ -29,17 +29,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Steam;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Models\PiggyBankRepetition;
-use FireflyIII\Models\PiggyBankEvent;
-use FireflyIII\Models\Note;
-use FireflyIII\Models\Account;
 
 /**
  * Class PiggyBank.
  *
- * @property Carbon $targetdate
- * @property Carbon $startdate
- * @property string $targetamount
+ * @property Carbon  $targetdate
+ * @property Carbon  $startdate
+ * @property string  $targetamount
+ * @property int     $id
+ * @property string  $name
+ * @property Account $account
+ * @property Carbon  $updated_at
+ * @property Carbon  $created_at
+ * @property int     $order
+ * @property bool    $active
+ * @property int     $account_id
  *
  */
 class PiggyBank extends Model

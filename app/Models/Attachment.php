@@ -22,16 +22,31 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Crypt;
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\User;
 
 /**
  * Class Attachment.
+ *
+ * @property int    $id
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property string $attachable_type
+ * @property string $md5
+ * @property string $filename
+ * @property string $title
+ * @property string $description
+ * @property string $notes
+ * @property string $mime
+ * @property int    $size
+ * @property User   $user
+ * @property bool   $uploaded
  */
 class Attachment extends Model
 {
@@ -100,9 +115,9 @@ class Attachment extends Model
      * @return null|string
      * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
-    public function getDescriptionAttribute($value)
+    public function getDescriptionAttribute($value): ?string
     {
-        if (null === $value || 0 === \strlen($value)) {
+        if (null === $value || '' === $value) {
             return null;
         }
 
@@ -116,9 +131,9 @@ class Attachment extends Model
      * @return null|string
      * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
-    public function getFilenameAttribute($value)
+    public function getFilenameAttribute($value): ?string
     {
-        if (null === $value || 0 === \strlen($value)) {
+        if (null === $value || '' === $value) {
             return null;
         }
 
@@ -132,9 +147,9 @@ class Attachment extends Model
      * @return null|string
      * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
-    public function getMimeAttribute($value)
+    public function getMimeAttribute($value): ?string
     {
-        if (null === $value || 0 === \strlen($value)) {
+        if (null === $value || '' === $value) {
             return null;
         }
 
@@ -148,9 +163,9 @@ class Attachment extends Model
      * @return null|string
      * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
-    public function getTitleAttribute($value)
+    public function getTitleAttribute($value): ?string
     {
-        if (null === $value || 0 === \strlen($value)) {
+        if (null === $value || '' === $value) {
             return null;
         }
 
@@ -169,13 +184,14 @@ class Attachment extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param string $value
-     *
-     * @throws \Illuminate\Contracts\Encryption\EncryptException
+     * @param string|null $value
      */
-    public function setDescriptionAttribute(string $value)
+    public function setDescriptionAttribute(string $value = null): void
     {
-        $this->attributes['description'] = Crypt::encrypt($value);
+        if (null !== $value) {
+            $this->attributes['description'] = Crypt::encrypt($value);
+        }
+
     }
 
     /**
@@ -185,7 +201,7 @@ class Attachment extends Model
      *
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
-    public function setFilenameAttribute(string $value)
+    public function setFilenameAttribute(string $value): void
     {
         $this->attributes['filename'] = Crypt::encrypt($value);
     }
@@ -197,7 +213,7 @@ class Attachment extends Model
      *
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
-    public function setMimeAttribute(string $value)
+    public function setMimeAttribute(string $value): void
     {
         $this->attributes['mime'] = Crypt::encrypt($value);
     }
@@ -209,9 +225,11 @@ class Attachment extends Model
      *
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
-    public function setTitleAttribute(string $value)
+    public function setTitleAttribute(string $value = null): void
     {
-        $this->attributes['title'] = Crypt::encrypt($value);
+        if (null !== $value) {
+            $this->attributes['title'] = Crypt::encrypt($value);
+        }
     }
 
     /**

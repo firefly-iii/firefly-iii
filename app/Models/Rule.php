@@ -22,19 +22,33 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Carbon\Carbon;
 use FireflyIII\User;
-use FireflyIII\Models\RuleTrigger;
-use FireflyIII\Models\RuleGroup;
-use FireflyIII\Models\RuleAction;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Rule.
- * @property bool $stop_processing
- * @property int $id
- * @property \Illuminate\Support\Collection $ruleTriggers
+ *
+ * @property bool       $stop_processing
+ * @property int        $id
+ * @property Collection $ruleTriggers
+ * @property Collection $ruleActions
+ * @property bool       $active
+ * @property bool       $strict
+ * @property User       $user
+ * @property Carbon     $created_at
+ * @property Carbon     $updated_at
+ * @property string     $title
+ * @property string     $text
+ * @property int        $order
+ * @property RuleGroup  $ruleGroup
+ * @property int        $rule_group_id
+ * @property string     $description
  */
 class Rule extends Model
 {
@@ -53,10 +67,11 @@ class Rule extends Model
             'active'          => 'boolean',
             'order'           => 'int',
             'stop_processing' => 'boolean',
+            'id'              => 'int',
             'strict'          => 'boolean',
         ];
     /** @var array */
-    protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id','strict'];
+    protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id', 'strict'];
 
     /**
      * @param string $value
@@ -78,27 +93,27 @@ class Rule extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function ruleActions()
+    public function ruleActions(): HasMany
     {
         return $this->hasMany(RuleAction::class);
     }
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function ruleGroup()
+    public function ruleGroup(): BelongsTo
     {
         return $this->belongsTo(RuleGroup::class);
     }
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function ruleTriggers()
+    public function ruleTriggers(): HasMany
     {
         return $this->hasMany(RuleTrigger::class);
     }
@@ -106,16 +121,16 @@ class Rule extends Model
     /**
      * @param $value
      */
-    public function setDescriptionAttribute($value)
+    public function setDescriptionAttribute($value): void
     {
         $this->attributes['description'] = e($value);
     }
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

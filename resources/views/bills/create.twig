@@ -35,7 +35,6 @@
                         {{ ExpandedForm.textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
                         {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                         {{ ExpandedForm.integer('skip',0) }}
-                        {{ ExpandedForm.checkbox('active',1,true) }}
                     </div>
                 </div>
 

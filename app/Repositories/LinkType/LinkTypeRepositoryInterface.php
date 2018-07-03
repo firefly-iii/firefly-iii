@@ -45,7 +45,7 @@ interface LinkTypeRepositoryInterface
      *
      * @return bool
      */
-    public function destroy(LinkType $linkType, LinkType $moveTo): bool;
+    public function destroy(LinkType $linkType, LinkType $moveTo = null): bool;
 
     /**
      * @param TransactionJournalLink $link
@@ -57,9 +57,19 @@ interface LinkTypeRepositoryInterface
     /**
      * @param int $id
      *
+     * @deprecated
      * @return LinkType
      */
     public function find(int $id): LinkType;
+
+    /**
+     * Find link type by name.
+     *
+     * @param string|null $name
+     *
+     * @return LinkType|null
+     */
+    public function findByName(string $name = null): ?LinkType;
 
     /**
      * Check if link exists between journals.
@@ -72,9 +82,34 @@ interface LinkTypeRepositoryInterface
     public function findLink(TransactionJournal $one, TransactionJournal $two): bool;
 
     /**
+     * @param int $id
+     *
+     * @return LinkType|null
+     */
+    public function findNull(int $id): ?LinkType;
+
+    /**
+     * See if such a link already exists (and get it).
+     *
+     * @param LinkType           $linkType
+     * @param TransactionJournal $inward
+     * @param TransactionJournal $outward
+     *
+     * @return TransactionJournalLink|null
+     */
+    public function findSpecificLink(LinkType $linkType, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink;
+
+    /**
      * @return Collection
      */
     public function get(): Collection;
+
+    /**
+     * @param LinkType|null $linkType
+     *
+     * @return Collection
+     */
+    public function getJournalLinks(LinkType $linkType = null): Collection;
 
     /**
      * Return list of existing connections.
@@ -96,12 +131,12 @@ interface LinkTypeRepositoryInterface
      * Store link between two journals.
      *
      * @param array              $information
-     * @param TransactionJournal $left
-     * @param TransactionJournal $right
+     * @param TransactionJournal $inward
+     * @param TransactionJournal $outward
      *
      * @return mixed
      */
-    public function storeLink(array $information, TransactionJournal $left, TransactionJournal $right): TransactionJournalLink;
+    public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): TransactionJournalLink;
 
     /**
      * @param TransactionJournalLink $link
@@ -117,4 +152,14 @@ interface LinkTypeRepositoryInterface
      * @return LinkType
      */
     public function update(LinkType $linkType, array $data): LinkType;
+
+    /**
+     * Update an existing transaction journal link.
+     *
+     * @param TransactionJournalLink $journalLink
+     * @param array                  $data
+     *
+     * @return TransactionJournalLink
+     */
+    public function updateLink(TransactionJournalLink $journalLink, array $data): TransactionJournalLink;
 }

@@ -127,13 +127,16 @@ return [
     'spectre_no_mapping'                   => 'Es scheint, dass Sie keine Konten zum Importieren ausgewählt haben.',
     'imported_from_account'                => 'Von „:account” importiert',
     'spectre_account_with_number'          => 'Konto :number',
+    'job_config_spectre_apply_rules'       => 'Regeln übernehmen',
+    'job_config_spectre_apply_rules_text'  => 'Standardmäßig werden Ihre Regeln auf die Buchungen angewendet, die während dieser Importfunktion erstellt wurden. Wenn Sie dies nicht wünschen, entfernen Sie die Markierung dieses Kontrollkästchens.',
     // job configuration for bunq:
     'job_config_bunq_accounts_title'       => 'bunq-Konten',
     'job_config_bunq_accounts_text'        => 'Dies sind jene Konten, die mit Ihrem „bunq”-Konto verknüpft sind. Bitte wählen Sie die Konten aus, von denen Sie importieren möchten, und in welches Konto die Buchungen importiert werden sollen.',
     'bunq_no_mapping'                      => 'Es scheint, dass Sie keine Konten ausgewählt haben.',
     'should_download_config'               => 'Sie sollten <a href=":route">die Konfigurationsdatei</a> für diesen Aufgabe herunterladen. Dies wird zukünftige Importe erheblich erleichtern.',
     'share_config_file'                    => 'Wenn Sie Daten von einer öffentlichen Bank importiert haben, sollten Sie <a href="https://github.com/firefly-iii/import-configurations/wiki"> Ihre Konfigurationsdatei freigeben</a>, damit es für andere Benutzer einfach ist, ihre Daten zu importieren. Wenn Sie Ihre Konfigurationsdatei freigeben, werden Ihre finanziellen Daten nicht preisgegeben.',
-
+    'job_config_bunq_apply_rules'          => 'Regeln übernehmen',
+    'job_config_bunq_apply_rules_text'     => 'Standardmäßig werden Ihre Regeln auf die Buchungen angewendet, die während dieser Importfunktion erstellt wurden. Wenn Sie dies nicht wünschen, entfernen Sie die Markierung dieses Kontrollkästchens.',
     // keys from "extra" array:
     'spectre_extra_key_iban'               => 'IBAN',
     'spectre_extra_key_swift'              => 'SWIFT Code',

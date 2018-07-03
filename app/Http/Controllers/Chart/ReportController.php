@@ -27,6 +27,7 @@ use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Log;
 use Steam;
@@ -57,9 +58,9 @@ class ReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function netWorth(Collection $accounts, Carbon $start, Carbon $end)
+    public function netWorth(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -111,14 +112,16 @@ class ReportController extends Controller
         $source    = $this->getChartData($accounts, $start, $end);
         $chartData = [
             [
-                'label'   => trans('firefly.income'),
-                'type'    => 'bar',
-                'entries' => [],
+                'label'           => trans('firefly.income'),
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
+                'entries'         => [],
             ],
             [
-                'label'   => trans('firefly.expenses'),
-                'type'    => 'bar',
-                'entries' => [],
+                'label'           => trans('firefly.expenses'),
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
+                'entries'         => [],
             ],
         ];
 
@@ -188,17 +191,19 @@ class ReportController extends Controller
 
         $chartData = [
             [
-                'label'   => (string)trans('firefly.income'),
-                'type'    => 'bar',
-                'entries' => [
+                'label'           => (string)trans('firefly.income'),
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
+                'entries'         => [
                     (string)trans('firefly.sum_of_period')     => $numbers['sum_earned'],
                     (string)trans('firefly.average_in_period') => $numbers['avg_earned'],
                 ],
             ],
             [
-                'label'   => trans('firefly.expenses'),
-                'type'    => 'bar',
-                'entries' => [
+                'label'           => trans('firefly.expenses'),
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
+                'entries'         => [
                     (string)trans('firefly.sum_of_period')     => $numbers['sum_spent'],
                     (string)trans('firefly.average_in_period') => $numbers['avg_spent'],
                 ],

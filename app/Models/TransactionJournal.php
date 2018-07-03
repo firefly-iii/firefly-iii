@@ -32,26 +32,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Log;
 use Preferences;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionType;
-use FireflyIII\Models\TransactionJournalMeta;
-use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\Tag;
-use FireflyIII\Models\PiggyBankEvent;
-use FireflyIII\Models\Note;
-use FireflyIII\Models\Category;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\Bill;
-use FireflyIII\Models\Attachment;
 
 /**
  * Class TransactionJournal.
  *
- * @property User $user
- * @property int $bill_id
+ * @property User       $user
+ * @property int        $bill_id
+ * @property Collection $categories
+ * @property bool       $completed
+ * @property string     $description
+ * @property string     $transaction_type_id
  */
 class TransactionJournal extends Model
 {

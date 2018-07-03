@@ -22,13 +22,22 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Note.
+ *
+ * @property int    $id
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property string $text
+ * @property string $title
  */
 class Note extends Model
 {
+    use SoftDeletes;
     /**
      * The attributes that should be casted to native types.
      *

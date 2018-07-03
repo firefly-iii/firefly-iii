@@ -28,10 +28,15 @@ return [
     'index'                  => '<strong>Firefly III</strong>\'e hoş geldiniz! Bu sayfada, finansal durumunuzun özetini görebilirsiniz. Daha fazla bilgi için Hesapları &rarr; <a href=":asset">Varlık Hesaplarını</a> ve tabii ki de<a href=":budgets">Bütçe</a> ve <a href=":reports">Rapor</a> sayfalarına göz atın. Ya da sadece bir göz gezdirin ve ne durumda olduğunuzu görün.',
     'accounts-index'         => 'Varlık hesapları kişisel banka hesaplarınızdır. Gider hesaplar, mağazalar ve arkadaşlar gibi para harcadığınız hesaplardır. Gelir hesapları, işiniz veya diğer gelir kaynakları gibi para aldığınız hesaplardır. Bu sayfada bunları düzenleyebilir veya silebilirsiniz.',
     'budgets-index'          => 'Bu sayfa bütçelerinize genel bir bakış sunmaktadır. Üstteki çubuk bütçelenebilecek miktarı gösterir. Bu sağdaki tutara tıklayarak herhangi bir dönem için özelleştirilebilir. Gerçekte harcadığınız tutar aşağıdaki barda gösterilir. Aşağıda, bütçe başına harcamalar ve bütçeniz için ne kadar para ayırdığınız gösterilir.',
-    'reports-index-start'    => 'Firefly III supports a number of types of reports. Read about them by clicking on the <i class="fa fa-question-circle"></i>-icon in the top right corner.',
+    'reports-index-start'    => 'Firefly III, bir dizi rapor türünü desteklemektedir. Sağ üst köşedeki <i class="fa fa-question-circle"></i> simgeyi tıklayarak onları okuyabilirsiniz.',
     'reports-index-examples' => 'Şu örnekleri incelediğinizden emin olun: <a href=":one">a aylık finansal genel bakış</a>, <a href=":two">a yıllık finansal genel bakış</a> ve <a href=":three">a bütçe genel bakışı</a>.',
     'currencies-index'       => 'Firefly III, birden fazla para birimini destekliyor. Euro varsayılan olmasına rağmen, ABD Doları ve diğer birçok para birimine ayarlanabilir. Gördüğünüz gibi küçük bir para birimi seçeneği dedahil edilmiştir ancak isterseniz kendi para biriminizi ekleyebilirsiniz. Varsayılan para birimi değiştirilebilir ancak mevcut işlemlerin para birimi değiştirilemez: Firefly III, aynı anda birden çok para biriminin kullanılmasını destekler.',
     'transactions-index'     => 'Bu masraflar, mevduatlar ve transferler için özellikle yaratıcı değildir. Bunlar otomatik olarak oluşturuldu.',
     'piggy-banks-index'      => 'Gördüğünüz gibi, üç tane banka var. Her domuzcuk bankasındaki para miktarını değiştirmek için artı ve eksi düğmelerini kullanın. Her domuzcuk bankasının yönetimini görmek için domuzcuk\'un üzerine tıklayın.',
-    'import-index'           => 'Any CSV file can be imported into Firefly III. It also supports importing data from bunq and Spectre. Other banks and financial aggregators will be implemented in the future. As a demo-user however, you can only see the "fake"-provider in action. It will generate some random transactions to show you how the process works.',
+    'import-index'           => 'Herhangi bir CSV dosyası Firefly III\'e aktarılabilir. Ayrıca bunq ve Spectre\'den veri almayı da destekliyor. Diğer bankalar ve finansal toplayıcılar gelecekte uygulanacaktır. Ancak bir demo kullanıcısı olarak, yalnızca "fake" -provider etkinlikte görebilirsiniz. Sürecin nasıl çalıştığını göstermek için bazı rasgele işlemler üretecektir.
+',
+    'recurring-index'        => '
+Lütfen bu özelliğin aktif geliştirme aşamasında olduğunu ve beklendiği gibi çalışmayabileceğini unutmayın.',
+    'recurring-create'       => '
+Lütfen bu özelliğin aktif geliştirme aşamasında olduğunu ve beklendiği gibi çalışmayabileceğini unutmayın.',
 ];

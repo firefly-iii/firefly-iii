@@ -148,11 +148,13 @@ class ChooseAccountsHandlerTest extends TestCase
         // data to submit:
         $data = [
             'account_mapping' => [3131 => 872,],
+            'apply_rules'     => true,
         ];
         // expected configuration:
         $config = [
             'accounts'        => [0 => ['id' => 3131, 'name' => 'Some fake account',],],
             'account_mapping' => [3131 => 872,],
+            'apply-rules'     => true,
         ];
 
 
@@ -173,6 +175,65 @@ class ChooseAccountsHandlerTest extends TestCase
         $handler = new ChooseAccountsHandler();
         $handler->setImportJob($job);
         $this->assertCount(0, $handler->configureJob($data));
+    }
+
+    /**
+     * Case: Local account is invalid. Spectre account is invalid.
+     *
+     * @covers \FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseAccountsHandler
+     */
+    public function testConfigureJobInvalidBoth(): void
+    {
+        // fake job:
+        $job                = new ImportJob;
+        $job->user_id       = $this->user()->id;
+        $job->key           = 'sca-E' . random_int(1, 1000);
+        $job->status        = 'new';
+        $job->stage         = 'new';
+        $job->provider      = 'spectre';
+        $job->file_type     = '';
+        $job->configuration = [
+            'accounts' => [
+                0 => [
+                    'id'   => 3134,
+                    'name' => 'Some fake account',
+                ],
+            ],
+        ];
+        $job->save();
+
+        // data to submit:
+        $data = [
+            'account_mapping' => [3131 => 872,],
+            'apply_rules'     => true,
+        ];
+        // expected configuration:
+        $config = [
+            'accounts'        => [0 => ['id' => 3134, 'name' => 'Some fake account',],],
+            'account_mapping' => [0 => 0,],
+            'apply-rules'     => true,
+        ];
+
+
+        // mock repositories:
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $importRepos   = $this->mock(ImportJobRepositoryInterface::class);
+
+        // mock calls:
+        $accountRepos->shouldReceive('setUser')->once();
+        $currencyRepos->shouldReceive('setUser')->once();
+        $importRepos->shouldReceive('setUser')->once();
+        $accountRepos->shouldReceive('findNull')->once()->withArgs([872])->andReturn(null);
+        $importRepos->shouldReceive('setConfiguration')->once()->withArgs([Mockery::any(), $config]);
+
+
+        // call handler:
+        $handler = new ChooseAccountsHandler();
+        $handler->setImportJob($job);
+        $result = $handler->configureJob($data);
+        $this->assertCount(1, $result);
+        $this->assertEquals('It seems you have not selected any accounts to import from.', $result->first());
     }
 
     /**
@@ -203,11 +264,13 @@ class ChooseAccountsHandlerTest extends TestCase
         // data to submit:
         $data = [
             'account_mapping' => [3131 => 872,],
+            'apply_rules'     => true,
         ];
         // expected configuration:
         $config = [
             'accounts'        => [0 => ['id' => 3131, 'name' => 'Some fake account',],],
             'account_mapping' => [3131 => 0,],
+            'apply-rules'     => true,
         ];
 
 
@@ -260,11 +323,13 @@ class ChooseAccountsHandlerTest extends TestCase
         // data to submit:
         $data = [
             'account_mapping' => [3131 => 872,],
+            'apply_rules'     => true,
         ];
         // expected configuration:
         $config = [
             'accounts'        => [0 => ['id' => 3134, 'name' => 'Some fake account',],],
             'account_mapping' => [0 => 872,],
+            'apply-rules'     => true,
         ];
 
 
@@ -286,64 +351,6 @@ class ChooseAccountsHandlerTest extends TestCase
         $handler->setImportJob($job);
         $this->assertCount(0, $handler->configureJob($data));
     }
-
-    /**
-     * Case: Local account is invalid. Spectre account is invalid.
-     *
-     * @covers \FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseAccountsHandler
-     */
-    public function testConfigureJobInvalidBoth(): void
-    {
-        // fake job:
-        $job                = new ImportJob;
-        $job->user_id       = $this->user()->id;
-        $job->key           = 'sca-E' . random_int(1, 1000);
-        $job->status        = 'new';
-        $job->stage         = 'new';
-        $job->provider      = 'spectre';
-        $job->file_type     = '';
-        $job->configuration = [
-            'accounts' => [
-                0 => [
-                    'id'   => 3134,
-                    'name' => 'Some fake account',
-                ],
-            ],
-        ];
-        $job->save();
-
-        // data to submit:
-        $data = [
-            'account_mapping' => [3131 => 872,],
-        ];
-        // expected configuration:
-        $config = [
-            'accounts'        => [0 => ['id' => 3134, 'name' => 'Some fake account',],],
-            'account_mapping' => [0 => 0,],
-        ];
-
-
-        // mock repositories:
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $importRepos   = $this->mock(ImportJobRepositoryInterface::class);
-
-        // mock calls:
-        $accountRepos->shouldReceive('setUser')->once();
-        $currencyRepos->shouldReceive('setUser')->once();
-        $importRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('findNull')->once()->withArgs([872])->andReturn(null);
-        $importRepos->shouldReceive('setConfiguration')->once()->withArgs([Mockery::any(), $config]);
-
-
-        // call handler:
-        $handler = new ChooseAccountsHandler();
-        $handler->setImportJob($job);
-        $result =$handler->configureJob($data);
-        $this->assertCount(1, $result);
-        $this->assertEquals('It seems you have not selected any accounts to import from.', $result->first());
-    }
-
 
     /**
      * @covers \FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseAccountsHandler

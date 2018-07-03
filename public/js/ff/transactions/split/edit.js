@@ -100,6 +100,12 @@ function removeDivRow(e) {
     }
     var row = $(e.target);
     var index = row.data('split');
+    if (typeof index === 'undefined') {
+        var parent = row.parent();
+        index = parent.data('split');
+        console.log('Parent. ' + parent.className);
+    }
+    console.log('Split index is "' + index + '"');
     $('div.split_row[data-split="' + index + '"]').remove();
 
 
@@ -185,15 +191,15 @@ function resetDivSplits() {
         var input = $(v);
         input.attr('name', 'transactions[' + i + '][transaction_description]');
     });
-    // ends with ][destination_account_name]
+    // ends with ][destination_name]
     $.each($('input[name$="][destination_name]"]'), function (i, v) {
         var input = $(v);
-        input.attr('name', 'transactions[' + i + '][destination_account_name]');
+        input.attr('name', 'transactions[' + i + '][destination_name]');
     });
-    // ends with ][source_account_name]
+    // ends with ][source_name]
     $.each($('input[name$="][source_name]"]'), function (i, v) {
         var input = $(v);
-        input.attr('name', 'transactions[' + i + '][source_account_name]');
+        input.attr('name', 'transactions[' + i + '][source_name]');
     });
     // ends with ][amount]
     $.each($('input[name$="][amount]"]'), function (i, v) {

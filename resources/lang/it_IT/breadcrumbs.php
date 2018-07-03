@@ -23,7 +23,7 @@
 declare(strict_types=1);
 
 return [
-    'home'                => 'Home',
+    'home'                => 'Pagina principale',
     'edit_currency'       => 'Modifica valuta ":name"',
     'delete_currency'     => 'Elimina valuta ":name"',
     'newPiggyBank'        => 'Crea un nuovo salvadanaio',
@@ -39,7 +39,7 @@ return [
     'reports'             => 'Resoconti',
     'search_result'       => 'Risultati di ricerca per ":query"',
     'withdrawal_list'     => 'Spese',
-    'deposit_list'        => 'Reddito, entrate e depositi',
+    'deposit_list'        => 'Redditi, entrate e depositi',
     'transfer_list'       => 'Trasferimenti',
     'transfers_list'      => 'Trasferimenti',
     'reconciliation_list' => 'Riconciliazioni',

@@ -39,8 +39,8 @@ class AddTagTest extends TestCase
      */
     public function testActExistingTag(): void
     {
-        $tag     = Tag::inRandomOrder()->whereNull('deleted_at')->first();
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $tag     = $this->user()->tags()->inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
         $journal->tags()->sync([$tag->id]);
         $this->assertDatabaseHas('tag_transaction_journal', ['tag_id' => $tag->id, 'transaction_journal_id' => $journal->id]);
         $ruleAction               = new RuleAction;

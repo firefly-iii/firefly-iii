@@ -37,14 +37,14 @@ interface AttachmentHelperInterface
      *
      * @return string
      */
-    public function getAttachmentLocation(Attachment $attachment): string;
+    public function getAttachmentContent(Attachment $attachment): string;
 
     /**
      * @param Attachment $attachment
      *
      * @return string
      */
-    public function getAttachmentContent(Attachment $attachment): string;
+    public function getAttachmentLocation(Attachment $attachment): string;
 
     /**
      * @return Collection
@@ -60,6 +60,16 @@ interface AttachmentHelperInterface
      * @return MessageBag
      */
     public function getMessages(): MessageBag;
+
+    /**
+     * Uploads a file as a string.
+     *
+     * @param Attachment $attachment
+     * @param string     $content
+     *
+     * @return bool
+     */
+    public function saveAttachmentFromApi(Attachment $attachment, string $content): bool;
 
     /**
      * @param Model      $model

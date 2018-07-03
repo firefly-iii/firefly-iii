@@ -33,6 +33,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Tag;
@@ -758,6 +759,46 @@ try {
         function (BreadCrumbsGenerator $breadcrumbs) {
             $breadcrumbs->parent('home');
             $breadcrumbs->push(trans('firefly.getting_started'), route('new-user.index'));
+        }
+    );
+
+    // Recurring transactions controller:
+    Breadcrumbs::register(
+        'recurring.index',
+        function (BreadCrumbsGenerator $breadcrumbs) {
+            $breadcrumbs->parent('home');
+            $breadcrumbs->push(trans('firefly.recurrences'), route('recurring.index'));
+        }
+    );
+    Breadcrumbs::register(
+        'recurring.show',
+        function (BreadCrumbsGenerator $breadcrumbs, Recurrence $recurrence) {
+            $breadcrumbs->parent('recurring.index');
+            $breadcrumbs->push($recurrence->title, route('recurring.show', [$recurrence->id]));
+        }
+    );
+
+    Breadcrumbs::register(
+        'recurring.delete',
+        function (BreadCrumbsGenerator $breadcrumbs, Recurrence $recurrence) {
+            $breadcrumbs->parent('recurring.index');
+            $breadcrumbs->push(trans('firefly.delete_recurring', ['title' => $recurrence->title]), route('recurring.delete', [$recurrence->id]));
+        }
+    );
+
+    Breadcrumbs::register(
+        'recurring.edit',
+        function (BreadCrumbsGenerator $breadcrumbs, Recurrence $recurrence) {
+            $breadcrumbs->parent('recurring.index');
+            $breadcrumbs->push(trans('firefly.edit_recurrence', ['title' => $recurrence->title]), route('recurring.edit', [$recurrence->id]));
+        }
+    );
+
+    Breadcrumbs::register(
+        'recurring.create',
+        function (BreadCrumbsGenerator $breadcrumbs) {
+            $breadcrumbs->parent('recurring.index');
+            $breadcrumbs->push(trans('firefly.create_new_recurrence'), route('recurring.create'));
         }
     );
 

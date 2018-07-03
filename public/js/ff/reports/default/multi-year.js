@@ -23,8 +23,8 @@
 $(function () {
     "use strict";
     lineChart(netWorthUri, 'net-worth');
-    columnChart(opChartUri, 'income-expenses-chart');
-    columnChart(sumChartUri, 'income-expenses-sum-chart');
+    columnChartCustomColours(opChartUri, 'income-expenses-chart');
+    columnChartCustomColours(sumChartUri, 'income-expenses-sum-chart');
 
     loadAjaxPartial('budgetPeriodReport', budgetPeriodReportUri);
     loadAjaxPartial('categoryExpense', categoryExpenseUri);

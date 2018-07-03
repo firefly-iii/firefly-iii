@@ -32,7 +32,7 @@ class RuleFormRequest extends Request
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         // Only allow logged in users
         return auth()->check();
@@ -43,27 +43,52 @@ class RuleFormRequest extends Request
      */
     public function getRuleData(): array
     {
-        return [
-            'title'               => $this->string('title'),
-            'rule_group_id'       => $this->integer('rule_group_id'),
-            'active'              => $this->boolean('active'),
-            'trigger'             => $this->string('trigger'),
-            'description'         => $this->string('description'),
-            'rule-triggers'       => $this->get('rule-trigger'),
-            'rule-trigger-values' => $this->get('rule-trigger-value'),
-            'rule-trigger-stop'   => $this->get('rule-trigger-stop'),
-            'rule-actions'        => $this->get('rule-action'),
-            'rule-action-values'  => $this->get('rule-action-value'),
-            'rule-action-stop'    => $this->get('rule-action-stop'),
-            'stop_processing'     => $this->boolean('stop_processing'),
-            'strict'              => $this->boolean('strict'),
+        $data          = [
+            'title'           => $this->string('title'),
+            'rule_group_id'   => $this->integer('rule_group_id'),
+            'active'          => $this->boolean('active'),
+            'trigger'         => $this->string('trigger'),
+            'description'     => $this->string('description'),
+            'stop-processing' => $this->boolean('stop_processing'),
+            'strict'          => $this->boolean('strict'),
+            'rule-triggers'   => [],
+            'rule-actions'    => [],
         ];
+        $triggers      = $this->get('rule-trigger');
+        $triggerValues = $this->get('rule-trigger-value');
+        $triggerStop   = $this->get('rule-trigger-stop');
+
+        $actions      = $this->get('rule-action');
+        $actionValues = $this->get('rule-action-value');
+        $actionStop   = $this->get('rule-action-stop');
+
+        if (\is_array($triggers)) {
+            foreach ($triggers as $index => $value) {
+                $data['rule-triggers'][] = [
+                    'name'            => $value,
+                    'value'           => $triggerValues[$index] ?? '',
+                    'stop-processing' => (int)($triggerStop[$index] ?? 0) === 1,
+                ];
+            }
+        }
+
+        if (\is_array($actions)) {
+            foreach ($actions as $index => $value) {
+                $data['rule-actions'][] = [
+                    'name'            => $value,
+                    'value'           => $actionValues[$index] ?? '',
+                    'stop-processing' => (int)($actionStop[$index] ?? 0) === 1,
+                ];
+            }
+        }
+
+        return $data;
     }
 
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         /** @var RuleRepositoryInterface $repository */
         $repository    = app(RuleRepositoryInterface::class);

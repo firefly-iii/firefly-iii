@@ -2,14 +2,12 @@
 <h1 align="center">Firefly III</h1>
 
 <p align="center">
-	<!-- alll icons are flatsquare -->
 	<!-- version -->
 	<a href="https://packagist.org/packages/grumpydictator/firefly-iii"><img src="https://img.shields.io/packagist/v/grumpydictator/firefly-iii.svg?style=flat-square" alt="Packagist"></a>
 	<!-- license -->
 	<a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square" alt="License"></a>
-	<!-- Patreon -->
-	<a href="http://patreon.com/JC5"><img src="https://img.shields.io/badge/patreon-JC5-brightgreen.svg?longCache=true&style=flat-square" alt="Patreon"></a>
-	
+	<!-- Donate -->
+	<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA"><img src="https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat-square" alt="Donate">
 </p>
 
 <!-- MarkdownTOC autolink="true" depth="4" bracket="round" list_bullets="*" -->
@@ -44,38 +42,38 @@ Personal financial management is pretty difficult, and everybody has their own a
 
 By keeping track of your expenses and your income you can budget accordingly and save money. Stop living from paycheck to paycheck but give yourself the financial wiggle room you need.
 
-You can read more about this in the [official documentation](http://firefly-iii.readthedocs.io/en/latest/index.html).
+You can read more about this in the [official documentation](https://firefly-iii.readthedocs.io/en/latest/index.html).
 
 ### Features
 Most importantly...
 
 * Firefly III runs on your own server, so you are fully in control of your data. It will not contact other sites or servers.
-* You can import from over 2500 financial providers, in 55 countries when you enable the [Spectre API](http://firefly-iii.readthedocs.io/en/latest/import/spectre.html).
+* You can import from over 2500 financial providers, in 55 countries when you enable the [Spectre API](https://firefly-iii.readthedocs.io/en/latest/import/spectre.html).
 * You can import from [bunq](https://www.bunq.com/).
 * You can import CSV files from practically any bank.
-* Firefly III features an JSON REST API.
+* Firefly III features an [JSON REST API](https://firefly-iii.readthedocs.io/en/latest/api/start.html).
 * If you feel you’re missing something you can just ask me and I’ll add it!
 
 But actually, it features:
 
-* [A double-entry bookkeeping system](http://firefly-iii.readthedocs.io/en/latest/concepts/transactions.html)
-* You can store, edit and remove [withdrawals, deposits and transfers](http://firefly-iii.readthedocs.io/en/latest/concepts/transactions.html). This allows you full financial management
+* [A double-entry bookkeeping system](https://firefly-iii.readthedocs.io/en/latest/concepts/transactions.html)
+* You can store, edit and remove [withdrawals, deposits and transfers](https://firefly-iii.readthedocs.io/en/latest/concepts/transactions.html). This allows you full financial management
 * You can manage different types of accounts
-  * [Asset](http://firefly-iii.readthedocs.io/en/latest/concepts/accounts.html) accounts
-  * Shared [asset accounts](http://firefly-iii.readthedocs.io/en/latest/concepts/accounts.html) ([household accounts](http://firefly-iii.readthedocs.io/en/latest/concepts/accounts.html))
+  * [Asset](https://firefly-iii.readthedocs.io/en/latest/concepts/accounts.html) accounts
+  * Shared [asset accounts](https://firefly-iii.readthedocs.io/en/latest/concepts/accounts.html) ([household accounts](https://firefly-iii.readthedocs.io/en/latest/concepts/accounts.html))
   * Saving accounts
   * Credit cards
-* It's possible to create, change and manage money using [budgets](http://firefly-iii.readthedocs.io/en/latest/concepts/budgets.html)
-* Organize transactions using [categories](http://firefly-iii.readthedocs.io/en/latest/concepts/categories.html)
-* Save towards a goal using [piggy banks](http://firefly-iii.readthedocs.io/en/latest/advanced/piggies.html)
-* Predict and anticipate [bills](http://firefly-iii.readthedocs.io/en/latest/advanced/bills.html)
-* View income / expense [reports](http://firefly-iii.readthedocs.io/en/latest/advanced/reports.html)
-* [Rule based](http://firefly-iii.readthedocs.io/en/latest/advanced/rules.html) transaction handling with the ability to create your own rules.
-* The ability to [export data](http://firefly-iii.readthedocs.io/en/latest/import/export.html) so you can move to another system.
-* The ability to [import data](http://firefly-iii.readthedocs.io/en/latest/import/csv.html) so you can move _from_ another system.
-* Organize expenses using [tags](http://firefly-iii.readthedocs.io/en/latest/concepts/tags.html)
+* It's possible to create, change and manage money using [budgets](https://firefly-iii.readthedocs.io/en/latest/concepts/budgets.html)
+* Organize transactions using [categories](https://firefly-iii.readthedocs.io/en/latest/concepts/categories.html)
+* Save towards a goal using [piggy banks](https://firefly-iii.readthedocs.io/en/latest/advanced/piggies.html)
+* Predict and anticipate [bills](https://firefly-iii.readthedocs.io/en/latest/advanced/bills.html)
+* View income / expense [reports](https://firefly-iii.readthedocs.io/en/latest/advanced/reports.html)
+* [Rule based](https://firefly-iii.readthedocs.io/en/latest/advanced/rules.html) transaction handling with the ability to create your own rules.
+* The ability to [export data](https://firefly-iii.readthedocs.io/en/latest/import/export.html) so you can move to another system.
+* The ability to [import data](https://firefly-iii.readthedocs.io/en/latest/import/csv.html) so you can move _from_ another system.
+* Organize expenses using [tags](https://firefly-iii.readthedocs.io/en/latest/concepts/tags.html)
 * 2 factor authentication for extra security 🔒
-* Supports any currency you want, including [crypto currencies](http://firefly-iii.readthedocs.io/en/latest/concepts/currencies.html) such as ₿itcoin  and Ξthereum
+* Supports any currency you want, including [crypto currencies](https://firefly-iii.readthedocs.io/en/latest/concepts/currencies.html) such as ₿itcoin  and Ξthereum
 * Lots of help text in case you don’t get it
 * Translations into 10(!) languages, proudly powered by Crowdin
 
@@ -94,13 +92,14 @@ This application is for people who want to track their finances, keep an eye on 
 ## Get started
 There are many ways to run Firefly III
 1. There is a [demo site](https://demo.firefly-iii.org) with an example financial administration already present.
-2. You can [install it on your server](http://firefly-iii.readthedocs.io/en/latest/installation/server.html).
-3. You can [run it using Docker](http://firefly-iii.readthedocs.io/en/latest/installation/docker.html).
+2. You can [install it on your server](https://firefly-iii.readthedocs.io/en/latest/installation/server.html).
+3. You can [run it using Docker](https://firefly-iii.readthedocs.io/en/latest/installation/docker.html).
 4. You can [deploy to Heroku](https://heroku.com/deploy?template=https://github.com/firefly-iii/firefly-iii/tree/master)
 5. You can [deploy to Sandstorm.io](https://apps.sandstorm.io/app/uws252ya9mep4t77tevn85333xzsgrpgth8q4y1rhknn1hammw70)
-6. You can [install it using Softaculous](https://softaculous.com/). These guys even have made [another demo site](http://www.softaculous.com/softaculous/apps/others/Firefly_III)!
+6. You can [install it using Softaculous](https://softaculous.com/). These guys even have made [another demo site](https://www.softaculous.com/softaculous/apps/others/Firefly_III)!
 7. You can [install it using AMPPS](https://www.ampps.com/)
-5. *Even more options are on the way!*
+8. You can [install it with YunoHost](https://install-app.yunohost.org/?app=firefly-iii).
+9. *Even more options are on the way!*
 
 ### Update your instance
 Make sure you check for updates regularly. Your Firefly III instance will ask you to do this. Upgrade instructions can be found with the installation instructions.
@@ -110,7 +109,7 @@ Your help is always welcome! Feel free to open issues, ask questions, talk about
 
 Of course there are some [contributing guidelines](https://github.com/firefly-iii/firefly-iii/blob/master/.github/contributing.md) and a [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/master/.github/code_of_conduct.md), which I invite you to check out.
 
-I can always use your help [squashing bugs](http://firefly-iii.readthedocs.io/en/latest/support/contribute.html#bugs), thinking about [new features](http://firefly-iii.readthedocs.io/en/latest/support/contribute.html#feature-requests) or [translating Firefly III](http://firefly-iii.readthedocs.io/en/latest/support/contribute.html#translations) into other languages.
+I can always use your help [squashing bugs](https://firefly-iii.readthedocs.io/en/latest/support/contribute.html#bugs), thinking about [new features](https://firefly-iii.readthedocs.io/en/latest/support/contribute.html#feature-requests) or [translating Firefly III](https://firefly-iii.readthedocs.io/en/latest/support/contribute.html#translations) into other languages.
 
 For all other contributions, see below.
 
@@ -126,7 +125,7 @@ Over time, [many people have contributed to Firefly III](https://github.com/fire
 
 ## Other stuff
 ### Versioning
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see [the tags](https://github.com/firefly-iii/firefly-iii/tags) on this repository.
+We use [SemVer](https://semver.org/) for versioning. For the versions available, see [the tags](https://github.com/firefly-iii/firefly-iii/tags) on this repository.
 
 ### License
 This work [is licensed](https://github.com/firefly-iii/firefly-iii/blob/master/LICENSE) under the [GPL v3](https://www.gnu.org/licenses/gpl.html).
@@ -142,4 +141,4 @@ If you are looking for alternatives, check out [Kickball's Awesome-Selfhosted li
 ### Badges
 I like badges!
 
-[![Travis branch](https://img.shields.io/travis/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://travis-ci.org/firefly-iii/firefly-iii/branches) [![Scrutinizer](https://img.shields.io/scrutinizer/g/firefly-iii/firefly-iii.svg?style=flat-square)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/) [![Coveralls github branch](https://img.shields.io/coveralls/github/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://coveralls.io/github/firefly-iii/firefly-iii) [![Requires PHP7.1](https://img.shields.io/badge/php-7.1-red.svg?style=flat-square)](https://secure.php.net/downloads.php) [![license](https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) 
+[![Travis branch](https://img.shields.io/travis/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://travis-ci.org/firefly-iii/firefly-iii/branches) [![Scrutinizer](https://img.shields.io/scrutinizer/g/firefly-iii/firefly-iii.svg?style=flat-square)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/) [![Coveralls github branch](https://img.shields.io/coveralls/github/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://coveralls.io/github/firefly-iii/firefly-iii) [![Requires PHP7.1](https://img.shields.io/badge/php-7.1-red.svg?style=flat-square)](https://secure.php.net/downloads.php) [![license](https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Patreon page](https://img.shields.io/badge/patreon-JC5-brightgreen.svg?longCache=true&style=flat-square)](https://patreon.com/JC5)

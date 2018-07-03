@@ -161,10 +161,13 @@ class BillController extends Controller
         $bill->amount_max = round($bill->amount_max, $currency->decimal_places);
         $defaultCurrency  = app('amount')->getDefaultCurrency();
 
+        // code to handle active-checkboxes
+        $hasOldInput = null !== $request->old('_token');
+
         $preFilled = [
             'notes'                   => $this->billRepository->getNoteText($bill),
             'transaction_currency_id' => $bill->transaction_currency_id,
-            'active'                  => $bill->active,
+            'active'                  => $hasOldInput ? (bool)$request->old('active') : $bill->active,
         ];
 
         $request->session()->flash('preFilled', $preFilled);

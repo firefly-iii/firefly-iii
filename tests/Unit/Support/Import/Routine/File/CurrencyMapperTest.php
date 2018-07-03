@@ -61,8 +61,7 @@ class CurrencyMapperTest extends TestCase
         $repository = $this->mock(CurrencyRepositoryInterface::class);
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('findNull')->once()->withArgs([$currency->id])->andReturn(null);
-        $repository->shouldReceive('store')->once()
-                   ->withArgs([['code' => null, 'name' => null, 'symbol' => null, 'decimal_places' => 2]])->andReturn(null);
+
         $mapper = new CurrencyMapper();
         $mapper->setUser($this->user());
 
@@ -161,9 +160,6 @@ class CurrencyMapperTest extends TestCase
         // mock data
         $repository = $this->mock(CurrencyRepositoryInterface::class);
         $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('store')->once()
-                   ->withArgs([['code' => null, 'name' => null, 'symbol' => null, 'decimal_places' => 2]])->andReturn(null);
-
 
         $mapper = new CurrencyMapper();
         $mapper->setUser($this->user());

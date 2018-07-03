@@ -81,6 +81,16 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
+     * Get all the users rules.
+     *
+     * @return Collection
+     */
+    public function getAll(): Collection
+    {
+        return $this->user->rules()->with(['ruleGroup'])->get();
+    }
+
+    /**
      * FIxXME can return null.
      *
      * @return RuleGroup
@@ -280,7 +290,7 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->order           = ($order + 1);
         $rule->active          = 1;
         $rule->strict          = $data['strict'] ?? false;
-        $rule->stop_processing = 1 === (int)$data['stop_processing'];
+        $rule->stop_processing = 1 === (int)$data['stop-processing'];
         $rule->title           = $data['title'];
         $rule->description     = \strlen($data['description']) > 0 ? $data['description'] : null;
 
@@ -346,7 +356,7 @@ class RuleRepository implements RuleRepositoryInterface
         // update rule:
         $rule->rule_group_id   = $data['rule_group_id'];
         $rule->active          = $data['active'];
-        $rule->stop_processing = $data['stop_processing'];
+        $rule->stop_processing = $data['stop-processing'];
         $rule->title           = $data['title'];
         $rule->strict          = $data['strict'] ?? false;
         $rule->description     = $data['description'];
@@ -377,11 +387,11 @@ class RuleRepository implements RuleRepositoryInterface
     {
         $order = 1;
         foreach ($data['rule-actions'] as $index => $action) {
-            $value          = $data['rule-action-values'][$index] ?? '';
-            $stopProcessing = isset($data['rule-action-stop'][$index]) ? true : false;
+            $value          = $action['value'] ?? '';
+            $stopProcessing = $action['stop-processing'] ?? false;
 
             $actionValues = [
-                'action'         => $action,
+                'action'         => $action['name'],
                 'value'          => $value,
                 'stopProcessing' => $stopProcessing,
                 'order'          => $order,
@@ -413,11 +423,11 @@ class RuleRepository implements RuleRepositoryInterface
 
         $this->storeTrigger($rule, $triggerValues);
         foreach ($data['rule-triggers'] as $index => $trigger) {
-            $value          = $data['rule-trigger-values'][$index] ?? '';
-            $stopProcessing = isset($data['rule-trigger-stop'][$index]) ? true : false;
+            $value          = $trigger['value'] ?? '';
+            $stopProcessing = $trigger['stop-processing'] ?? false;
 
             $triggerValues = [
-                'action'         => $trigger,
+                'action'         => $trigger['name'],
                 'value'          => $value,
                 'stopProcessing' => $stopProcessing,
                 'order'          => $order,

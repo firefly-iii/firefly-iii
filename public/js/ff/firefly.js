@@ -83,6 +83,7 @@ $(function () {
 
 function currencySelect(e) {
     "use strict";
+    console.log('In currencySelect() because somebody clicked a .currency-option.');
     // clicked on
     var target = $(e.target); // target is the <A> tag.
 
@@ -105,6 +106,7 @@ function currencySelect(e) {
     var id = target.data('id');
 
     // update the hidden input:
+    console.log('Updated ' + hiddenInputName + ' to ID ' + id);
     $('input[name="' + hiddenInputName + '"]').val(id);
 
     // update the symbol:

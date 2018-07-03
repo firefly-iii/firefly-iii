@@ -33,7 +33,6 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -306,7 +305,7 @@ class SingleControllerTest extends TestCase
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
-        $response->assertSee(' name="source_account_name" type="text" value="">');
+        $response->assertSee(' name="source_name" type="text" value="">');
     }
 
     /**
@@ -352,7 +351,7 @@ class SingleControllerTest extends TestCase
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
-        $response->assertSee(' name="destination_account_name" type="text" value="">');
+        $response->assertSee(' name="destination_name" type="text" value="">');
     }
 
     /**
@@ -592,8 +591,8 @@ class SingleControllerTest extends TestCase
             'what'                      => 'withdrawal',
             'amount'                    => '10',
             'amount_currency_id_amount' => 1,
-            'source_account_id'         => 1,
-            'destination_account_name'  => 'Some destination',
+            'source_id'                 => 1,
+            'destination_name'          => 'Some destination',
             'date'                      => '2016-01-01',
             'description'               => 'Test descr',
         ];
@@ -645,8 +644,8 @@ class SingleControllerTest extends TestCase
             'what'                      => 'withdrawal',
             'amount'                    => '10',
             'amount_currency_id_amount' => 1,
-            'source_account_id'         => 1,
-            'destination_account_name'  => 'Some destination',
+            'source_id'                 => 1,
+            'destination_name'          => 'Some destination',
             'date'                      => '2016-01-01',
             'description'               => 'Test descr',
         ];
@@ -700,8 +699,8 @@ class SingleControllerTest extends TestCase
             'what'                      => 'deposit',
             'amount'                    => '10',
             'amount_currency_id_amount' => 1,
-            'destination_account_id'    => 1,
-            'source_account_name'       => 'Some source',
+            'destination_id'            => 1,
+            'source_name'               => 'Some source',
             'date'                      => '2016-01-01',
             'description'               => 'Test descr',
         ];
@@ -756,8 +755,8 @@ class SingleControllerTest extends TestCase
             'what'                      => 'transfer',
             'amount'                    => '10',
             'amount_currency_id_amount' => 1,
-            'destination_account_id'    => 1,
-            'source_account_id'         => 2,
+            'destination_id'            => 1,
+            'source_id'                 => 2,
             'date'                      => '2016-01-01',
             'description'               => 'Test descr',
         ];
@@ -811,11 +810,13 @@ class SingleControllerTest extends TestCase
         $data     = [
             'what'                         => 'transfer',
             'amount'                       => '10',
+            'source_amount'                => '10',
+            'destination_amount'           => '10',
             'amount_currency_id_amount'    => 1,
             'source_account_currency'      => 1,
             'destination_account_currency' => 2,
-            'destination_account_id'       => 1,
-            'source_account_id'            => 2,
+            'destination_id'               => 1,
+            'source_id'                    => 2,
             'date'                         => '2016-01-01',
             'description'                  => 'Test descr',
         ];
@@ -858,13 +859,15 @@ class SingleControllerTest extends TestCase
             $this->assertTrue(false, $e->getMessage());
         }
 
-        $journal              = new TransactionJournal();
-        $type                 = TransactionType::find(1);
-        $journal->id          = 1000;
-        $journal->description = 'New journal';
-        $journal->transactionType()->associate($type);
+        // find withdrawal:
+        $loop = 0;
+        do {
+            $withdrawal = TransactionJournal::where('transaction_type_id', 1)->inRandomOrder()->where('user_id', $this->user()->id)->first();
+            $count      = $withdrawal->transactions()->count();
+            $loop++;
+        } while ($count !== 2 && $loop < 30);
 
-        $journalRepos->shouldReceive('update')->andReturn($journal);
+        $journalRepos->shouldReceive('update')->andReturn($withdrawal);
 
         $this->session(['transactions.edit.uri' => 'http://localhost']);
         $this->be($this->user());
@@ -872,8 +875,8 @@ class SingleControllerTest extends TestCase
             'id'                        => 123,
             'what'                      => 'withdrawal',
             'description'               => 'Updated groceries',
-            'source_account_id'         => 1,
-            'destination_account_name'  => 'PLUS',
+            'source_id'                 => 1,
+            'destination_name'          => 'PLUS',
             'amount'                    => '123',
             'amount_currency_id_amount' => 1,
             'budget_id'                 => 1,
@@ -882,13 +885,13 @@ class SingleControllerTest extends TestCase
             'date'                      => '2016-01-01',
         ];
 
-        $response = $this->post(route('transactions.update', [123]), $data);
+        $response = $this->post(route('transactions.update', [$withdrawal->id]), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
 
-        $response = $this->get(route('transactions.show', [123]));
+        $response = $this->get(route('transactions.show', [$withdrawal->id]));
         $response->assertStatus(200);
-        $response->assertSee('Updated groceries');
+        $response->assertSee($withdrawal->description);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
     }

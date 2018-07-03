@@ -40,7 +40,7 @@ class AccountControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Passport::actingAs($this->user());
@@ -50,7 +50,7 @@ class AccountControllerTest extends TestCase
     /**
      * Destroy account over API.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\AccountController::delete
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
      */
     public function testDelete(): void
     {
@@ -72,9 +72,9 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\AccountController::__construct
-     * @covers \FireflyIII\Api\V1\Controllers\AccountController::index
-     * @covers \FireflyIII\Api\V1\Controllers\AccountController::mapTypes
+     * Test the list of accounts.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
      */
     public function testIndex(): void
     {
@@ -110,10 +110,8 @@ class AccountControllerTest extends TestCase
     /**
      * Opening balance without date.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\AccountController::store
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::authorize
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::rules
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::getAll
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
      */
     public function testInvalidBalance(): void
     {
@@ -152,10 +150,8 @@ class AccountControllerTest extends TestCase
     /**
      * CC type present when account is a credit card.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\AccountController::store
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::authorize
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::rules
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::getAll
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
      */
     public function testNoCreditCardData(): void
     {
@@ -194,10 +190,8 @@ class AccountControllerTest extends TestCase
     /**
      * No currency information
      *
-     * @covers \FireflyIII\Api\V1\Controllers\AccountController::store
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::authorize
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::rules
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::getAll
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
      */
     public function testNoCurrencyInfo(): void
     {
@@ -233,7 +227,9 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\AccountController::show
+     * Show an account.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
      */
 
     public function testShow(): void
@@ -268,10 +264,8 @@ class AccountControllerTest extends TestCase
     /**
      * Name already in use.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\AccountController::store
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::authorize
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::rules
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::getAll
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
      */
     public function testStoreNotUnique(): void
     {
@@ -300,7 +294,7 @@ class AccountControllerTest extends TestCase
             [
                 'message' => 'The given data was invalid.',
                 'errors'  => [
-                    'name' => ['This account name is already in use'],
+                    'name' => ['This account name is already in use.'],
                 ],
             ]
         );
@@ -310,10 +304,8 @@ class AccountControllerTest extends TestCase
     /**
      * Send correct data. Should call account repository store method.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\AccountController::store
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::authorize
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::rules
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::getAll
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
      */
     public function testStoreValid(): void
     {
@@ -354,10 +346,8 @@ class AccountControllerTest extends TestCase
     /**
      * Send correct data. Should call account repository store method.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\AccountController::store
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::authorize
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::rules
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::getAll
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
      */
     public function testStoreWithCurrencyCode(): void
     {
@@ -402,8 +392,8 @@ class AccountControllerTest extends TestCase
     /**
      * Update first asset account we find. Name can be the same as it was.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\AccountController::update
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::rules
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
      */
     public function testUpdate(): void
     {
@@ -445,8 +435,8 @@ class AccountControllerTest extends TestCase
     /**
      * Update first asset account we find. Name can be the same as it was.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\AccountController::update
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest::rules
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
      */
     public function testUpdateCurrencyCode(): void
     {

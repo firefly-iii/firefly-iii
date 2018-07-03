@@ -1,7 +1,6 @@
 language: php
 php:
-  - 7.1
-  - 7.2
+  - 7.1.18
 
 cache:
     directories:
@@ -14,7 +13,6 @@ install:
   - cp .env.testing .env
   - php artisan clear-compiled
   - php artisan env
-  - cp .env.testing .env
   - wget -q https://github.com/firefly-iii/test-data/raw/master/storage/database.sqlite -O storage/database/database.sqlite
   - mkdir -p build/logs
 

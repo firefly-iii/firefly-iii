@@ -36,7 +36,6 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
-use Preferences;
 
 
 /**
@@ -94,7 +93,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         // user preferences
-        $pageSize = (int)Preferences::getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // make manager
         $manager = new Manager();
