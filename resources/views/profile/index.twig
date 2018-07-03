@@ -6,10 +6,6 @@
 
 {% block content %}
 
-
-
-
-
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-primary">
@@ -20,15 +16,18 @@
                     <p>
                         {{ trans('firefly.user_id_is',{user: userId})|raw }}
                     </p>
+                    {% if not SANDSTORM %}
                     <ul>
                         <li><a href="{{ route('profile.change-email') }}">{{ 'change_your_email'|_ }}</a></li>
                         <li><a href="{{ route('profile.change-password') }}">{{ 'change_your_password'|_ }}</a></li>
                         <li><a class="text-danger" href="{{ route('profile.delete-account') }}">{{ 'delete_account'|_ }}</a></li>
                     </ul>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
+    {% if not SANDSTORM %}
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-primary">
@@ -53,7 +52,9 @@
             </div>
         </div>
     </div>
+    {% endif %}
 
+    {% if not SANDSTORM %}
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-primary">
@@ -84,6 +85,8 @@
             </div>
         </div>
     </div>
+    {% endif %}
+
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <passport-clients></passport-clients>

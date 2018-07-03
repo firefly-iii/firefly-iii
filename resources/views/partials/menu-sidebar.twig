@@ -136,12 +136,11 @@
         </a>
 
         <ul class="treeview-menu">
-            {% if not SANDSTORM %}
-                <li class="{{ activeRoutePartial('profile') }}">
-                    <a class="{{ activeRouteStrict('profile.index') }}" href="{{ route('profile.index') }}"><i class="fa fa-user fa-fw"></i> {{ 'profile'|_ }}
-                    </a>
-                </li>
-            {% endif %}
+
+            <li class="{{ activeRoutePartial('profile') }}">
+                <a class="{{ activeRouteStrict('profile.index') }}" href="{{ route('profile.index') }}"><i class="fa fa-user fa-fw"></i> {{ 'profile'|_ }}
+                </a>
+            </li>
             <li class="{{ activeRoutePartial('preferences') }}">
                 <a class="{{ activeRouteStrict('preferences.index') }}" href="{{ route('preferences.index') }}"><i
                             class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a>
