@@ -549,23 +549,39 @@ class RuleController extends Controller
     {
         if (0 === $this->ruleRepos->count()) {
             $data = [
-                'rule_group_id'       => $this->ruleRepos->getFirstRuleGroup()->id,
-                'stop_processing'     => 0,
-                'title'               => trans('firefly.default_rule_name'),
-                'description'         => trans('firefly.default_rule_description'),
-                'trigger'             => 'store-journal',
-                'strict'              => true,
-                'rule-trigger-values' => [
-                    trans('firefly.default_rule_trigger_description'),
-                    trans('firefly.default_rule_trigger_from_account'),
-                ],
-                'rule-action-values'  => [
-                    trans('firefly.default_rule_action_prepend'),
-                    trans('firefly.default_rule_action_set_category'),
-                ],
+                'rule_group_id'   => $this->ruleRepos->getFirstRuleGroup()->id,
+                'stop-processing' => 0,
+                'title'           => trans('firefly.default_rule_name'),
+                'description'     => trans('firefly.default_rule_description'),
+                'trigger'         => 'store-journal',
+                'strict'          => true,
+                'rule-triggers'   => [
+                    [
+                        'name'            => 'description_is',
+                        'value'           => trans('firefly.default_rule_trigger_description'),
+                        'stop-processing' => false,
 
-                'rule-triggers' => ['description_is', 'from_account_is'],
-                'rule-actions'  => ['prepend_description', 'set_category'],
+                    ],
+                    [
+                        'name'            => 'from_account_is',
+                        'value'           => trans('firefly.default_rule_trigger_from_account'),
+                        'stop-processing' => false,
+
+                    ],
+
+                ],
+                'rule-actions'    => [
+                    [
+                        'name'            => 'prepend_description',
+                        'value'           => trans('firefly.default_rule_action_prepend'),
+                        'stop-processing' => false,
+                    ],
+                    [
+                        'name'            => 'set_category',
+                        'value'           => trans('firefly.default_rule_action_set_category'),
+                        'stop-processing' => false,
+                    ],
+                ],
             ];
 
             $this->ruleRepos->store($data);

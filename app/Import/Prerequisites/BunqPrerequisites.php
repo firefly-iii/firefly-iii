@@ -116,6 +116,7 @@ class BunqPrerequisites implements PrerequisitesInterface
         $environment       = $this->getBunqEnvironment();
         $deviceDescription = 'Firefly III v' . config('firefly.version');
         $permittedIps      = [$externalIP];
+        Log::debug(sprintf('Environment for bunq is %s', $environment->getChoiceString()));
 
         try {
             /** @var ApiContext $object */
