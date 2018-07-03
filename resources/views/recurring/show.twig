@@ -194,7 +194,7 @@
                     </h3>
                 </div>
                 <div class="box-body">
-                    {% include 'list.journals' with {sorting:false, hideBills:true, hideBudgets: true, hideCategories: true, showReconcile: false} %}
+                    {% include 'list.journals' with {sorting:false, hideBills:true, hideBudgets: true, showReconcile: false} %}
                 </div>
             </div>
         </div>
@@ -207,4 +207,5 @@
 
 {% block scripts %}
     <script type="text/javascript" src="js/lib/bootstrap-sortable.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/transactions/list.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

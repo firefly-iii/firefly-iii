@@ -334,13 +334,12 @@ class RecurringRepository implements RecurringRepositoryInterface
 
     /**
      * @param Recurrence $recurrence
-     *
      * @param int        $page
      * @param int        $pageSize
      *
      * @return LengthAwarePaginator
      */
-    public function getTransactions(Recurrence $recurrence, int $page, int $pageSize): LengthAwarePaginator
+    public function getTransactionPaginator(Recurrence $recurrence, int $page, int $pageSize): LengthAwarePaginator
     {
         $journalMeta = TransactionJournalMeta
             ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
@@ -356,13 +355,41 @@ class RecurringRepository implements RecurringRepositoryInterface
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setUser($recurrence->user);
-        $collector->withOpposingAccount()->setAllAssetAccounts()->
-        withCategoryInformation()->withBudgetInformation()->setLimit($pageSize)->setPage($page);
+        $collector->withOpposingAccount()->setAllAssetAccounts()->withCategoryInformation()->withBudgetInformation()->setLimit($pageSize)->setPage($page);
         // filter on specific journals.
         $collector->removeFilter(InternalTransferFilter::class);
         $collector->setJournals(new Collection($search));
 
         return $collector->getPaginatedJournals();
+    }
+
+    /**
+     * @param Recurrence $recurrence
+     *
+     * @return Collection
+     */
+    public function getTransactions(Recurrence $recurrence): Collection
+    {
+        $journalMeta = TransactionJournalMeta
+            ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+            ->whereNull('transaction_journals.deleted_at')
+            ->where('transaction_journals.user_id', $this->user->id)
+            ->where('name', 'recurrence_id')
+            ->where('data', json_encode((string)$recurrence->id))
+            ->get()->pluck('transaction_journal_id')->toArray();
+        $search      = [];
+        foreach ($journalMeta as $journalId) {
+            $search[] = ['id' => (int)$journalId];
+        }
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser($recurrence->user);
+        $collector->withOpposingAccount()->setAllAssetAccounts()->withCategoryInformation()->withBudgetInformation();
+        // filter on specific journals.
+        $collector->removeFilter(InternalTransferFilter::class);
+        $collector->setJournals(new Collection($search));
+
+        return $collector->getJournals();
     }
 
     /**

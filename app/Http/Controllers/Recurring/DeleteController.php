@@ -34,6 +34,29 @@ use Illuminate\Http\Request;
  */
 class DeleteController extends Controller
 {
+    /** @var RecurringRepositoryInterface */
+    private $recurring;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        // translations:
+        $this->middleware(
+            function ($request, $next) {
+                app('view')->share('mainTitleIcon', 'fa-paint-brush');
+                app('view')->share('title', trans('firefly.recurrences'));
+
+                $this->recurring = app(RecurringRepositoryInterface::class);
+
+                return $next($request);
+            }
+        );
+    }
+
     /**
      * @param Recurrence $recurrence
      *
@@ -46,7 +69,7 @@ class DeleteController extends Controller
         $this->rememberPreviousUri('recurrences.delete.uri');
 
         // todo actual number.
-        $journalsCreated = 5;
+        $journalsCreated = $this->recurring->getTransactions($recurrence)->count();
 
         return view('recurring.delete', compact('recurrence', 'subTitle', 'journalsCreated'));
     }

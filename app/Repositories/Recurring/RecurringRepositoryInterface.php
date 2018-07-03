@@ -48,16 +48,6 @@ interface RecurringRepositoryInterface
     public function destroy(Recurrence $recurrence): void;
 
     /**
-     * @param Recurrence $recurrence
-     *
-     * @param int        $page
-     * @param int        $pageSize
-     *
-     * @return LengthAwarePaginator
-     */
-    public function getTransactions(Recurrence $recurrence, int $page, int $pageSize): LengthAwarePaginator;
-
-    /**
      * Returns all of the user's recurring transactions.
      *
      * @return Collection
@@ -91,6 +81,7 @@ interface RecurringRepositoryInterface
 
     /**
      * Returns the journals created for this recurrence, possibly limited by time.
+     * TODO make consistent with getTransactions
      *
      * @param Recurrence  $recurrence
      * @param Carbon|null $start
@@ -130,6 +121,22 @@ interface RecurringRepositoryInterface
      * @return array
      */
     public function getTags(Recurrence $recurrence): array;
+
+    /**
+     * @param Recurrence $recurrence
+     * @param int        $page
+     * @param int        $pageSize
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getTransactionPaginator(Recurrence $recurrence, int $page, int $pageSize): LengthAwarePaginator;
+
+    /**
+     * @param Recurrence $recurrence
+     *
+     * @return Collection
+     */
+    public function getTransactions(Recurrence $recurrence): Collection;
 
     /**
      * Calculate the next X iterations starting on the date given in $date.
