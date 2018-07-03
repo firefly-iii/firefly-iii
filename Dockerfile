@@ -23,6 +23,7 @@ RUN apt-get update -y && \
                                                libpq-dev \
                                                libbz2-dev \
                                                gettext-base \
+                                               cron \
                                                locales && \
                                                apt-get clean && \
                                                rm -rf /var/lib/apt/lists/*
@@ -46,6 +47,13 @@ RUN cd /tmp && \
     ./configure --with-ssl && \
     make && \
     make install
+
+
+# Create the log file to be able to run tail
+RUN touch /var/log/cron.log
+
+# Setup cron job
+RUN (crontab -l ; echo "* * * * * root $FIREFLY_PATH/artisan schedule:run >> /var/log/cron.log") | crontab
 
 # Install PHP exentions.
 RUN docker-php-ext-install -j$(nproc) curl gd intl json readline tidy zip bcmath xml mbstring pdo_sqlite pdo_mysql bz2 pdo_pgsql
@@ -76,6 +84,9 @@ RUN composer install --prefer-dist --no-dev --no-scripts --no-suggest
 
 # Expose port 80
 EXPOSE 80
+
+# Run the command on container startup
+CMD cron
 
 # Run entrypoint thing
 ENTRYPOINT [".deploy/docker/entrypoint.sh"]
