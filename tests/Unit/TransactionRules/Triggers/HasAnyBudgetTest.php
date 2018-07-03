@@ -37,7 +37,14 @@ class HasAnyBudgetTest extends TestCase
      */
     public function testTriggered(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $loop = 0;
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+            $count   = $journal->transactions()->count();
+            $loop++;
+        } while ($count !== 0 && $loop < 30);
+
         $budget  = $journal->user->budgets()->first();
         $journal->budgets()->detach();
         $journal->budgets()->save($budget);
@@ -46,6 +53,7 @@ class HasAnyBudgetTest extends TestCase
         $trigger = HasAnyBudget::makeFromStrings('', false);
         $result  = $trigger->triggered($journal);
         $this->assertTrue($result);
+
     }
 
     /**
@@ -53,11 +61,13 @@ class HasAnyBudgetTest extends TestCase
      */
     public function testTriggeredNot(): void
     {
+        $loop = 0;
         do {
             /** @var TransactionJournal $journal */
             $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
             $count   = $journal->transactions()->count();
-        } while ($count !== 0);
+            $loop++;
+        } while ($count !== 0 && $loop < 30);
 
         $journal->budgets()->detach();
         $this->assertEquals(0, $journal->budgets()->count());
@@ -78,7 +88,14 @@ class HasAnyBudgetTest extends TestCase
      */
     public function testTriggeredTransactions(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $loop = 0;
+        do {
+            /** @var TransactionJournal $journal */
+            $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+            $count   = $journal->transactions()->count();
+            $loop++;
+        } while ($count !== 0 && $loop < 30);
+
         $budget  = $journal->user->budgets()->first();
         $journal->budgets()->detach();
         $this->assertEquals(0, $journal->budgets()->count());

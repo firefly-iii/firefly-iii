@@ -225,7 +225,7 @@ class IndexControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->get(route('import.job.download', [$job->key]));
         $response->assertStatus(200);
-        $response->assertExactJson(['column-mapping-config' => [], 'delimiter' => ',', 'hi' => 'there', 1 => true]);
+        $response->assertExactJson(['column-mapping-config' => ['a', 'b', 'c'], 'delimiter' => ',', 'hi' => 'there', 1 => true]);
     }
 
     /**
