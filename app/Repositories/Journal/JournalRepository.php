@@ -101,6 +101,11 @@ class JournalRepository implements JournalRepositoryInterface
                 $transaction->budgets()->detach();
             }
         }
+        // if journal is not a withdrawal, remove the bill ID.
+        if (TransactionType::WITHDRAWAL !== $type->type) {
+            $journal->bill_id = null;
+            $journal->save();
+        }
 
         Preferences::mark();
 

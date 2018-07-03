@@ -36,6 +36,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int    $order
  * @property bool   $active
  * @property bool   $stop_processing
+ * @property Rule   $rule
  */
 class RuleAction extends Model
 {

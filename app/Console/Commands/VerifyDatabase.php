@@ -90,6 +90,7 @@ class VerifyDatabase extends Command
         $this->createAccessTokens();
         $this->fixDoubleAmounts();
         $this->fixBadMeta();
+        $this->removeBills();
     }
 
     /**
@@ -252,6 +253,23 @@ class VerifyDatabase extends Command
         }
         if (0 === $count) {
             $this->info('Amount integrity OK!');
+        }
+    }
+
+    /**
+     *
+     */
+    private function removeBills(): void
+    {
+        /** @var TransactionType $withdrawal */
+        $withdrawal = TransactionType::where('type', TransactionType::WITHDRAWAL)->first();
+        $journals   = TransactionJournal::whereNotNull('bill_id')
+                                        ->where('transaction_type_id', '!=', $withdrawal->id)->get();
+        /** @var TransactionJournal $journal */
+        foreach ($journals as $journal) {
+            $this->line(sprintf('Transaction journal #%d should not be linked to bill #%d.', $journal->id, $journal->bill_id));
+            $journal->bill_id = null;
+            $journal->save();
         }
     }
 

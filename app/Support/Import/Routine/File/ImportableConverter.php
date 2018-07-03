@@ -185,12 +185,30 @@ class ImportableConverter
 
         Log::debug(sprintf('"%s" (#%d) is source and "%s" (#%d) is destination.', $source->name, $source->id, $destination->name, $destination->id));
 
-        if (bccomp($amount, '0') === 1) {
-            // amount is positive? Then switch:
+
+        if ($source->accountType->type === AccountType::ASSET && $destination->accountType->type === AccountType::ASSET) {
+            Log::debug('Source and destination are asset accounts. This is a transfer.');
+            $transactionType = 'transfer';
+        }
+
+        // amount is positive and its not a transfer? Then switch:
+        if ($transactionType !== 'transfer' && bccomp($amount, '0') === 1) {
+
             [$destination, $source] = [$source, $destination];
             Log::debug(
                 sprintf(
                     '%s is positive, so "%s" (#%d) is now source and "%s" (#%d) is now destination.',
+                    $amount, $source->name, $source->id, $destination->name, $destination->id
+                )
+            );
+        }
+        // amount is negative and type is transfer? then switch.
+        if ($transactionType === 'transfer' && bccomp($amount, '0') === -1) {
+            // amount is positive? Then switch:
+            [$destination, $source] = [$source, $destination];
+            Log::debug(
+                sprintf(
+                    '%s is negative, so "%s" (#%d) is now source and "%s" (#%d) is now destination.',
                     $amount, $source->name, $source->id, $destination->name, $destination->id
                 )
             );
@@ -218,10 +236,7 @@ class ImportableConverter
             $currency = $this->defaultCurrency;
         }
 
-        if ($source->accountType->type === AccountType::ASSET && $destination->accountType->type === AccountType::ASSET) {
-            Log::debug('Source and destination are asset accounts. This is a transfer.');
-            $transactionType = 'transfer';
-        }
+
         if ($source->accountType->type === AccountType::REVENUE) {
             Log::debug('Source is a revenue account. This is a deposit.');
             $transactionType = 'deposit';
