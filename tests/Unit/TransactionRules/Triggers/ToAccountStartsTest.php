@@ -37,12 +37,14 @@ class ToAccountStartsTest extends TestCase
     public function testTriggered(): void
     {
         $count = 0;
-        while ($count === 0) {
+        $account = null;
+        while ($count !== 0 && $account !== null) {
             $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
             $count       = $journal->transactions()->where('amount', '>', 0)->count();
             $transaction = $journal->transactions()->where('amount', '>', 0)->first();
+            $account     = $transaction->account;
         }
-        $account     = $transaction->account;
+
 
         $trigger = ToAccountStarts::makeFromStrings(substr($account->name, 0, -3), false);
         $result  = $trigger->triggered($journal);
@@ -55,12 +57,13 @@ class ToAccountStartsTest extends TestCase
     public function testTriggeredLonger(): void
     {
         $count = 0;
-        while ($count === 0) {
+        $account = null;
+        while ($count !== 0 && $account !== null) {
             $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
             $count       = $journal->transactions()->where('amount', '>', 0)->count();
             $transaction = $journal->transactions()->where('amount', '>', 0)->first();
+            $account     = $transaction->account;
         }
-        $account     = $transaction->account;
 
         $trigger = ToAccountStarts::makeFromStrings('bla-bla-bla' . $account->name, false);
         $result  = $trigger->triggered($journal);

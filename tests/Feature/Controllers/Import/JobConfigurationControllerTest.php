@@ -53,7 +53,7 @@ class JobConfigurationControllerTest extends TestCase
     {
         $job            = new ImportJob;
         $job->user_id   = $this->user()->id;
-        $job->key       = 'Afake_job_' . random_int(1, 1000);
+        $job->key       = '1Afake_job_' . random_int(1, 1000);
         $job->status    = 'has_prereq';
         $job->provider  = 'fake';
         $job->file_type = '';
@@ -85,7 +85,7 @@ class JobConfigurationControllerTest extends TestCase
     {
         $job            = new ImportJob;
         $job->user_id   = $this->user()->id;
-        $job->key       = 'Bfake_job_' . random_int(1, 1000);
+        $job->key       = '2Bfake_job_' . random_int(1, 1000);
         $job->status    = 'some_bad_state';
         $job->provider  = 'fake';
         $job->file_type = '';
@@ -111,7 +111,7 @@ class JobConfigurationControllerTest extends TestCase
     {
         $job            = new ImportJob;
         $job->user_id   = $this->user()->id;
-        $job->key       = 'Cfake_job_' . random_int(1, 1000);
+        $job->key       = '3Cfake_job_' . random_int(1, 1000);
         $job->status    = 'has_prereq';
         $job->provider  = 'fake';
         $job->file_type = '';
@@ -140,7 +140,7 @@ class JobConfigurationControllerTest extends TestCase
 
         $job            = new ImportJob;
         $job->user_id   = $this->user()->id;
-        $job->key       = 'Dfake_job_' . random_int(1, 1000);
+        $job->key       = '4Dfake_job_' . random_int(1, 1000);
         $job->status    = 'has_prereq';
         $job->provider  = 'fake';
         $job->file_type = '';
@@ -174,7 +174,7 @@ class JobConfigurationControllerTest extends TestCase
 
         $job            = new ImportJob;
         $job->user_id   = $this->user()->id;
-        $job->key       = 'Ffake_job_' . random_int(1, 1000);
+        $job->key       = '5Ffake_job_' . random_int(1, 1000);
         $job->status    = 'some_bad_state';
         $job->provider  = 'fake';
         $job->file_type = '';
@@ -203,7 +203,7 @@ class JobConfigurationControllerTest extends TestCase
 
         $job            = new ImportJob;
         $job->user_id   = $this->user()->id;
-        $job->key       = 'Efake_job_' . random_int(1, 1000);
+        $job->key       = '6Efake_job_' . random_int(1, 1000);
         $job->status    = 'has_prereq';
         $job->provider  = 'fake';
         $job->file_type = '';
@@ -233,7 +233,7 @@ class JobConfigurationControllerTest extends TestCase
         $file           = UploadedFile::fake()->image('avatar.jpg');
         $job            = new ImportJob;
         $job->user_id   = $this->user()->id;
-        $job->key       = 'Dfake_job_' . random_int(1, 1000);
+        $job->key       = '7Dfake_job_' . random_int(1, 1000);
         $job->status    = 'has_prereq';
         $job->provider  = 'fake';
         $job->file_type = '';
