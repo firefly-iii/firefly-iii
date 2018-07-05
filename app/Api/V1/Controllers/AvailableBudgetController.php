@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\AvailableBudgetRequest;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -144,11 +145,15 @@ class AvailableBudgetController extends Controller
      * @param AvailableBudgetRequest $request
      *
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function store(AvailableBudgetRequest $request): JsonResponse
     {
-        $data            = $request->getAll();
-        $currency        = $this->currencyRepository->findNull($data['transaction_currency_id']);
+        $data     = $request->getAll();
+        $currency = $this->currencyRepository->findNull($data['transaction_currency_id']);
+        if (null === $currency) {
+            throw new FireflyException('Could not find the indicated currency.');
+        }
         $availableBudget = $this->repository->setAvailableBudget($currency, $data['start_date'], $data['end_date'], $data['amount']);
         $manager         = new Manager;
         $baseUrl         = $request->getSchemeAndHttpHost() . '/api/v1';

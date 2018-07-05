@@ -162,7 +162,7 @@ class RecurrenceController extends Controller
      */
     public function update(RecurrenceRequest $request, Recurrence $recurrence): JsonResponse
     {
-        $data     = $request->getAll();
+        $data = $request->getAll();
 
         //
 

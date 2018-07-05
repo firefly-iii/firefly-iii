@@ -30,6 +30,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Rules\BelongsUser;
+use FireflyIII\User;
 use Illuminate\Validation\Validator;
 
 
@@ -200,11 +201,12 @@ class TransactionRequest extends Request
      */
     protected function assetAccountExists(Validator $validator, ?int $accountId, ?string $accountName, string $idField, string $nameField): ?Account
     {
-
+        /** @var User $admin */
+        $admin       = auth()->user();
         $accountId   = (int)$accountId;
         $accountName = (string)$accountName;
         // both empty? hard exit.
-        if ($accountId < 1 && \strlen($accountName) === 0) {
+        if ($accountId < 1 && '' === $accountName) {
             $validator->errors()->add($idField, trans('validation.filled', ['attribute' => $idField]));
 
             return null;
@@ -212,7 +214,7 @@ class TransactionRequest extends Request
         // ID belongs to user and is asset account:
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $repository->setUser(auth()->user());
+        $repository->setUser($admin);
         $set = $repository->getAccountsById([$accountId]);
         if ($set->count() === 1) {
             /** @var Account $first */
@@ -271,7 +273,7 @@ class TransactionRequest extends Request
         }
 
         // no valid descriptions and empty journal description? error.
-        if ($validDescriptions === 0 && \strlen($journalDescription) === 0) {
+        if ($validDescriptions === 0 && '' === $journalDescription) {
             $validator->errors()->add('description', trans('validation.filled', ['attribute' => trans('validation.attributes.description')]));
         }
 
@@ -290,7 +292,7 @@ class TransactionRequest extends Request
         foreach ($transactions as $index => $transaction) {
             $description = (string)($transaction['description'] ?? '');
             // filled description is mandatory for split transactions.
-            if (\count($transactions) > 1 && \strlen($description) === 0) {
+            if ('' === $description && \count($transactions) > 1) {
                 $validator->errors()->add(
                     'transactions.' . $index . '.description',
                     trans('validation.filled', ['attribute' => trans('validation.attributes.transaction_description')])
@@ -358,17 +360,19 @@ class TransactionRequest extends Request
      */
     protected function opposingAccountExists(Validator $validator, string $type, ?int $accountId, ?string $accountName, string $idField): ?Account
     {
+        /** @var User $admin */
+        $admin       = auth()->user();
         $accountId   = (int)$accountId;
         $accountName = (string)$accountName;
         // both empty? done!
-        if ($accountId < 1 && \strlen($accountName) === 0) {
+        if ($accountId < 1 && '' === $accountName) {
             return null;
         }
         if ($accountId !== 0) {
             // ID belongs to user and is $type account:
             /** @var AccountRepositoryInterface $repository */
             $repository = app(AccountRepositoryInterface::class);
-            $repository->setUser(auth()->user());
+            $repository->setUser($admin);
             $set = $repository->getAccountsById([$accountId]);
             if ($set->count() === 1) {
                 /** @var Account $first */

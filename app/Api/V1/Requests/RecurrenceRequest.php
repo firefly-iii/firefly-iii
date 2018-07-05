@@ -28,6 +28,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Rules\BelongsUser;
+use FireflyIII\User;
 use Illuminate\Validation\Validator;
 use InvalidArgumentException;
 use Log;
@@ -196,6 +197,8 @@ class RecurrenceRequest extends Request
      */
     protected function assetAccountExists(Validator $validator, ?int $accountId, ?string $accountName, string $idField, string $nameField): ?Account
     {
+        /** @var User $admin */
+        $admin       = auth()->user();
         $accountId   = (int)$accountId;
         $accountName = (string)$accountName;
         // both empty? hard exit.
@@ -207,7 +210,7 @@ class RecurrenceRequest extends Request
         // ID belongs to user and is asset account:
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $repository->setUser(auth()->user());
+        $repository->setUser($admin);
         $set = $repository->getAccountsById([$accountId]);
         Log::debug(sprintf('Count of accounts found by ID %d is: %d', $accountId, $set->count()));
         if ($set->count() === 1) {
@@ -302,17 +305,19 @@ class RecurrenceRequest extends Request
      */
     protected function opposingAccountExists(Validator $validator, string $type, ?int $accountId, ?string $accountName, string $idField): ?Account
     {
+        /** @var User $admin */
+        $admin       = auth()->user();
         $accountId   = (int)$accountId;
         $accountName = (string)$accountName;
         // both empty? done!
-        if ($accountId < 1 && \strlen($accountName) === 0) {
+        if ($accountId < 1 && '' === $accountName) {
             return null;
         }
         if ($accountId !== 0) {
             // ID belongs to user and is $type account:
             /** @var AccountRepositoryInterface $repository */
             $repository = app(AccountRepositoryInterface::class);
-            $repository->setUser(auth()->user());
+            $repository->setUser($admin);
             $set = $repository->getAccountsById([$accountId]);
             if ($set->count() === 1) {
                 /** @var Account $first */

@@ -62,7 +62,7 @@ class RuleGroupController extends Controller
     /**
      * Delete the resource.
      *
-     * @param string $object
+     * @param RuleGroup $ruleGroup
      *
      * @return JsonResponse
      */
@@ -151,8 +151,8 @@ class RuleGroupController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param string  $object
+     * @param RuleGroupRequest $request
+     * @param RuleGroup        $ruleGroup
      *
      * @return JsonResponse
      */

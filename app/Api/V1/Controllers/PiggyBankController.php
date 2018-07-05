@@ -53,10 +53,12 @@ class PiggyBankController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var User $user */
-                $user = auth()->user();
+                /** @var User $admin */
+                $admin = auth()->user();
 
                 $this->repository = app(PiggyBankRepositoryInterface::class);
+                $this->repository->setUser($admin);
+
 
                 return $next($request);
             }

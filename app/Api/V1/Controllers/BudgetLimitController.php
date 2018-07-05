@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 use Carbon\Carbon;
-use Exception;
-use FireflyIII\Api\V1\Requests\AvailableBudgetRequest;
 use FireflyIII\Api\V1\Requests\BudgetLimitRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
@@ -43,7 +41,6 @@ use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 use Log;
-use Throwable;
 
 /**
  * Class BudgetLimitController
@@ -206,8 +203,8 @@ class BudgetLimitController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param AvailableBudgetRequest $request
-     * @param BudgetLimit            $budgetLimit
+     * @param BudgetLimitRequest $request
+     * @param BudgetLimit        $budgetLimit
      *
      * @return JsonResponse
      */

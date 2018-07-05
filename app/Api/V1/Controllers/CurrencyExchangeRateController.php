@@ -28,11 +28,13 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Currency\ExchangeRateInterface;
 use FireflyIII\Transformers\CurrencyExchangeRateTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
+use League\Fractal\Serializer\JsonApiSerializer;
 use Log;
 
 /**
@@ -52,8 +54,11 @@ class CurrencyExchangeRateController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
+                /** @var User $admin */
+                $admin = auth()->user();
+
                 $this->repository = app(CurrencyRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+                $this->repository->setUser($admin);
 
                 return $next($request);
             }
@@ -72,6 +77,7 @@ class CurrencyExchangeRateController extends Controller
         // create some objects:
         $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         // currencies
         $fromCurrency = $this->repository->findByCodeNull($request->get('from') ?? 'EUR');
@@ -99,10 +105,12 @@ class CurrencyExchangeRateController extends Controller
         // get the exchange rate.
         $rate = $this->repository->getExchangeRate($fromCurrency, $toCurrency, $dateObj);
         if (null === $rate) {
+            /** @var User $admin */
+            $admin = auth()->user();
             // create service:
             /** @var ExchangeRateInterface $service */
             $service = app(ExchangeRateInterface::class);
-            $service->setUser(auth()->user());
+            $service->setUser($admin);
 
             // get rate:
             $rate = $service->getRate($fromCurrency, $toCurrency, $dateObj);

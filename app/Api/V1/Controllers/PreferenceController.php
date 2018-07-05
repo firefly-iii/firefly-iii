@@ -42,20 +42,6 @@ use Preferences;
  */
 class PreferenceController extends Controller
 {
-    public function __construct()
-    {
-        parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user = auth()->user();
-
-                // todo add local repositories.
-                return $next($request);
-            }
-        );
-    }
-
     /**
      * List all of them.
      *

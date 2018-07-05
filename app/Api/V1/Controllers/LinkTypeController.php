@@ -151,7 +151,10 @@ class LinkTypeController extends Controller
      */
     public function store(LinkTypeRequest $request): JsonResponse
     {
-        if (!$this->userRepository->hasRole(auth()->user(), 'owner')) {
+        /** @var User $admin */
+        $admin = auth()->user();
+
+        if (!$this->userRepository->hasRole($admin, 'owner')) {
             throw new FireflyException('You need the "owner"-role to do this.');
         }
         $data = $request->getAll();
@@ -179,7 +182,11 @@ class LinkTypeController extends Controller
         if ($linkType->editable === false) {
             throw new FireflyException(sprintf('You cannot edit this link type (#%d, "%s")', $linkType->id, $linkType->name));
         }
-        if (!$this->userRepository->hasRole(auth()->user(), 'owner')) {
+
+        /** @var User $admin */
+        $admin = auth()->user();
+
+        if (!$this->userRepository->hasRole($admin, 'owner')) {
             throw new FireflyException('You need the "owner"-role to do this.');
         }
 

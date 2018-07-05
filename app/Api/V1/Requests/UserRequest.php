@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 
 
@@ -43,7 +44,11 @@ class UserRequest extends Request
         }
         /** @var User $user */
         $user = auth()->user();
-        if (!$user->hasRole('owner')) {
+
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+
+        if (!$repository->hasRole($user, 'owner')) {
             return false; // @codeCoverageIgnore
         }
 

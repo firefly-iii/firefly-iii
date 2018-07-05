@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Requests;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Rules\IsBase64;
 use FireflyIII\Rules\IsValidAttachmentModel;
 
 /**

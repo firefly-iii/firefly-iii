@@ -25,6 +25,8 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -34,12 +36,33 @@ use Illuminate\Http\Request;
 class ConfigurationController extends Controller
 {
 
+
+    /** @var UserRepositoryInterface */
+    private $repository;
+
+    /**
+     * BudgetController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware(
+            function ($request, $next) {
+                $this->repository = app(UserRepositoryInterface::class);
+
+                return $next($request);
+            }
+        );
+    }
+
     /**
      * @throws FireflyException
      */
     public function index()
     {
-        if (!auth()->user()->hasRole('owner')) {
+        /** @var User $admin */
+        $admin = auth()->user();
+        if (!$this->repository->hasRole($admin, 'owner')) {
             throw new FireflyException('No access to method.'); // @codeCoverageIgnore
         }
         $configData = $this->getConfigData();
@@ -55,7 +78,9 @@ class ConfigurationController extends Controller
      */
     public function update(Request $request): JsonResponse
     {
-        if (!auth()->user()->hasRole('owner')) {
+        /** @var User $admin */
+        $admin = auth()->user();
+        if (!$this->repository->hasRole($admin, 'owner')) {
             throw new FireflyException('No access to method.'); // @codeCoverageIgnore
         }
         $name  = $request->get('name');
