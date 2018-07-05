@@ -37,7 +37,7 @@ class HasNoBudgetTest extends TestCase
      */
     public function testTriggeredBudget(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
+        $journal = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
         $budget  = $journal->user->budgets()->first();
         $journal->budgets()->detach();
         $journal->budgets()->save($budget);
@@ -54,7 +54,7 @@ class HasNoBudgetTest extends TestCase
     public function testTriggeredNoBudget(): void
     {
         /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
+        $journal = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
         $journal->budgets()->detach();
         /** @var Transaction $transaction */
         foreach ($journal->transactions as $transaction) {
@@ -72,8 +72,12 @@ class HasNoBudgetTest extends TestCase
      */
     public function testTriggeredTransaction(): void
     {
-        /** @var TransactionJournal $journal */
-        $journal      = TransactionJournal::inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
+        $loopCount = 0;
+        do {
+            $journal     = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
+            $count       = $journal->transactions()->count();
+        } while ($loopCount < 30 && $count !== 2);
+
         $transactions = $journal->transactions()->get();
         $budget       = $journal->user->budgets()->first();
 

@@ -50,7 +50,7 @@ class ToAccountStartsTest extends TestCase
             Log::debug(sprintf('Journal with id #%d', $journal->id));
             Log::debug(sprintf('Count of transactions is %d', $count));
             Log::debug(sprintf('Account is null: %s', var_export(null === $account, true)));
-        } while ($loopCount < 30 && $count !== 2 && null !== $account);
+        } while ($loopCount < 30 && $count !== 1 && null !== $account);
 
 
         $trigger = ToAccountStarts::makeFromStrings(substr($account->name, 0, -3), false);
@@ -63,6 +63,7 @@ class ToAccountStartsTest extends TestCase
      */
     public function testTriggeredLonger(): void
     {
+        Log::debug('Now in testTriggeredLonger');
         $loopCount = 0;
         $account   = null;
         do {
@@ -74,7 +75,8 @@ class ToAccountStartsTest extends TestCase
             Log::debug(sprintf('Journal with id #%d', $journal->id));
             Log::debug(sprintf('Count of transactions is %d', $count));
             Log::debug(sprintf('Account is null: %s', var_export(null === $account, true)));
-        } while ($loopCount < 30 && $count !== 2 && null !== $account);
+        } while ($loopCount < 30 && $count !== 1 && null !== $account);
+        Log::debug(sprintf('Loop has ended. loopCount is %d', $loopCount));
 
         $trigger = ToAccountStarts::makeFromStrings('bla-bla-bla' . $account->name, false);
         $result  = $trigger->triggered($journal);
