@@ -36,11 +36,18 @@ class ToAccountContainsTest extends TestCase
      */
     public function testTriggered(): void
     {
-        $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-        $transaction = $journal->transactions()->where('amount', '>', 0)->first();
-        $account     = $transaction->account;
-        $trigger     = ToAccountContains::makeFromStrings($account->name, false);
-        $result      = $trigger->triggered($journal);
+        $count = 0;
+        do {
+            $journal          = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+            $transaction      = $journal->transactions()->where('amount', '>', 0)->first();
+            $transactionCount = $journal->transactions()->count();
+            $account          = null === $transaction ? null : $transaction->account;
+            $count++;
+        } while ($account === null && $count < 30 && $transactionCount !== 2);
+
+
+        $trigger = ToAccountContains::makeFromStrings($account->name, false);
+        $result  = $trigger->triggered($journal);
         $this->assertTrue($result);
     }
 
@@ -49,7 +56,16 @@ class ToAccountContainsTest extends TestCase
      */
     public function testTriggeredNot(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $count = 0;
+        do {
+            $journal          = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+            $transaction      = $journal->transactions()->where('amount', '>', 0)->first();
+            $transactionCount = $journal->transactions()->count();
+            $account          = null === $transaction ? null : $transaction->account;
+            $count++;
+        } while ($account === null && $count < 30 && $transactionCount !== 2);
+
+
         $trigger = ToAccountContains::makeFromStrings('some name' . random_int(1, 234), false);
         $result  = $trigger->triggered($journal);
         $this->assertFalse($result);

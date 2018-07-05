@@ -46,7 +46,7 @@ class ToAccountStartsTest extends TestCase
             $journal     = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
             $count       = $journal->transactions()->where('amount', '>', 0)->count();
             $transaction = $journal->transactions()->where('amount', '>', 0)->first();
-            $account     = $transaction->account;
+            $account     = null === $transaction ? null : $transaction->account;
             Log::debug(sprintf('Journal with id #%d', $journal->id));
             Log::debug(sprintf('Count of transactions is %d', $count));
             Log::debug(sprintf('Account is null: %s', var_export(null === $account, true)));
@@ -71,7 +71,7 @@ class ToAccountStartsTest extends TestCase
             $journal     = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
             $count       = $journal->transactions()->where('amount', '>', 0)->count();
             $transaction = $journal->transactions()->where('amount', '>', 0)->first();
-            $account     = $transaction->account;
+            $account     = null === $transaction ? null : $transaction->account;
             Log::debug(sprintf('Journal with id #%d', $journal->id));
             Log::debug(sprintf('Count of transactions is %d', $count));
             Log::debug(sprintf('Account is null: %s', var_export(null === $account, true)));

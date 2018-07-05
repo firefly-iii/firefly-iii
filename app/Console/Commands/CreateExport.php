@@ -65,7 +65,9 @@ class CreateExport extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function handle(): int
     {
