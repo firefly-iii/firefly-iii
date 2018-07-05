@@ -31,11 +31,9 @@ use FireflyIII\Transformers\CurrencyExchangeRateTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use InvalidArgumentException;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
-use Log;
 
 /**
  *
@@ -79,7 +77,6 @@ class CurrencyExchangeRateController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        // currencies
         $fromCurrency = $this->repository->findByCodeNull($request->get('from') ?? 'EUR');
         $toCurrency   = $this->repository->findByCodeNull($request->get('to') ?? 'USD');
 
@@ -90,19 +87,11 @@ class CurrencyExchangeRateController extends Controller
             throw new FireflyException('Unknown destination currency.');
         }
 
-        $dateObj = new Carbon;
-        try {
-            $dateObj = Carbon::createFromFormat('Y-m-d', $request->get('date') ?? date('Y-m-d'));
-        } catch (InvalidArgumentException $e) {
-            Log::debug($e->getMessage());
-        }
-
-
+        $dateObj = Carbon::createFromFormat('Y-m-d', $request->get('date') ?? date('Y-m-d'));
         $this->parameters->set('from', $fromCurrency->code);
         $this->parameters->set('to', $toCurrency->code);
         $this->parameters->set('date', $dateObj->format('Y-m-d'));
 
-        // get the exchange rate.
         $rate = $this->repository->getExchangeRate($fromCurrency, $toCurrency, $dateObj);
         if (null === $rate) {
             /** @var User $admin */
@@ -111,8 +100,6 @@ class CurrencyExchangeRateController extends Controller
             /** @var ExchangeRateInterface $service */
             $service = app(ExchangeRateInterface::class);
             $service->setUser($admin);
-
-            // get rate:
             $rate = $service->getRate($fromCurrency, $toCurrency, $dateObj);
         }
 

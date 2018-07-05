@@ -51,9 +51,6 @@ class DecryptAttachment extends Command
 
     /**
      * Execute the console command.
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five its fine.
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function handle()
     {

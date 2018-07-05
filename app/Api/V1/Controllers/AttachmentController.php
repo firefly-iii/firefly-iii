@@ -42,6 +42,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
  * Class AttachmentController
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AttachmentController extends Controller
 {

@@ -37,6 +37,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  * Class Controller.
  *
  * @codeCoverageIgnore
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 class Controller extends BaseController
 {
@@ -57,6 +58,8 @@ class Controller extends BaseController
 
     /**
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function buildParams(): string
     {
@@ -68,21 +71,18 @@ class Controller extends BaseController
             }
             if ($value instanceof Carbon) {
                 $params[$key] = $value->format('Y-m-d');
+                continue;
             }
-            if (!$value instanceof Carbon) {
-                $params[$key] = $value;
-            }
+            $params[$key] = $value;
         }
         $return .= http_build_query($params);
-        if (\strlen($return) === 1) {
-            return '';
-        }
 
         return $return;
     }
 
     /**
      * @return ParameterBag
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getParameters(): ParameterBag
     {

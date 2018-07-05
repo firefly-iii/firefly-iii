@@ -41,6 +41,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
 /**
  * TODO order up and down.
  * Class PiggyBankController
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class PiggyBankController extends Controller
 {

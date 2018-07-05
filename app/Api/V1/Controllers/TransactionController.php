@@ -42,10 +42,10 @@ use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Serializer\JsonApiSerializer;
-use Log;
 
 /**
  * Class TransactionController
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TransactionController extends Controller
 {
@@ -96,19 +96,14 @@ class TransactionController extends Controller
     public function index(Request $request): JsonResponse
     {
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-
-        // read type from URI
-        $type = $request->get('type') ?? 'default';
+        $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
-        // types to get, page size:
-        $types = $this->mapTypes($this->parameters->get('type'));
-
+        $types   = $this->mapTypes($this->parameters->get('type'));
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        // collect transactions using the journal collector
         /** @var User $admin */
         $admin = auth()->user();
         /** @var JournalCollectorInterface $collector */
@@ -117,7 +112,6 @@ class TransactionController extends Controller
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setAllAssetAccounts();
 
-        // remove internal transfer filter:
         if (\in_array(TransactionType::TRANSFER, $types, true)) {
             $collector->removeFilter(InternalTransferFilter::class);
         }
@@ -130,7 +124,6 @@ class TransactionController extends Controller
         $paginator = $collector->getPaginatedJournals();
         $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
         $transactions = $paginator->getCollection();
-
 
         $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
@@ -235,13 +228,9 @@ class TransactionController extends Controller
     {
         $data         = $request->getAll();
         $data['user'] = auth()->user()->id;
-
-        Log::debug('Inside transaction update');
-
-        $journal = $repository->update($transaction->transactionJournal, $data);
-
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $journal      = $repository->update($transaction->transactionJournal, $data);
+        $manager      = new Manager();
+        $baseUrl      = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         // add include parameter:
@@ -280,59 +269,22 @@ class TransactionController extends Controller
     private function mapTypes(string $type): array
     {
         $types = [
-            'all'             => [
-                TransactionType::WITHDRAWAL,
-                TransactionType::DEPOSIT,
-                TransactionType::TRANSFER,
-                TransactionType::OPENING_BALANCE,
-                TransactionType::RECONCILIATION,
-            ],
-            'withdrawal'      => [
-                TransactionType::WITHDRAWAL,
-            ],
-            'withdrawals'     => [
-                TransactionType::WITHDRAWAL,
-            ],
-            'expense'         => [
-                TransactionType::WITHDRAWAL,
-            ],
-            'income'          => [
-                TransactionType::DEPOSIT,
-            ],
-            'deposit'         => [
-                TransactionType::DEPOSIT,
-            ],
-            'deposits'        => [
-                TransactionType::DEPOSIT,
-            ],
-            'transfer'        => [
-                TransactionType::TRANSFER,
-            ],
-            'transfers'       => [
-                TransactionType::TRANSFER,
-            ],
-            'opening_balance' => [
-                TransactionType::OPENING_BALANCE,
-            ],
-            'reconciliation'  => [
-                TransactionType::RECONCILIATION,
-            ],
-            'reconciliations' => [
-                TransactionType::RECONCILIATION,
-            ],
-            'special'         => [
-                TransactionType::OPENING_BALANCE,
-                TransactionType::RECONCILIATION,
-            ],
-            'specials'        => [
-                TransactionType::OPENING_BALANCE,
-                TransactionType::RECONCILIATION,
-            ],
-            'default'         => [
-                TransactionType::WITHDRAWAL,
-                TransactionType::DEPOSIT,
-                TransactionType::TRANSFER,
-            ],
+            'all'             => [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE,
+                                  TransactionType::RECONCILIATION,],
+            'withdrawal'      => [TransactionType::WITHDRAWAL,],
+            'withdrawals'     => [TransactionType::WITHDRAWAL,],
+            'expense'         => [TransactionType::WITHDRAWAL,],
+            'income'          => [TransactionType::DEPOSIT,],
+            'deposit'         => [TransactionType::DEPOSIT,],
+            'deposits'        => [TransactionType::DEPOSIT,],
+            'transfer'        => [TransactionType::TRANSFER,],
+            'transfers'       => [TransactionType::TRANSFER,],
+            'opening_balance' => [TransactionType::OPENING_BALANCE,],
+            'reconciliation'  => [TransactionType::RECONCILIATION,],
+            'reconciliations' => [TransactionType::RECONCILIATION,],
+            'special'         => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION,],
+            'specials'        => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION,],
+            'default'         => [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER,],
         ];
         if (isset($types[$type])) {
             return $types[$type];

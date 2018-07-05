@@ -39,6 +39,11 @@ use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
+/**
+ *
+ * Class JournalLinkController
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class JournalLinkController extends Controller
 {
     /** @var JournalRepositoryInterface */

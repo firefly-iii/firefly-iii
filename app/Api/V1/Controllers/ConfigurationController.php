@@ -49,6 +49,12 @@ class ConfigurationController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(UserRepositoryInterface::class);
+                /** @var User $admin */
+                $admin = auth()->user();
+
+                if (!$this->repository->hasRole($admin, 'owner')) {
+                    throw new FireflyException('No access to method.'); // @codeCoverageIgnore
+                }
 
                 return $next($request);
             }
@@ -60,11 +66,6 @@ class ConfigurationController extends Controller
      */
     public function index()
     {
-        /** @var User $admin */
-        $admin = auth()->user();
-        if (!$this->repository->hasRole($admin, 'owner')) {
-            throw new FireflyException('No access to method.'); // @codeCoverageIgnore
-        }
         $configData = $this->getConfigData();
 
         return response()->json(['data' => $configData], 200)->header('Content-Type', 'application/vnd.api+json');
@@ -75,14 +76,10 @@ class ConfigurationController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function update(Request $request): JsonResponse
     {
-        /** @var User $admin */
-        $admin = auth()->user();
-        if (!$this->repository->hasRole($admin, 'owner')) {
-            throw new FireflyException('No access to method.'); // @codeCoverageIgnore
-        }
         $name  = $request->get('name');
         $value = $request->get('value');
         $valid = ['is_demo_site', 'permission_update_check', 'single_user_mode'];
@@ -107,6 +104,7 @@ class ConfigurationController extends Controller
 
     /**
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getConfigData(): array
     {

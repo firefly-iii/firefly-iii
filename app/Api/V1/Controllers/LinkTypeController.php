@@ -42,6 +42,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
 /**
  *
  * Class LinkTypeController
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class LinkTypeController extends Controller
 {

@@ -40,6 +40,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
  * Class CategoryController
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CategoryController extends Controller
 {

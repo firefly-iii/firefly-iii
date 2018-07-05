@@ -46,8 +46,6 @@ use stdClass;
 
 /**
  * Class VerifyDatabase.
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class VerifyDatabase extends Command
 {

@@ -106,6 +106,7 @@ class PreferenceController extends Controller
      * @param Preference        $preference
      *
      * @return JsonResponse
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function update(PreferenceRequest $request, Preference $preference): JsonResponse
     {
