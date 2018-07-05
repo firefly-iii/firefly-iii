@@ -29,6 +29,7 @@ use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
@@ -73,8 +74,8 @@ class VerifyDatabase extends Command
             return;
         }
 
-        $this->reportObject('budget');
-        $this->reportObject('category');
+        $this->reportEmptyBudgets();
+        $this->reportEmptyCategories();
         $this->reportObject('tag');
         $this->reportAccounts();
         $this->reportBudgetLimits();
@@ -379,6 +380,80 @@ class VerifyDatabase extends Command
     }
 
     /**
+     * Report on budgets with no transactions or journals.
+     */
+    private function reportEmptyBudgets(): void
+    {
+        $set = Budget::leftJoin('budget_transaction_journal', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
+                     ->leftJoin('users', 'budgets.user_id', '=', 'users.id')
+                     ->distinct()
+                     ->whereNull('budget_transaction_journal.budget_id')
+                     ->whereNull('budgets.deleted_at')
+                     ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email']);
+
+        /** @var stdClass $entry */
+        foreach ($set as $entry) {
+            $objName = $entry->name;
+            try {
+                $objName = Crypt::decrypt($objName);
+            } catch (DecryptException $e) {
+                // it probably was not encrypted.
+            }
+
+            // also count the transactions:
+            $countTransactions = DB::table('budget_transaction')->where('budget_id', $entry->id)->count();
+
+            if ($countTransactions === 0) {
+                $line = sprintf(
+                    'User #%d (%s) has budget #%d ("%s") which has no transactions.',
+                    $entry->user_id,
+                    $entry->email,
+                    $entry->id,
+                    $objName
+                );
+                $this->line($line);
+            }
+        }
+    }
+
+    /**
+     * Report on categories with no transactions or journals.
+     */
+    private function reportEmptyCategories(): void
+    {
+        $set = Category::leftJoin('category_transaction_journal', 'categories.id', '=', 'category_transaction_journal.category_id')
+                     ->leftJoin('users', 'categories.user_id', '=', 'users.id')
+                     ->distinct()
+                     ->whereNull('category_transaction_journal.category_id')
+                     ->whereNull('categories.deleted_at')
+                     ->get(['categories.id', 'categories.name', 'categories.user_id', 'users.email']);
+
+        /** @var stdClass $entry */
+        foreach ($set as $entry) {
+            $objName = $entry->name;
+            try {
+                $objName = Crypt::decrypt($objName);
+            } catch (DecryptException $e) {
+                // it probably was not encrypted.
+            }
+
+            // also count the transactions:
+            $countTransactions = DB::table('category_transaction')->where('category_id', $entry->id)->count();
+
+            if ($countTransactions === 0) {
+                $line = sprintf(
+                    'User #%d (%s) has category #%d ("%s") which has no transactions.',
+                    $entry->user_id,
+                    $entry->email,
+                    $entry->id,
+                    $objName
+                );
+                $this->line($line);
+            }
+        }
+    }
+
+    /**
      * Report on journals with bad account types linked to them.
      */
     private function reportIncorrectJournals(): void
@@ -554,7 +629,7 @@ class VerifyDatabase extends Command
     /**
      * Report on transfers that have budgets.
      */
-    private function reportTransfersBudgets()
+    private function reportTransfersBudgets(): void
     {
         $set = TransactionJournal::distinct()
                                  ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
