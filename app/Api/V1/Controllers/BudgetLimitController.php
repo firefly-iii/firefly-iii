@@ -34,11 +34,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use InvalidArgumentException;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
+use Log;
 
 /**
  * Class BudgetLimitController
@@ -90,18 +92,27 @@ class BudgetLimitController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-
+        $manager  = new Manager;
+        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
+        $start    = null;
+        $end      = null;
         $budgetId = (int)($request->get('budget_id') ?? 0);
         $budget   = $this->repository->findNull($budgetId);
         $this->parameters->set('budget_id', $budgetId);
 
-        $start = Carbon::createFromFormat('Y-m-d', $request->get('start'));
-        $this->parameters->set('start', $start->format('Y-m-d'));
+        try {
+            $start = Carbon::createFromFormat('Y-m-d', $request->get('start'));
+            $this->parameters->set('start', $start->format('Y-m-d'));
+        } catch (InvalidArgumentException $e) {
+            Log::debug(sprintf('Invalid date: %s', $e->getMessage()));
+        }
 
-        $end = Carbon::createFromFormat('Y-m-d', $request->get('end'));
-        $this->parameters->set('end', $end->format('Y-m-d'));
+        try {
+            $end = Carbon::createFromFormat('Y-m-d', $request->get('end'));
+            $this->parameters->set('end', $end->format('Y-m-d'));
+        } catch (InvalidArgumentException $e) {
+            Log::debug(sprintf('Invalid date: %s', $e->getMessage()));
+        }
 
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 

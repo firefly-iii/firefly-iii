@@ -44,7 +44,7 @@ class ToAccountIsTest extends TestCase
             $transactionCount = $journal->transactions()->count();
             $account          = $transaction->account;
             $count++;
-        } while ($account === null && $count < 30 && $transactionCount !== 2);
+        } while ($account === null && $count < 30 && $transactionCount !== 1);
 
         $trigger = ToAccountIs::makeFromStrings($account->name, false);
         $result  = $trigger->triggered($journal);
@@ -64,7 +64,7 @@ class ToAccountIsTest extends TestCase
             $transactionCount = $journal->transactions()->count();
             $account          = $transaction->account;
             $count++;
-        } while ($account === null && $count < 30 && $transactionCount !== 2);
+        } while ($account === null && $count < 30 && $transactionCount !== 1);
 
         $trigger = ToAccountIs::makeFromStrings('some name' . random_int(1, 234), false);
         $result  = $trigger->triggered($journal);
