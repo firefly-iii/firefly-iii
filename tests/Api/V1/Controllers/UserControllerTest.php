@@ -139,6 +139,7 @@ class UserControllerTest extends TestCase
 
         // mock
         $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
         $userRepos->shouldReceive('store')->once()->andReturn($this->user());
 
         // test API
@@ -162,7 +163,7 @@ class UserControllerTest extends TestCase
 
         // mock
         $userRepos = $this->mock(UserRepositoryInterface::class);
-
+        $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
         // test API
         $response = $this->post('/api/v1/users', $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
@@ -198,6 +199,7 @@ class UserControllerTest extends TestCase
         // mock
         $userRepos = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('update')->once()->andReturn($user);
+        $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
 
         // call API
         $response = $this->put('/api/v1/users/' . $user->id, $data);

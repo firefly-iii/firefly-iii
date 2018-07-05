@@ -36,12 +36,14 @@ class FromAccountStartsTest extends TestCase
      */
     public function testTriggered(): void
     {
-        $transaction = null;
+        $count            = 0;
         do {
-            $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $transaction = $journal->transactions()->where('amount', '<', 0)->first();
-        } while (null === $transaction);
-        $account = $transaction->account;
+            $journal          = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
+            $transaction      = $journal->transactions()->where('amount', '<', 0)->first();
+            $transactionCount = $journal->transactions()->count();
+            $account          = $transaction->account;
+            $count++;
+        } while ($account === null && $count < 30 && $transactionCount !== 2);
 
         $trigger = FromAccountStarts::makeFromStrings(substr($account->name, 0, -3), false);
         $result  = $trigger->triggered($journal);
@@ -53,13 +55,14 @@ class FromAccountStartsTest extends TestCase
      */
     public function testTriggeredLonger(): void
     {
-        $transaction = null;
+        $count            = 0;
         do {
-            $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $transaction = $journal->transactions()->where('amount', '<', 0)->first();
-        } while (null === $transaction);
-
-        $account     = $transaction->account;
+            $journal          = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
+            $transaction      = $journal->transactions()->where('amount', '<', 0)->first();
+            $transactionCount = $journal->transactions()->count();
+            $account          = $transaction->account;
+            $count++;
+        } while ($account === null && $count < 30 && $transactionCount !== 2);
 
         $trigger = FromAccountStarts::makeFromStrings('bla-bla-bla' . $account->name, false);
         $result  = $trigger->triggered($journal);

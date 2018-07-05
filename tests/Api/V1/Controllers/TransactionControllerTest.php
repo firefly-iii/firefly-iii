@@ -1257,7 +1257,7 @@ class TransactionControllerTest extends TestCase
 
     /**
      * Show index with range.
-     * 
+     *
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      */
     public function testIndexWithRange(): void
@@ -1274,7 +1274,7 @@ class TransactionControllerTest extends TestCase
         $collector->setAllAssetAccounts();
         $collector->setLimit(5)->setPage(1);
         try {
-        $paginator = $collector->getPaginatedJournals();
+            $paginator = $collector->getPaginatedJournals();
         } catch (FireflyException $e) {
             $this->assertTrue(false, $e->getMessage());
         }
@@ -1324,17 +1324,18 @@ class TransactionControllerTest extends TestCase
 
     /**
      * Show a deposit.
-     * 
+     *
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      */
     public function testShowDeposit(): void
     {
+        $loop = 0;
         do {
-            // this is kind of cheating but OK.
             /** @var TransactionJournal $journal */
             $journal = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 2)->whereNull('deleted_at')->first();
             $count   = $journal->transactions()->count();
-        } while ($count !== 2);
+            $loop++;
+        } while ($count !== 2 && $loop < 30);
         $transaction = $journal->transactions()->first();
 
 
@@ -1387,19 +1388,21 @@ class TransactionControllerTest extends TestCase
 
     /**
      * Show a withdrawal.
-     * 
+     *
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      */
     public function testShowWithdrawal(): void
     {
+        $loop = 0;
         do {
             // this is kind of cheating but OK.
             /** @var TransactionJournal $journal */
             $journal = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
             $count   = $journal->transactions()->count();
-        } while ($count !== 2);
+            $loop++;
+        } while ($count !== 2 && $loop < 30);
         /** @var Transaction $transaction */
-        $transaction = $journal->transactions()->first();
+        $transaction              = $journal->transactions()->first();
         $transaction->description = null;
         $transaction->save();
 

@@ -85,8 +85,13 @@ class CurrencyExchangeRateControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(
             ['data' => [
-                'rate'  => 0.5,
-                'links' => [
+                'type'       => 'currency_exchange_rates',
+                'id'         => '0',
+                'attributes' => [
+                    'rate' => 0.5,
+                ],
+                'links'      => [
+
                     [
                         'rel' => 'self',
                         'uri' => '/currency_exchange_rates/',
