@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpDynamicAsStaticMethodCallInspection */
 
 /**
  * VerifyDatabase.php
@@ -65,7 +65,7 @@ class VerifyDatabase extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         // if table does not exist, return false
         if (!Schema::hasTable('users')) {
@@ -304,7 +304,7 @@ class VerifyDatabase extends Command
     /**
      * Reports on accounts with no transactions.
      */
-    private function reportAccounts()
+    private function reportAccounts(): void
     {
         $set = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
                       ->leftJoin('users', 'accounts.user_id', '=', 'users.id')
@@ -401,7 +401,7 @@ class VerifyDatabase extends Command
             // also count the transactions:
             $countTransactions = DB::table('budget_transaction')->where('budget_id', $entry->id)->count();
 
-            if ($countTransactions === 0) {
+            if (0 === $countTransactions) {
                 $line = sprintf(
                     'User #%d (%s) has budget #%d ("%s") which has no transactions.',
                     $entry->user_id,
@@ -420,11 +420,11 @@ class VerifyDatabase extends Command
     private function reportEmptyCategories(): void
     {
         $set = Category::leftJoin('category_transaction_journal', 'categories.id', '=', 'category_transaction_journal.category_id')
-                     ->leftJoin('users', 'categories.user_id', '=', 'users.id')
-                     ->distinct()
-                     ->whereNull('category_transaction_journal.category_id')
-                     ->whereNull('categories.deleted_at')
-                     ->get(['categories.id', 'categories.name', 'categories.user_id', 'users.email']);
+                       ->leftJoin('users', 'categories.user_id', '=', 'users.id')
+                       ->distinct()
+                       ->whereNull('category_transaction_journal.category_id')
+                       ->whereNull('categories.deleted_at')
+                       ->get(['categories.id', 'categories.name', 'categories.user_id', 'users.email']);
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
@@ -438,7 +438,7 @@ class VerifyDatabase extends Command
             // also count the transactions:
             $countTransactions = DB::table('category_transaction')->where('category_id', $entry->id)->count();
 
-            if ($countTransactions === 0) {
+            if (0 === $countTransactions) {
                 $line = sprintf(
                     'User #%d (%s) has category #%d ("%s") which has no transactions.',
                     $entry->user_id,
@@ -556,12 +556,13 @@ class VerifyDatabase extends Command
         $plural = str_plural($name);
         $class  = sprintf('FireflyIII\Models\%s', ucfirst($name));
         $field  = 'tag' === $name ? 'tag' : 'name';
-        $set    = $class::leftJoin($name . '_transaction_journal', $plural . '.id', '=', $name . '_transaction_journal.' . $name . '_id')
-                        ->leftJoin('users', $plural . '.user_id', '=', 'users.id')
-                        ->distinct()
-                        ->whereNull($name . '_transaction_journal.' . $name . '_id')
-                        ->whereNull($plural . '.deleted_at')
-                        ->get([$plural . '.id', $plural . '.' . $field . ' as name', $plural . '.user_id', 'users.email']);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $set = $class::leftJoin($name . '_transaction_journal', $plural . '.id', '=', $name . '_transaction_journal.' . $name . '_id')
+                     ->leftJoin('users', $plural . '.user_id', '=', 'users.id')
+                     ->distinct()
+                     ->whereNull($name . '_transaction_journal.' . $name . '_id')
+                     ->whereNull($plural . '.deleted_at')
+                     ->get([$plural . '.id', $plural . '.' . $field . ' as name', $plural . '.user_id', 'users.email']);
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {

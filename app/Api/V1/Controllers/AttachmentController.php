@@ -89,7 +89,7 @@ class AttachmentController extends Controller
      */
     public function download(Attachment $attachment): LaravelResponse
     {
-        if ($attachment->uploaded === false) {
+        if (false === $attachment->uploaded) {
             throw new FireflyException('No file has been uploaded for this attachment (yet).');
         }
         if ($this->repository->exists($attachment)) {

@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpDynamicAsStaticMethodCallInspection */
 
 /**
  * Import.php
@@ -27,8 +27,8 @@ namespace FireflyIII\Console\Commands;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Routine\RoutineInterface;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\Tag;
 use Illuminate\Console\Command;
-use Illuminate\Support\MessageBag;
 use Log;
 
 /**
@@ -55,7 +55,7 @@ class Import extends Command
      *
      * @throws FireflyException
      */
-    public function handle()
+    public function handle(): void
     {
         Log::debug('Start start-import command');
         $jobKey = $this->argument('key');
@@ -83,17 +83,25 @@ class Import extends Command
 
         /** @var RoutineInterface $routine */
         $routine = app($className);
-        $routine->setJob($job);
+        $routine->setImportJob($job);
         $routine->run();
 
-        /** @var MessageBag $error */
-        foreach ($routine->getErrors() as $index => $error) {
+        /**
+         * @var int    $index
+         * @var string $error
+         */
+        foreach ($job->errors as $index => $error) {
             $this->errorLine(sprintf('Error importing line #%d: %s', $index, $error));
         }
 
-        $this->infoLine(
-            sprintf('The import has finished. %d transactions have been imported out of %d records.', $routine->getJournals()->count(), $routine->getLines())
-        );
+        /** @var Tag $tag */
+        $tag   = $job->tag()->first();
+        $count = 0;
+        if (null === $tag) {
+            $count = $tag->transactionJournals()->count();
+        }
+
+        $this->infoLine(sprintf('The import has finished. %d transactions have been imported.', $count));
 
     }
 

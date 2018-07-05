@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpDynamicAsStaticMethodCallInspection */
 
 /**
  * ScanAttachments.php
@@ -53,7 +53,7 @@ class ScanAttachments extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $attachments = Attachment::get();
         $disk        = Storage::disk('upload');

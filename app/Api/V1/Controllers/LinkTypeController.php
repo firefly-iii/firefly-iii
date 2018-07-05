@@ -78,7 +78,7 @@ class LinkTypeController extends Controller
      */
     public function delete(LinkType $linkType): JsonResponse
     {
-        if ($linkType->editable === false) {
+        if (false === $linkType->editable) {
             throw new FireflyException(sprintf('You cannot delete this link type (#%d, "%s")', $linkType->id, $linkType->name));
         }
         $this->repository->destroy($linkType, null);
@@ -180,7 +180,7 @@ class LinkTypeController extends Controller
      */
     public function update(LinkTypeRequest $request, LinkType $linkType): JsonResponse
     {
-        if ($linkType->editable === false) {
+        if (false === $linkType->editable) {
             throw new FireflyException(sprintf('You cannot edit this link type (#%d, "%s")', $linkType->id, $linkType->name));
         }
 

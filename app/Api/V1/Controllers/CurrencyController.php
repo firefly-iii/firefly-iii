@@ -162,7 +162,7 @@ class CurrencyController extends Controller
         $currency = $this->repository->store($request->getAll());
 
         if (null !== $currency) {
-            if ($request->boolean('default') === true) {
+            if (true === $request->boolean('default')) {
                 app('preferences')->set('currencyPreference', $currency->code);
                 app('preferences')->mark();
             }
@@ -192,7 +192,7 @@ class CurrencyController extends Controller
         $data     = $request->getAll();
         $currency = $this->repository->update($currency, $data);
 
-        if ($request->boolean('default') === true) {
+        if (true === $request->boolean('default')) {
             app('preferences')->set('currencyPreference', $currency->code);
             app('preferences')->mark();
         }

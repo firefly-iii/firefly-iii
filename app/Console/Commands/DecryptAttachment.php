@@ -52,7 +52,7 @@ class DecryptAttachment extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         /** @var AttachmentRepositoryInterface $repository */
         $repository     = app(AttachmentRepositoryInterface::class);

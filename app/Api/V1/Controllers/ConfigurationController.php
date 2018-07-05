@@ -48,6 +48,7 @@ class ConfigurationController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
+                /** @noinspection UnusedConstructorDependenciesInspection */
                 $this->repository = app(UserRepositoryInterface::class);
                 /** @var User $admin */
                 $admin = auth()->user();
@@ -62,9 +63,9 @@ class ConfigurationController extends Controller
     }
 
     /**
-     * @throws FireflyException
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $configData = $this->getConfigData();
 
@@ -90,7 +91,7 @@ class ConfigurationController extends Controller
         switch ($name) {
             case 'is_demo_site':
             case 'single_user_mode':
-                $configValue = $value === 'true';
+                $configValue = 'true' === $value;
                 break;
             case 'permission_update_check':
                 $configValue = (int)$value >= -1 && (int)$value <= 1 ? (int)$value : -1;

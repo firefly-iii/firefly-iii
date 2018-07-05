@@ -42,6 +42,7 @@ use Storage;
 class CreateExport extends Command
 {
     use VerifiesAccessToken;
+
     /**
      * The console command description.
      *
@@ -66,7 +67,7 @@ class CreateExport extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(): int
     {
         if (!$this->verifyAccessToken()) {
             $this->error('Invalid access token.');
@@ -86,6 +87,9 @@ class CreateExport extends Command
 
         // set user
         $user = $userRepository->findNull((int)$this->option('user'));
+        if (null === $user) {
+            return 1;
+        }
         $jobRepository->setUser($user);
         $journalRepository->setUser($user);
         $accountRepository->setUser($user);

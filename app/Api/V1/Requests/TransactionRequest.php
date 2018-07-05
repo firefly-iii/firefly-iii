@@ -124,7 +124,7 @@ class TransactionRequest extends Request
             'transactions.*.destination_name'      => 'between:1,255|nullable',
         ];
 
-        if ($this->method() === 'PUT') {
+        if ('PUT' === $this->method()) {
             unset($rules['type'], $rules['piggy_bank_id'], $rules['piggy_bank_name']);
         }
 

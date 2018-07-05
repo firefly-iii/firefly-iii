@@ -50,6 +50,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int                 $skip
  * @property bool                $automatch
  * @property User                $user
+ * @property string $match
  */
 class Bill extends Model
 {

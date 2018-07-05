@@ -66,7 +66,7 @@ class Controller extends BaseController
         $return = '?';
         $params = [];
         foreach ($this->parameters as $key => $value) {
-            if ($key === 'page') {
+            if ('page' === $key) {
                 continue;
             }
             if ($value instanceof Carbon) {
@@ -88,7 +88,7 @@ class Controller extends BaseController
     {
         $bag  = new ParameterBag;
         $page = (int)request()->get('page');
-        if ($page === 0) {
+        if (0 === $page) {
             $page = 1;
         }
         $bag->set('page', $page);

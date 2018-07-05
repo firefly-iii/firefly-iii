@@ -125,7 +125,7 @@ class PreferenceController extends Controller
                 break;
             case 'customFiscalYear':
             case 'twoFactorAuthEnabled':
-                $newValue = (int)$data['data'] === 1;
+                $newValue = 1 === (int)$data['data'];
                 break;
         }
         $result = Preferences::set($preference->name, $newValue);

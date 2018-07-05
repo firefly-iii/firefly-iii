@@ -27,7 +27,9 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class PiggyBankEvent.
  *
- * @property $piggyBank
+ * @property PiggyBank $piggyBank
+ * @property int       $transaction_journal_id
+ * @property int       $piggy_bank_id
  */
 class PiggyBankEvent extends Model
 {
