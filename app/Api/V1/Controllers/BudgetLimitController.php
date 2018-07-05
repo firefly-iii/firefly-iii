@@ -115,7 +115,7 @@ class BudgetLimitController extends Controller
 
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-        $paginator = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
+        $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.budget_limits.index') . $this->buildParams());
 
         $manager->setSerializer(new JsonApiSerializer($baseUrl));

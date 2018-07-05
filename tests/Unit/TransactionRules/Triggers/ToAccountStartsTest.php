@@ -24,6 +24,7 @@ namespace Tests\Unit\TransactionRules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\ToAccountStarts;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -36,14 +37,20 @@ class ToAccountStartsTest extends TestCase
      */
     public function testTriggered(): void
     {
-        $count = 0;
-        $account = null;
-        while ($count !== 0 && $account !== null) {
-            $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        Log::debug('Now in testTriggered');
+
+        $loopCount = 0;
+        $account   = null;
+        do {
+            Log::debug(sprintf('Count of loop: %d', $loopCount));
+            $journal     = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
             $count       = $journal->transactions()->where('amount', '>', 0)->count();
             $transaction = $journal->transactions()->where('amount', '>', 0)->first();
             $account     = $transaction->account;
-        }
+            Log::debug(sprintf('Journal with id #%d', $journal->id));
+            Log::debug(sprintf('Count of transactions is %d', $count));
+            Log::debug(sprintf('Account is null: %s', var_export(null === $account, true)));
+        } while ($loopCount < 30 && $count !== 2 && null !== $account);
 
 
         $trigger = ToAccountStarts::makeFromStrings(substr($account->name, 0, -3), false);
@@ -56,14 +63,18 @@ class ToAccountStartsTest extends TestCase
      */
     public function testTriggeredLonger(): void
     {
-        $count = 0;
-        $account = null;
-        while ($count !== 0 && $account !== null) {
-            $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $loopCount = 0;
+        $account   = null;
+        do {
+            Log::debug(sprintf('Count of loop: %d', $loopCount));
+            $journal     = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
             $count       = $journal->transactions()->where('amount', '>', 0)->count();
             $transaction = $journal->transactions()->where('amount', '>', 0)->first();
             $account     = $transaction->account;
-        }
+            Log::debug(sprintf('Journal with id #%d', $journal->id));
+            Log::debug(sprintf('Count of transactions is %d', $count));
+            Log::debug(sprintf('Account is null: %s', var_export(null === $account, true)));
+        } while ($loopCount < 30 && $count !== 2 && null !== $account);
 
         $trigger = ToAccountStarts::makeFromStrings('bla-bla-bla' . $account->name, false);
         $result  = $trigger->triggered($journal);
