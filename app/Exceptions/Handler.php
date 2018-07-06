@@ -20,6 +20,8 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/** @noinspection MultipleReturnStatementsInspection */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Exceptions;
@@ -40,31 +42,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Handler extends ExceptionHandler
 {
     /**
-     * A list of the inputs that are never flashed for validation exceptions.
-     *
-     * @var array
-     */
-    protected $dontFlash
-        = [
-            'password',
-            'password_confirmation',
-        ];
-    /**
-     * A list of the exception types that are not reported.
-     *
-     * @var array
-     */
-    protected $dontReport
-        = [
-        ];
-
-    /**
      * Render an exception into an HTTP response.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Exception               $exception
+     * @param Request   $request
+     * @param Exception $exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
-     * @return \Illuminate\Http\Response
+     * @return mixed
      */
     public function render($request, Exception $exception)
     {
@@ -130,18 +116,10 @@ class Handler extends ExceptionHandler
     {
 
         $doMailError = env('SEND_ERROR_MESSAGE', true);
-        if (
-            // if the user wants us to mail:
-            $doMailError === true
-            && (
-                // and if is one of these error instances
-                $exception instanceof FireflyException
-                || $exception instanceof ErrorException
-                || $exception instanceof OAuthServerException
-
-            )
-        ) {
-            // then, send email
+        // if the user wants us to mail:
+        if (true === $doMailError
+            // and if is one of these error instances
+            && ($exception instanceof FireflyException || $exception instanceof ErrorException || $exception instanceof OAuthServerException)) {
             $userData = [
                 'id'    => 0,
                 'email' => 'unknown@example.com',
