@@ -28,16 +28,17 @@ use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * @codeCoverageIgnore
  * Class StoredTransactionJournal.
+ *
+ * @codeCoverageIgnore
  */
 class StoredTransactionJournal extends Event
 {
     use SerializesModels;
 
-    /** @var TransactionJournal */
+    /** @var TransactionJournal The journal that was stored. */
     public $journal;
-    /** @var int */
+    /** @var int The piggy bank ID. */
     public $piggyBankId;
 
     /**
