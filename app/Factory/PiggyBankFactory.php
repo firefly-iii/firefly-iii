@@ -1,5 +1,4 @@
 <?php
-
 /**
  * PiggyBankFactory.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
+/** @noinspection MultipleReturnStatementsInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Factory;
@@ -41,12 +40,13 @@ class PiggyBankFactory
      * @param null|string $piggyBankName
      *
      * @return PiggyBank|null
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function find(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
     {
         $piggyBankId   = (int)$piggyBankId;
         $piggyBankName = (string)$piggyBankName;
-        if (\strlen($piggyBankName) === 0 && $piggyBankId === 0) {
+        if ('' === $piggyBankName && 0 === $piggyBankId) {
             return null;
         }
         // first find by ID:
@@ -92,7 +92,7 @@ class PiggyBankFactory
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
 

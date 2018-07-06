@@ -1,5 +1,4 @@
 <?php
-
 /**
  * TransactionJournalMetaFactory.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection MultipleReturnStatementsInspection */
 
 declare(strict_types=1);
 
@@ -38,6 +38,8 @@ class TransactionJournalMetaFactory
      * @param array $data
      *
      * @return TransactionJournalMeta|null
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function updateOrCreate(array $data): ?TransactionJournalMeta
     {
@@ -57,7 +59,7 @@ class TransactionJournalMetaFactory
         if ($data['data'] instanceof Carbon) {
             $value = $data['data']->toW3cString();
         }
-        if ((string)$value === '') {
+        if ('' === (string)$value) {
             // don't store blank strings.
             if (null !== $entry) {
                 try {

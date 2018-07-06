@@ -27,7 +27,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class AccountMeta.
+ *
  * @property string $data
+ * @property string $name
+ * @property int    $account_id
  */
 class AccountMeta extends Model
 {

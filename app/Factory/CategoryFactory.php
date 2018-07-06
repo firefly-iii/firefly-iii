@@ -1,5 +1,4 @@
 <?php
-
 /**
  * CategoryFactory.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
+/** @noinspection MultipleReturnStatementsInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Factory;
@@ -64,6 +63,7 @@ class CategoryFactory
      * @param null|string $categoryName
      *
      * @return Category|null
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function findOrCreate(?int $categoryId, ?string $categoryName): ?Category
     {
@@ -72,7 +72,7 @@ class CategoryFactory
 
         Log::debug(sprintf('Going to find category with ID %d and name "%s"', $categoryId, $categoryName));
 
-        if ('' === $categoryName && $categoryId === 0) {
+        if ('' === $categoryName && 0 === $categoryId) {
             return null;
         }
         // first by ID:
@@ -104,7 +104,7 @@ class CategoryFactory
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }

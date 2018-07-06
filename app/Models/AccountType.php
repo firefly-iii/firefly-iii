@@ -29,6 +29,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Class AccountType.
  *
  * @property string $type
+ * @method whereType(string $type)
+ * @property int $id
  *
  */
 class AccountType extends Model

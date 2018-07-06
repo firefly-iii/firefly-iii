@@ -31,6 +31,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * @property User   $user
  * @property string $key
+ * @property int    $user_id
  */
 class ExportJob extends Model
 {

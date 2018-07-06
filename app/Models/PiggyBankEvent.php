@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property PiggyBank $piggyBank
  * @property int       $transaction_journal_id
  * @property int       $piggy_bank_id
+ * @property int       $id
  */
 class PiggyBankEvent extends Model
 {

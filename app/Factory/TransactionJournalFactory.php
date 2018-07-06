@@ -37,14 +37,18 @@ use Log;
 class TransactionJournalFactory
 {
     use JournalServiceTrait, TransactionTypeTrait;
-    /** @var User */
+    /** @var User The user */
     private $user;
 
     /**
+     * Store a new transaction journal.
+     *
      * @param array $data
      *
      * @return TransactionJournal
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function create(array $data): TransactionJournal
     {
@@ -124,6 +128,8 @@ class TransactionJournalFactory
     }
 
     /**
+     * Link a piggy bank to this journal.
+     *
      * @param TransactionJournal $journal
      * @param array              $data
      */

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * PiggyBankEventFactory.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
+/** @noinspection MultipleReturnStatementsInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Factory;
@@ -43,6 +42,7 @@ class PiggyBankEventFactory
      * @param PiggyBank|null     $piggyBank
      *
      * @return PiggyBankEvent|null
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function create(TransactionJournal $journal, ?PiggyBank $piggyBank): ?PiggyBankEvent
     {
@@ -51,7 +51,6 @@ class PiggyBankEventFactory
             return null;
         }
 
-        // is a transfer?
         if (!(TransactionType::TRANSFER === $journal->transactionType->type)) {
             Log::info(sprintf('Will not connect %s #%d to a piggy bank.', $journal->transactionType->type, $journal->id));
 
@@ -62,7 +61,6 @@ class PiggyBankEventFactory
         $piggyRepos = app(PiggyBankRepositoryInterface::class);
         $piggyRepos->setUser($journal->user);
 
-        // repetition exists?
         $repetition = $piggyRepos->getRepetition($piggyBank);
         if (null === $repetition) {
             Log::error(sprintf('No piggy bank repetition on %s!', $journal->date->format('Y-m-d')));
@@ -70,7 +68,6 @@ class PiggyBankEventFactory
             return null;
         }
 
-        // get the amount
         $amount = $piggyRepos->getExactAmount($piggyBank, $repetition, $journal);
         if (0 === bccomp($amount, '0')) {
             Log::debug('Amount is zero, will not create event.');
@@ -78,10 +75,8 @@ class PiggyBankEventFactory
             return null;
         }
 
-        // update amount
         $piggyRepos->addAmountToRepetition($repetition, $amount);
         $event = $piggyRepos->createEventWithJournal($piggyBank, $amount, $journal);
-
         Log::debug(sprintf('Created piggy bank event #%d', $event->id));
 
         return $event;
