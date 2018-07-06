@@ -33,21 +33,29 @@ use Illuminate\Support\Collection;
 interface CollectorInterface
 {
     /**
+     * Get entries.
+     *
      * @return Collection
      */
     public function getEntries(): Collection;
 
     /**
+     * Run the collector.
+     *
      * @return bool
      */
     public function run(): bool;
 
     /**
+     * Set entries.
+     *
      * @param Collection $entries
      */
     public function setEntries(Collection $entries);
 
     /**
+     * Set export job.
+     *
      * @param ExportJob $job
      *
      * @return mixed

@@ -32,9 +32,9 @@ use Illuminate\Support\Collection;
  */
 class BasicExporter
 {
-    /** @var ExportJob */
+    /** @var ExportJob The export job */
     protected $job;
-    /** @var Collection */
+    /** @var Collection The entries */
     private $entries;
 
     /**
@@ -46,6 +46,8 @@ class BasicExporter
     }
 
     /**
+     * Get all entries.
+     *
      * @return Collection
      */
     public function getEntries(): Collection
@@ -54,17 +56,21 @@ class BasicExporter
     }
 
     /**
+     * Set all entries.
+     *
      * @param Collection $entries
      */
-    public function setEntries(Collection $entries)
+    public function setEntries(Collection $entries): void
     {
         $this->entries = $entries;
     }
 
     /**
+     * Set the job.
+     *
      * @param ExportJob $job
      */
-    public function setJob(ExportJob $job)
+    public function setJob(ExportJob $job): void
     {
         $this->job = $job;
     }

@@ -33,11 +33,11 @@ use Illuminate\Support\Collection;
  */
 class BasicCollector
 {
-    /** @var ExportJob */
+    /** @var ExportJob The job to export. */
     protected $job;
-    /** @var User */
+    /** @var User The user */
     protected $user;
-    /** @var Collection */
+    /** @var Collection All the entries. */
     private $entries;
 
     /**
@@ -49,6 +49,8 @@ class BasicCollector
     }
 
     /**
+     * Get all entries.
+     *
      * @return Collection
      */
     public function getEntries(): Collection
@@ -57,26 +59,32 @@ class BasicCollector
     }
 
     /**
+     * Set entries.
+     *
      * @param Collection $entries
      */
-    public function setEntries(Collection $entries)
+    public function setEntries(Collection $entries): void
     {
         $this->entries = $entries;
     }
 
     /**
+     * Set export job.
+     *
      * @param ExportJob $job
      */
-    public function setJob(ExportJob $job)
+    public function setJob(ExportJob $job): void
     {
         $this->job  = $job;
         $this->user = $job->user;
     }
 
     /**
+     * Set user.
+     *
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
