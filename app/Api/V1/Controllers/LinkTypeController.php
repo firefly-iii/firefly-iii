@@ -40,18 +40,21 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
+ * Class LinkTypeController.
  *
- * Class LinkTypeController
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class LinkTypeController extends Controller
 {
-    /** @var LinkTypeRepositoryInterface */
+    /** @var LinkTypeRepositoryInterface The link type repository */
     private $repository;
 
-    /** @var UserRepositoryInterface */
+    /** @var UserRepositoryInterface The user repository */
     private $userRepository;
 
+    /**
+     * LinkTypeController constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -172,6 +175,8 @@ class LinkTypeController extends Controller
     }
 
     /**
+     * Update object.
+     *
      * @param LinkTypeRequest $request
      * @param LinkType        $linkType
      *

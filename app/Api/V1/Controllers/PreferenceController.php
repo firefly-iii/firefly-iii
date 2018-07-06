@@ -102,6 +102,8 @@ class PreferenceController extends Controller
     }
 
     /**
+     * Update a preference.
+     *
      * @param PreferenceRequest $request
      * @param Preference        $preference
      *

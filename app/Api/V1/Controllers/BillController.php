@@ -40,11 +40,11 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
- * Class BillController
+ * Class BillController.
  */
 class BillController extends Controller
 {
-    /** @var BillRepositoryInterface */
+    /** @var BillRepositoryInterface The bill repository */
     private $repository;
 
     /**
@@ -107,6 +107,8 @@ class BillController extends Controller
 
 
     /**
+     * Show the specified bill.
+     *
      * @param Request $request
      * @param Bill    $bill
      *
@@ -128,6 +130,8 @@ class BillController extends Controller
     }
 
     /**
+     * Store a bill.
+     *
      * @param BillRequest $request
      *
      * @return JsonResponse
@@ -151,6 +155,8 @@ class BillController extends Controller
 
 
     /**
+     * Update a bill.
+     *
      * @param BillRequest $request
      * @param Bill        $bill
      *

@@ -31,13 +31,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
- * Class ConfigurationController
+ * Class ConfigurationController.
  */
 class ConfigurationController extends Controller
 {
 
 
-    /** @var UserRepositoryInterface */
+    /** @var UserRepositoryInterface The user repository */
     private $repository;
 
     /**
@@ -63,6 +63,8 @@ class ConfigurationController extends Controller
     }
 
     /**
+     * Show all configuration.
+     *
      * @return JsonResponse
      */
     public function index(): JsonResponse
@@ -73,6 +75,8 @@ class ConfigurationController extends Controller
     }
 
     /**
+     * Update the configuration.
+     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -104,6 +108,8 @@ class ConfigurationController extends Controller
     }
 
     /**
+     * Get all config values.
+     *
      * @return array
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */

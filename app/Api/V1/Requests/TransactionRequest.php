@@ -37,6 +37,8 @@ class TransactionRequest extends Request
     use TransactionValidation;
 
     /**
+     * Authorize logged in users.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -78,6 +80,8 @@ class TransactionRequest extends Request
     }
 
     /**
+     * The rules that the incoming request must be matched against.
+     *
      * @return array
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
@@ -156,6 +160,8 @@ class TransactionRequest extends Request
     }
 
     /**
+     * Get transaction data.
+     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @return array

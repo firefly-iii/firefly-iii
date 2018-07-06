@@ -36,12 +36,11 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
- *
  * Class CurrencyExchangeRateController
  */
 class CurrencyExchangeRateController extends Controller
 {
-    /** @var CurrencyRepositoryInterface */
+    /** @var CurrencyRepositoryInterface The currency repository */
     private $repository;
 
     /**
@@ -65,6 +64,8 @@ class CurrencyExchangeRateController extends Controller
     }
 
     /**
+     * Show an exchange rate.
+     *
      * @param Request $request
      *
      * @return JsonResponse

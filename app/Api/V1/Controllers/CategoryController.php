@@ -39,12 +39,13 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
- * Class CategoryController
+ * Class CategoryController.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CategoryController extends Controller
 {
-    /** @var CategoryRepositoryInterface */
+    /** @var CategoryRepositoryInterface The category repository */
     private $repository;
 
     /**
@@ -116,6 +117,8 @@ class CategoryController extends Controller
 
 
     /**
+     * Show the category.
+     *
      * @param Request  $request
      * @param Category $category
      *
@@ -137,6 +140,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * Store new category.
+     *
      * @param CategoryRequest $request
      *
      * @return JsonResponse
@@ -159,6 +164,8 @@ class CategoryController extends Controller
 
 
     /**
+     * Update the category.
+     *
      * @param CategoryRequest $request
      * @param Category        $category
      *

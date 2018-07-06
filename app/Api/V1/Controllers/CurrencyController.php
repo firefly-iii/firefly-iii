@@ -41,14 +41,15 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
- * Class CurrencyController
+ * Class CurrencyController.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CurrencyController extends Controller
 {
-    /** @var CurrencyRepositoryInterface */
+    /** @var CurrencyRepositoryInterface The currency repository */
     private $repository;
-    /** @var UserRepositoryInterface */
+    /** @var UserRepositoryInterface The user repository */
     private $userRepository;
 
     /**
@@ -129,6 +130,8 @@ class CurrencyController extends Controller
 
 
     /**
+     * Show a currency.
+     *
      * @param Request             $request
      * @param TransactionCurrency $currency
      *
@@ -152,6 +155,8 @@ class CurrencyController extends Controller
     }
 
     /**
+     * Store new currency.
+     *
      * @param CurrencyRequest $request
      *
      * @return JsonResponse
@@ -182,6 +187,8 @@ class CurrencyController extends Controller
 
 
     /**
+     * Update a currency.
+     *
      * @param CurrencyRequest     $request
      * @param TransactionCurrency $currency
      *

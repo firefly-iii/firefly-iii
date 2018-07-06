@@ -1,5 +1,4 @@
 <?php
-
 /**
  * CreateExport.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/** @noinspection MultipleReturnStatementsInspection */
 
 declare(strict_types=1);
 

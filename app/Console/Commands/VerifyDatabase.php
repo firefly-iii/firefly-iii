@@ -1,5 +1,4 @@
-<?php /** @noinspection PhpDynamicAsStaticMethodCallInspection */
-
+<?php
 /**
  * VerifyDatabase.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/** @noinspection PhpDynamicAsStaticMethodCallInspection */
 
 declare(strict_types=1);
 
@@ -40,12 +41,16 @@ use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder;
+use Log;
 use Preferences;
 use Schema;
 use stdClass;
 
 /**
  * Class VerifyDatabase.
+ *
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class VerifyDatabase extends Command
 {
@@ -144,9 +149,10 @@ class VerifyDatabase extends Command
     }
 
     /**
-     * Fix the situation where the matching transactions
-     * of a journal somehow have non-matching categories
-     * or budgets
+     * Fix the situation where the matching transactions of a journal somehow have non-matching categories or budgets.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function fixBadMeta(): void
     {
@@ -207,6 +213,12 @@ class VerifyDatabase extends Command
         }
     }
 
+    /**
+     * Makes sure amounts are stored correctly.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     private function fixDoubleAmounts(): void
     {
         $count = 0;
@@ -256,7 +268,7 @@ class VerifyDatabase extends Command
     }
 
     /**
-     *
+     * Removes bills from journals that should not have bills.
      */
     private function removeBills(): void
     {
@@ -396,6 +408,7 @@ class VerifyDatabase extends Command
                 $objName = Crypt::decrypt($objName);
             } catch (DecryptException $e) {
                 // it probably was not encrypted.
+                Log::debug(sprintf('Not a problem: %s', $e->getMessage()));
             }
 
             // also count the transactions:
@@ -433,6 +446,7 @@ class VerifyDatabase extends Command
                 $objName = Crypt::decrypt($objName);
             } catch (DecryptException $e) {
                 // it probably was not encrypted.
+                Log::debug(sprintf('Not a problem: %s', $e->getMessage()));
             }
 
             // also count the transactions:
@@ -571,6 +585,7 @@ class VerifyDatabase extends Command
                 $objName = Crypt::decrypt($objName);
             } catch (DecryptException $e) {
                 // it probably was not encrypted.
+                Log::debug(sprintf('Not a problem: %s', $e->getMessage()));
             }
 
             $line = sprintf(
@@ -598,7 +613,8 @@ class VerifyDatabase extends Command
             $sum = (string)$user->transactions()->sum('amount');
             if (0 !== bccomp($sum, '0')) {
                 $this->error('Error: Transactions for user #' . $user->id . ' (' . $user->email . ') are off by ' . $sum . '!');
-            } else {
+            }
+            if (0 === bccomp($sum, '0')) {
                 $this->info(sprintf('Amount integrity OK for user #%d', $user->id));
             }
         }

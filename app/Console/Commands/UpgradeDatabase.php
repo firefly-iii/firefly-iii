@@ -1,5 +1,4 @@
-<?php /** @noinspection PhpStaticAsDynamicMethodCallInspection */
-/** @noinspection PhpDynamicAsStaticMethodCallInspection */
+<?php
 
 /**
  * UpgradeDatabase.php
@@ -20,6 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/** @noinspection MultipleReturnStatementsInspection */
+/** @noinspection PhpStaticAsDynamicMethodCallInspection */
+/** @noinspection PhpDynamicAsStaticMethodCallInspection */
 
 declare(strict_types=1);
 
@@ -59,6 +62,8 @@ use UnexpectedValueException;
  * Class UpgradeDatabase.
  *
  * Upgrade user database.
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class UpgradeDatabase extends Command
 {
@@ -94,6 +99,13 @@ class UpgradeDatabase extends Command
         $this->info('Firefly III database is up to date.');
     }
 
+    /**
+     * Since it is one routine these warnings make sense and should be supressed.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
     public function migrateBillsToRules(): void
     {
         foreach (User::get() as $user) {
@@ -104,11 +116,14 @@ class UpgradeDatabase extends Command
             $currencyPreference = Preferences::getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
 
             if (null === $currencyPreference) {
+                $this->error('User has no currency preference. Impossible.');
+
                 return;
             }
 
             $currency = TransactionCurrency::where('code', $currencyPreference->data)->first();
             if (null === $currency) {
+                $this->line('Fall back to default currency in migrateBillsToRules().');
                 $currency = app('amount')->getDefaultCurrency();
             }
 
@@ -265,6 +280,9 @@ class UpgradeDatabase extends Command
 
     /**
      * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's forced upon the account.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function updateAccountCurrencies(): void
     {
@@ -325,6 +343,9 @@ class UpgradeDatabase extends Command
      *
      * Both source and destination must match the respective currency preference of the related asset account.
      * So FF3 must verify all transactions.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function updateOtherCurrencies(): void
     {
@@ -570,7 +591,11 @@ class UpgradeDatabase extends Command
      *
      * The transaction that is sent to this function MUST be the source transaction (amount negative).
      *
-     * Method is long and complex bit I'm taking it for granted.
+     * Method is long and complex but I'll allow it. https://imgur.com/gallery/dVDJiez
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      *
      * @param Transaction $transaction
      */

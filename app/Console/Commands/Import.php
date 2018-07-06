@@ -1,5 +1,4 @@
-<?php /** @noinspection PhpDynamicAsStaticMethodCallInspection */
-
+<?php
 /**
  * Import.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/** @noinspection MultipleReturnStatementsInspection */
+/** @noinspection PhpDynamicAsStaticMethodCallInspection */
 
 declare(strict_types=1);
 
@@ -52,6 +54,8 @@ class Import extends Command
 
     /**
      * Run the import routine.
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @throws FireflyException
      */
@@ -102,10 +106,11 @@ class Import extends Command
         }
 
         $this->infoLine(sprintf('The import has finished. %d transactions have been imported.', $count));
-
     }
 
     /**
+     * Displays an error.
+     *
      * @param string     $message
      * @param array|null $data
      */
@@ -117,6 +122,8 @@ class Import extends Command
     }
 
     /**
+     * Displays an informational message.
+     *
      * @param string $message
      * @param array  $data
      */

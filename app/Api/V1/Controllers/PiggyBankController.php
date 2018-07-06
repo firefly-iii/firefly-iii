@@ -39,16 +39,19 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
- * TODO order up and down.
- * Class PiggyBankController
+ * Class PiggyBankController.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class PiggyBankController extends Controller
 {
 
-    /** @var PiggyBankRepositoryInterface */
+    /** @var PiggyBankRepositoryInterface The piggy bank repository */
     private $repository;
 
+    /**
+     * PiggyBankController constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -163,6 +166,8 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * Update piggy bank.
+     *
      * @param PiggyBankRequest $request
      * @param PiggyBank        $piggyBank
      *

@@ -40,14 +40,15 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
- * Class AvailableBudgetController
+ * Class AvailableBudgetController.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AvailableBudgetController extends Controller
 {
-    /** @var CurrencyRepositoryInterface */
+    /** @var CurrencyRepositoryInterface The currency repository */
     private $currencyRepository;
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
     /**

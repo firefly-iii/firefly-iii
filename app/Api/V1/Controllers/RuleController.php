@@ -42,9 +42,12 @@ use League\Fractal\Serializer\JsonApiSerializer;
  */
 class RuleController extends Controller
 {
-    /** @var RuleRepositoryInterface */
+    /** @var RuleRepositoryInterface The rule repository */
     private $ruleRepository;
 
+    /**
+     * RuleController constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -153,6 +156,8 @@ class RuleController extends Controller
     }
 
     /**
+     * Update a rule.
+     *
      * @param RuleRequest $request
      * @param Rule        $rule
      *

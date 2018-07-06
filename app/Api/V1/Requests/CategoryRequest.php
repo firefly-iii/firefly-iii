@@ -31,6 +31,8 @@ use FireflyIII\Models\Category;
 class CategoryRequest extends Request
 {
     /**
+     * Authorize logged in users.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -40,6 +42,8 @@ class CategoryRequest extends Request
     }
 
     /**
+     * Get all data from the request.
+     *
      * @return array
      */
     public function getAll(): array
@@ -51,6 +55,8 @@ class CategoryRequest extends Request
     }
 
     /**
+     * The rules that the incoming request must be matched against.
+     *
      * @return array
      */
     public function rules(): array

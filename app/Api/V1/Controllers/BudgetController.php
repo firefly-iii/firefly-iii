@@ -39,12 +39,13 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
- * Class BudgetController
+ * Class BudgetController.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BudgetController extends Controller
 {
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
     /**
@@ -116,6 +117,8 @@ class BudgetController extends Controller
 
 
     /**
+     * Show a budget.
+     *
      * @param Request $request
      * @param Budget  $budget
      *
@@ -137,6 +140,8 @@ class BudgetController extends Controller
     }
 
     /**
+     * Store a budget.
+     *
      * @param BudgetRequest $request
      *
      * @return JsonResponse
@@ -159,6 +164,8 @@ class BudgetController extends Controller
 
 
     /**
+     * Update a budget.
+     *
      * @param BudgetRequest $request
      * @param Budget        $budget
      *

@@ -40,13 +40,14 @@ use League\Fractal\Serializer\JsonApiSerializer;
 
 
 /**
- * Class UserController
+ * Class UserController.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class UserController extends Controller
 {
 
-    /** @var UserRepositoryInterface */
+    /** @var UserRepositoryInterface The user repository */
     private $repository;
 
     /**
@@ -119,6 +120,8 @@ class UserController extends Controller
     }
 
     /**
+     * Show a single user.
+     *
      * @param Request $request
      * @param User    $user
      *
@@ -142,6 +145,8 @@ class UserController extends Controller
     }
 
     /**
+     * Store a new user.
+     *
      * @param UserRequest $request
      *
      * @return JsonResponse
@@ -167,6 +172,8 @@ class UserController extends Controller
     }
 
     /**
+     * Update a user.
+     *
      * @param UserRequest $request
      * @param User        $user
      *

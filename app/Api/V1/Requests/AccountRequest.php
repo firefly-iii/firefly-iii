@@ -30,6 +30,8 @@ class AccountRequest extends Request
 {
 
     /**
+     * Authorize logged in users.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -39,6 +41,8 @@ class AccountRequest extends Request
     }
 
     /**
+     * Get all data from the request.
+     *
      * @return array
      */
     public function getAll(): array
@@ -66,6 +70,8 @@ class AccountRequest extends Request
     }
 
     /**
+     * The rules that the incoming request must be matched against.
+     *
      * @return array
      */
     public function rules(): array

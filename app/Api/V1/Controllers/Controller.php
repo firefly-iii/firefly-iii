@@ -43,7 +43,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    /** @var ParameterBag */
+    /** @var ParameterBag Parameters from the URI are stored here. */
     protected $parameters;
 
     /**
@@ -57,6 +57,8 @@ class Controller extends BaseController
     }
 
     /**
+     * Method to help build URI's.
+     *
      * @return string
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -81,6 +83,8 @@ class Controller extends BaseController
     }
 
     /**
+     * Method to grab all parameters from the URI.
+     *
      * @return ParameterBag
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */

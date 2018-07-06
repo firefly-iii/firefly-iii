@@ -43,12 +43,13 @@ use League\Fractal\Serializer\JsonApiSerializer;
 use Log;
 
 /**
- * Class BudgetLimitController
+ * Class BudgetLimitController.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BudgetLimitController extends Controller
 {
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
     /**

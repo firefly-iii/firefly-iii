@@ -33,6 +33,8 @@ class BillRequest extends Request
 {
 
     /**
+     * Authorize logged in users.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -42,6 +44,8 @@ class BillRequest extends Request
     }
 
     /**
+     * Get all data from the request.
+     *
      * @return array
      */
     public function getAll(): array
@@ -64,6 +68,8 @@ class BillRequest extends Request
     }
 
     /**
+     * The rules that the incoming request must be matched against.
+     *
      * @return array
      */
     public function rules(): array

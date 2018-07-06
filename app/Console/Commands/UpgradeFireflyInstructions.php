@@ -1,5 +1,4 @@
 <?php
-
 /**
  * UpgradeFireflyInstructions.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com

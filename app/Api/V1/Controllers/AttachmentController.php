@@ -41,12 +41,13 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
- * Class AttachmentController
+ * Class AttachmentController.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AttachmentController extends Controller
 {
-    /** @var AttachmentRepositoryInterface */
+    /** @var AttachmentRepositoryInterface The attachment repository */
     private $repository;
 
     /**
@@ -82,6 +83,8 @@ class AttachmentController extends Controller
     }
 
     /**
+     * Download an attachment.
+     *
      * @param Attachment $attachment
      *
      * @return LaravelResponse
@@ -212,6 +215,8 @@ class AttachmentController extends Controller
     }
 
     /**
+     * Upload an attachment.
+     *
      * @param Request    $request
      * @param Attachment $attachment
      *

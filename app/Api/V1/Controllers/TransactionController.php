@@ -50,7 +50,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
 class TransactionController extends Controller
 {
 
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface The journal repository */
     private $repository;
 
     /**
@@ -89,6 +89,8 @@ class TransactionController extends Controller
     }
 
     /**
+     * Show all transactions.
+     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -133,6 +135,8 @@ class TransactionController extends Controller
 
 
     /**
+     * Show a single transaction.
+     *
      * @param Request     $request
      * @param Transaction $transaction
      * @param string      $include
@@ -173,6 +177,8 @@ class TransactionController extends Controller
     }
 
     /**
+     * Store a new transaction.
+     *
      * @param TransactionRequest         $request
      *
      * @param JournalRepositoryInterface $repository
@@ -218,6 +224,8 @@ class TransactionController extends Controller
 
 
     /**
+     * Update a transaction.
+     *
      * @param TransactionRequest         $request
      * @param JournalRepositoryInterface $repository
      * @param Transaction                $transaction
@@ -262,13 +270,15 @@ class TransactionController extends Controller
     }
 
     /**
+     * All the types you can request.
+     *
      * @param string $type
      *
      * @return array
      */
     private function mapTypes(string $type): array
     {
-        $types = [
+        $types  = [
             'all'             => [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE,
                                   TransactionType::RECONCILIATION,],
             'withdrawal'      => [TransactionType::WITHDRAWAL,],
@@ -286,11 +296,12 @@ class TransactionController extends Controller
             'specials'        => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION,],
             'default'         => [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER,],
         ];
+        $return = $types['default'];
         if (isset($types[$type])) {
-            return $types[$type];
+            $return = $types[$type];
         }
 
-        return $types['default']; // @codeCoverageIgnore
+        return $return;
 
     }
 }
