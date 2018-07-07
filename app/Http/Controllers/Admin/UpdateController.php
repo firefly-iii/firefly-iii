@@ -133,6 +133,10 @@ class UpdateController extends Controller
                     ]
                 );
             }
+            if ($today->diffInDays($first->getUpdated(), true) <= 3) {
+                // tell user their running the current version.
+                $string = (string)trans('firefly.update_current_version_alert', ['version' => $current]);
+            }
         }
         if ($check === 0) {
             // you are running the current version!

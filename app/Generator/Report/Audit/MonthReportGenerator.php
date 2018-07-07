@@ -216,9 +216,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 $transactionAmount = $transaction->transaction_foreign_amount;
             }
 
-            $newBalance            = bcadd($startBalance, $transactionAmount);
-            $transaction->after    = $newBalance;
-            $startBalance          = $newBalance;
+            $newBalance         = bcadd($startBalance, $transactionAmount);
+            $transaction->after = $newBalance;
+            $startBalance       = $newBalance;
         }
 
         $return = [

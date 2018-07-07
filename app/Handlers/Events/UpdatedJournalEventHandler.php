@@ -29,13 +29,11 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\Processor;
 
 /**
- * @codeCoverageIgnore
- *
  * Class UpdatedJournalEventHandler
  */
 class UpdatedJournalEventHandler
 {
-    /** @var RuleGroupRepositoryInterface */
+    /** @var RuleGroupRepositoryInterface The rule group repository */
     public $repository;
 
     /**
