@@ -705,7 +705,8 @@ class TransactionFactoryTest extends TestCase
     {
         // objects:
         $asset    = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $opposing = $this->user()->accounts()->where('id', '!=', $asset->id)->where('account_type_id', 3)->first();
+        $reconAccount = $this->user()->accounts()->where('account_type_id', 10)->first();
+        //$opposing = $this->user()->accounts()->where('id', '!=', $asset->id)->where('account_type_id', 3)->first();
         $euro     = TransactionCurrency::first();
         $foreign  = TransactionCurrency::where('id', '!=', $euro->id)->first();
 
@@ -721,7 +722,7 @@ class TransactionFactoryTest extends TestCase
             'description'           => null,
             'source_id'             => $asset->id,
             'source_name'           => null,
-            'destination_id'        => $opposing->id,
+            'destination_id'        => $reconAccount->id,
             'destination_name'      => null,
             'amount'                => '10',
             'reconciled'            => false,
@@ -740,7 +741,7 @@ class TransactionFactoryTest extends TestCase
         $budgetFactory->shouldReceive('setUser');
         $categoryFactory->shouldReceive('setUser');
         // first search action is for the asset account, second is for expense account.
-        $accountRepos->shouldReceive('findNull')->andReturn($asset, $opposing);
+        $accountRepos->shouldReceive('findNull')->andReturn($asset, $reconAccount);
 
         // factories return various stuff:
         $budgetFactory->shouldReceive('find')->andReturn(null);

@@ -96,7 +96,7 @@ class TransactionFactory
      */
     public function createPair(TransactionJournal $journal, array $data): Collection
     {
-        Log::debug('Start of TransactionFactory::createPair()');
+        Log::debug('Start of TransactionFactory::createPair()', $data);
         // all this data is the same for both transactions:
         $currency    = $this->findCurrency($data['currency_id'], $data['currency_code']);
         $description = $journal->description === $data['description'] ? null : $data['description'];
@@ -105,12 +105,8 @@ class TransactionFactory
         $sourceType      = $this->accountType($journal, 'source');
         $destinationType = $this->accountType($journal, 'destination');
 
-        if (null === $sourceType || null === $destinationType) {
-            throw new FireflyException('Could not determine source or destination type.');
-        }
-
-        Log::debug(sprintf('Expect source account to be of type %s', $sourceType));
-        Log::debug(sprintf('Expect source destination to be of type %s', $destinationType));
+        Log::debug(sprintf('Expect source account to be of type "%s"', $sourceType));
+        Log::debug(sprintf('Expect source destination to be of type "%s"', $destinationType));
 
         // find source and destination account:
         $sourceAccount      = $this->findAccount($sourceType, $data['source_id'], $data['source_name']);
