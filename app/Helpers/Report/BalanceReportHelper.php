@@ -34,8 +34,6 @@ use Log;
 
 /**
  * Class BalanceReportHelper.
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // I can't really help it.
  */
 class BalanceReportHelper implements BalanceReportHelperInterface
 {
@@ -145,8 +143,8 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @param Balance $balance
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
      *
      * @return Balance
      */
@@ -157,6 +155,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
         foreach ($set as $entry) {
             if (null !== $entry->getBudget()->id) {
                 $sum = '0';
+                /** @var BalanceEntry $balanceEntry */
                 foreach ($entry->getBalanceEntries() as $balanceEntry) {
                     $sum = bcadd($sum, $balanceEntry->getSpent());
                 }

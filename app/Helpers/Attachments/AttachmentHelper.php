@@ -38,18 +38,18 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class AttachmentHelper implements AttachmentHelperInterface
 {
-    /** @var Collection */
+    /** @var Collection All attachments */
     public $attachments;
-    /** @var MessageBag */
+    /** @var MessageBag All errors */
     public $errors;
-    /** @var MessageBag */
+    /** @var MessageBag All messages */
     public $messages;
-    /** @var array */
+    /** @var array Allowed mimes */
     protected $allowedMimes = [];
-    /** @var int */
+    /** @var int Max upload size. */
     protected $maxUploadSize = 0;
 
-    /** @var \Illuminate\Contracts\Filesystem\Filesystem */
+    /** @var \Illuminate\Contracts\Filesystem\Filesystem The disk where attachments are stored. */
     protected $uploadDisk;
 
 
@@ -67,6 +67,8 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
+     * Returns the content of an attachment.
+     *
      * @codeCoverageIgnore
      *
      * @param Attachment $attachment
@@ -75,18 +77,19 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function getAttachmentContent(Attachment $attachment): string
     {
+        $content = '';
         try {
             $content = Crypt::decrypt($this->uploadDisk->get(sprintf('at-%d.data', $attachment->id)));
         } catch (DecryptException|FileNotFoundException $e) {
-            Log::error(sprintf('Could not decrypt data of attachment #%d', $attachment->id));
-
-            return '';
+            Log::error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
         }
 
         return $content;
     }
 
     /**
+     * Returns the file location for an attachment,
+     *
      * @param Attachment $attachment
      *
      * @return string
@@ -99,6 +102,8 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
+     * Get all attachments.
+     *
      * @return Collection
      */
     public function getAttachments(): Collection
@@ -107,6 +112,8 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
+     * Get all errors.
+     *
      * @return MessageBag
      */
     public function getErrors(): MessageBag
@@ -115,6 +122,8 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
+     * Get all messages.
+     *
      * @return MessageBag
      */
     public function getMessages(): MessageBag
@@ -122,6 +131,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         return $this->messages;
     }
 
+    /** @noinspection MultipleReturnStatementsInspection */
     /**
      * Uploads a file as a string.
      *
@@ -163,6 +173,8 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
+     * Save attachments that get uploaded with models, through the app.
+     *
      * @param Model      $model
      * @param array|null $files
      *
@@ -180,15 +192,17 @@ class AttachmentHelper implements AttachmentHelperInterface
                 }
             }
             Log::debug('Done processing uploads.');
-
-            return true;
         }
-        Log::debug('Array of files is not an array. Probably nothing uploaded. Will not store attachments.');
+        if (!\is_array($files) || (\is_array($files) && 0 === \count($files))) {
+            Log::debug('Array of files is not an array. Probably nothing uploaded. Will not store attachments.');
+        }
 
         return true;
     }
 
     /**
+     * Check if a model already has this file attached.
+     *
      * @param UploadedFile $file
      * @param Model        $model
      *
@@ -199,67 +213,70 @@ class AttachmentHelper implements AttachmentHelperInterface
         $md5   = md5_file($file->getRealPath());
         $name  = $file->getClientOriginalName();
         $class = \get_class($model);
-        $count = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
-
+        /** @noinspection PhpUndefinedFieldInspection */
+        $count  = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
+        $result = false;
         if ($count > 0) {
             $msg = (string)trans('validation.file_already_attached', ['name' => $name]);
             $this->errors->add('attachments', $msg);
             Log::error($msg);
-
-            return true;
+            $result = true;
         }
 
-        return false;
+        return $result;
     }
 
     /**
+     * Process the upload of a file.
+     *
      * @param UploadedFile $file
      * @param Model        $model
      *
-     * @return Attachment
+     * @return Attachment|null
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
-    protected function processFile(UploadedFile $file, Model $model): Attachment
+    protected function processFile(UploadedFile $file, Model $model): ?Attachment
     {
         Log::debug('Now in processFile()');
         $validation = $this->validateUpload($file, $model);
-        if (false === $validation) {
-            return new Attachment;
+        $attachment = null;
+        if (false !== $validation) {
+            $attachment = new Attachment; // create Attachment object.
+            /** @noinspection PhpUndefinedFieldInspection */
+            $attachment->user()->associate($model->user);
+            $attachment->attachable()->associate($model);
+            $attachment->md5      = md5_file($file->getRealPath());
+            $attachment->filename = $file->getClientOriginalName();
+            $attachment->mime     = $file->getMimeType();
+            $attachment->size     = $file->getSize();
+            $attachment->uploaded = 0;
+            $attachment->save();
+            Log::debug('Created attachment:', $attachment->toArray());
+
+            $fileObject = $file->openFile('r');
+            $fileObject->rewind();
+            $content   = $fileObject->fread($file->getSize());
+            $encrypted = Crypt::encrypt($content);
+            Log::debug(sprintf('Full file length is %d and upload size is %d.', \strlen($content), $file->getSize()));
+            Log::debug(sprintf('Encrypted content is %d', \strlen($encrypted)));
+
+            // store it:
+            $this->uploadDisk->put($attachment->fileName(), $encrypted);
+            $attachment->uploaded = 1; // update attachment
+            $attachment->save();
+            $this->attachments->push($attachment);
+
+            $name = e($file->getClientOriginalName()); // add message:
+            $msg  = (string)trans('validation.file_attached', ['name' => $name]);
+            $this->messages->add('attachments', $msg);
         }
 
-        $attachment = new Attachment; // create Attachment object.
-        $attachment->user()->associate($model->user);
-        $attachment->attachable()->associate($model);
-        $attachment->md5      = md5_file($file->getRealPath());
-        $attachment->filename = $file->getClientOriginalName();
-        $attachment->mime     = $file->getMimeType();
-        $attachment->size     = $file->getSize();
-        $attachment->uploaded = 0;
-        $attachment->save();
-        Log::debug('Created attachment:', $attachment->toArray());
-
-        $fileObject = $file->openFile('r');
-        $fileObject->rewind();
-        $content   = $fileObject->fread($file->getSize());
-        $encrypted = Crypt::encrypt($content);
-        Log::debug(sprintf('Full file length is %d and upload size is %d.', \strlen($content), $file->getSize()));
-        Log::debug(sprintf('Encrypted content is %d', \strlen($encrypted)));
-
-        // store it:
-        $this->uploadDisk->put($attachment->fileName(), $encrypted);
-        $attachment->uploaded = 1; // update attachment
-        $attachment->save();
-        $this->attachments->push($attachment);
-
-        $name = e($file->getClientOriginalName()); // add message:
-        $msg  = (string)trans('validation.file_attached', ['name' => $name]);
-        $this->messages->add('attachments', $msg);
-
-        // return it.
         return $attachment;
     }
 
     /**
+     * Verify if the mime of a file is valid.
+     *
      * @param UploadedFile $file
      *
      * @return bool
@@ -271,19 +288,22 @@ class AttachmentHelper implements AttachmentHelperInterface
         $name = e($file->getClientOriginalName());
         Log::debug(sprintf('Name is %s, and mime is %s', $name, $mime));
         Log::debug('Valid mimes are', $this->allowedMimes);
+        $result = true;
 
         if (!\in_array($mime, $this->allowedMimes, true)) {
             $msg = (string)trans('validation.file_invalid_mime', ['name' => $name, 'mime' => $mime]);
             $this->errors->add('attachments', $msg);
             Log::error($msg);
 
-            return false;
+            $result = false;
         }
 
-        return true;
+        return $result;
     }
 
     /**
+     * Verify if the size of a file is valid.
+     *
      * @codeCoverageIgnore
      *
      * @param UploadedFile $file
@@ -292,20 +312,23 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     protected function validSize(UploadedFile $file): bool
     {
-        $size = $file->getSize();
-        $name = e($file->getClientOriginalName());
+        $size   = $file->getSize();
+        $name   = e($file->getClientOriginalName());
+        $result = true;
         if ($size > $this->maxUploadSize) {
             $msg = (string)trans('validation.file_too_large', ['name' => $name]);
             $this->errors->add('attachments', $msg);
             Log::error($msg);
 
-            return false;
+            $result = false;
         }
 
-        return true;
+        return $result;
     }
 
     /**
+     * Verify if the file was uploaded correctly.
+     *
      * @param UploadedFile $file
      * @param Model        $model
      *
@@ -314,16 +337,17 @@ class AttachmentHelper implements AttachmentHelperInterface
     protected function validateUpload(UploadedFile $file, Model $model): bool
     {
         Log::debug('Now in validateUpload()');
+        $result = true;
         if (!$this->validMime($file)) {
-            return false;
+            $result = false;
         }
-        if (!$this->validSize($file)) {
-            return false; // @codeCoverageIgnore
+        if (true === $result && !$this->validSize($file)) {
+            $result = false;
         }
-        if ($this->hasFile($file, $model)) {
-            return false;
+        if (true === $result && $this->hasFile($file, $model)) {
+            $result = false;
         }
 
-        return true;
+        return $result;
     }
 }

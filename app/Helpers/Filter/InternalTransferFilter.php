@@ -61,7 +61,7 @@ class InternalTransferFilter implements FilterInterface
                     return $transaction;
                 }
                 // both id's in $parameters?
-                if (\in_array($transaction->account_id, $this->accounts) && \in_array($transaction->opposing_account_id, $this->accounts)) {
+                if (\in_array($transaction->account_id, $this->accounts, true) && \in_array($transaction->opposing_account_id, $this->accounts, true)) {
                     Log::debug(
                         sprintf(
                             'Transaction #%d has #%d and #%d in set, so removed',

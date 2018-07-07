@@ -44,7 +44,7 @@ class BalanceHeader
     /**
      * @param AccountModel $account
      */
-    public function addAccount(AccountModel $account)
+    public function addAccount(AccountModel $account): void
     {
         $this->accounts->push($account);
     }

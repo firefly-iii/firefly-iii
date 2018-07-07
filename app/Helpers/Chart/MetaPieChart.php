@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Chart;
@@ -44,6 +45,14 @@ use Steam;
  */
 class MetaPieChart implements MetaPieChartInterface
 {
+    /** @var array */
+    static protected $grouping
+        = [
+            'account'  => ['opposing_account_id'],
+            'budget'   => ['transaction_journal_budget_id', 'transaction_budget_id'],
+            'category' => ['transaction_journal_category_id', 'transaction_category_id'],
+            'tag'      => [],
+        ];
     /** @var Collection */
     protected $accounts;
     /** @var Collection */
@@ -54,14 +63,6 @@ class MetaPieChart implements MetaPieChartInterface
     protected $collectOtherObjects = false;
     /** @var Carbon */
     protected $end;
-    /** @var array */
-    protected $grouping
-        = [
-            'account'  => ['opposing_account_id'],
-            'budget'   => ['transaction_journal_budget_id', 'transaction_budget_id'],
-            'category' => ['transaction_journal_category_id', 'transaction_category_id'],
-            'tag'      => [],
-        ];
     /** @var array */
     protected $repositories
         = [
@@ -95,13 +96,12 @@ class MetaPieChart implements MetaPieChartInterface
      * @param string $group
      *
      * @return array
-     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function generate(string $direction, string $group): array
     {
         $transactions = $this->getTransactions($direction);
-        $grouped      = $this->groupByFields($transactions, $this->grouping[$group]);
+        $grouped      = $this->groupByFields($transactions, self::$grouping[$group]);
         $chartData    = $this->organizeByType($group, $grouped);
         $key          = (string)trans('firefly.everything_else');
 
@@ -295,24 +295,28 @@ class MetaPieChart implements MetaPieChartInterface
      * @return array
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     protected function groupByFields(Collection $set, array $fields): array
     {
+        $grouped = [];
         if (0 === \count($fields) && $this->tags->count() > 0) {
             // do a special group on tags:
-            return $this->groupByTag($set); // @codeCoverageIgnore
+            $grouped = $this->groupByTag($set); // @codeCoverageIgnore
         }
 
-        $grouped = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $values = [];
-            foreach ($fields as $field) {
-                $values[] = (int)$transaction->$field;
+        if (0 !== \count($fields) || $this->tags->count() <= 0) {
+            $grouped = [];
+            /** @var Transaction $transaction */
+            foreach ($set as $transaction) {
+                $values = [];
+                foreach ($fields as $field) {
+                    $values[] = (int)$transaction->$field;
+                }
+                $value           = max($values);
+                $grouped[$value] = $grouped[$value] ?? '0';
+                $grouped[$value] = bcadd($transaction->transaction_amount, $grouped[$value]);
             }
-            $value           = max($values);
-            $grouped[$value] = $grouped[$value] ?? '0';
-            $grouped[$value] = bcadd($transaction->transaction_amount, $grouped[$value]);
         }
 
         return $grouped;

@@ -68,7 +68,7 @@ class BillLine
     /**
      * @param string $amount
      */
-    public function setAmount(string $amount)
+    public function setAmount(string $amount): void
     {
         $this->amount = $amount;
     }
@@ -84,7 +84,7 @@ class BillLine
     /**
      * @param BillModel $bill
      */
-    public function setBill(BillModel $bill)
+    public function setBill(BillModel $bill): void
     {
         $this->bill = $bill;
     }
@@ -116,7 +116,7 @@ class BillLine
     /**
      * @param Carbon $lastHitDate
      */
-    public function setLastHitDate(Carbon $lastHitDate)
+    public function setLastHitDate(Carbon $lastHitDate): void
     {
         $this->lastHitDate = $lastHitDate;
     }
@@ -132,7 +132,7 @@ class BillLine
     /**
      * @param string $max
      */
-    public function setMax(string $max)
+    public function setMax(string $max): void
     {
         $this->max = $max;
     }
@@ -148,7 +148,7 @@ class BillLine
     /**
      * @param string $min
      */
-    public function setMin(string $min)
+    public function setMin(string $min): void
     {
         $this->min = $min;
     }
@@ -180,7 +180,7 @@ class BillLine
     /**
      * @param int $transactionJournalId
      */
-    public function setTransactionJournalId(int $transactionJournalId)
+    public function setTransactionJournalId(int $transactionJournalId): void
     {
         $this->transactionJournalId = $transactionJournalId;
     }
@@ -204,7 +204,7 @@ class BillLine
     /**
      * @param bool $hit
      */
-    public function setHit(bool $hit)
+    public function setHit(bool $hit): void
     {
         $this->hit = $hit;
     }

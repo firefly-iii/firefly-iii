@@ -119,6 +119,10 @@ class PopupReport implements PopupReportInterface
      */
     public function byExpenses(Account $account, array $attributes): Collection
     {
+        /** @var JournalRepositoryInterface $repository */
+        $repository = app(JournalRepositoryInterface::class);
+        $repository->setUser($account->user);
+
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
 
@@ -130,9 +134,9 @@ class PopupReport implements PopupReportInterface
 
         // filter for transfers and withdrawals TO the given $account
         $journals = $journals->filter(
-            function (Transaction $transaction) use ($report) {
+            function (Transaction $transaction) use ($report, $repository) {
                 // get the destinations:
-                $sources = $transaction->transactionJournal->sourceAccountList()->pluck('id')->toArray();
+                $sources = $repository->getJournalSourceAccounts($transaction->transactionJournal)->pluck('id')->toArray();
 
                 // do these intersect with the current list?
                 return !empty(array_intersect($report, $sources));

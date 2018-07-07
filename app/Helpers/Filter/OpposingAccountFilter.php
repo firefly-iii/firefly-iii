@@ -58,7 +58,7 @@ class OpposingAccountFilter implements FilterInterface
             function (Transaction $transaction) {
                 $opposing = $transaction->opposing_account_id;
                 // remove internal transfer
-                if (\in_array($opposing, $this->accounts)) {
+                if (\in_array($opposing, $this->accounts, true)) {
                     Log::debug(sprintf('Filtered #%d because its opposite is in accounts.', $transaction->id), $this->accounts);
 
                     return null;

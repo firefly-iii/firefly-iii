@@ -68,7 +68,7 @@ class CurrencyRequest extends Request
             'code'           => 'required|between:3,3|unique:transaction_currencies,code',
             'symbol'         => 'required|between:1,5|unique:transaction_currencies,symbol',
             'decimal_places' => 'required|between:0,20|numeric|min:0|max:20',
-            'default'        => 'in:true,false',
+            'default'        => 'boolean',
         ];
 
         switch ($this->method()) {

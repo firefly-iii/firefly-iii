@@ -47,7 +47,7 @@ class BalanceEntry
     /**
      * @param AccountModel $account
      */
-    public function setAccount(AccountModel $account)
+    public function setAccount(AccountModel $account): void
     {
         $this->account = $account;
     }
@@ -63,7 +63,7 @@ class BalanceEntry
     /**
      * @param string $left
      */
-    public function setLeft(string $left)
+    public function setLeft(string $left): void
     {
         $this->left = $left;
     }
@@ -79,7 +79,7 @@ class BalanceEntry
     /**
      * @param string $spent
      */
-    public function setSpent(string $spent)
+    public function setSpent(string $spent): void
     {
         $this->spent = $spent;
     }

@@ -55,6 +55,7 @@ class AvailableBudgetRequest extends Request
     }
 
     /**
+     * TODO must also accept currency code.
      * The rules that the incoming request must be matched against.
      *
      * @return array

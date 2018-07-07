@@ -34,6 +34,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * @property string $name
  * @property int    $id
+ * @property float  $spent // used in category reports
  */
 class Category extends Model
 {

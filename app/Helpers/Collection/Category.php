@@ -46,19 +46,19 @@ class Category
     /**
      * @param CategoryModel $category
      */
-    public function addCategory(CategoryModel $category)
+    public function addCategory(CategoryModel $category): void
     {
         // spent is minus zero for an expense report:
         if ($category->spent < 0) {
             $this->categories->push($category);
-            $this->addTotal($category->spent);
+            $this->addTotal((string)$category->spent);
         }
     }
 
     /**
      * @param string $add
      */
-    public function addTotal(string $add)
+    public function addTotal(string $add): void
     {
         $this->total = bcadd($this->total, $add);
     }

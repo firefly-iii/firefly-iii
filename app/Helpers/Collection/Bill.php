@@ -52,7 +52,7 @@ class Bill
     /**
      * @param BillLine $bill
      */
-    public function addBill(BillLine $bill)
+    public function addBill(BillLine $bill): void
     {
         $this->bills->push($bill);
     }
@@ -60,7 +60,7 @@ class Bill
     /**
      *
      */
-    public function filterBills()
+    public function filterBills(): void
     {
         Log::debug('Now in filterBills()');
         /** @var BillRepositoryInterface $repository */
@@ -114,7 +114,7 @@ class Bill
     /**
      * @param Carbon $endDate
      */
-    public function setEndDate(Carbon $endDate)
+    public function setEndDate(Carbon $endDate): void
     {
         $this->endDate = $endDate;
     }
@@ -122,7 +122,7 @@ class Bill
     /**
      * @param Carbon $startDate
      */
-    public function setStartDate(Carbon $startDate)
+    public function setStartDate(Carbon $startDate): void
     {
         $this->startDate = $startDate;
     }

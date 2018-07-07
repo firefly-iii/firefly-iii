@@ -46,7 +46,7 @@ class Balance
     /**
      * @param BalanceLine $line
      */
-    public function addBalanceLine(BalanceLine $line)
+    public function addBalanceLine(BalanceLine $line): void
     {
         $this->balanceLines->push($line);
     }
@@ -62,7 +62,7 @@ class Balance
     /**
      * @param BalanceHeader $balanceHeader
      */
-    public function setBalanceHeader(BalanceHeader $balanceHeader)
+    public function setBalanceHeader(BalanceHeader $balanceHeader): void
     {
         $this->balanceHeader = $balanceHeader;
     }
@@ -78,7 +78,7 @@ class Balance
     /**
      * @param Collection $balanceLines
      */
-    public function setBalanceLines(Collection $balanceLines)
+    public function setBalanceLines(Collection $balanceLines): void
     {
         $this->balanceLines = $balanceLines;
     }

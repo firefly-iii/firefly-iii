@@ -47,9 +47,8 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // all the arrays make it long.
-     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts

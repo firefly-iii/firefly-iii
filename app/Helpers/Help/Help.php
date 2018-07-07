@@ -65,22 +65,19 @@ class Help implements HelpInterface
     {
         $uri = sprintf('https://raw.githubusercontent.com/firefly-iii/help/master/%s/%s.md', $language, $route);
         Log::debug(sprintf('Trying to get %s...', $uri));
-        $opt     = ['headers' => ['User-Agent' => $this->userAgent]];
-        $content = '';
+        $opt        = ['headers' => ['User-Agent' => $this->userAgent]];
+        $content    = '';
+        $statusCode = 500;
+        $client     = new Client;
         try {
-            $client = new Client;
-            $res    = $client->request('GET', $uri, $opt);
+            $res        = $client->request('GET', $uri, $opt);
+            $statusCode = $res->getStatusCode();
+            $content    = trim($res->getBody()->getContents());
         } catch (GuzzleException|Exception $e) {
             Log::error($e);
-
-            return '';
         }
 
-        Log::debug(sprintf('Status code is %d', $res->getStatusCode()));
-
-        if (200 === $res->getStatusCode()) {
-            $content = trim($res->getBody()->getContents());
-        }
+        Log::debug(sprintf('Status code is %d', $statusCode));
 
         if (\strlen($content) > 0) {
             Log::debug('Content is longer than zero. Expect something.');
@@ -126,7 +123,7 @@ class Help implements HelpInterface
      * @param string $language
      * @param string $content
      */
-    public function putInCache(string $route, string $language, string $content)
+    public function putInCache(string $route, string $language, string $content): void
     {
         $key = sprintf(self::CACHEKEY, $route, $language);
         if (\strlen($content) > 0) {
