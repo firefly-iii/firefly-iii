@@ -28,6 +28,8 @@ namespace FireflyIII\Helpers\Help;
 interface HelpInterface
 {
     /**
+     * Get the help text from cache.
+     *
      * @param string $route
      * @param string $language
      *
@@ -36,14 +38,18 @@ interface HelpInterface
     public function getFromCache(string $route, string $language): string;
 
     /**
+     * Get the help text from GitHub.
+     *
      * @param string $route
      * @param string $language
      *
      * @return string
      */
-    public function getFromGithub(string $route, string $language): string;
+    public function getFromGitHub(string $route, string $language): string;
 
     /**
+     * Is the route a known route?
+     *
      * @param string $route
      *
      * @return bool
@@ -51,6 +57,8 @@ interface HelpInterface
     public function hasRoute(string $route): bool;
 
     /**
+     * Is the help text in cache?
+     *
      * @param string $route
      * @param string $language
      *
@@ -59,6 +67,8 @@ interface HelpInterface
     public function inCache(string $route, string $language): bool;
 
     /**
+     * Put the result in cache.
+     *
      * @param string $route
      * @param string $language
      * @param string $content

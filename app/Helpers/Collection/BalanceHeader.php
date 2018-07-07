@@ -30,11 +30,11 @@ use Illuminate\Support\Collection;
  */
 class BalanceHeader
 {
-    /** @var Collection */
+    /** @var Collection The accounts. */
     protected $accounts;
 
     /**
-     *
+     * BalanceHeader constructor.
      */
     public function __construct()
     {
@@ -42,6 +42,8 @@ class BalanceHeader
     }
 
     /**
+     * Add an account.
+     *
      * @param AccountModel $account
      */
     public function addAccount(AccountModel $account): void
@@ -50,6 +52,8 @@ class BalanceHeader
     }
 
     /**
+     * Get them all.
+     *
      * @return Collection
      */
     public function getAccounts(): Collection

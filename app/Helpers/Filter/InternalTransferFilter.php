@@ -35,7 +35,7 @@ use Log;
  */
 class InternalTransferFilter implements FilterInterface
 {
-    /** @var array */
+    /** @var array The accounts */
     private $accounts;
 
     /**
@@ -49,6 +49,8 @@ class InternalTransferFilter implements FilterInterface
     }
 
     /**
+     * See class description.
+     *
      * @param Collection $set
      *
      * @return Collection

@@ -30,23 +30,23 @@ use FireflyIII\Models\Bill as BillModel;
  */
 class BillLine
 {
-    /** @var string */
+    /** @var string The amount */
     protected $amount;
-    /** @var BillModel */
+    /** @var BillModel The bill. */
     protected $bill;
-    /** @var bool */
+    /** @var bool Is it hit this period */
     protected $hit;
-    /** @var string */
+    /** @var string What was the max amount. */
     protected $max;
-    /** @var string */
+    /** @var string What was the min amount. */
     protected $min;
-    /** @var Carbon */
+    /** @var Carbon Latest date that payment is expected. */
     private $endOfPayDate;
-    /** @var Carbon */
+    /** @var Carbon Date of last hit */
     private $lastHitDate;
-    /** @var Carbon */
+    /** @var Carbon Date of last payment */
     private $payDate;
-    /** @var int */
+    /** @var int Journal */
     private $transactionJournalId;
 
     /**
@@ -58,6 +58,8 @@ class BillLine
     }
 
     /**
+     * Amount getter.
+     *
      * @return string
      */
     public function getAmount(): string
@@ -66,6 +68,8 @@ class BillLine
     }
 
     /**
+     * Amount setter.
+     *
      * @param string $amount
      */
     public function setAmount(string $amount): void
@@ -74,6 +78,8 @@ class BillLine
     }
 
     /**
+     * Bill getter.
+     *
      * @return BillModel
      */
     public function getBill(): BillModel
@@ -82,6 +88,8 @@ class BillLine
     }
 
     /**
+     * Bill setter.
+     *
      * @param BillModel $bill
      */
     public function setBill(BillModel $bill): void
@@ -90,6 +98,8 @@ class BillLine
     }
 
     /**
+     * End of pay date getter.
+     *
      * @return Carbon
      */
     public function getEndOfPayDate(): Carbon
@@ -98,6 +108,8 @@ class BillLine
     }
 
     /**
+     * End of pay date setter.
+     *
      * @param Carbon $endOfPayDate
      */
     public function setEndOfPayDate(Carbon $endOfPayDate): void
@@ -106,6 +118,8 @@ class BillLine
     }
 
     /**
+     * Last hit date getter.
+     *
      * @return Carbon
      */
     public function getLastHitDate(): Carbon
@@ -114,6 +128,8 @@ class BillLine
     }
 
     /**
+     * Last hit date setter.
+     *
      * @param Carbon $lastHitDate
      */
     public function setLastHitDate(Carbon $lastHitDate): void
@@ -122,6 +138,8 @@ class BillLine
     }
 
     /**
+     * Max getter.
+     *
      * @return string
      */
     public function getMax(): string
@@ -130,6 +148,8 @@ class BillLine
     }
 
     /**
+     * Max setter.
+     *
      * @param string $max
      */
     public function setMax(string $max): void
@@ -138,6 +158,8 @@ class BillLine
     }
 
     /**
+     * Min getter.
+     *
      * @return string
      */
     public function getMin(): string
@@ -146,6 +168,8 @@ class BillLine
     }
 
     /**
+     * Min setter.
+     *
      * @param string $min
      */
     public function setMin(string $min): void
@@ -154,6 +178,8 @@ class BillLine
     }
 
     /**
+     * Pay date getter.
+     *
      * @return Carbon
      */
     public function getPayDate(): Carbon
@@ -162,6 +188,8 @@ class BillLine
     }
 
     /**
+     * Pay date setter.
+     *
      * @param Carbon $payDate
      */
     public function setPayDate(Carbon $payDate): void
@@ -170,6 +198,8 @@ class BillLine
     }
 
     /**
+     * Journal ID getter.
+     *
      * @return int
      */
     public function getTransactionJournalId(): int
@@ -178,6 +208,8 @@ class BillLine
     }
 
     /**
+     * Journal ID setter.
+     *
      * @param int $transactionJournalId
      */
     public function setTransactionJournalId(int $transactionJournalId): void
@@ -186,6 +218,8 @@ class BillLine
     }
 
     /**
+     * Is active.
+     *
      * @return bool
      */
     public function isActive(): bool
@@ -194,6 +228,8 @@ class BillLine
     }
 
     /**
+     * Is hit.
+     *
      * @return bool
      */
     public function isHit(): bool
@@ -202,6 +238,8 @@ class BillLine
     }
 
     /**
+     * Set is hit.
+     *
      * @param bool $hit
      */
     public function setHit(bool $hit): void

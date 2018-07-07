@@ -38,7 +38,7 @@ use Illuminate\Support\Collection;
  */
 class ReportHelper implements ReportHelperInterface
 {
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     protected $budgetRepository;
 
     /**
@@ -118,6 +118,8 @@ class ReportHelper implements ReportHelperInterface
     }
 
     /**
+     * Generate a list of months for the report.
+     *
      * @param Carbon $date
      *
      * @return array

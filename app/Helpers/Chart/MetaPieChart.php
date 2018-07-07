@@ -45,7 +45,7 @@ use Steam;
  */
 class MetaPieChart implements MetaPieChartInterface
 {
-    /** @var array */
+    /** @var array The ways to group transactions, given the type of chart. */
     static protected $grouping
         = [
             'account'  => ['opposing_account_id'],
@@ -53,17 +53,17 @@ class MetaPieChart implements MetaPieChartInterface
             'category' => ['transaction_journal_category_id', 'transaction_category_id'],
             'tag'      => [],
         ];
-    /** @var Collection */
+    /** @var Collection Involved accounts. */
     protected $accounts;
-    /** @var Collection */
+    /** @var Collection The budgets. */
     protected $budgets;
-    /** @var Collection */
+    /** @var Collection The categories. */
     protected $categories;
-    /** @var bool */
+    /** @var bool Collect other objects. */
     protected $collectOtherObjects = false;
-    /** @var Carbon */
+    /** @var Carbon The end date./ */
     protected $end;
-    /** @var array */
+    /** @var array The repositories. */
     protected $repositories
         = [
             'account'  => AccountRepositoryInterface::class,
@@ -71,13 +71,13 @@ class MetaPieChart implements MetaPieChartInterface
             'category' => CategoryRepositoryInterface::class,
             'tag'      => TagRepositoryInterface::class,
         ];
-    /** @var Carbon */
+    /** @var Carbon The start date. */
     protected $start;
-    /** @var Collection */
+    /** @var Collection The involved tags/ */
     protected $tags;
-    /** @var string */
+    /** @var string The total amount. */
     protected $total = '0';
-    /** @var User */
+    /** @var User The user. */
     protected $user;
 
     /**
@@ -92,6 +92,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * Generate the chart.
+     *
      * @param string $direction
      * @param string $group
      *
@@ -134,6 +136,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * Accounts setter.
+     *
      * @codeCoverageIgnore
      *
      * @param Collection $accounts
@@ -148,6 +152,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * Budgets setter.
+     *
      * @codeCoverageIgnore
      *
      * @param Collection $budgets
@@ -162,6 +168,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * Categories setter.
+     *
      * @codeCoverageIgnore
      *
      * @param Collection $categories
@@ -176,6 +184,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * Set if other objects should be collected.
+     *
      * @codeCoverageIgnore
      *
      * @param bool $collectOtherObjects
@@ -190,6 +200,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * Set the end date.
+     *
      * @codeCoverageIgnore
      *
      * @param Carbon $end
@@ -204,6 +216,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * Set the start date.
+     *
      * @codeCoverageIgnore
      *
      * @param Carbon $start
@@ -218,6 +232,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * Set the tags.
+     *
      * @codeCoverageIgnore
      *
      * @param Collection $tags
@@ -232,6 +248,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * Set the user.
+     *
      * @codeCoverageIgnore
      *
      * @param User $user
@@ -246,6 +264,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * Get all transactions.
+     *
      * @param string $direction
      *
      * @return Collection
@@ -289,6 +309,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * Group by a specific field.
+     *
      * @param Collection $set
      * @param array      $fields
      *
@@ -323,6 +345,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * Organise by certain type.
+     *
      * @param string $type
      * @param array  $array
      *
@@ -348,6 +372,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * Group by tag (slightly different).
+     *
      * @codeCoverageIgnore
      *
      * @param Collection $set

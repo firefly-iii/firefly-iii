@@ -32,17 +32,15 @@ use Log;
  */
 class Bill
 {
-    /**
-     * @var Collection
-     */
+    /** @var Collection The bills. */
     private $bills;
-    /** @var Carbon */
+    /** @var Carbon End date of the collection. */
     private $endDate;
-    /** @var Carbon */
+    /** @var Carbon Start date of the collection. */
     private $startDate;
 
     /**
-     *
+     * Bill constructor.
      */
     public function __construct()
     {
@@ -50,6 +48,8 @@ class Bill
     }
 
     /**
+     * Add a bill line.
+     *
      * @param BillLine $bill
      */
     public function addBill(BillLine $bill): void
@@ -58,7 +58,7 @@ class Bill
     }
 
     /**
-     *
+     * Filter the bills (yes how very descriptive).
      */
     public function filterBills(): void
     {
@@ -95,6 +95,8 @@ class Bill
     }
 
     /**
+     * Bills getter.
+     *
      * @return Collection
      */
     public function getBills(): Collection
@@ -112,6 +114,8 @@ class Bill
     }
 
     /**
+     * End date setter.
+     *
      * @param Carbon $endDate
      */
     public function setEndDate(Carbon $endDate): void
@@ -120,6 +124,8 @@ class Bill
     }
 
     /**
+     * Start date setter.
+     *
      * @param Carbon $startDate
      */
     public function setStartDate(Carbon $startDate): void

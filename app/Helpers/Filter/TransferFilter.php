@@ -35,6 +35,8 @@ use Steam;
 class TransferFilter implements FilterInterface
 {
     /**
+     * See class transaction.
+     *
      * @param Collection $set
      *
      * @return Collection

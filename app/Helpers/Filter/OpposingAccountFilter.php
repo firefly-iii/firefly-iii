@@ -34,7 +34,7 @@ use Log;
  */
 class OpposingAccountFilter implements FilterInterface
 {
-    /** @var array */
+    /** @var array The asset accounts. */
     private $accounts;
 
     /**
@@ -48,6 +48,8 @@ class OpposingAccountFilter implements FilterInterface
     }
 
     /**
+     * Only return specific transactions. See class description.
+     *
      * @param Collection $set
      *
      * @return Collection

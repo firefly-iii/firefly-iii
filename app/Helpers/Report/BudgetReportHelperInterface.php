@@ -31,6 +31,8 @@ use Illuminate\Support\Collection;
 interface BudgetReportHelperInterface
 {
     /**
+     * Generates the budget report.
+     *
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
@@ -40,6 +42,8 @@ interface BudgetReportHelperInterface
     public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts): array;
 
     /**
+     * Get budgets and the expenses in each budget.
+     *
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts

@@ -30,13 +30,13 @@ use Illuminate\Support\Collection;
  */
 class Category
 {
-    /** @var Collection */
+    /** @var Collection The categories */
     protected $categories;
-    /** @var string */
+    /** @var string Total amount */
     protected $total = '0';
 
     /**
-     *
+     * Category constructor.
      */
     public function __construct()
     {
@@ -44,6 +44,8 @@ class Category
     }
 
     /**
+     * Add a category.
+     *
      * @param CategoryModel $category
      */
     public function addCategory(CategoryModel $category): void
@@ -56,6 +58,8 @@ class Category
     }
 
     /**
+     * Add to the total amount.
+     *
      * @param string $add
      */
     public function addTotal(string $add): void
@@ -64,6 +68,8 @@ class Category
     }
 
     /**
+     * Get all categories.
+     *
      * @return Collection
      */
     public function getCategories(): Collection
@@ -78,6 +84,8 @@ class Category
     }
 
     /**
+     * Get the total.
+     *
      * @return string
      */
     public function getTotal(): string

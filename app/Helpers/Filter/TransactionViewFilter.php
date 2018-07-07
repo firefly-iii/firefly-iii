@@ -39,6 +39,8 @@ use Log;
 class TransactionViewFilter implements FilterInterface
 {
     /**
+     * See class description.
+     *
      * @param Collection $set
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @return Collection

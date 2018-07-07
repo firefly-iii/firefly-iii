@@ -37,6 +37,8 @@ use Illuminate\Support\Collection;
 class PopupReport implements PopupReportInterface
 {
     /**
+     * Collect the tranactions for one account and one budget.
+     *
      * @param Budget  $budget
      * @param Account $account
      * @param array   $attributes
@@ -53,6 +55,8 @@ class PopupReport implements PopupReportInterface
     }
 
     /**
+     * Collect the tranactions for one account and no budget.
+     *
      * @param Account $account
      * @param array   $attributes
      *
@@ -72,6 +76,8 @@ class PopupReport implements PopupReportInterface
     }
 
     /**
+     * Collect the tranactions for a budget.
+     *
      * @param Budget $budget
      * @param array  $attributes
      *
@@ -95,6 +101,8 @@ class PopupReport implements PopupReportInterface
     }
 
     /**
+     * Collect journals by a category.
+     *
      * @param Category $category
      * @param array    $attributes
      *
@@ -112,6 +120,8 @@ class PopupReport implements PopupReportInterface
     }
 
     /**
+     * Group transactions by expense.
+     *
      * @param Account $account
      * @param array   $attributes
      *
@@ -147,6 +157,8 @@ class PopupReport implements PopupReportInterface
     }
 
     /**
+     * Collect transactions by income.
+     *
      * @param Account $account
      * @param array   $attributes
      *

@@ -37,7 +37,7 @@ use Log;
  */
 class BalanceReportHelper implements BalanceReportHelperInterface
 {
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface Budget repository */
     protected $budgetRepository;
 
     /**
@@ -52,6 +52,8 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     }
 
     /**
+     * Generate a balance report.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -91,6 +93,8 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     }
 
     /**
+     * Create one balance line.
+     *
      * @param BudgetLimit $budgetLimit
      * @param Collection  $accounts
      *
@@ -120,6 +124,8 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     }
 
     /**
+     * Create a line for transactions without a budget.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -143,6 +149,8 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     }
 
     /**
+     * Remove unused budgets from the report.
+     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @param Balance $balance
      *
