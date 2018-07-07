@@ -31,15 +31,18 @@ use Illuminate\Support\Collection;
  */
 class MultiYearReportGenerator implements ReportGeneratorInterface
 {
-    /** @var Collection */
+    /** @var Collection The accounts involved. */
     private $accounts;
-    /** @var Carbon */
+    /** @var Carbon The end date. */
     private $end;
-    /** @var Carbon */
+    /** @var Carbon The start date. */
     private $start;
 
     /**
+     * Generates the report.
+     *
      * @return string
+     * @throws \Throwable
      */
     public function generate(): string
     {
@@ -55,6 +58,8 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Sets the accounts used in the report.
+     *
      * @param Collection $accounts
      *
      * @return ReportGeneratorInterface
@@ -67,6 +72,8 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Sets the budgets used in the report.
+     *
      * @param Collection $budgets
      *
      * @return ReportGeneratorInterface
@@ -77,6 +84,8 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Sets the categories used in the report.
+     *
      * @param Collection $categories
      *
      * @return ReportGeneratorInterface
@@ -87,6 +96,8 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Sets the end date used in the report.
+     *
      * @param Carbon $date
      *
      * @return ReportGeneratorInterface
@@ -99,6 +110,8 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Unused setter for expenses.
+     *
      * @param Collection $expense
      *
      * @return ReportGeneratorInterface
@@ -109,6 +122,8 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Set the start date of the report.
+     *
      * @param Carbon $date
      *
      * @return ReportGeneratorInterface
@@ -121,6 +136,8 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Set the tags for the report.
+     *
      * @param Collection $tags
      *
      * @return ReportGeneratorInterface

@@ -31,6 +31,8 @@ use FireflyIII\Exceptions\FireflyException;
 class ReportGeneratorFactory
 {
     /**
+     * Static report generator class.
+     *
      * @param string $type
      * @param Carbon $start
      * @param Carbon $end

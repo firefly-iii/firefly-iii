@@ -18,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/** @noinspection MultipleReturnStatementsInspection */
+/** @noinspection PhpUndefinedMethodInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report\Tag;
@@ -41,17 +44,17 @@ use Log;
  */
 class MonthReportGenerator extends Support implements ReportGeneratorInterface
 {
-    /** @var Collection */
+    /** @var Collection The accounts involved */
     private $accounts;
-    /** @var Carbon */
+    /** @var Carbon The end date */
     private $end;
-    /** @var Collection */
+    /** @var Collection The expenses involved */
     private $expenses;
-    /** @var Collection */
+    /** @var Collection The income involved */
     private $income;
-    /** @var Carbon */
+    /** @var Carbon The start date */
     private $start;
-    /** @var Collection */
+    /** @var Collection The tags involved. */
     private $tags;
 
     /**
@@ -64,7 +67,11 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
+     * Generate the report.
+     *
      * @return string
+     * @throws \Throwable
+     * @throws \Throwable
      */
     public function generate(): string
     {
@@ -98,6 +105,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
+     * Set the accounts.
+     *
      * @param Collection $accounts
      *
      * @return ReportGeneratorInterface
@@ -110,6 +119,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
+     * Unused budget setter.
+     *
      * @param Collection $budgets
      *
      * @return ReportGeneratorInterface
@@ -120,6 +131,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
+     * Unused category setter.
+     *
      * @param Collection $categories
      *
      * @return ReportGeneratorInterface
@@ -130,6 +143,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
+     * Set the end date of the report.
+     *
      * @param Carbon $date
      *
      * @return ReportGeneratorInterface
@@ -142,6 +157,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
+     * Set the expenses in this report.
+     *
      * @param Collection $expense
      *
      * @return ReportGeneratorInterface
@@ -152,6 +169,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
+     * Set the start date.
+     *
      * @param Carbon $date
      *
      * @return ReportGeneratorInterface
@@ -164,6 +183,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
+     * Set the tags used in this report.
+     *
      * @param Collection $tags
      *
      * @return ReportGeneratorInterface
@@ -176,6 +197,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
+     * Get expense collection for report.
+     *
      * @return Collection
      */
     protected function getExpenses(): Collection
@@ -204,6 +227,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
+     * Get the income for this report.
+     *
      * @return Collection
      */
     protected function getIncome(): Collection
@@ -228,6 +253,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
+     * Summarize by tag.
+     *
      * @param Collection $collection
      *
      * @return array
