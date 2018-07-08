@@ -30,7 +30,7 @@ class ReconciliationUpdateRequest extends Request
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         // Only allow logged in users
         return auth()->check();
@@ -41,7 +41,7 @@ class ReconciliationUpdateRequest extends Request
      *
      * @return array
      */
-    public function getJournalData()
+    public function getJournalData(): array
     {
         $data = [
             'tags'     => explode(',', $this->string('tags')),
@@ -55,7 +55,7 @@ class ReconciliationUpdateRequest extends Request
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = [
             'amount'   => 'numeric|required',

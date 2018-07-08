@@ -145,7 +145,7 @@ class InstallController extends Controller
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function verify()
+    public function verify(): JsonResponse
     {
         if ($this->hasForbiddenFunctions()) {
             return response()->json(['error' => true, 'message' => self::FORBIDDEN_ERROR]);

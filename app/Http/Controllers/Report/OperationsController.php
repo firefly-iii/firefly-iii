@@ -90,7 +90,7 @@ class OperationsController extends Controller
      * @return string
      * @throws \Throwable
      */
-    public function income(Collection $accounts, Carbon $start, Carbon $end)
+    public function income(Collection $accounts, Carbon $start, Carbon $end): string
     {
         // chart properties for cache:
         $cache = new CacheProperties;

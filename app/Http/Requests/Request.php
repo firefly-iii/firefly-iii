@@ -133,7 +133,7 @@ class Request extends FormRequest
      *
      * @return Carbon|null
      */
-    protected function date(string $field)
+    protected function date(string $field): ?Carbon
     {
         return $this->get($field) ? new Carbon($this->get($field)) : null;
     }

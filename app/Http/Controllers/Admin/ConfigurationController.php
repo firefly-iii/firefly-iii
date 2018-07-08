@@ -77,9 +77,9 @@ class ConfigurationController extends Controller
     /**
      * @param ConfigurationRequest $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function postIndex(ConfigurationRequest $request)
+    public function postIndex(ConfigurationRequest $request): RedirectResponse
     {
         // get config values:
         $data = $request->getConfigurationData();

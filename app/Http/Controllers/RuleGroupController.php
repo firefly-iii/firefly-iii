@@ -29,6 +29,7 @@ use FireflyIII\Jobs\ExecuteRuleGroupOnExistingTransactions;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 /**
@@ -151,9 +152,9 @@ class RuleGroupController extends Controller
      * @param AccountRepositoryInterface $repository
      * @param RuleGroup                  $ruleGroup
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function execute(SelectTransactionsRequest $request, AccountRepositoryInterface $repository, RuleGroup $ruleGroup)
+    public function execute(SelectTransactionsRequest $request, AccountRepositoryInterface $repository, RuleGroup $ruleGroup): RedirectResponse
     {
         // Get parameters specified by the user
         $accounts  = $repository->getAccountsById($request->get('accounts'));

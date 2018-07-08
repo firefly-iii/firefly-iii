@@ -175,7 +175,7 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function reorder(Request $request)
+    public function reorder(Request $request): JsonResponse
     {
         $ids  = $request->get('items');
         $date = new Carbon($request->get('date'));

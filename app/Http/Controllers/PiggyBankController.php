@@ -31,6 +31,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Transformers\AccountTransformer;
 use FireflyIII\Transformers\PiggyBankTransformer;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -159,9 +160,9 @@ class PiggyBankController extends Controller
     /**
      * @param PiggyBank $piggyBank
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function destroy(PiggyBank $piggyBank)
+    public function destroy(PiggyBank $piggyBank): RedirectResponse
     {
         session()->flash('success', (string)trans('firefly.deleted_piggy_bank', ['name' => $piggyBank->name]));
         app('preferences')->mark();
@@ -266,9 +267,9 @@ class PiggyBankController extends Controller
      * @param Request   $request
      * @param PiggyBank $piggyBank
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function postAdd(Request $request, PiggyBank $piggyBank)
+    public function postAdd(Request $request, PiggyBank $piggyBank): RedirectResponse
     {
         $amount     = $request->get('amount') ?? '0';
         $currency   = app('amount')->getDefaultCurrency();
@@ -306,9 +307,9 @@ class PiggyBankController extends Controller
      * @param Request   $request
      * @param PiggyBank $piggyBank
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function postRemove(Request $request, PiggyBank $piggyBank)
+    public function postRemove(Request $request, PiggyBank $piggyBank): RedirectResponse
     {
         $amount     = $request->get('amount') ?? '0';
         $currency   = app('amount')->getDefaultCurrency();

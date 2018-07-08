@@ -30,7 +30,7 @@ class LinkTypeFormRequest extends Request
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         // Only allow logged and admins
         return auth()->check() && auth()->user()->hasRole('owner');
@@ -39,7 +39,7 @@ class LinkTypeFormRequest extends Request
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         // fixed
         $nameRule = 'required|min:1|unique:link_types,name';

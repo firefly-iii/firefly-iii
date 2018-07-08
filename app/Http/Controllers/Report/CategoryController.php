@@ -77,7 +77,7 @@ class CategoryController extends Controller
      * @return string
      * @throws \Throwable
      */
-    public function income(Collection $accounts, Carbon $start, Carbon $end)
+    public function income(Collection $accounts, Carbon $start, Carbon $end): string
     {
         $cache = new CacheProperties;
         $cache->addProperty($start);

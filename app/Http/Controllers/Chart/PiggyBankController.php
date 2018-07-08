@@ -29,6 +29,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
 /**
@@ -55,9 +56,9 @@ class PiggyBankController extends Controller
      * @param PiggyBankRepositoryInterface $repository
      * @param PiggyBank                    $piggyBank
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse
      */
-    public function history(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
+    public function history(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank): JsonResponse
     {
         // chart properties for cache:
         $cache = new CacheProperties;

@@ -39,6 +39,7 @@ use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
@@ -174,7 +175,7 @@ class RuleController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Rule $rule)
+    public function destroy(Rule $rule): \Illuminate\Http\RedirectResponse
     {
         $title = $rule->title;
         $this->ruleRepos->destroy($rule);
@@ -254,11 +255,11 @@ class RuleController extends Controller
      * @param SelectTransactionsRequest $request
      * @param Rule                      $rule
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      *
      * @internal param RuleGroup $ruleGroup
      */
-    public function execute(SelectTransactionsRequest $request, Rule $rule)
+    public function execute(SelectTransactionsRequest $request, Rule $rule): RedirectResponse
     {
         // Get parameters specified by the user
         $accounts  = $this->accountRepos->getAccountsById($request->get('accounts'));

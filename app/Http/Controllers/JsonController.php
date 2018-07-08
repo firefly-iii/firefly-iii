@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
@@ -32,10 +33,10 @@ class JsonController extends Controller
     /**
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws \Throwable
      */
-    public function action(Request $request)
+    public function action(Request $request): JsonResponse
     {
         $count   = (int)$request->get('count') > 0 ? (int)$request->get('count') : 1;
         $keys    = array_keys(config('firefly.rule-actions'));
@@ -51,10 +52,10 @@ class JsonController extends Controller
     /**
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws \Throwable
      */
-    public function trigger(Request $request)
+    public function trigger(Request $request): JsonResponse
     {
         $count    = (int)$request->get('count') > 0 ? (int)$request->get('count') : 1;
         $keys     = array_keys(config('firefly.rule-triggers'));

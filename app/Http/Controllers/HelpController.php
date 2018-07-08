@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Helpers\Help\HelpInterface;
+use Illuminate\Http\JsonResponse;
 use Log;
 use Preferences;
 
@@ -53,9 +54,9 @@ class HelpController extends Controller
     /**
      * @param   $route
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function show(string $route)
+    public function show(string $route): JsonResponse
     {
         $language = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
         $html     = $this->getHelpText($route, $language);

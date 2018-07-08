@@ -33,7 +33,7 @@ class JournalLinkRequest extends Request
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         // Only allow logged in users
         return auth()->check();
@@ -61,7 +61,7 @@ class JournalLinkRequest extends Request
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         // all possible combinations of link types and inward / outward:
         $combinations = [];

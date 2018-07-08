@@ -31,6 +31,7 @@ use FireflyIII\Http\Middleware\IsSandStormUser;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
@@ -59,9 +60,9 @@ class HomeController extends Controller
     /**
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function dateRange(Request $request)
+    public function dateRange(Request $request): JsonResponse
     {
         $start         = new Carbon($request->get('start'));
         $end           = new Carbon($request->get('end'));

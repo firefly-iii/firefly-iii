@@ -27,6 +27,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Currency\ExchangeRateInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Log;
 
@@ -42,9 +43,9 @@ class ExchangeController extends Controller
      * @param TransactionCurrency $toCurrency
      * @param Carbon              $date
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getRate(Request $request, TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date)
+    public function getRate(Request $request, TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): JsonResponse
     {
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app(CurrencyRepositoryInterface::class);

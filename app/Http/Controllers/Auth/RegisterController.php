@@ -30,7 +30,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 /**
  * @codeCoverageIgnore
  * Class RegisterController
@@ -62,9 +62,9 @@ class RegisterController extends Controller
     /**
      * Handle a registration request for the application.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
     public function register(Request $request)
     {
@@ -94,7 +94,7 @@ class RegisterController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function showRegistrationForm(Request $request)
     {
@@ -122,7 +122,7 @@ class RegisterController extends Controller
      *
      * @return \FireflyIII\User
      */
-    protected function create(array $data)
+    protected function create(array $data): User
     {
         return User::create(
             [
@@ -137,9 +137,9 @@ class RegisterController extends Controller
      *
      * @param array $data
      *
-     * @return \Illuminate\Contracts\Validation\Validator
+     * @return ValidatorContract
      */
-    protected function validator(array $data)
+    protected function validator(array $data): ValidatorContract
     {
         return Validator::make(
             $data,

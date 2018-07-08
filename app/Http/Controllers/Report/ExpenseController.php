@@ -71,7 +71,7 @@ class ExpenseController extends Controller
      * @return string
      * @throws \Throwable
      */
-    public function budget(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
+    public function budget(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): string
     {
         // Properties for cache:
         $cache = new CacheProperties;
@@ -118,7 +118,7 @@ class ExpenseController extends Controller
      * @return string
      * @throws \Throwable
      */
-    public function category(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
+    public function category(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): string
     {
         // Properties for cache:
         $cache = new CacheProperties;
@@ -220,7 +220,7 @@ class ExpenseController extends Controller
      * @return string
      * @throws \Throwable
      */
-    public function topExpense(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
+    public function topExpense(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): string
     {
         // Properties for cache:
         $cache = new CacheProperties;

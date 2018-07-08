@@ -30,7 +30,7 @@ class CurrencyFormRequest extends Request
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         // Only allow logged in users
         return auth()->check();
@@ -39,7 +39,7 @@ class CurrencyFormRequest extends Request
     /**
      * @return array
      */
-    public function getCurrencyData()
+    public function getCurrencyData(): array
     {
         return [
             'name'           => $this->string('name'),
@@ -52,7 +52,7 @@ class CurrencyFormRequest extends Request
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         // fixed
         $rules = [

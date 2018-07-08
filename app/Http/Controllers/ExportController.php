@@ -30,6 +30,7 @@ use FireflyIII\Http\Requests\ExportFormRequest;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response as LaravelResponse;
 use Preferences;
 
@@ -98,7 +99,7 @@ class ExportController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getStatus(ExportJob $job)
+    public function getStatus(ExportJob $job): JsonResponse
     {
         return response()->json(['status' => trans('firefly.' . $job->status)]);
     }
@@ -129,9 +130,9 @@ class ExportController extends Controller
      * @param AccountRepositoryInterface   $repository
      * @param ExportJobRepositoryInterface $jobs
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function postIndex(ExportFormRequest $request, AccountRepositoryInterface $repository, ExportJobRepositoryInterface $jobs)
+    public function postIndex(ExportFormRequest $request, AccountRepositoryInterface $repository, ExportJobRepositoryInterface $jobs): JsonResponse
     {
         $job      = $jobs->findByKey($request->get('job'));
         $accounts = $request->get('accounts') ?? [];

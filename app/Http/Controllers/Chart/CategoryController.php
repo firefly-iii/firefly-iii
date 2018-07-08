@@ -30,6 +30,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Preferences;
 
@@ -59,9 +60,9 @@ class CategoryController extends Controller
      * @param AccountRepositoryInterface  $accountRepository
      * @param Category                    $category
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse
      */
-    public function all(CategoryRepositoryInterface $repository, AccountRepositoryInterface $accountRepository, Category $category)
+    public function all(CategoryRepositoryInterface $repository, AccountRepositoryInterface $accountRepository, Category $category): JsonResponse
     {
         $cache = new CacheProperties;
         $cache->addProperty('chart.category.all');
@@ -122,9 +123,9 @@ class CategoryController extends Controller
      * @param CategoryRepositoryInterface $repository
      * @param AccountRepositoryInterface  $accountRepository
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function frontpage(CategoryRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
+    public function frontpage(CategoryRepositoryInterface $repository, AccountRepositoryInterface $accountRepository): JsonResponse
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
@@ -166,9 +167,9 @@ class CategoryController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return \Illuminate\Http\JsonResponse|mixed
+     * @return JsonResponse
      */
-    public function reportPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end)
+    public function reportPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -224,9 +225,9 @@ class CategoryController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return \Illuminate\Http\JsonResponse|mixed
+     * @return JsonResponse
      */
-    public function reportPeriodNoCategory(Collection $accounts, Carbon $start, Carbon $end)
+    public function reportPeriodNoCategory(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -278,9 +279,9 @@ class CategoryController extends Controller
      * @param Category                    $category
      * @param                             $date
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse
      */
-    public function specificPeriod(Category $category, Carbon $date)
+    public function specificPeriod(Category $category, Carbon $date): JsonResponse
     {
         $range = Preferences::get('viewRange', '1M')->data;
         $start = app('navigation')->startOfPeriod($date, $range);
@@ -298,7 +299,7 @@ class CategoryController extends Controller
      *
      * @return array
      */
-    private function makePeriodChart(Category $category, Carbon $start, Carbon $end)
+    private function makePeriodChart(Category $category, Carbon $start, Carbon $end): array
     {
         $cache = new CacheProperties;
         $cache->addProperty($start);

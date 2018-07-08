@@ -172,7 +172,7 @@ class Controller extends BaseController
     /**
      * @param string $identifier
      */
-    protected function rememberPreviousUri(string $identifier)
+    protected function rememberPreviousUri(string $identifier): void
     {
         session()->put($identifier, URL::previous());
     }

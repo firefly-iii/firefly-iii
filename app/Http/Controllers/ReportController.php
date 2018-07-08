@@ -81,7 +81,7 @@ class ReportController extends Controller
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function accountReport(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
+    public function accountReport(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): string
     {
         if ($end < $start) {
             return view('error')->with('message', trans('firefly.end_after_start_date')); // @codeCoverageIgnore
@@ -115,7 +115,7 @@ class ReportController extends Controller
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function auditReport(Collection $accounts, Carbon $start, Carbon $end)
+    public function auditReport(Collection $accounts, Carbon $start, Carbon $end): string
     {
         if ($end < $start) {
             return view('error')->with('message', trans('firefly.end_after_start_date')); // @codeCoverageIgnore
@@ -152,7 +152,7 @@ class ReportController extends Controller
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function budgetReport(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
+    public function budgetReport(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): string
     {
         if ($end < $start) {
             return view('error')->with('message', trans('firefly.end_after_start_date')); // @codeCoverageIgnore
@@ -190,7 +190,7 @@ class ReportController extends Controller
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function categoryReport(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
+    public function categoryReport(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): string
     {
         if ($end < $start) {
             return view('error')->with('message', trans('firefly.end_after_start_date')); // @codeCoverageIgnore
@@ -227,7 +227,7 @@ class ReportController extends Controller
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function defaultReport(Collection $accounts, Carbon $start, Carbon $end)
+    public function defaultReport(Collection $accounts, Carbon $start, Carbon $end): string
     {
         if ($end < $start) {
             return view('error')->with('message', trans('firefly.end_after_start_date'));
@@ -386,7 +386,7 @@ class ReportController extends Controller
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function tagReport(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
+    public function tagReport(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): string
     {
         if ($end < $start) {
             return view('error')->with('message', trans('firefly.end_after_start_date')); // @codeCoverageIgnore

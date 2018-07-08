@@ -96,7 +96,7 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function operations(Collection $accounts, Carbon $start, Carbon $end)
+    public function operations(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -153,7 +153,7 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function sum(Collection $accounts, Carbon $start, Carbon $end)
+    public function sum(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
         // chart properties for cache:
         $cache = new CacheProperties;

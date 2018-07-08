@@ -35,6 +35,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
 /**
@@ -70,9 +71,9 @@ class CategoryReportController extends Controller
      * @param Carbon     $end
      * @param string     $others
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function accountExpense(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others)
+    public function accountExpense(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others): JsonResponse
     {
         /** @var MetaPieChartInterface $helper */
         $helper = app(MetaPieChartInterface::class);
@@ -92,9 +93,9 @@ class CategoryReportController extends Controller
      * @param Carbon     $end
      * @param string     $others
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function accountIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others)
+    public function accountIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others): JsonResponse
     {
         /** @var MetaPieChartInterface $helper */
         $helper = app(MetaPieChartInterface::class);
@@ -117,9 +118,9 @@ class CategoryReportController extends Controller
      * @param Carbon     $end
      * @param string     $others
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function categoryExpense(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others)
+    public function categoryExpense(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others): JsonResponse
     {
         /** @var MetaPieChartInterface $helper */
         $helper = app(MetaPieChartInterface::class);
@@ -142,9 +143,9 @@ class CategoryReportController extends Controller
      * @param Carbon     $end
      * @param string     $others
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function categoryIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others)
+    public function categoryIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others): JsonResponse
     {
         /** @var MetaPieChartInterface $helper */
         $helper = app(MetaPieChartInterface::class);
@@ -167,9 +168,9 @@ class CategoryReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function mainChart(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
+    public function mainChart(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): JsonResponse
     {
         $cache = new CacheProperties;
         $cache->addProperty('chart.category.report.main');

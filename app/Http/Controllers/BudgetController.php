@@ -34,6 +34,8 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -75,9 +77,9 @@ class BudgetController extends Controller
      * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function amount(Request $request, BudgetRepositoryInterface $repository, Budget $budget)
+    public function amount(Request $request, BudgetRepositoryInterface $repository, Budget $budget): JsonResponse
     {
         $amount      = (string)$request->get('amount');
         $start       = Carbon::createFromFormat('Y-m-d', $request->get('start'));
@@ -474,9 +476,9 @@ class BudgetController extends Controller
     /**
      * @param BudgetIncomeRequest $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function postUpdateIncome(BudgetIncomeRequest $request)
+    public function postUpdateIncome(BudgetIncomeRequest $request): RedirectResponse
     {
         $start           = Carbon::createFromFormat('Y-m-d', $request->string('start'));
         $end             = Carbon::createFromFormat('Y-m-d', $request->string('end'));
@@ -562,7 +564,7 @@ class BudgetController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(BudgetFormRequest $request)
+    public function store(BudgetFormRequest $request): RedirectResponse
     {
         $data   = $request->getBudgetData();
         $budget = $this->repository->store($data);
@@ -590,7 +592,7 @@ class BudgetController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(BudgetFormRequest $request, Budget $budget)
+    public function update(BudgetFormRequest $request, Budget $budget): RedirectResponse
     {
         $data = $request->getBudgetData();
         $this->repository->update($budget, $data);

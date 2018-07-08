@@ -30,6 +30,7 @@ use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use View;
@@ -99,9 +100,9 @@ class TagController extends Controller
     /**
      * @param Tag $tag
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function destroy(Tag $tag)
+    public function destroy(Tag $tag): RedirectResponse
     {
         $tagName = $tag->tag;
         $this->repository->destroy($tag);
@@ -231,9 +232,9 @@ class TagController extends Controller
     /**
      * @param TagFormRequest $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function store(TagFormRequest $request)
+    public function store(TagFormRequest $request): RedirectResponse
     {
         $data = $request->collectTagData();
         $this->repository->store($data);
@@ -258,9 +259,9 @@ class TagController extends Controller
      * @param TagFormRequest $request
      * @param Tag            $tag
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(TagFormRequest $request, Tag $tag)
+    public function update(TagFormRequest $request, Tag $tag): RedirectResponse
     {
         $data = $request->collectTagData();
         $this->repository->update($tag, $data);

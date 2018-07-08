@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers\Json;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use Illuminate\Http\JsonResponse;
 
 /**
  * Class FrontpageController.
@@ -34,10 +35,10 @@ class FrontpageController extends Controller
     /**
      * @param PiggyBankRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws \Throwable
      */
-    public function piggyBanks(PiggyBankRepositoryInterface $repository)
+    public function piggyBanks(PiggyBankRepositoryInterface $repository): JsonResponse
     {
         $set  = $repository->getPiggyBanks();
         $info = [];

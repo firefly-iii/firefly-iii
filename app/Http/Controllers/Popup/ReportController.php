@@ -31,6 +31,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\Binder\AccountList;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use InvalidArgumentException;
@@ -78,12 +79,12 @@ class ReportController extends Controller
     /**
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      *
      * @throws FireflyException
      * @throws \Throwable
      */
-    public function general(Request $request)
+    public function general(Request $request): JsonResponse
     {
         $attributes = $request->get('attributes') ?? [];
         $attributes = $this->parseAttributes($attributes);

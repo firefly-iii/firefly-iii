@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Json;
 
 use FireflyIII\Support\Facades\Preferences;
+use Illuminate\Http\JsonResponse;
 use Log;
 
 /**
@@ -34,9 +35,9 @@ class IntroController
      * @param string      $route
      * @param string|null $specificPage
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getIntroSteps(string $route, string $specificPage = null)
+    public function getIntroSteps(string $route, string $specificPage = null): JsonResponse
     {
         Log::debug(sprintf('getIntroSteps for route "%s" and page "%s"', $route, $specificPage));
         $specificPage  = $specificPage ?? '';
@@ -92,9 +93,9 @@ class IntroController
      * @param string      $route
      * @param string|null $specialPage
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function postEnable(string $route, string $specialPage = null)
+    public function postEnable(string $route, string $specialPage = null): JsonResponse
     {
         $specialPage = $specialPage ?? '';
         $route       = str_replace('.', '_', $route);
@@ -112,9 +113,9 @@ class IntroController
      * @param string      $route
      * @param string|null $specialPage
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function postFinished(string $route, string $specialPage = null)
+    public function postFinished(string $route, string $specialPage = null): JsonResponse
     {
         $specialPage = $specialPage ?? '';
         $key         = 'shown_demo_' . $route;

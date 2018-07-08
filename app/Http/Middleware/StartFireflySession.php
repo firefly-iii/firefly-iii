@@ -37,7 +37,7 @@ class StartFireflySession extends StartSession
      * @param \Illuminate\Http\Request              $request
      * @param \Illuminate\Contracts\Session\Session $session
      */
-    protected function storeCurrentUrl(Request $request, $session)
+    protected function storeCurrentUrl(Request $request, $session): void
     {
         $uri    = $request->fullUrl();
         $strpos = strpos($uri, 'jscript');

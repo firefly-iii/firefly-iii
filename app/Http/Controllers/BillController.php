@@ -30,6 +30,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\BillTransformer;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use League\Fractal\Manager;
@@ -120,7 +121,7 @@ class BillController extends Controller
      * @param Request $request
      * @param Bill    $bill
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function destroy(Request $request, Bill $bill)
     {
@@ -220,7 +221,7 @@ class BillController extends Controller
      * @param Request $request
      * @param Bill    $bill
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|\Illuminate\Routing\Redirector
      * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function rescan(Request $request, Bill $bill)
@@ -296,9 +297,9 @@ class BillController extends Controller
     /**
      * @param BillFormRequest $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function store(BillFormRequest $request)
+    public function store(BillFormRequest $request): RedirectResponse
     {
         $billData = $request->getBillData();
         $bill     = $this->billRepository->store($billData);
@@ -348,9 +349,9 @@ class BillController extends Controller
      * @param BillFormRequest $request
      * @param Bill            $bill
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(BillFormRequest $request, Bill $bill)
+    public function update(BillFormRequest $request, Bill $bill): RedirectResponse
     {
         $billData = $request->getBillData();
         $bill     = $this->billRepository->update($bill, $billData);

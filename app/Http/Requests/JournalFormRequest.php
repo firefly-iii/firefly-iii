@@ -35,7 +35,7 @@ class JournalFormRequest extends Request
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         // Only allow logged in users
         return auth()->check();
@@ -46,7 +46,7 @@ class JournalFormRequest extends Request
      *
      * @return array
      */
-    public function getJournalData()
+    public function getJournalData(): array
     {
         $currencyId = $this->integer('amount_currency_id_amount');
         $data       = [
@@ -142,7 +142,7 @@ class JournalFormRequest extends Request
      *
      * @throws FireflyException
      */
-    public function rules()
+    public function rules(): array
     {
         $what  = $this->get('what');
         $rules = [

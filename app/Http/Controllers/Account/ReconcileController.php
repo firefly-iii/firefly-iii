@@ -38,6 +38,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
@@ -119,12 +120,12 @@ class ReconcileController extends Controller
      * @param Carbon  $start
      * @param Carbon  $end
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      *
      * @throws FireflyException
      * @throws \Throwable
      */
-    public function overview(Request $request, Account $account, Carbon $start, Carbon $end)
+    public function overview(Request $request, Account $account, Carbon $start, Carbon $end): JsonResponse
     {
         if (AccountType::ASSET !== $account->accountType->type) {
             throw new FireflyException(sprintf('Account %s is not an asset account.', $account->name));

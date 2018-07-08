@@ -52,7 +52,7 @@ class DebugController extends Controller
     /**
      * @throws FireflyException
      */
-    public function displayError()
+    public function displayError(): void
     {
         Log::debug('This is a test message at the DEBUG level.');
         Log::info('This is a test message at the INFO level.');

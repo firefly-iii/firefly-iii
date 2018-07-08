@@ -66,7 +66,7 @@ class Range
     /**
      *
      */
-    private function configureList()
+    private function configureList(): void
     {
         $pref = Preferences::get('list-length', config('firefly.list_length', 10))->data;
         View::share('listLength', $pref);
@@ -75,7 +75,7 @@ class Range
     /**
      *
      */
-    private function configureView()
+    private function configureView(): void
     {
         $pref = Preferences::get('language', config('firefly.default_language', 'en_US'));
         $lang = $pref->data;
@@ -105,7 +105,7 @@ class Range
     /**
      * @param Request $request
      */
-    private function loseItAll(Request $request)
+    private function loseItAll(Request $request): void
     {
         if ('sqlite' === getenv('DB_CONNECTION') && true === getenv('IS_DOCKER')) {
             $request->session()->flash(
@@ -117,7 +117,7 @@ class Range
     /**
      *
      */
-    private function setRange()
+    private function setRange(): void
     {
         // ignore preference. set the range to be the current month:
         if (!Session::has('start') && !Session::has('end')) {

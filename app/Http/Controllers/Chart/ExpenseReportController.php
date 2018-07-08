@@ -33,6 +33,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
 /**
@@ -69,9 +70,9 @@ class ExpenseReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function mainChart(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
+    public function mainChart(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): JsonResponse
     {
         $cache = new CacheProperties;
         $cache->addProperty('chart.expense.report.main');
