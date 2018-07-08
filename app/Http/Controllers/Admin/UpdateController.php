@@ -18,27 +18,24 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection PhpMethodParametersCountMismatchInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
-use Carbon\Carbon;
 use FireflyConfig;
-use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Middleware\IsSandStormUser;
-use FireflyIII\Services\Github\Object\Release;
-use FireflyIII\Services\Github\Request\UpdateRequest;
 use Illuminate\Http\Request;
-use Log;
 
 /**
  * Class HomeController.
  */
 class UpdateController extends Controller
 {
-
+    use UpdateTrait;
 
     /**
      * ConfigurationController constructor.
@@ -70,9 +67,9 @@ class UpdateController extends Controller
         $permission   = app('fireflyconfig')->get('permission_update_check', -1);
         $selected     = $permission->data;
         $options      = [
-            '-1' => trans('firefly.updates_ask_me_later'),
-            '0'  => trans('firefly.updates_do_not_check'),
-            '1'  => trans('firefly.updates_enable_check'),
+            -1 => trans('firefly.updates_ask_me_later'),
+            0  => trans('firefly.updates_do_not_check'),
+            1  => trans('firefly.updates_enable_check'),
         ];
 
         return view('admin.update.index', compact('subTitle', 'subTitleIcon', 'selected', 'options'));
@@ -98,55 +95,16 @@ class UpdateController extends Controller
      */
     public function updateCheck()
     {
-        $current = config('firefly.version');
-        /** @var UpdateRequest $request */
-        $request = app(UpdateRequest::class);
-        $check   = -2;
-        $first   = new Release(['id' => '0', 'title' => '0', 'updated' => '2017-01-01', 'content' => '']);
-        $string  = '';
-        try {
-            $request->call();
-            $releases = $request->getReleases();
-            // first entry should be the latest entry:
-            /** @var Release $first */
-            $first = reset($releases);
-            $check = version_compare($current, $first->getTitle());
-            FireflyConfig::set('last_update_check', time());
-        } catch (FireflyException $e) {
-            Log::error(sprintf('Could not check for updates: %s', $e->getMessage()));
-        }
-        if ($check === -2) {
-            $string = (string)trans('firefly.update_check_error');
-        }
+        $latestRelease = $this->getLatestRelease();
+        $versionCheck  = $this->versionCheck($latestRelease);
+        $resultString  = $this->parseResult($latestRelease, $versionCheck);
 
-        if ($check === -1) {
-            // there is a new FF version!
-            // has it been released for more than three days?
-            $today = new Carbon;
-            if ($today->diffInDays($first->getUpdated(), true) > 3) {
-                $string = (string)trans(
-                    'firefly.update_new_version_alert',
-                    [
-                        'your_version' => $current,
-                        'new_version'  => $first->getTitle(),
-                        'date'         => $first->getUpdated()->formatLocalized($this->monthAndDayFormat),
-                    ]
-                );
-            }
-            if ($today->diffInDays($first->getUpdated(), true) <= 3) {
-                // tell user their running the current version.
-                $string = (string)trans('firefly.update_current_version_alert', ['version' => $current]);
-            }
+        if (0 !== $versionCheck && '' !== $resultString) {
+            // flash info
+            session()->flash('info', $resultString);
         }
-        if ($check === 0) {
-            // you are running the current version!
-            $string = (string)trans('firefly.update_current_version_alert', ['version' => $current]);
-        }
-        if ($check === 1) {
-            // you are running a newer version!
-            $string = (string)trans('firefly.update_newer_version_alert', ['your_version' => $current, 'new_version' => $first->getTitle()]);
-        }
+        FireflyConfig::set('last_update_check', time());
 
-        return response()->json(['result' => $string]);
+        return response()->json(['result' => $resultString]);
     }
 }

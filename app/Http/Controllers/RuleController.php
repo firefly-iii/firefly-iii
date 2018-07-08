@@ -104,7 +104,7 @@ class RuleController extends Controller
         $oldActions   = [];
         $returnToBill = false;
 
-        if ($request->get('return') === 'true') {
+        if ('true' === $request->get('return')) {
             $returnToBill = true;
         }
 
@@ -359,7 +359,7 @@ class RuleController extends Controller
         Preferences::mark();
 
         // redirect to show bill.
-        if ($request->get('return_to_bill') === 'true' && (int)$request->get('bill_id') > 0) {
+        if ('true' === $request->get('return_to_bill') && (int)$request->get('bill_id') > 0) {
             return redirect(route('bills.show', [(int)$request->get('bill_id')])); // @codeCoverageIgnore
         }
 
@@ -792,6 +792,7 @@ class RuleController extends Controller
     private function getTriggersForBill(Bill $bill): array
     {
         $triggers = [];
+        /** @noinspection BadExceptionsProcessingInspection */
         try {
             $triggers[] = view(
                 'rules.partials.trigger',
@@ -822,6 +823,7 @@ class RuleController extends Controller
                     'count'      => 3,
                 ]
             )->render();
+
             $triggers[] = view(
                 'rules.partials.trigger',
                 [

@@ -51,11 +51,11 @@ class TrustProxies extends Middleware
     {
         $trustedProxies = env('TRUSTED_PROXIES', null);
         if (false !== $trustedProxies && null !== $trustedProxies && \strlen($trustedProxies) > 0) {
-            if ($trustedProxies === '*' || $trustedProxies === '**') {
-                $this->proxies = (string)$trustedProxies;
+            if ('*' === $trustedProxies || '**' === $trustedProxies) {
+                $this->proxies = $trustedProxies;
 
             }
-            if ($trustedProxies !== '*' && $trustedProxies !== '**') {
+            if ('*' !== $trustedProxies && '**' !== $trustedProxies) {
                 $this->proxies = explode(',', $trustedProxies);
             }
         }

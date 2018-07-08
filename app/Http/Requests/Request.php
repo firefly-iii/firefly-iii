@@ -37,10 +37,10 @@ class Request extends FormRequest
      */
     public function boolean(string $field): bool
     {
-        if ((string)$this->input($field) === 'true') {
+        if ('true' === (string)$this->input($field)) {
             return true;
         }
-        if ((string)$this->input($field) === 'false') {
+        if ('false' === (string)$this->input($field)) {
             return false;
         }
 

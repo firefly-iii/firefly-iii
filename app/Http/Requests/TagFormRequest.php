@@ -68,13 +68,13 @@ class TagFormRequest extends Request
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);
         $idRule     = '';
         $tagRule    = 'required|min:1|uniqueObjectForUser:tags,tag';
-        if (null !== $repository->find((int)$this->get('id'))->id) {
+        if (null !== $repository->findNull((int)$this->get('id'))) {
             $idRule  = 'belongsToUser:tags';
             $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag,' . $this->get('id');
         }

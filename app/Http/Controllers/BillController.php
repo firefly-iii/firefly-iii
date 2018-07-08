@@ -326,7 +326,7 @@ class BillController extends Controller
 
         // find first rule group, or create one:
         $count = $this->ruleGroupRepos->count();
-        if ($count === 0) {
+        if (0 === $count) {
             $data  = [
                 'title'       => (string)trans('firefly.rulegroup_for_bills_title'),
                 'description' => (string)trans('firefly.rulegroup_for_bills_description'),

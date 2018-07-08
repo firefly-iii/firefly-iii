@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection PhpMethodParametersCountMismatchInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -226,7 +227,7 @@ class TagController extends Controller
 
         $sums = $repository->sumsOfTag($tag, $start, $end);
 
-        return view('tags.show', compact('apiKey', 'tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'transactions', 'start', 'end', 'moment'));
+        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'transactions', 'start', 'end', 'moment'));
     }
 
     /**

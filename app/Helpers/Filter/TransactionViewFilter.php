@@ -43,6 +43,7 @@ class TransactionViewFilter implements FilterInterface
      *
      * @param Collection $set
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      * @return Collection
      */
     public function filter(Collection $set): Collection

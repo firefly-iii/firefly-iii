@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
+/** @noinspection PhpMethodParametersCountMismatchInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Recurring;
@@ -64,13 +64,14 @@ class IndexController extends Controller
         );
     }
 
+
     /**
      * @param Request $request
      *
      * @throws FireflyException
      * @return JsonResponse
      */
-    function events(Request $request): JsonResponse
+    public function events(Request $request): JsonResponse
     {
         $return           = [];
         $start            = Carbon::createFromFormat('Y-m-d', $request->get('start'));
@@ -187,8 +188,8 @@ class IndexController extends Controller
      */
     public function show(Request $request, Recurrence $recurrence)
     {
-        $transformer = new RecurrenceTransformer(new ParameterBag);
-        $array       = $transformer->transform($recurrence);
+        $transformer  = new RecurrenceTransformer(new ParameterBag);
+        $array        = $transformer->transform($recurrence);
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         $transactions = $this->recurring->getTransactions($recurrence, $page, $pageSize);
@@ -202,7 +203,7 @@ class IndexController extends Controller
 
         $subTitle = trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
 
-        return view('recurring.show', compact('recurrence', 'subTitle', 'array','transactions'));
+        return view('recurring.show', compact('recurrence', 'subTitle', 'array', 'transactions'));
     }
 
     /**
@@ -216,7 +217,7 @@ class IndexController extends Controller
         $date        = Carbon::createFromFormat('Y-m-d', $request->get('date'));
         $preSelected = (string)$request->get('pre_select');
         $result      = [];
-        if ($date > $today || (string)$request->get('past') === 'true') {
+        if ($date > $today || 'true' === (string)$request->get('past')) {
             $weekly     = sprintf('weekly,%s', $date->dayOfWeekIso);
             $monthly    = sprintf('monthly,%s', $date->day);
             $dayOfWeek  = trans(sprintf('config.dow_%s', $date->dayOfWeekIso));

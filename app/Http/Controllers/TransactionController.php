@@ -85,7 +85,6 @@ class TransactionController extends Controller
         $types        = config('firefly.transactionTypesByWhat.' . $what);
         $page         = (int)$request->get('page');
         $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
-        $path         = route('transactions.index', [$what]);
         if (null === $start) {
             $start = session('start');
             $end   = session('end');
@@ -183,8 +182,8 @@ class TransactionController extends Controller
             $order = 0;
             $ids   = array_unique($ids);
             foreach ($ids as $id) {
-                $journal = $this->repository->find((int)$id);
-                if ($journal && $journal->date->isSameDay($date)) {
+                $journal = $this->repository->findNull((int)$id);
+                if (null !== $journal && $journal->date->isSameDay($date)) {
                     $this->repository->setOrder($journal, $order);
                     ++$order;
                 }

@@ -147,6 +147,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
 
     /**
      * Calculate the expenses for a budget.
+     *
      * @param Budget      $budget
      * @param BudgetLimit $budgetLimit
      * @param Collection  $accounts

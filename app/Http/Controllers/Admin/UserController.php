@@ -120,13 +120,13 @@ class UserController extends Controller
 
         // add meta stuff.
         $users->each(
-            function (User $user) {
+            function (User $user) use ($repository) {
                 $list          = ['twoFactorAuthEnabled', 'twoFactorAuthSecret'];
                 $preferences   = Preferences::getArrayForUser($user, $list);
-                $user->isAdmin = $user->hasRole('owner');
+                $user->isAdmin = $repository->hasRole($user, 'owner');
                 $is2faEnabled  = 1 === $preferences['twoFactorAuthEnabled'];
                 $has2faSecret  = null !== $preferences['twoFactorAuthSecret'];
-                $user->has2FA  = ($is2faEnabled && $has2faSecret) ? true : false;
+                $user->has2FA  = ($is2faEnabled && $has2faSecret);
                 $user->prefs   = $preferences;
             }
         );

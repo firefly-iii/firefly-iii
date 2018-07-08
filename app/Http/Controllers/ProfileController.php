@@ -210,14 +210,14 @@ class ProfileController extends Controller
 
         $this->createOAuthKeys();
 
-        if ($count === 0) {
+        if (0 === $count) {
             /** @var ClientRepository $repository */
             $repository = app(ClientRepository::class);
             $repository->createPersonalAccessClient(null, config('app.name') . ' Personal Access Client', 'http://localhost');
         }
         $subTitle   = auth()->user()->email;
         $userId     = auth()->user()->id;
-        $enabled2FA = (int)Preferences::get('twoFactorAuthEnabled', 0)->data === 1;
+        $enabled2FA = 1 === (int)Preferences::get('twoFactorAuthEnabled', 0)->data;
 
         // get access token or create one.
         $accessToken = Preferences::get('access_token', null);

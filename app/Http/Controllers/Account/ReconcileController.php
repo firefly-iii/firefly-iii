@@ -254,6 +254,7 @@ class ReconcileController extends Controller
      * @param Carbon                     $end
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws FireflyException
      */
     public function submit(ReconciliationStoreRequest $request, JournalRepositoryInterface $repository, Account $account, Carbon $start, Carbon $end)
     {
@@ -275,7 +276,7 @@ class ReconcileController extends Controller
             $difference  = $data['difference'];
             $source      = $reconciliation;
             $destination = $account;
-            if (bccomp($difference, '0') === 1) {
+            if (1 === bccomp($difference, '0')) {
                 // amount is positive. Add it to reconciliation?
                 $source      = $account;
                 $destination = $reconciliation;
@@ -401,7 +402,7 @@ class ReconcileController extends Controller
         // amount pos neg influences the accounts:
         $source      = $this->repository->getJournalSourceAccounts($journal)->first();
         $destination = $this->repository->getJournalDestinationAccounts($journal)->first();
-        if (bccomp($submitted['amount'], '0') === 1) {
+        if (1 === bccomp($submitted['amount'], '0')) {
             // amount is positive, switch accounts:
             [$source, $destination] = [$destination, $source];
 

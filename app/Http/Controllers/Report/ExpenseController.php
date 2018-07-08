@@ -98,7 +98,6 @@ class ExpenseController extends Controller
             }
             $together[$categoryId]['grand_total'] = bcadd($spentInfo['grand_total'], $together[$categoryId]['grand_total']);
         }
-        unset($spentInfo);
         $result = view('reports.partials.exp-budgets', compact('together'))->render();
         $cache->store($result);
 
@@ -146,7 +145,6 @@ class ExpenseController extends Controller
             }
             $together[$categoryId]['grand_total'] = bcadd($spentInfo['grand_total'], $together[$categoryId]['grand_total']);
         }
-        unset($spentInfo);
         foreach ($earned as $categoryId => $earnedInfo) {
             if (!isset($together[$categoryId])) {
                 $together[$categoryId]['earned']      = $earnedInfo;

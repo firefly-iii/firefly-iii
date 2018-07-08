@@ -153,12 +153,12 @@ class MassController extends Controller
         // transform to array
         $transactions = $collection->map(
             function (Transaction $transaction) use ($transformer) {
-                $transaction = $transformer->transform($transaction);
+                $transformed = $transformer->transform($transaction);
                 // make sure amount is positive:
-                $transaction['amount']         = app('steam')->positive((string)$transaction['amount']);
-                $transaction['foreign_amount'] = app('steam')->positive((string)$transaction['foreign_amount']);
+                $transformed['amount']         = app('steam')->positive((string)$transformed['amount']);
+                $transformed['foreign_amount'] = app('steam')->positive((string)$transformed['foreign_amount']);
 
-                return $transaction;
+                return $transformed;
             }
         );
 
@@ -177,7 +177,7 @@ class MassController extends Controller
         $count      = 0;
         if (\is_array($journalIds)) {
             foreach ($journalIds as $journalId) {
-                $journal = $repository->find((int)$journalId);
+                $journal = $repository->findNull((int)$journalId);
                 if (null !== $journal) {
                     // get optional fields:
                     $what              = strtolower($this->repository->getTransactionType($journal));
@@ -206,7 +206,7 @@ class MassController extends Controller
 
                                                 'category_id'           => null,
                                                 'category_name'         => $category,
-                                                'budget_id'             => (int)$budgetId,
+                                                'budget_id'             => $budgetId,
                                                 'budget_name'           => null,
                                                 'source_id'             => (int)$sourceAccountId,
                                                 'source_name'           => $sourceAccountName,

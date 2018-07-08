@@ -107,7 +107,7 @@ class Range
      */
     private function loseItAll(Request $request)
     {
-        if (getenv('DB_CONNECTION') === 'sqlite' && getenv('IS_DOCKER') === true) {
+        if ('sqlite' === getenv('DB_CONNECTION') && true === getenv('IS_DOCKER')) {
             $request->session()->flash(
                 'error', 'You seem to be using SQLite in a Docker container. Don\'t do this. If the container restarts all your data will be gone.'
             );

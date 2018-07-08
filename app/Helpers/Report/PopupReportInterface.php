@@ -55,6 +55,7 @@ interface PopupReportInterface
 
     /**
      * Group by budget.
+     *
      * @param Budget $budget
      * @param array  $attributes
      *

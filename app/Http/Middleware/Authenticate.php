@@ -105,7 +105,12 @@ class Authenticate
                 }
             } catch (QueryException $e) {
                 // @codeCoverageIgnoreStart
-                throw new FireflyException('It seems the database has not yet been initialized. Did you run the correct upgrade or installation commands?');
+                throw new FireflyException(
+                    sprintf(
+                        'It seems the database has not yet been initialized. Did you run the correct upgrade or installation commands? Error: %s',
+                        $e->getMessage()
+                    )
+                );
                 // @codeCoverageIgnoreEnd
             }
 

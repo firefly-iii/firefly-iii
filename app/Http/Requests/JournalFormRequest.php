@@ -239,15 +239,15 @@ class JournalFormRequest extends Request
         $data = $validator->getData();
         $type = $data['what'] ?? 'invalid';
         Log::debug(sprintf('Type is %s', $type));
-        if ($type === 'withdrawal') {
+        if ('withdrawal' === $type) {
 
             $selectedCurrency = (int)($data['amount_currency_id_amount'] ?? 0);
             $accountCurrency  = (int)($data['source_account_currency'] ?? 0);
             Log::debug(sprintf('Selected currency is %d, account currency is %d', $selectedCurrency, $accountCurrency));
             $nativeAmount = (string)($data['native_amount'] ?? '');
             if ($selectedCurrency !== $accountCurrency && '' === $nativeAmount
-                && $selectedCurrency !== 0
-                && $accountCurrency !== 0
+                && 0 !== $selectedCurrency
+                && 0 !== $accountCurrency
             ) {
                 Log::debug('ADD validation error on native_amount');
                 $validator->errors()->add('native_amount', trans('validation.numeric_native'));
@@ -257,13 +257,13 @@ class JournalFormRequest extends Request
         }
 
         // same thing for deposits:
-        if ($type === 'deposit') {
+        if ('deposit' === $type) {
             $selectedCurrency = (int)($data['amount_currency_id_amount'] ?? 0);
             $accountCurrency  = (int)($data['destination_account_currency'] ?? 0);
             $nativeAmount     = (string)($data['native_amount'] ?? '');
             if ($selectedCurrency !== $accountCurrency && '' === $nativeAmount
-                && $selectedCurrency !== 0
-                && $accountCurrency !== 0
+                && 0 !== $selectedCurrency
+                && 0 !== $accountCurrency
             ) {
                 $validator->errors()->add('native_amount', trans('validation.numeric_native'));
 
@@ -272,7 +272,7 @@ class JournalFormRequest extends Request
         }
 
         // and for transfers
-        if ($type === 'transfer') {
+        if ('transfer' === $type) {
 
             $sourceCurrency      = (int)($data['source_account_currency'] ?? 0);
             $destinationCurrency = (int)($data['destination_account_currency'] ?? 0);
@@ -282,15 +282,15 @@ class JournalFormRequest extends Request
             Log::debug(sprintf('Source currency is %d, destination currency is %d', $sourceCurrency, $destinationCurrency));
 
             if ($sourceCurrency !== $destinationCurrency && '' === $sourceAmount
-                && $sourceCurrency !== 0
-                && $destinationCurrency !== 0
+                && 0 !== $sourceCurrency
+                && 0 !== $destinationCurrency
             ) {
                 $validator->errors()->add('source_amount', trans('validation.numeric_source'));
             }
 
             if ($sourceCurrency !== $destinationCurrency && '' === $destinationAmount
-                && $sourceCurrency !== 0
-                && $destinationCurrency !== 0
+                && 0 !== $sourceCurrency
+                && 0 !== $destinationCurrency
             ) {
                 $validator->errors()->add('destination_amount', trans('validation.numeric_destination'));
                 $validator->errors()->add('destination_amount', trans('validation.numeric', ['attribute' => 'destination_amount']));

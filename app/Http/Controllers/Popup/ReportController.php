@@ -81,6 +81,7 @@ class ReportController extends Controller
      * @return \Illuminate\Http\JsonResponse
      *
      * @throws FireflyException
+     * @throws \Throwable
      */
     public function general(Request $request)
     {
@@ -229,13 +230,13 @@ class ReportController extends Controller
         try {
             $attributes['startDate'] = Carbon::createFromFormat('Ymd', $attributes['startDate']);
         } catch (InvalidArgumentException $e) {
-            throw new FireflyException('Could not parse start date "' . e($attributes['startDate']) . '".');
+            throw new FireflyException(sprintf('Could not parse start date "%s": %s', $attributes['startDate'], $e->getMessage()));
         }
 
         try {
             $attributes['endDate'] = Carbon::createFromFormat('Ymd', $attributes['endDate']);
         } catch (InvalidArgumentException $e) {
-            throw new FireflyException('Could not parse start date "' . e($attributes['endDate']) . '".');
+            throw new FireflyException(sprintf('Could not parse end date "%s": %s', $attributes['endDate'], $e->getMessage()));
         }
 
         return $attributes;

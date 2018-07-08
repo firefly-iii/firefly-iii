@@ -107,7 +107,7 @@ class BudgetController extends Controller
 
         while ($end >= $current) {
             $currentEnd = app('navigation')->endOfPeriod($current, $step);
-            if ($step === '1Y') {
+            if ('1Y' === $step) {
                 $currentEnd->subDay(); // @codeCoverageIgnore
             }
             $spent             = $this->repository->spentInPeriod($budgetCollection, new Collection, $current, $currentEnd);
@@ -544,7 +544,7 @@ class BudgetController extends Controller
                 $return[$name] = $row;
             }
         }
-        unset($rows, $row);
+        unset($rows);
 
         return $return;
     }

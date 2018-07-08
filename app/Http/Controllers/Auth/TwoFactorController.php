@@ -59,7 +59,7 @@ class TwoFactorController extends Controller
             return redirect(route('index'));
         }
 
-        if (0 === \strlen((string)$secret)) {
+        if ('' === (string)$secret) {
             throw new FireflyException('Your two factor authentication secret is empty, which it cannot be at this point. Please check the log files.');
         }
         $request->session()->flash('two-factor-secret', $secret);

@@ -89,10 +89,10 @@ class IndexController extends Controller
         $hasPreReq = (bool)config(sprintf('import.has_prereq.%s', $importProvider));
         $hasConfig = (bool)config(sprintf('import.has_job_config.%s', $importProvider));
         // if job provider has no prerequisites:
-        if ($hasPreReq === false) {
+        if (false === $hasPreReq) {
             Log::debug('Provider has no prerequisites. Continue.');
             // if job provider also has no configuration:
-            if ($hasConfig === false) {
+            if (false === $hasConfig) {
                 // @codeCoverageIgnoreStart
                 Log::debug('Provider needs no configuration for job. Job is ready to start.');
                 $this->repository->updateStatus($importJob, 'ready_to_run');
@@ -130,7 +130,7 @@ class IndexController extends Controller
 
         // update job to say "has_prereq".
         $this->repository->setStatus($importJob, 'has_prereq');
-        if ($hasConfig === false) {
+        if (false === $hasConfig) {
             // @codeCoverageIgnoreStart
             Log::debug('Provider has no configuration. Job is ready to start.');
             $this->repository->updateStatus($importJob, 'ready_to_run');
@@ -208,16 +208,16 @@ class IndexController extends Controller
             $enabled        = (bool)config(sprintf('import.enabled.%s', $providerName));
             $allowedForDemo = (bool)config(sprintf('import.allowed_for_demo.%s', $providerName));
             $allowedForUser = (bool)config(sprintf('import.allowed_for_user.%s', $providerName));
-            if ($enabled === false) {
+            if (false === $enabled) {
                 //Log::debug('Provider is not enabled. NEXT!');
                 continue;
             }
 
-            if ($isDemoUser === true && $allowedForDemo === false) {
+            if (true === $isDemoUser && false === $allowedForDemo) {
                 //Log::debug('User is demo and this provider is not allowed for demo user. NEXT!');
                 continue;
             }
-            if ($isDemoUser === false && $allowedForUser === false && $isDebug === false) {
+            if (false === $isDemoUser && false === $allowedForUser && false === $isDebug) {
                 //Log::debug('User is not demo and this provider is not allowed for such users. NEXT!');
                 continue; // @codeCoverageIgnore
             }
@@ -227,7 +227,7 @@ class IndexController extends Controller
             ];
             $class                    = (string)config(sprintf('import.prerequisites.%s', $providerName));
             $result                   = false;
-            if ($class !== '' && class_exists($class)) {
+            if ('' !== $class && class_exists($class)) {
                 //Log::debug('Will not check prerequisites.');
                 /** @var PrerequisitesInterface $object */
                 $object = app($class);

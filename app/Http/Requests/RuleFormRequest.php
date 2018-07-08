@@ -67,7 +67,7 @@ class RuleFormRequest extends Request
                 $data['rule-triggers'][] = [
                     'name'            => $value,
                     'value'           => $triggerValues[$index] ?? '',
-                    'stop-processing' => (int)($triggerStop[$index] ?? 0) === 1,
+                    'stop-processing' => 1 === (int)($triggerStop[$index] ?? 0),
                 ];
             }
         }
@@ -77,7 +77,7 @@ class RuleFormRequest extends Request
                 $data['rule-actions'][] = [
                     'name'            => $value,
                     'value'           => $actionValues[$index] ?? '',
-                    'stop-processing' => (int)($actionStop[$index] ?? 0) === 1,
+                    'stop-processing' => 1 === (int)($actionStop[$index] ?? 0),
                 ];
             }
         }

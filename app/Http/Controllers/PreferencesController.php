@@ -24,7 +24,6 @@ namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Preferences;
 use View;
@@ -85,12 +84,11 @@ class PreferencesController extends Controller
     }
 
     /**
-     * @param Request                 $request
-     * @param UserRepositoryInterface $repository
+     * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function postIndex(Request $request, UserRepositoryInterface $repository)
+    public function postIndex(Request $request)
     {
         // front page accounts
         $frontPageAccounts = [];

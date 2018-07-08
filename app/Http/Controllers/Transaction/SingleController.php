@@ -113,13 +113,13 @@ class SingleController extends Controller
             'budget_id'                 => $budgetId,
             'category'                  => $categoryName,
             'tags'                      => $tags,
-            'interest_date'             => $journal->getMeta('interest_date'),
-            'book_date'                 => $journal->getMeta('book_date'),
-            'process_date'              => $journal->getMeta('process_date'),
-            'due_date'                  => $journal->getMeta('due_date'),
-            'payment_date'              => $journal->getMeta('payment_date'),
-            'invoice_date'              => $journal->getMeta('invoice_date'),
-            'internal_reference'        => $journal->getMeta('internal_reference'),
+            'interest_date'             => $this->repository->getMetaField($journal, 'interest_date'),
+            'book_date'                 => $this->repository->getMetaField($journal, 'book_date'),
+            'process_date'              => $this->repository->getMetaField($journal, 'process_date'),
+            'due_date'                  => $this->repository->getMetaField($journal, 'due_date'),
+            'payment_date'              => $this->repository->getMetaField($journal, 'payment_date'),
+            'invoice_date'              => $this->repository->getMetaField($journal, 'invoice_date'),
+            'internal_reference'        => $this->repository->getMetaField($journal, 'internal_reference'),
             'notes'                     => '',
         ];
 
@@ -143,7 +143,7 @@ class SingleController extends Controller
     public function create(Request $request, string $what = TransactionType::DEPOSIT)
     {
         $what           = strtolower($what);
-        $what           = $request->old('what') ?? $what;
+        $what           = (string)($request->old('what') ?? $what);
         $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $preFilled      = session()->has('preFilled') ? session('preFilled') : [];
         $subTitle       = trans('form.add_new_' . $what);
@@ -152,13 +152,13 @@ class SingleController extends Controller
         $source         = (int)$request->get('source');
 
         // grab old currency ID from old data:
-        $currencyID = (int)$request->old('amount_currency_id_amount');
+        $currencyID                             = (int)$request->old('amount_currency_id_amount');
         $preFilled['amount_currency_id_amount'] = $currencyID;
 
-        if (($what === 'withdrawal' || $what === 'transfer') && $source > 0) {
+        if (('withdrawal' === $what || 'transfer' === $what) && $source > 0) {
             $preFilled['source_id'] = $source;
         }
-        if ($what === 'deposit' && $source > 0) {
+        if ('deposit' === $what && $source > 0) {
             $preFilled['destination_id'] = $source;
         }
 

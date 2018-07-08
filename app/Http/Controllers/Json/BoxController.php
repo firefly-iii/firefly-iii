@@ -153,7 +153,7 @@ class BoxController extends Controller
             $incomes[$currencyId]  = Amount::formatAnything($currency, $incomes[$currencyId] ?? '0', false);
             $expenses[$currencyId] = Amount::formatAnything($currency, $expenses[$currencyId] ?? '0', false);
         }
-        if (\count($sums) === 0) {
+        if (0 === \count($sums)) {
             $currency                = app('amount')->getDefaultCurrency();
             $sums[$currency->id]     = Amount::formatAnything($currency, '0', false);
             $incomes[$currency->id]  = Amount::formatAnything($currency, '0', false);
@@ -248,7 +248,7 @@ class BoxController extends Controller
             $accountCurrency = null;
             $balance         = $balances[$account->id] ?? '0';
             $currencyId      = (int)$repository->getMetaValue($account, 'currency_id');
-            if ($currencyId !== 0) {
+            if (0 !== $currencyId) {
                 $accountCurrency = $currencyRepos->findNull($currencyId);
             }
             if (null === $accountCurrency) {
@@ -259,7 +259,7 @@ class BoxController extends Controller
             // to better reflect that this is not money that is actually "yours".
             $role           = (string)$repository->getMetaValue($account, 'accountRole');
             $virtualBalance = (string)$account->virtual_balance;
-            if ($role === 'ccAsset' && $virtualBalance !== '' && (float)$virtualBalance > 0) {
+            if ('ccAsset' === $role && '' !== $virtualBalance && (float)$virtualBalance > 0) {
                 $balance = bcsub($balance, $virtualBalance);
             }
 

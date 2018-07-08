@@ -146,7 +146,7 @@ class AutoCompleteController extends Controller
         $set      = $repository->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY]);
         $filtered = $set->filter(
             function (Account $account) {
-                if ($account->active === true) {
+                if (true === $account->active) {
                     return $account;
                 }
 
@@ -203,7 +203,7 @@ class AutoCompleteController extends Controller
         $set      = $repository->getAccountsByType([AccountType::REVENUE]);
         $filtered = $set->filter(
             function (Account $account) {
-                if ($account->active === true) {
+                if (true === $account->active) {
                     return $account;
                 }
 

@@ -87,7 +87,7 @@ class DebugController extends Controller
             // @codeCoverageIgnoreStart
         } catch (Exception $e) {
             // don't care
-            Log::debug('Called twig:clean.');
+            Log::debug(sprintf('Called twig:clean: %s', $e->getMessage()));
         }
         // @codeCoverageIgnoreEnd
         Log::debug('Call view:clear...');
@@ -202,7 +202,7 @@ class DebugController extends Controller
                         break;
                     }
                 }
-                if ($found === false) {
+                if (false === $found) {
                     $return .= 'touch ' . $route->getName() . '.md;';
                 }
             }
@@ -258,7 +258,7 @@ class DebugController extends Controller
     {
         $packages = [];
         $file     = \dirname(__DIR__, 3) . '/vendor/composer/installed.json';
-        if (!($file === false) && file_exists($file)) {
+        if (!(false === $file) && file_exists($file)) {
             // file exists!
             $content = file_get_contents($file);
             $json    = json_decode($content, true);

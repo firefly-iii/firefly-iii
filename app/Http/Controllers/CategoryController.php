@@ -268,7 +268,7 @@ class CategoryController extends Controller
         }
 
         // prep for current period
-        if (0 === \strlen($moment)) {
+        if ('' === $moment) {
             /** @var Carbon $start */
             $start = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
             /** @var Carbon $end */

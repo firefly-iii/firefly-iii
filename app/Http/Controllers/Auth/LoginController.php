@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection PhpDynamicAsStaticMethodCallInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
@@ -123,7 +124,7 @@ class LoginController extends Controller
     public function showLoginForm(Request $request)
     {
         $count = DB::table('users')->count();
-        if ($count === 0) {
+        if (0 === $count) {
             return redirect(route('register')); // @codeCoverageIgnore
         }
 

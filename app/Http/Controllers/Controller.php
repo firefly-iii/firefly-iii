@@ -157,7 +157,7 @@ class Controller extends BaseController
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             $account = $transaction->account;
-            if (\in_array($account->accountType->type, $valid)) {
+            if (in_array($account->accountType->type, $valid, true)) {
                 return redirect(route('accounts.show', [$account->id]));
             }
         }

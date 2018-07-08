@@ -105,13 +105,13 @@ class PiggyBankController extends Controller
             $chartData[$label] = $currentSum;
             $oldest            = app('navigation')->addPeriod($oldest, $step, 0);
         }
-        /** @var Collection $filtered */
+        /** @var Collection $finalFiltered */
         $finalFiltered          = $set->filter(
             function (PiggyBankEvent $event) use ($today) {
                 return $event->date->lte($today);
             }
         );
-        $finalSum               = $filtered->sum('amount');
+        $finalSum               = $finalFiltered->sum('amount');
         $finalLabel             = $today->formatLocalized((string)trans('config.month_and_day'));
         $chartData[$finalLabel] = $finalSum;
 

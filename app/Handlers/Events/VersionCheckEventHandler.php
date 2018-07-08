@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyConfig;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Github\Object\Release;
 use FireflyIII\Services\Github\Request\UpdateRequest;
@@ -39,6 +40,7 @@ use Log;
  */
 class VersionCheckEventHandler
 {
+    use UpdateTrait;
 
     /**
      * Checks with GitHub to see if there is a new version.
@@ -72,7 +74,7 @@ class VersionCheckEventHandler
         if ($diff < 604800) {
             Log::debug(sprintf('Checked for updates less than a week ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data)));
 
-            return;
+            //return;
 
         }
         // last check time was more than a week ago.
@@ -81,86 +83,17 @@ class VersionCheckEventHandler
         // have actual permission?
         if ($permission->data === -1) {
             // never asked before.
-            session()->flash('info', (string)trans('firefly.check_for_updates_permission', ['link' => route('admin.update-check')]));
-
-            return;
+            //session()->flash('info', (string)trans('firefly.check_for_updates_permission', ['link' => route('admin.update-check')]));
+            //return;
         }
 
-        $current       = config('firefly.version');
         $latestRelease = $this->getLatestRelease();
         $versionCheck  = $this->versionCheck($latestRelease);
-        $string        = '';
-        if ($versionCheck === -2) {
-            $string = (string)trans('firefly.update_check_error');
-        }
-        if ($versionCheck === -1 && null !== $latestRelease) {
-            // there is a new FF version!
-            // has it been released for at least three days?
-            $today = new Carbon;
-            if ($today->diffInDays($latestRelease->getUpdated(), true) > 3) {
-                $monthAndDayFormat = (string)trans('config.month_and_day');
-                $string            = (string)trans(
-                    'firefly.update_new_version_alert',
-                    [
-                        'your_version' => $current,
-                        'new_version'  => $latestRelease->getTitle(),
-                        'date'         => $latestRelease->getUpdated()->formatLocalized($monthAndDayFormat),
-                    ]
-                );
-            }
-        }
-        if (0 !== $versionCheck && '' !== $string) {
+        $resultString = $this->parseResult($latestRelease, $versionCheck);
+        if (0 !== $versionCheck && '' !== $resultString) {
             // flash info
-            session()->flash('info', $string);
+            session()->flash('info', $resultString);
         }
         FireflyConfig::set('last_update_check', time());
     }
-
-    /**
-     * Get object for the latest release from GitHub.
-     *
-     * @return Release|null
-     */
-    private function getLatestRelease(): ?Release
-    {
-        $return = null;
-        /** @var UpdateRequest $request */
-        $request = app(UpdateRequest::class);
-        try {
-            $request->call();
-        } catch (FireflyException $e) {
-            Log::error(sprintf('Could not check for updates: %s', $e->getMessage()));
-        }
-
-        // get releases from array.
-        $releases = $request->getReleases();
-        if (\count($releases) > 0) {
-            // first entry should be the latest entry:
-            /** @var Release $first */
-            $first  = reset($releases);
-            $return = $first;
-        }
-
-        return $return;
-    }
-
-    /**
-     * Compare version and store result.
-     *
-     * @param Release|null $release
-     *
-     * @return int
-     */
-    private function versionCheck(Release $release = null): int
-    {
-        if (null === $release) {
-            return -2;
-        }
-        $current = (string)config('firefly.version');
-        $check   = version_compare($current, $release->getTitle());
-        Log::debug(sprintf('Comparing %s with %s, result is %s', $current, $release->getTitle(), $check));
-
-        return $check;
-    }
-
 }

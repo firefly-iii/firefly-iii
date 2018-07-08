@@ -105,8 +105,8 @@ class BudgetController extends Controller
             $days        = $start->diffInDays($end);
             $daysInMonth = $start->diffInDays($end);
         }
-        $days        = $days === 0 ? 1 : $days;
-        $daysInMonth = $daysInMonth === 0 ? 1 : $daysInMonth;
+        $days        = 0 === $days ? 1 : $days;
+        $daysInMonth = 0 === $daysInMonth ? 1 : $daysInMonth;
 
         // calculate left in budget:
         $spent      = $repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
@@ -258,7 +258,7 @@ class BudgetController extends Controller
                 $end   = app('navigation')->endOfPeriod($start, $range);
             } catch (Exception $e) {
                 // start and end are already defined.
-                Log::debug('start and end are already defined.');
+                Log::debug(sprintf('start and end are already defined: %s', $e->getMessage()));
             }
         }
 
@@ -273,8 +273,8 @@ class BudgetController extends Controller
             $days        = $start->diffInDays($end);
             $daysInMonth = $start->diffInDays($end);
         }
-        $days        = $days === 0 ? 1 : $days;
-        $daysInMonth = $daysInMonth === 0 ? 1 : $daysInMonth;
+        $days        = 0 === $days ? 1 : $days;
+        $daysInMonth = 0 === $daysInMonth ? 1 : $daysInMonth;
 
 
         $next = clone $end;
@@ -489,7 +489,7 @@ class BudgetController extends Controller
         $end             = Carbon::createFromFormat('Y-m-d', $request->string('end'));
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $amount          = $request->get('amount');
-        $page            = $request->integer('page') === 0 ? 1 : $request->integer('page');
+        $page            = 0 === $request->integer('page') ? 1 : $request->integer('page');
         $this->repository->cleanupBudgets();
         $this->repository->setAvailableBudget($defaultCurrency, $start, $end, $amount);
         Preferences::mark();

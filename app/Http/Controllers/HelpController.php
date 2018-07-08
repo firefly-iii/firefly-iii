@@ -90,10 +90,10 @@ class HelpController extends Controller
         }
 
         // get help content from Github:
-        $content = $this->help->getFromGithub($route, $language);
+        $content = $this->help->getFromGitHub($route, $language);
 
         // content will have 0 length when Github failed. Try en_US when it does:
-        if (0 === \strlen($content)) {
+        if ('' === $content) {
             $language = 'en_US';
 
             // also check cache first:
@@ -104,11 +104,11 @@ class HelpController extends Controller
                 return $content;
             }
 
-            $content = $this->help->getFromGithub($route, $language);
+            $content = $this->help->getFromGitHub($route, $language);
         }
 
         // help still empty?
-        if (0 !== \strlen($content)) {
+        if ('' !== $content) {
             $this->help->putInCache($route, $language, $content);
 
             return $content;
