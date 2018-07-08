@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection MoreThanThreeArgumentsInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
@@ -57,6 +58,7 @@ class ExpenseController extends Controller
             }
         );
     }
+
 
     /**
      * Generates the overview per budget.
@@ -103,6 +105,7 @@ class ExpenseController extends Controller
 
         return $result;
     }
+
 
     /**
      * Generates the overview per category (spent and earned).
@@ -160,6 +163,7 @@ class ExpenseController extends Controller
         return $result;
     }
 
+
     /**
      * Overview of spending
      *
@@ -205,6 +209,7 @@ class ExpenseController extends Controller
         return $result;
         // for period, get spent and earned for each account (by name)
     }
+
 
     /**
      * @param Collection $accounts

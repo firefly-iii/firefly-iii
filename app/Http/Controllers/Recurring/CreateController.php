@@ -113,6 +113,7 @@ class CreateController extends Controller
         );
     }
 
+
     /**
      * @param RecurrenceFormRequest $request
      *
@@ -126,16 +127,16 @@ class CreateController extends Controller
 
         $request->session()->flash('success', (string)trans('firefly.stored_new_recurrence', ['title' => $recurrence->title]));
         app('preferences')->mark();
-
+        $redirect = redirect($this->getPreviousUri('recurring.create.uri'));
         if (1 === (int)$request->get('create_another')) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('recurring.create.fromStore', true);
 
-            return redirect(route('recurring.create'))->withInput();
+            $redirect = redirect(route('recurring.create'))->withInput();
         }
 
         // redirect to previous URL.
-        return redirect($this->getPreviousUri('recurring.create.uri'));
+        return $redirect;
 
     }
 

@@ -42,7 +42,6 @@ class TwoFactorController extends Controller
      *
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function index(Request $request)
     {
@@ -90,7 +89,6 @@ class TwoFactorController extends Controller
      * @param CookieJar        $cookieJar
      *
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
      */
     public function postIndex(TokenFormRequest $request, CookieJar $cookieJar)
     {

@@ -51,6 +51,7 @@ class AuthenticateTwoFactor
         $this->auth = $auth;
     }
 
+
     /**
      * @param         $request
      * @param Closure $next

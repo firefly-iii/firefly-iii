@@ -41,7 +41,7 @@ class StartFireflySession extends StartSession
     {
         $uri    = $request->fullUrl();
         $strpos = strpos($uri, 'jscript');
-        if ('GET' === $request->method() && $request->route() && !$request->ajax() && false === $strpos) {
+        if (false === $strpos && 'GET' === $request->method() && $request->route() && !$request->ajax()) {
             $session->setPreviousUrl($uri);
         }
     }

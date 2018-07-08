@@ -41,6 +41,7 @@ use FireflyIII\Support\CacheProperties;
  */
 class BoxController extends Controller
 {
+
     /**
      * @param BudgetRepositoryInterface $repository
      *
@@ -91,6 +92,7 @@ class BoxController extends Controller
 
         return response()->json($return);
     }
+
 
     /**
      * @param CurrencyRepositoryInterface $repository
@@ -173,6 +175,7 @@ class BoxController extends Controller
         return response()->json($response);
     }
 
+
     /**
      * @param BillRepositoryInterface $repository
      *
@@ -207,6 +210,7 @@ class BoxController extends Controller
 
         return response()->json($return);
     }
+
 
     /**
      * @param AccountRepositoryInterface  $repository

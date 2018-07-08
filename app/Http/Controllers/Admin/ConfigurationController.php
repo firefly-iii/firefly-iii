@@ -28,9 +28,7 @@ use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Middleware\IsSandStormUser;
 use FireflyIII\Http\Requests\ConfigurationRequest;
 use FireflyIII\Support\Facades\FireflyConfig;
-use Preferences;
 use Redirect;
-use View;
 
 /**
  * Class ConfigurationController.
@@ -57,7 +55,7 @@ class ConfigurationController extends Controller
     }
 
     /**
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
@@ -92,7 +90,7 @@ class ConfigurationController extends Controller
 
         // flash message
         session()->flash('success', (string)trans('firefly.configuration_updated'));
-        Preferences::mark();
+        app('preferences')->mark();
 
         return Redirect::route('admin.configuration.index');
     }

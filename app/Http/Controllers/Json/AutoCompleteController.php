@@ -160,6 +160,7 @@ class AutoCompleteController extends Controller
         return response()->json($return);
     }
 
+
     /**
      * @param JournalCollectorInterface $collector
      * @param TransactionJournal        $except

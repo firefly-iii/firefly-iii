@@ -28,7 +28,6 @@ use FireflyIII\Http\Requests\LinkTypeFormRequest;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use Illuminate\Http\Request;
-use Preferences;
 use View;
 
 /**
@@ -116,7 +115,7 @@ class LinkController extends Controller
         $repository->destroy($linkType, $moveTo);
 
         $request->session()->flash('success', (string)trans('firefly.deleted_link_type', ['name' => $name]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect($this->getPreviousUri('link_types.delete.uri'));
     }
@@ -194,16 +193,16 @@ class LinkController extends Controller
         ];
         $linkType = $repository->store($data);
         $request->session()->flash('success', (string)trans('firefly.stored_new_link_type', ['name' => $linkType->name]));
-
+        $redirect = redirect($this->getPreviousUri('link_types.create.uri'));
         if (1 === (int)$request->get('create_another')) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('link_types.create.fromStore', true);
 
-            return redirect(route('admin.links.create'))->withInput();
+            $redirect = redirect(route('admin.links.create'))->withInput();
         }
 
         // redirect to previous URL.
-        return redirect($this->getPreviousUri('link_types.create.uri'));
+        return $redirect;
     }
 
     /**
@@ -229,16 +228,16 @@ class LinkController extends Controller
         $repository->update($linkType, $data);
 
         $request->session()->flash('success', (string)trans('firefly.updated_link_type', ['name' => $linkType->name]));
-        Preferences::mark();
-
+        app('preferences')->mark();
+        $redirect = redirect($this->getPreviousUri('link_types.edit.uri'));
         if (1 === (int)$request->get('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('link_types.edit.fromUpdate', true);
 
-            return redirect(route('admin.links.edit', [$linkType->id]))->withInput(['return_to_edit' => 1]);
+            $redirect = redirect(route('admin.links.edit', [$linkType->id]))->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.
-        return redirect($this->getPreviousUri('link_types.edit.uri'));
+        return $redirect;
     }
 }

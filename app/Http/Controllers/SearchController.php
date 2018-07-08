@@ -26,7 +26,6 @@ use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use View;
 
 /**
  * Class SearchController.
@@ -54,7 +53,7 @@ class SearchController extends Controller
      * @param Request         $request
      * @param SearchInterface $searcher
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(Request $request, SearchInterface $searcher)
     {

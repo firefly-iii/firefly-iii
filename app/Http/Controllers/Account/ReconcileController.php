@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection CallableParameterUseCaseInTypeContextInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
@@ -44,8 +45,6 @@ use Preferences;
 
 /**
  * Class ReconcileController.
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReconcileController extends Controller
 {
@@ -113,6 +112,7 @@ class ReconcileController extends Controller
         )->with('data', $preFilled);
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Request $request
      * @param Account $account
@@ -246,9 +246,9 @@ class ReconcileController extends Controller
         return view('accounts.reconcile.show', compact('journal', 'subTitle', 'transaction', 'account'));
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param ReconciliationStoreRequest $request
-     * @param JournalRepositoryInterface $repository
      * @param Account                    $account
      * @param Carbon                     $start
      * @param Carbon                     $end
@@ -256,14 +256,14 @@ class ReconcileController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @throws FireflyException
      */
-    public function submit(ReconciliationStoreRequest $request, JournalRepositoryInterface $repository, Account $account, Carbon $start, Carbon $end)
+    public function submit(ReconciliationStoreRequest $request, Account $account, Carbon $start, Carbon $end)
     {
         Log::debug('In ReconcileController::submit()');
         $data = $request->getAll();
 
         /** @var Transaction $transaction */
         foreach ($data['transactions'] as $transactionId) {
-            $repository->reconcileById((int)$transactionId);
+            $this->repository->reconcileById((int)$transactionId);
         }
         Log::debug('Reconciled all transactions.');
 
@@ -322,11 +322,11 @@ class ReconcileController extends Controller
                 'notes'           => implode(', ', $data['transactions']),
             ];
 
-            $repository->store($journalData);
+            $this->repository->store($journalData);
         }
         Log::debug('End of routine.');
 
-        Preferences::mark();
+        app('preferences')->mark();
 
         session()->flash('success', trans('firefly.reconciliation_stored'));
 

@@ -32,8 +32,6 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
-use Preferences;
-use View;
 
 /**
  * Class BulkController
@@ -45,7 +43,7 @@ class BulkController extends Controller
 
 
     /**
-     *
+     * BulkController constructor.
      */
     public function __construct()
     {
@@ -65,7 +63,7 @@ class BulkController extends Controller
     /**
      * @param Collection $journals
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(Collection $journals)
     {
@@ -129,7 +127,7 @@ class BulkController extends Controller
             }
         }
 
-        Preferences::mark();
+        app('preferences')->mark();
         $request->session()->flash('success', trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:

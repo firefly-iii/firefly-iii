@@ -151,11 +151,10 @@ class UpdateControllerTest extends TestCase
         $falseConfig       = new Configuration;
         $falseConfig->data = false;
         FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
+        FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn(new Configuration);
 
         $version  = config('firefly.version') . '-alpha';
-        $releases = [
-            new Release(['id' => 'x', 'title' => $version, 'content' => '', 'updated' => new Carbon]),
-        ];
+        $releases = [];
         $updater  = $this->mock(UpdateRequest::class);
         $updater->shouldReceive('call')->andThrow(FireflyException::class, 'Something broke.');
         $updater->shouldReceive('getReleases')->andReturn($releases);

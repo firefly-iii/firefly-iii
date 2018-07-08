@@ -31,16 +31,15 @@ use Log;
 class IntroController
 {
     /**
-     * Get the intro steps. There are currently no specific routes with an outro step.
-     *
-     * @param string $route
-     * @param string $specificPage
+     * @param string      $route
+     * @param string|null $specificPage
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getIntroSteps(string $route, string $specificPage = '')
+    public function getIntroSteps(string $route, string $specificPage = null)
     {
         Log::debug(sprintf('getIntroSteps for route "%s" and page "%s"', $route, $specificPage));
+        $specificPage  = $specificPage ?? '';
         $steps         = $this->getBasicSteps($route);
         $specificSteps = $this->getSpecificSteps($route, $specificPage);
         if (0 === \count($specificSteps)) {
@@ -90,15 +89,16 @@ class IntroController
     }
 
     /**
-     * @param string $route
-     * @param string $specialPage
+     * @param string      $route
+     * @param string|null $specialPage
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function postEnable(string $route, string $specialPage = '')
+    public function postEnable(string $route, string $specialPage = null)
     {
-        $route = str_replace('.', '_', $route);
-        $key   = 'shown_demo_' . $route;
+        $specialPage = $specialPage ?? '';
+        $route       = str_replace('.', '_', $route);
+        $key         = 'shown_demo_' . $route;
         if ('' !== $specialPage) {
             $key .= '_' . $specialPage;
         }
@@ -109,14 +109,15 @@ class IntroController
     }
 
     /**
-     * @param string $route
-     * @param string $specialPage
+     * @param string      $route
+     * @param string|null $specialPage
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function postFinished(string $route, string $specialPage = '')
+    public function postFinished(string $route, string $specialPage = null)
     {
-        $key = 'shown_demo_' . $route;
+        $specialPage = $specialPage ?? '';
+        $key         = 'shown_demo_' . $route;
         if ('' !== $specialPage) {
             $key .= '_' . $specialPage;
         }

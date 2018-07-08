@@ -66,6 +66,7 @@ class BudgetReportController extends Controller
         );
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $budgets
@@ -90,6 +91,7 @@ class BudgetReportController extends Controller
         return response()->json($data);
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $budgets
@@ -114,6 +116,7 @@ class BudgetReportController extends Controller
         return response()->json($data);
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $budgets
@@ -197,6 +200,7 @@ class BudgetReportController extends Controller
         return response()->json($data);
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * Returns the budget limits belonging to the given budget and valid on the given day.
      *
@@ -225,6 +229,7 @@ class BudgetReportController extends Controller
         return $set;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $budgets

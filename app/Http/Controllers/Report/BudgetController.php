@@ -34,16 +34,16 @@ use Illuminate\Support\Collection;
  */
 class BudgetController extends Controller
 {
+
     /**
-     * @param BudgetReportHelperInterface $helper
-     * @param Collection                  $accounts
-     * @param Carbon                      $start
-     * @param Carbon                      $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return mixed|string
      * @throws \Throwable
      */
-    public function general(BudgetReportHelperInterface $helper, Collection $accounts, Carbon $start, Carbon $end)
+    public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -54,7 +54,7 @@ class BudgetController extends Controller
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-
+        $helper  = app(BudgetReportHelperInterface::class);
         $budgets = $helper->getBudgetReport($start, $end, $accounts);
 
         $result = view('reports.partials.budgets', compact('budgets'))->render();
@@ -62,6 +62,7 @@ class BudgetController extends Controller
 
         return $result;
     }
+
 
     /**
      * @param Collection $accounts

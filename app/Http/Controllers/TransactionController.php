@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection CallableParameterUseCaseInTypeContextInspection */
+/** @noinspection MoreThanThreeArgumentsInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -71,13 +73,12 @@ class TransactionController extends Controller
     /**
      * Index for a range of transactions.
      *
-     * @param Request $request
-     * @param string  $what
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Request     $request
+     * @param string      $what
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
-     * @return View
-     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(Request $request, string $what, Carbon $start = null, Carbon $end = null)
     {
@@ -189,7 +190,7 @@ class TransactionController extends Controller
                 }
             }
         }
-        Preferences::mark();
+        app('preferences')->mark();
 
         return response()->json([true]);
     }

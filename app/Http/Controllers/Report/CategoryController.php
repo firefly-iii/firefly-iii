@@ -34,6 +34,7 @@ use Illuminate\Support\Collection;
  */
 class CategoryController extends Controller
 {
+
     /**
      * @param Collection $accounts
      * @param Carbon     $start
@@ -65,6 +66,7 @@ class CategoryController extends Controller
 
         return $result;
     }
+
 
     /**
      * @param Collection $accounts
@@ -98,6 +100,7 @@ class CategoryController extends Controller
 
         return $result;
     }
+
 
     /**
      * @param Collection $accounts

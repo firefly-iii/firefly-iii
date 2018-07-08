@@ -153,16 +153,16 @@ class EditController extends Controller
 
         $request->session()->flash('success', (string)trans('firefly.updated_recurrence', ['title' => $recurrence->title]));
         app('preferences')->mark();
-
+        $redirect = redirect($this->getPreviousUri('recurrences.edit.uri'));
         if (1 === (int)$request->get('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('recurrences.edit.fromUpdate', true);
 
-            return redirect(route('recurring.edit', [$recurrence->id]))->withInput(['return_to_edit' => 1]);
+            $redirect = redirect(route('recurring.edit', [$recurrence->id]))->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.
-        return redirect($this->getPreviousUri('recurrences.edit.uri'));
+        return $redirect;
     }
 
 

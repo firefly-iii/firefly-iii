@@ -63,6 +63,7 @@ class CurrencyController extends Controller
         );
     }
 
+
     /**
      * @param Request $request
      *
@@ -97,7 +98,7 @@ class CurrencyController extends Controller
     public function defaultCurrency(Request $request, TransactionCurrency $currency)
     {
         Preferences::set('currencyPreference', $currency->code);
-        Preferences::mark();
+        app('preferences')->mark();
 
         $request->session()->flash('success', trans('firefly.new_default_currency', ['name' => $currency->name]));
         Cache::forget('FFCURRENCYSYMBOL');
@@ -105,6 +106,7 @@ class CurrencyController extends Controller
 
         return redirect(route('currencies.index'));
     }
+
 
     /**
      * @param Request             $request
@@ -135,6 +137,7 @@ class CurrencyController extends Controller
         return view('currencies.delete', compact('currency', 'subTitle'));
     }
 
+
     /**
      * @param Request             $request
      * @param TransactionCurrency $currency
@@ -162,6 +165,7 @@ class CurrencyController extends Controller
 
         return redirect($this->getPreviousUri('currencies.delete.uri'));
     }
+
 
     /**
      * @param Request             $request
@@ -195,7 +199,7 @@ class CurrencyController extends Controller
     /**
      * @param Request $request
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(Request $request)
     {
@@ -221,6 +225,7 @@ class CurrencyController extends Controller
 
         return view('currencies.index', compact('currencies', 'defaultCurrency', 'isOwner'));
     }
+
 
     /**
      * @param CurrencyFormRequest $request
@@ -252,6 +257,7 @@ class CurrencyController extends Controller
         return redirect($this->getPreviousUri('currencies.create.uri'));
     }
 
+
     /**
      * @param CurrencyFormRequest $request
      * @param TransactionCurrency $currency
@@ -271,7 +277,7 @@ class CurrencyController extends Controller
         $data     = $request->getCurrencyData();
         $currency = $this->repository->update($currency, $data);
         $request->session()->flash('success', trans('firefly.updated_currency', ['name' => $currency->name]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart

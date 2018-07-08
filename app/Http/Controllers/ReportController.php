@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection CallableParameterUseCaseInTypeContextInspection */
+/** @noinspection MoreThanThreeArgumentsInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -256,7 +258,7 @@ class ReportController extends Controller
     /**
      * @param AccountRepositoryInterface $repository
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(AccountRepositoryInterface $repository)
     {
@@ -307,7 +309,6 @@ class ReportController extends Controller
      * @return RedirectResponse|\Illuminate\Routing\Redirector
      *
      * @throws \FireflyIII\Exceptions\FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function postIndex(ReportFormRequest $request)
     {
@@ -329,19 +330,19 @@ class ReportController extends Controller
             return redirect(route('reports.index'));
         }
 
-        if (0 === $request->getCategoryList()->count() && 'category' === $reportType) {
+        if ('category' === $reportType && 0 === $request->getCategoryList()->count()) {
             session()->flash('error', trans('firefly.select_more_than_one_category'));
 
             return redirect(route('reports.index'));
         }
 
-        if (0 === $request->getBudgetList()->count() && 'budget' === $reportType) {
+        if ('budget' === $reportType && 0 === $request->getBudgetList()->count()) {
             session()->flash('error', trans('firefly.select_more_than_one_budget'));
 
             return redirect(route('reports.index'));
         }
 
-        if (0 === $request->getTagList()->count() && 'tag' === $reportType) {
+        if ('tag' === $reportType && 0 === $request->getTagList()->count()) {
             session()->flash('error', trans('firefly.select_more_than_one_tag'));
 
             return redirect(route('reports.index'));

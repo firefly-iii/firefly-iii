@@ -30,8 +30,6 @@ use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Illuminate\Http\Request;
-use Preferences;
-use View;
 
 /**
  * Class RuleGroupController.
@@ -56,7 +54,7 @@ class RuleGroupController extends Controller
     }
 
     /**
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
     {
@@ -75,7 +73,7 @@ class RuleGroupController extends Controller
     /**
      * @param RuleGroup $ruleGroup
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function delete(RuleGroup $ruleGroup)
     {
@@ -102,7 +100,7 @@ class RuleGroupController extends Controller
         $repository->destroy($ruleGroup, $moveTo);
 
         session()->flash('success', (string)trans('firefly.deleted_rule_group', ['title' => $title]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect($this->getPreviousUri('rule-groups.delete.uri'));
     }
@@ -183,7 +181,7 @@ class RuleGroupController extends Controller
     /**
      * @param RuleGroup $ruleGroup
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function selectTransactions(RuleGroup $ruleGroup)
     {
@@ -206,17 +204,18 @@ class RuleGroupController extends Controller
         $ruleGroup = $repository->store($data);
 
         session()->flash('success', (string)trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title]));
-        Preferences::mark();
+        app('preferences')->mark();
 
+        $redirect = redirect($this->getPreviousUri('rule-groups.create.uri'));
         if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
             session()->put('rule-groups.create.fromStore', true);
 
-            return redirect(route('rule-groups.create'))->withInput();
+            $redirect = redirect(route('rule-groups.create'))->withInput();
             // @codeCoverageIgnoreEnd
         }
 
-        return redirect($this->getPreviousUri('rule-groups.create.uri'));
+        return $redirect;
     }
 
     /**
@@ -250,17 +249,17 @@ class RuleGroupController extends Controller
         $repository->update($ruleGroup, $data);
 
         session()->flash('success', (string)trans('firefly.updated_rule_group', ['title' => $ruleGroup->title]));
-        Preferences::mark();
-
+        app('preferences')->mark();
+        $redirect = redirect($this->getPreviousUri('rule-groups.edit.uri'));
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             session()->put('rule-groups.edit.fromUpdate', true);
 
-            return redirect(route('rule-groups.edit', [$ruleGroup->id]))->withInput(['return_to_edit' => 1]);
+            $redirect = redirect(route('rule-groups.edit', [$ruleGroup->id]))->withInput(['return_to_edit' => 1]);
             // @codeCoverageIgnoreEnd
         }
 
         // redirect to previous URL.
-        return redirect($this->getPreviousUri('rule-groups.edit.uri'));
+        return $redirect;
     }
 }

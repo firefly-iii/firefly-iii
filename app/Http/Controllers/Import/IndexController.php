@@ -30,7 +30,6 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Response as LaravelResponse;
 use Log;
-use View;
 
 /**
  * Class FileController.
@@ -180,7 +179,7 @@ class IndexController extends Controller
     /**
      * General import index.
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {

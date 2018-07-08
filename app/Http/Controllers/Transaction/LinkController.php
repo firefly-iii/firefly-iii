@@ -29,7 +29,6 @@ use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use Log;
-use Preferences;
 use URL;
 
 /**
@@ -86,7 +85,7 @@ class LinkController extends Controller
         $this->repository->destroyLink($link);
 
         session()->flash('success', (string)trans('firefly.deleted_link'));
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect((string)session('journal_links.delete.uri'));
     }

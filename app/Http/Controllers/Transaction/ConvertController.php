@@ -61,6 +61,7 @@ class ConvertController extends Controller
         );
     }
 
+
     /**
      * @param TransactionType    $destinationType
      * @param TransactionJournal $journal
@@ -109,6 +110,7 @@ class ConvertController extends Controller
         );
     }
 
+
     /**
      * @param Request            $request
      * @param TransactionType    $destinationType
@@ -124,6 +126,7 @@ class ConvertController extends Controller
         // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($journal)) {
             Log::debug('Journal is opening balance, return to account.');
+
             return $this->redirectToAccount($journal);
         }
         // @codeCoverageIgnoreEnd
@@ -159,6 +162,7 @@ class ConvertController extends Controller
 
         return redirect(route('transactions.show', [$journal->id]));
     }
+
 
     /**
      * @param TransactionJournal $journal
@@ -214,6 +218,7 @@ class ConvertController extends Controller
 
         return $destination;
     }
+
 
     /**
      * @param TransactionJournal $journal

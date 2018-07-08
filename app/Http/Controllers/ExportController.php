@@ -32,7 +32,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface;
 use Illuminate\Http\Response as LaravelResponse;
 use Preferences;
-use View;
 
 /**
  * Class ExportController.
@@ -107,7 +106,7 @@ class ExportController extends Controller
     /**
      * @param ExportJobRepositoryInterface $jobs
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(ExportJobRepositoryInterface $jobs)
     {

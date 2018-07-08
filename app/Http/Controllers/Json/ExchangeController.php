@@ -35,6 +35,7 @@ use Log;
  */
 class ExchangeController extends Controller
 {
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Request             $request
      * @param TransactionCurrency $fromCurrency

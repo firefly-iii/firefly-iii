@@ -135,14 +135,14 @@ class SingleController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param string  $what
+     * @param Request     $request
+     * @param string|null $what
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create(Request $request, string $what = TransactionType::DEPOSIT)
+    public function create(Request $request, string $what = null)
     {
-        $what           = strtolower($what);
+        $what           = strtolower($what ?? TransactionType::DEPOSIT);
         $what           = (string)($request->old('what') ?? $what);
         $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $preFilled      = session()->has('preFilled') ? session('preFilled') : [];
@@ -220,7 +220,7 @@ class SingleController extends Controller
 
         $this->repository->destroy($transactionJournal);
 
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect($this->getPreviousUri('transactions.delete.uri'));
     }
@@ -296,7 +296,7 @@ class SingleController extends Controller
 
         // amounts for withdrawals and deposits:
         // amount, native_amount, source_amount, destination_amount
-        if (($journal->isWithdrawal() || $journal->isDeposit()) && null !== $pTransaction->foreign_amount) {
+        if (null !== $pTransaction->foreign_amount && ($journal->isWithdrawal() || $journal->isDeposit())) {
             $preFilled['amount']   = $pTransaction->foreign_amount;
             $preFilled['currency'] = $pTransaction->foreignCurrency;
         }
@@ -355,7 +355,7 @@ class SingleController extends Controller
         event(new StoredTransactionJournal($journal, $data['piggy_bank_id']));
 
         session()->flash('success', (string)trans('firefly.stored_journal', ['description' => $journal->description]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         // @codeCoverageIgnoreStart
         if (true === $createAnother) {
@@ -412,7 +412,7 @@ class SingleController extends Controller
 
         $type = strtolower($this->repository->getTransactionType($journal));
         session()->flash('success', (string)trans('firefly.updated_' . $type, ['description' => $data['description']]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         // @codeCoverageIgnoreStart
         if (1 === (int)$request->get('return_to_edit')) {

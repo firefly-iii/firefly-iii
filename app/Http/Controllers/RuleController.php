@@ -42,9 +42,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
-use Preferences;
 use Throwable;
-use View;
 
 /**
  * Class RuleController.
@@ -88,8 +86,7 @@ class RuleController extends Controller
      * @param Request   $request
      * @param RuleGroup $ruleGroup
      *
-     * @return View
-     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create(Request $request, RuleGroup $ruleGroup)
     {
@@ -158,7 +155,7 @@ class RuleController extends Controller
      *
      * @param Rule $rule
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function delete(Rule $rule)
     {
@@ -183,7 +180,7 @@ class RuleController extends Controller
         $this->ruleRepos->destroy($rule);
 
         session()->flash('success', trans('firefly.deleted_rule', ['title' => $title]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect($this->getPreviousUri('rules.delete.uri'));
     }
@@ -204,8 +201,7 @@ class RuleController extends Controller
      * @param Request $request
      * @param Rule    $rule
      *
-     * @return View
-     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(Request $request, Rule $rule)
     {
@@ -288,7 +284,7 @@ class RuleController extends Controller
     }
 
     /**
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
@@ -356,7 +352,7 @@ class RuleController extends Controller
         $data = $request->getRuleData();
         $rule = $this->ruleRepos->store($data);
         session()->flash('success', trans('firefly.stored_new_rule', ['title' => $rule->title]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         // redirect to show bill.
         if ('true' === $request->get('return_to_bill') && (int)$request->get('bill_id') > 0) {
@@ -368,16 +364,16 @@ class RuleController extends Controller
             return redirect($this->getPreviousUri('bills.create.uri')); // @codeCoverageIgnore
         }
 
+        $redirect = redirect($this->getPreviousUri('rules.create.uri'));
 
         if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
             session()->put('rules.create.fromStore', true);
-
-            return redirect(route('rules.create', [$data['rule_group_id']]))->withInput();
+            $redirect = redirect(route('rules.create', [$data['rule_group_id']]))->withInput();
             // @codeCoverageIgnoreEnd
         }
 
-        return redirect($this->getPreviousUri('rules.create.uri'));
+        return $redirect;
     }
 
     /**
@@ -529,17 +525,17 @@ class RuleController extends Controller
         $this->ruleRepos->update($rule, $data);
 
         session()->flash('success', trans('firefly.updated_rule', ['title' => $rule->title]));
-        Preferences::mark();
-
+        app('preferences')->mark();
+        $redirect = redirect($this->getPreviousUri('rules.edit.uri'));
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             session()->put('rules.edit.fromUpdate', true);
 
-            return redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
+            $redirect = redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
             // @codeCoverageIgnoreEnd
         }
 
-        return redirect($this->getPreviousUri('rules.edit.uri'));
+        return $redirect;
     }
 
     /**

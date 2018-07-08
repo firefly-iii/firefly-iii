@@ -33,6 +33,7 @@ use Illuminate\Support\Collection;
  */
 class AccountController extends Controller
 {
+
     /**
      * @param Collection $accounts
      * @param Carbon     $start

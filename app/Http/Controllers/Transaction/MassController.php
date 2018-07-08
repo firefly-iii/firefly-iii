@@ -37,7 +37,6 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Support\Collection;
 use Illuminate\View\View as IlluminateView;
-use Preferences;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -109,7 +108,7 @@ class MassController extends Controller
             ++$count;
         }
 
-        Preferences::mark();
+        app('preferences')->mark();
         session()->flash('success', trans('firefly.mass_deleted_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:
@@ -241,7 +240,7 @@ class MassController extends Controller
                 }
             }
         }
-        Preferences::mark();
+        app('preferences')->mark();
         session()->flash('success', trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:

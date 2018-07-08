@@ -44,7 +44,6 @@ use Laravel\Passport\Passport;
 use Log;
 use phpseclib\Crypt\RSA;
 use Preferences;
-use View;
 
 /**
  * Class ProfileController.
@@ -73,7 +72,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function changeEmail()
     {
@@ -86,7 +85,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function changePassword()
     {
@@ -100,7 +99,7 @@ class ProfileController extends Controller
     /**
      * View that generates a 2FA code for the user.
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function code()
     {
@@ -149,7 +148,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function deleteAccount()
     {
@@ -199,7 +198,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
@@ -302,7 +301,6 @@ class ProfileController extends Controller
      * @param TokenFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
      */
     public function postCode(TokenFormRequest $request)
     {
@@ -310,7 +308,7 @@ class ProfileController extends Controller
         Preferences::set('twoFactorAuthSecret', session()->get('two-factor-secret'));
 
         session()->flash('success', (string)trans('firefly.saved_preferences'));
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect(route('profile.index'));
     }

@@ -39,7 +39,6 @@ use Illuminate\Support\Collection;
 use Log;
 use Preferences;
 use Steam;
-use View;
 
 /**
  * Class CategoryController.
@@ -54,7 +53,7 @@ class CategoryController extends Controller
     private $repository;
 
     /**
-     *
+     * CategoryController constructor.
      */
     public function __construct()
     {
@@ -76,7 +75,7 @@ class CategoryController extends Controller
     /**
      * @param Request $request
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create(Request $request)
     {
@@ -92,7 +91,7 @@ class CategoryController extends Controller
     /**
      * @param Category $category
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function delete(Category $category)
     {
@@ -116,7 +115,7 @@ class CategoryController extends Controller
         $this->repository->destroy($category);
 
         $request->session()->flash('success', (string)trans('firefly.deleted_category', ['name' => $name]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect($this->getPreviousUri('categories.delete.uri'));
     }
@@ -125,7 +124,7 @@ class CategoryController extends Controller
      * @param Request  $request
      * @param Category $category
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(Request $request, Category $category)
     {
@@ -167,14 +166,15 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param string  $moment
+     * @param Request     $request
+     * @param string|null $moment
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function noCategory(Request $request, string $moment = '')
+    public function noCategory(Request $request, string $moment = null)
     {
         // default values:
+        $moment   = $moment ?? '';
         $range    = Preferences::get('viewRange', '1M')->data;
         $start    = null;
         $end      = null;
@@ -224,16 +224,16 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param Request                     $request
-     * @param CategoryRepositoryInterface $repository
-     * @param Category                    $category
-     * @param string                      $moment
+     * @param Request     $request
+     * @param Category    $category
+     * @param string|null $moment
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show(Request $request, CategoryRepositoryInterface $repository, Category $category, string $moment = '')
+    public function show(Request $request, Category $category, string $moment = null)
     {
         // default values:
+        $moment       = $moment ?? '';
         $subTitle     = $category->name;
         $subTitleIcon = 'fa-bar-chart';
         $page         = (int)$request->get('page');
@@ -247,7 +247,7 @@ class CategoryController extends Controller
         // prep for "all" view.
         if ('all' === $moment) {
             $subTitle = trans('firefly.all_journals_for_category', ['name' => $category->name]);
-            $first    = $repository->firstUseDate($category);
+            $first    = $this->repository->firstUseDate($category);
             /** @var Carbon $start */
             $start = $first ?? new Carbon;
             $end   = new Carbon;
@@ -255,7 +255,7 @@ class CategoryController extends Controller
         }
 
         // prep for "specific date" view.
-        if (\strlen($moment) > 0 && 'all' !== $moment) {
+        if ('all' !== $moment && \strlen($moment) > 0) {
             $start    = app('navigation')->startOfPeriod(new Carbon($moment), $range);
             $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
@@ -304,18 +304,20 @@ class CategoryController extends Controller
         $category = $repository->store($data);
 
         $request->session()->flash('success', (string)trans('firefly.stored_category', ['name' => $category->name]));
-        Preferences::mark();
+        app('preferences')->mark();
 
+        $redirect = redirect(route('categories.index'));
         if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('categories.create.fromStore', true);
 
-            return redirect(route('categories.create'))->withInput();
+            $redirect = redirect(route('categories.create'))->withInput();
             // @codeCoverageIgnoreEnd
         }
 
-        return redirect(route('categories.index'));
+        return $redirect;
     }
+
 
     /**
      * @param CategoryFormRequest         $request
@@ -330,18 +332,21 @@ class CategoryController extends Controller
         $repository->update($category, $data);
 
         $request->session()->flash('success', (string)trans('firefly.updated_category', ['name' => $category->name]));
-        Preferences::mark();
+        app('preferences')->mark();
+
+        $redirect = redirect($this->getPreviousUri('categories.edit.uri'));
 
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('categories.edit.fromUpdate', true);
 
-            return redirect(route('categories.edit', [$category->id]));
+            $redirect = redirect(route('categories.edit', [$category->id]));
             // @codeCoverageIgnoreEnd
         }
 
-        return redirect($this->getPreviousUri('categories.edit.uri'));
+        return $redirect;
     }
+
 
     /**
      * @param Carbon $theDate
@@ -420,6 +425,7 @@ class CategoryController extends Controller
 
         return $entries;
     }
+
 
     /**
      * @param Category $category

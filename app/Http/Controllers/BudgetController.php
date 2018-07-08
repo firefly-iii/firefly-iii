@@ -44,8 +44,6 @@ use View;
 /**
  * Class BudgetController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BudgetController extends Controller
 {
@@ -139,7 +137,7 @@ class BudgetController extends Controller
             );
         }
 
-        Preferences::mark();
+        app('preferences')->mark();
 
         return response()->json(
             [
@@ -161,7 +159,7 @@ class BudgetController extends Controller
     /**
      * @param Request $request
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create(Request $request)
     {
@@ -178,7 +176,7 @@ class BudgetController extends Controller
     /**
      * @param Budget $budget
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function delete(Budget $budget)
     {
@@ -201,7 +199,7 @@ class BudgetController extends Controller
         $name = $budget->name;
         $this->repository->destroy($budget);
         $request->session()->flash('success', (string)trans('firefly.deleted_budget', ['name' => $name]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect($this->getPreviousUri('budgets.delete.uri'));
     }
@@ -210,7 +208,7 @@ class BudgetController extends Controller
      * @param Request $request
      * @param Budget  $budget
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(Request $request, Budget $budget)
     {
@@ -236,10 +234,7 @@ class BudgetController extends Controller
      * @param Request     $request
      * @param string|null $moment
      *
-     * @return View
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) complex because of while loop
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(Request $request, string $moment = null)
     {
@@ -339,10 +334,10 @@ class BudgetController extends Controller
         );
     }
 
+
     /**
      * @param Carbon $start
      * @param Carbon $end
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -420,16 +415,14 @@ class BudgetController extends Controller
     /**
      * @param Request                    $request
      * @param JournalRepositoryInterface $repository
-     * @param string                     $moment
+     * @param string|null                $moment
      *
-     * @return View
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function noBudget(Request $request, JournalRepositoryInterface $repository, string $moment = '')
+    public function noBudget(Request $request, JournalRepositoryInterface $repository, string $moment = null)
     {
         // default values:
+        $moment  = $moment ?? '';
         $range   = Preferences::get('viewRange', '1M')->data;
         $start   = null;
         $end     = null;
@@ -492,7 +485,7 @@ class BudgetController extends Controller
         $page            = 0 === $request->integer('page') ? 1 : $request->integer('page');
         $this->repository->cleanupBudgets();
         $this->repository->setAvailableBudget($defaultCurrency, $start, $end, $amount);
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect(route('budgets.index', [$start->format('Y-m-d')]) . '?page=' . $page);
     }
@@ -501,7 +494,7 @@ class BudgetController extends Controller
      * @param Request $request
      * @param Budget  $budget
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show(Request $request, Budget $budget)
     {
@@ -530,8 +523,7 @@ class BudgetController extends Controller
      * @param Budget      $budget
      * @param BudgetLimit $budgetLimit
      *
-     * @return View
-     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws FireflyException
      */
     public function showByBudgetLimit(Request $request, Budget $budget, BudgetLimit $budgetLimit)
@@ -576,18 +568,21 @@ class BudgetController extends Controller
         $budget = $this->repository->store($data);
         $this->repository->cleanupBudgets();
         $request->session()->flash('success', (string)trans('firefly.stored_new_budget', ['name' => $budget->name]));
-        Preferences::mark();
+        app('preferences')->mark();
+
+        $redirect = redirect($this->getPreviousUri('budgets.create.uri'));
 
         if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('budgets.create.fromStore', true);
 
-            return redirect(route('budgets.create'))->withInput();
+            $redirect = redirect(route('budgets.create'))->withInput();
             // @codeCoverageIgnoreEnd
         }
 
-        return redirect($this->getPreviousUri('budgets.create.uri'));
+        return $redirect;
     }
+
 
     /**
      * @param BudgetFormRequest $request
@@ -602,17 +597,19 @@ class BudgetController extends Controller
 
         $request->session()->flash('success', (string)trans('firefly.updated_budget', ['name' => $budget->name]));
         $this->repository->cleanupBudgets();
-        Preferences::mark();
+        app('preferences')->mark();
+
+        $redirect = redirect($this->getPreviousUri('budgets.edit.uri'));
 
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('budgets.edit.fromUpdate', true);
 
-            return redirect(route('budgets.edit', [$budget->id]))->withInput(['return_to_edit' => 1]);
+            $redirect = redirect(route('budgets.edit', [$budget->id]))->withInput(['return_to_edit' => 1]);
             // @codeCoverageIgnoreEnd
         }
 
-        return redirect($this->getPreviousUri('budgets.edit.uri'));
+        return $redirect;
     }
 
     /**
@@ -631,6 +628,7 @@ class BudgetController extends Controller
 
         return view('budgets.income', compact('available', 'start', 'end', 'page'));
     }
+
 
     /**
      * @param Budget $budget
@@ -664,6 +662,7 @@ class BudgetController extends Controller
 
         return $set;
     }
+
 
     /**
      * @return Collection

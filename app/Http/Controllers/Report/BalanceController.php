@@ -33,17 +33,18 @@ use Illuminate\Support\Collection;
  */
 class BalanceController extends Controller
 {
+
     /**
-     * @param BalanceReportHelperInterface $helper
-     * @param Collection                   $accounts
-     * @param Carbon                       $start
-     * @param Carbon                       $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return mixed|string
      * @throws \Throwable
      */
-    public function general(BalanceReportHelperInterface $helper, Collection $accounts, Carbon $start, Carbon $end)
+    public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
+
         // chart properties for cache:
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -53,7 +54,7 @@ class BalanceController extends Controller
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-
+        $helper  = app(BalanceReportHelperInterface::class);
         $balance = $helper->getBalanceReport($accounts, $start, $end);
 
         $result = view('reports.partials.balance', compact('balance'))->render();

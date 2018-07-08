@@ -42,7 +42,6 @@ use Steam;
 /**
  * Class BudgetController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // can't realy be helped.
  */
 class BudgetController extends Controller
 {
@@ -68,6 +67,7 @@ class BudgetController extends Controller
             }
         );
     }
+
 
     /**
      * @param Budget $budget
@@ -124,10 +124,10 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
+
     /**
      * Shows the amount left in a specific budget limit.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
      *
      * @param Budget      $budget
      * @param BudgetLimit $budgetLimit
@@ -172,6 +172,7 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
+
     /**
      * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
@@ -215,6 +216,7 @@ class BudgetController extends Controller
 
         return response()->json($data);
     }
+
 
     /**
      * @param Budget           $budget
@@ -262,6 +264,7 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
+
     /**
      * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
@@ -307,11 +310,9 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
+
     /**
      * Shows a budget list with spent/left/overspent.
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // 46 lines, I'm fine with this.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -361,8 +362,8 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
      *
      * @param Budget     $budget
      * @param Carbon     $start
@@ -405,6 +406,7 @@ class BudgetController extends Controller
 
         return response()->json($data);
     }
+
 
     /**
      * @param Collection $accounts
@@ -514,8 +516,8 @@ class BudgetController extends Controller
         return $return;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's 6 but ok.
      *
      * @param Collection $limits
      * @param Budget     $budget
@@ -550,7 +552,6 @@ class BudgetController extends Controller
     }
 
     /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
      *
      * Returns an array with the following values:
      * 0 =>

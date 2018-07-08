@@ -62,6 +62,7 @@ class CategoryReportController extends Controller
         );
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $categories
@@ -83,6 +84,7 @@ class CategoryReportController extends Controller
         return response()->json($data);
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $categories
@@ -107,6 +109,7 @@ class CategoryReportController extends Controller
         return response()->json($data);
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $categories
@@ -131,6 +134,7 @@ class CategoryReportController extends Controller
         return response()->json($data);
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $categories
@@ -155,6 +159,8 @@ class CategoryReportController extends Controller
         return response()->json($data);
     }
 
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $categories
@@ -260,6 +266,7 @@ class CategoryReportController extends Controller
         return response()->json($data);
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $categories
@@ -282,6 +289,7 @@ class CategoryReportController extends Controller
         return $collector->getJournals();
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $categories

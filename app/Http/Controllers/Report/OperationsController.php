@@ -33,16 +33,37 @@ use Illuminate\Support\Collection;
  */
 class OperationsController extends Controller
 {
+
+    /** @var AccountTaskerInterface */
+    private $tasker;
+
     /**
-     * @param AccountTaskerInterface $tasker
-     * @param Collection             $accounts
-     * @param Carbon                 $start
-     * @param Carbon                 $end
+     *
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        // translations:
+        $this->middleware(
+            function ($request, $next) {
+                $this->tasker = app(AccountTaskerInterface::class);
+
+                return $next($request);
+            }
+        );
+    }
+
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return mixed|string
      * @throws \Throwable
      */
-    public function expenses(AccountTaskerInterface $tasker, Collection $accounts, Carbon $start, Carbon $end)
+    public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -53,7 +74,7 @@ class OperationsController extends Controller
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        $entries = $tasker->getExpenseReport($start, $end, $accounts);
+        $entries = $this->tasker->getExpenseReport($start, $end, $accounts);
         $type    = 'expense-entry';
         $result  = view('reports.partials.income-expenses', compact('entries', 'type'))->render();
         $cache->store($result);
@@ -62,15 +83,14 @@ class OperationsController extends Controller
     }
 
     /**
-     * @param AccountTaskerInterface $tasker
-     * @param Collection             $accounts
-     * @param Carbon                 $start
-     * @param Carbon                 $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return string
      * @throws \Throwable
      */
-    public function income(AccountTaskerInterface $tasker, Collection $accounts, Carbon $start, Carbon $end)
+    public function income(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -81,7 +101,7 @@ class OperationsController extends Controller
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        $entries = $tasker->getIncomeReport($start, $end, $accounts);
+        $entries = $this->tasker->getIncomeReport($start, $end, $accounts);
         $type    = 'income-entry';
         $result  = view('reports.partials.income-expenses', compact('entries', 'type'))->render();
 
@@ -91,15 +111,14 @@ class OperationsController extends Controller
     }
 
     /**
-     * @param AccountTaskerInterface $tasker
-     * @param Collection             $accounts
-     * @param Carbon                 $start
-     * @param Carbon                 $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return mixed|string
      * @throws \Throwable
      */
-    public function operations(AccountTaskerInterface $tasker, Collection $accounts, Carbon $start, Carbon $end)
+    public function operations(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -111,8 +130,8 @@ class OperationsController extends Controller
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        $incomes   = $tasker->getIncomeReport($start, $end, $accounts);
-        $expenses  = $tasker->getExpenseReport($start, $end, $accounts);
+        $incomes   = $this->tasker->getIncomeReport($start, $end, $accounts);
+        $expenses  = $this->tasker->getExpenseReport($start, $end, $accounts);
         $incomeSum = array_sum(
             array_map(
                 function ($item) {
