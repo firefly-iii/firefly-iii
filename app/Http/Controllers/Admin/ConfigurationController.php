@@ -28,6 +28,7 @@ use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Middleware\IsSandStormUser;
 use FireflyIII\Http\Requests\ConfigurationRequest;
 use FireflyIII\Support\Facades\FireflyConfig;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Class ConfigurationController.

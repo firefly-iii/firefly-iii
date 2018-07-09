@@ -35,7 +35,7 @@ class UserControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Log::debug(sprintf('Now in %s.', \get_class($this)));
@@ -46,6 +46,8 @@ class UserControllerTest extends TestCase
      */
     public function testDelete(): void
     {
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('hasRole')->once()->andReturn(true);
         $this->be($this->user());
         $response = $this->get(route('admin.users.delete', [1]));
         $response->assertStatus(200);
@@ -60,6 +62,8 @@ class UserControllerTest extends TestCase
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('destroy')->once();
+        $repository->shouldReceive('hasRole')->once()->andReturn(true);
+
         $this->be($this->user());
         $response = $this->post(route('admin.users.destroy', ['2']));
         $response->assertStatus(302);
@@ -71,6 +75,7 @@ class UserControllerTest extends TestCase
      */
     public function testEdit(): void
     {
+        $repository = $this->mock(UserRepositoryInterface::class);
         $this->be($this->user());
         $response = $this->get(route('admin.users.edit', [1]));
         $response->assertStatus(200);
