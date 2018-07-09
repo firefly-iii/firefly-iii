@@ -48,7 +48,7 @@ class FileRoutine implements RoutineInterface
     public function run(): void
     {
         Log::debug(sprintf('Now in run() for file routine with status: %s', $this->importJob->status));
-        if ($this->importJob->status === 'ready_to_run') {
+        if ('ready_to_run' === $this->importJob->status) {
             $this->repository->setStatus($this->importJob, 'running');
             // get processor, depending on file type
             // is just CSV for now.
