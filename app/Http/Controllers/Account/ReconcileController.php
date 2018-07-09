@@ -231,6 +231,7 @@ class ReconcileController extends Controller
      * @param TransactionJournal $journal
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @throws FireflyException
      */
     public function show(TransactionJournal $journal)
     {
@@ -242,6 +243,9 @@ class ReconcileController extends Controller
 
         // get main transaction:
         $transaction = $this->repository->getAssetTransaction($journal);
+        if(null === $transaction) {
+            throw new FireflyException('The transaction data is incomplete. This is probably a bug. Apologies.');
+        }
         $account     = $transaction->account;
 
         return view('accounts.reconcile.show', compact('journal', 'subTitle', 'transaction', 'account'));

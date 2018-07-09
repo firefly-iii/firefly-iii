@@ -29,6 +29,7 @@ use FireflyIII\Jobs\ExecuteRuleGroupOnExistingTransactions;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -95,8 +96,12 @@ class RuleGroupController extends Controller
      */
     public function destroy(Request $request, RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
+        /** @var User $user */
+        $user = auth()->user();
         $title  = $ruleGroup->title;
-        $moveTo = auth()->user()->ruleGroups()->find((int)$request->get('move_rules_before_delete'));
+
+        /** @var RuleGroup $moveTo */
+        $moveTo = $user->ruleGroups()->find((int)$request->get('move_rules_before_delete'));
 
         $repository->destroy($ruleGroup, $moveTo);
 
@@ -157,6 +162,8 @@ class RuleGroupController extends Controller
     public function execute(SelectTransactionsRequest $request, AccountRepositoryInterface $repository, RuleGroup $ruleGroup): RedirectResponse
     {
         // Get parameters specified by the user
+        /** @var User $user */
+        $user      = auth()->user();
         $accounts  = $repository->getAccountsById($request->get('accounts'));
         $startDate = new Carbon($request->get('start_date'));
         $endDate   = new Carbon($request->get('end_date'));
@@ -165,7 +172,7 @@ class RuleGroupController extends Controller
         $job = new ExecuteRuleGroupOnExistingTransactions($ruleGroup);
 
         // Apply parameters to the job
-        $job->setUser(auth()->user());
+        $job->setUser($user);
         $job->setAccounts($accounts);
         $job->setStartDate($startDate);
         $job->setEndDate($endDate);

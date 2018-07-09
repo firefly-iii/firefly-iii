@@ -162,9 +162,10 @@ class TransactionController extends Controller
         foreach ($transactionIds as $transactionId) {
             $transactionId = (int)$transactionId;
             $transaction   = $this->repository->findTransaction($transactionId);
-            Log::debug(sprintf('Transaction ID is %d', $transaction->id));
-
-            $this->repository->reconcile($transaction);
+            if (null !== $transaction) {
+                Log::debug(sprintf('Transaction ID is %d', $transaction->id));
+                $this->repository->reconcile($transaction);
+            }
         }
 
         return response()->json(['ok' => 'reconciled']);
@@ -271,11 +272,13 @@ class TransactionController extends Controller
                 $sums     = $this->sumPerCurrency($journals);
                 $dateName = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
                 $sum      = $journals->sum('transaction_amount');
+                /** @noinspection PhpUndefinedMethodInspection */
                 $entries->push(
                     [
                         'name'  => $dateName,
                         'sums'  => $sums,
                         'sum'   => $sum,
+
                         'start' => $currentDate['start']->format('Y-m-d'),
                         'end'   => $currentDate['end']->format('Y-m-d'),
                     ]

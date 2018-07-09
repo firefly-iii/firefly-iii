@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers\Auth;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\TokenFormRequest;
+use FireflyIII\User;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Http\Request;
 use Log;
@@ -71,6 +72,7 @@ class TwoFactorController extends Controller
      */
     public function lostTwoFactor()
     {
+        /** @var User $user */
         $user      = auth()->user();
         $siteOwner = env('SITE_OWNER', '');
         $title     = (string)trans('firefly.two_factor_forgot_title');

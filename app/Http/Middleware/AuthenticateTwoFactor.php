@@ -52,6 +52,7 @@ class AuthenticateTwoFactor
     }
 
 
+    /** @noinspection PhpUnusedParameterInspection */
     /**
      * @param         $request
      * @param Closure $next
@@ -63,6 +64,7 @@ class AuthenticateTwoFactor
      */
     public function handle($request, Closure $next, ...$guards)
     {
+        /** @noinspection PhpUndefinedMethodInspection */
         if ($this->auth->guest()) {
             return response()->redirectTo(route('login'));
         }
@@ -70,6 +72,7 @@ class AuthenticateTwoFactor
 
         $is2faEnabled = app('preferences')->get('twoFactorAuthEnabled', false)->data;
         $has2faSecret = null !== app('preferences')->get('twoFactorAuthSecret');
+        /** @noinspection PhpUndefinedMethodInspection */
         $is2faAuthed  = 'true' === $request->cookie('twoFactorAuthenticated');
 
         if ($is2faEnabled && $has2faSecret && !$is2faAuthed) {

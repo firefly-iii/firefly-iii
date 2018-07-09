@@ -49,6 +49,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int                 transaction_currency_id
  * @property TransactionCurrency $transactionCurrency
  * @property Collection          $tags
+ * @property mixed               user_id
+ * @property mixed               transactions
+ * @property int                 transaction_count
+ * @property Carbon              interest_date
+ * @property Carbon              book_date
+ * @property Carbon              process_date
  */
 class TransactionJournal extends Model
 {

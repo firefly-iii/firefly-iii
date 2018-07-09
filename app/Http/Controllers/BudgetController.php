@@ -298,6 +298,7 @@ class BudgetController extends Controller
 
         // select thing for last 12 periods:
         $previousLoop = [];
+        /** @var Carbon $previousDate */
         $previousDate = clone $start;
         $count        = 0;
         while ($count < 12) {
@@ -310,6 +311,7 @@ class BudgetController extends Controller
 
         // select thing for next 12 periods:
         $nextLoop = [];
+        /** @var Carbon $nextDate */
         $nextDate = clone $end;
         $nextDate->addDay();
         $count = 0;
@@ -368,7 +370,8 @@ class BudgetController extends Controller
         ];
         $currency = app('amount')->getDefaultCurrency();
         $range    = Preferences::get('viewRange', '1M')->data;
-        $begin    = app('navigation')->subtractPeriod($start, $range, 3);
+        /** @var Carbon $begin */
+        $begin = app('navigation')->subtractPeriod($start, $range, 3);
 
         Log::debug(sprintf('Range is %s', $range));
         Log::debug(sprintf('infoIncome begin is %s', $begin->format('Y-m-d')));
@@ -378,6 +381,7 @@ class BudgetController extends Controller
         $count        = 0;
         $currentStart = clone $begin;
         while ($currentStart < $start) {
+
             Log::debug(sprintf('Loop: currentStart is %s', $currentStart->format('Y-m-d')));
             $currentEnd   = app('navigation')->endOfPeriod($currentStart, $range);
             $total        = bcadd($total, $this->repository->getAvailableBudget($currency, $currentStart, $currentEnd));
@@ -441,6 +445,7 @@ class BudgetController extends Controller
         // prep for "specific date" view.
         if ('all' !== $moment && \strlen($moment) > 0) {
             $start    = new Carbon($moment);
+            /** @var Carbon $end */
             $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
                 'firefly.without_budget_between',
@@ -697,6 +702,7 @@ class BudgetController extends Controller
             $set      = $collector->getJournals();
             $sum      = (string)($set->sum('transaction_amount') ?? '0');
             $journals = $set->count();
+            /** @noinspection PhpUndefinedMethodInspection */
             $dateStr  = $date['end']->format('Y-m-d');
             $dateName = app('navigation')->periodShow($date['end'], $date['period']);
             $entries->push(['string' => $dateStr, 'name' => $dateName, 'count' => $journals, 'sum' => $sum, 'date' => clone $date['end']]);

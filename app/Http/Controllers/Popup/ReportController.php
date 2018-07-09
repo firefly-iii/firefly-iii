@@ -130,12 +130,13 @@ class ReportController extends Controller
         $account = $this->accountRepository->findNull((int)$attributes['accountId']);
 
 
+
         switch (true) {
-            case BalanceLine::ROLE_DEFAULTROLE === $role && null !== $budget->id:
+            case BalanceLine::ROLE_DEFAULTROLE === $role && null !== $budget && null !== $account:
                 // normal row with a budget:
                 $journals = $this->popupHelper->balanceForBudget($budget, $account, $attributes);
                 break;
-            case BalanceLine::ROLE_DEFAULTROLE === $role && null === $budget->id:
+            case BalanceLine::ROLE_DEFAULTROLE === $role && null === $budget && null !== $account:
                 // normal row without a budget:
                 $journals     = $this->popupHelper->balanceForNoBudget($account, $attributes);
                 $budget->name = (string)trans('firefly.no_budget');
@@ -160,6 +161,9 @@ class ReportController extends Controller
     private function budgetSpentAmount(array $attributes): string
     {
         $budget   = $this->budgetRepository->findNull((int)$attributes['budgetId']);
+        if(null === $budget) {
+            throw new FireflyException('This is an unknown budget. Apologies.');
+        }
         $journals = $this->popupHelper->byBudget($budget, $attributes);
         $view     = view('popup.report.budget-spent-amount', compact('journals', 'budget'))->render();
 
@@ -177,6 +181,11 @@ class ReportController extends Controller
     private function categoryEntry(array $attributes): string
     {
         $category = $this->categoryRepository->findNull((int)$attributes['categoryId']);
+
+        if(null === $category) {
+            throw new FireflyException('This is an unknown category. Apologies.');
+        }
+
         $journals = $this->popupHelper->byCategory($category, $attributes);
         $view     = view('popup.report.category-entry', compact('journals', 'category'))->render();
 
@@ -194,6 +203,11 @@ class ReportController extends Controller
     private function expenseEntry(array $attributes): string
     {
         $account  = $this->accountRepository->findNull((int)$attributes['accountId']);
+
+        if(null === $account) {
+            throw new FireflyException('This is an unknown account. Apologies.');
+        }
+
         $journals = $this->popupHelper->byExpenses($account, $attributes);
         $view     = view('popup.report.expense-entry', compact('journals', 'account'))->render();
 
@@ -211,6 +225,11 @@ class ReportController extends Controller
     private function incomeEntry(array $attributes): string
     {
         $account  = $this->accountRepository->findNull((int)$attributes['accountId']);
+
+        if(null === $account) {
+            throw new FireflyException('This is an unknown category. Apologies.');
+        }
+
         $journals = $this->popupHelper->byIncome($account, $attributes);
         $view     = view('popup.report.income-entry', compact('journals', 'account'))->render();
 

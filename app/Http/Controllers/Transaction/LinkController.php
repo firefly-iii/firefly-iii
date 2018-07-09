@@ -106,7 +106,14 @@ class LinkController extends Controller
 
             return redirect(route('transactions.show', [$journal->id]));
         }
-        $other         = $this->journalRepository->findNull($linkInfo['transaction_journal_id']);
+        $other = $this->journalRepository->findNull($linkInfo['transaction_journal_id']);
+
+        if (null === $other) {
+            session()->flash('error', trans('firefly.invalid_link_selection'));
+
+            return redirect(route('transactions.show', [$journal->id]));
+        }
+
         $alreadyLinked = $this->repository->findLink($journal, $other);
 
         if ($other->id === $journal->id) {

@@ -248,6 +248,7 @@ class CategoryReportController extends Controller
                 $chartData[$labelSumIn]['entries'][$label]  = $sumOfIncome[$category->id];
                 $chartData[$labelSumOut]['entries'][$label] = $sumOfExpense[$category->id];
             }
+            /** @var Carbon $currentStart */
             $currentStart = clone $currentEnd;
             $currentStart->addDay();
         }

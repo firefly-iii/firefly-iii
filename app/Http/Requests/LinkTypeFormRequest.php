@@ -33,7 +33,7 @@ class LinkTypeFormRequest extends Request
     public function authorize(): bool
     {
         // Only allow logged and admins
-        return auth()->check() && auth()->user()->hasRole('owner');
+        return auth()->check();
     }
 
     /**

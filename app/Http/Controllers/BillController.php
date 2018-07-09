@@ -326,6 +326,7 @@ class BillController extends Controller
             $return = 'true';
         }
 
+        $group = null;
         // find first rule group, or create one:
         $count = $this->ruleGroupRepos->count();
         if (0 === $count) {
@@ -336,7 +337,7 @@ class BillController extends Controller
             $group = $this->ruleGroupRepos->store($data);
         }
         if ($count > 0) {
-            $group = $this->ruleGroupRepos->getActiveGroups(auth()->user())->first();
+            $group = $this->ruleGroupRepos->getActiveGroups($bill->user)->first();
         }
 
         // redirect to page that will create a new rule.

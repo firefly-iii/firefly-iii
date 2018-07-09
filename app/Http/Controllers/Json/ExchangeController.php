@@ -27,6 +27,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Currency\ExchangeRateInterface;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Log;
@@ -56,9 +57,11 @@ class ExchangeController extends Controller
             Log::debug(sprintf('No cached exchange rate in database for %s to %s on %s', $fromCurrency->code, $toCurrency->code, $date->format('Y-m-d')));
 
             // create service:
+            /** @var User $user */
+            $user = auth()->user();
             /** @var ExchangeRateInterface $service */
             $service = app(ExchangeRateInterface::class);
-            $service->setUser(auth()->user());
+            $service->setUser($user);
 
             // get rate:
             $rate = $service->getRate($fromCurrency, $toCurrency, $date);

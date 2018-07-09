@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int       $transaction_journal_id
  * @property int       $piggy_bank_id
  * @property int       $id
+ * @property mixed     date
  */
 class PiggyBankEvent extends Model
 {

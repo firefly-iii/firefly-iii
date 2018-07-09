@@ -77,6 +77,7 @@ class ResetPasswordController extends Controller
             $allowRegistration = false;
         }
 
+        /** @noinspection PhpUndefinedFieldInspection */
         return view('auth.passwords.reset')->with(
             ['token' => $token, 'email' => $request->email, 'allowRegistration' => $allowRegistration]
         );

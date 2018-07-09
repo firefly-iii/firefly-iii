@@ -165,6 +165,7 @@ class ExpenseReportController extends Controller
                 $chartData[$labelSumIn]['entries'][$label]  = $sumOfIncome[$exp->id];
                 $chartData[$labelSumOut]['entries'][$label] = $sumOfExpense[$exp->id];
             }
+            /** @var Carbon $currentStart */
             $currentStart = clone $currentEnd;
             $currentStart->addDay();
         }

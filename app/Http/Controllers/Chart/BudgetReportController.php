@@ -191,6 +191,7 @@ class BudgetReportController extends Controller
                     $chartData[$budget->id . '-left']['entries'][$label] = $leftOfLimits[$budgetLimitId];
                 }
             }
+            /** @var Carbon $currentStart */
             $currentStart = clone $currentEnd;
             $currentStart->addDay();
         }

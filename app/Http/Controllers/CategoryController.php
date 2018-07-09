@@ -192,7 +192,9 @@ class CategoryController extends Controller
 
         // prep for "specific date" view.
         if ('all' !== $moment && \strlen($moment) > 0) {
+            /** @var Carbon $start */
             $start    = app('navigation')->startOfPeriod(new Carbon($moment), $range);
+            /** @var Carbon $end */
             $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
                 'firefly.without_category_between',
@@ -257,6 +259,7 @@ class CategoryController extends Controller
         // prep for "specific date" view.
         if ('all' !== $moment && \strlen($moment) > 0) {
             $start    = app('navigation')->startOfPeriod(new Carbon($moment), $range);
+            /** @var Carbon $end */
             $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
                 'firefly.journals_in_period_for_category',
@@ -406,6 +409,7 @@ class CategoryController extends Controller
                 [TransactionType::DEPOSIT]
             );
             $earned   = $collector->getJournals()->sum('transaction_amount');
+            /** @noinspection PhpUndefinedMethodInspection */
             $dateStr  = $date['end']->format('Y-m-d');
             $dateName = app('navigation')->periodShow($date['end'], $date['period']);
             $entries->push(
@@ -460,6 +464,7 @@ class CategoryController extends Controller
         foreach ($dates as $currentDate) {
             $spent    = $this->repository->spentInPeriod(new Collection([$category]), $accounts, $currentDate['start'], $currentDate['end']);
             $earned   = $this->repository->earnedInPeriod(new Collection([$category]), $accounts, $currentDate['start'], $currentDate['end']);
+            /** @noinspection PhpUndefinedMethodInspection */
             $dateStr  = $currentDate['end']->format('Y-m-d');
             $dateName = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
 

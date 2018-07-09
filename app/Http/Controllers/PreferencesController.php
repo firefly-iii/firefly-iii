@@ -58,6 +58,7 @@ class PreferencesController extends Controller
     {
         $accounts           = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $viewRangePref      = Preferences::get('viewRange', '1M');
+        /** @noinspection NullPointerExceptionInspection */
         $viewRange          = $viewRangePref->data;
         $frontPageAccounts  = Preferences::get('frontPageAccounts', []);
         $language           = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;

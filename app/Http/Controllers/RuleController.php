@@ -38,6 +38,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -173,9 +174,9 @@ class RuleController extends Controller
      *
      * @param Rule $rule
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function destroy(Rule $rule): \Illuminate\Http\RedirectResponse
+    public function destroy(Rule $rule): RedirectResponse
     {
         $title = $rule->title;
         $this->ruleRepos->destroy($rule);
@@ -189,7 +190,7 @@ class RuleController extends Controller
     /**
      * @param Rule $rule
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function down(Rule $rule)
     {
@@ -262,6 +263,8 @@ class RuleController extends Controller
     public function execute(SelectTransactionsRequest $request, Rule $rule): RedirectResponse
     {
         // Get parameters specified by the user
+        /** @var User $user */
+        $user      = auth()->user();
         $accounts  = $this->accountRepos->getAccountsById($request->get('accounts'));
         $startDate = new Carbon($request->get('start_date'));
         $endDate   = new Carbon($request->get('end_date'));
@@ -270,7 +273,7 @@ class RuleController extends Controller
         $job = new ExecuteRuleOnExistingTransactions($rule);
 
         // Apply parameters to the job
-        $job->setUser(auth()->user());
+        $job->setUser($user);
         $job->setAccounts($accounts);
         $job->setStartDate($startDate);
         $job->setEndDate($endDate);
@@ -289,9 +292,11 @@ class RuleController extends Controller
      */
     public function index()
     {
+        /** @var User $user */
+        $user      = auth()->user();
         $this->createDefaultRuleGroup();
         $this->createDefaultRule();
-        $ruleGroups = $this->ruleGroupRepos->getRuleGroupsWithRules(auth()->user());
+        $ruleGroups = $this->ruleGroupRepos->getRuleGroupsWithRules($user);
 
         return view('rules.index', compact('ruleGroups'));
     }
@@ -346,7 +351,7 @@ class RuleController extends Controller
     /**
      * @param RuleFormRequest $request
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function store(RuleFormRequest $request)
     {
@@ -505,7 +510,7 @@ class RuleController extends Controller
     /**
      * @param Rule $rule
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function up(Rule $rule)
     {
@@ -518,7 +523,7 @@ class RuleController extends Controller
      * @param RuleFormRequest $request
      * @param Rule            $rule
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(RuleFormRequest $request, Rule $rule)
     {

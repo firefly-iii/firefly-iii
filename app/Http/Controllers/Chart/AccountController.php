@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection NullPointerExceptionInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
@@ -216,6 +217,7 @@ class AccountController extends Controller
         return $this->expenseCategory($account, $start, $end);
     }
 
+
     /**
      * Shows the balances for all the user's frontpage accounts.
      *
@@ -230,6 +232,8 @@ class AccountController extends Controller
         $defaultSet = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray();
         Log::debug('Default set is ', $defaultSet);
         $frontPage = Preferences::get('frontPageAccounts', $defaultSet);
+
+
         Log::debug('Frontpage preference set is ', $frontPage->data);
         if (0 === \count($frontPage->data)) {
             $frontPage->data = $defaultSet;

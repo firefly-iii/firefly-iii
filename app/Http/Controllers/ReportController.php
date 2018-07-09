@@ -77,11 +77,10 @@ class ReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
-     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function accountReport(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): string
+    public function accountReport(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
             return view('error')->with('message', trans('firefly.end_after_start_date')); // @codeCoverageIgnore
@@ -111,11 +110,11 @@ class ReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function auditReport(Collection $accounts, Carbon $start, Carbon $end): string
+    public function auditReport(Collection $accounts, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
             return view('error')->with('message', trans('firefly.end_after_start_date')); // @codeCoverageIgnore
@@ -148,11 +147,11 @@ class ReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function budgetReport(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): string
+    public function budgetReport(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
             return view('error')->with('message', trans('firefly.end_after_start_date')); // @codeCoverageIgnore
@@ -186,11 +185,11 @@ class ReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
+     *  @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function categoryReport(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): string
+    public function categoryReport(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
             return view('error')->with('message', trans('firefly.end_after_start_date')); // @codeCoverageIgnore
@@ -223,11 +222,11 @@ class ReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function defaultReport(Collection $accounts, Carbon $start, Carbon $end): string
+    public function defaultReport(Collection $accounts, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
             return view('error')->with('message', trans('firefly.end_after_start_date'));
@@ -382,11 +381,11 @@ class ReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function tagReport(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): string
+    public function tagReport(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
             return view('error')->with('message', trans('firefly.end_after_start_date')); // @codeCoverageIgnore
@@ -427,7 +426,7 @@ class ReportController extends Controller
         $set        = new Collection;
         $names      = $revenue->pluck('name')->toArray();
         foreach ($expense as $exp) {
-            if (in_array($exp->name, $names, true)) {
+            if (\in_array($exp->name, $names, true)) {
                 $set->push($exp);
             }
         }

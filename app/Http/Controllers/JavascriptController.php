@@ -48,14 +48,16 @@ class JavascriptController extends Controller
     {
         $accounts   = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $preference = Preferences::get('currencyPreference', config('firefly.default_currency', 'EUR'));
-        $default    = $currencyRepository->findByCodeNull($preference->data);
+        /** @noinspection NullPointerExceptionInspection */
+        $default = $currencyRepository->findByCodeNull($preference->data);
 
         $data = ['accounts' => []];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $accountId                    = $account->id;
-            $currency                     = (int)$repository->getMetaValue($account, 'currency_id');
+            $accountId = $account->id;
+            $currency  = (int)$repository->getMetaValue($account, 'currency_id');
+            /** @noinspection NullPointerExceptionInspection */
             $currency                     = 0 === $currency ? $default->id : $currency;
             $entry                        = ['preferredCurrency' => $currency, 'name' => $account->name];
             $data['accounts'][$accountId] = $entry;
@@ -113,8 +115,9 @@ class JavascriptController extends Controller
         $localeconv                = localeconv();
         $localeconv['frac_digits'] = $currency->decimal_places;
         $pref                      = Preferences::get('language', config('firefly.default_language', 'en_US'));
-        $lang                      = $pref->data;
-        $dateRange                 = $this->getDateRangeConfig();
+        /** @noinspection NullPointerExceptionInspection */
+        $lang      = $pref->data;
+        $dateRange = $this->getDateRangeConfig();
 
         $data = [
             'currencyCode'    => $currency->code,
@@ -173,7 +176,9 @@ class JavascriptController extends Controller
         $ranges[$index] = [$nextStart, $nextEnd];
 
         // today:
+        /** @var Carbon $todayStart */
         $todayStart = app('navigation')->startOfPeriod($today, $viewRange);
+        /** @var Carbon $todayEnd */
         $todayEnd   = app('navigation')->endOfPeriod($todayStart, $viewRange);
         if ($todayStart->ne($start) || $todayEnd->ne($end)) {
             $ranges[ucfirst((string)trans('firefly.today'))] = [$todayStart, $todayEnd];

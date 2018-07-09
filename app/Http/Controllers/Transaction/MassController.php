@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Transformers\TransactionTransformer;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Illuminate\View\View as IlluminateView;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -122,7 +123,10 @@ class MassController extends Controller
      */
     public function edit(Collection $journals): IlluminateView
     {
+        /** @var User $user */
+        $user      = auth()->user();
         $subTitle = trans('firefly.mass_edit_journals');
+
 
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -140,7 +144,7 @@ class MassController extends Controller
         $transformer = new TransactionTransformer(new ParameterBag);
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setUser(auth()->user());
+        $collector->setUser($user);
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setJournals($journals);
         $collector->addFilter(TransactionViewFilter::class);
@@ -220,11 +224,6 @@ class MassController extends Controller
                                                 'foreign_amount'        => $foreignAmount,
                                                 'foreign_currency_id'   => $foreignCurrencyId,
                                                 'foreign_currency_code' => null,
-                                                //'native_amount'            => $amount,
-                                                //'source_amount'            => $amount,
-                                                //'foreign_amount'           => $foreignAmount,
-                                                //'destination_amount'       => $foreignAmount,
-                                                //'amount'                   => $foreignAmount,
                                             ]],
                         'currency_id'   => $foreignCurrencyId,
                         'tags'          => $tags,

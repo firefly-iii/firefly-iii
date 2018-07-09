@@ -194,6 +194,7 @@ class TagController extends Controller
         // prep for "specific date" view.
         if ('all' !== $moment && \strlen($moment) > 0) {
             $start    = new Carbon($moment);
+            /** @var Carbon $end */
             $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
                 'firefly.journals_in_period_for_tag',
@@ -291,6 +292,7 @@ class TagController extends Controller
     {
         // get first and last tag date from tag:
         $range = app('preferences')->get('viewRange', '1M')->data;
+        /** @var Carbon $end */
         $end   = app('navigation')->endOfX($this->repository->lastUseDate($tag), $range, null);
         $start = $this->repository->firstUseDate($tag);
 
@@ -322,6 +324,7 @@ class TagController extends Controller
             ];
             $collection->push($arr);
 
+            /** @var Carbon $currentEnd */
             $currentEnd = clone $currentStart;
             $currentEnd->subDay();
         }

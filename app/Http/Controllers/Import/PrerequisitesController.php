@@ -27,6 +27,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Http\Request;
 use Log;
 
@@ -73,7 +74,7 @@ class PrerequisitesController extends Controller
     {
         // catch impossible status:
         $allowed = ['new'];
-        if (null !== $importJob && !in_array($importJob->status, $allowed, true)) {
+        if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
             Log::error(sprintf('Job has state "%s" but this Prerequisites::index() only accepts %s', $importJob->status, json_encode($allowed)));
             session()->flash('error', trans('import.bad_job_status', ['status' => $importJob->status]));
 
@@ -85,9 +86,11 @@ class PrerequisitesController extends Controller
         if (!class_exists($class)) {
             throw new FireflyException(sprintf('No class to handle prerequisites for "%s".', $importProvider)); // @codeCoverageIgnore
         }
+        /** @var User $user */
+        $user      = auth()->user();
         /** @var PrerequisitesInterface $object */
         $object = app($class);
-        $object->setUser(auth()->user());
+        $object->setUser($user);
 
         if (null !== $importJob && $object->isComplete()) {
             // update job:
@@ -139,9 +142,11 @@ class PrerequisitesController extends Controller
         if (!class_exists($class)) {
             throw new FireflyException(sprintf('Cannot find class %s', $class)); // @codeCoverageIgnore
         }
+        /** @var User $user */
+        $user      = auth()->user();
         /** @var PrerequisitesInterface $object */
         $object = app($class);
-        $object->setUser(auth()->user());
+        $object->setUser($user);
         Log::debug('Going to store entered prerequisites.');
         // store post data
         $data   = $request->all();

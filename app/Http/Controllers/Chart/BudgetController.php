@@ -107,6 +107,7 @@ class BudgetController extends Controller
         $current          = app('navigation')->startOfPeriod($current, $step);
 
         while ($end >= $current) {
+            /** @var Carbon $currentEnd */
             $currentEnd = app('navigation')->endOfPeriod($current, $step);
             if ('1Y' === $step) {
                 $currentEnd->subDay(); // @codeCoverageIgnore
@@ -182,9 +183,10 @@ class BudgetController extends Controller
      */
     public function expenseAsset(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
     {
-        $cache = new CacheProperties;
+        $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
+        $cache         = new CacheProperties;
         $cache->addProperty($budget->id);
-        $cache->addProperty($budgetLimit->id ?? 0);
+        $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-asset');
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
@@ -193,7 +195,7 @@ class BudgetController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setBudget($budget);
-        if (null !== $budgetLimit->id) {
+        if (null !== $budgetLimit) {
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         }
 
@@ -227,9 +229,10 @@ class BudgetController extends Controller
      */
     public function expenseCategory(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
     {
+        $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
         $cache = new CacheProperties;
         $cache->addProperty($budget->id);
-        $cache->addProperty($budgetLimit->id ?? 0);
+        $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-category');
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
@@ -238,7 +241,7 @@ class BudgetController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setBudget($budget)->withCategoryInformation();
-        if (null !== $budgetLimit->id) {
+        if (null !== $budgetLimit) {
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         }
 
@@ -274,9 +277,10 @@ class BudgetController extends Controller
      */
     public function expenseExpense(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
     {
+        $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
         $cache = new CacheProperties;
         $cache->addProperty($budget->id);
-        $cache->addProperty($budgetLimit->id ?? 0);
+        $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-expense');
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
@@ -285,7 +289,7 @@ class BudgetController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)->withOpposingAccount();
-        if (null !== $budgetLimit->id) {
+        if (null !== $budgetLimit) {
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         }
 
@@ -481,7 +485,9 @@ class BudgetController extends Controller
         $current  = clone $start;
         $budgeted = [];
         while ($current < $end) {
+            /** @var Carbon $currentStart */
             $currentStart     = app('navigation')->startOfPeriod($current, $range);
+            /** @var Carbon $currentEnd */
             $currentEnd       = app('navigation')->endOfPeriod($current, $range);
             $budgetLimits     = $this->repository->getBudgetLimits($budget, $currentStart, $currentEnd);
             $index            = $currentStart->format($key);

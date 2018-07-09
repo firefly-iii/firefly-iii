@@ -266,6 +266,7 @@ class SplitController extends Controller
 
         foreach ($old as $index => $row) {
             if (isset($array[$index])) {
+                /** @noinspection SlowArrayOperationsInLoopInspection */
                 $array[$index] = array_merge($array[$index], $row);
                 continue;
             }

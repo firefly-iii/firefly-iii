@@ -28,6 +28,7 @@ use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Http\Response as LaravelResponse;
 use Log;
 
@@ -117,7 +118,7 @@ class IndexController extends Controller
         }
         /** @var PrerequisitesInterface $providerPre */
         $providerPre = app($class);
-        $providerPre->setUser(auth()->user());
+        $providerPre->setUser($importJob->user);
 
         if (!$providerPre->isComplete()) {
             Log::debug('Job provider prerequisites are not yet filled in. Redirect to prerequisites-page.');
@@ -196,10 +197,12 @@ class IndexController extends Controller
     private function getProviders(): array
     {
         // get and filter all import routines:
+        /** @var User $user */
+        $user      = auth()->user();
         /** @var array $config */
         $providerNames = array_keys(config('import.enabled'));
         $providers     = [];
-        $isDemoUser    = $this->userRepository->hasRole(auth()->user(), 'demo');
+        $isDemoUser    = $this->userRepository->hasRole($user, 'demo');
         $isDebug       = (bool)config('app.debug');
         foreach ($providerNames as $providerName) {
             //Log::debug(sprintf('Now with provider %s', $providerName));
@@ -230,7 +233,7 @@ class IndexController extends Controller
                 //Log::debug('Will not check prerequisites.');
                 /** @var PrerequisitesInterface $object */
                 $object = app($class);
-                $object->setUser(auth()->user());
+                $object->setUser($user);
                 $result = $object->isComplete();
             }
             $providers[$providerName]['prereq_complete'] = $result;

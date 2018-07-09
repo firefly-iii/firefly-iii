@@ -294,6 +294,7 @@ class AccountController extends Controller
         $subTitle  = trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
         $chartUri  = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $periods   = $this->getPeriodOverview($account, $end);
+        /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
         $collector->setRange($start, $end);
@@ -337,6 +338,7 @@ class AccountController extends Controller
         }
         $subTitle  = trans('firefly.all_journals_for_account', ['name' => $account->name]);
         $periods   = new Collection;
+        /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
         $transactions = $collector->getPaginatedJournals();
@@ -475,6 +477,7 @@ class AccountController extends Controller
             $spent = (string)$collector->getJournals()->sum('transaction_amount');
 
             $dateName = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
+            /** @noinspection PhpUndefinedMethodInspection */
             $entries->push(
                 [
                     'name'   => $dateName,

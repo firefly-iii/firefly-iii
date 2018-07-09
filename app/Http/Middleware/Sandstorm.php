@@ -74,6 +74,7 @@ class Sandstorm
             if (1 === $count && \strlen($userId) > 0) {
                 // login as first user user.
                 $user = $repository->first();
+                /** @noinspection NullPointerExceptionInspection */
                 Auth::guard($guard)->login($user);
                 View::share('SANDSTORM_ANON', false);
 
@@ -83,6 +84,7 @@ class Sandstorm
             if (1 === $count && '' === $userId) {
                 // login but indicate anonymous
                 $user = User::first();
+                /** @noinspection NullPointerExceptionInspection */
                 Auth::guard($guard)->login($user);
                 View::share('SANDSTORM_ANON', true);
 

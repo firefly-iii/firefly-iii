@@ -237,6 +237,7 @@ class TagReportController extends Controller
                 $chartData[$labelSumIn]['entries'][$label]  = $sumOfIncome[$tag->id];
                 $chartData[$labelSumOut]['entries'][$label] = $sumOfExpense[$tag->id];
             }
+            /** @var Carbon $currentStart */
             $currentStart = clone $currentEnd;
             $currentStart->addDay();
         }

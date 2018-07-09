@@ -77,6 +77,7 @@ class RegisterController extends Controller
             return view('error', compact('message'));
         }
 
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->validator($request->all())->validate();
 
         event(new Registered($user = $this->create($request->all())));

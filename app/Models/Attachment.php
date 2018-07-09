@@ -47,6 +47,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int    $size
  * @property User   $user
  * @property bool   $uploaded
+ * @property bool   file_exists
  */
 class Attachment extends Model
 {

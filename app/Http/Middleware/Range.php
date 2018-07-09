@@ -78,6 +78,7 @@ class Range
     private function configureView(): void
     {
         $pref = Preferences::get('language', config('firefly.default_language', 'en_US'));
+        /** @noinspection NullPointerExceptionInspection */
         $lang = $pref->data;
         App::setLocale($lang);
         Carbon::setLocale(substr($lang, 0, 2));

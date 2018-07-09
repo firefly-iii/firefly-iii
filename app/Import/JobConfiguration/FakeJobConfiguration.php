@@ -73,9 +73,9 @@ class FakeJobConfiguration implements JobConfigurationInterface
         $artist        = strtolower($data['artist'] ?? '');
         $song          = strtolower($data['song'] ?? '');
         $album         = strtolower($data['album'] ?? '');
-        $applyRules    = isset($data['apply_rules']) ? (int)$data['apply_rules'] === 1 : null;
+        $applyRules    = isset($data['apply_rules']) ? 1 === (int)$data['apply_rules'] : null;
         $configuration = $this->importJob->configuration;
-        if ($artist === 'david bowie') {
+        if ('david bowie' === $artist) {
             // store artist
             $configuration['artist'] = $artist;
         }
