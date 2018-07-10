@@ -301,8 +301,9 @@ class BillController extends Controller
      */
     public function store(BillFormRequest $request): RedirectResponse
     {
-        $billData = $request->getBillData();
-        $bill     = $this->billRepository->store($billData);
+        $billData           = $request->getBillData();
+        $billData['active'] = true;
+        $bill               = $this->billRepository->store($billData);
         if (null === $bill) {
             $request->session()->flash('error', (string)trans('firefly.bill_store_error'));
 
