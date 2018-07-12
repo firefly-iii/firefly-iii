@@ -161,24 +161,10 @@ class ProfileControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController
      */
-    public function testEnable2FADemo(): void
-    {
-        $repository = $this->mock(UserRepositoryInterface::class);
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(true);
-
-        $this->be($this->user());
-        $response = $this->post(route('profile.enable2FA'));
-        $response->assertStatus(302);
-        $response->assertRedirect(route('profile.index'));
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController
-     */
     public function testEnable2FANoSecret(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->twice()->andReturn(false);
 
         // ask about language:
         $langPreference       = new Preference;
@@ -220,7 +206,7 @@ class ProfileControllerTest extends TestCase
     public function testEnable2FASecret(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->twice()->andReturn(false);
 
         // ask about language:
         $langPreference       = new Preference;
@@ -291,6 +277,7 @@ class ProfileControllerTest extends TestCase
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('findByEmail')->once()->andReturn(null);
         $repository->shouldReceive('changeEmail')->once()->andReturn(true);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
 
         $this->be($this->user());
         $response = $this->post(route('profile.change-email.post'), $data);
@@ -310,6 +297,7 @@ class ProfileControllerTest extends TestCase
         ];
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('findByEmail')->once()->andReturn(new User);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
 
         $this->be($this->user());
         $response = $this->post(route('profile.change-email.post'), $data);
@@ -324,6 +312,7 @@ class ProfileControllerTest extends TestCase
     public function testPostChangeEmailSame(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
         $data       = [
             'email' => $this->user()->email,
         ];
@@ -345,6 +334,7 @@ class ProfileControllerTest extends TestCase
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('changePassword');
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
 
         $data = [
             'current_password'          => 'james',
@@ -368,6 +358,7 @@ class ProfileControllerTest extends TestCase
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('changePassword');
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
 
         $data = [
             'current_password'          => 'james3',
@@ -391,6 +382,7 @@ class ProfileControllerTest extends TestCase
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('changePassword');
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
 
         $data = [
             'current_password'          => 'james',
@@ -440,6 +432,7 @@ class ProfileControllerTest extends TestCase
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('destroy')->once();
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
         $data = [
             'password' => 'james',
         ];
@@ -458,6 +451,7 @@ class ProfileControllerTest extends TestCase
         $repository   = $this->mock(UserRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
         $data = [
             'password' => 'james2',
         ];
@@ -473,6 +467,8 @@ class ProfileControllerTest extends TestCase
      */
     public function testRegenerate(): void
     {
+        $repository   = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
         $token        = '';
         $currentToken = Preference::where('user_id', $this->user()->id)->where('name', 'access_token')->first();
         if (null !== $currentToken) {

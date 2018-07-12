@@ -87,48 +87,6 @@ class ReconcileControllerTest extends TestCase
         $response->assertRedirect(route('transactions.edit', [$journal->id]));
     }
 
-    /**
-     * Test overview of reconciliation.
-     *
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
-     */
-    public function testOverview(): void
-    {
-        $transactions = $this->user()->transactions()->inRandomOrder()->take(3)->get();
-        $repository   = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
-        $repository->shouldReceive('getTransactionsById')->andReturn($transactions)->twice();
-
-        $parameters = [
-            'startBalance' => '0',
-            'endBalance'   => '10',
-            'transactions' => [1, 2, 3],
-            'cleared'      => [4, 5, 6],
-        ];
-        $this->be($this->user());
-        $response = $this->get(route('accounts.reconcile.overview', [1, '20170101', '20170131']) . '?' . http_build_query($parameters));
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Test overview when it's not an asset.
-     *
-     * @covers                   \FireflyIII\Http\Controllers\Account\ReconcileController
-     * @expectedExceptionMessage is not an asset account
-     */
-    public function testOverviewNotAsset(): void
-    {
-        $account    = $this->user()->accounts()->where('account_type_id', '!=', 3)->first();
-        $parameters = [
-            'startBalance' => '0',
-            'endBalance'   => '10',
-            'transactions' => [1, 2, 3],
-            'cleared'      => [4, 5, 6],
-        ];
-        $this->be($this->user());
-        $response = $this->get(route('accounts.reconcile.overview', [$account->id, '20170101', '20170131']) . '?' . http_build_query($parameters));
-        $response->assertStatus(500);
-    }
 
     /**
      * Test showing the reconciliation.
@@ -273,33 +231,6 @@ class ReconcileControllerTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertSessionHas('success');
-    }
-
-    /**
-     * List transactions for reconciliation view.
-     *
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
-     */
-    public function testTransactions(): void
-    {
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $repository->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(1));
-
-        $this->be($this->user());
-        $response = $this->get(route('accounts.reconcile.transactions', [1, '20170101', '20170131']));
-        $response->assertStatus(200);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
-     */
-    public function testTransactionsInitialBalance(): void
-    {
-        $transaction = Transaction::leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                  ->where('accounts.user_id', $this->user()->id)->where('accounts.account_type_id', 6)->first(['account_id']);
-        $this->be($this->user());
-        $response = $this->get(route('accounts.reconcile.transactions', [$transaction->account_id, '20170101', '20170131']));
-        $response->assertStatus(302);
     }
 
     /**

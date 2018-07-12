@@ -188,7 +188,7 @@ class MassControllerTest extends TestCase
         $repository = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('update')->once();
-        $repository->shouldReceive('find')->once()->andReturn($deposit);
+        $repository->shouldReceive('findNull')->once()->andReturn($deposit);
         $repository->shouldReceive('getTransactionType')->andReturn('Deposit');
         $repository->shouldReceive('getNoteText')->andReturn('Some note');
 

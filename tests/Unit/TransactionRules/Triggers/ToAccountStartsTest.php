@@ -72,10 +72,12 @@ class ToAccountStartsTest extends TestCase
             $count       = $journal->transactions()->where('amount', '>', 0)->count();
             $transaction = $journal->transactions()->where('amount', '>', 0)->first();
             $account     = null === $transaction ? null : $transaction->account;
+
             Log::debug(sprintf('Journal with id #%d', $journal->id));
             Log::debug(sprintf('Count of transactions is %d', $count));
             Log::debug(sprintf('Account is null: %s', var_export(null === $account, true)));
-        } while ($loopCount < 30 && $count !== 1 && null !== $account);
+
+        } while ($loopCount < 30 && $count < 1 && null !== $account);
         Log::debug(sprintf('Loop has ended. loopCount is %d', $loopCount));
 
         $trigger = ToAccountStarts::makeFromStrings('bla-bla-bla' . $account->name, false);

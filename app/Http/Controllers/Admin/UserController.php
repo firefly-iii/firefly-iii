@@ -147,15 +147,7 @@ class UserController extends Controller
         $subTitleIcon  = 'fa-user';
         $information   = $repository->getUserData($user);
 
-        return view(
-            'admin.users.show',
-            compact(
-                'title',
-                'mainTitleIcon',
-                'subTitle',
-                'subTitleIcon',
-                'information',
-                'user'
+        return view('admin.users.show', compact('title', 'mainTitleIcon', 'subTitle', 'subTitleIcon', 'information', 'user'
             )
         );
     }

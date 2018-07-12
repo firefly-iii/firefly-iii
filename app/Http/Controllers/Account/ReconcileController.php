@@ -25,7 +25,6 @@ namespace FireflyIII\Http\Controllers\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\ReconciliationStoreRequest;
 use FireflyIII\Http\Requests\ReconciliationUpdateRequest;
@@ -38,14 +37,13 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Log;
 use Preferences;
 
 /**
  * Class ReconcileController.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReconcileController extends Controller
 {
@@ -111,63 +109,6 @@ class ReconcileController extends Controller
             'accounts.reconcile.edit',
             compact('journal', 'subTitle')
         )->with('data', $preFilled);
-    }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-    /**
-     * @param Request $request
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
-     *
-     * @return JsonResponse
-     *
-     * @throws FireflyException
-     * @throws \Throwable
-     */
-    public function overview(Request $request, Account $account, Carbon $start, Carbon $end): JsonResponse
-    {
-        if (AccountType::ASSET !== $account->accountType->type) {
-            throw new FireflyException(sprintf('Account %s is not an asset account.', $account->name));
-        }
-        $startBalance   = $request->get('startBalance');
-        $endBalance     = $request->get('endBalance');
-        $transactionIds = $request->get('transactions') ?? [];
-        $clearedIds     = $request->get('cleared') ?? [];
-        $amount         = '0';
-        $clearedAmount  = '0';
-        $route          = route('accounts.reconcile.submit', [$account->id, $start->format('Ymd'), $end->format('Ymd')]);
-        // get sum of transaction amounts:
-        $transactions = $this->repository->getTransactionsById($transactionIds);
-        $cleared      = $this->repository->getTransactionsById($clearedIds);
-        $countCleared = 0;
-
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $amount = bcadd($amount, $transaction->amount);
-        }
-
-        /** @var Transaction $transaction */
-        foreach ($cleared as $transaction) {
-            if ($transaction->transactionJournal->date <= $end) {
-                $clearedAmount = bcadd($clearedAmount, $transaction->amount);
-                ++$countCleared;
-            }
-        }
-        $difference  = bcadd(bcadd(bcsub($startBalance, $endBalance), $clearedAmount), $amount);
-        $diffCompare = bccomp($difference, '0');
-        $return      = [
-            'post_uri' => $route,
-            'html'     => view(
-                'accounts.reconcile.overview', compact(
-                                                 'account', 'start', 'diffCompare', 'difference', 'end', 'clearedIds', 'transactionIds', 'clearedAmount',
-                                                 'startBalance', 'endBalance', 'amount',
-                                                 'route', 'countCleared'
-                                             )
-            )->render(),
-        ];
-
-        return response()->json($return);
     }
 
     /**
@@ -243,10 +184,10 @@ class ReconcileController extends Controller
 
         // get main transaction:
         $transaction = $this->repository->getAssetTransaction($journal);
-        if(null === $transaction) {
+        if (null === $transaction) {
             throw new FireflyException('The transaction data is incomplete. This is probably a bug. Apologies.');
         }
-        $account     = $transaction->account;
+        $account = $transaction->account;
 
         return view('accounts.reconcile.show', compact('journal', 'subTitle', 'transaction', 'account'));
     }
@@ -338,52 +279,6 @@ class ReconcileController extends Controller
         return redirect(route('accounts.show', [$account->id]));
     }
 
-    /**
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
-     *
-     * @return mixed
-     *
-     * @throws FireflyException
-     * @throws \Throwable
-     */
-    public function transactions(Account $account, Carbon $start, Carbon $end)
-    {
-        if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
-            return $this->redirectToOriginalAccount($account);
-        }
-
-        $startDate = clone $start;
-        $startDate->subDays(1);
-
-        $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
-        $currency   = $this->currencyRepos->findNull($currencyId);
-        if (0 === $currency) {
-            $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
-        }
-
-        $startBalance = round(app('steam')->balance($account, $startDate), $currency->decimal_places);
-        $endBalance   = round(app('steam')->balance($account, $end), $currency->decimal_places);
-
-        // get the transactions
-        $selectionStart = clone $start;
-        $selectionStart->subDays(3);
-        $selectionEnd = clone $end;
-        $selectionEnd->addDays(3);
-
-        // grab transactions:
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))
-                  ->setRange($selectionStart, $selectionEnd)->withBudgetInformation()->withOpposingAccount()->withCategoryInformation();
-        $transactions = $collector->getJournals();
-        $html         = view(
-            'accounts.reconcile.transactions', compact('account', 'transactions', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
-        )->render();
-
-        return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
-    }
 
     /**
      * @param ReconciliationUpdateRequest $request

@@ -114,10 +114,10 @@ class ReportControllerTest extends TestCase
         $popupHelper   = $this->mock(PopupReportInterface::class);
         $account       = factory(Account::class)->make();
 
-        $popupHelper->shouldReceive('balanceForNoBudget')->once()->andReturn(new Collection);
+        $popupHelper->shouldReceive('balanceForNoBudget')->andReturn(new Collection);
         $budgetRepos->shouldReceive('findNull')->andReturn(new Budget)->once()->withArgs([0]);
         $accountRepos->shouldReceive('findNull')->andReturn($account)->once()->withArgs([1]);
-
+        $popupHelper->shouldReceive('balanceForBudget')->once()->andReturn(new Collection);
 
         $this->be($this->user());
         $arguments = [
