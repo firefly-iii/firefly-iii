@@ -28,6 +28,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Laravel\Passport\Passport;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -94,6 +95,7 @@ class UserControllerTest extends TestCase
         $users = factory(User::class, 10)->create();
         // mock stuff:
         $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->once()->andReturn(true);
 
         // mock calls:
         $repository->shouldReceive('all')->withAnyArgs()->andReturn($users)->once();
@@ -116,7 +118,9 @@ class UserControllerTest extends TestCase
      */
     public function testShow(): void
     {
-        $user = User::first();
+        $user       = User::first();
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->once()->andReturn(true);
 
         // test API
         $response = $this->get('/api/v1/users/' . $user->id);
@@ -139,7 +143,7 @@ class UserControllerTest extends TestCase
 
         // mock
         $userRepos = $this->mock(UserRepositoryInterface::class);
-        $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->twice()->andReturn(true);
         $userRepos->shouldReceive('store')->once()->andReturn($this->user());
 
         // test API
@@ -163,7 +167,7 @@ class UserControllerTest extends TestCase
 
         // mock
         $userRepos = $this->mock(UserRepositoryInterface::class);
-        $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->twice()->andReturn(true);
         // test API
         $response = $this->post('/api/v1/users', $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
@@ -199,7 +203,7 @@ class UserControllerTest extends TestCase
         // mock
         $userRepos = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('update')->once()->andReturn($user);
-        $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->twice()->andReturn(true);
 
         // call API
         $response = $this->put('/api/v1/users/' . $user->id, $data);

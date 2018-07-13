@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [4.7.5.1] - 2018-07-13
+### Fixed
+- #1531, the database routine incorrectly reports empty categories.
+- #1532, broken dropdown for autosuggest things.
+- #1533, fix where the import could not import category names.
+- #1538, fix a bug where Spectre would not work when ignoring rules.
+- #1542, fix a bug where the importer was incapable of generating new currencies.
+- #1541, no longer ignore composer.lock in Docker ignore.
+- Bills are stored inactive.
+
 ## [4.7.5] - 2018-07-02
 ### Added
 - A new feature called "recurring transactions" that will make Firefly III automatically create transactions for you.

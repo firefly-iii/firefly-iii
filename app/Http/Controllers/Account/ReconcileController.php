@@ -117,7 +117,8 @@ class ReconcileController extends Controller
      * @param Carbon|null $end
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
-     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @throws FireflyException
      */
     public function reconcile(Account $account, Carbon $start = null, Carbon $end = null)
@@ -201,6 +202,9 @@ class ReconcileController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function submit(ReconciliationStoreRequest $request, Account $account, Carbon $start, Carbon $end)
     {
@@ -217,16 +221,13 @@ class ReconcileController extends Controller
         if ('create' === $data['reconcile']) {
             // get "opposing" account.
             $reconciliation = $this->accountRepos->getReconciliation($account);
-
-
-            $difference  = $data['difference'];
-            $source      = $reconciliation;
-            $destination = $account;
+            $difference     = $data['difference'];
+            $source         = $reconciliation;
+            $destination    = $account;
             if (1 === bccomp($difference, '0')) {
                 // amount is positive. Add it to reconciliation?
                 $source      = $account;
                 $destination = $reconciliation;
-
             }
 
             // data for journal
@@ -271,9 +272,7 @@ class ReconcileController extends Controller
             $this->repository->store($journalData);
         }
         Log::debug('End of routine.');
-
         app('preferences')->mark();
-
         session()->flash('success', trans('firefly.reconciliation_stored'));
 
         return redirect(route('accounts.show', [$account->id]));

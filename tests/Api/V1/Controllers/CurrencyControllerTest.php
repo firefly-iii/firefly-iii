@@ -163,7 +163,7 @@ class CurrencyControllerTest extends TestCase
             'code'           => 'ABC',
             'symbol'         => 'A',
             'decimal_places' => 2,
-            'default'        => 'false',
+            'default'        => '0',
         ];
 
         // test API
@@ -200,7 +200,7 @@ class CurrencyControllerTest extends TestCase
             'code'           => 'ABC',
             'symbol'         => 'A',
             'decimal_places' => 2,
-            'default'        => 'true',
+            'default'        => '1',
         ];
 
         // test API
@@ -232,7 +232,7 @@ class CurrencyControllerTest extends TestCase
             'code'           => 'ABC',
             'symbol'         => '$E',
             'decimal_places' => '2',
-            'default'        => 'false',
+            'default'        => '0',
         ];
 
         // test API
@@ -270,7 +270,7 @@ class CurrencyControllerTest extends TestCase
             'code'           => 'ABC',
             'symbol'         => '$E',
             'decimal_places' => '2',
-            'default'        => 'true',
+            'default'        => '1',
         ];
 
         // test API
