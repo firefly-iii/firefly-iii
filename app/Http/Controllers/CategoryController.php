@@ -399,7 +399,7 @@ class CategoryController extends Controller
             $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutCategory()
                       ->withOpposingAccount()->setTypes([TransactionType::TRANSFER]);
             $collector->removeFilter(InternalTransferFilter::class);
-            $transferred = app('steam')->positive($collector->getJournals()->sum('transaction_amount'));
+            $transferred = app('steam')->positive((string)$collector->getJournals()->sum('transaction_amount'));
 
             // amount spent
             /** @var JournalCollectorInterface $collector */
@@ -481,7 +481,7 @@ class CategoryController extends Controller
             $collector->setAllAssetAccounts()->setRange($currentDate['start'], $currentDate['end'])->setCategory($category)
                       ->withOpposingAccount()->setTypes([TransactionType::TRANSFER]);
             $collector->removeFilter(InternalTransferFilter::class);
-            $transferred = app('steam')->positive($collector->getJournals()->sum('transaction_amount'));
+            $transferred = app('steam')->positive((string)$collector->getJournals()->sum('transaction_amount'));
 
             $entries->push(
                 [
