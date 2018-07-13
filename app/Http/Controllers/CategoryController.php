@@ -181,19 +181,20 @@ class CategoryController extends Controller
         $periods  = new Collection;
         $page     = (int)$request->get('page');
         $pageSize = (int)Preferences::get('listPageSize', 50)->data;
-
+        Log::debug('Start of noCategory()');
         // prep for "all" view.
         if ('all' === $moment) {
             $subTitle = trans('firefly.all_journals_without_category');
             $first    = $this->journalRepos->firstNull();
             $start    = null === $first ? new Carbon : $first->date;
             $end      = new Carbon;
+            Log::debug('Moment is all()');
         }
 
         // prep for "specific date" view.
         if ('all' !== $moment && \strlen($moment) > 0) {
             /** @var Carbon $start */
-            $start    = app('navigation')->startOfPeriod(new Carbon($moment), $range);
+            $start = app('navigation')->startOfPeriod(new Carbon($moment), $range);
             /** @var Carbon $end */
             $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
@@ -201,6 +202,7 @@ class CategoryController extends Controller
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
             );
             $periods  = $this->getNoCategoryPeriodOverview($start);
+
         }
 
         // prep for current period
@@ -213,6 +215,8 @@ class CategoryController extends Controller
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
             );
         }
+        Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
+        Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
 
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -258,7 +262,7 @@ class CategoryController extends Controller
 
         // prep for "specific date" view.
         if ('all' !== $moment && \strlen($moment) > 0) {
-            $start    = app('navigation')->startOfPeriod(new Carbon($moment), $range);
+            $start = app('navigation')->startOfPeriod(new Carbon($moment), $range);
             /** @var Carbon $end */
             $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
@@ -358,10 +362,14 @@ class CategoryController extends Controller
      */
     private function getNoCategoryPeriodOverview(Carbon $theDate): Collection
     {
+        Log::debug(sprintf('Now in getNoCategoryPeriodOverview(%s)', $theDate->format('Y-m-d')));
         $range = Preferences::get('viewRange', '1M')->data;
         $first = $this->journalRepos->firstNull();
         $start = null === $first ? new Carbon : $first->date;
         $end   = $theDate ?? new Carbon;
+
+        Log::debug(sprintf('Start for getNoCategoryPeriodOverview() is %s', $start->format('Y-m-d')));
+        Log::debug(sprintf('End for getNoCategoryPeriodOverview() is %s', $end->format('Y-m-d')));
 
         // properties for cache
         $cache = new CacheProperties;
@@ -408,7 +416,7 @@ class CategoryController extends Controller
             $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutCategory()->withOpposingAccount()->setTypes(
                 [TransactionType::DEPOSIT]
             );
-            $earned   = $collector->getJournals()->sum('transaction_amount');
+            $earned = $collector->getJournals()->sum('transaction_amount');
             /** @noinspection PhpUndefinedMethodInspection */
             $dateStr  = $date['end']->format('Y-m-d');
             $dateName = app('navigation')->periodShow($date['end'], $date['period']);
@@ -462,8 +470,8 @@ class CategoryController extends Controller
         $entries = new Collection;
 
         foreach ($dates as $currentDate) {
-            $spent    = $this->repository->spentInPeriod(new Collection([$category]), $accounts, $currentDate['start'], $currentDate['end']);
-            $earned   = $this->repository->earnedInPeriod(new Collection([$category]), $accounts, $currentDate['start'], $currentDate['end']);
+            $spent  = $this->repository->spentInPeriod(new Collection([$category]), $accounts, $currentDate['start'], $currentDate['end']);
+            $earned = $this->repository->earnedInPeriod(new Collection([$category]), $accounts, $currentDate['start'], $currentDate['end']);
             /** @noinspection PhpUndefinedMethodInspection */
             $dateStr  = $currentDate['end']->format('Y-m-d');
             $dateName = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);

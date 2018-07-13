@@ -25,6 +25,7 @@ namespace Tests\Unit\TransactionRules\Triggers;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\ToAccountIs;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class ToAccountIsTest
@@ -36,14 +37,22 @@ class ToAccountIsTest extends TestCase
      */
     public function testTriggered(): void
     {
-        $count = 0;
+        $loops = 0; // FINAL LOOP METHOD.
         do {
-            $journal          = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $transaction      = $journal->transactions()->where('amount', '>', 0)->first();
-            $transactionCount = $journal->transactions()->count();
-            $account          = null === $transaction ? null : $transaction->account;
-            $count++;
-        } while ($account === null && $count < 30 && $transactionCount !== 2);
+            /** @var TransactionJournal $journal */
+            $journal     = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
+            $transaction = $journal->transactions()->where('amount', '>', 0)->first();
+            $account     = $transaction->account;
+            $count       = $journal->transactions()->count();
+
+            Log::debug(sprintf('Loop: %d, transaction count: %d, account is null: %d', $loops, $count, (int)null===$account));
+
+            $loops++;
+
+            // do this until:  account is not null, journal has two transactions, loops is below 30
+        } while (!(null !== $account && 2 === $count && $loops < 30));
+
+
 
         $trigger = ToAccountIs::makeFromStrings($account->name, false);
         $result  = $trigger->triggered($journal);
@@ -55,14 +64,20 @@ class ToAccountIsTest extends TestCase
      */
     public function testTriggeredNot(): void
     {
-        $count = 0;
+        $loops = 0; // FINAL LOOP METHOD.
         do {
-            $journal          = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $transaction      = $journal->transactions()->where('amount', '>', 0)->first();
-            $transactionCount = $journal->transactions()->count();
-            $account          = null === $transaction ? null : $transaction->account;
-            $count++;
-        } while ($account === null && $count < 30 && $transactionCount !== 2);
+            /** @var TransactionJournal $journal */
+            $journal     = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
+            $transaction = $journal->transactions()->where('amount', '>', 0)->first();
+            $account     = $transaction->account;
+            $count       = $journal->transactions()->count();
+
+            Log::debug(sprintf('Loop: %d, transaction count: %d, account is null: %d', $loops, $count, (int)null===$account));
+
+            $loops++;
+
+            // do this until:  account is not null, journal has two transactions, loops is below 30
+        } while (!(null !== $account && 2 === $count && $loops < 30));
 
         $trigger = ToAccountIs::makeFromStrings('some name' . random_int(1, 234), false);
         $result  = $trigger->triggered($journal);
