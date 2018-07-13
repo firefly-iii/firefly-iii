@@ -607,6 +607,7 @@ return [
     'cannot_delete_currency'                  => 'Kan ":name" niet verwijderen, want deze is in gebruik.',
     'deleted_currency'                        => 'Valuta :name verwijderd',
     'created_currency'                        => 'Nieuwe valuta :name opgeslagen',
+    'could_not_store_currency'                => 'Kon nieuwe valuta niet opslaan.',
     'updated_currency'                        => 'Valuta :name bijgewerkt',
     'ask_site_owner'                          => 'Vraag :owner of deze valuta wilt toevoegen, verwijderen of wijzigen.',
     'currencies_intro'                        => 'Firefly III ondersteunt diverse valuta die je hier kan instellen en bewerken.',
