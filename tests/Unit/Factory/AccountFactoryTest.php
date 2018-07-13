@@ -341,7 +341,7 @@ class AccountFactoryTest extends TestCase
         $data = [
             'account_type_id' => null,
             'accountType'     => 'asset',
-            'iban'            => 'NL18RABO0326747238',
+            'iban'            => 'NL02ABNA0870809585',
             'name'            => 'Basic asset account #' . random_int(1, 1000),
             'virtualBalance'  => null,
             'active'          => true,
@@ -356,7 +356,7 @@ class AccountFactoryTest extends TestCase
         // assert stuff about account:
         $this->assertEquals($account->name, $data['name']);
         $this->assertEquals(AccountType::ASSET, $account->accountType->type);
-        $this->assertEquals('NL18RABO0326747238', $account->iban);
+        $this->assertEquals('NL02ABNA0870809585', $account->iban);
         $this->assertTrue($account->active);
         $this->assertEquals('0', $account->virtual_balance);
 
