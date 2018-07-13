@@ -124,7 +124,7 @@ class MassController extends Controller
     public function edit(Collection $journals): IlluminateView
     {
         /** @var User $user */
-        $user      = auth()->user();
+        $user     = auth()->user();
         $subTitle = trans('firefly.mass_edit_journals');
 
 

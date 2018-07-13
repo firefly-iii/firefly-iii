@@ -27,10 +27,11 @@ use FireflyConfig;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Contracts\Validation\Validator as ValidatorContract;
+
 /**
  * @codeCoverageIgnore
  * Class RegisterController

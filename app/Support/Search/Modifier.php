@@ -26,7 +26,6 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Models\Transaction;
 use Log;
-use Steam;
 
 /**
  * Class Modifier
@@ -42,8 +41,8 @@ class Modifier
      */
     public static function amountCompare(Transaction $transaction, string $amount, int $expected): bool
     {
-        $amount            = Steam::positive($amount);
-        $transactionAmount = Steam::positive($transaction->transaction_amount);
+        $amount            = app('steam')->positive($amount);
+        $transactionAmount = app('steam')->positive($transaction->transaction_amount);
 
         $compare = bccomp($amount, $transactionAmount);
         Log::debug(sprintf('%s vs %s is %d', $amount, $transactionAmount, $compare));
@@ -64,12 +63,12 @@ class Modifier
         $res = true;
         switch ($modifier['type']) {
             case 'source':
-                $name = Steam::tryDecrypt($transaction->account_name);
+                $name = app('steam')->tryDecrypt($transaction->account_name);
                 $res  = self::stringCompare($name, $modifier['value']);
                 Log::debug(sprintf('Source is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
             case 'destination':
-                $name = Steam::tryDecrypt($transaction->opposing_account_name);
+                $name = app('steam')->tryDecrypt($transaction->opposing_account_name);
                 $res  = self::stringCompare($name, $modifier['value']);
                 Log::debug(sprintf('Destination is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
@@ -82,7 +81,7 @@ class Modifier
                 Log::debug(sprintf('Budget is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
             case 'bill':
-                $name = Steam::tryDecrypt($transaction->bill_name);
+                $name = app('steam')->tryDecrypt($transaction->bill_name);
                 $res  = self::stringCompare($name, $modifier['value']);
                 Log::debug(sprintf('Bill is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
@@ -166,11 +165,11 @@ class Modifier
     {
         $journalBudget = '';
         if (null !== $transaction->transaction_journal_budget_name) {
-            $journalBudget = Steam::decrypt((int)$transaction->transaction_journal_budget_encrypted, $transaction->transaction_journal_budget_name);
+            $journalBudget = app('steam')->decrypt((int)$transaction->transaction_journal_budget_encrypted, $transaction->transaction_journal_budget_name);
         }
         $transactionBudget = '';
         if (null !== $transaction->transaction_budget_name) {
-            $journalBudget = Steam::decrypt((int)$transaction->transaction_budget_encrypted, $transaction->transaction_budget_name);
+            $journalBudget = app('steam')->decrypt((int)$transaction->transaction_budget_encrypted, $transaction->transaction_budget_name);
         }
 
         return self::stringCompare($journalBudget, $search) || self::stringCompare($transactionBudget, $search);
@@ -186,11 +185,13 @@ class Modifier
     {
         $journalCategory = '';
         if (null !== $transaction->transaction_journal_category_name) {
-            $journalCategory = Steam::decrypt((int)$transaction->transaction_journal_category_encrypted, $transaction->transaction_journal_category_name);
+            $journalCategory = app('steam')->decrypt(
+                (int)$transaction->transaction_journal_category_encrypted, $transaction->transaction_journal_category_name
+            );
         }
         $transactionCategory = '';
         if (null !== $transaction->transaction_category_name) {
-            $journalCategory = Steam::decrypt((int)$transaction->transaction_category_encrypted, $transaction->transaction_category_name);
+            $journalCategory = app('steam')->decrypt((int)$transaction->transaction_category_encrypted, $transaction->transaction_category_name);
         }
 
         return self::stringCompare($journalCategory, $search) || self::stringCompare($transactionCategory, $search);

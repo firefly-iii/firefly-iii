@@ -185,7 +185,7 @@ class ReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     *  @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */

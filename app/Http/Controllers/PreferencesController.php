@@ -56,8 +56,8 @@ class PreferencesController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-        $accounts           = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $viewRangePref      = Preferences::get('viewRange', '1M');
+        $accounts      = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $viewRangePref = Preferences::get('viewRange', '1M');
         /** @noinspection NullPointerExceptionInspection */
         $viewRange          = $viewRangePref->data;
         $frontPageAccounts  = Preferences::get('frontPageAccounts', []);

@@ -73,7 +73,7 @@ class AuthenticateTwoFactor
         $is2faEnabled = app('preferences')->get('twoFactorAuthEnabled', false)->data;
         $has2faSecret = null !== app('preferences')->get('twoFactorAuthSecret');
         /** @noinspection PhpUndefinedMethodInspection */
-        $is2faAuthed  = 'true' === $request->cookie('twoFactorAuthenticated');
+        $is2faAuthed = 'true' === $request->cookie('twoFactorAuthenticated');
 
         if ($is2faEnabled && $has2faSecret && !$is2faAuthed) {
             Log::debug('Does not seem to be 2 factor authed, redirect.');

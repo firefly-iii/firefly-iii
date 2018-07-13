@@ -49,7 +49,6 @@ use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
-use Steam;
 
 /**
  * TODO rename references to journals to transactions
@@ -282,10 +281,10 @@ class JournalCollector implements JournalCollectorInterface
         $set->each(
             function (Transaction $transaction) {
                 $transaction->date        = new Carbon($transaction->date);
-                $transaction->description = Steam::decrypt((int)$transaction->encrypted, $transaction->description);
+                $transaction->description = app('steam')->decrypt((int)$transaction->encrypted, $transaction->description);
 
                 if (null !== $transaction->bill_name) {
-                    $transaction->bill_name = Steam::decrypt((int)$transaction->bill_name_encrypted, $transaction->bill_name);
+                    $transaction->bill_name = app('steam')->decrypt((int)$transaction->bill_name_encrypted, $transaction->bill_name);
                 }
                 $transaction->account_name          = app('steam')->tryDecrypt($transaction->account_name);
                 $transaction->opposing_account_name = app('steam')->tryDecrypt($transaction->opposing_account_name);

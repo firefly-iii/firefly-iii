@@ -27,7 +27,6 @@ use Crypt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Steam;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -149,7 +148,7 @@ class PiggyBank extends Model
      */
     public function leftOnAccount(Carbon $date): string
     {
-        $balance = Steam::balanceIgnoreVirtual($this->account, $date);
+        $balance = app('steam')->balanceIgnoreVirtual($this->account, $date);
         /** @var PiggyBank $piggyBank */
         foreach ($this->account->piggyBanks as $piggyBank) {
             $currentAmount = $piggyBank->currentRelevantRep()->currentamount ?? '0';

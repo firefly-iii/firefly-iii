@@ -40,7 +40,6 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Preferences;
-use Steam;
 use View;
 
 /**
@@ -228,9 +227,9 @@ class AccountController extends Controller
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
-        $startBalances = Steam::balancesByAccounts($accounts, $start);
-        $endBalances   = Steam::balancesByAccounts($accounts, $end);
-        $activities    = Steam::getLastActivities($ids);
+        $startBalances = app('steam')->balancesByAccounts($accounts, $start);
+        $endBalances   = app('steam')->balancesByAccounts($accounts, $end);
+        $activities    = app('steam')->getLastActivities($ids);
 
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances) {
@@ -289,11 +288,11 @@ class AccountController extends Controller
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
-        $fStart    = $start->formatLocalized($this->monthAndDayFormat);
-        $fEnd      = $end->formatLocalized($this->monthAndDayFormat);
-        $subTitle  = trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
-        $chartUri  = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
-        $periods   = $this->getPeriodOverview($account, $end);
+        $fStart   = $start->formatLocalized($this->monthAndDayFormat);
+        $fEnd     = $end->formatLocalized($this->monthAndDayFormat);
+        $subTitle = trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
+        $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+        $periods  = $this->getPeriodOverview($account, $end);
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
@@ -336,8 +335,8 @@ class AccountController extends Controller
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
-        $subTitle  = trans('firefly.all_journals_for_account', ['name' => $account->name]);
-        $periods   = new Collection;
+        $subTitle = trans('firefly.all_journals_for_account', ['name' => $account->name]);
+        $periods  = new Collection;
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);

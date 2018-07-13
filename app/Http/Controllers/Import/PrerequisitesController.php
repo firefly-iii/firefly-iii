@@ -87,7 +87,7 @@ class PrerequisitesController extends Controller
             throw new FireflyException(sprintf('No class to handle prerequisites for "%s".', $importProvider)); // @codeCoverageIgnore
         }
         /** @var User $user */
-        $user      = auth()->user();
+        $user = auth()->user();
         /** @var PrerequisitesInterface $object */
         $object = app($class);
         $object->setUser($user);
@@ -143,7 +143,7 @@ class PrerequisitesController extends Controller
             throw new FireflyException(sprintf('Cannot find class %s', $class)); // @codeCoverageIgnore
         }
         /** @var User $user */
-        $user      = auth()->user();
+        $user = auth()->user();
         /** @var PrerequisitesInterface $object */
         $object = app($class);
         $object->setUser($user);

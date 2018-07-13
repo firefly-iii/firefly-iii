@@ -293,7 +293,7 @@ class RuleController extends Controller
     public function index()
     {
         /** @var User $user */
-        $user      = auth()->user();
+        $user = auth()->user();
         $this->createDefaultRuleGroup();
         $this->createDefaultRule();
         $ruleGroups = $this->ruleGroupRepos->getRuleGroupsWithRules($user);

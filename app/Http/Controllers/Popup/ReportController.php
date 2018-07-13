@@ -130,7 +130,6 @@ class ReportController extends Controller
         $account = $this->accountRepository->findNull((int)$attributes['accountId']);
 
 
-
         switch (true) {
             case BalanceLine::ROLE_DEFAULTROLE === $role && null !== $budget && null !== $account:
                 // normal row with a budget:
@@ -160,8 +159,8 @@ class ReportController extends Controller
      */
     private function budgetSpentAmount(array $attributes): string
     {
-        $budget   = $this->budgetRepository->findNull((int)$attributes['budgetId']);
-        if(null === $budget) {
+        $budget = $this->budgetRepository->findNull((int)$attributes['budgetId']);
+        if (null === $budget) {
             throw new FireflyException('This is an unknown budget. Apologies.');
         }
         $journals = $this->popupHelper->byBudget($budget, $attributes);
@@ -182,7 +181,7 @@ class ReportController extends Controller
     {
         $category = $this->categoryRepository->findNull((int)$attributes['categoryId']);
 
-        if(null === $category) {
+        if (null === $category) {
             throw new FireflyException('This is an unknown category. Apologies.');
         }
 
@@ -202,9 +201,9 @@ class ReportController extends Controller
      */
     private function expenseEntry(array $attributes): string
     {
-        $account  = $this->accountRepository->findNull((int)$attributes['accountId']);
+        $account = $this->accountRepository->findNull((int)$attributes['accountId']);
 
-        if(null === $account) {
+        if (null === $account) {
             throw new FireflyException('This is an unknown account. Apologies.');
         }
 
@@ -224,9 +223,9 @@ class ReportController extends Controller
      */
     private function incomeEntry(array $attributes): string
     {
-        $account  = $this->accountRepository->findNull((int)$attributes['accountId']);
+        $account = $this->accountRepository->findNull((int)$attributes['accountId']);
 
-        if(null === $account) {
+        if (null === $account) {
             throw new FireflyException('This is an unknown category. Apologies.');
         }
 

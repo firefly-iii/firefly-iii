@@ -38,7 +38,6 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use Steam;
 
 /**
  * Class MetaPieChart.
@@ -363,7 +362,7 @@ class MetaPieChart implements MetaPieChartInterface
                 $object           = $repository->find((int)$objectId);
                 $names[$objectId] = $object->name ?? $object->tag;
             }
-            $amount                       = Steam::positive($amount);
+            $amount                       = app('steam')->positive($amount);
             $this->total                  = bcadd($this->total, $amount);
             $chartData[$names[$objectId]] = $amount;
         }

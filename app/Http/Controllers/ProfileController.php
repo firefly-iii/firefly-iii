@@ -182,7 +182,7 @@ class ProfileController extends Controller
     public function enable2FA(UserRepositoryInterface $repository)
     {
         /** @var User $user */
-        $user      = auth()->user();
+        $user = auth()->user();
         if ($repository->hasRole($user, 'demo')) {
             return redirect(route('profile.index'));
         }
@@ -289,7 +289,7 @@ class ProfileController extends Controller
         $current = $request->get('current_password');
         $new     = $request->get('new_password');
         /** @var User $user */
-        $user      = auth()->user();
+        $user = auth()->user();
         try {
             $this->validatePassword($user, $current, $new);
         } catch (ValidationException $e) {
@@ -351,7 +351,7 @@ class ProfileController extends Controller
     public function regenerate()
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user  = auth()->user();
         $token = $user->generateAccessToken();
         Preferences::set('access_token', $token);
         session()->flash('success', (string)trans('firefly.token_regenerated'));

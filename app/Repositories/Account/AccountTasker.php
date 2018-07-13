@@ -29,7 +29,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
-use Steam;
 
 /**
  * Class AccountTasker.
@@ -50,8 +49,8 @@ class AccountTasker implements AccountTaskerInterface
     {
         $yesterday = clone $start;
         $yesterday->subDay();
-        $startSet = Steam::balancesByAccounts($accounts, $yesterday);
-        $endSet   = Steam::balancesByAccounts($accounts, $end);
+        $startSet = app('steam')->balancesByAccounts($accounts, $yesterday);
+        $endSet   = app('steam')->balancesByAccounts($accounts, $end);
 
         Log::debug('Start of accountreport');
 

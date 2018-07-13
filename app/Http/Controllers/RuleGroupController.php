@@ -97,8 +97,8 @@ class RuleGroupController extends Controller
     public function destroy(Request $request, RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
         /** @var User $user */
-        $user = auth()->user();
-        $title  = $ruleGroup->title;
+        $user  = auth()->user();
+        $title = $ruleGroup->title;
 
         /** @var RuleGroup $moveTo */
         $moveTo = $user->ruleGroups()->find((int)$request->get('move_rules_before_delete'));

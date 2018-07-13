@@ -38,7 +38,6 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use Steam;
 
 /**
  * Class BudgetController.
@@ -230,7 +229,7 @@ class BudgetController extends Controller
     public function expenseCategory(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
     {
         $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
-        $cache = new CacheProperties;
+        $cache         = new CacheProperties;
         $cache->addProperty($budget->id);
         $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-category');
@@ -278,7 +277,7 @@ class BudgetController extends Controller
     public function expenseExpense(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
     {
         $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
-        $cache = new CacheProperties;
+        $cache         = new CacheProperties;
         $cache->addProperty($budget->id);
         $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-expense');
@@ -486,7 +485,7 @@ class BudgetController extends Controller
         $budgeted = [];
         while ($current < $end) {
             /** @var Carbon $currentStart */
-            $currentStart     = app('navigation')->startOfPeriod($current, $range);
+            $currentStart = app('navigation')->startOfPeriod($current, $range);
             /** @var Carbon $currentEnd */
             $currentEnd       = app('navigation')->endOfPeriod($current, $range);
             $budgetLimits     = $this->repository->getBudgetLimits($budget, $currentStart, $currentEnd);
@@ -581,7 +580,7 @@ class BudgetController extends Controller
         /** @var BudgetLimit $budgetLimit */
         foreach ($limits as $budgetLimit) {
             $expenses = $this->repository->spentInPeriod(new Collection([$budget]), new Collection, $budgetLimit->start_date, $budgetLimit->end_date);
-            $expenses = Steam::positive($expenses);
+            $expenses = app('steam')->positive($expenses);
 
             if ($limits->count() > 1) {
                 $name = $budget->name . ' ' . trans(
@@ -603,7 +602,7 @@ class BudgetController extends Controller
 
             $left      = $hasOverspent ? '0' : bcsub($amount, $expenses);
             $spent     = $hasOverspent ? $amount : $expenses;
-            $overspent = $hasOverspent ? Steam::positive($leftInLimit) : '0';
+            $overspent = $hasOverspent ? app('steam')->positive($leftInLimit) : '0';
 
             $return[$name] = [
                 'left'      => $left,

@@ -117,6 +117,7 @@ class Authenticate
                 );
                 // @codeCoverageIgnoreEnd
             }
+
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->auth->authenticate();
         }

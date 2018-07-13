@@ -275,9 +275,9 @@ class TransactionController extends Controller
                 /** @noinspection PhpUndefinedMethodInspection */
                 $entries->push(
                     [
-                        'name'  => $dateName,
-                        'sums'  => $sums,
-                        'sum'   => $sum,
+                        'name' => $dateName,
+                        'sums' => $sums,
+                        'sum'  => $sum,
 
                         'start' => $currentDate['start']->format('Y-m-d'),
                         'end'   => $currentDate['end']->format('Y-m-d'),

@@ -213,7 +213,7 @@ class CurrencyController extends Controller
     public function index(Request $request)
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user       = auth()->user();
         $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
         $pageSize   = (int)Preferences::get('listPageSize', 50)->data;
         $collection = $this->repository->get();

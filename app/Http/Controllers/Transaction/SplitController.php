@@ -39,7 +39,6 @@ use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Preferences;
-use Steam;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use View;
 
@@ -94,7 +93,7 @@ class SplitController extends Controller
             return $this->redirectToAccount($journal); // @codeCoverageIgnore
         }
         // basic fields:
-        $uploadSize   = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
+        $uploadSize   = min(app('steam')->phpBytes(ini_get('upload_max_filesize')), app('steam')->phpBytes(ini_get('post_max_size')));
         $subTitle     = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
         $subTitleIcon = 'fa-pencil';
 

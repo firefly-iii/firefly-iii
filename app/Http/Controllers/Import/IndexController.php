@@ -198,7 +198,7 @@ class IndexController extends Controller
     {
         // get and filter all import routines:
         /** @var User $user */
-        $user      = auth()->user();
+        $user = auth()->user();
         /** @var array $config */
         $providerNames = array_keys(config('import.enabled'));
         $providers     = [];

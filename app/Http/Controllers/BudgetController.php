@@ -444,7 +444,7 @@ class BudgetController extends Controller
 
         // prep for "specific date" view.
         if ('all' !== $moment && \strlen($moment) > 0) {
-            $start    = new Carbon($moment);
+            $start = new Carbon($moment);
             /** @var Carbon $end */
             $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(

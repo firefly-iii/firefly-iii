@@ -118,7 +118,7 @@ class HomeController extends Controller
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
-        $end      = session('end', Carbon::now()->endOfMonth());
+        $end = session('end', Carbon::now()->endOfMonth());
         /** @noinspection NullPointerExceptionInspection */
         $accounts = $repository->getAccountsById($frontPage->data);
         $today    = new Carbon;

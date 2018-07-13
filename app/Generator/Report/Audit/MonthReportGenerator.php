@@ -34,7 +34,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
-use Steam;
 
 /**
  * Class MonthReportGenerator.
@@ -199,7 +198,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end);
         $journals         = $collector->getJournals();
         $journals         = $journals->reverse();
-        $dayBeforeBalance = Steam::balance($account, $date);
+        $dayBeforeBalance = app('steam')->balance($account, $date);
         $startBalance     = $dayBeforeBalance;
         $currency         = $currencyRepos->findNull((int)$accountRepository->getMetaValue($account, 'currency_id'));
 
@@ -225,7 +224,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
             'journals'         => $journals->reverse(),
             'exists'           => $journals->count() > 0,
             'end'              => $this->end->formatLocalized((string)trans('config.month_and_day')),
-            'endBalance'       => Steam::balance($account, $this->end),
+            'endBalance'       => app('steam')->balance($account, $this->end),
             'dayBefore'        => $date->formatLocalized((string)trans('config.month_and_day')),
             'dayBeforeBalance' => $dayBeforeBalance,
         ];
