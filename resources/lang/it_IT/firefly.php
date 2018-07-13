@@ -607,7 +607,7 @@ return [
     'cannot_delete_currency'                  => 'Impossibile eliminare :name perché è ancora in uso.',
     'deleted_currency'                        => 'Valuta :name elimina',
     'created_currency'                        => 'Valuta :name creata',
-    'could_not_store_currency'                => 'Could not store the new currency.',
+    'could_not_store_currency'                => 'Impossibile memorizzare la nuova valuta.',
     'updated_currency'                        => 'Valuta :name aggiornata',
     'ask_site_owner'                          => 'Chiedi a :owner di aggiungere, rimuovere o modificare valute.',
     'currencies_intro'                        => 'Firefly III supporta varie valute che è possibile impostare e abilitare qui.',
