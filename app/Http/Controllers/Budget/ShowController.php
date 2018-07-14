@@ -228,6 +228,8 @@ class ShowController extends Controller
 
     /**
      * @return Collection
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function getPeriodOverview(): Collection
     {

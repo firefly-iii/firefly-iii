@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, category, moment, start, end) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, category, '', start, end) }}
 {% endblock %}
 
 {% block content %}
@@ -52,7 +52,7 @@
     {% if periods.count > 0 %}
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('categories.show',[category.id,'all']) }}">{{ 'showEverything'|_ }}</a></p>
+                <p class="small text-center"><a href="{{ route('categories.show-all',[category.id]) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
     {% endif %}
@@ -69,7 +69,7 @@
                     {% if periods.count > 0 %}
                         <p>
                             <i class="fa fa-calendar"></i>
-                            <a href="{{ route('categories.show', [category.id,'all']) }}">
+                            <a href="{{ route('categories.show-all', [category.id]) }}">
                                 {{ 'show_all_no_filter'|_ }}
                             </a>
                         </p>
@@ -90,7 +90,7 @@
                     {% if period.spent != 0 or period.earned != 0 or period.sum != 0 %}
                         <div class="box {% if period.date == end %}box-solid box-primary{% endif %}">
                             <div class="box-header with-border">
-                                <h3 class="box-title"><a href="{{ route('categories.show',[category.id,period.string]) }}">{{ period.name }}</a>
+                                <h3 class="box-title"><a href="{{ route('categories.show',[category.id, period.start.format('Y-m-d'),period.end.format('Y-m-d')]) }}">{{ period.name }}</a>
                                 </h3>
                             </div>
                             <div class="box-body no-padding">

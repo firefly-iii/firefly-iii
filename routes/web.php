@@ -225,17 +225,30 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'categories', 'as' => 'categories.'], function () {
+
+    // index:
     Route::get('', ['uses' => 'CategoryController@index', 'as' => 'index']);
+
+    // create
     Route::get('create', ['uses' => 'CategoryController@create', 'as' => 'create']);
-    Route::get('edit/{category}', ['uses' => 'CategoryController@edit', 'as' => 'edit']);
-    Route::get('delete/{category}', ['uses' => 'CategoryController@delete', 'as' => 'delete']);
-
-    Route::get('show/{category}/{moment?}', ['uses' => 'CategoryController@show', 'as' => 'show']);
-    Route::get('list/no-category/{moment?}', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
-
     Route::post('store', ['uses' => 'CategoryController@store', 'as' => 'store']);
+
+    // edit
+    Route::get('edit/{category}', ['uses' => 'CategoryController@edit', 'as' => 'edit']);
     Route::post('update/{category}', ['uses' => 'CategoryController@update', 'as' => 'update']);
+
+    // delete
+    Route::get('delete/{category}', ['uses' => 'CategoryController@delete', 'as' => 'delete']);
     Route::post('destroy/{category}', ['uses' => 'CategoryController@destroy', 'as' => 'destroy']);
+
+    // show category:
+    Route::get('show/{category}/all', ['uses' => 'Category\ShowController@showAll', 'as' => 'show-all']);
+    Route::get('show/{category}/{start_date?}/{end_date?}', ['uses' => 'Category\ShowController@show', 'as' => 'show']);
+
+    // no category controller:
+    Route::get('list/no-category/all', ['uses' => 'Category\NoCategoryController@showAll', 'as' => 'no-category-all']);
+    Route::get('list/no-category/{start_date?}/{end_date?}', ['uses' => 'Category\NoCategoryController@show', 'as' => 'no-category']);
+
 }
 );
 

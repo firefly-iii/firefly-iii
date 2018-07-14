@@ -1,0 +1,225 @@
+<?php
+/**
+ * NoCategoryController.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
+ *
+ * This file is part of Firefly III.
+ *
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types=1);
+
+namespace FireflyIII\Http\Controllers\Category;
+
+
+use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\CacheProperties;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Log;
+
+/**
+ *
+ * Class NoCategoryController
+ */
+class NoCategoryController extends Controller
+{
+
+    /** @var JournalRepositoryInterface */
+    private $journalRepos;
+    /** @var CategoryRepositoryInterface */
+    private $repository;
+
+    /**
+     * CategoryController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->middleware(
+            function ($request, $next) {
+                app('view')->share('title', trans('firefly.categories'));
+                app('view')->share('mainTitleIcon', 'fa-bar-chart');
+                $this->journalRepos = app(JournalRepositoryInterface::class);
+                $this->repository   = app(CategoryRepositoryInterface::class);
+
+                return $next($request);
+            }
+        );
+    }
+
+    /**
+     * @param Request     $request
+     * @param string|null $moment
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function show(Request $request, Carbon $start = null, Carbon $end = null)
+    {
+        Log::debug('Start of noCategory()');
+        /** @var Carbon $start */
+        $start = $start ?? session('start');
+        /** @var Carbon $end */
+        $end      = $end ?? session('end');
+        $moment   = '';
+        $page     = (int)$request->get('page');
+        $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
+        $subTitle = trans(
+            'firefly.without_category_between',
+            ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+        );
+        $periods  = $this->getNoCategoryPeriodOverview($start);
+
+        Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
+        Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
+
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()->withOpposingAccount()
+                  ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
+        $collector->removeFilter(InternalTransferFilter::class);
+        $transactions = $collector->getPaginatedJournals();
+        $transactions->setPath(route('categories.no-category'));
+
+        return view('categories.no-category', compact('transactions', 'subTitle', 'moment', 'periods', 'start', 'end'));
+    }
+
+
+    /**
+     * @param Request     $request
+     * @param string|null $moment
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function showAll(Request $request, string $moment = null)
+    {
+        // default values:
+        $moment   = $moment ?? '';
+        $start    = null;
+        $end      = null;
+        $periods  = new Collection;
+        $page     = (int)$request->get('page');
+        $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
+        Log::debug('Start of noCategory()');
+        $subTitle = trans('firefly.all_journals_without_category');
+        $first    = $this->journalRepos->firstNull();
+        $start    = null === $first ? new Carbon : $first->date;
+        $end      = new Carbon;
+        Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
+        Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
+
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()->withOpposingAccount()
+                  ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
+        $collector->removeFilter(InternalTransferFilter::class);
+        $transactions = $collector->getPaginatedJournals();
+        $transactions->setPath(route('categories.no-category'));
+
+        return view('categories.no-category', compact('transactions', 'subTitle', 'moment', 'periods', 'start', 'end'));
+    }
+
+
+    /**
+     * @param Carbon $theDate
+     *
+     * @return Collection
+     */
+    private function getNoCategoryPeriodOverview(Carbon $theDate): Collection
+    {
+        Log::debug(sprintf('Now in getNoCategoryPeriodOverview(%s)', $theDate->format('Y-m-d')));
+        $range = app('preferences')->get('viewRange', '1M')->data;
+        $first = $this->journalRepos->firstNull();
+        $start = null === $first ? new Carbon : $first->date;
+        $end   = $theDate ?? new Carbon;
+
+        Log::debug(sprintf('Start for getNoCategoryPeriodOverview() is %s', $start->format('Y-m-d')));
+        Log::debug(sprintf('End for getNoCategoryPeriodOverview() is %s', $end->format('Y-m-d')));
+
+        // properties for cache
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('no-category-period-entries');
+
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        $dates   = app('navigation')->blockPeriods($start, $end, $range);
+        $entries = new Collection;
+
+        foreach ($dates as $date) {
+
+            // count journals without category in this period:
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutCategory()
+                      ->withOpposingAccount()->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
+            $collector->removeFilter(InternalTransferFilter::class);
+            $count = $collector->getJournals()->count();
+
+            // amount transferred
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutCategory()
+                      ->withOpposingAccount()->setTypes([TransactionType::TRANSFER]);
+            $collector->removeFilter(InternalTransferFilter::class);
+            $transferred = app('steam')->positive((string)$collector->getJournals()->sum('transaction_amount'));
+
+            // amount spent
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutCategory()->withOpposingAccount()->setTypes(
+                [TransactionType::WITHDRAWAL]
+            );
+            $spent = $collector->getJournals()->sum('transaction_amount');
+
+            // amount earned
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutCategory()->withOpposingAccount()->setTypes(
+                [TransactionType::DEPOSIT]
+            );
+            $earned = $collector->getJournals()->sum('transaction_amount');
+            /** @noinspection PhpUndefinedMethodInspection */
+            $dateStr  = $date['end']->format('Y-m-d');
+            $dateName = app('navigation')->periodShow($date['end'], $date['period']);
+            $entries->push(
+                [
+                    'string'      => $dateStr,
+                    'name'        => $dateName,
+                    'count'       => $count,
+                    'spent'       => $spent,
+                    'earned'      => $earned,
+                    'transferred' => $transferred,
+                    'start'       => clone $date['start'],
+                    'end'         => clone $date['end'],
+                ]
+            );
+        }
+        Log::debug('End of loops');
+        $cache->store($entries);
+
+        return $entries;
+    }
+}

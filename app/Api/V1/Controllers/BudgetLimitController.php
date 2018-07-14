@@ -97,7 +97,10 @@ class BudgetLimitController extends Controller
         $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
         $budgetId = (int)($request->get('budget_id') ?? 0);
         $budget   = $this->repository->findNull($budgetId);
+        $start    = null;
+        $end      = null;
         $this->parameters->set('budget_id', $budgetId);
+
 
         try {
             $start = Carbon::createFromFormat('Y-m-d', $request->get('start'));
