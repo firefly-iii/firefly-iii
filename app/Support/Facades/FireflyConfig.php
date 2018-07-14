@@ -22,11 +22,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Facades;
 
+use FireflyIII\Models\Configuration;
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @codeCoverageIgnore
  * Class FireflyConfig.
+ * @method ?Configuration get($name, $default = null)
+ * @method Configuration set(string $name, $value)
  */
 class FireflyConfig extends Facade
 {
