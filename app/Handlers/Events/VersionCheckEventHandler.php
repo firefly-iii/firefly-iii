@@ -18,14 +18,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
+/** @noinspection MultipleReturnStatementsInspection */
+/** @noinspection NullPointerExceptionInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use Carbon\Carbon;
 use FireflyConfig;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Github\Object\Release;
 use FireflyIII\Services\Github\Request\UpdateRequest;
@@ -37,21 +40,26 @@ use Log;
  */
 class VersionCheckEventHandler
 {
+    use UpdateTrait;
 
     /**
+     * Checks with GitHub to see if there is a new version.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @param RequestedVersionCheckStatus $event
      */
     public function checkForUpdates(RequestedVersionCheckStatus $event): void
     {
         // in Sandstorm, cannot check for updates:
         $sandstorm = 1 === (int)getenv('SANDSTORM');
-        if ($sandstorm === true) {
+        if (true === $sandstorm) {
             return; // @codeCoverageIgnore
         }
 
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-
         /** @var User $user */
         $user = $event->user;
         if (!$repository->hasRole($user, 'owner')) {
@@ -66,7 +74,7 @@ class VersionCheckEventHandler
         if ($diff < 604800) {
             Log::debug(sprintf('Checked for updates less than a week ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data)));
 
-            return;
+            //return;
 
         }
         // last check time was more than a week ago.
@@ -75,48 +83,17 @@ class VersionCheckEventHandler
         // have actual permission?
         if ($permission->data === -1) {
             // never asked before.
-            session()->flash('info', (string)trans('firefly.check_for_updates_permission', ['link' => route('admin.update-check')]));
-
-            return;
+            //session()->flash('info', (string)trans('firefly.check_for_updates_permission', ['link' => route('admin.update-check')]));
+            //return;
         }
 
-        $current = config('firefly.version');
-        /** @var UpdateRequest $request */
-        $request = app(UpdateRequest::class);
-        $check   = -2;
-        $first   = new Release(['id' => '0', 'title' => '0.2', 'updated' => '2017-01-01', 'content' => '']);
-        try {
-            $request->call();
-            $releases = $request->getReleases();
-            // first entry should be the latest entry:
-            /** @var Release $first */
-            $first = reset($releases);
-            $check = version_compare($current, $first->getTitle());
-            Log::debug(sprintf('Comparing %s with %s, result is %s', $current, $first->getTitle(), $check));
-            FireflyConfig::set('last_update_check', time());
-        } catch (FireflyException $e) {
-            Log::error(sprintf('Could not check for updates: %s', $e->getMessage()));
-        }
-        $string = 'no result: ' . $check;
-        if ($check === -2) {
-            $string = (string)trans('firefly.update_check_error');
-        }
-        if ($check === -1) {
-            // there is a new FF version!
-            $monthAndDayFormat = (string)trans('config.month_and_day');
-            $string            = (string)trans(
-                'firefly.update_new_version_alert',
-                [
-                    'your_version' => $current,
-                    'new_version'  => $first->getTitle(),
-                    'date'         => $first->getUpdated()->formatLocalized($monthAndDayFormat),
-                ]
-            );
-        }
-        if ($check !== 0) {
+        $latestRelease = $this->getLatestRelease();
+        $versionCheck  = $this->versionCheck($latestRelease);
+        $resultString = $this->parseResult($latestRelease, $versionCheck);
+        if (0 !== $versionCheck && '' !== $resultString) {
             // flash info
-            session()->flash('info', $string);
+            session()->flash('info', $resultString);
         }
+        FireflyConfig::set('last_update_check', time());
     }
-
 }

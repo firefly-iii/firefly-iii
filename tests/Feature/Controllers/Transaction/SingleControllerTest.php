@@ -84,6 +84,8 @@ class SingleControllerTest extends TestCase
         $journalRepos->shouldReceive('getJournalBudgetId')->andReturn(0);
         $journalRepos->shouldReceive('getJournalCategoryName')->andReturn('');
         $journalRepos->shouldReceive('getTags')->andReturn([]);
+        $journalRepos->shouldReceive('getMetaField')->andReturnNull();
+
 
         $note       = new Note();
         $note->id   = 5;

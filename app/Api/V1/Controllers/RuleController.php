@@ -42,9 +42,12 @@ use League\Fractal\Serializer\JsonApiSerializer;
  */
 class RuleController extends Controller
 {
-    /** @var RuleRepositoryInterface */
+    /** @var RuleRepositoryInterface The rule repository */
     private $ruleRepository;
 
+    /**
+     * RuleController constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -136,7 +139,7 @@ class RuleController extends Controller
     /**
      * Store new object.
      *
-     * @param Request $request
+     * @param RuleRequest $request
      *
      * @return JsonResponse
      */
@@ -153,6 +156,8 @@ class RuleController extends Controller
     }
 
     /**
+     * Update a rule.
+     *
      * @param RuleRequest $request
      * @param Rule        $rule
      *
@@ -160,9 +165,9 @@ class RuleController extends Controller
      */
     public function update(RuleRequest $request, Rule $rule): JsonResponse
     {
-        $rule = $this->ruleRepository->update($rule, $request->getAll());
-        $manager   = new Manager();
-        $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
+        $rule    = $this->ruleRepository->update($rule, $request->getAll());
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         $resource = new Item($rule, new RuleTransformer($this->parameters), 'rules');

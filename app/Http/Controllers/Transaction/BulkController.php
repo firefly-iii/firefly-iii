@@ -32,8 +32,6 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
-use Preferences;
-use View;
 
 /**
  * Class BulkController
@@ -45,7 +43,7 @@ class BulkController extends Controller
 
 
     /**
-     *
+     * BulkController constructor.
      */
     public function __construct()
     {
@@ -65,7 +63,7 @@ class BulkController extends Controller
     /**
      * @param Collection $journals
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(Collection $journals)
     {
@@ -95,9 +93,9 @@ class BulkController extends Controller
     {
         $journalIds     = $request->get('journals');
         $journalIds     = \is_array($journalIds) ? $journalIds : [];
-        $ignoreCategory = (int)$request->get('ignore_category') === 1;
-        $ignoreBudget   = (int)$request->get('ignore_budget') === 1;
-        $ignoreTags     = (int)$request->get('ignore_tags') === 1;
+        $ignoreCategory = 1 === (int)$request->get('ignore_category');
+        $ignoreBudget   = 1 === (int)$request->get('ignore_budget');
+        $ignoreTags     = 1 === (int)$request->get('ignore_tags');
         $count          = 0;
 
         foreach ($journalIds as $journalId) {
@@ -110,26 +108,26 @@ class BulkController extends Controller
             Log::debug(sprintf('Found journal #%d', $journal->id));
 
             // update category if not told to ignore
-            if ($ignoreCategory === false) {
+            if (false === $ignoreCategory) {
                 Log::debug(sprintf('Set category to %s', $request->string('category')));
 
                 $this->repository->updateCategory($journal, $request->string('category'));
             }
 
             // update budget if not told to ignore (and is withdrawal)
-            if ($ignoreBudget === false) {
+            if (false === $ignoreBudget) {
                 Log::debug(sprintf('Set budget to %d', $request->integer('budget_id')));
                 $this->repository->updateBudget($journal, $request->integer('budget_id'));
             }
 
             // update tags:
-            if ($ignoreTags === false) {
+            if (false === $ignoreTags) {
                 Log::debug(sprintf('Set tags to %s', $request->string('budget_id')));
                 $this->repository->updateTags($journal, ['tags' => explode(',', $request->string('tags'))]);
             }
         }
 
-        Preferences::mark();
+        app('preferences')->mark();
         $request->session()->flash('success', trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:

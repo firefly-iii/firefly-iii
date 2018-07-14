@@ -1,5 +1,4 @@
 <?php
-
 /**
  * AccountController.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -41,13 +40,15 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
- * Class AccountController
+ * Class AccountController.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AccountController extends Controller
 {
-    /** @var CurrencyRepositoryInterface */
+    /** @var CurrencyRepositoryInterface The currency repository */
     private $currencyRepository;
-    /** @var AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
     /**
@@ -125,6 +126,8 @@ class AccountController extends Controller
     }
 
     /**
+     * Show single instance.
+     *
      * @param Request $request
      * @param Account $account
      *
@@ -146,6 +149,8 @@ class AccountController extends Controller
     }
 
     /**
+     * Store a new instance.
+     *
      * @param AccountRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
@@ -197,52 +202,25 @@ class AccountController extends Controller
     }
 
     /**
+     * All the available types.
+     *
      * @param string $type
      *
      * @return array
      */
     private function mapTypes(string $type): array
     {
-        $types = [
-            'all'                        => [
-                AccountType::DEFAULT,
-                AccountType::CASH,
-                AccountType::ASSET,
-                AccountType::EXPENSE,
-                AccountType::REVENUE,
-                AccountType::INITIAL_BALANCE,
-                AccountType::BENEFICIARY,
-                AccountType::IMPORT,
-                AccountType::RECONCILIATION,
-                AccountType::LOAN,
-            ],
-            'asset'                      => [
-                AccountType::DEFAULT,
-                AccountType::ASSET,
-            ],
-            'cash'                       => [
-                AccountType::CASH,
-            ],
-            'expense'                    => [
-                AccountType::EXPENSE,
-                AccountType::BENEFICIARY,
-            ],
-            'revenue'                    => [
-                AccountType::REVENUE,
-            ],
-            'special'                    => [
-                AccountType::CASH,
-                AccountType::INITIAL_BALANCE,
-                AccountType::IMPORT,
-                AccountType::RECONCILIATION,
-                AccountType::LOAN,
-            ],
-            'hidden'                     => [
-                AccountType::INITIAL_BALANCE,
-                AccountType::IMPORT,
-                AccountType::RECONCILIATION,
-                AccountType::LOAN,
-            ],
+        $types  = [
+            'all'                        => [AccountType::DEFAULT, AccountType::CASH, AccountType::ASSET, AccountType::EXPENSE, AccountType::REVENUE,
+                                             AccountType::INITIAL_BALANCE, AccountType::BENEFICIARY, AccountType::IMPORT, AccountType::RECONCILIATION,
+                                             AccountType::LOAN,],
+            'asset'                      => [AccountType::DEFAULT, AccountType::ASSET,],
+            'cash'                       => [AccountType::CASH,],
+            'expense'                    => [AccountType::EXPENSE, AccountType::BENEFICIARY,],
+            'revenue'                    => [AccountType::REVENUE,],
+            'special'                    => [AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION,
+                                             AccountType::LOAN,],
+            'hidden'                     => [AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION, AccountType::LOAN,],
             AccountType::DEFAULT         => [AccountType::DEFAULT],
             AccountType::CASH            => [AccountType::CASH],
             AccountType::ASSET           => [AccountType::ASSET],
@@ -254,10 +232,11 @@ class AccountController extends Controller
             AccountType::RECONCILIATION  => [AccountType::RECONCILIATION],
             AccountType::LOAN            => [AccountType::LOAN],
         ];
+        $return = $types['all'];
         if (isset($types[$type])) {
-            return $types[$type];
+            $return = $types[$type];
         }
 
-        return $types['all']; // @codeCoverageIgnore
+        return $return; // @codeCoverageIgnore
     }
 }

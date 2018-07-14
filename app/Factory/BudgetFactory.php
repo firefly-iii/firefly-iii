@@ -1,5 +1,4 @@
 <?php
-
 /**
  * BudgetFactory.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
+/** @noinspection MultipleReturnStatementsInspection */
 declare(strict_types=1);
 
 
@@ -30,7 +29,7 @@ use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
- * Class BudgetFactory
+ * Class BudgetFactory.
  */
 class BudgetFactory
 {
@@ -43,13 +42,14 @@ class BudgetFactory
      * @param null|string $budgetName
      *
      * @return Budget|null
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function find(?int $budgetId, ?string $budgetName): ?Budget
     {
         $budgetId   = (int)$budgetId;
         $budgetName = (string)$budgetName;
 
-        if (\strlen($budgetName) === 0 && $budgetId === 0) {
+        if (0 === $budgetId && '' === $budgetName) {
             return null;
         }
 
@@ -62,7 +62,7 @@ class BudgetFactory
             }
         }
 
-        if (\strlen($budgetName) > 0) {
+        if ('' !== $budgetName) {
             $budget = $this->findByName($budgetName);
             if (null !== $budget) {
                 return $budget;
@@ -94,7 +94,7 @@ class BudgetFactory
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }

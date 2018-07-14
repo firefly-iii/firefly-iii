@@ -121,12 +121,17 @@ class MappingConverger
     private function getRoleForColumn(int $column, int $mapped): string
     {
         $role = $this->roles[$column] ?? '_ignore';
-        if ($mapped === 0) {
+        if (0 === $mapped) {
             Log::debug(sprintf('Column #%d with role "%s" is not mapped.', $column, $role));
 
             return $role;
         }
-        if (!(isset($this->doMapping[$column]) && $this->doMapping[$column] === true)) {
+        if (!(isset($this->doMapping[$column]) && true === $this->doMapping[$column])) {
+
+            // if the mapping has been filled in already by a role with a higher priority,
+            // ignore the mapping.
+            Log::debug(sprintf('Column #%d ("%s") has something.', $column, $role));
+
 
             return $role;
         }
@@ -172,6 +177,7 @@ class MappingConverger
 
         // also store the $mapped values in a "mappedValues" array.
         $this->mappedValues[$newRole][] = $mapped;
+        Log::debug(sprintf('Values mapped to role "%s" are: ', $newRole), $this->mappedValues[$newRole]);
 
         return $newRole;
     }

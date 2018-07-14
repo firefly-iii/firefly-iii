@@ -29,8 +29,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class TransactionJournalMeta.
  *
- * @property string $name
- * @property int    $transaction_journal_id
+ * @property string             $name
+ * @property int                $transaction_journal_id
+ * @property TransactionJournal $transactionJournal
+ * @property string $data
+ * @property int $id
  */
 class TransactionJournalMeta extends Model
 {

@@ -33,6 +33,8 @@ use Illuminate\Support\Collection;
 interface PopupReportInterface
 {
     /**
+     * Get balances for budget.
+     *
      * @param Budget  $budget
      * @param Account $account
      * @param array   $attributes
@@ -42,6 +44,8 @@ interface PopupReportInterface
     public function balanceForBudget(Budget $budget, Account $account, array $attributes): Collection;
 
     /**
+     * Get balances for transactions without a budget.
+     *
      * @param Account $account
      * @param array   $attributes
      *
@@ -50,6 +54,8 @@ interface PopupReportInterface
     public function balanceForNoBudget(Account $account, array $attributes): Collection;
 
     /**
+     * Group by budget.
+     *
      * @param Budget $budget
      * @param array  $attributes
      *
@@ -58,6 +64,8 @@ interface PopupReportInterface
     public function byBudget(Budget $budget, array $attributes): Collection;
 
     /**
+     * Group by category.
+     *
      * @param Category $category
      * @param array    $attributes
      *
@@ -66,6 +74,8 @@ interface PopupReportInterface
     public function byCategory(Category $category, array $attributes): Collection;
 
     /**
+     * Do something with expense. Sorry, I am not very inspirational here.
+     *
      * @param Account $account
      * @param array   $attributes
      *
@@ -74,6 +84,8 @@ interface PopupReportInterface
     public function byExpenses(Account $account, array $attributes): Collection;
 
     /**
+     * Do something with income. Sorry, I am not very inspirational here.
+     *
      * @param Account $account
      * @param array   $attributes
      *

@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection PhpDynamicAsStaticMethodCallInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
@@ -47,7 +48,6 @@ class Sandstorm
      * @return mixed
      *
      * @throws FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
@@ -74,6 +74,7 @@ class Sandstorm
             if (1 === $count && \strlen($userId) > 0) {
                 // login as first user user.
                 $user = $repository->first();
+                /** @noinspection NullPointerExceptionInspection */
                 Auth::guard($guard)->login($user);
                 View::share('SANDSTORM_ANON', false);
 
@@ -83,6 +84,7 @@ class Sandstorm
             if (1 === $count && '' === $userId) {
                 // login but indicate anonymous
                 $user = User::first();
+                /** @noinspection NullPointerExceptionInspection */
                 Auth::guard($guard)->login($user);
                 View::share('SANDSTORM_ANON', true);
 

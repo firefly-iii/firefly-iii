@@ -33,7 +33,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Log;
 use Monolog\Handler\RotatingFileHandler;
-use Preferences;
 use Route as RouteFacade;
 
 /**
@@ -53,7 +52,7 @@ class DebugController extends Controller
     /**
      * @throws FireflyException
      */
-    public function displayError()
+    public function displayError(): void
     {
         Log::debug('This is a test message at the DEBUG level.');
         Log::info('This is a test message at the INFO level.');
@@ -73,7 +72,7 @@ class DebugController extends Controller
      */
     public function flush(Request $request)
     {
-        Preferences::mark();
+        app('preferences')->mark();
         $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range']);
         Log::debug('Call cache:clear...');
         Artisan::call('cache:clear');
@@ -87,7 +86,7 @@ class DebugController extends Controller
             // @codeCoverageIgnoreStart
         } catch (Exception $e) {
             // don't care
-            Log::debug('Called twig:clean.');
+            Log::debug(sprintf('Called twig:clean: %s', $e->getMessage()));
         }
         // @codeCoverageIgnoreEnd
         Log::debug('Call view:clear...');
@@ -202,7 +201,7 @@ class DebugController extends Controller
                         break;
                     }
                 }
-                if ($found === false) {
+                if (false === $found) {
                     $return .= 'touch ' . $route->getName() . '.md;';
                 }
             }
@@ -235,7 +234,7 @@ class DebugController extends Controller
      */
     protected function errorReporting(int $value): string
     {
-        $array = [
+        $array  = [
             -1                                                             => 'ALL errors',
             E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED                  => 'E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED',
             E_ALL                                                          => 'E_ALL',
@@ -244,11 +243,12 @@ class DebugController extends Controller
             E_ALL & ~E_NOTICE & ~E_STRICT                                  => 'E_ALL & ~E_NOTICE & ~E_STRICT',
             E_COMPILE_ERROR | E_RECOVERABLE_ERROR | E_ERROR | E_CORE_ERROR => 'E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR',
         ];
+        $result = (string)$value;
         if (isset($array[$value])) {
-            return $array[$value];
+            $result = $array[$value];
         }
 
-        return (string)$value; // @codeCoverageIgnore
+        return $result;
     }
 
     /**
@@ -258,7 +258,7 @@ class DebugController extends Controller
     {
         $packages = [];
         $file     = \dirname(__DIR__, 3) . '/vendor/composer/installed.json';
-        if (!($file === false) && file_exists($file)) {
+        if (!(false === $file) && file_exists($file)) {
             // file exists!
             $content = file_get_contents($file);
             $json    = json_decode($content, true);

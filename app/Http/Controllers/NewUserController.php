@@ -109,7 +109,7 @@ class NewUserController extends Controller
 
         // store currency preference:
         Preferences::set('currencyPreference', $currency->code);
-        Preferences::mark();
+        app('preferences')->mark();
 
         // set default optional fields:
         $visibleFields = [
@@ -126,7 +126,7 @@ class NewUserController extends Controller
         Preferences::set('transaction_journal_optional_fields', $visibleFields);
 
         session()->flash('success', (string)trans('firefly.stored_new_accounts_new_user'));
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect(route('index'));
     }

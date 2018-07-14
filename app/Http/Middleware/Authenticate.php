@@ -73,6 +73,7 @@ class Authenticate
         return $next($request);
     }
 
+
     /**
      * Determine if the user is logged in to any of the given guards.
      *
@@ -88,9 +89,11 @@ class Authenticate
         if (empty($guards)) {
             try {
                 // go for default guard:
+                /** @noinspection PhpUndefinedMethodInspection */
                 if ($this->auth->check()) {
 
                     // do an extra check on user object.
+                    /** @noinspection PhpUndefinedMethodInspection */
                     $user = $this->auth->authenticate();
                     if (1 === (int)$user->blocked) {
                         $message = (string)trans('firefly.block_account_logout');
@@ -98,6 +101,7 @@ class Authenticate
                             $message = (string)trans('firefly.email_changed_logout');
                         }
                         app('session')->flash('logoutMessage', $message);
+                        /** @noinspection PhpUndefinedMethodInspection */
                         $this->auth->logout();
 
                         throw new AuthenticationException('Blocked account.', $guards);
@@ -105,16 +109,23 @@ class Authenticate
                 }
             } catch (QueryException $e) {
                 // @codeCoverageIgnoreStart
-                throw new FireflyException('It seems the database has not yet been initialized. Did you run the correct upgrade or installation commands?');
+                throw new FireflyException(
+                    sprintf(
+                        'It seems the database has not yet been initialized. Did you run the correct upgrade or installation commands? Error: %s',
+                        $e->getMessage()
+                    )
+                );
                 // @codeCoverageIgnoreEnd
             }
 
+            /** @noinspection PhpUndefinedMethodInspection */
             return $this->auth->authenticate();
         }
 
         // @codeCoverageIgnoreStart
         foreach ($guards as $guard) {
             if ($this->auth->guard($guard)->check()) {
+                /** @noinspection PhpVoidFunctionResultUsedInspection */
                 return $this->auth->shouldUse($guard);
             }
         }

@@ -24,12 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Rules\BelongsUser;
+use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Validation\Validator;
 
 
@@ -38,7 +34,11 @@ use Illuminate\Validation\Validator;
  */
 class TransactionRequest extends Request
 {
+    use TransactionValidation;
+
     /**
+     * Authorize logged in users.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -48,12 +48,15 @@ class TransactionRequest extends Request
     }
 
     /**
+     * Get all data. Is pretty complex because of all the ??-statements.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      * @return array
      */
     public function getAll(): array
     {
         $data = [
-            // basic fields for journal:
             'type'               => $this->string('type'),
             'date'               => $this->date('date'),
             'description'        => $this->string('description'),
@@ -62,8 +65,6 @@ class TransactionRequest extends Request
             'bill_id'            => $this->integer('bill_id'),
             'bill_name'          => $this->string('bill_name'),
             'tags'               => explode(',', $this->string('tags')),
-
-            // then, custom fields for journal
             'interest_date'      => $this->date('interest_date'),
             'book_date'          => $this->date('book_date'),
             'process_date'       => $this->date('process_date'),
@@ -72,39 +73,17 @@ class TransactionRequest extends Request
             'invoice_date'       => $this->date('invoice_date'),
             'internal_reference' => $this->string('internal_reference'),
             'notes'              => $this->string('notes'),
-
-            // then, transactions (see below).
-            'transactions'       => [],
-
+            'transactions'       => $this->getTransactionData(),
         ];
-        foreach ($this->get('transactions') as $index => $transaction) {
-            $array                  = [
-                'description'           => $transaction['description'] ?? null,
-                'amount'                => $transaction['amount'],
-                'currency_id'           => isset($transaction['currency_id']) ? (int)$transaction['currency_id'] : null,
-                'currency_code'         => $transaction['currency_code'] ?? null,
-                'foreign_amount'        => $transaction['foreign_amount'] ?? null,
-                'foreign_currency_id'   => isset($transaction['foreign_currency_id']) ? (int)$transaction['foreign_currency_id'] : null,
-                'foreign_currency_code' => $transaction['foreign_currency_code'] ?? null,
-                'budget_id'             => isset($transaction['budget_id']) ? (int)$transaction['budget_id'] : null,
-                'budget_name'           => $transaction['budget_name'] ?? null,
-                'category_id'           => isset($transaction['category_id']) ? (int)$transaction['category_id'] : null,
-                'category_name'         => $transaction['category_name'] ?? null,
-                'source_id'             => isset($transaction['source_id']) ? (int)$transaction['source_id'] : null,
-                'source_name'           => isset($transaction['source_name']) ? (string)$transaction['source_name'] : null,
-                'destination_id'        => isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null,
-                'destination_name'      => isset($transaction['destination_name']) ? (string)$transaction['destination_name'] : null,
-                'reconciled'            => $transaction['reconciled'] ?? false,
-                'identifier'            => $index,
-            ];
-            $data['transactions'][] = $array;
-        }
 
         return $data;
     }
 
     /**
+     * The rules that the incoming request must be matched against.
+     *
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function rules(): array
     {
@@ -149,13 +128,8 @@ class TransactionRequest extends Request
             'transactions.*.destination_name'      => 'between:1,255|nullable',
         ];
 
-        switch ($this->method()) {
-            default:
-                break;
-            case 'PUT':
-            case 'PATCH':
-                unset($rules['type'], $rules['piggy_bank_id'], $rules['piggy_bank_name']);
-                break;
+        if ('PUT' === $this->method()) {
+            unset($rules['type'], $rules['piggy_bank_id'], $rules['piggy_bank_name']);
         }
 
         return $rules;
@@ -174,11 +148,11 @@ class TransactionRequest extends Request
     {
         $validator->after(
             function (Validator $validator) {
-                $this->atLeastOneTransaction($validator);
-                $this->checkValidDescriptions($validator);
-                $this->equalToJournalDescription($validator);
-                $this->emptySplitDescriptions($validator);
-                $this->foreignCurrencyInformation($validator);
+                $this->validateOneTransaction($validator);
+                $this->validateDescriptions($validator);
+                $this->validateJournalDescription($validator);
+                $this->validateSplitDescriptions($validator);
+                $this->validateForeignCurrencyInformation($validator);
                 $this->validateAccountInformation($validator);
                 $this->validateSplitAccounts($validator);
             }
@@ -186,335 +160,37 @@ class TransactionRequest extends Request
     }
 
     /**
-     * Throws an error when this asset account is invalid.
+     * Get transaction data.
      *
-     * @noinspection MoreThanThreeArgumentsInspection
-     *
-     * @param Validator   $validator
-     * @param int|null    $accountId
-     * @param null|string $accountName
-     * @param string      $idField
-     * @param string      $nameField
-     *
-     * @return null|Account
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @return array
      */
-    protected function assetAccountExists(Validator $validator, ?int $accountId, ?string $accountName, string $idField, string $nameField): ?Account
+    private function getTransactionData(): array
     {
-
-        $accountId   = (int)$accountId;
-        $accountName = (string)$accountName;
-        // both empty? hard exit.
-        if ($accountId < 1 && \strlen($accountName) === 0) {
-            $validator->errors()->add($idField, trans('validation.filled', ['attribute' => $idField]));
-
-            return null;
-        }
-        // ID belongs to user and is asset account:
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $repository->setUser(auth()->user());
-        $set = $repository->getAccountsById([$accountId]);
-        if ($set->count() === 1) {
-            /** @var Account $first */
-            $first = $set->first();
-            if ($first->accountType->type !== AccountType::ASSET) {
-                $validator->errors()->add($idField, trans('validation.belongs_user'));
-
-                return null;
-            }
-
-            // we ignore the account name at this point.
-            return $first;
+        $return = [];
+        foreach ($this->get('transactions') as $index => $transaction) {
+            $return[] = [
+                'description'           => $transaction['description'] ?? null,
+                'amount'                => $transaction['amount'],
+                'currency_id'           => isset($transaction['currency_id']) ? (int)$transaction['currency_id'] : null,
+                'currency_code'         => $transaction['currency_code'] ?? null,
+                'foreign_amount'        => $transaction['foreign_amount'] ?? null,
+                'foreign_currency_id'   => isset($transaction['foreign_currency_id']) ? (int)$transaction['foreign_currency_id'] : null,
+                'foreign_currency_code' => $transaction['foreign_currency_code'] ?? null,
+                'budget_id'             => isset($transaction['budget_id']) ? (int)$transaction['budget_id'] : null,
+                'budget_name'           => $transaction['budget_name'] ?? null,
+                'category_id'           => isset($transaction['category_id']) ? (int)$transaction['category_id'] : null,
+                'category_name'         => $transaction['category_name'] ?? null,
+                'source_id'             => isset($transaction['source_id']) ? (int)$transaction['source_id'] : null,
+                'source_name'           => isset($transaction['source_name']) ? (string)$transaction['source_name'] : null,
+                'destination_id'        => isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null,
+                'destination_name'      => isset($transaction['destination_name']) ? (string)$transaction['destination_name'] : null,
+                'reconciled'            => $transaction['reconciled'] ?? false,
+                'identifier'            => $index,
+            ];
         }
 
-        $account = $repository->findByName($accountName, [AccountType::ASSET]);
-        if (null === $account) {
-            $validator->errors()->add($nameField, trans('validation.belongs_user'));
-
-            return null;
-        }
-
-        return $account;
+        return $return;
     }
-
-    /**
-     * Adds an error to the validator when there are no transactions in the array of data.
-     *
-     * @param Validator $validator
-     */
-    protected function atLeastOneTransaction(Validator $validator): void
-    {
-        $data         = $validator->getData();
-        $transactions = $data['transactions'] ?? [];
-        // need at least one transaction
-        if (\count($transactions) === 0) {
-            $validator->errors()->add('description', trans('validation.at_least_one_transaction'));
-        }
-    }
-
-    /**
-     * Adds an error to the "description" field when the user has submitted no descriptions and no
-     * journal description.
-     *
-     * @param Validator $validator
-     */
-    protected function checkValidDescriptions(Validator $validator): void
-    {
-        $data               = $validator->getData();
-        $transactions       = $data['transactions'] ?? [];
-        $journalDescription = (string)($data['description'] ?? '');
-        $validDescriptions  = 0;
-        foreach ($transactions as $index => $transaction) {
-            if (\strlen((string)($transaction['description'] ?? '')) > 0) {
-                $validDescriptions++;
-            }
-        }
-
-        // no valid descriptions and empty journal description? error.
-        if ($validDescriptions === 0 && \strlen($journalDescription) === 0) {
-            $validator->errors()->add('description', trans('validation.filled', ['attribute' => trans('validation.attributes.description')]));
-        }
-
-    }
-
-    /**
-     * Adds an error to the validator when the user submits a split transaction (more than 1 transactions)
-     * but does not give them a description.
-     *
-     * @param Validator $validator
-     */
-    protected function emptySplitDescriptions(Validator $validator): void
-    {
-        $data         = $validator->getData();
-        $transactions = $data['transactions'] ?? [];
-        foreach ($transactions as $index => $transaction) {
-            $description = (string)($transaction['description'] ?? '');
-            // filled description is mandatory for split transactions.
-            if (\count($transactions) > 1 && \strlen($description) === 0) {
-                $validator->errors()->add(
-                    'transactions.' . $index . '.description',
-                    trans('validation.filled', ['attribute' => trans('validation.attributes.transaction_description')])
-                );
-            }
-        }
-    }
-
-    /**
-     * Adds an error to the validator when any transaction descriptions are equal to the journal description.
-     *
-     * @param Validator $validator
-     */
-    protected function equalToJournalDescription(Validator $validator): void
-    {
-        $data               = $validator->getData();
-        $transactions       = $data['transactions'] ?? [];
-        $journalDescription = (string)($data['description'] ?? '');
-        foreach ($transactions as $index => $transaction) {
-            $description = (string)($transaction['description'] ?? '');
-            // description cannot be equal to journal description.
-            if ($description === $journalDescription) {
-                $validator->errors()->add('transactions.' . $index . '.description', trans('validation.equal_description'));
-            }
-        }
-    }
-
-    /**
-     * TODO can be made a rule?
-     *
-     * If the transactions contain foreign amounts, there must also be foreign currency information.
-     *
-     * @param Validator $validator
-     */
-    protected function foreignCurrencyInformation(Validator $validator): void
-    {
-        $data         = $validator->getData();
-        $transactions = $data['transactions'] ?? [];
-        foreach ($transactions as $index => $transaction) {
-            // must have currency info.
-            if (isset($transaction['foreign_amount'])
-                && !(isset($transaction['foreign_currency_id'])
-                     || isset($transaction['foreign_currency_code']))) {
-                $validator->errors()->add(
-                    'transactions.' . $index . '.foreign_amount',
-                    trans('validation.require_currency_info')
-                );
-            }
-        }
-    }
-
-    /**
-     * Throws an error when the given opposing account (of type $type) is invalid.
-     * Empty data is allowed, system will default to cash.
-     *
-     * @noinspection MoreThanThreeArgumentsInspection
-     *
-     * @param Validator   $validator
-     * @param string      $type
-     * @param int|null    $accountId
-     * @param null|string $accountName
-     * @param string      $idField
-     *
-     * @return null|Account
-     */
-    protected function opposingAccountExists(Validator $validator, string $type, ?int $accountId, ?string $accountName, string $idField): ?Account
-    {
-        $accountId   = (int)$accountId;
-        $accountName = (string)$accountName;
-        // both empty? done!
-        if ($accountId < 1 && \strlen($accountName) === 0) {
-            return null;
-        }
-        if ($accountId !== 0) {
-            // ID belongs to user and is $type account:
-            /** @var AccountRepositoryInterface $repository */
-            $repository = app(AccountRepositoryInterface::class);
-            $repository->setUser(auth()->user());
-            $set = $repository->getAccountsById([$accountId]);
-            if ($set->count() === 1) {
-                /** @var Account $first */
-                $first = $set->first();
-                if ($first->accountType->type !== $type) {
-                    $validator->errors()->add($idField, trans('validation.belongs_user'));
-
-                    return null;
-                }
-
-                // we ignore the account name at this point.
-                return $first;
-            }
-        }
-
-        // not having an opposing account by this name is NOT a problem.
-        return null;
-    }
-
-    /**
-     * Validates the given account information. Switches on given transaction type.
-     *
-     * @param Validator $validator
-     *
-     * @throws FireflyException
-     */
-    protected function validateAccountInformation(Validator $validator): void
-    {
-        $data         = $validator->getData();
-        $transactions = $data['transactions'] ?? [];
-        if (!isset($data['type'])) {
-            // the journal may exist in the request:
-            /** @var Transaction $transaction */
-            $transaction = $this->route()->parameter('transaction');
-            if (null === $transaction) {
-                return; // @codeCoverageIgnore
-            }
-            $data['type'] = strtolower($transaction->transactionJournal->transactionType->type);
-        }
-        foreach ($transactions as $index => $transaction) {
-            $sourceId           = isset($transaction['source_id']) ? (int)$transaction['source_id'] : null;
-            $sourceName         = $transaction['source_name'] ?? null;
-            $destinationId      = isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null;
-            $destinationName    = $transaction['destination_name'] ?? null;
-            $sourceAccount      = null;
-            $destinationAccount = null;
-            switch ($data['type']) {
-                case 'withdrawal':
-                    $idField            = 'transactions.' . $index . '.source_id';
-                    $nameField          = 'transactions.' . $index . '.source_name';
-                    $sourceAccount      = $this->assetAccountExists($validator, $sourceId, $sourceName, $idField, $nameField);
-                    $idField            = 'transactions.' . $index . '.destination_id';
-                    $destinationAccount = $this->opposingAccountExists($validator, AccountType::EXPENSE, $destinationId, $destinationName, $idField);
-                    break;
-                case 'deposit':
-                    $idField       = 'transactions.' . $index . '.source_id';
-                    $sourceAccount = $this->opposingAccountExists($validator, AccountType::REVENUE, $sourceId, $sourceName, $idField);
-
-                    $idField            = 'transactions.' . $index . '.destination_id';
-                    $nameField          = 'transactions.' . $index . '.destination_name';
-                    $destinationAccount = $this->assetAccountExists($validator, $destinationId, $destinationName, $idField, $nameField);
-                    break;
-                case 'transfer':
-                    $idField       = 'transactions.' . $index . '.source_id';
-                    $nameField     = 'transactions.' . $index . '.source_name';
-                    $sourceAccount = $this->assetAccountExists($validator, $sourceId, $sourceName, $idField, $nameField);
-
-                    $idField            = 'transactions.' . $index . '.destination_id';
-                    $nameField          = 'transactions.' . $index . '.destination_name';
-                    $destinationAccount = $this->assetAccountExists($validator, $destinationId, $destinationName, $idField, $nameField);
-                    break;
-                default:
-                    // @codeCoverageIgnoreStart
-                    throw new FireflyException(
-                        sprintf('The validator cannot handle transaction type "%s" in validateAccountInformation().', $data['type'])
-                    );
-                // @codeCoverageIgnoreEnd
-
-            }
-            // add some errors in case of same account submitted:
-            if (null !== $sourceAccount && null !== $destinationAccount && $sourceAccount->id === $destinationAccount->id) {
-                $validator->errors()->add($idField, trans('validation.source_equals_destination'));
-            }
-        }
-    }
-
-    /**
-     * @param Validator $validator
-     *
-     * @throws FireflyException
-     */
-    protected function validateSplitAccounts(Validator $validator): void
-    {
-        $data  = $validator->getData();
-        $count = isset($data['transactions']) ? \count($data['transactions']) : 0;
-        if ($count < 2) {
-            return;
-        }
-        // this is pretty much impossible:
-        // @codeCoverageIgnoreStart
-        if (!isset($data['type'])) {
-            // the journal may exist in the request:
-            /** @var Transaction $transaction */
-            $transaction = $this->route()->parameter('transaction');
-            if (null === $transaction) {
-                return;
-            }
-            $data['type'] = strtolower($transaction->transactionJournal->transactionType->type);
-        }
-        // @codeCoverageIgnoreEnd
-
-        // collect all source ID's and destination ID's, if present:
-        $sources      = [];
-        $destinations = [];
-
-        foreach ($data['transactions'] as $transaction) {
-            $sources[]      = isset($transaction['source_id']) ? (int)$transaction['source_id'] : 0;
-            $destinations[] = isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : 0;
-        }
-        $destinations = array_unique($destinations);
-        $sources      = array_unique($sources);
-        // switch on type:
-        switch ($data['type']) {
-            case 'withdrawal':
-                if (\count($sources) > 1) {
-                    $validator->errors()->add('transactions.0.source_id', trans('validation.all_accounts_equal'));
-                }
-                break;
-            case 'deposit':
-                if (\count($destinations) > 1) {
-                    $validator->errors()->add('transactions.0.destination_id', trans('validation.all_accounts_equal'));
-                }
-                break;
-            case 'transfer':
-                if (\count($sources) > 1 || \count($destinations) > 1) {
-                    $validator->errors()->add('transactions.0.source_id', trans('validation.all_accounts_equal'));
-                    $validator->errors()->add('transactions.0.destination_id', trans('validation.all_accounts_equal'));
-                }
-                break;
-            default:
-                // @codeCoverageIgnoreStart
-                throw new FireflyException(
-                    sprintf('The validator cannot handle transaction type "%s" in validateSplitAccounts().', $data['type'])
-                );
-            // @codeCoverageIgnoreEnd
-        }
-    }
-
 }

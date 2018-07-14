@@ -81,25 +81,19 @@ class BillFactory
     {
         $billId   = (int)$billId;
         $billName = (string)$billName;
-
+        $bill     = null;
         // first find by ID:
         if ($billId > 0) {
             /** @var Bill $bill */
             $bill = $this->user->bills()->find($billId);
-            if (null !== $bill) {
-                return $bill;
-            }
         }
 
         // then find by name:
-        if (\strlen($billName) > 0) {
+        if (null === $bill && \strlen($billName) > 0) {
             $bill = $this->findByName($billName);
-            if (null !== $bill) {
-                return $bill;
-            }
         }
 
-        return null;
+        return $bill;
 
     }
 
@@ -112,22 +106,24 @@ class BillFactory
     {
         /** @var Collection $collection */
         $collection = $this->user->bills()->get();
+        $return     = null;
         /** @var Bill $bill */
         foreach ($collection as $bill) {
             Log::debug(sprintf('"%s" vs. "%s"', $bill->name, $name));
             if ($bill->name === $name) {
-                return $bill;
+                $return = $bill;
+                break;
             }
         }
-        Log::debug(sprintf('Bill::Find by name returns NULL based on "%s"', $name));
+        Log::debug(sprintf('Bill::find("%s") by name returns null? %s', $name, var_export($return, true)));
 
-        return null;
+        return $return;
     }
 
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }

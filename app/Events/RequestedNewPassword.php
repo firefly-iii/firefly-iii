@@ -34,18 +34,12 @@ class RequestedNewPassword extends Event
 {
     use SerializesModels;
 
-    /**
-     * @var string
-     */
+    /** @var string The users IP address */
     public $ipAddress;
-    /**
-     * @var string
-     */
-    public $token;
-    /**
-     * @var User
-     */
+    /** @var User The user */
     public $user;
+    /** @var string The token */
+    public $token;
 
     /**
      * Create a new event instance. This event is triggered when a users tries to reset his or her password.

@@ -60,6 +60,7 @@ class CategoryControllerTest extends TestCase
      */
     public function testCreate(): void
     {
+        Log::debug('TestCreate()');
         // mock stuff
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -78,6 +79,7 @@ class CategoryControllerTest extends TestCase
      */
     public function testDelete(): void
     {
+        Log::debug('Test Delete()');
         // mock stuff
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -96,6 +98,7 @@ class CategoryControllerTest extends TestCase
      */
     public function testDestroy(): void
     {
+        Log::debug('Test destroy()');
         // mock stuff
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -116,6 +119,7 @@ class CategoryControllerTest extends TestCase
      */
     public function testEdit(): void
     {
+        Log::debug('Test edit()');
         // mock stuff
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -135,6 +139,7 @@ class CategoryControllerTest extends TestCase
      */
     public function testIndex(): void
     {
+        Log::debug('Test index()');
         // mock stuff
         $category      = factory(Category::class)->make();
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
@@ -160,12 +165,17 @@ class CategoryControllerTest extends TestCase
      */
     public function testNoCategory(string $range): void
     {
+        Log::debug(sprintf('Test noCategory(%s)', $range));
         // mock stuff
         $collector     = $this->mock(JournalCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->twice()->andReturn(TransactionJournal::first());
+
+
+        // get the journal with the most recent date for firstNull:
+        $journal = $this->user()->transactionJournals()->orderBy('date','DESC')->first();
+        $journalRepos->shouldReceive('firstNull')->twice()->andReturn($journal);
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setTypes')->andReturnSelf();
@@ -197,6 +207,7 @@ class CategoryControllerTest extends TestCase
      */
     public function testNoCategoryAll(string $range): void
     {
+        Log::debug('Test nocategoryAll()');
         // mock stuff
         $collector     = $this->mock(JournalCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
@@ -233,6 +244,7 @@ class CategoryControllerTest extends TestCase
      */
     public function testNoCategoryDate(string $range): void
     {
+        Log::debug('Test nocategorydate()');
         // mock stuff
         $collector     = $this->mock(JournalCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
@@ -277,6 +289,7 @@ class CategoryControllerTest extends TestCase
      */
     public function testShow(string $range): void
     {
+        Log::debug('Test show()');
         $transaction   = factory(Transaction::class)->make();
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -326,6 +339,7 @@ class CategoryControllerTest extends TestCase
      */
     public function testShowAll(string $range): void
     {
+        Log::debug('Test showAll()');
         // mock stuff
         $transaction  = factory(Transaction::class)->make();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -364,6 +378,7 @@ class CategoryControllerTest extends TestCase
      */
     public function testShowByDate(string $range): void
     {
+        Log::debug('Test showbydate()');
         // mock stuff
         $transaction  = factory(Transaction::class)->make();
         $repository   = $this->mock(CategoryRepositoryInterface::class);
@@ -412,6 +427,7 @@ class CategoryControllerTest extends TestCase
      */
     public function testShowEmpty(string $range): void
     {
+        Log::debug('Test showempty()');
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->twice()->andReturn(TransactionJournal::first());
 
@@ -451,6 +467,7 @@ class CategoryControllerTest extends TestCase
      */
     public function testStore(): void
     {
+        Log::debug('Test store()');
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -475,6 +492,7 @@ class CategoryControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
+        Log::debug('Test update()');
         $category     = Category::first();
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);

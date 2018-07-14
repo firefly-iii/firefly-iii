@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection PhpDynamicAsStaticMethodCallInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
@@ -32,7 +33,7 @@ class JournalLinkRequest extends Request
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         // Only allow logged in users
         return auth()->check();
@@ -60,7 +61,7 @@ class JournalLinkRequest extends Request
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         // all possible combinations of link types and inward / outward:
         $combinations = [];

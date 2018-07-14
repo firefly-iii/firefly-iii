@@ -37,6 +37,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon $start_date
  * @property Carbon $end_date
  * @property string $amount
+ * @property int    $budget_id
+ * @property string spent
  */
 class BudgetLimit extends Model
 {
@@ -46,7 +48,7 @@ class BudgetLimit extends Model
      * @var array
      */
     protected $casts
-        = [
+                        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'start_date' => 'date',

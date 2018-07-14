@@ -28,20 +28,19 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Currency\ExchangeRateInterface;
 use FireflyIII\Transformers\CurrencyExchangeRateTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use InvalidArgumentException;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
-use Log;
+use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
- *
  * Class CurrencyExchangeRateController
  */
 class CurrencyExchangeRateController extends Controller
 {
-    /** @var CurrencyRepositoryInterface */
+    /** @var CurrencyRepositoryInterface The currency repository */
     private $repository;
 
     /**
@@ -52,8 +51,11 @@ class CurrencyExchangeRateController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
+                /** @var User $admin */
+                $admin = auth()->user();
+
                 $this->repository = app(CurrencyRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+                $this->repository->setUser($admin);
 
                 return $next($request);
             }
@@ -62,6 +64,8 @@ class CurrencyExchangeRateController extends Controller
     }
 
     /**
+     * Show an exchange rate.
+     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -72,8 +76,8 @@ class CurrencyExchangeRateController extends Controller
         // create some objects:
         $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        // currencies
         $fromCurrency = $this->repository->findByCodeNull($request->get('from') ?? 'EUR');
         $toCurrency   = $this->repository->findByCodeNull($request->get('to') ?? 'USD');
 
@@ -84,27 +88,19 @@ class CurrencyExchangeRateController extends Controller
             throw new FireflyException('Unknown destination currency.');
         }
 
-        $dateObj = new Carbon;
-        try {
-            $dateObj = Carbon::createFromFormat('Y-m-d', $request->get('date') ?? date('Y-m-d'));
-        } catch (InvalidArgumentException $e) {
-            Log::debug($e->getMessage());
-        }
-
-
+        $dateObj = Carbon::createFromFormat('Y-m-d', $request->get('date') ?? date('Y-m-d'));
         $this->parameters->set('from', $fromCurrency->code);
         $this->parameters->set('to', $toCurrency->code);
         $this->parameters->set('date', $dateObj->format('Y-m-d'));
 
-        // get the exchange rate.
         $rate = $this->repository->getExchangeRate($fromCurrency, $toCurrency, $dateObj);
         if (null === $rate) {
+            /** @var User $admin */
+            $admin = auth()->user();
             // create service:
             /** @var ExchangeRateInterface $service */
             $service = app(ExchangeRateInterface::class);
-            $service->setUser(auth()->user());
-
-            // get rate:
+            $service->setUser($admin);
             $rate = $service->getRate($fromCurrency, $toCurrency, $dateObj);
         }
 

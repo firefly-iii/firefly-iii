@@ -37,41 +37,57 @@ interface ProcessorInterface
     public function __construct();
 
     /**
+     * Collect all attachments.
+     *
      * @return bool
      */
     public function collectAttachments(): bool;
 
     /**
+     * Collect all journals.
+     *
      * @return bool
      */
     public function collectJournals(): bool;
 
     /**
+     * Collect old uploads.
+     *
      * @return bool
      */
     public function collectOldUploads(): bool;
 
     /**
+     * Convert all journals.
+     *
      * @return bool
      */
     public function convertJournals(): bool;
 
     /**
+     * Create a zip file.
+     *
      * @return bool
      */
     public function createZipFile(): bool;
 
     /**
+     * Export journals.
+     *
      * @return bool
      */
     public function exportJournals(): bool;
 
     /**
+     * Get all files.
+     *
      * @return Collection
      */
     public function getFiles(): Collection;
 
     /**
+     * Set the settings.
+     *
      * @param array $settings
      */
     public function setSettings(array $settings);

@@ -54,6 +54,7 @@ class Binder
         $this->auth    = $auth;
     }
 
+    /** @noinspection PhpUnusedParameterInspection */
     /**
      * Handle an incoming request.
      *
@@ -63,7 +64,6 @@ class Binder
      *
      * @return mixed
      *
-
      */
     public function handle($request, Closure $next, ...$guards)
     {

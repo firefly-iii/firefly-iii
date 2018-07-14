@@ -113,13 +113,13 @@ class SingleController extends Controller
             'budget_id'                 => $budgetId,
             'category'                  => $categoryName,
             'tags'                      => $tags,
-            'interest_date'             => $journal->getMeta('interest_date'),
-            'book_date'                 => $journal->getMeta('book_date'),
-            'process_date'              => $journal->getMeta('process_date'),
-            'due_date'                  => $journal->getMeta('due_date'),
-            'payment_date'              => $journal->getMeta('payment_date'),
-            'invoice_date'              => $journal->getMeta('invoice_date'),
-            'internal_reference'        => $journal->getMeta('internal_reference'),
+            'interest_date'             => $this->repository->getMetaField($journal, 'interest_date'),
+            'book_date'                 => $this->repository->getMetaField($journal, 'book_date'),
+            'process_date'              => $this->repository->getMetaField($journal, 'process_date'),
+            'due_date'                  => $this->repository->getMetaField($journal, 'due_date'),
+            'payment_date'              => $this->repository->getMetaField($journal, 'payment_date'),
+            'invoice_date'              => $this->repository->getMetaField($journal, 'invoice_date'),
+            'internal_reference'        => $this->repository->getMetaField($journal, 'internal_reference'),
             'notes'                     => '',
         ];
 
@@ -135,15 +135,15 @@ class SingleController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param string  $what
+     * @param Request     $request
+     * @param string|null $what
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create(Request $request, string $what = TransactionType::DEPOSIT)
+    public function create(Request $request, string $what = null)
     {
-        $what           = strtolower($what);
-        $what           = $request->old('what') ?? $what;
+        $what           = strtolower($what ?? TransactionType::DEPOSIT);
+        $what           = (string)($request->old('what') ?? $what);
         $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $preFilled      = session()->has('preFilled') ? session('preFilled') : [];
         $subTitle       = trans('form.add_new_' . $what);
@@ -152,13 +152,13 @@ class SingleController extends Controller
         $source         = (int)$request->get('source');
 
         // grab old currency ID from old data:
-        $currencyID = (int)$request->old('amount_currency_id_amount');
+        $currencyID                             = (int)$request->old('amount_currency_id_amount');
         $preFilled['amount_currency_id_amount'] = $currencyID;
 
-        if (($what === 'withdrawal' || $what === 'transfer') && $source > 0) {
+        if (('withdrawal' === $what || 'transfer' === $what) && $source > 0) {
             $preFilled['source_id'] = $source;
         }
-        if ($what === 'deposit' && $source > 0) {
+        if ('deposit' === $what && $source > 0) {
             $preFilled['destination_id'] = $source;
         }
 
@@ -220,7 +220,7 @@ class SingleController extends Controller
 
         $this->repository->destroy($transactionJournal);
 
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect($this->getPreviousUri('transactions.delete.uri'));
     }
@@ -296,7 +296,7 @@ class SingleController extends Controller
 
         // amounts for withdrawals and deposits:
         // amount, native_amount, source_amount, destination_amount
-        if (($journal->isWithdrawal() || $journal->isDeposit()) && null !== $pTransaction->foreign_amount) {
+        if (null !== $pTransaction->foreign_amount && ($journal->isWithdrawal() || $journal->isDeposit())) {
             $preFilled['amount']   = $pTransaction->foreign_amount;
             $preFilled['currency'] = $pTransaction->foreignCurrency;
         }
@@ -355,7 +355,7 @@ class SingleController extends Controller
         event(new StoredTransactionJournal($journal, $data['piggy_bank_id']));
 
         session()->flash('success', (string)trans('firefly.stored_journal', ['description' => $journal->description]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         // @codeCoverageIgnoreStart
         if (true === $createAnother) {
@@ -412,7 +412,7 @@ class SingleController extends Controller
 
         $type = strtolower($this->repository->getTransactionType($journal));
         session()->flash('success', (string)trans('firefly.updated_' . $type, ['description' => $data['description']]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         // @codeCoverageIgnoreStart
         if (1 === (int)$request->get('return_to_edit')) {

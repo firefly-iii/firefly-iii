@@ -40,6 +40,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon $updated_at
  * @property Carbon $created_at
  * @property int    $id
+ * @property mixed  user
+ * @property mixed  user
  */
 class Preference extends Model
 {

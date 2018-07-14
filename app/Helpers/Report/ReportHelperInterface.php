@@ -46,6 +46,8 @@ interface ReportHelperInterface
     public function getBillReport(Carbon $start, Carbon $end, Collection $accounts): BillCollection;
 
     /**
+     * Generate a list of months.
+     *
      * @param Carbon $date
      *
      * @return array

@@ -30,6 +30,8 @@ use Illuminate\Support\Collection;
 interface FilterInterface
 {
     /**
+     * Apply the filter.
+     *
      * @param Collection $set
      *
      * @return Collection

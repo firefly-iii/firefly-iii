@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,7 +53,9 @@ class IsAdmin
         }
         /** @var User $user */
         $user = auth()->user();
-        if (!$user->hasRole('owner')) {
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+        if (!$repository->hasRole($user, 'owner')) {
             return response()->redirectTo(route('home'));
         }
 

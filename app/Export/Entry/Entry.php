@@ -46,136 +46,64 @@ use FireflyIII\Models\Transaction;
  */
 final class Entry
 {
-    // @formatter:off
-    /**
-     * @var int
-     */
+    /** @var int ID of the journal */
     public $journal_id;
-    /**
-     * @var int
-     */
+    /** @var int ID of the transaction */
     public $transaction_id = 0;
-
-    /**
-     * @var string
-     */
+    /** @var string The date. */
     public $date;
-    /**
-     * @var string
-     */
+    /** @var string The description */
     public $description;
-
-    /**
-     * @var string
-     */
+    /** @var string The currency code. */
     public $currency_code;
-    /**
-     * @var string
-     */
+    /** @var string The amount. */
     public $amount;
-    /**
-     * @var string
-     */
+    /** @var string The foreign currency code */
     public $foreign_currency_code = '';
-    /**
-     * @var string
-     */
+    /** @var string Foreign amount */
     public $foreign_amount = '0';
-
-    /**
-     * @var string
-     */
+    /** @var string Transaction type */
     public $transaction_type;
-
-    /**
-     * @var string
-     */
+    /** @var string Asset account ID */
     public $asset_account_id;
-    /**
-     * @var string
-     */
+    /** @var string Asset account name */
     public $asset_account_name;
-    /**
-     * @var string
-     */
+    /** @var string Asset account IBAN */
     public $asset_account_iban;
-    /**
-     * @var string
-     */
+    /** @var string Asset account BIC */
     public $asset_account_bic;
-    /**
-     * @var string
-     */
+    /** @var string Asset account number */
     public $asset_account_number;
-    /**
-     * @var string
-     */
+    /** @var string Asset account currency code */
     public $asset_currency_code;
-
-    /**
-     * @var string
-     */
+    /** @var string Opposing account ID */
     public $opposing_account_id;
-    /**
-     * @var string
-     */
+    /** @var string Opposing account name */
     public $opposing_account_name;
-    /**
-     * @var string
-     */
+    /** @var string Opposing account IBAN */
     public $opposing_account_iban;
-    /**
-     * @var string
-     */
+    /** @var string Opposing account BIC */
     public $opposing_account_bic;
-    /**
-     * @var string
-     */
+    /** @var string Opposing account number */
     public $opposing_account_number;
-    /**
-     * @var string
-     */
+    /** @var string Opposing account code */
     public $opposing_currency_code;
-
-    /**
-     * @var string
-     */
+    /** @var string Budget ID */
     public $budget_id;
-    /**
-     * @var string
-     */
+    /** @var string Budget name */
     public $budget_name;
-
-    /**
-     * @var string
-     */
+    /** @var string Category ID */
     public $category_id;
-    /**
-     * @var string
-     */
+    /** @var string Category name */
     public $category_name;
-
-    /**
-     * @var string
-     */
+    /** @var string Bill ID */
     public $bill_id;
-    /**
-     * @var string
-     */
+    /** @var string Bill name */
     public $bill_name;
-
-    /**
-     * @var string
-     */
+    /** @var string Notes */
     public $notes;
-
-    /**
-     * @var string
-     */
+    /** @var string Tags */
     public $tags;
-
-
-    // @formatter:on
 
     /**
      * Entry constructor.

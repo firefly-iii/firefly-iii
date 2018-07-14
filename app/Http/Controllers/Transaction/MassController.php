@@ -35,9 +35,9 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Transformers\TransactionTransformer;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Illuminate\View\View as IlluminateView;
-use Preferences;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -109,7 +109,7 @@ class MassController extends Controller
             ++$count;
         }
 
-        Preferences::mark();
+        app('preferences')->mark();
         session()->flash('success', trans('firefly.mass_deleted_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:
@@ -123,7 +123,10 @@ class MassController extends Controller
      */
     public function edit(Collection $journals): IlluminateView
     {
+        /** @var User $user */
+        $user     = auth()->user();
         $subTitle = trans('firefly.mass_edit_journals');
+
 
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -141,7 +144,7 @@ class MassController extends Controller
         $transformer = new TransactionTransformer(new ParameterBag);
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setUser(auth()->user());
+        $collector->setUser($user);
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setJournals($journals);
         $collector->addFilter(TransactionViewFilter::class);
@@ -153,12 +156,12 @@ class MassController extends Controller
         // transform to array
         $transactions = $collection->map(
             function (Transaction $transaction) use ($transformer) {
-                $transaction = $transformer->transform($transaction);
+                $transformed = $transformer->transform($transaction);
                 // make sure amount is positive:
-                $transaction['amount']         = app('steam')->positive((string)$transaction['amount']);
-                $transaction['foreign_amount'] = app('steam')->positive((string)$transaction['foreign_amount']);
+                $transformed['amount']         = app('steam')->positive((string)$transformed['amount']);
+                $transformed['foreign_amount'] = app('steam')->positive((string)$transformed['foreign_amount']);
 
-                return $transaction;
+                return $transformed;
             }
         );
 
@@ -177,7 +180,7 @@ class MassController extends Controller
         $count      = 0;
         if (\is_array($journalIds)) {
             foreach ($journalIds as $journalId) {
-                $journal = $repository->find((int)$journalId);
+                $journal = $repository->findNull((int)$journalId);
                 if (null !== $journal) {
                     // get optional fields:
                     $what              = strtolower($this->repository->getTransactionType($journal));
@@ -206,7 +209,7 @@ class MassController extends Controller
 
                                                 'category_id'           => null,
                                                 'category_name'         => $category,
-                                                'budget_id'             => (int)$budgetId,
+                                                'budget_id'             => $budgetId,
                                                 'budget_name'           => null,
                                                 'source_id'             => (int)$sourceAccountId,
                                                 'source_name'           => $sourceAccountName,
@@ -221,11 +224,6 @@ class MassController extends Controller
                                                 'foreign_amount'        => $foreignAmount,
                                                 'foreign_currency_id'   => $foreignCurrencyId,
                                                 'foreign_currency_code' => null,
-                                                //'native_amount'            => $amount,
-                                                //'source_amount'            => $amount,
-                                                //'foreign_amount'           => $foreignAmount,
-                                                //'destination_amount'       => $foreignAmount,
-                                                //'amount'                   => $foreignAmount,
                                             ]],
                         'currency_id'   => $foreignCurrencyId,
                         'tags'          => $tags,
@@ -241,7 +239,7 @@ class MassController extends Controller
                 }
             }
         }
-        Preferences::mark();
+        app('preferences')->mark();
         session()->flash('success', trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:

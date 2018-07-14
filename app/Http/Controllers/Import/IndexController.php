@@ -28,9 +28,9 @@ use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Http\Response as LaravelResponse;
 use Log;
-use View;
 
 /**
  * Class FileController.
@@ -89,10 +89,10 @@ class IndexController extends Controller
         $hasPreReq = (bool)config(sprintf('import.has_prereq.%s', $importProvider));
         $hasConfig = (bool)config(sprintf('import.has_job_config.%s', $importProvider));
         // if job provider has no prerequisites:
-        if ($hasPreReq === false) {
+        if (false === $hasPreReq) {
             Log::debug('Provider has no prerequisites. Continue.');
             // if job provider also has no configuration:
-            if ($hasConfig === false) {
+            if (false === $hasConfig) {
                 // @codeCoverageIgnoreStart
                 Log::debug('Provider needs no configuration for job. Job is ready to start.');
                 $this->repository->updateStatus($importJob, 'ready_to_run');
@@ -118,7 +118,7 @@ class IndexController extends Controller
         }
         /** @var PrerequisitesInterface $providerPre */
         $providerPre = app($class);
-        $providerPre->setUser(auth()->user());
+        $providerPre->setUser($importJob->user);
 
         if (!$providerPre->isComplete()) {
             Log::debug('Job provider prerequisites are not yet filled in. Redirect to prerequisites-page.');
@@ -130,7 +130,7 @@ class IndexController extends Controller
 
         // update job to say "has_prereq".
         $this->repository->setStatus($importJob, 'has_prereq');
-        if ($hasConfig === false) {
+        if (false === $hasConfig) {
             // @codeCoverageIgnoreStart
             Log::debug('Provider has no configuration. Job is ready to start.');
             $this->repository->updateStatus($importJob, 'ready_to_run');
@@ -180,7 +180,7 @@ class IndexController extends Controller
     /**
      * General import index.
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
@@ -197,10 +197,12 @@ class IndexController extends Controller
     private function getProviders(): array
     {
         // get and filter all import routines:
+        /** @var User $user */
+        $user = auth()->user();
         /** @var array $config */
         $providerNames = array_keys(config('import.enabled'));
         $providers     = [];
-        $isDemoUser    = $this->userRepository->hasRole(auth()->user(), 'demo');
+        $isDemoUser    = $this->userRepository->hasRole($user, 'demo');
         $isDebug       = (bool)config('app.debug');
         foreach ($providerNames as $providerName) {
             //Log::debug(sprintf('Now with provider %s', $providerName));
@@ -208,16 +210,16 @@ class IndexController extends Controller
             $enabled        = (bool)config(sprintf('import.enabled.%s', $providerName));
             $allowedForDemo = (bool)config(sprintf('import.allowed_for_demo.%s', $providerName));
             $allowedForUser = (bool)config(sprintf('import.allowed_for_user.%s', $providerName));
-            if ($enabled === false) {
+            if (false === $enabled) {
                 //Log::debug('Provider is not enabled. NEXT!');
                 continue;
             }
 
-            if ($isDemoUser === true && $allowedForDemo === false) {
+            if (true === $isDemoUser && false === $allowedForDemo) {
                 //Log::debug('User is demo and this provider is not allowed for demo user. NEXT!');
                 continue;
             }
-            if ($isDemoUser === false && $allowedForUser === false && $isDebug === false) {
+            if (false === $isDemoUser && false === $allowedForUser && false === $isDebug) {
                 //Log::debug('User is not demo and this provider is not allowed for such users. NEXT!');
                 continue; // @codeCoverageIgnore
             }
@@ -227,11 +229,11 @@ class IndexController extends Controller
             ];
             $class                    = (string)config(sprintf('import.prerequisites.%s', $providerName));
             $result                   = false;
-            if ($class !== '' && class_exists($class)) {
+            if ('' !== $class && class_exists($class)) {
                 //Log::debug('Will not check prerequisites.');
                 /** @var PrerequisitesInterface $object */
                 $object = app($class);
-                $object->setUser(auth()->user());
+                $object->setUser($user);
                 $result = $object->isComplete();
             }
             $providers[$providerName]['prereq_complete'] = $result;

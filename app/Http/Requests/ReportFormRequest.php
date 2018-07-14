@@ -40,7 +40,7 @@ class ReportFormRequest extends Request
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         // Only allow logged in users
         return auth()->check();
@@ -125,8 +125,9 @@ class ReportFormRequest extends Request
                 $date = new Carbon($parts[1]);
                 // @codeCoverageIgnoreStart
             } catch (Exception $e) {
-                Log::error(sprintf('"%s" is not a valid date range.', $range));
-                throw new FireflyException(sprintf('"%s" is not a valid date range.', $range));
+                $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
+                Log::error($error);
+                throw new FireflyException($error);
                 // @codeCoverageIgnoreEnd
             }
 
@@ -172,8 +173,9 @@ class ReportFormRequest extends Request
                 $date = new Carbon($parts[0]);
                 // @codeCoverageIgnoreStart
             } catch (Exception $e) {
-                Log::error(sprintf('"%s" is not a valid date range.', $range));
-                throw new FireflyException(sprintf('"%s" is not a valid date range.', $range));
+                $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
+                Log::error($error);
+                throw new FireflyException($error);
                 // @codeCoverageIgnoreEnd
             }
         }

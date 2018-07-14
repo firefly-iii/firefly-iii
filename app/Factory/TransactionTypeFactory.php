@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection PhpUndefinedMethodInspection */
 
 declare(strict_types=1);
 

@@ -34,6 +34,8 @@ use Log;
 class NegativeAmountFilter implements FilterInterface
 {
     /**
+     * See class description.
+     *
      * @param Collection $set
      *
      * @return Collection

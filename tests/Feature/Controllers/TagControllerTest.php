@@ -264,7 +264,7 @@ class TagControllerTest extends TestCase
         $repository   = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('find')->andReturn(new Tag);
+        $repository->shouldReceive('findNull')->andReturn(null);
         $repository->shouldReceive('store')->andReturn(new Tag);
 
         $this->session(['tags.create.uri' => 'http://localhost']);
@@ -299,7 +299,7 @@ class TagControllerTest extends TestCase
         ];
 
         $repository->shouldReceive('update');
-        $repository->shouldReceive('find')->andReturn(Tag::first());
+        $repository->shouldReceive('findNull')->andReturn(Tag::first());
 
         $this->be($this->user());
         $response = $this->post(route('tags.update', [1]), $data);

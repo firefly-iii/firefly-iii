@@ -243,19 +243,21 @@ class BillControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\BillController::store
+     * @covers \FireflyIII\Http\Controllers\BillController
      * @covers \FireflyIII\Http\Requests\BillFormRequest
      * @covers \FireflyIII\Http\Requests\Request
      */
     public function testStore(): void
     {
+        $this->be($this->user());
+        $bill = $this->user()->bills()->first();
         // mock stuff
         $attachHelper = $this->mock(AttachmentHelperInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(BillRepositoryInterface::class);
         $ruleGroupRepos =$this->mock(RuleGroupRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('store')->andReturn(new Bill);
+        $repository->shouldReceive('store')->andReturn($bill);
         $attachHelper->shouldReceive('saveAttachmentsForModel');
         $attachHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
         $ruleGroupRepos->shouldReceive('count')->andReturn(1);
@@ -271,7 +273,7 @@ class BillControllerTest extends TestCase
             'repeat_freq'             => 'monthly',
         ];
         $this->session(['bills.create.uri' => 'http://localhost']);
-        $this->be($this->user());
+
         $response = $this->post(route('bills.store'), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
@@ -289,8 +291,9 @@ class BillControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(BillRepositoryInterface::class);
         $ruleGroupRepos =$this->mock(RuleGroupRepositoryInterface::class);
+        $bill = $this->user()->bills()->first();
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('store')->andReturn(new Bill);
+        $repository->shouldReceive('store')->andReturn($bill);
         $attachHelper->shouldReceive('saveAttachmentsForModel');
         $attachHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
         $ruleGroupRepos->shouldReceive('count')->andReturn(1);

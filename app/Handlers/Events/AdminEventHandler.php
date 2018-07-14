@@ -48,26 +48,23 @@ class AdminEventHandler
         $repository = app(UserRepositoryInterface::class);
 
         // is user even admin?
-        if (!$repository->hasRole($event->user, 'owner')) {
-            return true;
+        if ($repository->hasRole($event->user, 'owner')) {
+            $email     = $event->user->email;
+            $ipAddress = $event->ipAddress;
+
+            Log::debug(sprintf('Now in sendTestMessage event handler. Email is %s, IP is %s', $email, $ipAddress));
+            try {
+                Log::debug('Trying to send message...');
+                Mail::to($email)->send(new AdminTestMail($email, $ipAddress));
+                // @codeCoverageIgnoreStart
+            } catch (Exception $e) {
+                Log::debug('Send message failed! :(');
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
+                Session::flash('error', 'Possible email error: ' . $e->getMessage());
+            }
+            Log::debug('If no error above this line, message was sent.');
         }
-
-
-        $email     = $event->user->email;
-        $ipAddress = $event->ipAddress;
-
-        Log::debug(sprintf('Now in sendTestMessage event handler. Email is %s, IP is %s', $email, $ipAddress));
-        try {
-            Log::debug('Trying to send message...');
-            Mail::to($email)->send(new AdminTestMail($email, $ipAddress));
-            // @codeCoverageIgnoreStart
-        } catch (Exception $e) {
-            Log::debug('Send message failed! :(');
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            Session::flash('error', 'Possible email error: ' . $e->getMessage());
-        }
-        Log::debug('If no error above this line, message was sent.');
 
         // @codeCoverageIgnoreEnd
         return true;

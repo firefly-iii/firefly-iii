@@ -31,6 +31,8 @@ use FireflyIII\Http\Middleware\IsSandStormUser;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
@@ -59,9 +61,9 @@ class HomeController extends Controller
     /**
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function dateRange(Request $request)
+    public function dateRange(Request $request): JsonResponse
     {
         $start         = new Carbon($request->get('start'));
         $end           = new Carbon($request->get('end'));
@@ -116,7 +118,8 @@ class HomeController extends Controller
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
-        $end      = session('end', Carbon::now()->endOfMonth());
+        $end = session('end', Carbon::now()->endOfMonth());
+        /** @noinspection NullPointerExceptionInspection */
         $accounts = $repository->getAccountsById($frontPage->data);
         $today    = new Carbon;
 
@@ -133,7 +136,9 @@ class HomeController extends Controller
         }
 
         // fire check update event:
-        event(new RequestedVersionCheckStatus(auth()->user()));
+        /** @var User $user */
+        $user = auth()->user();
+        event(new RequestedVersionCheckStatus($user));
 
         return view(
             'index',

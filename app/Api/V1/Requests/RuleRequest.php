@@ -32,6 +32,8 @@ use Illuminate\Validation\Validator;
 class RuleRequest extends Request
 {
     /**
+     * Authorize logged in users.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -41,6 +43,8 @@ class RuleRequest extends Request
     }
 
     /**
+     * Get all data from the request.
+     *
      * @return array
      */
     public function getAll(): array
@@ -62,14 +66,14 @@ class RuleRequest extends Request
             $data['rule-triggers'][] = [
                 'name'            => $trigger['name'],
                 'value'           => $trigger['value'],
-                'stop-processing' => (int)($trigger['stop-processing'] ?? 0) === 1,
+                'stop-processing' => 1 === (int)($trigger['stop-processing'] ?? 0),
             ];
         }
         foreach ($this->get('rule-actions') as $action) {
             $data['rule-actions'][] = [
                 'name'            => $action['name'],
                 'value'           => $action['value'],
-                'stop-processing' => (int)($action['stop-processing'] ?? 0) === 1,
+                'stop-processing' => 1 === (int)($action['stop-processing'] ?? 0),
             ];
         }
 
@@ -77,6 +81,8 @@ class RuleRequest extends Request
     }
 
     /**
+     * The rules that the incoming request must be matched against.
+     *
      * @return array
      */
     public function rules(): array
@@ -134,7 +140,7 @@ class RuleRequest extends Request
         $data        = $validator->getData();
         $repetitions = $data['rule-actions'] ?? [];
         // need at least one transaction
-        if (\count($repetitions) === 0) {
+        if (0 === \count($repetitions)) {
             $validator->errors()->add('title', trans('validation.at_least_one_action'));
         }
     }
@@ -149,7 +155,7 @@ class RuleRequest extends Request
         $data        = $validator->getData();
         $repetitions = $data['rule-triggers'] ?? [];
         // need at least one transaction
-        if (\count($repetitions) === 0) {
+        if (0 === \count($repetitions)) {
             $validator->errors()->add('title', trans('validation.at_least_one_trigger'));
         }
     }

@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection CallableParameterUseCaseInTypeContextInspection */
+/** @noinspection MoreThanThreeArgumentsInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -71,13 +73,12 @@ class TransactionController extends Controller
     /**
      * Index for a range of transactions.
      *
-     * @param Request $request
-     * @param string  $what
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Request     $request
+     * @param string      $what
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
-     * @return View
-     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(Request $request, string $what, Carbon $start = null, Carbon $end = null)
     {
@@ -85,7 +86,6 @@ class TransactionController extends Controller
         $types        = config('firefly.transactionTypesByWhat.' . $what);
         $page         = (int)$request->get('page');
         $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
-        $path         = route('transactions.index', [$what]);
         if (null === $start) {
             $start = session('start');
             $end   = session('end');
@@ -162,9 +162,10 @@ class TransactionController extends Controller
         foreach ($transactionIds as $transactionId) {
             $transactionId = (int)$transactionId;
             $transaction   = $this->repository->findTransaction($transactionId);
-            Log::debug(sprintf('Transaction ID is %d', $transaction->id));
-
-            $this->repository->reconcile($transaction);
+            if (null !== $transaction) {
+                Log::debug(sprintf('Transaction ID is %d', $transaction->id));
+                $this->repository->reconcile($transaction);
+            }
         }
 
         return response()->json(['ok' => 'reconciled']);
@@ -175,7 +176,7 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function reorder(Request $request)
+    public function reorder(Request $request): JsonResponse
     {
         $ids  = $request->get('items');
         $date = new Carbon($request->get('date'));
@@ -183,14 +184,14 @@ class TransactionController extends Controller
             $order = 0;
             $ids   = array_unique($ids);
             foreach ($ids as $id) {
-                $journal = $this->repository->find((int)$id);
-                if ($journal && $journal->date->isSameDay($date)) {
+                $journal = $this->repository->findNull((int)$id);
+                if (null !== $journal && $journal->date->isSameDay($date)) {
                     $this->repository->setOrder($journal, $order);
                     ++$order;
                 }
             }
         }
-        Preferences::mark();
+        app('preferences')->mark();
 
         return response()->json([true]);
     }
@@ -271,11 +272,13 @@ class TransactionController extends Controller
                 $sums     = $this->sumPerCurrency($journals);
                 $dateName = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
                 $sum      = $journals->sum('transaction_amount');
+                /** @noinspection PhpUndefinedMethodInspection */
                 $entries->push(
                     [
-                        'name'  => $dateName,
-                        'sums'  => $sums,
-                        'sum'   => $sum,
+                        'name' => $dateName,
+                        'sums' => $sums,
+                        'sum'  => $sum,
+
                         'start' => $currentDate['start']->format('Y-m-d'),
                         'end'   => $currentDate['end']->format('Y-m-d'),
                     ]

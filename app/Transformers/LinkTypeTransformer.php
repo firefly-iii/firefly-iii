@@ -28,6 +28,10 @@ use FireflyIII\Models\LinkType;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+/**
+ *
+ * Class LinkTypeTransformer
+ */
 class LinkTypeTransformer extends TransformerAbstract
 {
 
@@ -75,7 +79,7 @@ class LinkTypeTransformer extends TransformerAbstract
             'name'       => $linkType->name,
             'inward'     => $linkType->inward,
             'outward'    => $linkType->outward,
-            'editable'   => (int)$linkType->editable,
+            'editable'   => 1 === (int)$linkType->editable,
             'links'      => [
                 [
                     'rel' => 'self',

@@ -36,6 +36,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
 /**
@@ -66,6 +67,7 @@ class BudgetReportController extends Controller
         );
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $budgets
@@ -73,9 +75,9 @@ class BudgetReportController extends Controller
      * @param Carbon     $end
      * @param string     $others
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function accountExpense(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end, string $others)
+    public function accountExpense(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end, string $others): JsonResponse
     {
         /** @var MetaPieChartInterface $helper */
         $helper = app(MetaPieChartInterface::class);
@@ -90,6 +92,7 @@ class BudgetReportController extends Controller
         return response()->json($data);
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $budgets
@@ -97,9 +100,9 @@ class BudgetReportController extends Controller
      * @param Carbon     $end
      * @param string     $others
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function budgetExpense(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end, string $others)
+    public function budgetExpense(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end, string $others): JsonResponse
     {
         /** @var MetaPieChartInterface $helper */
         $helper = app(MetaPieChartInterface::class);
@@ -114,15 +117,16 @@ class BudgetReportController extends Controller
         return response()->json($data);
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $budgets
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function mainChart(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
+    public function mainChart(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): JsonResponse
     {
         $cache = new CacheProperties;
         $cache->addProperty('chart.budget.report.main');
@@ -187,6 +191,7 @@ class BudgetReportController extends Controller
                     $chartData[$budget->id . '-left']['entries'][$label] = $leftOfLimits[$budgetLimitId];
                 }
             }
+            /** @var Carbon $currentStart */
             $currentStart = clone $currentEnd;
             $currentStart->addDay();
         }
@@ -197,6 +202,7 @@ class BudgetReportController extends Controller
         return response()->json($data);
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * Returns the budget limits belonging to the given budget and valid on the given day.
      *
@@ -225,6 +231,7 @@ class BudgetReportController extends Controller
         return $set;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $budgets

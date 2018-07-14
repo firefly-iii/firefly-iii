@@ -30,6 +30,8 @@ namespace FireflyIII\Api\V1\Requests;
 class CurrencyRequest extends Request
 {
     /**
+     * Authorize logged in users.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -39,6 +41,8 @@ class CurrencyRequest extends Request
     }
 
     /**
+     * Get all data from the request.
+     *
      * @return array
      */
     public function getAll(): array
@@ -53,6 +57,8 @@ class CurrencyRequest extends Request
     }
 
     /**
+     * The rules that the incoming request must be matched against.
+     *
      * @return array
      */
     public function rules(): array
@@ -62,7 +68,7 @@ class CurrencyRequest extends Request
             'code'           => 'required|between:3,3|unique:transaction_currencies,code',
             'symbol'         => 'required|between:1,5|unique:transaction_currencies,symbol',
             'decimal_places' => 'required|between:0,20|numeric|min:0|max:20',
-            'default'        => 'in:true,false',
+            'default'        => 'boolean',
         ];
 
         switch ($this->method()) {

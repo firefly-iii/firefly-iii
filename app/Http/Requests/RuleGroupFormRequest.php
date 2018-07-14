@@ -32,7 +32,7 @@ class RuleGroupFormRequest extends Request
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         // Only allow logged in users
         return auth()->check();
@@ -52,7 +52,7 @@ class RuleGroupFormRequest extends Request
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         // fixed
         /** @var RuleGroupRepositoryInterface $repository */

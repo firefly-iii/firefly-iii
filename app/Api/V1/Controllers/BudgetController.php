@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Transformers\BudgetTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -38,11 +39,13 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
- * Class BudgetController
+ * Class BudgetController.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BudgetController extends Controller
 {
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
     /**
@@ -53,9 +56,12 @@ class BudgetController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
+                /** @var User $admin */
+                $admin = auth()->user();
+
                 /** @var BudgetRepositoryInterface repository */
                 $this->repository = app(BudgetRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+                $this->repository->setUser($admin);
 
                 return $next($request);
             }
@@ -111,6 +117,8 @@ class BudgetController extends Controller
 
 
     /**
+     * Show a budget.
+     *
      * @param Request $request
      * @param Budget  $budget
      *
@@ -132,6 +140,8 @@ class BudgetController extends Controller
     }
 
     /**
+     * Store a budget.
+     *
      * @param BudgetRequest $request
      *
      * @return JsonResponse
@@ -154,6 +164,8 @@ class BudgetController extends Controller
 
 
     /**
+     * Update a budget.
+     *
      * @param BudgetRequest $request
      * @param Budget        $budget
      *

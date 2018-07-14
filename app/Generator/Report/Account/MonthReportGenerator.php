@@ -31,17 +31,20 @@ use Illuminate\Support\Collection;
  */
 class MonthReportGenerator implements ReportGeneratorInterface
 {
-    /** @var Collection */
+    /** @var Collection The accounts involved in the report. */
     private $accounts;
-    /** @var Carbon */
+    /** @var Carbon The end date */
     private $end;
-    /** @var Collection */
+    /** @var Collection The expense accounts. */
     private $expense;
-    /** @var Carbon */
+    /** @var Carbon The start date. */
     private $start;
 
     /**
+     * Generate the report.
+     *
      * @return string
+     * @throws \Throwable
      */
     public function generate(): string
     {
@@ -57,6 +60,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Set accounts.
+     *
      * @param Collection $accounts
      *
      * @return ReportGeneratorInterface
@@ -69,6 +74,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Set budgets.
+     *
      * @param Collection $budgets
      *
      * @return ReportGeneratorInterface
@@ -79,6 +86,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Set categories.
+     *
      * @param Collection $categories
      *
      * @return ReportGeneratorInterface
@@ -89,6 +98,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Set end date.
+     *
      * @param Carbon $date
      *
      * @return ReportGeneratorInterface
@@ -101,6 +112,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Set expense collection.
+     *
      * @param Collection $expense
      *
      * @return ReportGeneratorInterface
@@ -113,6 +126,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Set start date.
+     *
      * @param Carbon $date
      *
      * @return ReportGeneratorInterface
@@ -125,6 +140,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Set collection of tags.
+     *
      * @param Collection $tags
      *
      * @return ReportGeneratorInterface
@@ -135,6 +152,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Return the preferred period.
+     *
      * @return string
      */
     protected function preferredPeriod(): string

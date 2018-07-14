@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection NullPointerExceptionInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
@@ -35,6 +36,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
@@ -62,9 +64,9 @@ class AccountController extends Controller
      *
      * @param AccountRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function expenseAccounts(AccountRepositoryInterface $repository)
+    public function expenseAccounts(AccountRepositoryInterface $repository): JsonResponse
     {
         $start = clone session('start', Carbon::now()->startOfMonth());
         $end   = clone session('end', Carbon::now()->endOfMonth());
@@ -99,14 +101,15 @@ class AccountController extends Controller
         return response()->json($data);
     }
 
+
     /**
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function expenseBudget(Account $account, Carbon $start, Carbon $end)
+    public function expenseBudget(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -146,9 +149,9 @@ class AccountController extends Controller
      * @param AccountRepositoryInterface $repository
      * @param Account                    $account
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function expenseBudgetAll(AccountRepositoryInterface $repository, Account $account)
+    public function expenseBudgetAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
         $start = $repository->oldestJournalDate($account);
         $end   = Carbon::now();
@@ -156,14 +159,15 @@ class AccountController extends Controller
         return $this->expenseBudget($account, $start, $end);
     }
 
+
     /**
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function expenseCategory(Account $account, Carbon $start, Carbon $end)
+    public function expenseCategory(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -203,9 +207,9 @@ class AccountController extends Controller
      * @param AccountRepositoryInterface $repository
      * @param Account                    $account
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function expenseCategoryAll(AccountRepositoryInterface $repository, Account $account)
+    public function expenseCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
         $start = $repository->oldestJournalDate($account);
         $end   = Carbon::now();
@@ -213,20 +217,23 @@ class AccountController extends Controller
         return $this->expenseCategory($account, $start, $end);
     }
 
+
     /**
      * Shows the balances for all the user's frontpage accounts.
      *
      * @param AccountRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function frontpage(AccountRepositoryInterface $repository)
+    public function frontpage(AccountRepositoryInterface $repository): JsonResponse
     {
         $start      = clone session('start', Carbon::now()->startOfMonth());
         $end        = clone session('end', Carbon::now()->endOfMonth());
         $defaultSet = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray();
         Log::debug('Default set is ', $defaultSet);
         $frontPage = Preferences::get('frontPageAccounts', $defaultSet);
+
+
         Log::debug('Frontpage preference set is ', $frontPage->data);
         if (0 === \count($frontPage->data)) {
             $frontPage->data = $defaultSet;
@@ -238,14 +245,15 @@ class AccountController extends Controller
         return response()->json($this->accountBalanceChart($accounts, $start, $end));
     }
 
+
     /**
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function incomeCategory(Account $account, Carbon $start, Carbon $end)
+    public function incomeCategory(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -285,9 +293,9 @@ class AccountController extends Controller
      * @param AccountRepositoryInterface $repository
      * @param Account                    $account
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function incomeCategoryAll(AccountRepositoryInterface $repository, Account $account)
+    public function incomeCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
         $start = $repository->oldestJournalDate($account);
         $end   = Carbon::now();
@@ -295,15 +303,16 @@ class AccountController extends Controller
         return $this->incomeCategory($account, $start, $end);
     }
 
+
     /**
      * @param Account $account
      * @param Carbon  $start
      *
      * @param Carbon  $end
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function period(Account $account, Carbon $start, Carbon $end)
+    public function period(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
         $cache = new CacheProperties;
         $cache->addProperty('chart.account.period');
@@ -367,21 +376,22 @@ class AccountController extends Controller
      * @param Carbon     $end
      * @param Collection $accounts
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function report(Collection $accounts, Carbon $start, Carbon $end)
+    public function report(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
         return response()->json($this->accountBalanceChart($accounts, $start, $end));
     }
+
 
     /**
      * Shows the balances for all the user's revenue accounts.
      *
      * @param AccountRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function revenueAccounts(AccountRepositoryInterface $repository)
+    public function revenueAccounts(AccountRepositoryInterface $repository): JsonResponse
     {
         $start     = clone session('start', Carbon::now()->startOfMonth());
         $end       = clone session('end', Carbon::now()->endOfMonth());
@@ -416,6 +426,7 @@ class AccountController extends Controller
 
         return response()->json($data);
     }
+
 
     /**
      * @param Collection $accounts

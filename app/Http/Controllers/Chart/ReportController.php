@@ -30,7 +30,6 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Log;
-use Steam;
 
 /**
  * Class ReportController.
@@ -74,7 +73,7 @@ class ReportController extends Controller
         $current   = clone $start;
         $chartData = [];
         while ($current < $end) {
-            $balances          = Steam::balancesByAccounts($accounts, $current);
+            $balances          = app('steam')->balancesByAccounts($accounts, $current);
             $sum               = $this->arraySum($balances);
             $label             = $current->formatLocalized((string)trans('config.month_and_day'));
             $chartData[$label] = $sum;
@@ -96,7 +95,7 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function operations(Collection $accounts, Carbon $start, Carbon $end)
+    public function operations(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -153,7 +152,7 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function sum(Collection $accounts, Carbon $start, Carbon $end)
+    public function sum(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
         // chart properties for cache:
         $cache = new CacheProperties;

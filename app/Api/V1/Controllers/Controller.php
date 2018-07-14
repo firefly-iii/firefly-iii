@@ -37,12 +37,13 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  * Class Controller.
  *
  * @codeCoverageIgnore
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    /** @var ParameterBag */
+    /** @var ParameterBag Parameters from the URI are stored here. */
     protected $parameters;
 
     /**
@@ -56,39 +57,42 @@ class Controller extends BaseController
     }
 
     /**
+     * Method to help build URI's.
+     *
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function buildParams(): string
     {
         $return = '?';
         $params = [];
         foreach ($this->parameters as $key => $value) {
-            if ($key === 'page') {
+            if ('page' === $key) {
                 continue;
             }
             if ($value instanceof Carbon) {
                 $params[$key] = $value->format('Y-m-d');
+                continue;
             }
-            if (!$value instanceof Carbon) {
-                $params[$key] = $value;
-            }
+            $params[$key] = $value;
         }
         $return .= http_build_query($params);
-        if (\strlen($return) === 1) {
-            return '';
-        }
 
         return $return;
     }
 
     /**
+     * Method to grab all parameters from the URI.
+     *
      * @return ParameterBag
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getParameters(): ParameterBag
     {
         $bag  = new ParameterBag;
         $page = (int)request()->get('page');
-        if ($page === 0) {
+        if (0 === $page) {
             $page = 1;
         }
         $bag->set('page', $page);

@@ -30,6 +30,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\BillTransformer;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use League\Fractal\Manager;
@@ -80,7 +81,7 @@ class BillController extends Controller
     /**
      * @param Request $request
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create(Request $request)
     {
@@ -105,7 +106,7 @@ class BillController extends Controller
     /**
      * @param Bill $bill
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function delete(Bill $bill)
     {
@@ -120,7 +121,7 @@ class BillController extends Controller
      * @param Request $request
      * @param Bill    $bill
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function destroy(Request $request, Bill $bill)
     {
@@ -128,7 +129,7 @@ class BillController extends Controller
         $this->billRepository->destroy($bill);
 
         $request->session()->flash('success', (string)trans('firefly.deleted_bill', ['name' => $name]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect($this->getPreviousUri('bills.delete.uri'));
     }
@@ -137,7 +138,7 @@ class BillController extends Controller
      * @param Request $request
      * @param Bill    $bill
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(Request $request, Bill $bill)
     {
@@ -177,7 +178,7 @@ class BillController extends Controller
     }
 
     /**
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
@@ -220,33 +221,33 @@ class BillController extends Controller
      * @param Request $request
      * @param Bill    $bill
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|\Illuminate\Routing\Redirector
      * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function rescan(Request $request, Bill $bill)
     {
-        if (0 === (int)$bill->active) {
+        if (false === $bill->active) {
             $request->session()->flash('warning', (string)trans('firefly.cannot_scan_inactive_bill'));
-
-            return redirect(URL::previous());
         }
-        $set   = $this->billRepository->getRulesForBill($bill);
-        $total = 0;
-        foreach ($set as $rule) {
-            // simply fire off all rules?
-            /** @var TransactionMatcher $matcher */
-            $matcher = app(TransactionMatcher::class);
-            $matcher->setLimit(100000); // large upper limit
-            $matcher->setRange(100000); // large upper limit
-            $matcher->setRule($rule);
-            $matchingTransactions = $matcher->findTransactionsByRule();
-            $total                += $matchingTransactions->count();
-            $this->billRepository->linkCollectionToBill($bill, $matchingTransactions);
+        if (true === $bill->active) {
+            $set   = $this->billRepository->getRulesForBill($bill);
+            $total = 0;
+            foreach ($set as $rule) {
+                // simply fire off all rules?
+                /** @var TransactionMatcher $matcher */
+                $matcher = app(TransactionMatcher::class);
+                $matcher->setLimit(100000); // large upper limit
+                $matcher->setRange(100000); // large upper limit
+                $matcher->setRule($rule);
+                $matchingTransactions = $matcher->findTransactionsByRule();
+                $total                += $matchingTransactions->count();
+                $this->billRepository->linkCollectionToBill($bill, $matchingTransactions);
+            }
+
+
+            $request->session()->flash('success', (string)trans('firefly.rescanned_bill', ['total' => $total]));
+            app('preferences')->mark();
         }
-
-
-        $request->session()->flash('success', (string)trans('firefly.rescanned_bill', ['total' => $total]));
-        Preferences::mark();
 
         return redirect(URL::previous());
     }
@@ -255,7 +256,7 @@ class BillController extends Controller
      * @param Request $request
      * @param Bill    $bill
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show(Request $request, Bill $bill)
     {
@@ -292,22 +293,24 @@ class BillController extends Controller
         return view('bills.show', compact('transactions', 'rules', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
     }
 
+
     /**
      * @param BillFormRequest $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function store(BillFormRequest $request)
+    public function store(BillFormRequest $request): RedirectResponse
     {
-        $billData = $request->getBillData();
-        $bill     = $this->billRepository->store($billData);
+        $billData           = $request->getBillData();
+        $billData['active'] = true;
+        $bill               = $this->billRepository->store($billData);
         if (null === $bill) {
             $request->session()->flash('error', (string)trans('firefly.bill_store_error'));
 
             return redirect(route('bills.create'))->withInput();
         }
         $request->session()->flash('success', (string)trans('firefly.stored_new_bill', ['name' => $bill->name]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
@@ -324,9 +327,10 @@ class BillController extends Controller
             $return = 'true';
         }
 
+        $group = null;
         // find first rule group, or create one:
         $count = $this->ruleGroupRepos->count();
-        if ($count === 0) {
+        if (0 === $count) {
             $data  = [
                 'title'       => (string)trans('firefly.rulegroup_for_bills_title'),
                 'description' => (string)trans('firefly.rulegroup_for_bills_description'),
@@ -334,7 +338,7 @@ class BillController extends Controller
             $group = $this->ruleGroupRepos->store($data);
         }
         if ($count > 0) {
-            $group = $this->ruleGroupRepos->getActiveGroups(auth()->user())->first();
+            $group = $this->ruleGroupRepos->getActiveGroups($bill->user)->first();
         }
 
         // redirect to page that will create a new rule.
@@ -347,15 +351,15 @@ class BillController extends Controller
      * @param BillFormRequest $request
      * @param Bill            $bill
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(BillFormRequest $request, Bill $bill)
+    public function update(BillFormRequest $request, Bill $bill): RedirectResponse
     {
         $billData = $request->getBillData();
         $bill     = $this->billRepository->update($bill, $billData);
 
         $request->session()->flash('success', (string)trans('firefly.updated_bill', ['name' => $bill->name]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
@@ -365,15 +369,16 @@ class BillController extends Controller
         if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
+        $redirect = redirect($this->getPreviousUri('bills.edit.uri'));
 
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('bills.edit.fromUpdate', true);
 
-            return redirect(route('bills.edit', [$bill->id]))->withInput(['return_to_edit' => 1]);
+            $redirect = redirect(route('bills.edit', [$bill->id]))->withInput(['return_to_edit' => 1]);
             // @codeCoverageIgnoreEnd
         }
 
-        return redirect($this->getPreviousUri('bills.edit.uri'));
+        return $redirect;
     }
 }

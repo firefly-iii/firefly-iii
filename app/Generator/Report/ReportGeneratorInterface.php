@@ -31,11 +31,15 @@ use Illuminate\Support\Collection;
 interface ReportGeneratorInterface
 {
     /**
+     * Generate the report.
+     *
      * @return string
      */
     public function generate(): string;
 
     /**
+     * Set the involved accounts.
+     *
      * @param Collection $accounts
      *
      * @return ReportGeneratorInterface
@@ -43,6 +47,8 @@ interface ReportGeneratorInterface
     public function setAccounts(Collection $accounts): ReportGeneratorInterface;
 
     /**
+     * Set the involved budgets.
+     *
      * @param Collection $budgets
      *
      * @return ReportGeneratorInterface
@@ -50,6 +56,8 @@ interface ReportGeneratorInterface
     public function setBudgets(Collection $budgets): ReportGeneratorInterface;
 
     /**
+     * Set the involved categories.
+     *
      * @param Collection $categories
      *
      * @return ReportGeneratorInterface
@@ -57,6 +65,8 @@ interface ReportGeneratorInterface
     public function setCategories(Collection $categories): ReportGeneratorInterface;
 
     /**
+     * Set the end date.
+     *
      * @param Carbon $date
      *
      * @return ReportGeneratorInterface
@@ -64,6 +74,8 @@ interface ReportGeneratorInterface
     public function setEndDate(Carbon $date): ReportGeneratorInterface;
 
     /**
+     * Set the expense accounts.
+     *
      * @param Collection $expense
      *
      * @return ReportGeneratorInterface
@@ -71,6 +83,8 @@ interface ReportGeneratorInterface
     public function setExpense(Collection $expense): ReportGeneratorInterface;
 
     /**
+     * Set the start date.
+     *
      * @param Carbon $date
      *
      * @return ReportGeneratorInterface
@@ -78,6 +92,8 @@ interface ReportGeneratorInterface
     public function setStartDate(Carbon $date): ReportGeneratorInterface;
 
     /**
+     * Set the tags.
+     *
      * @param Collection $tags
      *
      * @return ReportGeneratorInterface

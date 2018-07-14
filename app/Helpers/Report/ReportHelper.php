@@ -38,7 +38,7 @@ use Illuminate\Support\Collection;
  */
 class ReportHelper implements ReportHelperInterface
 {
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     protected $budgetRepository;
 
     /**
@@ -56,9 +56,10 @@ class ReportHelper implements ReportHelperInterface
      * This method generates a full report for the given period on all
      * the users bills and their payments.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
-     *
      * Excludes bills which have not had a payment on the mentioned accounts.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @param Carbon     $start
      * @param Carbon     $end
@@ -82,6 +83,7 @@ class ReportHelper implements ReportHelperInterface
             foreach ($expectedDates as $payDate) {
                 $endOfPayPeriod = app('navigation')->endOfX($payDate, $bill->repeat_freq, null);
 
+                /** @var JournalCollectorInterface $collector */
                 $collector = app(JournalCollectorInterface::class);
                 $collector->setAccounts($accounts)->setRange($payDate, $endOfPayPeriod)->setBills($bills);
                 $journals = $collector->getJournals();
@@ -116,6 +118,8 @@ class ReportHelper implements ReportHelperInterface
     }
 
     /**
+     * Generate a list of months for the report.
+     *
      * @param Carbon $date
      *
      * @return array

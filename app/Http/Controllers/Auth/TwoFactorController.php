@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers\Auth;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\TokenFormRequest;
+use FireflyIII\User;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Http\Request;
 use Log;
@@ -42,7 +43,6 @@ class TwoFactorController extends Controller
      *
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function index(Request $request)
     {
@@ -59,7 +59,7 @@ class TwoFactorController extends Controller
             return redirect(route('index'));
         }
 
-        if (0 === \strlen((string)$secret)) {
+        if ('' === (string)$secret) {
             throw new FireflyException('Your two factor authentication secret is empty, which it cannot be at this point. Please check the log files.');
         }
         $request->session()->flash('two-factor-secret', $secret);
@@ -72,6 +72,7 @@ class TwoFactorController extends Controller
      */
     public function lostTwoFactor()
     {
+        /** @var User $user */
         $user      = auth()->user();
         $siteOwner = env('SITE_OWNER', '');
         $title     = (string)trans('firefly.two_factor_forgot_title');
@@ -90,7 +91,6 @@ class TwoFactorController extends Controller
      * @param CookieJar        $cookieJar
      *
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
      */
     public function postIndex(TokenFormRequest $request, CookieJar $cookieJar)
     {

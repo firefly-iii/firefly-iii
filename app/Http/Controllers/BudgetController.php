@@ -34,6 +34,8 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -44,8 +46,6 @@ use View;
 /**
  * Class BudgetController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BudgetController extends Controller
 {
@@ -77,9 +77,9 @@ class BudgetController extends Controller
      * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function amount(Request $request, BudgetRepositoryInterface $repository, Budget $budget)
+    public function amount(Request $request, BudgetRepositoryInterface $repository, Budget $budget): JsonResponse
     {
         $amount      = (string)$request->get('amount');
         $start       = Carbon::createFromFormat('Y-m-d', $request->get('start'));
@@ -105,8 +105,8 @@ class BudgetController extends Controller
             $days        = $start->diffInDays($end);
             $daysInMonth = $start->diffInDays($end);
         }
-        $days        = $days === 0 ? 1 : $days;
-        $daysInMonth = $daysInMonth === 0 ? 1 : $daysInMonth;
+        $days        = 0 === $days ? 1 : $days;
+        $daysInMonth = 0 === $daysInMonth ? 1 : $daysInMonth;
 
         // calculate left in budget:
         $spent      = $repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
@@ -139,7 +139,7 @@ class BudgetController extends Controller
             );
         }
 
-        Preferences::mark();
+        app('preferences')->mark();
 
         return response()->json(
             [
@@ -161,7 +161,7 @@ class BudgetController extends Controller
     /**
      * @param Request $request
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create(Request $request)
     {
@@ -178,7 +178,7 @@ class BudgetController extends Controller
     /**
      * @param Budget $budget
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function delete(Budget $budget)
     {
@@ -201,7 +201,7 @@ class BudgetController extends Controller
         $name = $budget->name;
         $this->repository->destroy($budget);
         $request->session()->flash('success', (string)trans('firefly.deleted_budget', ['name' => $name]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect($this->getPreviousUri('budgets.delete.uri'));
     }
@@ -210,7 +210,7 @@ class BudgetController extends Controller
      * @param Request $request
      * @param Budget  $budget
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(Request $request, Budget $budget)
     {
@@ -236,10 +236,7 @@ class BudgetController extends Controller
      * @param Request     $request
      * @param string|null $moment
      *
-     * @return View
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) complex because of while loop
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(Request $request, string $moment = null)
     {
@@ -258,7 +255,7 @@ class BudgetController extends Controller
                 $end   = app('navigation')->endOfPeriod($start, $range);
             } catch (Exception $e) {
                 // start and end are already defined.
-                Log::debug('start and end are already defined.');
+                Log::debug(sprintf('start and end are already defined: %s', $e->getMessage()));
             }
         }
 
@@ -273,8 +270,8 @@ class BudgetController extends Controller
             $days        = $start->diffInDays($end);
             $daysInMonth = $start->diffInDays($end);
         }
-        $days        = $days === 0 ? 1 : $days;
-        $daysInMonth = $daysInMonth === 0 ? 1 : $daysInMonth;
+        $days        = 0 === $days ? 1 : $days;
+        $daysInMonth = 0 === $daysInMonth ? 1 : $daysInMonth;
 
 
         $next = clone $end;
@@ -301,6 +298,7 @@ class BudgetController extends Controller
 
         // select thing for last 12 periods:
         $previousLoop = [];
+        /** @var Carbon $previousDate */
         $previousDate = clone $start;
         $count        = 0;
         while ($count < 12) {
@@ -313,6 +311,7 @@ class BudgetController extends Controller
 
         // select thing for next 12 periods:
         $nextLoop = [];
+        /** @var Carbon $nextDate */
         $nextDate = clone $end;
         $nextDate->addDay();
         $count = 0;
@@ -339,10 +338,10 @@ class BudgetController extends Controller
         );
     }
 
+
     /**
      * @param Carbon $start
      * @param Carbon $end
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -371,7 +370,8 @@ class BudgetController extends Controller
         ];
         $currency = app('amount')->getDefaultCurrency();
         $range    = Preferences::get('viewRange', '1M')->data;
-        $begin    = app('navigation')->subtractPeriod($start, $range, 3);
+        /** @var Carbon $begin */
+        $begin = app('navigation')->subtractPeriod($start, $range, 3);
 
         Log::debug(sprintf('Range is %s', $range));
         Log::debug(sprintf('infoIncome begin is %s', $begin->format('Y-m-d')));
@@ -381,6 +381,7 @@ class BudgetController extends Controller
         $count        = 0;
         $currentStart = clone $begin;
         while ($currentStart < $start) {
+
             Log::debug(sprintf('Loop: currentStart is %s', $currentStart->format('Y-m-d')));
             $currentEnd   = app('navigation')->endOfPeriod($currentStart, $range);
             $total        = bcadd($total, $this->repository->getAvailableBudget($currency, $currentStart, $currentEnd));
@@ -420,16 +421,14 @@ class BudgetController extends Controller
     /**
      * @param Request                    $request
      * @param JournalRepositoryInterface $repository
-     * @param string                     $moment
+     * @param string|null                $moment
      *
-     * @return View
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function noBudget(Request $request, JournalRepositoryInterface $repository, string $moment = '')
+    public function noBudget(Request $request, JournalRepositoryInterface $repository, string $moment = null)
     {
         // default values:
+        $moment  = $moment ?? '';
         $range   = Preferences::get('viewRange', '1M')->data;
         $start   = null;
         $end     = null;
@@ -445,7 +444,8 @@ class BudgetController extends Controller
 
         // prep for "specific date" view.
         if ('all' !== $moment && \strlen($moment) > 0) {
-            $start    = new Carbon($moment);
+            $start = new Carbon($moment);
+            /** @var Carbon $end */
             $end      = app('navigation')->endOfPeriod($start, $range);
             $subTitle = trans(
                 'firefly.without_budget_between',
@@ -481,18 +481,18 @@ class BudgetController extends Controller
     /**
      * @param BudgetIncomeRequest $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function postUpdateIncome(BudgetIncomeRequest $request)
+    public function postUpdateIncome(BudgetIncomeRequest $request): RedirectResponse
     {
         $start           = Carbon::createFromFormat('Y-m-d', $request->string('start'));
         $end             = Carbon::createFromFormat('Y-m-d', $request->string('end'));
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $amount          = $request->get('amount');
-        $page            = $request->integer('page') === 0 ? 1 : $request->integer('page');
+        $page            = 0 === $request->integer('page') ? 1 : $request->integer('page');
         $this->repository->cleanupBudgets();
         $this->repository->setAvailableBudget($defaultCurrency, $start, $end, $amount);
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect(route('budgets.index', [$start->format('Y-m-d')]) . '?page=' . $page);
     }
@@ -501,7 +501,7 @@ class BudgetController extends Controller
      * @param Request $request
      * @param Budget  $budget
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show(Request $request, Budget $budget)
     {
@@ -530,8 +530,7 @@ class BudgetController extends Controller
      * @param Budget      $budget
      * @param BudgetLimit $budgetLimit
      *
-     * @return View
-     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws FireflyException
      */
     public function showByBudgetLimit(Request $request, Budget $budget, BudgetLimit $budgetLimit)
@@ -570,24 +569,27 @@ class BudgetController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(BudgetFormRequest $request)
+    public function store(BudgetFormRequest $request): RedirectResponse
     {
         $data   = $request->getBudgetData();
         $budget = $this->repository->store($data);
         $this->repository->cleanupBudgets();
         $request->session()->flash('success', (string)trans('firefly.stored_new_budget', ['name' => $budget->name]));
-        Preferences::mark();
+        app('preferences')->mark();
+
+        $redirect = redirect($this->getPreviousUri('budgets.create.uri'));
 
         if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('budgets.create.fromStore', true);
 
-            return redirect(route('budgets.create'))->withInput();
+            $redirect = redirect(route('budgets.create'))->withInput();
             // @codeCoverageIgnoreEnd
         }
 
-        return redirect($this->getPreviousUri('budgets.create.uri'));
+        return $redirect;
     }
+
 
     /**
      * @param BudgetFormRequest $request
@@ -595,24 +597,26 @@ class BudgetController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(BudgetFormRequest $request, Budget $budget)
+    public function update(BudgetFormRequest $request, Budget $budget): RedirectResponse
     {
         $data = $request->getBudgetData();
         $this->repository->update($budget, $data);
 
         $request->session()->flash('success', (string)trans('firefly.updated_budget', ['name' => $budget->name]));
         $this->repository->cleanupBudgets();
-        Preferences::mark();
+        app('preferences')->mark();
+
+        $redirect = redirect($this->getPreviousUri('budgets.edit.uri'));
 
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('budgets.edit.fromUpdate', true);
 
-            return redirect(route('budgets.edit', [$budget->id]))->withInput(['return_to_edit' => 1]);
+            $redirect = redirect(route('budgets.edit', [$budget->id]))->withInput(['return_to_edit' => 1]);
             // @codeCoverageIgnoreEnd
         }
 
-        return redirect($this->getPreviousUri('budgets.edit.uri'));
+        return $redirect;
     }
 
     /**
@@ -631,6 +635,7 @@ class BudgetController extends Controller
 
         return view('budgets.income', compact('available', 'start', 'end', 'page'));
     }
+
 
     /**
      * @param Budget $budget
@@ -665,6 +670,7 @@ class BudgetController extends Controller
         return $set;
     }
 
+
     /**
      * @return Collection
      */
@@ -696,6 +702,7 @@ class BudgetController extends Controller
             $set      = $collector->getJournals();
             $sum      = (string)($set->sum('transaction_amount') ?? '0');
             $journals = $set->count();
+            /** @noinspection PhpUndefinedMethodInspection */
             $dateStr  = $date['end']->format('Y-m-d');
             $dateName = app('navigation')->periodShow($date['end'], $date['period']);
             $entries->push(['string' => $dateStr, 'name' => $dateName, 'count' => $journals, 'sum' => $sum, 'date' => clone $date['end']]);

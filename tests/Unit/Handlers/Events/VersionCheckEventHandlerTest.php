@@ -59,10 +59,11 @@ class VersionCheckEventHandlerTest extends TestCase
         // report on config variables:
         FireflyConfig::shouldReceive('get')->withArgs(['permission_update_check', -1])->once()->andReturn($updateConfig);
         FireflyConfig::shouldReceive('get')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
+        FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
 
         // request thing:
-        $request->shouldReceive('call')->once();
-        $request->shouldReceive('getReleases')->once()->andThrow(new FireflyException('Errrr'));
+        $request->shouldReceive('call')->once()->andThrow(new FireflyException('Errrr'));
+        $request->shouldReceive('getReleases')->once();
 
 
         $handler = new VersionCheckEventHandler;
@@ -140,6 +141,7 @@ class VersionCheckEventHandlerTest extends TestCase
         // report on config variables:
         FireflyConfig::shouldReceive('get')->withArgs(['permission_update_check', -1])->once()->andReturn($updateConfig);
         FireflyConfig::shouldReceive('get')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
+        FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
 
         $handler = new VersionCheckEventHandler;
         $handler->checkForUpdates($event);
@@ -164,6 +166,7 @@ class VersionCheckEventHandlerTest extends TestCase
         // report on config variables:
         FireflyConfig::shouldReceive('get')->withArgs(['permission_update_check', -1])->once()->andReturn($updateConfig);
         FireflyConfig::shouldReceive('get')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
+        FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
 
         $handler = new VersionCheckEventHandler;
         $handler->checkForUpdates($event);

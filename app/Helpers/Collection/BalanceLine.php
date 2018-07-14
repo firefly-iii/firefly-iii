@@ -62,7 +62,7 @@ class BalanceLine
     /**
      * @param BalanceEntry $balanceEntry
      */
-    public function addBalanceEntry(BalanceEntry $balanceEntry)
+    public function addBalanceEntry(BalanceEntry $balanceEntry): void
     {
         $this->balanceEntries->push($balanceEntry);
     }
@@ -78,7 +78,7 @@ class BalanceLine
     /**
      * @param Collection $balanceEntries
      */
-    public function setBalanceEntries(Collection $balanceEntries)
+    public function setBalanceEntries(Collection $balanceEntries): void
     {
         $this->balanceEntries = $balanceEntries;
     }
@@ -94,7 +94,7 @@ class BalanceLine
     /**
      * @param BudgetModel $budget
      */
-    public function setBudget(BudgetModel $budget)
+    public function setBudget(BudgetModel $budget): void
     {
         $this->budget = $budget;
     }
@@ -110,7 +110,7 @@ class BalanceLine
     /**
      * @param BudgetLimit $budgetLimit
      */
-    public function setBudgetLimit(BudgetLimit $budgetLimit)
+    public function setBudgetLimit(BudgetLimit $budgetLimit): void
     {
         $this->budgetLimit = $budgetLimit;
     }
@@ -118,7 +118,7 @@ class BalanceLine
     /**
      * @return Carbon
      */
-    public function getEndDate()
+    public function getEndDate(): Carbon
     {
         return $this->budgetLimit->end_date ?? new Carbon;
     }
@@ -134,7 +134,7 @@ class BalanceLine
     /**
      * @param int $role
      */
-    public function setRole(int $role)
+    public function setRole(int $role): void
     {
         $this->role = $role;
     }
@@ -142,29 +142,28 @@ class BalanceLine
     /**
      * @return Carbon
      */
-    public function getStartDate()
+    public function getStartDate(): Carbon
     {
         return $this->budgetLimit->start_date ?? new Carbon;
     }
 
     /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     *
      * @return string
      */
     public function getTitle(): string
     {
+        $title = '';
         if ($this->getBudget() instanceof BudgetModel && null !== $this->getBudget()->id) {
-            return $this->getBudget()->name;
+            $title = $this->getBudget()->name;
         }
-        if (self::ROLE_DEFAULTROLE === $this->getRole()) {
-            return (string)trans('firefly.no_budget');
+        if ('' === $title && self::ROLE_DEFAULTROLE === $this->getRole()) {
+            $title = (string)trans('firefly.no_budget');
         }
-        if (self::ROLE_TAGROLE === $this->getRole()) {
-            return (string)trans('firefly.coveredWithTags');
+        if ('' === $title && self::ROLE_TAGROLE === $this->getRole()) {
+            $title = (string)trans('firefly.coveredWithTags');
         }
 
-        return '';
+        return $title;
     }
 
     /**

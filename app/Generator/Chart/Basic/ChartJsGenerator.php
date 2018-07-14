@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Generator\Chart\Basic;
 
 use FireflyIII\Support\ChartColour;
-use Steam;
 
 /**
  * Class ChartJsGenerator.
@@ -90,7 +89,7 @@ class ChartJsGenerator implements GeneratorInterface
             if (isset($set['currency_symbol'])) {
                 $currentSet['currency_symbol'] = $set['currency_symbol'];
             }
-            if(isset($set['backgroundColor'])) {
+            if (isset($set['backgroundColor'])) {
                 $currentSet['backgroundColor'] = $set['backgroundColor'];
             }
             $chartData['datasets'][] = $currentSet;
@@ -130,7 +129,7 @@ class ChartJsGenerator implements GeneratorInterface
         $index = 0;
         foreach ($data as $key => $value) {
             // make larger than 0
-            $chartData['datasets'][0]['data'][]            = (float)Steam::positive($value);
+            $chartData['datasets'][0]['data'][]            = (float)app('steam')->positive($value);
             $chartData['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
             $chartData['labels'][]                         = $key;
             ++$index;

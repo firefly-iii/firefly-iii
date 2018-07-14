@@ -37,6 +37,8 @@ use Log;
 class PositiveAmountFilter implements FilterInterface
 {
     /**
+     * See class description.
+     *
      * @param Collection $set
      *
      * @return Collection

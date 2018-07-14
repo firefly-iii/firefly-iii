@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection MoreThanThreeArgumentsInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
@@ -58,6 +59,7 @@ class ExpenseController extends Controller
         );
     }
 
+
     /**
      * Generates the overview per budget.
      *
@@ -69,7 +71,7 @@ class ExpenseController extends Controller
      * @return string
      * @throws \Throwable
      */
-    public function budget(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
+    public function budget(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): string
     {
         // Properties for cache:
         $cache = new CacheProperties;
@@ -98,12 +100,12 @@ class ExpenseController extends Controller
             }
             $together[$categoryId]['grand_total'] = bcadd($spentInfo['grand_total'], $together[$categoryId]['grand_total']);
         }
-        unset($spentInfo);
         $result = view('reports.partials.exp-budgets', compact('together'))->render();
         $cache->store($result);
 
         return $result;
     }
+
 
     /**
      * Generates the overview per category (spent and earned).
@@ -116,7 +118,7 @@ class ExpenseController extends Controller
      * @return string
      * @throws \Throwable
      */
-    public function category(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
+    public function category(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): string
     {
         // Properties for cache:
         $cache = new CacheProperties;
@@ -146,7 +148,6 @@ class ExpenseController extends Controller
             }
             $together[$categoryId]['grand_total'] = bcadd($spentInfo['grand_total'], $together[$categoryId]['grand_total']);
         }
-        unset($spentInfo);
         foreach ($earned as $categoryId => $earnedInfo) {
             if (!isset($together[$categoryId])) {
                 $together[$categoryId]['earned']      = $earnedInfo;
@@ -161,6 +162,7 @@ class ExpenseController extends Controller
 
         return $result;
     }
+
 
     /**
      * Overview of spending
@@ -208,6 +210,7 @@ class ExpenseController extends Controller
         // for period, get spent and earned for each account (by name)
     }
 
+
     /**
      * @param Collection $accounts
      * @param Collection $expense
@@ -217,7 +220,7 @@ class ExpenseController extends Controller
      * @return string
      * @throws \Throwable
      */
-    public function topExpense(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
+    public function topExpense(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): string
     {
         // Properties for cache:
         $cache = new CacheProperties;

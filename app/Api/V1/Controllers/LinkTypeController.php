@@ -40,17 +40,21 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
+ * Class LinkTypeController.
  *
- * Class LinkTypeController
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class LinkTypeController extends Controller
 {
-    /** @var LinkTypeRepositoryInterface */
+    /** @var LinkTypeRepositoryInterface The link type repository */
     private $repository;
 
-    /** @var UserRepositoryInterface */
+    /** @var UserRepositoryInterface The user repository */
     private $userRepository;
 
+    /**
+     * LinkTypeController constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -77,7 +81,7 @@ class LinkTypeController extends Controller
      */
     public function delete(LinkType $linkType): JsonResponse
     {
-        if ($linkType->editable === false) {
+        if (false === $linkType->editable) {
             throw new FireflyException(sprintf('You cannot delete this link type (#%d, "%s")', $linkType->id, $linkType->name));
         }
         $this->repository->destroy($linkType, null);
@@ -151,7 +155,10 @@ class LinkTypeController extends Controller
      */
     public function store(LinkTypeRequest $request): JsonResponse
     {
-        if (!$this->userRepository->hasRole(auth()->user(), 'owner')) {
+        /** @var User $admin */
+        $admin = auth()->user();
+
+        if (!$this->userRepository->hasRole($admin, 'owner')) {
             throw new FireflyException('You need the "owner"-role to do this.');
         }
         $data = $request->getAll();
@@ -168,6 +175,8 @@ class LinkTypeController extends Controller
     }
 
     /**
+     * Update object.
+     *
      * @param LinkTypeRequest $request
      * @param LinkType        $linkType
      *
@@ -176,10 +185,14 @@ class LinkTypeController extends Controller
      */
     public function update(LinkTypeRequest $request, LinkType $linkType): JsonResponse
     {
-        if ($linkType->editable === false) {
+        if (false === $linkType->editable) {
             throw new FireflyException(sprintf('You cannot edit this link type (#%d, "%s")', $linkType->id, $linkType->name));
         }
-        if (!$this->userRepository->hasRole(auth()->user(), 'owner')) {
+
+        /** @var User $admin */
+        $admin = auth()->user();
+
+        if (!$this->userRepository->hasRole($admin, 'owner')) {
             throw new FireflyException('You need the "owner"-role to do this.');
         }
 

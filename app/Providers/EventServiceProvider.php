@@ -135,7 +135,7 @@ class EventServiceProvider extends ServiceProvider
                 $repository = app(UserRepositoryInterface::class);
                 $user       = $repository->findNull((int)$oauthClient->user_id);
                 if (null === $user) {
-                    Log::error('OAuth client generated but no user associated.');
+                    Log::info('OAuth client generated but no user associated.');
 
                     return;
                 }

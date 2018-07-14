@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection CallableParameterUseCaseInTypeContextInspection */
+/** @noinspection MoreThanThreeArgumentsInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -75,8 +77,7 @@ class ReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
-     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function accountReport(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
@@ -109,7 +110,7 @@ class ReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
@@ -146,7 +147,7 @@ class ReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
@@ -184,7 +185,7 @@ class ReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
@@ -221,7 +222,7 @@ class ReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
@@ -256,7 +257,7 @@ class ReportController extends Controller
     /**
      * @param AccountRepositoryInterface $repository
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(AccountRepositoryInterface $repository)
     {
@@ -276,7 +277,7 @@ class ReportController extends Controller
      *
      * @return mixed
      *
-
+     * @throws \Throwable
      */
     public function options(string $reportType)
     {
@@ -307,7 +308,6 @@ class ReportController extends Controller
      * @return RedirectResponse|\Illuminate\Routing\Redirector
      *
      * @throws \FireflyIII\Exceptions\FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function postIndex(ReportFormRequest $request)
     {
@@ -329,19 +329,19 @@ class ReportController extends Controller
             return redirect(route('reports.index'));
         }
 
-        if (0 === $request->getCategoryList()->count() && 'category' === $reportType) {
+        if ('category' === $reportType && 0 === $request->getCategoryList()->count()) {
             session()->flash('error', trans('firefly.select_more_than_one_category'));
 
             return redirect(route('reports.index'));
         }
 
-        if (0 === $request->getBudgetList()->count() && 'budget' === $reportType) {
+        if ('budget' === $reportType && 0 === $request->getBudgetList()->count()) {
             session()->flash('error', trans('firefly.select_more_than_one_budget'));
 
             return redirect(route('reports.index'));
         }
 
-        if (0 === $request->getTagList()->count() && 'tag' === $reportType) {
+        if ('tag' === $reportType && 0 === $request->getTagList()->count()) {
             session()->flash('error', trans('firefly.select_more_than_one_tag'));
 
             return redirect(route('reports.index'));
@@ -381,7 +381,7 @@ class ReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
@@ -426,7 +426,7 @@ class ReportController extends Controller
         $set        = new Collection;
         $names      = $revenue->pluck('name')->toArray();
         foreach ($expense as $exp) {
-            if (\in_array($exp->name, $names)) {
+            if (\in_array($exp->name, $names, true)) {
                 $set->push($exp);
             }
         }

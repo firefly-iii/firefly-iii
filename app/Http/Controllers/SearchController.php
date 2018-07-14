@@ -24,9 +24,9 @@ namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Search\SearchInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use View;
 
 /**
  * Class SearchController.
@@ -54,7 +54,7 @@ class SearchController extends Controller
      * @param Request         $request
      * @param SearchInterface $searcher
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(Request $request, SearchInterface $searcher)
     {
@@ -75,7 +75,7 @@ class SearchController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
      */
-    public function search(Request $request, SearchInterface $searcher)
+    public function search(Request $request, SearchInterface $searcher): JsonResponse
     {
         $fullQuery    = (string)$request->get('query');
         $transactions = new Collection;

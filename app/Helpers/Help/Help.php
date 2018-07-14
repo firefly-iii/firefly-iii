@@ -35,14 +35,14 @@ use Route;
  */
 class Help implements HelpInterface
 {
-    /**
-     *
-     */
+    /** @var string The cache key */
     public const CACHEKEY = 'help_%s_%s';
-    /** @var string */
+    /** @var string The user agent. */
     protected $userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36';
 
     /**
+     * Get from cache.
+     *
      * @param string $route
      * @param string $language
      *
@@ -56,31 +56,30 @@ class Help implements HelpInterface
     }
 
     /**
+     * Get text from GitHub.
+     *
      * @param string $route
      * @param string $language
      *
      * @return string
      */
-    public function getFromGithub(string $route, string $language): string
+    public function getFromGitHub(string $route, string $language): string
     {
         $uri = sprintf('https://raw.githubusercontent.com/firefly-iii/help/master/%s/%s.md', $language, $route);
         Log::debug(sprintf('Trying to get %s...', $uri));
-        $opt     = ['headers' => ['User-Agent' => $this->userAgent]];
-        $content = '';
+        $opt        = ['headers' => ['User-Agent' => $this->userAgent]];
+        $content    = '';
+        $statusCode = 500;
+        $client     = new Client;
         try {
-            $client = new Client;
-            $res    = $client->request('GET', $uri, $opt);
+            $res        = $client->request('GET', $uri, $opt);
+            $statusCode = $res->getStatusCode();
+            $content    = trim($res->getBody()->getContents());
         } catch (GuzzleException|Exception $e) {
             Log::error($e);
-
-            return '';
         }
 
-        Log::debug(sprintf('Status code is %d', $res->getStatusCode()));
-
-        if (200 === $res->getStatusCode()) {
-            $content = trim($res->getBody()->getContents());
-        }
+        Log::debug(sprintf('Status code is %d', $statusCode));
 
         if (\strlen($content) > 0) {
             Log::debug('Content is longer than zero. Expect something.');
@@ -92,6 +91,8 @@ class Help implements HelpInterface
     }
 
     /**
+     * Do we have the route?
+     *
      * @param string $route
      *
      * @return bool
@@ -102,6 +103,8 @@ class Help implements HelpInterface
     }
 
     /**
+     * Is in cache?
+     *
      * @param string $route
      * @param string $language
      *
@@ -122,11 +125,13 @@ class Help implements HelpInterface
     }
 
     /**
+     * Put help text in cache.
+     *
      * @param string $route
      * @param string $language
      * @param string $content
      */
-    public function putInCache(string $route, string $language, string $content)
+    public function putInCache(string $route, string $language, string $content): void
     {
         $key = sprintf(self::CACHEKEY, $route, $language);
         if (\strlen($content) > 0) {

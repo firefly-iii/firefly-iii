@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection PhpDynamicAsStaticMethodCallInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
@@ -76,6 +77,7 @@ class ResetPasswordController extends Controller
             $allowRegistration = false;
         }
 
+        /** @noinspection PhpUndefinedFieldInspection */
         return view('auth.passwords.reset')->with(
             ['token' => $token, 'email' => $request->email, 'allowRegistration' => $allowRegistration]
         );

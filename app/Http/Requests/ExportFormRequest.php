@@ -32,7 +32,7 @@ class ExportFormRequest extends Request
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         // Only allow logged in users
         return auth()->check();
@@ -41,7 +41,7 @@ class ExportFormRequest extends Request
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         $sessionFirst = clone session('first');
         $first        = $sessionFirst->subDay()->format('Y-m-d');

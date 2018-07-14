@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection MoreThanThreeArgumentsInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
@@ -35,6 +36,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
 /**
@@ -62,9 +64,9 @@ class TagReportController extends Controller
      * @param Carbon     $end
      * @param string     $others
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function accountExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end, string $others)
+    public function accountExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end, string $others): JsonResponse
     {
         /** @var MetaPieChartInterface $helper */
         $helper = app(MetaPieChartInterface::class);
@@ -86,9 +88,9 @@ class TagReportController extends Controller
      * @param Carbon     $end
      * @param string     $others
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function accountIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end, string $others)
+    public function accountIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end, string $others): JsonResponse
     {
         /** @var MetaPieChartInterface $helper */
         $helper = app(MetaPieChartInterface::class);
@@ -109,9 +111,9 @@ class TagReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function budgetExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
+    public function budgetExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
     {
         /** @var MetaPieChartInterface $helper */
         $helper = app(MetaPieChartInterface::class);
@@ -132,9 +134,9 @@ class TagReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function categoryExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
+    public function categoryExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
     {
         /** @var MetaPieChartInterface $helper */
         $helper = app(MetaPieChartInterface::class);
@@ -155,9 +157,9 @@ class TagReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function mainChart(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
+    public function mainChart(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
     {
         $cache = new CacheProperties;
         $cache->addProperty('chart.category.report.main');
@@ -235,6 +237,7 @@ class TagReportController extends Controller
                 $chartData[$labelSumIn]['entries'][$label]  = $sumOfIncome[$tag->id];
                 $chartData[$labelSumOut]['entries'][$label] = $sumOfExpense[$tag->id];
             }
+            /** @var Carbon $currentStart */
             $currentStart = clone $currentEnd;
             $currentStart->addDay();
         }
@@ -261,9 +264,9 @@ class TagReportController extends Controller
      * @param Carbon     $end
      * @param string     $others
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function tagExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end, string $others)
+    public function tagExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end, string $others): JsonResponse
     {
         /** @var MetaPieChartInterface $helper */
         $helper = app(MetaPieChartInterface::class);
@@ -285,9 +288,9 @@ class TagReportController extends Controller
      * @param Carbon     $end
      * @param string     $others
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function tagIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end, string $others)
+    public function tagIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end, string $others): JsonResponse
     {
         /** @var MetaPieChartInterface $helper */
         $helper = app(MetaPieChartInterface::class);

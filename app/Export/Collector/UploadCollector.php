@@ -1,5 +1,4 @@
 <?php
-
 /**
  * UploadCollector.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -84,7 +83,10 @@ class UploadCollector extends BasicCollector implements CollectorInterface
         return true;
     }
 
+    /** @noinspection MultipleReturnStatementsInspection */
     /**
+     * Process new file uploads.
+     *
      * @param string $key
      *
      * @return bool

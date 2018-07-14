@@ -31,10 +31,10 @@ class ConfigurationRequest extends Request
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         // Only allow logged in users and admins
-        return auth()->check() && auth()->user()->hasRole('owner');
+        return auth()->check();
     }
 
     /**
@@ -51,7 +51,7 @@ class ConfigurationRequest extends Request
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         // fixed
         $rules = [

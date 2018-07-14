@@ -25,7 +25,6 @@ namespace FireflyIII\Helpers\Filter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
-use Steam;
 
 /**
  * Class TransferFilter.
@@ -35,6 +34,8 @@ use Steam;
 class TransferFilter implements FilterInterface
 {
     /**
+     * See class transaction.
+     *
      * @param Collection $set
      *
      * @return Collection
@@ -51,7 +52,7 @@ class TransferFilter implements FilterInterface
             }
             // make property string:
             $journalId      = $transaction->transaction_journal_id;
-            $amount         = Steam::positive($transaction->transaction_amount);
+            $amount         = app('steam')->positive($transaction->transaction_amount);
             $accountIds     = [(int)$transaction->account_id, (int)$transaction->opposing_account_id];
             $transactionIds = [$transaction->id, (int)$transaction->opposing_id];
             sort($accountIds);

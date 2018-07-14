@@ -35,18 +35,20 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Http\JsonResponse;
 
 /**
  * Class BoxController.
  */
 class BoxController extends Controller
 {
+
     /**
      * @param BudgetRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function available(BudgetRepositoryInterface $repository)
+    public function available(BudgetRepositoryInterface $repository): JsonResponse
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
@@ -92,12 +94,13 @@ class BoxController extends Controller
         return response()->json($return);
     }
 
+
     /**
      * @param CurrencyRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function balance(CurrencyRepositoryInterface $repository)
+    public function balance(CurrencyRepositoryInterface $repository): JsonResponse
     {
         // Cache result, return cache if present.
         $start = session('start', Carbon::now()->startOfMonth());
@@ -153,7 +156,7 @@ class BoxController extends Controller
             $incomes[$currencyId]  = Amount::formatAnything($currency, $incomes[$currencyId] ?? '0', false);
             $expenses[$currencyId] = Amount::formatAnything($currency, $expenses[$currencyId] ?? '0', false);
         }
-        if (\count($sums) === 0) {
+        if (0 === \count($sums)) {
             $currency                = app('amount')->getDefaultCurrency();
             $sums[$currency->id]     = Amount::formatAnything($currency, '0', false);
             $incomes[$currency->id]  = Amount::formatAnything($currency, '0', false);
@@ -173,12 +176,13 @@ class BoxController extends Controller
         return response()->json($response);
     }
 
+
     /**
      * @param BillRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function bills(BillRepositoryInterface $repository)
+    public function bills(BillRepositoryInterface $repository): JsonResponse
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
@@ -208,14 +212,15 @@ class BoxController extends Controller
         return response()->json($return);
     }
 
+
     /**
      * @param AccountRepositoryInterface  $repository
      *
      * @param CurrencyRepositoryInterface $currencyRepos
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function netWorth(AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepos)
+    public function netWorth(AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepos): JsonResponse
     {
         $date = new Carbon(date('Y-m-d')); // needed so its per day.
         /** @var Carbon $start */
@@ -248,7 +253,7 @@ class BoxController extends Controller
             $accountCurrency = null;
             $balance         = $balances[$account->id] ?? '0';
             $currencyId      = (int)$repository->getMetaValue($account, 'currency_id');
-            if ($currencyId !== 0) {
+            if (0 !== $currencyId) {
                 $accountCurrency = $currencyRepos->findNull($currencyId);
             }
             if (null === $accountCurrency) {
@@ -259,7 +264,7 @@ class BoxController extends Controller
             // to better reflect that this is not money that is actually "yours".
             $role           = (string)$repository->getMetaValue($account, 'accountRole');
             $virtualBalance = (string)$account->virtual_balance;
-            if ($role === 'ccAsset' && $virtualBalance !== '' && (float)$virtualBalance > 0) {
+            if ('ccAsset' === $role && '' !== $virtualBalance && (float)$virtualBalance > 0) {
                 $balance = bcsub($balance, $virtualBalance);
             }
 

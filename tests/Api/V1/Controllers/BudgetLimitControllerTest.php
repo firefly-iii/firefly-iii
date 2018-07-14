@@ -116,15 +116,16 @@ class BudgetLimitControllerTest extends TestCase
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('findNull')->andReturn($budget);
+        $repository->shouldReceive('findNull')->andReturn(null);
         $repository->shouldReceive('getAllBudgetLimits')->once()->andReturn($budget->budgetlimits()->get());
 
         // call API
         $params   = [
-            'start_date' => '2018-01-01',
-            'end_date'   => '2018-01-31',
+            'start' => '2018-01-01',
+            'end'   => '2018-01-31',
         ];
-        $response = $this->get('/api/v1/budget_limits?' . http_build_query($params));
+        $uri = '/api/v1/budget_limits?' . http_build_query($params);
+        $response = $this->get($uri);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
@@ -149,8 +150,8 @@ class BudgetLimitControllerTest extends TestCase
         // call API
         $params   = [
             'budget_id'  => $budget->id,
-            'start_date' => '2018-01-01',
-            'end_date'   => '2018-01-31',
+            'start' => '2018-01-01',
+            'end'   => '2018-01-31',
         ];
         $response = $this->get('/api/v1/budget_limits?' . http_build_query($params));
         $response->assertStatus(200);

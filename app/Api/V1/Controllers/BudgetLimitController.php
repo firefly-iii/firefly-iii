@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 use Carbon\Carbon;
-use Exception;
-use FireflyIII\Api\V1\Requests\AvailableBudgetRequest;
 use FireflyIII\Api\V1\Requests\BudgetLimitRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
@@ -43,16 +41,15 @@ use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 use Log;
-use Throwable;
 
 /**
- * Class BudgetLimitController
+ * Class BudgetLimitController.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BudgetLimitController extends Controller
 {
-    ///** @var CurrencyRepositoryInterface */
-    //private $currencyRepository;
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
     /**
@@ -66,7 +63,6 @@ class BudgetLimitController extends Controller
                 /** @var User $user */
                 $user             = auth()->user();
                 $this->repository = app(BudgetRepositoryInterface::class);
-                //$this->currencyRepository = app(CurrencyRepositoryInterface::class);
                 $this->repository->setUser($user);
 
                 return $next($request);
@@ -97,40 +93,30 @@ class BudgetLimitController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-
-        // read budget from request
+        $manager  = new Manager;
+        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
+        $start    = null;
+        $end      = null;
         $budgetId = (int)($request->get('budget_id') ?? 0);
-        $budget   = null;
-        if ($budgetId > 0) {
-            $budget = $this->repository->findNull($budgetId);
-        }
-        // read start date from request
-        $start = null;
+        $budget   = $this->repository->findNull($budgetId);
+        $this->parameters->set('budget_id', $budgetId);
+
         try {
             $start = Carbon::createFromFormat('Y-m-d', $request->get('start'));
             $this->parameters->set('start', $start->format('Y-m-d'));
         } catch (InvalidArgumentException $e) {
-            Log::debug(sprintf('Could not parse start date "%s": %s', $request->get('start'), $e->getMessage()));
-
+            Log::debug(sprintf('Invalid date: %s', $e->getMessage()));
         }
 
-        // read end date from request
-        $end = null;
         try {
             $end = Carbon::createFromFormat('Y-m-d', $request->get('end'));
             $this->parameters->set('end', $end->format('Y-m-d'));
         } catch (InvalidArgumentException $e) {
-            Log::debug(sprintf('Could not parse end date "%s": %s', $request->get('end'), $e->getMessage()));
+            Log::debug(sprintf('Invalid date: %s', $e->getMessage()));
         }
-        $this->parameters->set('budget_id', $budgetId);
 
-        // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
-        // get list of budget limits. Count it and split it.
         $collection = new Collection;
         if (null === $budget) {
             $collection = $this->repository->getAllBudgetLimits($start, $end);
@@ -141,12 +127,9 @@ class BudgetLimitController extends Controller
 
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-
-        // make paginator:
-        $paginator = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
+        $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.budget_limits.index') . $this->buildParams());
 
-        // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
         $resource = new FractalCollection($budgetLimits, new BudgetLimitTransformer($this->parameters), 'budget_limits');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
@@ -206,8 +189,8 @@ class BudgetLimitController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param AvailableBudgetRequest $request
-     * @param BudgetLimit            $budgetLimit
+     * @param BudgetLimitRequest $request
+     * @param BudgetLimit        $budgetLimit
      *
      * @return JsonResponse
      */

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Import.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -20,6 +19,9 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/** @noinspection MultipleReturnStatementsInspection */
+/** @noinspection PhpDynamicAsStaticMethodCallInspection */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
@@ -27,8 +29,8 @@ namespace FireflyIII\Console\Commands;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Routine\RoutineInterface;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\Tag;
 use Illuminate\Console\Command;
-use Illuminate\Support\MessageBag;
 use Log;
 
 /**
@@ -52,10 +54,12 @@ class Import extends Command
 
     /**
      * Run the import routine.
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @throws FireflyException
      */
-    public function handle()
+    public function handle(): void
     {
         Log::debug('Start start-import command');
         $jobKey = $this->argument('key');
@@ -83,21 +87,30 @@ class Import extends Command
 
         /** @var RoutineInterface $routine */
         $routine = app($className);
-        $routine->setJob($job);
+        $routine->setImportJob($job);
         $routine->run();
 
-        /** @var MessageBag $error */
-        foreach ($routine->getErrors() as $index => $error) {
+        /**
+         * @var int    $index
+         * @var string $error
+         */
+        foreach ($job->errors as $index => $error) {
             $this->errorLine(sprintf('Error importing line #%d: %s', $index, $error));
         }
 
-        $this->infoLine(
-            sprintf('The import has finished. %d transactions have been imported out of %d records.', $routine->getJournals()->count(), $routine->getLines())
-        );
+        /** @var Tag $tag */
+        $tag   = $job->tag()->first();
+        $count = 0;
+        if (null === $tag) {
+            $count = $tag->transactionJournals()->count();
+        }
 
+        $this->infoLine(sprintf('The import has finished. %d transactions have been imported.', $count));
     }
 
     /**
+     * Displays an error.
+     *
      * @param string     $message
      * @param array|null $data
      */
@@ -109,6 +122,8 @@ class Import extends Command
     }
 
     /**
+     * Displays an informational message.
+     *
      * @param string $message
      * @param array  $data
      */

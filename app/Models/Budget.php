@@ -35,6 +35,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int    $id
  * @property string $name
  * @property bool   $active
+ * @property int $user_id
+ * @property-read string $email
  */
 class Budget extends Model
 {

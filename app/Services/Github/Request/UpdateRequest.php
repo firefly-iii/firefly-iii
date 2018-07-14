@@ -54,7 +54,7 @@ class UpdateRequest implements GithubRequest
             throw new FireflyException(sprintf('Response error from Github: %s', $e->getMessage()));
         }
 
-        if ($res->getStatusCode() !== 200) {
+        if (200 !== $res->getStatusCode()) {
             throw new FireflyException(sprintf('Returned code %d, error: %s', $res->getStatusCode(), $res->getBody()->getContents()));
         }
 

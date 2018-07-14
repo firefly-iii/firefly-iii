@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Transformers\BillTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -39,11 +40,11 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
- * Class BillController
+ * Class BillController.
  */
 class BillController extends Controller
 {
-    /** @var BillRepositoryInterface */
+    /** @var BillRepositoryInterface The bill repository */
     private $repository;
 
     /**
@@ -54,9 +55,12 @@ class BillController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
+                /** @var User $admin */
+                $admin = auth()->user();
+
                 /** @var BillRepositoryInterface repository */
                 $this->repository = app(BillRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+                $this->repository->setUser($admin);
 
                 return $next($request);
             }
@@ -103,6 +107,8 @@ class BillController extends Controller
 
 
     /**
+     * Show the specified bill.
+     *
      * @param Request $request
      * @param Bill    $bill
      *
@@ -124,6 +130,8 @@ class BillController extends Controller
     }
 
     /**
+     * Store a bill.
+     *
      * @param BillRequest $request
      *
      * @return JsonResponse
@@ -147,6 +155,8 @@ class BillController extends Controller
 
 
     /**
+     * Update a bill.
+     *
      * @param BillRequest $request
      * @param Bill        $bill
      *

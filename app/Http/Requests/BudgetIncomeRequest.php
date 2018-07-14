@@ -31,7 +31,7 @@ class BudgetIncomeRequest extends Request
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         // Only allow logged in users
         return auth()->check();
@@ -40,7 +40,7 @@ class BudgetIncomeRequest extends Request
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         // fixed
         return [

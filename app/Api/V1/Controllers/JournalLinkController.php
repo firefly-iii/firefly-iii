@@ -39,13 +39,21 @@ use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
+/**
+ * Class JournalLinkController.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class JournalLinkController extends Controller
 {
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface The journal repository */
     private $journalRepository;
-    /** @var LinkTypeRepositoryInterface */
+    /** @var LinkTypeRepositoryInterface The link type repository */
     private $repository;
 
+    /**
+     * JournalLinkController constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -175,6 +183,8 @@ class JournalLinkController extends Controller
     }
 
     /**
+     * Update object.
+     *
      * @param JournalLinkRequest     $request
      * @param TransactionJournalLink $journalLink
      *

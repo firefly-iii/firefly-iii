@@ -29,7 +29,6 @@ use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use Log;
-use Preferences;
 use URL;
 
 /**
@@ -86,7 +85,7 @@ class LinkController extends Controller
         $this->repository->destroyLink($link);
 
         session()->flash('success', (string)trans('firefly.deleted_link'));
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect((string)session('journal_links.delete.uri'));
     }
@@ -107,7 +106,14 @@ class LinkController extends Controller
 
             return redirect(route('transactions.show', [$journal->id]));
         }
-        $other         = $this->journalRepository->findNull($linkInfo['transaction_journal_id']);
+        $other = $this->journalRepository->findNull($linkInfo['transaction_journal_id']);
+
+        if (null === $other) {
+            session()->flash('error', trans('firefly.invalid_link_selection'));
+
+            return redirect(route('transactions.show', [$journal->id]));
+        }
+
         $alreadyLinked = $this->repository->findLink($journal, $other);
 
         if ($other->id === $journal->id) {

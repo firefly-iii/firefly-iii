@@ -66,7 +66,7 @@ class Range
     /**
      *
      */
-    private function configureList()
+    private function configureList(): void
     {
         $pref = Preferences::get('list-length', config('firefly.list_length', 10))->data;
         View::share('listLength', $pref);
@@ -75,9 +75,10 @@ class Range
     /**
      *
      */
-    private function configureView()
+    private function configureView(): void
     {
         $pref = Preferences::get('language', config('firefly.default_language', 'en_US'));
+        /** @noinspection NullPointerExceptionInspection */
         $lang = $pref->data;
         App::setLocale($lang);
         Carbon::setLocale(substr($lang, 0, 2));
@@ -105,9 +106,9 @@ class Range
     /**
      * @param Request $request
      */
-    private function loseItAll(Request $request)
+    private function loseItAll(Request $request): void
     {
-        if (getenv('DB_CONNECTION') === 'sqlite' && getenv('IS_DOCKER') === true) {
+        if ('sqlite' === getenv('DB_CONNECTION') && true === getenv('IS_DOCKER')) {
             $request->session()->flash(
                 'error', 'You seem to be using SQLite in a Docker container. Don\'t do this. If the container restarts all your data will be gone.'
             );
@@ -117,7 +118,7 @@ class Range
     /**
      *
      */
-    private function setRange()
+    private function setRange(): void
     {
         // ignore preference. set the range to be the current month:
         if (!Session::has('start') && !Session::has('end')) {

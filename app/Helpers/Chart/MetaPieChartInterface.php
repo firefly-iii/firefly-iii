@@ -32,6 +32,8 @@ use Illuminate\Support\Collection;
 interface MetaPieChartInterface
 {
     /**
+     * Generate a chart.
+     *
      * @param string $direction
      * @param string $group
      *
@@ -40,6 +42,8 @@ interface MetaPieChartInterface
     public function generate(string $direction, string $group): array;
 
     /**
+     * Accounts setter.
+     *
      * @param Collection $accounts
      *
      * @return MetaPieChartInterface
@@ -47,6 +51,8 @@ interface MetaPieChartInterface
     public function setAccounts(Collection $accounts): MetaPieChartInterface;
 
     /**
+     * Budgets setter.
+     *
      * @param Collection $budgets
      *
      * @return MetaPieChartInterface
@@ -54,6 +60,8 @@ interface MetaPieChartInterface
     public function setBudgets(Collection $budgets): MetaPieChartInterface;
 
     /**
+     * Categories setter.
+     *
      * @param Collection $categories
      *
      * @return MetaPieChartInterface
@@ -61,6 +69,8 @@ interface MetaPieChartInterface
     public function setCategories(Collection $categories): MetaPieChartInterface;
 
     /**
+     * Set if other objects should be collected.
+     *
      * @param bool $collectOtherObjects
      *
      * @return MetaPieChartInterface
@@ -68,6 +78,8 @@ interface MetaPieChartInterface
     public function setCollectOtherObjects(bool $collectOtherObjects): MetaPieChartInterface;
 
     /**
+     * Set the end date.
+     *
      * @param Carbon $end
      *
      * @return MetaPieChartInterface
@@ -75,6 +87,8 @@ interface MetaPieChartInterface
     public function setEnd(Carbon $end): MetaPieChartInterface;
 
     /**
+     * Set the start date.
+     *
      * @param Carbon $start
      *
      * @return MetaPieChartInterface
@@ -82,6 +96,8 @@ interface MetaPieChartInterface
     public function setStart(Carbon $start): MetaPieChartInterface;
 
     /**
+     * Set the tags.
+     *
      * @param Collection $tags
      *
      * @return MetaPieChartInterface
@@ -89,6 +105,8 @@ interface MetaPieChartInterface
     public function setTags(Collection $tags): MetaPieChartInterface;
 
     /**
+     * Set the user.
+     *
      * @param User $user
      *
      * @return MetaPieChartInterface

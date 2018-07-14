@@ -54,10 +54,10 @@ class FiscalHelper implements FiscalHelperInterface
             // add 1 year and sub 1 day
             $endDate->addYear();
             $endDate->subDay();
-
-            return $endDate;
         }
-        $endDate->endOfYear();
+        if (false === $this->useCustomFiscalYear) {
+            $endDate->endOfYear();
+        }
 
         return $endDate;
     }
@@ -80,10 +80,10 @@ class FiscalHelper implements FiscalHelperInterface
             if ($startDate > $date) {
                 $startDate->subYear();
             }
-
-            return $startDate;
         }
-        $startDate->startOfYear();
+        if (false === $this->useCustomFiscalYear) {
+            $startDate->startOfYear();
+        }
 
         return $startDate;
     }

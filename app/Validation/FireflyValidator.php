@@ -433,6 +433,19 @@ class FireflyValidator extends Validator
     }
 
     /**
+     * TODO fill me.
+     *
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     *
+     * @return bool
+     */
+    public function validateRepetitionMoment($attribute, $value, $parameters): bool {
+
+    }
+
+    /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @param $attribute

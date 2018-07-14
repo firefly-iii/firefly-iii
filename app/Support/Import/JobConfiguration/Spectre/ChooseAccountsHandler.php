@@ -86,7 +86,7 @@ class ChooseAccountsHandler implements SpectreJobConfigurationInterface
         $config     = $this->importJob->configuration;
         $mapping    = $data['account_mapping'] ?? [];
         $final      = [];
-        $applyRules = (int)$data['apply_rules'] === 1;
+        $applyRules = 1 === (int)($data['apply_rules'] ?? 0);
         foreach ($mapping as $spectreId => $localId) {
             // validate each
             $spectreId         = $this->validSpectreAccount((int)$spectreId);

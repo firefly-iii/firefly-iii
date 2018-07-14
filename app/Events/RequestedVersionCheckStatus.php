@@ -35,9 +35,7 @@ class RequestedVersionCheckStatus extends Event
 {
     use SerializesModels;
 
-    /**
-     * @var User
-     */
+    /** @var User The user */
     public $user;
 
     /**

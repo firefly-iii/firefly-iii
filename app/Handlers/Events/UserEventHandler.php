@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection NullPointerExceptionInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
@@ -26,7 +27,6 @@ use Exception;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\UserChangedEmail;
-use FireflyIII\Factories\RoleFactory;
 use FireflyIII\Mail\ConfirmEmailChangeMail;
 use FireflyIII\Mail\RegisteredUser as RegisteredUserMail;
 use FireflyIII\Mail\RequestedNewPassword as RequestedNewPasswordMail;
@@ -44,6 +44,7 @@ use Preferences;
  * This class responds to any events that have anything to do with the User object.
  *
  * The method name reflects what is being done. This is in the present tense.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class UserEventHandler
 {
@@ -68,6 +69,8 @@ class UserEventHandler
     }
 
     /**
+     * Fires to see if a user is admin.
+     *
      * @param Login $event
      *
      * @return bool
@@ -81,34 +84,27 @@ class UserEventHandler
         $user  = $event->user;
         $count = $repository->count();
 
-        if ($count > 1) {
-            // if more than one user, do nothing.
-            Log::debug(sprintf('System has %d users, will not change users roles.', $count));
+        // only act when there is 1 user in the system and he has no admin rights.
+        if (1 === $count && !$repository->hasRole($user, 'owner')) {
+            // user is the only user but does not have role "owner".
+            $role = $repository->getRole('owner');
+            if (null === $role) {
+                // create role, does not exist. Very strange situation so let's raise a big fuss about it.
+                $role = $repository->createRole('owner', 'Site Owner', 'User runs this instance of FF3');
+                Log::error('Could not find role "owner". This is weird.');
+            }
 
-            return true;
+            Log::info(sprintf('Gave user #%d role #%d ("%s")', $user->id, $role->id, $role->name));
+            // give user the role
+            $repository->attachRole($user, 'owner');
         }
-        // user is only user but has admin role
-        if (1 === $count && $user->hasRole('owner')) {
-            Log::debug(sprintf('User #%d is only user but has role owner so all is well.', $user->id));
-
-            return true;
-        }
-        // user is the only user but does not have role "owner".
-        $role = $repository->getRole('owner');
-        if (null === $role) {
-            // create role, does not exist. Very strange situation so let's raise a big fuss about it.
-            $role = $repository->createRole('owner', 'Site Owner', 'User runs this instance of FF3');
-            Log::error('Could not find role "owner". This is weird.');
-        }
-
-        Log::info(sprintf('Gave user #%d role #%d ("%s")', $user->id, $role->id, $role->name));
-        // give user the role
-        $repository->attachRole($user, 'owner');
 
         return true;
     }
 
     /**
+     * Set the demo user back to English.
+     *
      * @param Login $event
      *
      * @return bool
@@ -130,6 +126,8 @@ class UserEventHandler
     }
 
     /**
+     * Send email to confirm email change.
+     *
      * @param UserChangedEmail $event
      *
      * @return bool
@@ -154,6 +152,8 @@ class UserEventHandler
     }
 
     /**
+     * Send email to be able to undo email change.
+     *
      * @param UserChangedEmail $event
      *
      * @return bool
@@ -178,6 +178,8 @@ class UserEventHandler
     }
 
     /**
+     * Send a new password to the user.
+     *
      * @param RequestedNewPassword $event
      *
      * @return bool
@@ -211,26 +213,24 @@ class UserEventHandler
      *
      * @return bool
      */
-    public function sendRegistrationMail(RegisteredUser $event)
+    public function sendRegistrationMail(RegisteredUser $event): bool
     {
         $sendMail = env('SEND_REGISTRATION_MAIL', true);
-        if (!$sendMail) {
-            return true; // @codeCoverageIgnore
-        }
-        // get the email address
-        $email     = $event->user->email;
-        $uri       = route('index');
-        $ipAddress = $event->ipAddress;
+        if ($sendMail) {
+            // get the email address
+            $email     = $event->user->email;
+            $uri       = route('index');
+            $ipAddress = $event->ipAddress;
 
-        // send email.
-        try {
-            Mail::to($email)->send(new RegisteredUserMail($uri, $ipAddress));
-            // @codeCoverageIgnoreStart
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
+            // send email.
+            try {
+                Mail::to($email)->send(new RegisteredUserMail($uri, $ipAddress));
+                // @codeCoverageIgnoreStart
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+            // @codeCoverageIgnoreEnd
         }
-
-        // @codeCoverageIgnoreEnd
 
         return true;
     }

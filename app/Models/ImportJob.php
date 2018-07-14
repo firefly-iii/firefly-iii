@@ -40,6 +40,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $file_type
  * @property int    $tag_id
  * @property Tag    $tag
+ * @property array $errors
  */
 class ImportJob extends Model
 {

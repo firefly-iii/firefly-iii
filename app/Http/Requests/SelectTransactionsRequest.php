@@ -33,7 +33,7 @@ class SelectTransactionsRequest extends Request
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         // Only allow logged in users
         return auth()->check();
@@ -42,7 +42,7 @@ class SelectTransactionsRequest extends Request
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         // fixed
         $sessionFirst = clone session('first');

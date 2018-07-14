@@ -1,5 +1,4 @@
 <?php
-
 /**
  * TransactionCurrencyFactory.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,6 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/** @noinspection PhpDynamicAsStaticMethodCallInspection */
+/** @noinspection PhpUndefinedMethodInspection */
+/** @noinspection MultipleReturnStatementsInspection */
 
 declare(strict_types=1);
 
@@ -63,13 +66,14 @@ class TransactionCurrencyFactory
      * @param null|string $currencyCode
      *
      * @return TransactionCurrency|null
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function find(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {
         $currencyCode = (string)$currencyCode;
         $currencyId   = (int)$currencyId;
 
-        if ('' === $currencyCode && $currencyId === 0) {
+        if ('' === $currencyCode && 0 === $currencyId) {
             Log::warning('Cannot find anything on empty currency code and empty currency ID!');
 
             return null;

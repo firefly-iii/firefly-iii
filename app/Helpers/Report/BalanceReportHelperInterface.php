@@ -32,6 +32,8 @@ use Illuminate\Support\Collection;
 interface BalanceReportHelperInterface
 {
     /**
+     * Generates the report (duh).
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end

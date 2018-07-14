@@ -90,7 +90,7 @@ class JobStatusController extends Controller
             'download_config_text' => '',
         ];
 
-        if ($importJob->provider === 'file') {
+        if ('file' === $importJob->provider) {
             $json['download_config'] = true;
             $json['download_config_text']
                                      = trans('import.should_download_config', ['route' => route('import.job.download', [$importJob->key])]) . ' '
@@ -101,10 +101,10 @@ class JobStatusController extends Controller
         if (null !== $importJob->tag_id) {
             $count = $importJob->tag->transactionJournals->count();
         }
-        if ($count === 0) {
+        if (0 === $count) {
             $json['report_txt'] = trans('import.result_no_transactions');
         }
-        if ($count === 1 && null !== $importJob->tag_id) {
+        if (1 === $count && null !== $importJob->tag_id) {
             $json['report_txt'] = trans(
                 'import.result_one_transaction', ['route' => route('tags.show', [$importJob->tag_id, 'all']), 'tag' => $importJob->tag->tag]
             );

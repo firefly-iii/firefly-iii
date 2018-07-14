@@ -30,7 +30,7 @@ class PiggyBankFormRequest extends Request
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         // Only allow logged in users
         return auth()->check();
@@ -54,7 +54,7 @@ class PiggyBankFormRequest extends Request
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         $nameRule = 'required|between:1,255|uniquePiggyBankForUser';
         if ($this->integer('id')) {

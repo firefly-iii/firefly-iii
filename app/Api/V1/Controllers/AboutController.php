@@ -35,7 +35,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
 /**
  * Returns basic information about this installation.
  *
- * Class AboutController
+ * Class AboutController.
  */
 class AboutController extends Controller
 {

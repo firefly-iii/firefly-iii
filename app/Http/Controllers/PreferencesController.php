@@ -24,10 +24,8 @@ namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Preferences;
-use View;
 
 /**
  * Class PreferencesController.
@@ -54,12 +52,13 @@ class PreferencesController extends Controller
     /**
      * @param AccountRepositoryInterface $repository
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(AccountRepositoryInterface $repository)
     {
-        $accounts           = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $viewRangePref      = Preferences::get('viewRange', '1M');
+        $accounts      = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $viewRangePref = Preferences::get('viewRange', '1M');
+        /** @noinspection NullPointerExceptionInspection */
         $viewRange          = $viewRangePref->data;
         $frontPageAccounts  = Preferences::get('frontPageAccounts', []);
         $language           = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
@@ -85,12 +84,11 @@ class PreferencesController extends Controller
     }
 
     /**
-     * @param Request                 $request
-     * @param UserRepositoryInterface $repository
+     * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function postIndex(Request $request, UserRepositoryInterface $repository)
+    public function postIndex(Request $request)
     {
         // front page accounts
         $frontPageAccounts = [];
@@ -143,7 +141,7 @@ class PreferencesController extends Controller
         Preferences::set('transaction_journal_optional_fields', $optionalTj);
 
         session()->flash('success', (string)trans('firefly.saved_preferences'));
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect(route('preferences.index'));
     }

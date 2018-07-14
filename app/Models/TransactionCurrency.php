@@ -33,6 +33,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $symbol
  * @property int    $decimal_places
  * @property int    $id
+ * @property mixed  name
+ * @property mixed  name
+ * @property mixed  name
+ * @property mixed  name
+ * @property mixed  name
+ * @property mixed  name
+ * @property mixed  name
+ * @property mixed  name
  *
  */
 class TransactionCurrency extends Model

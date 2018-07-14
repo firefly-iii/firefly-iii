@@ -169,19 +169,11 @@ class ImportableConverter
             throw new FireflyException('No transaction amount information.');
         }
 
-        $transactionType   = 'unknown';
-        $accountId         = $this->verifyObjectId('account-id', $importable->accountId);
-        $billId            = $this->verifyObjectId('bill-id', $importable->billId);
-        $budgetId          = $this->verifyObjectId('budget-id', $importable->budgetId);
-        $currencyId        = $this->verifyObjectId('currency-id', $importable->currencyId);
-        $categoryId        = $this->verifyObjectId('category-id', $importable->categoryId);
-        $foreignCurrencyId = $this->verifyObjectId('foreign-currency-id', $importable->foreignCurrencyId);
-        $opposingId        = $this->verifyObjectId('opposing-id', $importable->opposingId);
-
-        $source          = $this->assetMapper->map($accountId, $importable->getAccountData());
-        $destination     = $this->opposingMapper->map($opposingId, $amount, $importable->getOpposingAccountData());
-        $currency        = $this->currencyMapper->map($currencyId, $importable->getCurrencyData());
-        $foreignCurrency = $this->currencyMapper->map($foreignCurrencyId, $importable->getForeignCurrencyData());
+        $transactionType = 'unknown';
+        $source          = $this->assetMapper->map($importable->accountId, $importable->getAccountData());
+        $destination     = $this->opposingMapper->map($importable->opposingId, $amount, $importable->getOpposingAccountData());
+        $currency        = $this->currencyMapper->map($importable->currencyId, $importable->getCurrencyData());
+        $foreignCurrency = $this->currencyMapper->map($importable->foreignCurrencyId, $importable->getForeignCurrencyData());
 
         Log::debug(sprintf('"%s" (#%d) is source and "%s" (#%d) is destination.', $source->name, $source->id, $destination->name, $destination->id));
 
@@ -296,7 +288,7 @@ class ImportableConverter
             'description'        => $importable->description,
             'piggy_bank_id'      => null,
             'piggy_bank_name'    => null,
-            'bill_id'            => $billId,
+            'bill_id'            => $importable->billId,
             'bill_name'          => $importable->billName,
 
             // transaction data:
@@ -306,15 +298,15 @@ class ImportableConverter
                     'currency_code'         => null,
                     'description'           => null,
                     'amount'                => $amount,
-                    'budget_id'             => $budgetId,
-                    'budget_name'           => null === $budgetId ? $importable->budgetName : null,
-                    'category_id'           => $categoryId,
-                    'category_name'         => null === $categoryId ? $importable->categoryName : null,
+                    'budget_id'             => $importable->budgetId,
+                    'budget_name'           => $importable->budgetName,
+                    'category_id'           => $importable->categoryId,
+                    'category_name'         => $importable->categoryName,
                     'source_id'             => $source->id,
                     'source_name'           => null,
                     'destination_id'        => $destination->id,
                     'destination_name'      => null,
-                    'foreign_currency_id'   => $foreignCurrencyId,
+                    'foreign_currency_id'   => $importable->foreignCurrencyId,
                     'foreign_currency_code' => null === $foreignCurrency ? null : $foreignCurrency->code,
                     'foreign_amount'        => $foreignAmount,
                     'reconciled'            => false,
@@ -335,7 +327,6 @@ class ImportableConverter
      */
     private function verifyObjectId(string $key, int $objectId): ?int
     {
-
         if (isset($this->mappedValues[$key]) && \in_array($objectId, $this->mappedValues[$key], true)) {
             Log::debug(sprintf('verifyObjectId(%s, %d) is valid!', $key, $objectId));
 

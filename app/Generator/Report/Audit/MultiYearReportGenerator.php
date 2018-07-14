@@ -27,5 +27,4 @@ namespace FireflyIII\Generator\Report\Audit;
  */
 class MultiYearReportGenerator extends MonthReportGenerator
 {
-    // Doesn't do anything different.
 }

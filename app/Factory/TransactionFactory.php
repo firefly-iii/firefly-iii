@@ -50,6 +50,7 @@ class TransactionFactory
      *
      * @return Transaction
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function create(array $data): ?Transaction
     {
@@ -89,37 +90,41 @@ class TransactionFactory
      *
      * @return Collection
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function createPair(TransactionJournal $journal, array $data): Collection
     {
-        Log::debug('Start of TransactionFactory::createPair()');
+        Log::debug('Start of TransactionFactory::createPair()', $data);
         // all this data is the same for both transactions:
         $currency    = $this->findCurrency($data['currency_id'], $data['currency_code']);
         $description = $journal->description === $data['description'] ? null : $data['description'];
 
-        // type of source account depends on journal type:
-        $sourceType = $this->accountType($journal, 'source');
-        Log::debug(sprintf('Expect source account to be of type %s', $sourceType));
-        $sourceAccount = $this->findAccount($sourceType, $data['source_id'], $data['source_name']);
-
-        // same for destination account:
+        // type of source account and destination account depends on journal type:
+        $sourceType      = $this->accountType($journal, 'source');
         $destinationType = $this->accountType($journal, 'destination');
-        Log::debug(sprintf('Expect source destination to be of type %s', $destinationType));
+
+        Log::debug(sprintf('Expect source account to be of type "%s"', $sourceType));
+        Log::debug(sprintf('Expect source destination to be of type "%s"', $destinationType));
+
+        // find source and destination account:
+        $sourceAccount      = $this->findAccount($sourceType, $data['source_id'], $data['source_name']);
         $destinationAccount = $this->findAccount($destinationType, $data['destination_id'], $data['destination_name']);
 
+        if (null === $sourceAccount || null === $destinationAccount) {
+            throw new FireflyException('Could not determine source or destination account.');
+        }
+
         Log::debug(sprintf('Source type is "%s", destination type is "%s"', $sourceAccount->accountType->type, $destinationAccount->accountType->type));
-        // throw big fat error when source type === dest type
-        if ($sourceAccount->accountType->type === $destinationAccount->accountType->type
-            && ($journal->transactionType->type !== TransactionType::TRANSFER
-                && $journal->transactionType->type !== TransactionType::RECONCILIATION)
-        ) {
+        // throw big fat error when source type === dest type and it's not a transfer or reconciliation.
+        if ($sourceAccount->accountType->type === $destinationAccount->accountType->type && $journal->transactionType->type !== TransactionType::TRANSFER) {
             throw new FireflyException(sprintf('Source and destination account cannot be both of the type "%s"', $destinationAccount->accountType->type));
         }
         if ($sourceAccount->accountType->type !== AccountType::ASSET && $destinationAccount->accountType->type !== AccountType::ASSET) {
             throw new FireflyException('At least one of the accounts must be an asset account.');
         }
 
-        // first make a "negative" (source) transaction based on the data in the array.
         $source = $this->create(
             [
                 'description'         => $description,
@@ -132,8 +137,7 @@ class TransactionFactory
                 'identifier'          => $data['identifier'],
             ]
         );
-        // then make a "positive" transaction based on the data in the array.
-        $dest = $this->create(
+        $dest   = $this->create(
             [
                 'description'         => $description,
                 'amount'              => app('steam')->positive((string)$data['amount']),
@@ -145,6 +149,9 @@ class TransactionFactory
                 'identifier'          => $data['identifier'],
             ]
         );
+        if (null === $source || null === $dest) {
+            throw new FireflyException('Could not create transactions.');
+        }
 
         // set foreign currency
         $foreign = $this->findCurrency($data['foreign_currency_id'], $data['foreign_currency_code']);
@@ -178,7 +185,7 @@ class TransactionFactory
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }

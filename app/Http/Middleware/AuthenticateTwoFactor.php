@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection PhpMethodParametersCountMismatchInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
@@ -50,6 +51,8 @@ class AuthenticateTwoFactor
         $this->auth = $auth;
     }
 
+
+    /** @noinspection PhpUnusedParameterInspection */
     /**
      * @param         $request
      * @param Closure $next
@@ -61,13 +64,16 @@ class AuthenticateTwoFactor
      */
     public function handle($request, Closure $next, ...$guards)
     {
+        /** @noinspection PhpUndefinedMethodInspection */
         if ($this->auth->guest()) {
             return response()->redirectTo(route('login'));
         }
 
+
         $is2faEnabled = app('preferences')->get('twoFactorAuthEnabled', false)->data;
         $has2faSecret = null !== app('preferences')->get('twoFactorAuthSecret');
-        $is2faAuthed  = 'true' === $request->cookie('twoFactorAuthenticated');
+        /** @noinspection PhpUndefinedMethodInspection */
+        $is2faAuthed = 'true' === $request->cookie('twoFactorAuthenticated');
 
         if ($is2faEnabled && $has2faSecret && !$is2faAuthed) {
             Log::debug('Does not seem to be 2 factor authed, redirect.');

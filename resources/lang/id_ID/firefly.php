@@ -607,6 +607,7 @@ return [
     'cannot_delete_currency'                  => 'Tidak dapat menghapus :name karena masih digunakan.',
     'deleted_currency'                        => 'Mata uang :name dihapus',
     'created_currency'                        => 'Mata uang :name dibuat',
+    'could_not_store_currency'                => 'Could not store the new currency.',
     'updated_currency'                        => 'Mata uang :name diperbarui',
     'ask_site_owner'                          => 'Harap bertanya :owner untuk menambahkan, menghapus atau mengedit mata uang.',
     'currencies_intro'                        => 'Firefly III mendukung berbagai mata uang yang dapat Anda atur dan aktifkan di sini.',

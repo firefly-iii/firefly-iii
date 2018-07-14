@@ -25,35 +25,33 @@ namespace FireflyIII\Handlers\Events;
 use FireflyIII\Events\StoredTransactionJournal;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface as JRI;
-use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface as PRI;
-use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface as RGRI;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\Processor;
 
 /**
- * @codeCoverageIgnore
- *
  * Class StoredJournalEventHandler
  */
 class StoredJournalEventHandler
 {
-    /** @var JRI */
+    /** @var JournalRepositoryInterface The journal repository. */
     public $journalRepository;
-    /** @var PRI */
+    /** @var PiggyBankRepositoryInterface The Piggy bank repository */
     public $repository;
-
-    /** @var RGRI */
+    /** @var RuleGroupRepositoryInterface The rule group repository */
     public $ruleGroupRepository;
 
     /**
      * StoredJournalEventHandler constructor.
      *
-     * @param PRI  $repository
-     * @param JRI  $journalRepository
-     * @param RGRI $ruleGroupRepository
+     * @param PiggyBankRepositoryInterface $repository
+     * @param JournalRepositoryInterface   $journalRepository
+     * @param RuleGroupRepositoryInterface $ruleGroupRepository
      */
-    public function __construct(PRI $repository, JRI $journalRepository, RGRI $ruleGroupRepository)
-    {
+    public function __construct(
+        PiggyBankRepositoryInterface $repository, JournalRepositoryInterface $journalRepository, RuleGroupRepositoryInterface $ruleGroupRepository
+    ) {
         $this->repository          = $repository;
         $this->journalRepository   = $journalRepository;
         $this->ruleGroupRepository = $ruleGroupRepository;

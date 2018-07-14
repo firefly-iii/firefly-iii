@@ -32,7 +32,6 @@ use FireflyIII\Http\Requests\SplitJournalFormRequest;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -40,7 +39,6 @@ use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Preferences;
-use Steam;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use View;
 
@@ -49,9 +47,6 @@ use View;
  */
 class SplitController extends Controller
 {
-    /** @var AccountRepositoryInterface */
-    private $accounts;
-
     /** @var AttachmentHelperInterface */
     private $attachments;
 
@@ -73,7 +68,6 @@ class SplitController extends Controller
         // some useful repositories:
         $this->middleware(
             function ($request, $next) {
-                $this->accounts    = app(AccountRepositoryInterface::class);
                 $this->budgets     = app(BudgetRepositoryInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->currencies  = app(CurrencyRepositoryInterface::class);
@@ -99,7 +93,7 @@ class SplitController extends Controller
             return $this->redirectToAccount($journal); // @codeCoverageIgnore
         }
         // basic fields:
-        $uploadSize   = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
+        $uploadSize   = min(app('steam')->phpBytes(ini_get('upload_max_filesize')), app('steam')->phpBytes(ini_get('post_max_size')));
         $subTitle     = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
         $subTitleIcon = 'fa-pencil';
 
@@ -271,6 +265,7 @@ class SplitController extends Controller
 
         foreach ($old as $index => $row) {
             if (isset($array[$index])) {
+                /** @noinspection SlowArrayOperationsInLoopInspection */
                 $array[$index] = array_merge($array[$index], $row);
                 continue;
             }

@@ -36,13 +36,12 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use Steam;
 
 /**
  * Class BudgetController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // can't realy be helped.
  */
 class BudgetController extends Controller
 {
@@ -69,12 +68,13 @@ class BudgetController extends Controller
         );
     }
 
+
     /**
      * @param Budget $budget
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse
      */
-    public function budget(Budget $budget)
+    public function budget(Budget $budget): JsonResponse
     {
         $start = $this->repository->firstUseDate($budget);
         $end   = session('end', new Carbon);
@@ -106,8 +106,9 @@ class BudgetController extends Controller
         $current          = app('navigation')->startOfPeriod($current, $step);
 
         while ($end >= $current) {
+            /** @var Carbon $currentEnd */
             $currentEnd = app('navigation')->endOfPeriod($current, $step);
-            if ($step === '1Y') {
+            if ('1Y' === $step) {
                 $currentEnd->subDay(); // @codeCoverageIgnore
             }
             $spent             = $this->repository->spentInPeriod($budgetCollection, new Collection, $current, $currentEnd);
@@ -124,19 +125,19 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
+
     /**
      * Shows the amount left in a specific budget limit.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
      *
      * @param Budget      $budget
      * @param BudgetLimit $budgetLimit
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse
      *
      * @throws FireflyException
      */
-    public function budgetLimit(Budget $budget, BudgetLimit $budgetLimit)
+    public function budgetLimit(Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {
         if ($budgetLimit->budget->id !== $budget->id) {
             throw new FireflyException('This budget limit is not part of this budget.');
@@ -172,17 +173,19 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
+
     /**
      * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function expenseAsset(Budget $budget, ?BudgetLimit $budgetLimit)
+    public function expenseAsset(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
     {
-        $cache = new CacheProperties;
+        $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
+        $cache         = new CacheProperties;
         $cache->addProperty($budget->id);
-        $cache->addProperty($budgetLimit->id ?? 0);
+        $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-asset');
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
@@ -191,7 +194,7 @@ class BudgetController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setBudget($budget);
-        if (null !== $budgetLimit->id) {
+        if (null !== $budgetLimit) {
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         }
 
@@ -216,17 +219,19 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
+
     /**
      * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function expenseCategory(Budget $budget, ?BudgetLimit $budgetLimit)
+    public function expenseCategory(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
     {
-        $cache = new CacheProperties;
+        $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
+        $cache         = new CacheProperties;
         $cache->addProperty($budget->id);
-        $cache->addProperty($budgetLimit->id ?? 0);
+        $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-category');
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
@@ -235,7 +240,7 @@ class BudgetController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setBudget($budget)->withCategoryInformation();
-        if (null !== $budgetLimit->id) {
+        if (null !== $budgetLimit) {
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         }
 
@@ -262,17 +267,19 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
+
     /**
      * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function expenseExpense(Budget $budget, ?BudgetLimit $budgetLimit)
+    public function expenseExpense(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
     {
-        $cache = new CacheProperties;
+        $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
+        $cache         = new CacheProperties;
         $cache->addProperty($budget->id);
-        $cache->addProperty($budgetLimit->id ?? 0);
+        $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-expense');
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
@@ -281,7 +288,7 @@ class BudgetController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)->withOpposingAccount();
-        if (null !== $budgetLimit->id) {
+        if (null !== $budgetLimit) {
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         }
 
@@ -307,15 +314,13 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
+
     /**
      * Shows a budget list with spent/left/overspent.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // 46 lines, I'm fine with this.
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function frontpage()
+    public function frontpage(): \Symfony\Component\HttpFoundation\Response
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
@@ -361,17 +366,17 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
      *
      * @param Budget     $budget
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function period(Budget $budget, Collection $accounts, Carbon $start, Carbon $end)
+    public function period(Budget $budget, Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -406,14 +411,15 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
+
     /**
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function periodNoBudget(Collection $accounts, Carbon $start, Carbon $end)
+    public function periodNoBudget(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -478,7 +484,9 @@ class BudgetController extends Controller
         $current  = clone $start;
         $budgeted = [];
         while ($current < $end) {
-            $currentStart     = app('navigation')->startOfPeriod($current, $range);
+            /** @var Carbon $currentStart */
+            $currentStart = app('navigation')->startOfPeriod($current, $range);
+            /** @var Carbon $currentEnd */
             $currentEnd       = app('navigation')->endOfPeriod($current, $range);
             $budgetLimits     = $this->repository->getBudgetLimits($budget, $currentStart, $currentEnd);
             $index            = $currentStart->format($key);
@@ -514,8 +522,8 @@ class BudgetController extends Controller
         return $return;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's 6 but ok.
      *
      * @param Collection $limits
      * @param Budget     $budget
@@ -544,13 +552,12 @@ class BudgetController extends Controller
                 $return[$name] = $row;
             }
         }
-        unset($rows, $row);
+        unset($rows);
 
         return $return;
     }
 
     /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
      *
      * Returns an array with the following values:
      * 0 =>
@@ -573,7 +580,7 @@ class BudgetController extends Controller
         /** @var BudgetLimit $budgetLimit */
         foreach ($limits as $budgetLimit) {
             $expenses = $this->repository->spentInPeriod(new Collection([$budget]), new Collection, $budgetLimit->start_date, $budgetLimit->end_date);
-            $expenses = Steam::positive($expenses);
+            $expenses = app('steam')->positive($expenses);
 
             if ($limits->count() > 1) {
                 $name = $budget->name . ' ' . trans(
@@ -595,7 +602,7 @@ class BudgetController extends Controller
 
             $left      = $hasOverspent ? '0' : bcsub($amount, $expenses);
             $spent     = $hasOverspent ? $amount : $expenses;
-            $overspent = $hasOverspent ? Steam::positive($leftInLimit) : '0';
+            $overspent = $hasOverspent ? app('steam')->positive($leftInLimit) : '0';
 
             $return[$name] = [
                 'left'      => $left,

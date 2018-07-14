@@ -30,6 +30,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
 /**
@@ -49,14 +50,15 @@ class BillController extends Controller
         $this->generator = app(GeneratorInterface::class);
     }
 
+
     /**
      * Shows all bills and whether or not they've been paid this month (pie chart).
      *
      * @param BillRepositoryInterface $repository
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse
      */
-    public function frontpage(BillRepositoryInterface $repository)
+    public function frontpage(BillRepositoryInterface $repository): JsonResponse
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
@@ -81,13 +83,14 @@ class BillController extends Controller
         return response()->json($data);
     }
 
+
     /**
      * @param JournalCollectorInterface $collector
      * @param Bill                      $bill
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function single(JournalCollectorInterface $collector, Bill $bill)
+    public function single(JournalCollectorInterface $collector, Bill $bill): JsonResponse
     {
         $cache = new CacheProperties;
         $cache->addProperty('chart.bill.single');

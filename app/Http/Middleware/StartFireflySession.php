@@ -37,11 +37,11 @@ class StartFireflySession extends StartSession
      * @param \Illuminate\Http\Request              $request
      * @param \Illuminate\Contracts\Session\Session $session
      */
-    protected function storeCurrentUrl(Request $request, $session)
+    protected function storeCurrentUrl(Request $request, $session): void
     {
         $uri    = $request->fullUrl();
         $strpos = strpos($uri, 'jscript');
-        if ('GET' === $request->method() && $request->route() && !$request->ajax() && false === $strpos) {
+        if (false === $strpos && 'GET' === $request->method() && $request->route() && !$request->ajax()) {
             $session->setPreviousUrl($uri);
         }
     }

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * VerifyDatabase.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -20,6 +19,8 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/** @noinspection PhpDynamicAsStaticMethodCallInspection */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
@@ -29,6 +30,7 @@ use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
@@ -39,6 +41,7 @@ use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder;
+use Log;
 use Preferences;
 use Schema;
 use stdClass;
@@ -46,6 +49,7 @@ use stdClass;
 /**
  * Class VerifyDatabase.
  *
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class VerifyDatabase extends Command
@@ -66,15 +70,15 @@ class VerifyDatabase extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         // if table does not exist, return false
         if (!Schema::hasTable('users')) {
             return;
         }
 
-        $this->reportObject('budget');
-        $this->reportObject('category');
+        $this->reportEmptyBudgets();
+        $this->reportEmptyCategories();
         $this->reportObject('tag');
         $this->reportAccounts();
         $this->reportBudgetLimits();
@@ -145,9 +149,10 @@ class VerifyDatabase extends Command
     }
 
     /**
-     * Fix the situation where the matching transactions
-     * of a journal somehow have non-matching categories
-     * or budgets
+     * Fix the situation where the matching transactions of a journal somehow have non-matching categories or budgets.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function fixBadMeta(): void
     {
@@ -208,6 +213,12 @@ class VerifyDatabase extends Command
         }
     }
 
+    /**
+     * Makes sure amounts are stored correctly.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     private function fixDoubleAmounts(): void
     {
         $count = 0;
@@ -257,7 +268,7 @@ class VerifyDatabase extends Command
     }
 
     /**
-     *
+     * Removes bills from journals that should not have bills.
      */
     private function removeBills(): void
     {
@@ -305,7 +316,7 @@ class VerifyDatabase extends Command
     /**
      * Reports on accounts with no transactions.
      */
-    private function reportAccounts()
+    private function reportAccounts(): void
     {
         $set = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
                       ->leftJoin('users', 'accounts.user_id', '=', 'users.id')
@@ -375,6 +386,82 @@ class VerifyDatabase extends Command
                 'Error: Account #' . $entry->account_id . ' should have been deleted, but has not.' .
                 ' Find it in the table called "accounts" and change the "deleted_at" field to: "' . $date . '"'
             );
+        }
+    }
+
+    /**
+     * Report on budgets with no transactions or journals.
+     */
+    private function reportEmptyBudgets(): void
+    {
+        $set = Budget::leftJoin('budget_transaction_journal', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
+                     ->leftJoin('users', 'budgets.user_id', '=', 'users.id')
+                     ->distinct()
+                     ->whereNull('budget_transaction_journal.budget_id')
+                     ->whereNull('budgets.deleted_at')
+                     ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email']);
+
+        /** @var stdClass $entry */
+        foreach ($set as $entry) {
+            $objName = $entry->name;
+            try {
+                $objName = Crypt::decrypt($objName);
+            } catch (DecryptException $e) {
+                // it probably was not encrypted.
+                Log::debug(sprintf('Not a problem: %s', $e->getMessage()));
+            }
+
+            // also count the transactions:
+            $countTransactions = DB::table('budget_transaction')->where('budget_id', $entry->id)->count();
+
+            if (0 === $countTransactions) {
+                $line = sprintf(
+                    'User #%d (%s) has budget #%d ("%s") which has no transactions.',
+                    $entry->user_id,
+                    $entry->email,
+                    $entry->id,
+                    $objName
+                );
+                $this->line($line);
+            }
+        }
+    }
+
+    /**
+     * Report on categories with no transactions or journals.
+     */
+    private function reportEmptyCategories(): void
+    {
+        $set = Category::leftJoin('category_transaction_journal', 'categories.id', '=', 'category_transaction_journal.category_id')
+                       ->leftJoin('users', 'categories.user_id', '=', 'users.id')
+                       ->distinct()
+                       ->whereNull('category_transaction_journal.category_id')
+                       ->whereNull('categories.deleted_at')
+                       ->get(['categories.id', 'categories.name', 'categories.user_id', 'users.email']);
+
+        /** @var stdClass $entry */
+        foreach ($set as $entry) {
+            $objName = $entry->name;
+            try {
+                $objName = Crypt::decrypt($objName);
+            } catch (DecryptException $e) {
+                // it probably was not encrypted.
+                Log::debug(sprintf('Not a problem: %s', $e->getMessage()));
+            }
+
+            // also count the transactions:
+            $countTransactions = DB::table('category_transaction')->where('category_id', $entry->id)->count();
+
+            if (0 === $countTransactions) {
+                $line = sprintf(
+                    'User #%d (%s) has category #%d ("%s") which has no transactions.',
+                    $entry->user_id,
+                    $entry->email,
+                    $entry->id,
+                    $objName
+                );
+                $this->line($line);
+            }
         }
     }
 
@@ -483,12 +570,13 @@ class VerifyDatabase extends Command
         $plural = str_plural($name);
         $class  = sprintf('FireflyIII\Models\%s', ucfirst($name));
         $field  = 'tag' === $name ? 'tag' : 'name';
-        $set    = $class::leftJoin($name . '_transaction_journal', $plural . '.id', '=', $name . '_transaction_journal.' . $name . '_id')
-                        ->leftJoin('users', $plural . '.user_id', '=', 'users.id')
-                        ->distinct()
-                        ->whereNull($name . '_transaction_journal.' . $name . '_id')
-                        ->whereNull($plural . '.deleted_at')
-                        ->get([$plural . '.id', $plural . '.' . $field . ' as name', $plural . '.user_id', 'users.email']);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $set = $class::leftJoin($name . '_transaction_journal', $plural . '.id', '=', $name . '_transaction_journal.' . $name . '_id')
+                     ->leftJoin('users', $plural . '.user_id', '=', 'users.id')
+                     ->distinct()
+                     ->whereNull($name . '_transaction_journal.' . $name . '_id')
+                     ->whereNull($plural . '.deleted_at')
+                     ->get([$plural . '.id', $plural . '.' . $field . ' as name', $plural . '.user_id', 'users.email']);
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
@@ -497,6 +585,7 @@ class VerifyDatabase extends Command
                 $objName = Crypt::decrypt($objName);
             } catch (DecryptException $e) {
                 // it probably was not encrypted.
+                Log::debug(sprintf('Not a problem: %s', $e->getMessage()));
             }
 
             $line = sprintf(
@@ -524,7 +613,8 @@ class VerifyDatabase extends Command
             $sum = (string)$user->transactions()->sum('amount');
             if (0 !== bccomp($sum, '0')) {
                 $this->error('Error: Transactions for user #' . $user->id . ' (' . $user->email . ') are off by ' . $sum . '!');
-            } else {
+            }
+            if (0 === bccomp($sum, '0')) {
                 $this->info(sprintf('Amount integrity OK for user #%d', $user->id));
             }
         }
@@ -554,7 +644,7 @@ class VerifyDatabase extends Command
     /**
      * Report on transfers that have budgets.
      */
-    private function reportTransfersBudgets()
+    private function reportTransfersBudgets(): void
     {
         $set = TransactionJournal::distinct()
                                  ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')

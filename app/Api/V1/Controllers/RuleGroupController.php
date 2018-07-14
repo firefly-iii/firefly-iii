@@ -38,11 +38,17 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 
+/**
+ * Class RuleGroupController
+ */
 class RuleGroupController extends Controller
 {
-    /** @var RuleGroupRepositoryInterface */
+    /** @var RuleGroupRepositoryInterface The rule group repository */
     private $ruleGroupRepository;
 
+    /**
+     * RuleGroupController constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -62,7 +68,7 @@ class RuleGroupController extends Controller
     /**
      * Delete the resource.
      *
-     * @param string $object
+     * @param RuleGroup $ruleGroup
      *
      * @return JsonResponse
      */
@@ -151,8 +157,10 @@ class RuleGroupController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param string  $object
+     * Update a rule group.
+     *
+     * @param RuleGroupRequest $request
+     * @param RuleGroup        $ruleGroup
      *
      * @return JsonResponse
      */

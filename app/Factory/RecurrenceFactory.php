@@ -18,12 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection MultipleReturnStatementsInspection */
 
 declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
 
+use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
@@ -56,6 +58,9 @@ class RecurrenceFactory
 
             return null;
         }
+        /** @var Carbon $firstDate */
+        $firstDate = $data['recurrence']['first_date'];
+
         $repetitions = (int)$data['recurrence']['repetitions'];
         $recurrence  = new Recurrence(
             [
@@ -63,7 +68,7 @@ class RecurrenceFactory
                 'transaction_type_id' => $type->id,
                 'title'               => $data['recurrence']['title'],
                 'description'         => $data['recurrence']['description'],
-                'first_date'          => $data['recurrence']['first_date']->format('Y-m-d'),
+                'first_date'          => $firstDate->format('Y-m-d'),
                 'repeat_until'        => $repetitions > 0 ? null : $data['recurrence']['repeat_until'],
                 'latest_date'         => null,
                 'repetitions'         => $data['recurrence']['repetitions'],

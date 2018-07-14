@@ -37,6 +37,8 @@ class AutomationHandler
 {
 
     /**
+     * Respond to the creation of X journals.
+     *
      * @param RequestedReportOnJournals $event
      *
      * @return bool
@@ -47,25 +49,16 @@ class AutomationHandler
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->findNull($event->userId);
-        if (null === $user) {
-            Log::debug('User is NULL');
-
-            return true;
+        if (null !== $user && 0 !== $event->journals->count()) {
+            try {
+                Log::debug('Trying to mail...');
+                Mail::to($user->email)->send(new ReportNewJournalsMail($user->email, '127.0.0.1', $event->journals));
+                // @codeCoverageIgnoreStart
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+            Log::debug('Done!');
         }
-        if ($event->journals->count() === 0) {
-            Log::debug('No journals.');
-
-            return true;
-        }
-
-        try {
-            Log::debug('Trying to mail...');
-            Mail::to($user->email)->send(new ReportNewJournalsMail($user->email, '127.0.0.1', $event->journals));
-            // @codeCoverageIgnoreStart
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-        }
-        Log::debug('Done!');
 
         // @codeCoverageIgnoreEnd
         return true;

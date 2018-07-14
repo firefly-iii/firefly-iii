@@ -1,5 +1,4 @@
 <?php
-
 /**
  * CreateImport.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -19,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/** @noinspection MultipleReturnStatementsInspection */
 
 declare(strict_types=1);
 
@@ -81,9 +82,14 @@ class CreateImport extends Command
         $configuration     = (string)$this->argument('configuration');
         $user              = $userRepository->findNull((int)$this->option('user'));
         $cwd               = getcwd();
-        $type              = strtolower((string)$this->option('type'));
         $provider          = strtolower((string)$this->option('provider'));
         $configurationData = [];
+
+        if (null === $user) {
+            $this->errorLine('User is NULL.');
+
+            return 1;
+        }
 
         if (!$this->validArguments()) {
             $this->errorLine('Invalid arguments.');
@@ -182,7 +188,7 @@ class CreateImport extends Command
                 }
                 $count++;
             }
-            if ($importJob->status === 'provider_finished') {
+            if ('provider_finished' === $importJob->status) {
                 $this->infoLine('Import has finished. Please wait for storage of data.');
                 // set job to be storing data:
                 $jobRepository->setStatus($importJob, 'storing_data');
@@ -274,19 +280,19 @@ class CreateImport extends Command
             return false;
         }
 
-        if ($provider === 'file' && !\in_array($type, $validTypes, true)) {
+        if ('file' === $provider && !\in_array($type, $validTypes, true)) {
             $this->errorLine(sprintf('Cannot import file of type "%s"', $type));
 
             return false;
         }
 
-        if ($provider === 'file' && !file_exists($file)) {
+        if ('file' === $provider && !file_exists($file)) {
             $this->errorLine(sprintf('Firefly III cannot find file "%s" (working directory: "%s").', $file, $cwd));
 
             return false;
         }
 
-        if ($provider === 'file' && !file_exists($configuration)) {
+        if ('file' === $provider && !file_exists($configuration)) {
             $this->errorLine(sprintf('Firefly III cannot find configuration file "%s" (working directory: "%s").', $configuration, $cwd));
 
             return false;

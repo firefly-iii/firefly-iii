@@ -103,6 +103,7 @@ class IndexControllerTest extends TestCase
         $importJob           = new ImportJob;
         $importJob->provider = 'fake';
         $importJob->key      = 'fake_job_1';
+        $importJob->user_id  = 1;
 
         // mock calls
         $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(true)->once();
@@ -135,6 +136,7 @@ class IndexControllerTest extends TestCase
         $importJob           = new ImportJob;
         $importJob->provider = 'fake';
         $importJob->key      = 'fake_job_2';
+        $importJob->user_id  = 1;
 
         // mock call:
         $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(true)->once();
@@ -168,6 +170,7 @@ class IndexControllerTest extends TestCase
         $importJob           = new ImportJob;
         $importJob->provider = 'file';
         $importJob->key      = 'file_job_1';
+        $importJob->user_id =1;
 
         // mock calls
         $fakePrerequisites->shouldReceive('setUser')->once();

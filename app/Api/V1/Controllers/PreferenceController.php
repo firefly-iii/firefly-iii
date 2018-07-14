@@ -42,20 +42,6 @@ use Preferences;
  */
 class PreferenceController extends Controller
 {
-    public function __construct()
-    {
-        parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user = auth()->user();
-
-                // todo add local repositories.
-                return $next($request);
-            }
-        );
-    }
-
     /**
      * List all of them.
      *
@@ -116,10 +102,13 @@ class PreferenceController extends Controller
     }
 
     /**
+     * Update a preference.
+     *
      * @param PreferenceRequest $request
      * @param Preference        $preference
      *
      * @return JsonResponse
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function update(PreferenceRequest $request, Preference $preference): JsonResponse
     {
@@ -138,7 +127,7 @@ class PreferenceController extends Controller
                 break;
             case 'customFiscalYear':
             case 'twoFactorAuthEnabled':
-                $newValue = (int)$data['data'] === 1;
+                $newValue = 1 === (int)$data['data'];
                 break;
         }
         $result = Preferences::set($preference->name, $newValue);

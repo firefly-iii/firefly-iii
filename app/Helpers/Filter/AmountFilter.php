@@ -34,7 +34,7 @@ use Log;
  */
 class AmountFilter implements FilterInterface
 {
-    /** @var int */
+    /** @var int Either -1 or +1 for the filter. */
     private $modifier;
 
     /**
@@ -48,6 +48,8 @@ class AmountFilter implements FilterInterface
     }
 
     /**
+     * Filter on amount.
+     *
      * @param Collection $set
      *
      * @return Collection

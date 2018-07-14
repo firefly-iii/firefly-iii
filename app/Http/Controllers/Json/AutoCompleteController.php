@@ -50,7 +50,7 @@ class AutoCompleteController extends Controller
      *
      * @return JsonResponse
      */
-    public function allAccounts(AccountRepositoryInterface $repository)
+    public function allAccounts(AccountRepositoryInterface $repository): JsonResponse
     {
         $return = array_unique(
             $repository->getAccountsByType(
@@ -98,7 +98,7 @@ class AutoCompleteController extends Controller
      *
      * @return JsonResponse
      */
-    public function budgets(BudgetRepositoryInterface $repository)
+    public function budgets(BudgetRepositoryInterface $repository): JsonResponse
     {
         $return = array_unique($repository->getBudgets()->pluck('name')->toArray());
         sort($return);
@@ -113,7 +113,7 @@ class AutoCompleteController extends Controller
      *
      * @return JsonResponse
      */
-    public function categories(CategoryRepositoryInterface $repository)
+    public function categories(CategoryRepositoryInterface $repository): JsonResponse
     {
         $return = array_unique($repository->getCategories()->pluck('name')->toArray());
         sort($return);
@@ -126,7 +126,7 @@ class AutoCompleteController extends Controller
      *
      * @return JsonResponse
      */
-    public function currencyNames(CurrencyRepositoryInterface $repository)
+    public function currencyNames(CurrencyRepositoryInterface $repository): JsonResponse
     {
         $return = $repository->get()->pluck('name')->toArray();
         sort($return);
@@ -141,12 +141,12 @@ class AutoCompleteController extends Controller
      *
      * @return JsonResponse
      */
-    public function expenseAccounts(AccountRepositoryInterface $repository)
+    public function expenseAccounts(AccountRepositoryInterface $repository): JsonResponse
     {
         $set      = $repository->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY]);
         $filtered = $set->filter(
             function (Account $account) {
-                if ($account->active === true) {
+                if (true === $account->active) {
                     return $account;
                 }
 
@@ -159,6 +159,7 @@ class AutoCompleteController extends Controller
 
         return response()->json($return);
     }
+
 
     /**
      * @param JournalCollectorInterface $collector
@@ -198,12 +199,12 @@ class AutoCompleteController extends Controller
      *
      * @return JsonResponse
      */
-    public function revenueAccounts(AccountRepositoryInterface $repository)
+    public function revenueAccounts(AccountRepositoryInterface $repository): JsonResponse
     {
         $set      = $repository->getAccountsByType([AccountType::REVENUE]);
         $filtered = $set->filter(
             function (Account $account) {
-                if ($account->active === true) {
+                if (true === $account->active) {
                     return $account;
                 }
 
@@ -223,7 +224,7 @@ class AutoCompleteController extends Controller
      *
      * @return JsonResponse
      */
-    public function tags(TagRepositoryInterface $tagRepository)
+    public function tags(TagRepositoryInterface $tagRepository): JsonResponse
     {
         $return = array_unique($tagRepository->get()->pluck('tag')->toArray());
         sort($return);
@@ -237,7 +238,7 @@ class AutoCompleteController extends Controller
      *
      * @return JsonResponse
      */
-    public function transactionJournals(JournalCollectorInterface $collector, string $what)
+    public function transactionJournals(JournalCollectorInterface $collector, string $what): JsonResponse
     {
         $type  = config('firefly.transactionTypesByWhat.' . $what);
         $types = [$type];
@@ -254,7 +255,7 @@ class AutoCompleteController extends Controller
      *
      * @return JsonResponse
      */
-    public function transactionTypes(JournalRepositoryInterface $repository)
+    public function transactionTypes(JournalRepositoryInterface $repository): JsonResponse
     {
         $return = array_unique($repository->getTransactionTypes()->pluck('type')->toArray());
         sort($return);

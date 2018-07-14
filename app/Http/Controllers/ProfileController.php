@@ -39,12 +39,12 @@ use FireflyIII\User;
 use Google2FA;
 use Hash;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Support\Collection;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Passport;
 use Log;
 use phpseclib\Crypt\RSA;
 use Preferences;
-use View;
 
 /**
  * Class ProfileController.
@@ -73,7 +73,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function changeEmail()
     {
@@ -86,7 +86,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function changePassword()
     {
@@ -100,7 +100,7 @@ class ProfileController extends Controller
     /**
      * View that generates a 2FA code for the user.
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function code()
     {
@@ -124,6 +124,7 @@ class ProfileController extends Controller
     public function confirmEmailChange(UserRepositoryInterface $repository, string $token)
     {
         // find preference with this token value.
+        /** @var Collection $set */
         $set  = Preferences::findByName('email_change_confirm_token');
         $user = null;
         Log::debug(sprintf('Found %d preferences', $set->count()));
@@ -149,7 +150,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function deleteAccount()
     {
@@ -180,7 +181,9 @@ class ProfileController extends Controller
      */
     public function enable2FA(UserRepositoryInterface $repository)
     {
-        if ($repository->hasRole(auth()->user(), 'demo')) {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($repository->hasRole($user, 'demo')) {
             return redirect(route('profile.index'));
         }
         $hasTwoFactorAuthSecret = (null !== Preferences::get('twoFactorAuthSecret'));
@@ -199,7 +202,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
@@ -210,19 +213,21 @@ class ProfileController extends Controller
 
         $this->createOAuthKeys();
 
-        if ($count === 0) {
+        if (0 === $count) {
             /** @var ClientRepository $repository */
             $repository = app(ClientRepository::class);
             $repository->createPersonalAccessClient(null, config('app.name') . ' Personal Access Client', 'http://localhost');
         }
         $subTitle   = auth()->user()->email;
         $userId     = auth()->user()->id;
-        $enabled2FA = (int)Preferences::get('twoFactorAuthEnabled', 0)->data === 1;
+        $enabled2FA = 1 === (int)Preferences::get('twoFactorAuthEnabled', 0)->data;
+        /** @var User $user */
+        $user = auth()->user();
 
         // get access token or create one.
         $accessToken = Preferences::get('access_token', null);
         if (null === $accessToken) {
-            $token       = auth()->user()->generateAccessToken();
+            $token       = $user->generateAccessToken();
             $accessToken = Preferences::set('access_token', $token);
         }
 
@@ -283,26 +288,27 @@ class ProfileController extends Controller
         // the request has already validated both new passwords must be equal.
         $current = $request->get('current_password');
         $new     = $request->get('new_password');
-
+        /** @var User $user */
+        $user = auth()->user();
         try {
-            $this->validatePassword(auth()->user(), $current, $new);
+            $this->validatePassword($user, $current, $new);
         } catch (ValidationException $e) {
             session()->flash('error', $e->getMessage());
 
             return redirect(route('profile.change-password'));
         }
 
-        $repository->changePassword(auth()->user(), $request->get('new_password'));
+        $repository->changePassword($user, $request->get('new_password'));
         session()->flash('success', (string)trans('firefly.password_changed'));
 
         return redirect(route('profile.index'));
     }
 
+    /** @noinspection PhpUnusedParameterInspection */
     /**
      * @param TokenFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
      */
     public function postCode(TokenFormRequest $request)
     {
@@ -310,7 +316,7 @@ class ProfileController extends Controller
         Preferences::set('twoFactorAuthSecret', session()->get('two-factor-secret'));
 
         session()->flash('success', (string)trans('firefly.saved_preferences'));
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect(route('profile.index'));
     }
@@ -328,6 +334,7 @@ class ProfileController extends Controller
 
             return redirect(route('profile.delete-account'));
         }
+        /** @var User $user */
         $user = auth()->user();
         Log::info(sprintf('User #%d has opted to delete their account', auth()->user()->id));
         // make repository delete user:
@@ -343,7 +350,9 @@ class ProfileController extends Controller
      */
     public function regenerate()
     {
-        $token = auth()->user()->generateAccessToken();
+        /** @var User $user */
+        $user  = auth()->user();
+        $token = $user->generateAccessToken();
         Preferences::set('access_token', $token);
         session()->flash('success', (string)trans('firefly.token_regenerated'));
 

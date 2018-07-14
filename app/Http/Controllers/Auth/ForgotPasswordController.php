@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection PhpDynamicAsStaticMethodCallInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
@@ -84,7 +85,7 @@ class ForgotPasswordController extends Controller
             $request->only('email')
         );
 
-        if ($response == Password::RESET_LINK_SENT) {
+        if ($response === Password::RESET_LINK_SENT) {
             return back()->with('status', trans($response));
         }
 
@@ -93,9 +94,8 @@ class ForgotPasswordController extends Controller
 
     /**
      * @codeCoverageIgnore
-     * Display the form to request a password reset link.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function showLinkRequestForm()
     {

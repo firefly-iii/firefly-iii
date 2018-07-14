@@ -38,13 +38,13 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
-use Preferences;
 use Throwable;
-use View;
 
 /**
  * Class RuleController.
@@ -88,8 +88,7 @@ class RuleController extends Controller
      * @param Request   $request
      * @param RuleGroup $ruleGroup
      *
-     * @return View
-     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create(Request $request, RuleGroup $ruleGroup)
     {
@@ -104,7 +103,7 @@ class RuleController extends Controller
         $oldActions   = [];
         $returnToBill = false;
 
-        if ($request->get('return') === 'true') {
+        if ('true' === $request->get('return')) {
             $returnToBill = true;
         }
 
@@ -158,7 +157,7 @@ class RuleController extends Controller
      *
      * @param Rule $rule
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function delete(Rule $rule)
     {
@@ -175,15 +174,15 @@ class RuleController extends Controller
      *
      * @param Rule $rule
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function destroy(Rule $rule)
+    public function destroy(Rule $rule): RedirectResponse
     {
         $title = $rule->title;
         $this->ruleRepos->destroy($rule);
 
         session()->flash('success', trans('firefly.deleted_rule', ['title' => $title]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect($this->getPreviousUri('rules.delete.uri'));
     }
@@ -191,7 +190,7 @@ class RuleController extends Controller
     /**
      * @param Rule $rule
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function down(Rule $rule)
     {
@@ -204,8 +203,7 @@ class RuleController extends Controller
      * @param Request $request
      * @param Rule    $rule
      *
-     * @return View
-     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(Request $request, Rule $rule)
     {
@@ -258,13 +256,15 @@ class RuleController extends Controller
      * @param SelectTransactionsRequest $request
      * @param Rule                      $rule
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      *
      * @internal param RuleGroup $ruleGroup
      */
-    public function execute(SelectTransactionsRequest $request, Rule $rule)
+    public function execute(SelectTransactionsRequest $request, Rule $rule): RedirectResponse
     {
         // Get parameters specified by the user
+        /** @var User $user */
+        $user      = auth()->user();
         $accounts  = $this->accountRepos->getAccountsById($request->get('accounts'));
         $startDate = new Carbon($request->get('start_date'));
         $endDate   = new Carbon($request->get('end_date'));
@@ -273,7 +273,7 @@ class RuleController extends Controller
         $job = new ExecuteRuleOnExistingTransactions($rule);
 
         // Apply parameters to the job
-        $job->setUser(auth()->user());
+        $job->setUser($user);
         $job->setAccounts($accounts);
         $job->setStartDate($startDate);
         $job->setEndDate($endDate);
@@ -288,13 +288,15 @@ class RuleController extends Controller
     }
 
     /**
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
+        /** @var User $user */
+        $user = auth()->user();
         $this->createDefaultRuleGroup();
         $this->createDefaultRule();
-        $ruleGroups = $this->ruleGroupRepos->getRuleGroupsWithRules(auth()->user());
+        $ruleGroups = $this->ruleGroupRepos->getRuleGroupsWithRules($user);
 
         return view('rules.index', compact('ruleGroups'));
     }
@@ -349,17 +351,17 @@ class RuleController extends Controller
     /**
      * @param RuleFormRequest $request
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function store(RuleFormRequest $request)
     {
         $data = $request->getRuleData();
         $rule = $this->ruleRepos->store($data);
         session()->flash('success', trans('firefly.stored_new_rule', ['title' => $rule->title]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         // redirect to show bill.
-        if ($request->get('return_to_bill') === 'true' && (int)$request->get('bill_id') > 0) {
+        if ('true' === $request->get('return_to_bill') && (int)$request->get('bill_id') > 0) {
             return redirect(route('bills.show', [(int)$request->get('bill_id')])); // @codeCoverageIgnore
         }
 
@@ -368,16 +370,16 @@ class RuleController extends Controller
             return redirect($this->getPreviousUri('bills.create.uri')); // @codeCoverageIgnore
         }
 
+        $redirect = redirect($this->getPreviousUri('rules.create.uri'));
 
         if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
             session()->put('rules.create.fromStore', true);
-
-            return redirect(route('rules.create', [$data['rule_group_id']]))->withInput();
+            $redirect = redirect(route('rules.create', [$data['rule_group_id']]))->withInput();
             // @codeCoverageIgnoreEnd
         }
 
-        return redirect($this->getPreviousUri('rules.create.uri'));
+        return $redirect;
     }
 
     /**
@@ -508,7 +510,7 @@ class RuleController extends Controller
     /**
      * @param Rule $rule
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function up(Rule $rule)
     {
@@ -521,7 +523,7 @@ class RuleController extends Controller
      * @param RuleFormRequest $request
      * @param Rule            $rule
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(RuleFormRequest $request, Rule $rule)
     {
@@ -529,17 +531,17 @@ class RuleController extends Controller
         $this->ruleRepos->update($rule, $data);
 
         session()->flash('success', trans('firefly.updated_rule', ['title' => $rule->title]));
-        Preferences::mark();
-
+        app('preferences')->mark();
+        $redirect = redirect($this->getPreviousUri('rules.edit.uri'));
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             session()->put('rules.edit.fromUpdate', true);
 
-            return redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
+            $redirect = redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
             // @codeCoverageIgnoreEnd
         }
 
-        return redirect($this->getPreviousUri('rules.edit.uri'));
+        return $redirect;
     }
 
     /**
@@ -792,6 +794,7 @@ class RuleController extends Controller
     private function getTriggersForBill(Bill $bill): array
     {
         $triggers = [];
+        /** @noinspection BadExceptionsProcessingInspection */
         try {
             $triggers[] = view(
                 'rules.partials.trigger',
@@ -822,6 +825,7 @@ class RuleController extends Controller
                     'count'      => 3,
                 ]
             )->render();
+
             $triggers[] = view(
                 'rules.partials.trigger',
                 [

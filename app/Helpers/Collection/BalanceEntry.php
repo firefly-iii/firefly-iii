@@ -29,14 +29,16 @@ use FireflyIII\Models\Account as AccountModel;
  */
 class BalanceEntry
 {
-    /** @var AccountModel */
+    /** @var AccountModel The account. */
     protected $account;
-    /** @var string */
+    /** @var string The amount left. */
     protected $left = '0';
-    /** @var string */
+    /** @var string The amount spent. */
     protected $spent = '0';
 
     /**
+     * Account getter.
+     *
      * @return AccountModel
      */
     public function getAccount(): AccountModel
@@ -45,14 +47,18 @@ class BalanceEntry
     }
 
     /**
+     * Account setter.
+     *
      * @param AccountModel $account
      */
-    public function setAccount(AccountModel $account)
+    public function setAccount(AccountModel $account): void
     {
         $this->account = $account;
     }
 
     /**
+     * Get amount left.
+     *
      * @return string
      */
     public function getLeft(): string
@@ -61,14 +67,18 @@ class BalanceEntry
     }
 
     /**
+     * Set amount left.
+     *
      * @param string $left
      */
-    public function setLeft(string $left)
+    public function setLeft(string $left): void
     {
         $this->left = $left;
     }
 
     /**
+     * Get amount spent.
+     *
      * @return string
      */
     public function getSpent(): string
@@ -77,9 +87,11 @@ class BalanceEntry
     }
 
     /**
+     * Set amount spent.
+     *
      * @param string $spent
      */
-    public function setSpent(string $spent)
+    public function setSpent(string $spent): void
     {
         $this->spent = $spent;
     }

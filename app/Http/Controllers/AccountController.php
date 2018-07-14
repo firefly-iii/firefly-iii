@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @noinspection CallableParameterUseCaseInTypeContextInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -39,13 +40,11 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Preferences;
-use Steam;
 use View;
 
 /**
  * Class AccountController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AccountController extends Controller
 {
@@ -76,13 +75,14 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param string  $what
+     * @param Request     $request
+     * @param string|null $what
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create(Request $request, string $what = 'asset')
+    public function create(Request $request, string $what = null)
     {
+        $what            = $what ?? 'asset';
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $subTitleIcon    = config('firefly.subIconsByIdentifier.' . $what);
         $subTitle        = trans('firefly.make_new_' . $what . '_account');
@@ -106,7 +106,7 @@ class AccountController extends Controller
     /**
      * @param Account $account
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function delete(Account $account)
     {
@@ -137,25 +137,17 @@ class AccountController extends Controller
         $this->repository->destroy($account, $moveTo);
 
         $request->session()->flash('success', (string)trans('firefly.' . $typeName . '_deleted', ['name' => $name]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         return redirect($this->getPreviousUri('accounts.delete.uri'));
     }
 
     /**
-     * Edit an account.
-     *
      * @param Request                    $request
      * @param Account                    $account
-     *
      * @param AccountRepositoryInterface $repository
      *
-     * @return View
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // long and complex but not that excessively so.
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     *
-
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
     {
@@ -214,7 +206,7 @@ class AccountController extends Controller
      * @param Request $request
      * @param string  $what
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(Request $request, string $what)
     {
@@ -235,9 +227,9 @@ class AccountController extends Controller
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
-        $startBalances = Steam::balancesByAccounts($accounts, $start);
-        $endBalances   = Steam::balancesByAccounts($accounts, $end);
-        $activities    = Steam::getLastActivities($ids);
+        $startBalances = app('steam')->balancesByAccounts($accounts, $start);
+        $endBalances   = app('steam')->balancesByAccounts($accounts, $end);
+        $activities    = app('steam')->getLastActivities($ids);
 
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances) {
@@ -255,6 +247,8 @@ class AccountController extends Controller
         return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
     }
 
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * Show an account.
      *
@@ -294,11 +288,12 @@ class AccountController extends Controller
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
-        $fStart    = $start->formatLocalized($this->monthAndDayFormat);
-        $fEnd      = $end->formatLocalized($this->monthAndDayFormat);
-        $subTitle  = trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
-        $chartUri  = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
-        $periods   = $this->getPeriodOverview($account, $end);
+        $fStart   = $start->formatLocalized($this->monthAndDayFormat);
+        $fEnd     = $end->formatLocalized($this->monthAndDayFormat);
+        $subTitle = trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
+        $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+        $periods  = $this->getPeriodOverview($account, $end);
+        /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
         $collector->setRange($start, $end);
@@ -311,6 +306,7 @@ class AccountController extends Controller
             compact('account', 'showAll', 'what', 'currency', 'today', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end', 'chartUri')
         );
     }
+
 
     /**
      * Show an account.
@@ -339,8 +335,9 @@ class AccountController extends Controller
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
-        $subTitle  = trans('firefly.all_journals_for_account', ['name' => $account->name]);
-        $periods   = new Collection;
+        $subTitle = trans('firefly.all_journals_for_account', ['name' => $account->name]);
+        $periods  = new Collection;
+        /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
         $transactions = $collector->getPaginatedJournals();
@@ -364,7 +361,7 @@ class AccountController extends Controller
         $data    = $request->getAccountData();
         $account = $this->repository->store($data);
         $request->session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));
-        Preferences::mark();
+        app('preferences')->mark();
 
         // update preferences if necessary:
         $frontPage = Preferences::get('frontPageAccounts', [])->data;
@@ -374,16 +371,16 @@ class AccountController extends Controller
             Preferences::set('frontPageAccounts', $frontPage);
             // @codeCoverageIgnoreEnd
         }
-
+        // redirect to previous URL.
+        $redirect = redirect($this->getPreviousUri('accounts.create.uri'));
         if (1 === (int)$request->get('create_another')) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('accounts.create.fromStore', true);
 
-            return redirect(route('accounts.create', [$request->input('what')]))->withInput();
+            $redirect = redirect(route('accounts.create', [$request->input('what')]))->withInput();
         }
 
-        // redirect to previous URL.
-        return redirect($this->getPreviousUri('accounts.create.uri'));
+        return $redirect;
     }
 
     /**
@@ -398,17 +395,17 @@ class AccountController extends Controller
         $this->repository->update($account, $data);
 
         $request->session()->flash('success', (string)trans('firefly.updated_account', ['name' => $account->name]));
-        Preferences::mark();
+        app('preferences')->mark();
 
+        $redirect = redirect($this->getPreviousUri('accounts.edit.uri'));
         if (1 === (int)$request->get('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('accounts.edit.fromUpdate', true);
 
-            return redirect(route('accounts.edit', [$account->id]))->withInput(['return_to_edit' => 1]);
+            $redirect = redirect(route('accounts.edit', [$account->id]))->withInput(['return_to_edit' => 1]);
         }
 
-        // redirect to previous URL.
-        return redirect($this->getPreviousUri('accounts.edit.uri'));
+        return $redirect;
     }
 
     /**
@@ -419,12 +416,14 @@ class AccountController extends Controller
      */
     protected function isInArray(array $array, int $entryId)
     {
+        $result = '0';
         if (isset($array[$entryId])) {
-            return $array[$entryId];
+            $result = $array[$entryId];
         }
 
-        return '0';
+        return $result;
     }
+
 
     /**
      * This method returns "period entries", so nov-2015, dec-2015, etc etc (this depends on the users session range)
@@ -437,7 +436,6 @@ class AccountController extends Controller
      *
      * @return Collection
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function getPeriodOverview(Account $account, ?Carbon $date): Collection
     {
@@ -478,6 +476,7 @@ class AccountController extends Controller
             $spent = (string)$collector->getJournals()->sum('transaction_amount');
 
             $dateName = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
+            /** @noinspection PhpUndefinedMethodInspection */
             $entries->push(
                 [
                     'name'   => $dateName,

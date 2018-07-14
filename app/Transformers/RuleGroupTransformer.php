@@ -62,6 +62,11 @@ class RuleGroupTransformer extends TransformerAbstract
         $this->parameters = $parameters;
     }
 
+    /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return FractalCollection
+     */
     public function includeRules(RuleGroup $ruleGroup): FractalCollection
     {
         return $this->collection($ruleGroup->rules, new RuleTransformer($this->parameters), 'rules');

@@ -18,33 +18,40 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/** @noinspection PhpUndefinedMethodInspection */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report\Audit;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
-use Steam;
 
 /**
  * Class MonthReportGenerator.
  */
 class MonthReportGenerator implements ReportGeneratorInterface
 {
-    /** @var Collection */
+    /** @var Collection The accounts used. */
     private $accounts;
-    /** @var Carbon */
+    /** @var Carbon End date of the report. */
     private $end;
-    /** @var Carbon */
+    /** @var Carbon Start date of the report. */
     private $start;
 
     /**
+     * Generates the report.
+     *
      * @return string
+     * @throws \Throwable
      */
     public function generate(): string
     {
@@ -77,6 +84,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Account collection setter.
+     *
      * @param Collection $accounts
      *
      * @return ReportGeneratorInterface
@@ -89,6 +98,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Budget collection setter.
+     *
      * @param Collection $budgets
      *
      * @return ReportGeneratorInterface
@@ -99,6 +110,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Category collection setter.
+     *
      * @param Collection $categories
      *
      * @return ReportGeneratorInterface
@@ -109,6 +122,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * End date setter.
+     *
      * @param Carbon $date
      *
      * @return ReportGeneratorInterface
@@ -121,6 +136,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Expenses collection setter.
+     *
      * @param Collection $expense
      *
      * @return ReportGeneratorInterface
@@ -131,6 +148,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Start date collection setter.
+     *
      * @param Carbon $date
      *
      * @return ReportGeneratorInterface
@@ -143,6 +162,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Tags collection setter.
+     *
      * @param Collection $tags
      *
      * @return ReportGeneratorInterface
@@ -153,26 +174,37 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Get the audit report.
+     *
      * @param Account $account
      * @param Carbon  $date
      *
      * @return array
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // not that long
+     * @throws FireflyException
      */
     private function getAuditReport(Account $account, Carbon $date): array
     {
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
 
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $accountRepository->setUser($account->user);
+
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end);
         $journals         = $collector->getJournals();
         $journals         = $journals->reverse();
-        $dayBeforeBalance = Steam::balance($account, $date);
+        $dayBeforeBalance = app('steam')->balance($account, $date);
         $startBalance     = $dayBeforeBalance;
-        $currency         = $currencyRepos->find((int)$account->getMeta('currency_id'));
+        $currency         = $currencyRepos->findNull((int)$accountRepository->getMetaValue($account, 'currency_id'));
+
+        if (null === $currency) {
+            throw new FireflyException('Unexpected NULL value in account currency preference.');
+        }
 
         /** @var Transaction $transaction */
         foreach ($journals as $transaction) {
@@ -183,17 +215,16 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 $transactionAmount = $transaction->transaction_foreign_amount;
             }
 
-            $newBalance            = bcadd($startBalance, $transactionAmount);
-            $transaction->after    = $newBalance;
-            $startBalance          = $newBalance;
-            $transaction->currency = $currency;
+            $newBalance         = bcadd($startBalance, $transactionAmount);
+            $transaction->after = $newBalance;
+            $startBalance       = $newBalance;
         }
 
         $return = [
             'journals'         => $journals->reverse(),
             'exists'           => $journals->count() > 0,
             'end'              => $this->end->formatLocalized((string)trans('config.month_and_day')),
-            'endBalance'       => Steam::balance($account, $this->end),
+            'endBalance'       => app('steam')->balance($account, $this->end),
             'dayBefore'        => $date->formatLocalized((string)trans('config.month_and_day')),
             'dayBeforeBalance' => $dayBeforeBalance,
         ];

@@ -174,16 +174,16 @@ class RecurrenceFormRequest extends Request
         }
 
         // if ends after X repetitions, set another rule
-        if ($this->string('repetition_end') === 'times') {
+        if ('times' === $this->string('repetition_end')) {
             $rules['repetitions'] = 'required|numeric|between:0,254';
         }
         // if foreign amount, currency must be  different.
-        if ($this->float('foreign_amount') !== 0.0) {
+        if (0.0 !== $this->float('foreign_amount')) {
             $rules['foreign_currency_id'] = 'exists:transaction_currencies,id|different:transaction_currency_id';
         }
 
         // if ends at date X, set another rule.
-        if ($this->string('repetition_end') === 'until_date') {
+        if ('until_date' === $this->string('repetition_end')) {
             $rules['repeat_until'] = 'required|date|after:' . $tomorrow->format('Y-m-d');
         }
 
@@ -231,7 +231,7 @@ class RecurrenceFormRequest extends Request
             'moment' => '',
         ];
 
-        if ($value === 'daily') {
+        if ('daily' === $value) {
             $return['type'] = $value;
         }
         //monthly,17

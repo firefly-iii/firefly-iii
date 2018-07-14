@@ -34,12 +34,10 @@ use Log;
 
 /**
  * Class BalanceReportHelper.
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // I can't really help it.
  */
 class BalanceReportHelper implements BalanceReportHelperInterface
 {
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface Budget repository */
     protected $budgetRepository;
 
     /**
@@ -54,6 +52,8 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     }
 
     /**
+     * Generate a balance report.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -93,6 +93,8 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     }
 
     /**
+     * Create one balance line.
+     *
      * @param BudgetLimit $budgetLimit
      * @param Collection  $accounts
      *
@@ -122,6 +124,8 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     }
 
     /**
+     * Create a line for transactions without a budget.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -145,8 +149,10 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     }
 
     /**
+     * Remove unused budgets from the report.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @param Balance $balance
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
      *
      * @return Balance
      */
@@ -157,6 +163,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
         foreach ($set as $entry) {
             if (null !== $entry->getBudget()->id) {
                 $sum = '0';
+                /** @var BalanceEntry $balanceEntry */
                 foreach ($entry->getBalanceEntries() as $balanceEntry) {
                     $sum = bcadd($sum, $balanceEntry->getSpent());
                 }

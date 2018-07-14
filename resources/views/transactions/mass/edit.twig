@@ -67,7 +67,7 @@
                                         <input class="form-control input-sm" autocomplete="off"
                                                name="date[{{ transaction.journal_id }}]" type="date" value="{{ transaction.date }}">
                                     </td>
-                                    <td>
+                                    <td style="position: relative;">
                                         {# SOURCE ACCOUNT ID FOR TRANSFER OR WITHDRAWAL #}
                                         {% if transaction.type == 'Transfer' or transaction.type == 'Withdrawal' %}
                                             <select class="form-control input-sm" name="source_id[{{ transaction.journal_id }}]">
@@ -82,7 +82,7 @@
                                                    name="source_name[{{ transaction.journal_id }}]" type="text" value="{% if transaction.source_type != 'Cash account' %}{{ transaction.source_name }}{% endif %}">
                                         {% endif %}
                                     </td>
-                                    <td>
+                                    <td style="position: relative;">
                                         {% if transaction.type == 'Transfer' or transaction.type == 'Deposit' %}
                                             {# DESTINATION ACCOUNT NAME FOR TRANSFER AND DEPOSIT #}
                                             <select class="form-control input-sm" name="destination_id[{{ transaction.journal_id }}]">
@@ -100,7 +100,7 @@
                                         {% endif %}
                                     </td>
                                     {# category #}
-                                    <td>
+                                    <td style="position: relative;">
                                         <input class="form-control input-sm" placeholder="{{ transaction.category_name }}" autocomplete="off"
                                                name="category[{{ transaction.journal_id }}]" type="text" value="{{ transaction.category_name }}">
                                     </td>

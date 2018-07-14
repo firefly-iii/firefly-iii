@@ -38,14 +38,16 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
- *
  * Class RecurrenceController
  */
 class RecurrenceController extends Controller
 {
-    /** @var RecurringRepositoryInterface */
+    /** @var RecurringRepositoryInterface The recurring transaction repository */
     private $repository;
 
+    /**
+     * RecurrenceController constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -155,6 +157,8 @@ class RecurrenceController extends Controller
     }
 
     /**
+     * Update single recurrence.
+     *
      * @param RecurrenceRequest $request
      * @param Recurrence        $recurrence
      *
@@ -163,9 +167,6 @@ class RecurrenceController extends Controller
     public function update(RecurrenceRequest $request, Recurrence $recurrence): JsonResponse
     {
         $data     = $request->getAll();
-
-        //
-
         $category = $this->repository->update($recurrence, $data);
         $manager  = new Manager();
         $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';

@@ -25,39 +25,66 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
- * Class ConfigurationController
+ * Class ConfigurationController.
  */
 class ConfigurationController extends Controller
 {
 
+
+    /** @var UserRepositoryInterface The user repository */
+    private $repository;
+
     /**
-     * @throws FireflyException
+     * BudgetController constructor.
      */
-    public function index()
+    public function __construct()
     {
-        if (!auth()->user()->hasRole('owner')) {
-            throw new FireflyException('No access to method.'); // @codeCoverageIgnore
-        }
+        parent::__construct();
+        $this->middleware(
+            function ($request, $next) {
+                /** @noinspection UnusedConstructorDependenciesInspection */
+                $this->repository = app(UserRepositoryInterface::class);
+                /** @var User $admin */
+                $admin = auth()->user();
+
+                if (!$this->repository->hasRole($admin, 'owner')) {
+                    throw new FireflyException('No access to method.'); // @codeCoverageIgnore
+                }
+
+                return $next($request);
+            }
+        );
+    }
+
+    /**
+     * Show all configuration.
+     *
+     * @return JsonResponse
+     */
+    public function index(): JsonResponse
+    {
         $configData = $this->getConfigData();
 
         return response()->json(['data' => $configData], 200)->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**
+     * Update the configuration.
+     *
      * @param Request $request
      *
      * @return JsonResponse
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function update(Request $request): JsonResponse
     {
-        if (!auth()->user()->hasRole('owner')) {
-            throw new FireflyException('No access to method.'); // @codeCoverageIgnore
-        }
         $name  = $request->get('name');
         $value = $request->get('value');
         $valid = ['is_demo_site', 'permission_update_check', 'single_user_mode'];
@@ -68,7 +95,7 @@ class ConfigurationController extends Controller
         switch ($name) {
             case 'is_demo_site':
             case 'single_user_mode':
-                $configValue = $value === 'true';
+                $configValue = 'true' === $value;
                 break;
             case 'permission_update_check':
                 $configValue = (int)$value >= -1 && (int)$value <= 1 ? (int)$value : -1;
@@ -81,7 +108,10 @@ class ConfigurationController extends Controller
     }
 
     /**
+     * Get all config values.
+     *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getConfigData(): array
     {

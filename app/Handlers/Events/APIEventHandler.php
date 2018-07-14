@@ -39,6 +39,8 @@ use Session;
 class APIEventHandler
 {
     /**
+     * Respond to the creation of an access token.
+     *
      * @param AccessTokenCreated $event
      *
      * @return bool
@@ -48,27 +50,23 @@ class APIEventHandler
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->findNull((int)$event->userId);
-        if (null === $user) {
-            Log::error('Access Token generated but no user associated.');
+        if (null !== $user) {
+            $email     = $user->email;
+            $ipAddress = Request::ip();
 
-            return true;
+            Log::debug(sprintf('Now in APIEventHandler::accessTokenCreated. Email is %s, IP is %s', $email, $ipAddress));
+            try {
+                Log::debug('Trying to send message...');
+                Mail::to($email)->send(new AccessTokenCreatedMail($email, $ipAddress));
+                // @codeCoverageIgnoreStart
+            } catch (Exception $e) {
+                Log::debug('Send message failed! :(');
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
+                Session::flash('error', 'Possible email error: ' . $e->getMessage());
+            }
+            Log::debug('If no error above this line, message was sent.');
         }
-
-        $email     = $user->email;
-        $ipAddress = Request::ip();
-
-        Log::debug(sprintf('Now in APIEventHandler::accessTokenCreated. Email is %s, IP is %s', $email, $ipAddress));
-        try {
-            Log::debug('Trying to send message...');
-            Mail::to($email)->send(new AccessTokenCreatedMail($email, $ipAddress));
-            // @codeCoverageIgnoreStart
-        } catch (Exception $e) {
-            Log::debug('Send message failed! :(');
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            Session::flash('error', 'Possible email error: ' . $e->getMessage());
-        }
-        Log::debug('If no error above this line, message was sent.');
 
         // @codeCoverageIgnoreEnd
         return true;

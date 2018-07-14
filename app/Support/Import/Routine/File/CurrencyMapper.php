@@ -71,15 +71,15 @@ class CurrencyMapper
                 return $result;
             }
         }
-        if (!isset($data['code']) || $data['code'] === null) {
+        if (!isset($data['code']) || null === $data['code']) {
             return null;
         }
 
         // if still nothing, and fields not null, try to create it
         $creation = [
             'code'           => $data['code'],
-            'name'           => $data['name'] ?? $code,
-            'symbol'         => $data['symbol'] ?? $code,
+            'name'           => $data['name'] ?? $data['code'],
+            'symbol'         => $data['symbol'] ?? $data['code'],
             'decimal_places' => 2,
         ];
 

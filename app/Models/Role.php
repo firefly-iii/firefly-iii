@@ -28,6 +28,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class Role.
+ *
+ * @property int    $id
+ * @property string $name
  */
 class Role extends Model
 {

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * AttachmentCollector.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -29,6 +28,7 @@ use Crypt;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Collection;
 use Log;
 use Storage;
@@ -38,15 +38,15 @@ use Storage;
  */
 class AttachmentCollector extends BasicCollector implements CollectorInterface
 {
-    /** @var Carbon */
+    /** @var Carbon The end date of the range. */
     private $end;
-    /** @var \Illuminate\Contracts\Filesystem\Filesystem */
+    /** @var \Illuminate\Contracts\Filesystem\Filesystem File system */
     private $exportDisk;
-    /** @var AttachmentRepositoryInterface */
+    /** @var AttachmentRepositoryInterface Attachment repository */
     private $repository;
-    /** @var Carbon */
+    /** @var Carbon Start date of range */
     private $start;
-    /** @var \Illuminate\Contracts\Filesystem\Filesystem */
+    /** @var \Illuminate\Contracts\Filesystem\Filesystem Disk with uploads on it */
     private $uploadDisk;
 
     /**
@@ -64,6 +64,8 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
     }
 
     /**
+     * Run the routine.
+     *
      * @return bool
      */
     public function run(): bool
@@ -80,6 +82,8 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
     }
 
     /**
+     * Set the start and end date.
+     *
      * @param Carbon $start
      * @param Carbon $end
      */
@@ -89,7 +93,10 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
         $this->end   = $end;
     }
 
+    /** @noinspection MultipleReturnStatementsInspection */
     /**
+     * Export attachments.
+     *
      * @param Attachment $attachment
      *
      * @return bool
@@ -101,13 +108,13 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
         if ($this->uploadDisk->exists($file)) {
             try {
                 $decrypted = Crypt::decrypt($this->uploadDisk->get($file));
-            } catch (DecryptException $e) {
+            } catch (FileNotFoundException|DecryptException $e) {
                 Log::error('Catchable error: could not decrypt attachment #' . $attachment->id . ' because: ' . $e->getMessage());
 
                 return false;
             }
         }
-        if ($decrypted === false) {
+        if (false === $decrypted) {
             return false;
         }
         $exportFile = $this->exportFileName($attachment);
@@ -130,6 +137,8 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
     }
 
     /**
+     * Get the attachments.
+     *
      * @return Collection
      */
     private function getAttachments(): Collection

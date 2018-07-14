@@ -139,8 +139,10 @@ class ImportTransaction
                 );
             // @codeCoverageIgnoreEnd
             case 'account-id':
+                $mappedValue = $this->getMappedValue($columnValue);
                 // could be the result of a mapping?
-                $this->accountId = $this->getMappedValue($columnValue);
+                $this->accountId = $mappedValue;
+                Log::debug(sprintf('Going to set the account-id. Original value is "%s", mapped value is "%s".', $columnValue->getValue(), $mappedValue));
                 break;
             case 'account-iban':
                 $this->accountIban = $columnValue->getValue();
@@ -233,7 +235,9 @@ class ImportTransaction
                 $this->note = trim($this->note . ' ' . $columnValue->getValue());
                 break;
             case 'opposing-id':
-                $this->opposingId = $this->getMappedValue($columnValue);
+                $mappedValue = $this->getMappedValue($columnValue);
+                $this->opposingId = $mappedValue;
+                Log::debug(sprintf('Going to set the OPPOSING-id. Original value is "%s", mapped value is "%s".', $columnValue->getValue(), $mappedValue));
                 break;
             case 'opposing-iban':
                 $this->opposingIban = $columnValue->getValue();

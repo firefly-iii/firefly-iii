@@ -45,6 +45,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property bool        $active
  * @property string      $virtual_balance
  * @property User        $user
+ * @property mixed|null  startBalance
+ * @property mixed|null  endBalance
+ * @property string      difference
+ * @property mixed|null  endBalance
+ * @property mixed|null  startBalance
+ * @property mixed|null  lastActivityDate
  */
 class Account extends Model
 {

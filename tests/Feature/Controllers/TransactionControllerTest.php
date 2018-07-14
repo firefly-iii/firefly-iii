@@ -323,7 +323,7 @@ class TransactionControllerTest extends TestCase
         $journal->date = new Carbon('2016-01-01');
         $repository    = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('find')->once()->andReturn($journal);
+        $repository->shouldReceive('findNull')->once()->andReturn($journal);
         $repository->shouldReceive('setOrder')->once()->andReturn(true);
 
         $data = [

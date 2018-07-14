@@ -30,6 +30,8 @@ use Illuminate\Support\Collection;
 class EmptyFilter implements FilterInterface
 {
     /**
+     * Simply returns the set.
+     *
      * @param Collection $set
      *
      * @return Collection

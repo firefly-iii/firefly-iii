@@ -104,7 +104,9 @@ class TransactionJournal extends Twig_Extension
             if (TransactionType::WITHDRAWAL === $type) {
                 $total['amount'] = bcmul($total['amount'], '-1');
             }
-            $array[] = app('amount')->formatAnything($total['currency'], $total['amount']);
+            if (null !== $total['currency']) {
+                $array[] = app('amount')->formatAnything($total['currency'], $total['amount']);
+            }
         }
 
         return implode(' / ', $array);

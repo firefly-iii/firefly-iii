@@ -92,6 +92,8 @@ class UserEventHandlerTest extends TestCase
         $listener   = new UserEventHandler();
 
         // mock stuff
+
+        $repository->shouldReceive('hasRole')->once()->andReturn(false);
         $repository->shouldReceive('count')->once()->andReturn(1);
         $repository->shouldReceive('getRole')->once()->andReturn(null);
         $repository->shouldReceive('attachRole')->once()->withArgs([Mockery::any(), 'owner']);
@@ -112,6 +114,7 @@ class UserEventHandlerTest extends TestCase
         $listener   = new UserEventHandler();
 
         // mock stuff
+        $repository->shouldReceive('hasRole')->once()->andReturn(false);
         $repository->shouldReceive('count')->once()->andReturn(1);
         $repository->shouldReceive('getRole')->once()->andReturn(new Role);
         $repository->shouldReceive('attachRole')->once()->withArgs([Mockery::any(), 'owner']);
@@ -131,6 +134,7 @@ class UserEventHandlerTest extends TestCase
         $listener   = new UserEventHandler();
 
         // mock stuff
+        $repository->shouldReceive('hasRole')->once()->andReturn(true);
         $repository->shouldReceive('count')->once()->andReturn(1);
 
         $listener->checkSingleUserIsAdmin($event);
