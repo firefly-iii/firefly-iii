@@ -31,7 +31,6 @@ use FireflyIII\User;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Log;
-use Preferences;
 use View;
 
 /**
@@ -100,7 +99,7 @@ class CurrencyController extends Controller
      */
     public function defaultCurrency(Request $request, TransactionCurrency $currency)
     {
-        Preferences::set('currencyPreference', $currency->code);
+        app('preferences')->set('currencyPreference', $currency->code);
         app('preferences')->mark();
 
         $request->session()->flash('success', trans('firefly.new_default_currency', ['name' => $currency->name]));
@@ -215,7 +214,7 @@ class CurrencyController extends Controller
         /** @var User $user */
         $user       = auth()->user();
         $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize   = (int)Preferences::get('listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->repository->get();
         $total      = $collection->count();
         $collection = $collection->sortBy(
@@ -227,7 +226,7 @@ class CurrencyController extends Controller
         $currencies = new LengthAwarePaginator($collection, $total, $pageSize, $page);
         $currencies->setPath(route('currencies.index'));
 
-        $defaultCurrency = $this->repository->getCurrencyByPreference(Preferences::get('currencyPreference', config('firefly.default_currency', 'EUR')));
+        $defaultCurrency = $this->repository->getCurrencyByPreference(app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR')));
         $isOwner         = true;
         if (!$this->userRepository->hasRole($user, 'owner')) {
             $request->session()->flash('info', trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));

@@ -37,8 +37,6 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Log;
-use Preferences;
-use View;
 
 /**
  * Class ReportController.
@@ -62,7 +60,7 @@ class ReportController extends Controller
             function ($request, $next) {
                 app('view')->share('title', trans('firefly.reports'));
                 app('view')->share('mainTitleIcon', 'fa-line-chart');
-                View::share('subTitleIcon', 'fa-calendar');
+                app('view')->share('subTitleIcon', 'fa-calendar');
                 $this->helper     = app(ReportHelperInterface::class);
                 $this->repository = app(BudgetRepositoryInterface::class);
 
@@ -91,7 +89,7 @@ class ReportController extends Controller
         }
         $this->repository->cleanupBudgets();
 
-        View::share(
+        app('view')->share(
             'subTitle', trans(
                           'firefly.report_account',
                           ['start' => $start->formatLocalized($this->monthFormat), 'end' => $end->formatLocalized($this->monthFormat)]
@@ -124,7 +122,7 @@ class ReportController extends Controller
         }
         $this->repository->cleanupBudgets();
 
-        View::share(
+        app('view')->share(
             'subTitle',
             trans(
                 'firefly.report_audit',
@@ -161,7 +159,7 @@ class ReportController extends Controller
         }
         $this->repository->cleanupBudgets();
 
-        View::share(
+        app('view')->share(
             'subTitle',
             trans(
                 'firefly.report_budget',
@@ -199,7 +197,7 @@ class ReportController extends Controller
         }
         $this->repository->cleanupBudgets();
 
-        View::share(
+        app('view')->share(
             'subTitle',
             trans(
                 'firefly.report_category',
@@ -237,7 +235,7 @@ class ReportController extends Controller
         }
         $this->repository->cleanupBudgets();
 
-        View::share(
+        app('view')->share(
             'subTitle',
             trans(
                 'firefly.report_default',
@@ -264,7 +262,7 @@ class ReportController extends Controller
         /** @var Carbon $start */
         $start            = clone session('first');
         $months           = $this->helper->listOfMonths($start);
-        $customFiscalYear = Preferences::get('customFiscalYear', 0)->data;
+        $customFiscalYear = app('preferences')->get('customFiscalYear', 0)->data;
         $accounts         = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $accountList      = implode(',', $accounts->pluck('id')->toArray());
         $this->repository->cleanupBudgets();
@@ -395,7 +393,7 @@ class ReportController extends Controller
         }
         $this->repository->cleanupBudgets();
 
-        View::share(
+        app('view')->share(
             'subTitle',
             trans(
                 'firefly.report_tag',

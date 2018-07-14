@@ -44,7 +44,6 @@ use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Passport;
 use Log;
 use phpseclib\Crypt\RSA;
-use Preferences;
 
 /**
  * Class ProfileController.
@@ -125,7 +124,7 @@ class ProfileController extends Controller
     {
         // find preference with this token value.
         /** @var Collection $set */
-        $set  = Preferences::findByName('email_change_confirm_token');
+        $set  = app('preferences')->findByName('email_change_confirm_token');
         $user = null;
         Log::debug(sprintf('Found %d preferences', $set->count()));
         /** @var Preference $preference */
@@ -166,8 +165,8 @@ class ProfileController extends Controller
      */
     public function deleteCode()
     {
-        Preferences::delete('twoFactorAuthEnabled');
-        Preferences::delete('twoFactorAuthSecret');
+        app('preferences')->delete('twoFactorAuthEnabled');
+        app('preferences')->delete('twoFactorAuthSecret');
         session()->flash('success', (string)trans('firefly.pref_two_factor_auth_disabled'));
         session()->flash('info', (string)trans('firefly.pref_two_factor_auth_remove_it'));
 
@@ -186,7 +185,7 @@ class ProfileController extends Controller
         if ($repository->hasRole($user, 'demo')) {
             return redirect(route('profile.index'));
         }
-        $hasTwoFactorAuthSecret = (null !== Preferences::get('twoFactorAuthSecret'));
+        $hasTwoFactorAuthSecret = (null !== app('preferences')->get('twoFactorAuthSecret'));
 
         // if we don't have a valid secret yet, redirect to the code page to get one.
         if (!$hasTwoFactorAuthSecret) {
@@ -196,7 +195,7 @@ class ProfileController extends Controller
         // If FF3 already has a secret, just set the two factor auth enabled to 1,
         // and let the user continue with the existing secret.
 
-        Preferences::set('twoFactorAuthEnabled', 1);
+        app('preferences')->set('twoFactorAuthEnabled', 1);
 
         return redirect(route('profile.index'));
     }
@@ -220,15 +219,15 @@ class ProfileController extends Controller
         }
         $subTitle   = auth()->user()->email;
         $userId     = auth()->user()->id;
-        $enabled2FA = 1 === (int)Preferences::get('twoFactorAuthEnabled', 0)->data;
+        $enabled2FA = 1 === (int)app('preferences')->get('twoFactorAuthEnabled', 0)->data;
         /** @var User $user */
         $user = auth()->user();
 
         // get access token or create one.
-        $accessToken = Preferences::get('access_token', null);
+        $accessToken = app('preferences')->get('access_token', null);
         if (null === $accessToken) {
             $token       = $user->generateAccessToken();
-            $accessToken = Preferences::set('access_token', $token);
+            $accessToken = app('preferences')->set('access_token', $token);
         }
 
         return view('profile.index', compact('subTitle', 'userId', 'accessToken', 'enabled2FA'));
@@ -312,8 +311,8 @@ class ProfileController extends Controller
      */
     public function postCode(TokenFormRequest $request)
     {
-        Preferences::set('twoFactorAuthEnabled', 1);
-        Preferences::set('twoFactorAuthSecret', session()->get('two-factor-secret'));
+        app('preferences')->set('twoFactorAuthEnabled', 1);
+        app('preferences')->set('twoFactorAuthSecret', session()->get('two-factor-secret'));
 
         session()->flash('success', (string)trans('firefly.saved_preferences'));
         app('preferences')->mark();
@@ -353,7 +352,7 @@ class ProfileController extends Controller
         /** @var User $user */
         $user  = auth()->user();
         $token = $user->generateAccessToken();
-        Preferences::set('access_token', $token);
+        app('preferences')->set('access_token', $token);
         session()->flash('success', (string)trans('firefly.token_regenerated'));
 
         return redirect(route('profile.index'));
@@ -371,7 +370,7 @@ class ProfileController extends Controller
     public function undoEmailChange(UserRepositoryInterface $repository, string $token, string $hash)
     {
         // find preference with this token value.
-        $set  = Preferences::findByName('email_change_undo_token');
+        $set  = app('preferences')->findByName('email_change_undo_token');
         $user = null;
         /** @var Preference $preference */
         foreach ($set as $preference) {
@@ -385,7 +384,7 @@ class ProfileController extends Controller
 
         // found user.
         // which email address to return to?
-        $set = Preferences::beginsWith($user, 'previous_email_');
+        $set = app('preferences')->beginsWith($user, 'previous_email_');
         /** @var string $match */
         $match = null;
         foreach ($set as $entry) {

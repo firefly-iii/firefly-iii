@@ -32,13 +32,12 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
-use Preferences;
-use View;
 
 /**
  *
@@ -46,6 +45,7 @@ use View;
  */
 class AmountController extends Controller
 {
+    use DateCalculation;
     /** @var BudgetRepositoryInterface */
     private $repository;
 
@@ -56,7 +56,7 @@ class AmountController extends Controller
     {
         parent::__construct();
 
-        View::share('hideBudgets', true);
+        app('view')->share('hideBudgets', true);
 
         $this->middleware(
             function ($request, $next) {
@@ -79,53 +79,36 @@ class AmountController extends Controller
      */
     public function amount(Request $request, BudgetRepositoryInterface $repository, Budget $budget): JsonResponse
     {
-        $amount      = (string)$request->get('amount');
-        $start       = Carbon::createFromFormat('Y-m-d', $request->get('start'));
-        $end         = Carbon::createFromFormat('Y-m-d', $request->get('end'));
-        $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
-        $largeDiff   = false;
-        $warnText    = '';
-        $days        = 0;
-        $daysInMonth = 0;
-        if (0 === bccomp($amount, '0')) {
-            $budgetLimit = null;
-        }
+        $amount        = (string)$request->get('amount');
+        $start         = Carbon::createFromFormat('Y-m-d', $request->get('start'));
+        $end           = Carbon::createFromFormat('Y-m-d', $request->get('end'));
+        $budgetLimit   = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
+        $spent         = $repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
+        $currency      = app('amount')->getDefaultCurrency();
+        $left          = app('amount')->formatAnything($currency, bcadd($amount, $spent), true);
+        $largeDiff     = false;
+        $warnText      = '';
+        $leftPerDay    = null;
+        $periodLength  = $start->diffInDays($end);
+        $dayDifference = $this->getDayDifference($start, $end);
 
-        // if today is between start and end, use the diff in days between end and today (days left)
-        // otherwise, use diff between start and end.
-        $today = new Carbon;
-        Log::debug(sprintf('Start is %s, end is %s, today is %s', $start->format('Y-m-d'), $end->format('Y-m-d'), $today->format('Y-m-d')));
-        if ($today->gte($start) && $today->lte($end)) {
-            $days        = $end->diffInDays($today);
-            $daysInMonth = $start->diffInDays($today);
-        }
-        if ($today->lte($start) || $today->gte($end)) {
-            $days        = $start->diffInDays($end);
-            $daysInMonth = $start->diffInDays($end);
-        }
-        $days        = 0 === $days ? 1 : $days;
-        $daysInMonth = 0 === $daysInMonth ? 1 : $daysInMonth;
 
-        // calculate left in budget:
-        $spent      = $repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
-        $currency   = app('amount')->getDefaultCurrency();
-        $left       = app('amount')->formatAnything($currency, bcadd($amount, $spent), true);
-        $leftPerDay = 'none';
-
-        // is user has money left, calculate.
+        /*
+         * If the user budgets ANY amount per day for this budget (anything but zero)
+         * Firefly III calculates how much he could spend per day.
+         */
         if (1 === bccomp(bcadd($amount, $spent), '0')) {
-            $leftPerDay = app('amount')->formatAnything($currency, bcdiv(bcadd($amount, $spent), (string)$days), true);
+            $leftPerDay = app('amount')->formatAnything($currency, bcdiv(bcadd($amount, $spent), (string)$dayDifference), true);
         }
 
-
-        // over or under budgeting, compared to previous budgets?
+        /*
+         * Get the average amount of money the user budgets for this budget.
+         * And calculate the same for the current amount.
+         *
+         * If the difference is very large, give the user a notification.
+         */
         $average = $this->repository->budgetedPerDay($budget);
-        // current average per day:
-        $diff    = $start->diffInDays($end);
-        $current = $amount;
-        if ($diff > 0) {
-            $current = bcdiv($amount, (string)$diff);
-        }
+        $current = bcdiv($amount, (string)$periodLength);
         if (bccomp(bcmul('1.1', $average), $current) === -1) {
             $largeDiff = true;
             $warnText  = (string)trans(
@@ -150,8 +133,6 @@ class AmountController extends Controller
                 'large_diff'   => $largeDiff,
                 'left_per_day' => $leftPerDay,
                 'warn_text'    => $warnText,
-                'daysInMonth'  => $daysInMonth,
-
             ]
         );
     }
@@ -187,7 +168,7 @@ class AmountController extends Controller
             'suggested' => '0',
         ];
         $currency = app('amount')->getDefaultCurrency();
-        $range    = Preferences::get('viewRange', '1M')->data;
+        $range    = app('preferences')->get('viewRange', '1M')->data;
         /** @var Carbon $begin */
         $begin = app('navigation')->subtractPeriod($start, $range, 3);
 
@@ -272,5 +253,4 @@ class AmountController extends Controller
 
         return view('budgets.income', compact('available', 'start', 'end', 'page'));
     }
-
 }

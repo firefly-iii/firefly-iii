@@ -29,7 +29,6 @@ use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\Request;
-use Preferences;
 
 /**
  *
@@ -103,11 +102,11 @@ class CreateController extends Controller
         app('preferences')->mark();
 
         // update preferences if necessary:
-        $frontPage = Preferences::get('frontPageAccounts', [])->data;
+        $frontPage = app('preferences')->get('frontPageAccounts', [])->data;
         if (AccountType::ASSET === $account->accountType->type && \count($frontPage) > 0) {
             // @codeCoverageIgnoreStart
             $frontPage[] = $account->id;
-            Preferences::set('frontPageAccounts', $frontPage);
+            app('preferences')->set('frontPageAccounts', $frontPage);
             // @codeCoverageIgnoreEnd
         }
         // redirect to previous URL.

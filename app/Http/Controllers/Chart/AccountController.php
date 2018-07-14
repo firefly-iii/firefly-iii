@@ -39,7 +39,6 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Log;
-use Preferences;
 
 /** checked
  * Class AccountController.
@@ -231,7 +230,7 @@ class AccountController extends Controller
         $end        = clone session('end', Carbon::now()->endOfMonth());
         $defaultSet = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray();
         Log::debug('Default set is ', $defaultSet);
-        $frontPage = Preferences::get('frontPageAccounts', $defaultSet);
+        $frontPage = app('preferences')->get('frontPageAccounts', $defaultSet);
 
 
         Log::debug('Frontpage preference set is ', $frontPage->data);

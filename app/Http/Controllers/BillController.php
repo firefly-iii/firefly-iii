@@ -36,10 +36,8 @@ use Illuminate\Support\Collection;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\DataArraySerializer;
-use Preferences;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use URL;
-use View;
 
 /**
  * Class BillController.
@@ -65,7 +63,7 @@ class BillController extends Controller
         $maxFileSize = app('steam')->phpBytes(ini_get('upload_max_filesize'));
         $maxPostSize = app('steam')->phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
-        View::share('uploadSize', $uploadSize);
+        app('view')->share('uploadSize', $uploadSize);
 
         $this->middleware(
             function ($request, $next) {
@@ -186,7 +184,7 @@ class BillController extends Controller
     {
         $start      = session('start');
         $end        = session('end');
-        $pageSize   = (int)Preferences::get('listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
         $paginator  = $this->billRepository->getPaginator($pageSize);
         $parameters = new ParameterBag();
         $parameters->set('start', $start);
@@ -269,7 +267,7 @@ class BillController extends Controller
         $end            = session('end');
         $year           = $start->year;
         $page           = (int)$request->get('page');
-        $pageSize       = (int)Preferences::get('listPageSize', 50)->data;
+        $pageSize       = (int)app('preferences')->get('listPageSize', 50)->data;
         $yearAverage    = $this->billRepository->getYearAverage($bill, $start);
         $overallAverage = $this->billRepository->getOverallAverage($bill);
         $manager        = new Manager();

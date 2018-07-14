@@ -25,7 +25,6 @@ namespace FireflyIII\Http\Controllers;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\Request;
-use Preferences;
 
 /**
  * Class PreferencesController.
@@ -57,16 +56,16 @@ class PreferencesController extends Controller
     public function index(AccountRepositoryInterface $repository)
     {
         $accounts      = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $viewRangePref = Preferences::get('viewRange', '1M');
+        $viewRangePref = app('preferences')->get('viewRange', '1M');
         /** @noinspection NullPointerExceptionInspection */
         $viewRange          = $viewRangePref->data;
-        $frontPageAccounts  = Preferences::get('frontPageAccounts', []);
-        $language           = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
-        $listPageSize       = Preferences::get('listPageSize', 50)->data;
-        $customFiscalYear   = Preferences::get('customFiscalYear', 0)->data;
-        $fiscalYearStartStr = Preferences::get('fiscalYearStart', '01-01')->data;
+        $frontPageAccounts  = app('preferences')->get('frontPageAccounts', []);
+        $language           = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
+        $listPageSize       = app('preferences')->get('listPageSize', 50)->data;
+        $customFiscalYear   = app('preferences')->get('customFiscalYear', 0)->data;
+        $fiscalYearStartStr = app('preferences')->get('fiscalYearStart', '01-01')->data;
         $fiscalYearStart    = date('Y') . '-' . $fiscalYearStartStr;
-        $tjOptionalFields   = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $tjOptionalFields   = app('preferences')->get('transaction_journal_optional_fields', [])->data;
 
         return view(
             'preferences.index',
@@ -96,11 +95,11 @@ class PreferencesController extends Controller
             foreach ($request->get('frontPageAccounts') as $id) {
                 $frontPageAccounts[] = (int)$id;
             }
-            Preferences::set('frontPageAccounts', $frontPageAccounts);
+            app('preferences')->set('frontPageAccounts', $frontPageAccounts);
         }
 
         // view range:
-        Preferences::set('viewRange', $request->get('viewRange'));
+        app('preferences')->set('viewRange', $request->get('viewRange'));
         // forget session values:
         session()->forget('start');
         session()->forget('end');
@@ -109,20 +108,20 @@ class PreferencesController extends Controller
         // custom fiscal year
         $customFiscalYear = 1 === (int)$request->get('customFiscalYear');
         $fiscalYearStart  = date('m-d', strtotime((string)$request->get('fiscalYearStart')));
-        Preferences::set('customFiscalYear', $customFiscalYear);
-        Preferences::set('fiscalYearStart', $fiscalYearStart);
+        app('preferences')->set('customFiscalYear', $customFiscalYear);
+        app('preferences')->set('fiscalYearStart', $fiscalYearStart);
 
         // save page size:
-        Preferences::set('listPageSize', 50);
+        app('preferences')->set('listPageSize', 50);
         $listPageSize = (int)$request->get('listPageSize');
         if ($listPageSize > 0 && $listPageSize < 1337) {
-            Preferences::set('listPageSize', $listPageSize);
+            app('preferences')->set('listPageSize', $listPageSize);
         }
 
         // language:
         $lang = $request->get('language');
         if (array_key_exists($lang, config('firefly.languages'))) {
-            Preferences::set('language', $lang);
+            app('preferences')->set('language', $lang);
         }
 
         // optional fields for transactions:
@@ -138,7 +137,7 @@ class PreferencesController extends Controller
             'notes'              => isset($setOptions['notes']),
             'attachments'        => isset($setOptions['attachments']),
         ];
-        Preferences::set('transaction_journal_optional_fields', $optionalTj);
+        app('preferences')->set('transaction_journal_optional_fields', $optionalTj);
 
         session()->flash('success', (string)trans('firefly.saved_preferences'));
         app('preferences')->mark();

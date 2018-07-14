@@ -33,7 +33,6 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use View;
 
 /**
  * Class TagController.
@@ -49,7 +48,7 @@ class TagController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('hideTags', true);
+        app('view')->share('hideTags', true);
         $this->redirectUri = route('tags.index');
 
         $this->middleware(

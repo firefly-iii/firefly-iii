@@ -29,7 +29,6 @@ use FireflyIII\Http\Requests\UserFormRequest;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Log;
-use Preferences;
 
 /**
  * Class UserController.
@@ -121,7 +120,7 @@ class UserController extends Controller
         $users->each(
             function (User $user) use ($repository) {
                 $list          = ['twoFactorAuthEnabled', 'twoFactorAuthSecret'];
-                $preferences   = Preferences::getArrayForUser($user, $list);
+                $preferences   = app('preferences')->getArrayForUser($user, $list);
                 $user->isAdmin = $repository->hasRole($user, 'owner');
                 $is2faEnabled  = 1 === $preferences['twoFactorAuthEnabled'];
                 $has2faSecret  = null !== $preferences['twoFactorAuthSecret'];

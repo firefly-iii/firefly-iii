@@ -36,7 +36,6 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
-use Preferences;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -220,7 +219,7 @@ class PiggyBankController extends Controller
         $collection = $this->piggyRepos->getPiggyBanks();
         $total      = $collection->count();
         $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize   = (int)Preferences::get('listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
         $accounts   = [];
         /** @var Carbon $end */
         $end = session('end', Carbon::now()->endOfMonth());

@@ -24,7 +24,6 @@ namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
-use Preferences;
 
 /**
  * Class RedirectIfTwoFactorAuthenticated.
@@ -43,9 +42,9 @@ class RedirectIfTwoFactorAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            $is2faEnabled = Preferences::get('twoFactorAuthEnabled', false)->data;
+            $is2faEnabled = app('preferences')->get('twoFactorAuthEnabled', false)->data;
 
-            $has2faSecret = null !== Preferences::get('twoFactorAuthSecret');
+            $has2faSecret = null !== app('preferences')->get('twoFactorAuthSecret');
 
             // grab 2auth information from cookie.
             $is2faAuthed = 'true' === $request->cookie('twoFactorAuthenticated');

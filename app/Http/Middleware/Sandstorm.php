@@ -30,7 +30,6 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\Request;
 use Log;
-use View;
 
 /**
  * Class Sandstorm.
@@ -53,7 +52,7 @@ class Sandstorm
     {
         // is in Sandstorm environment?
         $sandstorm = 1 === (int)getenv('SANDSTORM');
-        View::share('SANDSTORM', $sandstorm);
+        app('view')->share('SANDSTORM', $sandstorm);
         if (!$sandstorm) {
             return $next($request);
         }
@@ -76,7 +75,7 @@ class Sandstorm
                 $user = $repository->first();
                 /** @noinspection NullPointerExceptionInspection */
                 Auth::guard($guard)->login($user);
-                View::share('SANDSTORM_ANON', false);
+                app('view')->share('SANDSTORM_ANON', false);
 
                 return $next($request);
             }
@@ -86,7 +85,7 @@ class Sandstorm
                 $user = User::first();
                 /** @noinspection NullPointerExceptionInspection */
                 Auth::guard($guard)->login($user);
-                View::share('SANDSTORM_ANON', true);
+                app('view')->share('SANDSTORM_ANON', true);
 
                 return $next($request);
             }
@@ -108,7 +107,7 @@ class Sandstorm
                 $repository->attachRole($user, 'owner');
 
                 // share value.
-                View::share('SANDSTORM_ANON', false);
+                app('view')->share('SANDSTORM_ANON', false);
 
                 return $next($request);
             }
@@ -124,11 +123,11 @@ class Sandstorm
         // if in Sandstorm, user logged in, still must check if user is anon.
         $userId = (string)$request->header('X-Sandstorm-User-Id');
         if ('' === $userId) {
-            View::share('SANDSTORM_ANON', true);
+            app('view')->share('SANDSTORM_ANON', true);
 
             return $next($request);
         }
-        View::share('SANDSTORM_ANON', false);
+        app('view')->share('SANDSTORM_ANON', false);
 
         return $next($request);
     }

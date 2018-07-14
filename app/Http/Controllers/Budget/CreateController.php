@@ -29,7 +29,6 @@ use FireflyIII\Http\Requests\BudgetFormRequest;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use View;
 
 /**
  * Class CreateController
@@ -46,7 +45,7 @@ class CreateController extends Controller
     {
         parent::__construct();
 
-        View::share('hideBudgets', true);
+        app('view')->share('hideBudgets', true);
 
         $this->middleware(
             function ($request, $next) {

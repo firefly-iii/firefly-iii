@@ -40,7 +40,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
-use Preferences;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use View;
 
@@ -85,7 +84,7 @@ class TransactionController extends Controller
         $subTitleIcon = config('firefly.transactionIconsByWhat.' . $what);
         $types        = config('firefly.transactionTypesByWhat.' . $what);
         $page         = (int)$request->get('page');
-        $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         if (null === $start) {
             $start = session('start');
             $end   = session('end');
@@ -130,7 +129,7 @@ class TransactionController extends Controller
         $subTitleIcon = config('firefly.transactionIconsByWhat.' . $what);
         $types        = config('firefly.transactionTypesByWhat.' . $what);
         $page         = (int)$request->get('page');
-        $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         $path         = route('transactions.index.all', [$what]);
         $first        = $this->repository->firstNull();
         $start        = null === $first ? new Carbon : $first->date;
@@ -245,7 +244,7 @@ class TransactionController extends Controller
      */
     private function getPeriodOverview(string $what, Carbon $date): Collection
     {
-        $range = Preferences::get('viewRange', '1M')->data;
+        $range = app('preferences')->get('viewRange', '1M')->data;
         $first = $this->repository->firstNull();
         $start = new Carbon;
         $start->subYear();

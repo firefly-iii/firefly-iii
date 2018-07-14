@@ -27,7 +27,6 @@ use FireflyIII\Http\Requests\NewUserFormRequest;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use Preferences;
 use View;
 
 /**
@@ -89,7 +88,7 @@ class NewUserController extends Controller
         }
 
         // set language preference:
-        Preferences::set('language', $language);
+        app('preferences')->set('language', $language);
         // Store currency preference from input:
         $currency = $currencyRepository->findNull((int)$request->input('amount_currency_id_bank_balance'));
 
@@ -108,7 +107,7 @@ class NewUserController extends Controller
         $this->createCashWalletAccount($currency, $language);
 
         // store currency preference:
-        Preferences::set('currencyPreference', $currency->code);
+        app('preferences')->set('currencyPreference', $currency->code);
         app('preferences')->mark();
 
         // set default optional fields:
@@ -123,7 +122,7 @@ class NewUserController extends Controller
             'notes'              => true,
             'attachments'        => true,
         ];
-        Preferences::set('transaction_journal_optional_fields', $visibleFields);
+        app('preferences')->set('transaction_journal_optional_fields', $visibleFields);
 
         session()->flash('success', (string)trans('firefly.stored_new_accounts_new_user'));
         app('preferences')->mark();

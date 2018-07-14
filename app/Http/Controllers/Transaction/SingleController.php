@@ -38,7 +38,6 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Log;
-use Preferences;
 use View;
 
 /**
@@ -63,7 +62,7 @@ class SingleController extends Controller
         $maxFileSize = app('steam')->phpBytes(ini_get('upload_max_filesize'));
         $maxPostSize = app('steam')->phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
-        View::share('uploadSize', $uploadSize);
+        app('view')->share('uploadSize', $uploadSize);
 
         // some useful repositories:
         $this->middleware(
@@ -148,7 +147,7 @@ class SingleController extends Controller
         $preFilled      = session()->has('preFilled') ? session('preFilled') : [];
         $subTitle       = trans('form.add_new_' . $what);
         $subTitleIcon   = 'fa-plus';
-        $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $optionalFields = app('preferences')->get('transaction_journal_optional_fields', [])->data;
         $source         = (int)$request->get('source');
 
         // grab old currency ID from old data:
@@ -259,7 +258,7 @@ class SingleController extends Controller
         // journal related code
         $sourceAccounts      = $repository->getJournalSourceAccounts($journal);
         $destinationAccounts = $repository->getJournalDestinationAccounts($journal);
-        $optionalFields      = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $optionalFields      = app('preferences')->get('transaction_journal_optional_fields', [])->data;
         $pTransaction        = $repository->getFirstPosTransaction($journal);
         $foreignCurrency     = $pTransaction->foreignCurrency ?? $pTransaction->transactionCurrency;
         $preFilled           = [

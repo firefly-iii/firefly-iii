@@ -30,7 +30,6 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use View;
 
 /**
  *
@@ -48,7 +47,7 @@ class EditController extends Controller
     {
         parent::__construct();
 
-        View::share('hideBudgets', true);
+        app('view')->share('hideBudgets', true);
 
         $this->middleware(
             function ($request, $next) {

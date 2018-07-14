@@ -36,7 +36,6 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Preferences;
 use View;
 
 /**
@@ -100,7 +99,7 @@ class ShowController extends Controller
         $today        = new Carbon;
         $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
         $page         = (int)$request->get('page');
-        $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         $currencyId   = (int)$this->repository->getMetaValue($account, 'currency_id');
         $currency     = $this->currencyRepos->findNull($currencyId);
         if (0 === $currencyId) {
@@ -146,7 +145,7 @@ class ShowController extends Controller
         $start        = $this->repository->oldestJournalDate($account);
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $page         = (int)$request->get('page');
-        $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         $currencyId   = (int)$this->repository->getMetaValue($account, 'currency_id');
         $currency     = $this->currencyRepos->findNull($currencyId);
         if (0 === $currencyId) {
@@ -187,7 +186,7 @@ class ShowController extends Controller
      */
     private function getPeriodOverview(Account $account, ?Carbon $date): Collection
     {
-        $range = Preferences::get('viewRange', '1M')->data;
+        $range = app('preferences')->get('viewRange', '1M')->data;
         $start = $this->repository->oldestJournalDate($account);
         $end   = $date ?? new Carbon;
         if ($end < $start) {

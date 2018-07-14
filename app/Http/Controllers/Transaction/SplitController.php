@@ -38,7 +38,6 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Preferences;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use View;
 
@@ -102,7 +101,7 @@ class SplitController extends Controller
         $budgets    = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
 
         // other fields
-        $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $optionalFields = app('preferences')->get('transaction_journal_optional_fields', [])->data;
         $preFilled      = $this->arrayFromJournal($request, $journal);
 
         // put previous url in session if not redirect from store (not "return_to_edit").

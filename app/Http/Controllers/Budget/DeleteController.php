@@ -28,7 +28,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Http\Request;
-use View;
 
 /**
  *
@@ -46,7 +45,7 @@ class DeleteController extends Controller
     {
         parent::__construct();
 
-        View::share('hideBudgets', true);
+        app('view')->share('hideBudgets', true);
 
         $this->middleware(
             function ($request, $next) {

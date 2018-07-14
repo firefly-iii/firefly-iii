@@ -36,8 +36,6 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Preferences;
-use View;
 
 /**
  *
@@ -56,7 +54,7 @@ class ShowController extends Controller
     {
         parent::__construct();
 
-        View::share('hideBudgets', true);
+        app('view')->share('hideBudgets', true);
 
         $this->middleware(
             function ($request, $next) {
@@ -80,7 +78,7 @@ class ShowController extends Controller
     {
         // default values:
         $moment  = $moment ?? '';
-        $range   = Preferences::get('viewRange', '1M')->data;
+        $range   = app('preferences')->get('viewRange', '1M')->data;
         $start   = null;
         $end     = null;
         $periods = new Collection;
@@ -117,7 +115,7 @@ class ShowController extends Controller
         }
 
         $page     = (int)$request->get('page');
-        $pageSize = (int)Preferences::get('listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
 
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -141,7 +139,7 @@ class ShowController extends Controller
         $start      = session('first', Carbon::create()->startOfYear());
         $end        = new Carbon;
         $page       = (int)$request->get('page');
-        $pageSize   = (int)Preferences::get('listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
         $limits     = $this->getLimits($budget, $start, $end);
         $repetition = null;
 
@@ -172,7 +170,7 @@ class ShowController extends Controller
         }
 
         $page     = (int)$request->get('page');
-        $pageSize = (int)Preferences::get('listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
         $subTitle = trans(
             'firefly.budget_in_period',
             [
@@ -239,7 +237,7 @@ class ShowController extends Controller
         $repository = app(JournalRepositoryInterface::class);
         $first      = $repository->firstNull();
         $start      = null === $first ? new Carbon : $first->date;
-        $range      = Preferences::get('viewRange', '1M')->data;
+        $range      = app('preferences')->get('viewRange', '1M')->data;
         $start      = app('navigation')->startOfPeriod($start, $range);
         $end        = app('navigation')->endOfX(new Carbon, $range, null);
         $entries    = new Collection;

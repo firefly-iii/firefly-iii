@@ -60,31 +60,29 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function budgetedPerDay(Budget $budget): string
     {
+        Log::debug(sprintf('Now with budget #%d "%s"', $budget->id, $budget->name));
         $total = '0';
         $count = 0;
         foreach ($budget->budgetlimits as $limit) {
-            $diff = (string)$limit->start_date->diffInDays($limit->end_date);
-            if (bccomp('0', $diff) === 0) {
-                $diff = '1';
-            }
+            $diff   = $limit->start_date->diffInDays($limit->end_date);
+            $diff   = 0 === $diff ? 1 : $diff;
             $amount = (string)$limit->amount;
-            $perDay = bcdiv($amount, $diff);
+            $perDay = bcdiv($amount, (string)$diff);
             $total  = bcadd($total, $perDay);
             $count++;
+            Log::debug(sprintf('Found %d budget limits. Per day is %s, total is %s', $count, $perDay, $total));
         }
         $avg = $total;
         if ($count > 0) {
             $avg = bcdiv($total, (string)$count);
         }
+        Log::debug(sprintf('%s / %d = %s = average.', $total, $count, $avg));
 
         return $avg;
     }
 
     /**
      * @return bool
-     *
-
-
      */
     public function cleanupBudgets(): bool
     {
@@ -852,10 +850,9 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Carbon $end
      * @param string $amount
      *
-     * @return BudgetLimit
-     * @throws \Exception
+     * @return BudgetLimit|null
      */
-    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): BudgetLimit
+    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): ?BudgetLimit
     {
         $this->cleanupBudgets();
         // count the limits:
@@ -885,9 +882,14 @@ class BudgetRepository implements BudgetRepositoryInterface
         // 1 if the left_operand is larger than the right_operand, -1 otherwise.
         if (null !== $limit && bccomp($amount, '0') <= 0) {
             Log::debug(sprintf('%s is zero, delete budget limit #%d', $amount, $limit->id));
-            $limit->delete();
+            try {
+                $limit->delete();
+            } catch (Exception $e) {
+                Log::debug(sprintf('Could not delete limit: %s', $e->getMessage()));
+            }
 
-            return new BudgetLimit;
+
+            return null;
         }
         // update if exists:
         if (null !== $limit) {

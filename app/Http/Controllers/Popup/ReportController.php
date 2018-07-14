@@ -35,7 +35,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use InvalidArgumentException;
-use View;
 
 /**
  * Class ReportController.
@@ -89,8 +88,8 @@ class ReportController extends Controller
         $attributes = $request->get('attributes') ?? [];
         $attributes = $this->parseAttributes($attributes);
 
-        View::share('start', $attributes['startDate']);
-        View::share('end', $attributes['endDate']);
+        app('view')->share('start', $attributes['startDate']);
+        app('view')->share('end', $attributes['endDate']);
 
         switch ($attributes['location']) {
             default:

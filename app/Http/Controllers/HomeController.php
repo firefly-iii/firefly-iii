@@ -36,7 +36,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
-use Preferences;
 use View;
 
 /**
@@ -111,7 +110,7 @@ class HomeController extends Controller
         }
         $subTitle     = trans('firefly.welcomeBack');
         $transactions = [];
-        $frontPage    = Preferences::get(
+        $frontPage    = app('preferences')->get(
             'frontPageAccounts',
             $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray()
         );

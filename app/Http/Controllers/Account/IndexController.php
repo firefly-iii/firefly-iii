@@ -29,7 +29,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Preferences;
 
 /**
  *
@@ -75,7 +74,7 @@ class IndexController extends Controller
         $collection   = $this->repository->getAccountsByType($types);
         $total        = $collection->count();
         $page         = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         $accounts     = $collection->slice(($page - 1) * $pageSize, $pageSize);
         unset($collection);
         /** @var Carbon $start */

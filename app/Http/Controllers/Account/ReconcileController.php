@@ -38,7 +38,6 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
 use Log;
-use Preferences;
 
 /**
  * Class ReconcileController.
@@ -138,7 +137,7 @@ class ReconcileController extends Controller
         }
 
         // no start or end:
-        $range = Preferences::get('viewRange', '1M')->data;
+        $range = app('preferences')->get('viewRange', '1M')->data;
 
         // get start and end
         if (null === $start && null === $end) {

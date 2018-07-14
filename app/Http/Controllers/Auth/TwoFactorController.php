@@ -29,7 +29,6 @@ use FireflyIII\User;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Http\Request;
 use Log;
-use Preferences;
 
 /**
  * Class TwoFactorController.
@@ -49,12 +48,12 @@ class TwoFactorController extends Controller
         $user = auth()->user();
 
         // to make sure the validator in the next step gets the secret, we push it in session
-        $secretPreference = Preferences::get('twoFactorAuthSecret', null);
+        $secretPreference = app('preferences')->get('twoFactorAuthSecret', null);
         $secret           = null === $secretPreference ? null : $secretPreference->data;
         $title            = (string)trans('firefly.two_factor_title');
 
         // make sure the user has two factor configured:
-        $has2FA = Preferences::get('twoFactorAuthEnabled', false)->data;
+        $has2FA = app('preferences')->get('twoFactorAuthEnabled', false)->data;
         if (null === $has2FA || false === $has2FA) {
             return redirect(route('index'));
         }

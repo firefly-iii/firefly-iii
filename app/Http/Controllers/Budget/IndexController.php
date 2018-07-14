@@ -28,11 +28,10 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Log;
-use Preferences;
-use View;
 
 /**
  *
@@ -41,6 +40,7 @@ use View;
 class IndexController extends Controller
 {
 
+    use DateCalculation;
     /** @var BudgetRepositoryInterface */
     private $repository;
 
@@ -51,7 +51,7 @@ class IndexController extends Controller
     {
         parent::__construct();
 
-        View::share('hideBudgets', true);
+        app('view')->share('hideBudgets', true);
 
         $this->middleware(
             function ($request, $next) {
@@ -73,13 +73,13 @@ class IndexController extends Controller
      */
     public function index(Request $request, string $moment = null)
     {
-        $range       = Preferences::get('viewRange', '1M')->data;
-        $start       = session('start', new Carbon);
-        $end         = session('end', new Carbon);
-        $page        = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize    = (int)Preferences::get('listPageSize', 50)->data;
-        $days        = 0;
-        $daysInMonth = 0;
+        $range    = app('preferences')->get('viewRange', '1M')->data;
+        $start    = session('start', new Carbon);
+        $end      = session('end', new Carbon);
+        $page     = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
+        $days     = 0;
+
 
         // make date if present:
         if (null !== $moment || '' !== (string)$moment) {
@@ -96,15 +96,12 @@ class IndexController extends Controller
         // otherwise, use diff between start and end.
         $today = new Carbon;
         if ($today->gte($start) && $today->lte($end)) {
-            $days        = $end->diffInDays($today);
-            $daysInMonth = $start->diffInDays($today);
+            $days = $end->diffInDays($today);
         }
         if ($today->lte($start) || $today->gte($end)) {
-            $days        = $start->diffInDays($end);
-            $daysInMonth = $start->diffInDays($end);
+            $days = $start->diffInDays($end);
         }
-        $days        = 0 === $days ? 1 : $days;
-        $daysInMonth = 0 === $daysInMonth ? 1 : $daysInMonth;
+        $days = 0 === $days ? 1 : $days;
 
 
         $next = clone $end;
@@ -113,6 +110,7 @@ class IndexController extends Controller
         $prev->subDay();
         $prev = app('navigation')->startOfPeriod($prev, $range);
         $this->repository->cleanupBudgets();
+        $daysPassed        = $this->getDaysPassedInPeriod($start, $end);
         $allBudgets        = $this->repository->getActiveBudgets();
         $total             = $allBudgets->count();
         $budgets           = $allBudgets->slice(($page - 1) * $pageSize, $pageSize);
@@ -165,10 +163,14 @@ class IndexController extends Controller
         return view(
             'budgets.index', compact(
                                'available', 'currentMonth', 'next', 'nextText', 'prev', 'allBudgets', 'prevText', 'periodStart', 'periodEnd', 'days', 'page',
-                               'budgetInformation', 'daysInMonth',
+                               'budgetInformation', 'daysPassed',
                                'inactive', 'budgets', 'spent', 'budgeted', 'previousLoop', 'nextLoop', 'start', 'end'
                            )
         );
     }
+
+
+
+
 
 }

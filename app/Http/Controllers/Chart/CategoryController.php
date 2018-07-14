@@ -32,7 +32,6 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use Preferences;
 
 /**
  * Class CategoryController.
@@ -77,7 +76,7 @@ class CategoryController extends Controller
             $start = new Carbon; // @codeCoverageIgnore
         }
 
-        $range     = Preferences::get('viewRange', '1M')->data;
+        $range     = app('preferences')->get('viewRange', '1M')->data;
         $start     = app('navigation')->startOfPeriod($start, $range);
         $end       = new Carbon;
         $accounts  = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
@@ -283,7 +282,7 @@ class CategoryController extends Controller
      */
     public function specificPeriod(Category $category, Carbon $date): JsonResponse
     {
-        $range = Preferences::get('viewRange', '1M')->data;
+        $range = app('preferences')->get('viewRange', '1M')->data;
         $start = app('navigation')->startOfPeriod($date, $range);
         $end   = app('navigation')->endOfPeriod($date, $range);
         $data  = $this->makePeriodChart($category, $start, $end);

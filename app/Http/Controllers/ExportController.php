@@ -32,7 +32,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response as LaravelResponse;
-use Preferences;
 
 /**
  * Class ExportController.
@@ -118,7 +117,7 @@ class ExportController extends Controller
 
         // does the user have shared accounts?
         $formats       = array_keys(config('firefly.export_formats'));
-        $defaultFormat = Preferences::get('export_format', config('firefly.default_export_format'))->data;
+        $defaultFormat = app('preferences')->get('export_format', config('firefly.default_export_format'))->data;
         $first         = session('first')->format('Y-m-d');
         $today         = Carbon::create()->format('Y-m-d');
 

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
-use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Http\JsonResponse;
 use Log;
 
@@ -104,7 +103,7 @@ class IntroController
             $key .= '_' . $specialPage;
         }
         Log::debug(sprintf('Going to mark the following route as NOT done: %s with special "%s" (%s)', $route, $specialPage, $key));
-        Preferences::set($key, false);
+        app('preferences')->set($key, false);
 
         return response()->json(['message' => trans('firefly.intro_boxes_after_refresh')]);
     }
@@ -123,7 +122,7 @@ class IntroController
             $key .= '_' . $specialPage;
         }
         Log::debug(sprintf('Going to mark the following route as done: %s with special "%s" (%s)', $route, $specialPage, $key));
-        Preferences::set($key, true);
+        app('preferences')->set($key, true);
 
         return response()->json(['result' => sprintf('Reported demo watched for route "%s".', $route)]);
     }

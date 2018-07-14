@@ -37,7 +37,6 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
-use Preferences;
 
 /**
  * Class CategoryController.
@@ -146,7 +145,7 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize   = (int)Preferences::get('listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->repository->getCategories();
         $total      = $collection->count();
         $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
@@ -174,12 +173,12 @@ class CategoryController extends Controller
     {
         // default values:
         $moment   = $moment ?? '';
-        $range    = Preferences::get('viewRange', '1M')->data;
+        $range    = app('preferences')->get('viewRange', '1M')->data;
         $start    = null;
         $end      = null;
         $periods  = new Collection;
         $page     = (int)$request->get('page');
-        $pageSize = (int)Preferences::get('listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
         Log::debug('Start of noCategory()');
         // prep for "all" view.
         if ('all' === $moment) {
@@ -242,8 +241,8 @@ class CategoryController extends Controller
         $subTitle     = $category->name;
         $subTitleIcon = 'fa-bar-chart';
         $page         = (int)$request->get('page');
-        $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
-        $range        = Preferences::get('viewRange', '1M')->data;
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $range        = app('preferences')->get('viewRange', '1M')->data;
         $start        = null;
         $end          = null;
         $periods      = new Collection;
@@ -362,7 +361,7 @@ class CategoryController extends Controller
     private function getNoCategoryPeriodOverview(Carbon $theDate): Collection
     {
         Log::debug(sprintf('Now in getNoCategoryPeriodOverview(%s)', $theDate->format('Y-m-d')));
-        $range = Preferences::get('viewRange', '1M')->data;
+        $range = app('preferences')->get('viewRange', '1M')->data;
         $first = $this->journalRepos->firstNull();
         $start = null === $first ? new Carbon : $first->date;
         $end   = $theDate ?? new Carbon;
@@ -447,7 +446,7 @@ class CategoryController extends Controller
      */
     private function getPeriodOverview(Category $category, Carbon $date): Collection
     {
-        $range    = Preferences::get('viewRange', '1M')->data;
+        $range    = app('preferences')->get('viewRange', '1M')->data;
         $first    = $this->journalRepos->firstNull();
         $start    = null === $first ? new Carbon : $first->date;
         $end      = $date ?? new Carbon;

@@ -27,9 +27,7 @@ use Carbon\Carbon;
 use Closure;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\Request;
-use Preferences;
 use Session;
-use View;
 
 /**
  * Class SessionFilter.
@@ -68,8 +66,8 @@ class Range
      */
     private function configureList(): void
     {
-        $pref = Preferences::get('list-length', config('firefly.list_length', 10))->data;
-        View::share('listLength', $pref);
+        $pref = app('preferences')->get('list-length', config('firefly.list_length', 10))->data;
+        app('view')->share('listLength', $pref);
     }
 
     /**
@@ -77,7 +75,7 @@ class Range
      */
     private function configureView(): void
     {
-        $pref = Preferences::get('language', config('firefly.default_language', 'en_US'));
+        $pref = app('preferences')->get('language', config('firefly.default_language', 'en_US'));
         /** @noinspection NullPointerExceptionInspection */
         $lang = $pref->data;
         App::setLocale($lang);
@@ -90,7 +88,7 @@ class Range
 
         // send error to view if could not set money format
         if (false === $moneyResult) {
-            View::share('invalidMonetaryLocale', true); // @codeCoverageIgnore
+            app('view')->share('invalidMonetaryLocale', true); // @codeCoverageIgnore
         }
 
         // save some formats:
@@ -98,9 +96,9 @@ class Range
         $dateTimeFormat    = (string)trans('config.date_time');
         $defaultCurrency   = app('amount')->getDefaultCurrency();
 
-        View::share('monthAndDayFormat', $monthAndDayFormat);
-        View::share('dateTimeFormat', $dateTimeFormat);
-        View::share('defaultCurrency', $defaultCurrency);
+        app('view')->share('monthAndDayFormat', $monthAndDayFormat);
+        app('view')->share('dateTimeFormat', $dateTimeFormat);
+        app('view')->share('defaultCurrency', $defaultCurrency);
     }
 
     /**
@@ -122,10 +120,10 @@ class Range
     {
         // ignore preference. set the range to be the current month:
         if (!Session::has('start') && !Session::has('end')) {
-            $viewRange = Preferences::get('viewRange', '1M')->data;
+            $viewRange = app('preferences')->get('viewRange', '1M')->data;
             if (null === $viewRange) {
                 $viewRange = '1M';
-                Preferences::set('viewRange', '1M');
+                app('preferences')->set('viewRange', '1M');
             }
             $start = new Carbon;
             $start = app('navigation')->updateStartDate($viewRange, $start);

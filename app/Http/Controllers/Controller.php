@@ -27,7 +27,6 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -35,7 +34,6 @@ use Illuminate\Routing\Controller as BaseController;
 use Log;
 use Route;
 use URL;
-use View;
 
 /**
  * Class Controller.
@@ -59,17 +57,17 @@ class Controller extends BaseController
     public function __construct()
     {
         // for transaction lists:
-        View::share('hideBudgets', false);
-        View::share('hideCategories', false);
-        View::share('hideBills', false);
-        View::share('hideTags', false);
+        app('view')->share('hideBudgets', false);
+        app('view')->share('hideCategories', false);
+        app('view')->share('hideBills', false);
+        app('view')->share('hideTags', false);
 
         // is site a demo site?
         $isDemoSite = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
-        View::share('IS_DEMO_SITE', $isDemoSite);
-        View::share('DEMO_USERNAME', env('DEMO_USERNAME', ''));
-        View::share('DEMO_PASSWORD', env('DEMO_PASSWORD', ''));
-        View::share('FF_VERSION', config('firefly.version'));
+        app('view')->share('IS_DEMO_SITE', $isDemoSite);
+        app('view')->share('DEMO_USERNAME', env('DEMO_USERNAME', ''));
+        app('view')->share('DEMO_PASSWORD', env('DEMO_PASSWORD', ''));
+        app('view')->share('FF_VERSION', config('firefly.version'));
 
         $this->middleware(
             function ($request, $next) {
@@ -93,17 +91,17 @@ class Controller extends BaseController
 
                     // either must be array and either must be > 0
                     if ((\is_array($intro) || \is_array($specialIntro)) && (\count($intro) > 0 || \count($specialIntro) > 0)) {
-                        $shownDemo = Preferences::get($key, false)->data;
+                        $shownDemo = app('preferences')->get($key, false)->data;
                         Log::debug(sprintf('Check if user has already seen intro with key "%s". Result is %d', $key, $shownDemo));
                     }
 
                     // share language
-                    $language = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
+                    $language = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
 
-                    View::share('language', $language);
-                    View::share('shownDemo', $shownDemo);
-                    View::share('current_route_name', $page);
-                    View::share('original_route_name', Route::currentRouteName());
+                    app('view')->share('language', $language);
+                    app('view')->share('shownDemo', $shownDemo);
+                    app('view')->share('current_route_name', $page);
+                    app('view')->share('original_route_name', Route::currentRouteName());
                 }
 
                 return $next($request);
