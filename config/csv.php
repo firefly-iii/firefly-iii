@@ -25,7 +25,6 @@ declare(strict_types=1);
 use FireflyIII\Import\Specifics\AbnAmroDescription;
 use FireflyIII\Import\Specifics\IngDescription;
 use FireflyIII\Import\Specifics\PresidentsChoice;
-use FireflyIII\Import\Specifics\RabobankDescription;
 use FireflyIII\Import\Specifics\SnsDescription;
 
 return [
@@ -34,11 +33,10 @@ return [
      * Configuration for the CSV specifics.
      */
     'import_specifics' => [
-        'IngDescription'      => IngDescription::class,
-        'RabobankDescription' => RabobankDescription::class,
-        'AbnAmroDescription'  => AbnAmroDescription::class,
-        'SnsDescription'      => SnsDescription::class,
-        'PresidentsChoice'    => PresidentsChoice::class,
+        'IngDescription'     => IngDescription::class,
+        'AbnAmroDescription' => AbnAmroDescription::class,
+        'SnsDescription'     => SnsDescription::class,
+        'PresidentsChoice'   => PresidentsChoice::class,
     ],
 
     /*
