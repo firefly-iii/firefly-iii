@@ -55,7 +55,7 @@ class FireflyValidator extends Validator
      */
     public function validate2faCode($attribute, $value): bool
     {
-        if (!\is_string($value) || null === $value || 6 != \strlen($value)) {
+        if (!\is_string($value) || null === $value || 6 !== \strlen($value)) {
             return false;
         }
 

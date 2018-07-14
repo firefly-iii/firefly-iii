@@ -34,6 +34,30 @@ use Log;
 trait DateCalculation
 {
     /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return string
+     */
+    protected function calculateStep(Carbon $start, Carbon $end): string
+    {
+
+        $step   = '1D';
+        $months = $start->diffInMonths($end);
+        if ($months > 3) {
+            $step = '1W'; // @codeCoverageIgnore
+        }
+        if ($months > 24) {
+            $step = '1M'; // @codeCoverageIgnore
+        }
+        if ($months > 100) {
+            $step = '1Y'; // @codeCoverageIgnore
+        }
+
+        return $step;
+    }
+
+    /**
      * Returns the number of days between the two given dates.
      * - If today is within the two dates, give the number of days between today and the end date.
      * - If they are the same, return 1.
@@ -111,7 +135,7 @@ trait DateCalculation
         while ($count < 12) {
             $format        = $current->format('Y-m-d');
             $loop[$format] = app('navigation')->periodShow($current, $range);
-            $current      = app('navigation')->endOfPeriod($current, $range);
+            $current       = app('navigation')->endOfPeriod($current, $range);
             ++$count;
             $current->addDay();
         }

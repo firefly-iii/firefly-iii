@@ -36,15 +36,22 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Log;
 
-/** checked
+/**
  * Class AccountController.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AccountController extends Controller
 {
+    use DateCalculation;
+
     /** @var GeneratorInterface */
     protected $generator;
 
@@ -310,6 +317,8 @@ class AccountController extends Controller
      * @param Carbon  $end
      *
      * @return JsonResponse
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function period(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -321,18 +330,8 @@ class AccountController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-        // depending on diff, do something with range of chart.
-        $step   = '1D';
-        $months = $start->diffInMonths($end);
-        if ($months > 3) {
-            $step = '1W'; // @codeCoverageIgnore
-        }
-        if ($months > 24) {
-            $step = '1M'; // @codeCoverageIgnore
-        }
-        if ($months > 100) {
-            $step = '1Y'; // @codeCoverageIgnore
-        }
+
+        $step      = $this->calculateStep($start, $end);
         $chartData = [];
         $current   = clone $start;
         switch ($step) {
@@ -433,6 +432,9 @@ class AccountController extends Controller
      * @param Carbon     $end
      *
      * @return array
+     *
+     * @SuppressWarnigns(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnigns(PHPMD.ExcessiveMethodLength)
      */
     private function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array
     {

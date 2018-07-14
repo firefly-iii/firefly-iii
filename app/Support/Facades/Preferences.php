@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Facade;
  *
  * @method Preference set(string $name, $value)
  * @method Preference get(string $name, $value)
- * @method Preference|null getForUser(User $user, string $name, $default)
+ * @method Preference|null getForUser(User $user, string $name, $default = null)
  * @method void mark()
  */
 class Preferences extends Facade

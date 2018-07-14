@@ -36,6 +36,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
@@ -45,6 +46,7 @@ use Illuminate\Support\Collection;
  */
 class BudgetController extends Controller
 {
+    use DateCalculation;
     /** @var GeneratorInterface */
     protected $generator;
 
@@ -89,17 +91,7 @@ class BudgetController extends Controller
         }
 
         // depending on diff, do something with range of chart.
-        $step   = '1D';
-        $months = $start->diffInMonths($end);
-        if ($months > 3) {
-            $step = '1W';
-        }
-        if ($months > 24) {
-            $step = '1M';
-        }
-        if ($months > 60) {
-            $step = '1Y'; // @codeCoverageIgnore
-        }
+        $step             = $this->calculateStep($start, $end);
         $budgetCollection = new Collection([$budget]);
         $chartData        = [];
         $current          = clone $start;

@@ -143,6 +143,7 @@ class NoCategoryController extends Controller
      * @param Carbon $theDate
      *
      * @return Collection
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function getNoCategoryPeriodOverview(Carbon $theDate): Collection
     {
