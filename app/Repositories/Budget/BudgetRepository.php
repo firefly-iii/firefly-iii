@@ -440,6 +440,37 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * Calculate the average amount in the budgets available in this period.
+     * Grouped by day.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return string
+     */
+    public function getAverageAvailable(Carbon $start, Carbon $end): string
+    {
+        /** @var Collection $list */
+        $list = $this->user->availableBudgets()
+                           ->where('start_date', '>=', $start->format('Y-m-d 00:00:00'))
+                           ->where('end_date', '<=', $end->format('Y-m-d 00:00:00'))
+                           ->get();
+        if (0 === $list->count()) {
+            return '0';
+        }
+        $total = '0';
+        $days  = 0;
+        /** @var AvailableBudget $availableBudget */
+        foreach ($list as $availableBudget) {
+            $total = bcadd($availableBudget->amount, $total);
+            $days  += $availableBudget->start_date->diffInDays($availableBudget->end_date);
+        }
+        $avg = bcdiv($total, (string)$days);
+
+        return $avg;
+    }
+
+    /**
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
