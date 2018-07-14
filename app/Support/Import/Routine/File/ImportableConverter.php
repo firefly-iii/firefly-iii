@@ -183,24 +183,13 @@ class ImportableConverter
             $transactionType = 'transfer';
         }
 
-        // amount is positive and its not a transfer? Then switch:
-        if ($transactionType !== 'transfer' && bccomp($amount, '0') === 1) {
+        // amount is positive? Then switch:
+        if (1 === bccomp($amount, '0')) {
 
             [$destination, $source] = [$source, $destination];
             Log::debug(
                 sprintf(
                     '%s is positive, so "%s" (#%d) is now source and "%s" (#%d) is now destination.',
-                    $amount, $source->name, $source->id, $destination->name, $destination->id
-                )
-            );
-        }
-        // amount is negative and type is transfer? then switch.
-        if ($transactionType === 'transfer' && bccomp($amount, '0') === -1) {
-            // amount is positive? Then switch:
-            [$destination, $source] = [$source, $destination];
-            Log::debug(
-                sprintf(
-                    '%s is negative, so "%s" (#%d) is now source and "%s" (#%d) is now destination.',
                     $amount, $source->name, $source->id, $destination->name, $destination->id
                 )
             );
@@ -273,9 +262,10 @@ class ImportableConverter
             'sepa-ct-op'         => $importable->meta['sepa-ct-op'] ?? null,
             'sepa-ct-id'         => $importable->meta['sepa-ct-id'] ?? null,
             'sepa-db'            => $importable->meta['sepa-db'] ?? null,
-            'sepa-country'       => $importable->meta['sepa-countru'] ?? null,
+            'sepa-country'       => $importable->meta['sepa-country'] ?? null,
             'sepa-ep'            => $importable->meta['sepa-ep'] ?? null,
             'sepa-ci'            => $importable->meta['sepa-ci'] ?? null,
+            'sepa-batch-id'      => $importable->meta['sepa-batch-id'] ?? null,
             'interest_date'      => $this->convertDateValue($importable->meta['date-interest'] ?? null),
             'book_date'          => $this->convertDateValue($importable->meta['date-book'] ?? null),
             'process_date'       => $this->convertDateValue($importable->meta['date-process'] ?? null),

@@ -283,6 +283,12 @@ return [
             'converter'       => 'AssetAccountNumber',
             'mapper'          => 'AssetAccounts',
         ],
+        'account-bic'        => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'field'           => 'asset-account-bic',
+            'converter'       => 'AccountBic',
+        ],
         'opposing-id'        => [
             'mappable'        => true,
             'pre-process-map' => false,
@@ -390,6 +396,13 @@ return [
             'pre-process-map' => false,
             'converter'       => 'Description',
             'field'           => 'sepa_ci',
+        ],
+        // SEPA Batch ID
+        'sepa-batch-id'      => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'converter'       => 'Description',
+            'field'           => 'sepa_batch',
         ],
         // Internal reference
         'internal-reference' => [

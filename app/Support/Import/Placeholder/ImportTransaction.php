@@ -203,13 +203,14 @@ class ImportTransaction
             case 'external-id':
                 $this->externalId = $columnValue->getValue();
                 break;
-            case 'sepa-ct-id';
-            case 'sepa-ct-op';
-            case 'sepa-db';
+            case 'sepa-ct-id':
+            case 'sepa-ct-op':
+            case 'sepa-db':
             case 'sepa-cc':
-            case 'sepa-country';
-            case 'sepa-ep';
-            case 'sepa-ci';
+            case 'sepa-country':
+            case 'sepa-batch-id':
+            case 'sepa-ep':
+            case 'sepa-ci':
             case 'internal-reference':
             case 'date-interest':
             case 'date-invoice':
