@@ -284,6 +284,9 @@ class ReconcileController extends Controller
      * @param TransactionJournal          $journal
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function update(ReconciliationUpdateRequest $request, TransactionJournal $journal)
     {

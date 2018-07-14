@@ -30,7 +30,6 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -72,134 +71,6 @@ class AccountController extends Controller
                 return $next($request);
             }
         );
-    }
-
-    /**
-     * @param Request     $request
-     * @param string|null $what
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function create(Request $request, string $what = null)
-    {
-        $what            = $what ?? 'asset';
-        $defaultCurrency = app('amount')->getDefaultCurrency();
-        $subTitleIcon    = config('firefly.subIconsByIdentifier.' . $what);
-        $subTitle        = trans('firefly.make_new_' . $what . '_account');
-        $roles           = [];
-        foreach (config('firefly.accountRoles') as $role) {
-            $roles[$role] = (string)trans('firefly.account_role_' . $role);
-        }
-
-        // pre fill some data
-        $request->session()->flash('preFilled', ['currency_id' => $defaultCurrency->id]);
-
-        // put previous url in session if not redirect from store (not "create another").
-        if (true !== session('accounts.create.fromStore')) {
-            $this->rememberPreviousUri('accounts.create.uri');
-        }
-        $request->session()->forget('accounts.create.fromStore');
-
-        return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'roles'));
-    }
-
-    /**
-     * @param Account $account
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function delete(Account $account)
-    {
-        $typeName    = config('firefly.shortNamesByFullName.' . $account->accountType->type);
-        $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
-        $accountList = ExpandedForm::makeSelectListWithEmpty($this->repository->getAccountsByType([$account->accountType->type]));
-        unset($accountList[$account->id]);
-
-        // put previous url in session
-        $this->rememberPreviousUri('accounts.delete.uri');
-
-        return view('accounts.delete', compact('account', 'subTitle', 'accountList'));
-    }
-
-    /**
-     * @param Request $request
-     * @param Account $account
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     */
-    public function destroy(Request $request, Account $account)
-    {
-        $type     = $account->accountType->type;
-        $typeName = config('firefly.shortNamesByFullName.' . $type);
-        $name     = $account->name;
-        $moveTo   = $this->repository->findNull((int)$request->get('move_account_before_delete'));
-
-        $this->repository->destroy($account, $moveTo);
-
-        $request->session()->flash('success', (string)trans('firefly.' . $typeName . '_deleted', ['name' => $name]));
-        app('preferences')->mark();
-
-        return redirect($this->getPreviousUri('accounts.delete.uri'));
-    }
-
-    /**
-     * @param Request                    $request
-     * @param Account                    $account
-     * @param AccountRepositoryInterface $repository
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
-    {
-        $what         = config('firefly.shortNamesByFullName')[$account->accountType->type];
-        $subTitle     = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
-        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
-        $roles        = [];
-        foreach (config('firefly.accountRoles') as $role) {
-            $roles[$role] = (string)trans('firefly.account_role_' . $role);
-        }
-
-        // put previous url in session if not redirect from store (not "return_to_edit").
-        if (true !== session('accounts.edit.fromUpdate')) {
-            $this->rememberPreviousUri('accounts.edit.uri');
-        }
-        $request->session()->forget('accounts.edit.fromUpdate');
-
-        // pre fill some useful values.
-
-        // the opening balance is tricky:
-        $openingBalanceAmount = (string)$repository->getOpeningBalanceAmount($account);
-        $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
-        $default              = app('amount')->getDefaultCurrency();
-        $currency             = $this->currencyRepos->findNull((int)$repository->getMetaValue($account, 'currency_id'));
-        if (null === $currency) {
-            $currency = $default;
-        }
-
-        // code to handle active-checkboxes
-        $hasOldInput = null !== $request->old('_token');
-        $preFilled   = [
-            'accountNumber'        => $repository->getMetaValue($account, 'accountNumber'),
-            'accountRole'          => $repository->getMetaValue($account, 'accountRole'),
-            'ccType'               => $repository->getMetaValue($account, 'ccType'),
-            'ccMonthlyPaymentDate' => $repository->getMetaValue($account, 'ccMonthlyPaymentDate'),
-            'BIC'                  => $repository->getMetaValue($account, 'BIC'),
-            'openingBalanceDate'   => $openingBalanceDate,
-            'openingBalance'       => $openingBalanceAmount,
-            'virtualBalance'       => $account->virtual_balance,
-            'currency_id'          => $currency->id,
-            'notes'                => '',
-            'active'               => $hasOldInput ? (bool)$request->old('active') : $account->active,
-        ];
-        /** @var Note $note */
-        $note = $this->repository->getNote($account);
-        if (null !== $note) {
-            $preFilled['notes'] = $note->text;
-        }
-
-        $request->session()->flash('preFilled', $preFilled);
-
-        return view('accounts.edit', compact('account', 'currency', 'subTitle', 'subTitleIcon', 'what', 'roles', 'preFilled'));
     }
 
     /**
@@ -349,63 +220,6 @@ class AccountController extends Controller
             'accounts.show',
             compact('account', 'showAll', 'currency', 'today', 'chartUri', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end')
         );
-    }
-
-    /**
-     * @param AccountFormRequest $request
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     */
-    public function store(AccountFormRequest $request)
-    {
-        $data    = $request->getAccountData();
-        $account = $this->repository->store($data);
-        $request->session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));
-        app('preferences')->mark();
-
-        // update preferences if necessary:
-        $frontPage = Preferences::get('frontPageAccounts', [])->data;
-        if (AccountType::ASSET === $account->accountType->type && \count($frontPage) > 0) {
-            // @codeCoverageIgnoreStart
-            $frontPage[] = $account->id;
-            Preferences::set('frontPageAccounts', $frontPage);
-            // @codeCoverageIgnoreEnd
-        }
-        // redirect to previous URL.
-        $redirect = redirect($this->getPreviousUri('accounts.create.uri'));
-        if (1 === (int)$request->get('create_another')) {
-            // set value so create routine will not overwrite URL:
-            $request->session()->put('accounts.create.fromStore', true);
-
-            $redirect = redirect(route('accounts.create', [$request->input('what')]))->withInput();
-        }
-
-        return $redirect;
-    }
-
-    /**
-     * @param AccountFormRequest $request
-     * @param Account            $account
-     *
-     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     */
-    public function update(AccountFormRequest $request, Account $account)
-    {
-        $data = $request->getAccountData();
-        $this->repository->update($account, $data);
-
-        $request->session()->flash('success', (string)trans('firefly.updated_account', ['name' => $account->name]));
-        app('preferences')->mark();
-
-        $redirect = redirect($this->getPreviousUri('accounts.edit.uri'));
-        if (1 === (int)$request->get('return_to_edit')) {
-            // set value so edit routine will not overwrite URL:
-            $request->session()->put('accounts.edit.fromUpdate', true);
-
-            $redirect = redirect(route('accounts.edit', [$account->id]))->withInput(['return_to_edit' => 1]);
-        }
-
-        return $redirect;
     }
 
     /**

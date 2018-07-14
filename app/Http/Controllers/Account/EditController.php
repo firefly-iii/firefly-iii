@@ -1,0 +1,153 @@
+<?php
+/**
+ * EditController.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
+ *
+ * This file is part of Firefly III.
+ *
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types=1);
+
+namespace FireflyIII\Http\Controllers\Account;
+
+
+use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Http\Requests\AccountFormRequest;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\Note;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use Illuminate\Http\Request;
+
+/**
+ *
+ * Class EditController
+ */
+class EditController extends Controller
+{
+    /** @var CurrencyRepositoryInterface */
+    private $currencyRepos;
+    /** @var AccountRepositoryInterface */
+    private $repository;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        // translations:
+        $this->middleware(
+            function ($request, $next) {
+                app('view')->share('mainTitleIcon', 'fa-credit-card');
+                app('view')->share('title', trans('firefly.accounts'));
+
+                $this->repository    = app(AccountRepositoryInterface::class);
+                $this->currencyRepos = app(CurrencyRepositoryInterface::class);
+
+                return $next($request);
+            }
+        );
+    }
+
+    /**
+     * @param Request                    $request
+     * @param Account                    $account
+     * @param AccountRepositoryInterface $repository
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
+    {
+        $what         = config('firefly.shortNamesByFullName')[$account->accountType->type];
+        $subTitle     = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
+        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
+        $roles        = [];
+        foreach (config('firefly.accountRoles') as $role) {
+            $roles[$role] = (string)trans('firefly.account_role_' . $role);
+        }
+
+        // put previous url in session if not redirect from store (not "return_to_edit").
+        if (true !== session('accounts.edit.fromUpdate')) {
+            $this->rememberPreviousUri('accounts.edit.uri');
+        }
+        $request->session()->forget('accounts.edit.fromUpdate');
+
+        // pre fill some useful values.
+
+        // the opening balance is tricky:
+        $openingBalanceAmount = (string)$repository->getOpeningBalanceAmount($account);
+        $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
+        $default              = app('amount')->getDefaultCurrency();
+        $currency             = $this->currencyRepos->findNull((int)$repository->getMetaValue($account, 'currency_id'));
+        if (null === $currency) {
+            $currency = $default;
+        }
+
+        // code to handle active-checkboxes
+        $hasOldInput = null !== $request->old('_token');
+        $preFilled   = [
+            'accountNumber'        => $repository->getMetaValue($account, 'accountNumber'),
+            'accountRole'          => $repository->getMetaValue($account, 'accountRole'),
+            'ccType'               => $repository->getMetaValue($account, 'ccType'),
+            'ccMonthlyPaymentDate' => $repository->getMetaValue($account, 'ccMonthlyPaymentDate'),
+            'BIC'                  => $repository->getMetaValue($account, 'BIC'),
+            'openingBalanceDate'   => $openingBalanceDate,
+            'openingBalance'       => $openingBalanceAmount,
+            'virtualBalance'       => $account->virtual_balance,
+            'currency_id'          => $currency->id,
+            'notes'                => '',
+            'active'               => $hasOldInput ? (bool)$request->old('active') : $account->active,
+        ];
+        /** @var Note $note */
+        $note = $this->repository->getNote($account);
+        if (null !== $note) {
+            $preFilled['notes'] = $note->text;
+        }
+
+        $request->session()->flash('preFilled', $preFilled);
+
+        return view('accounts.edit', compact('account', 'currency', 'subTitle', 'subTitleIcon', 'what', 'roles', 'preFilled'));
+    }
+
+
+    /**
+     * @param AccountFormRequest $request
+     * @param Account            $account
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function update(AccountFormRequest $request, Account $account)
+    {
+        $data = $request->getAccountData();
+        $this->repository->update($account, $data);
+
+        $request->session()->flash('success', (string)trans('firefly.updated_account', ['name' => $account->name]));
+        app('preferences')->mark();
+
+        $redirect = redirect($this->getPreviousUri('accounts.edit.uri'));
+        if (1 === (int)$request->get('return_to_edit')) {
+            // set value so edit routine will not overwrite URL:
+            $request->session()->put('accounts.edit.fromUpdate', true);
+
+            $redirect = redirect(route('accounts.edit', [$account->id]))->withInput(['return_to_edit' => 1]);
+        }
+
+        return $redirect;
+    }
+
+}

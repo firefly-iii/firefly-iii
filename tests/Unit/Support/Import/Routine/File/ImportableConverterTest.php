@@ -326,6 +326,7 @@ class ImportableConverterTest extends TestCase
 
         $assetMapper->shouldReceive('map')->once()->withArgs([null, $nullAccount])->andReturn($asset);
         $opposingMapper->shouldReceive('map')->once()->withArgs([null, '45.67', $nullAccount])->andReturn($other);
+
         $currencyMapper->shouldReceive('map')->once()->withArgs([null, ['name' => null, 'code' => null, 'symbol' => null]])->andReturn($usd);
         $currencyMapper->shouldReceive('map')->once()->withArgs([null, ['code' => null]])->andReturn(null);
 
@@ -341,9 +342,10 @@ class ImportableConverterTest extends TestCase
         $this->assertEquals(2, $result[0]['bill_id']); // will NOT be ignored.
         $this->assertEquals($importable->billName, $result[0]['bill_name']);
         $this->assertEquals($usd->id, $result[0]['transactions'][0]['currency_id']);
+
         // since amount is positive, $asset recieves the money
-        $this->assertEquals($asset->id, $result[0]['transactions'][0]['source_id']);
-        $this->assertEquals($other->id, $result[0]['transactions'][0]['destination_id']);
+        $this->assertEquals($other->id, $result[0]['transactions'][0]['source_id']);
+        $this->assertEquals($asset->id, $result[0]['transactions'][0]['destination_id']);
     }
 
     /**
@@ -411,9 +413,10 @@ class ImportableConverterTest extends TestCase
         $this->assertEquals(3, $result[0]['bill_id']);
         $this->assertEquals($importable->billName, $result[0]['bill_name']);
         $this->assertEquals($usd->id, $result[0]['transactions'][0]['currency_id']);
+
         // since amount is negative, $asset sends the money
-        $this->assertEquals($other->id, $result[0]['transactions'][0]['source_id']);
-        $this->assertEquals($asset->id, $result[0]['transactions'][0]['destination_id']);
+        $this->assertEquals($asset->id, $result[0]['transactions'][0]['source_id']);
+        $this->assertEquals($other->id, $result[0]['transactions'][0]['destination_id']);
     }
 
     /**

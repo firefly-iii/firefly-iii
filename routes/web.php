@@ -109,30 +109,40 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'accounts', 'as' => 'accounts.'], function () {
     Route::get('{what}', ['uses' => 'AccountController@index', 'as' => 'index'])->where('what', 'revenue|asset|expense');
-    Route::get('create/{what}', ['uses' => 'AccountController@create', 'as' => 'create'])->where('what', 'revenue|asset|expense');
-    Route::get('edit/{account}', ['uses' => 'AccountController@edit', 'as' => 'edit']);
-    Route::get('delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'delete']);
+
+
+    // create
+    Route::get('create/{what}', ['uses' => 'Account\CreateController@create', 'as' => 'create'])->where('what', 'revenue|asset|expense');
+    Route::post('store', ['uses' => 'Account\CreateController@store', 'as' => 'store']);
+
+
+    // edit
+    Route::get('edit/{account}', ['uses' => 'Account\EditController@edit', 'as' => 'edit']);
+    Route::post('update/{account}', ['uses' => 'Account\EditController@update', 'as' => 'update']);
+
+    // delete
+    Route::get('delete/{account}', ['uses' => 'Account\DeleteController@delete', 'as' => 'delete']);
+    Route::post('destroy/{account}', ['uses' => 'Account\DeleteController@destroy', 'as' => 'destroy']);
+
+    // show
     Route::get('show/{account}/all', ['uses' => 'AccountController@showAll', 'as' => 'show.all']);
     Route::get('show/{account}/{start_date?}/{end_date?}', ['uses' => 'AccountController@show', 'as' => 'show']);
 
     // reconcile routes:
     Route::get('reconcile/{account}/index/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@reconcile', 'as' => 'reconcile']);
-
-
     Route::post('reconcile/{account}/submit/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@submit', 'as' => 'reconcile.submit']);
 
     // reconcile JSON routes
     Route::get('reconcile/{account}/overview/{start_date?}/{end_date?}', ['uses' => 'Json\ReconcileController@overview', 'as' => 'reconcile.overview']);
-    Route::get('reconcile/{account}/transactions/{start_date?}/{end_date?}', ['uses' => 'Json\ReconcileController@transactions', 'as' => 'reconcile.transactions']);
+    Route::get(
+        'reconcile/{account}/transactions/{start_date?}/{end_date?}', ['uses' => 'Json\ReconcileController@transactions', 'as' => 'reconcile.transactions']
+    );
 
     // show reconciliation
     Route::get('reconcile/show/{tj}', ['uses' => 'Account\ReconcileController@show', 'as' => 'reconcile.show']);
     Route::get('reconcile/edit/{tj}', ['uses' => 'Account\ReconcileController@edit', 'as' => 'reconcile.edit']);
     Route::post('reconcile/update/{tj}', ['uses' => 'Account\ReconcileController@update', 'as' => 'reconcile.update']);
 
-    Route::post('store', ['uses' => 'AccountController@store', 'as' => 'store']);
-    Route::post('update/{account}', ['uses' => 'AccountController@update', 'as' => 'update']);
-    Route::post('destroy/{account}', ['uses' => 'AccountController@destroy', 'as' => 'destroy']);
 
 }
 );
