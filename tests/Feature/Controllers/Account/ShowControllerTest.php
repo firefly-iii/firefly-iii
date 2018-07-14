@@ -1,7 +1,7 @@
 <?php
 /**
- * AccountControllerTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * ShowControllerTest.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,16 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace Tests\Feature\Controllers;
+namespace Tests\Feature\Controllers\Account;
 
-use Amount;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -38,67 +35,26 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
-use Mockery;
-use Preferences;
-use Steam;
 use Tests\TestCase;
 
 /**
- * Class AccountControllerTest
  *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * Class ShowControllerTest
  */
-class AccountControllerTest extends TestCase
+class ShowControllerTest extends TestCase
 {
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
 
-
     /**
-     * @covers       \FireflyIII\Http\Controllers\AccountController::index
-     * @covers       \FireflyIII\Http\Controllers\AccountController::__construct
-     * @covers       \FireflyIII\Http\Controllers\AccountController::isInArray
-     * @dataProvider dateRangeProvider
-     *
-     * @param string $range
-     *
-     */
-    public function testIndex(string $range): void
-    {
-        // mock stuff
-        $account       = factory(Account::class)->make();
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $repository->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]));
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
-        Steam::shouldReceive('balancesByAccounts')->andReturn([$account->id => '100']);
-        Steam::shouldReceive('getLastActivities')->andReturn([]);
-
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('123');
-
-        $this->be($this->user());
-        $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('accounts.index', ['asset']));
-        $response->assertStatus(200);
-        // has bread crumb
-        $response->assertSee('<ol class="breadcrumb">');
-    }
-
-    /**
-     * @covers       \FireflyIII\Http\Controllers\AccountController::show
-     * @covers       \FireflyIII\Http\Controllers\AccountController::getPeriodOverview
+     * @covers       \FireflyIII\Http\Controllers\Account\ShowController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -145,8 +101,7 @@ class AccountControllerTest extends TestCase
 
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\AccountController
-     * @covers       \FireflyIII\Http\Controllers\AccountController
+     * @covers       \FireflyIII\Http\Controllers\Account\ShowController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -192,7 +147,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\AccountController::show
+     * @covers       \FireflyIII\Http\Controllers\Account\ShowController
      * @expectedExceptionMessage End is after start!
      */
     public function testShowBrokenBadDates(): void
@@ -210,8 +165,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\AccountController::show
-     * @covers                   \FireflyIII\Http\Controllers\AccountController::redirectToOriginalAccount
+     * @covers       \FireflyIII\Http\Controllers\Account\ShowController
      * @expectedExceptionMessage Expected a transaction
      */
     public function testShowBrokenInitial(): void
@@ -230,7 +184,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\AccountController::show
+     * @covers       \FireflyIII\Http\Controllers\Account\ShowController
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -267,8 +221,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\AccountController::show
-     * @covers       \FireflyIII\Http\Controllers\AccountController::redirectToOriginalAccount
+     * @covers       \FireflyIII\Http\Controllers\Account\ShowController
      */
     public function testShowInitial(): void
     {

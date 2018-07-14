@@ -31,13 +31,21 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
-
+use Log;
 /**
  *
  * Class DeleteControllerTest
  */
 class DeleteControllerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
+    }
     /**
      * @covers \FireflyIII\Http\Controllers\Account\DeleteController
      * @covers \FireflyIII\Http\Controllers\Controller

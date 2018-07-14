@@ -108,8 +108,9 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'accounts', 'as' => 'accounts.'], function () {
-    Route::get('{what}', ['uses' => 'AccountController@index', 'as' => 'index'])->where('what', 'revenue|asset|expense');
 
+    // show:
+    Route::get('{what}', ['uses' => 'Account\IndexController@index', 'as' => 'index'])->where('what', 'revenue|asset|expense');
 
     // create
     Route::get('create/{what}', ['uses' => 'Account\CreateController@create', 'as' => 'create'])->where('what', 'revenue|asset|expense');
@@ -125,8 +126,8 @@ Route::group(
     Route::post('destroy/{account}', ['uses' => 'Account\DeleteController@destroy', 'as' => 'destroy']);
 
     // show
-    Route::get('show/{account}/all', ['uses' => 'AccountController@showAll', 'as' => 'show.all']);
-    Route::get('show/{account}/{start_date?}/{end_date?}', ['uses' => 'AccountController@show', 'as' => 'show']);
+    Route::get('show/{account}/all', ['uses' => 'Account\ShowController@showAll', 'as' => 'show.all']);
+    Route::get('show/{account}/{start_date?}/{end_date?}', ['uses' => 'Account\ShowController@show', 'as' => 'show']);
 
     // reconcile routes:
     Route::get('reconcile/{account}/index/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@reconcile', 'as' => 'reconcile']);

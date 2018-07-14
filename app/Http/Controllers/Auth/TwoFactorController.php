@@ -42,7 +42,7 @@ class TwoFactorController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      *
      * @throws FireflyException
-     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function index(Request $request)
     {

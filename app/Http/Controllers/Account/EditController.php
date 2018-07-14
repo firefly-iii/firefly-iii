@@ -27,7 +27,6 @@ namespace FireflyIII\Http\Controllers\Account;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Note;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Http\Request;
@@ -70,6 +69,9 @@ class EditController extends Controller
      * @param AccountRepositoryInterface $repository
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
     {
@@ -87,9 +89,6 @@ class EditController extends Controller
         }
         $request->session()->forget('accounts.edit.fromUpdate');
 
-        // pre fill some useful values.
-
-        // the opening balance is tricky:
         $openingBalanceAmount = (string)$repository->getOpeningBalanceAmount($account);
         $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
         $default              = app('amount')->getDefaultCurrency();
@@ -110,14 +109,9 @@ class EditController extends Controller
             'openingBalance'       => $openingBalanceAmount,
             'virtualBalance'       => $account->virtual_balance,
             'currency_id'          => $currency->id,
-            'notes'                => '',
+            'notes'                => $this->repository->getNoteText($account),
             'active'               => $hasOldInput ? (bool)$request->old('active') : $account->active,
         ];
-        /** @var Note $note */
-        $note = $this->repository->getNote($account);
-        if (null !== $note) {
-            $preFilled['notes'] = $note->text;
-        }
 
         $request->session()->flash('preFilled', $preFilled);
 

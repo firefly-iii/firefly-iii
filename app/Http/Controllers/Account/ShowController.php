@@ -1,7 +1,7 @@
 <?php
 /**
- * AccountController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * ShowController.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,16 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-/** @noinspection CallableParameterUseCaseInTypeContextInspection */
+
 declare(strict_types=1);
 
-namespace FireflyIII\Http\Controllers;
+namespace FireflyIII\Http\Controllers\Account;
 
 use Carbon\Carbon;
-use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
-use FireflyIII\Http\Requests\AccountFormRequest;
+use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
@@ -36,16 +35,15 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Preferences;
 use View;
 
 /**
- * Class AccountController.
  *
+ * Class ShowController
  */
-class AccountController extends Controller
+class ShowController extends Controller
 {
     /** @var CurrencyRepositoryInterface */
     private $currencyRepos;
@@ -74,53 +72,6 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param string  $what
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function index(Request $request, string $what)
-    {
-        $what         = $what ?? 'asset';
-        $subTitle     = trans('firefly.' . $what . '_accounts');
-        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
-        $types        = config('firefly.accountTypesByIdentifier.' . $what);
-        $collection   = $this->repository->getAccountsByType($types);
-        $total        = $collection->count();
-        $page         = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
-        $accounts     = $collection->slice(($page - 1) * $pageSize, $pageSize);
-        unset($collection);
-        /** @var Carbon $start */
-        $start = clone session('start', Carbon::now()->startOfMonth());
-        /** @var Carbon $end */
-        $end = clone session('end', Carbon::now()->endOfMonth());
-        $start->subDay();
-
-        $ids           = $accounts->pluck('id')->toArray();
-        $startBalances = app('steam')->balancesByAccounts($accounts, $start);
-        $endBalances   = app('steam')->balancesByAccounts($accounts, $end);
-        $activities    = app('steam')->getLastActivities($ids);
-
-        $accounts->each(
-            function (Account $account) use ($activities, $startBalances, $endBalances) {
-                $account->lastActivityDate = $this->isInArray($activities, $account->id);
-                $account->startBalance     = $this->isInArray($startBalances, $account->id);
-                $account->endBalance       = $this->isInArray($endBalances, $account->id);
-                $account->difference       = bcsub($account->endBalance, $account->startBalance);
-            }
-        );
-
-        // make paginator:
-        $accounts = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
-        $accounts->setPath(route('accounts.index', [$what]));
-
-        return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
-    }
-
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-    /**
      * Show an account.
      *
      * @param Request     $request
@@ -138,16 +89,11 @@ class AccountController extends Controller
         if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
             return $this->redirectToOriginalAccount($account);
         }
-        if (null === $start) {
-            $start = session('start');
-        }
-        if (null === $end) {
-            $end = session('end');
-        }
+        $start = $start ?? session('start');
+        $end   = $end ?? session('end');
         if ($end < $start) {
             throw new FireflyException('End is after start!'); // @codeCoverageIgnore
         }
-
 
         $what         = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type)); // used for menu
         $today        = new Carbon;
@@ -177,7 +123,6 @@ class AccountController extends Controller
             compact('account', 'showAll', 'what', 'currency', 'today', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end', 'chartUri')
         );
     }
-
 
     /**
      * Show an account.
@@ -222,22 +167,9 @@ class AccountController extends Controller
         );
     }
 
-    /**
-     * @param array $array
-     * @param int   $entryId
-     *
-     * @return null|mixed
-     */
-    protected function isInArray(array $array, int $entryId)
-    {
-        $result = '0';
-        if (isset($array[$entryId])) {
-            $result = $array[$entryId];
-        }
 
-        return $result;
-    }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * This method returns "period entries", so nov-2015, dec-2015, etc etc (this depends on the users session range)
@@ -250,6 +182,7 @@ class AccountController extends Controller
      *
      * @return Collection
      *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function getPeriodOverview(Account $account, ?Carbon $date): Collection
     {

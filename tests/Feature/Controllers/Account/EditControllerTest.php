@@ -34,22 +34,26 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Mockery;
 use Tests\TestCase;
-
+use Log;
 /**
  *
  * Class EditControllerTest
  */
 class EditControllerTest extends TestCase
 {
-
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
+    }
     /**
      * @covers \FireflyIII\Http\Controllers\Account\EditController
      */
     public function testEdit(): void
     {
-        $note       = new Note();
-        $note->text = 'This is a test';
-        // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -57,7 +61,7 @@ class EditControllerTest extends TestCase
         $repository->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(1));
         $repository->shouldReceive('get')->andReturn(new Collection);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('getNote')->andReturn($note)->once();
+        $accountRepos->shouldReceive('getNoteText')->andReturn('Some text')->once();
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturnNull();
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturnNull();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
@@ -73,7 +77,7 @@ class EditControllerTest extends TestCase
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
-        $response->assertSee($note->text);
+        $response->assertSee('Some text');
     }
 
     /**
@@ -81,8 +85,6 @@ class EditControllerTest extends TestCase
      */
     public function testEditNull(): void
     {
-        $note       = new Note();
-        $note->text = 'This is a test';
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
@@ -92,7 +94,7 @@ class EditControllerTest extends TestCase
         $repository->shouldReceive('findNull')->once()->andReturn(null);
         $repository->shouldReceive('get')->andReturn(new Collection);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('getNote')->andReturn($note)->once();
+        $accountRepos->shouldReceive('getNoteText')->andReturn('Some text')->once();
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturnNull();
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturnNull();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
@@ -108,7 +110,7 @@ class EditControllerTest extends TestCase
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
-        $response->assertSee($note->text);
+        $response->assertSee('Some text');
     }
 
 
@@ -157,7 +159,7 @@ class EditControllerTest extends TestCase
         $this->be($this->user());
         $data = [
             'name'           => 'updated account ' . random_int(1000, 9999),
-            'active'         => 1,ss
+            'active'         => 1,
             'what'           => 'asset',
             'return_to_edit' => '1',
         ];
