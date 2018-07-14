@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @codeCoverageIgnore
  * Class Steam.
+ * @method string positive(string $amount)
  */
 class Steam extends Facade
 {

@@ -27,6 +27,9 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @codeCoverageIgnore
  * Class Navigation.
+ *
+ * @method array blockPeriods(\Carbon\Carbon $start, \Carbon\Carbon $end, string $range)
+ * @method string periodShow(\Carbon\Carbon $theDate, string $repeatFrequency)
  */
 class Navigation extends Facade
 {

@@ -22,11 +22,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Facades;
 
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\User;
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @codeCoverageIgnore
  * Class Amount.
+ *
+ * @method TransactionCurrency getDefaultCurrencyByUser(User $user)
  */
 class Amount extends Facade
 {

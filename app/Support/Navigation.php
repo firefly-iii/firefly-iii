@@ -298,7 +298,7 @@ class Navigation
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function periodShow(Carbon $theDate, string $repeatFrequency): string
+    public function periodShow(\Carbon\Carbon $theDate, string $repeatFrequency): string
     {
         $date      = clone $theDate;
         $formatMap = [

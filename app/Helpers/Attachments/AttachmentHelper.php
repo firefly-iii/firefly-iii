@@ -166,7 +166,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $attachment->md5      = md5_file($path);
         $attachment->mime     = $mime;
         $attachment->size     = \strlen($content);
-        $attachment->uploaded = 1;
+        $attachment->uploaded = true;
         $attachment->save();
 
         return true;

@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\LinkType;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -61,6 +62,13 @@ interface LinkTypeRepositoryInterface
      * @return LinkType
      */
     public function find(int $id): LinkType;
+
+    /**
+     * Set the user for this instance.
+     *
+     * @param User $user
+     */
+    public function setUser(User $user): void;
 
     /**
      * Find link type by name.

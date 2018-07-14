@@ -22,11 +22,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Facades;
 
+use FireflyIII\Models\Preference;
+use FireflyIII\User;
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @codeCoverageIgnore
  * Class Preferences.
+ *
+ * @method Preference set(string $name, $value)
+ * @method Preference get(string $name, $value)
+ * @method Preference|null getForUser(User $user, string $name, $default)
+ * @method void mark()
  */
 class Preferences extends Facade
 {
