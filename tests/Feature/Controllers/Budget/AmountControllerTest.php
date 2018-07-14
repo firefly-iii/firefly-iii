@@ -149,6 +149,7 @@ class AmountControllerTest extends TestCase
         $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
+        $repository->shouldReceive('getAverageAvailable')->andReturn('100.123')->once();
 
         $this->be($this->user());
         $response = $this->get(route('budgets.income.info', ['20170101', '20170131']));
@@ -170,6 +171,7 @@ class AmountControllerTest extends TestCase
         $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
+        $repository->shouldReceive('getAverageAvailable')->andReturn('100.123')->once();
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);

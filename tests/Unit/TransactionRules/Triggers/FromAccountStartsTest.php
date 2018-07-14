@@ -70,7 +70,6 @@ class FromAccountStartsTest extends TestCase
         $trigger = FromAccountStarts::makeFromStrings(substr($account->name, 0, -3), false);
         $result  = $trigger->triggered($journal);
         $this->assertTrue($result);
-        exit;
     }
 
     /**
