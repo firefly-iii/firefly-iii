@@ -40,8 +40,9 @@ use Preferences;
 use View;
 
 /**
- *
  * Class ShowController
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ShowController extends Controller
 {

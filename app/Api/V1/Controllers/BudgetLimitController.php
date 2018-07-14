@@ -95,8 +95,6 @@ class BudgetLimitController extends Controller
     {
         $manager  = new Manager;
         $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
-        $start    = null;
-        $end      = null;
         $budgetId = (int)($request->get('budget_id') ?? 0);
         $budget   = $this->repository->findNull($budgetId);
         $this->parameters->set('budget_id', $budgetId);
@@ -119,9 +117,11 @@ class BudgetLimitController extends Controller
 
         $collection = new Collection;
         if (null === $budget) {
+            /** @noinspection PhpUndefinedVariableInspection */
             $collection = $this->repository->getAllBudgetLimits($start, $end);
         }
         if (null !== $budget) {
+            /** @noinspection PhpUndefinedVariableInspection */
             $collection = $this->repository->getBudgetLimits($budget, $start, $end);
         }
 

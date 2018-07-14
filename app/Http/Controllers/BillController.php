@@ -43,6 +43,8 @@ use View;
 
 /**
  * Class BillController.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BillController extends Controller
 {
@@ -298,6 +300,9 @@ class BillController extends Controller
      * @param BillFormRequest $request
      *
      * @return RedirectResponse
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function store(BillFormRequest $request): RedirectResponse
     {
@@ -316,7 +321,6 @@ class BillController extends Controller
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         $this->attachments->saveAttachmentsForModel($bill, $files);
 
-        // flash messages
         if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }

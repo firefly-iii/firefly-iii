@@ -35,7 +35,7 @@ class FromAccountStartsTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Log::debug(sprintf('Now in %s.', \get_class($this)));
@@ -54,17 +54,23 @@ class FromAccountStartsTest extends TestCase
             $transaction = $journal->transactions()->where('amount', '<', 0)->first();
             $account     = $transaction->account;
             $count       = $journal->transactions()->count();
+            $name        = $account->name ?? '';
 
-            Log::debug(sprintf('Loop: %d, transaction count: %d, account is null: %d', $loops, $count, (int)null===$account));
+            Log::debug(sprintf('Loop: %d, transaction count: %d, account is null: %d, name = "%s"', $loops, $count, (int)null === $account, $name));
 
             $loops++;
 
-            // do this until:  account is not null, journal has two transactions, loops is below 30
-        } while (!(null !== $account && 2 === $count && $loops < 30));
+            // do this while the following is untrue:
+            // 1) account is not null,
+            // 2) journal has two transactions
+            // 3) loops is less than 30
+            // 4) $name is longer than 3
+        } while (!(null !== $account && 2 === $count && $loops < 30 && \strlen($name) > 3));
 
         $trigger = FromAccountStarts::makeFromStrings(substr($account->name, 0, -3), false);
         $result  = $trigger->triggered($journal);
         $this->assertTrue($result);
+        exit;
     }
 
     /**
@@ -80,13 +86,18 @@ class FromAccountStartsTest extends TestCase
             $transaction = $journal->transactions()->where('amount', '<', 0)->first();
             $account     = $transaction->account;
             $count       = $journal->transactions()->count();
+            $name        = $account->name ?? '';
 
-            Log::debug(sprintf('Loop: %d, transaction count: %d, account is null: %d', $loops, $count, (int)null===$account));
+            Log::debug(sprintf('Loop: %d, transaction count: %d, account is null: %d, name = "%s"', $loops, $count, (int)null === $account, $name));
 
             $loops++;
 
-            // do this until:  account is not null, journal has two transactions, loops is below 30
-        } while (!(null !== $account && 2 === $count && $loops < 30));
+            // do this while the following is untrue:
+            // 1) account is not null,
+            // 2) journal has two transactions
+            // 3) loops is less than 30
+            // 4) $name is longer than 3
+        } while (!(null !== $account && 2 === $count && $loops < 30 && \strlen($name) > 3));
 
         $trigger = FromAccountStarts::makeFromStrings('bla-bla-bla' . $account->name, false);
         $result  = $trigger->triggered($journal);
