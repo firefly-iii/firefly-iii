@@ -205,7 +205,9 @@ Route::group(
     // show
     Route::get('show/{budget}', ['uses' => 'Budget\ShowController@show', 'as' => 'show']);
     Route::get('show/{budget}/{budgetLimit}', ['uses' => 'Budget\ShowController@showByBudgetLimit', 'as' => 'show.limit']);
-    Route::get('list/no-budget/{moment?}', ['uses' => 'Budget\ShowController@noBudget', 'as' => 'no-budget']);
+    Route::get('list/no-budget/all', ['uses' => 'Budget\ShowController@noBudgetAll', 'as' => 'no-budget-all']);
+    Route::get('list/no-budget/{start_date?}/{end_date?}', ['uses' => 'Budget\ShowController@noBudget', 'as' => 'no-budget']);
+
 
     // index
     Route::get('{moment?}', ['uses' => 'Budget\IndexController@index', 'as' => 'index']);

@@ -74,6 +74,8 @@ class AmountController extends Controller
      * @param Budget                    $budget
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function amount(Request $request, BudgetRepositoryInterface $repository, Budget $budget): JsonResponse
     {
@@ -128,16 +130,13 @@ class AmountController extends Controller
     public function infoIncome(Carbon $start, Carbon $end)
     {
         $range = app('preferences')->get('viewRange', '1M')->data;
-
         /** @var Carbon $searchBegin */
         $searchBegin        = app('navigation')->subtractPeriod($start, $range, 3);
         $searchEnd          = app('navigation')->addPeriod($end, $range, 3);
         $daysInPeriod       = $start->diffInDays($end);
         $daysInSearchPeriod = $searchBegin->diffInDays($searchEnd);
-
-        // get average available budget from repository:
-        $average   = $this->repository->getAverageAvailable($start, $end);
-        $available = bcmul($average, (string)$daysInPeriod);
+        $average            = $this->repository->getAverageAvailable($start, $end);
+        $available          = bcmul($average, (string)$daysInPeriod);
 
         // amount earned in this period:
         /** @var JournalCollectorInterface $collector */
@@ -159,17 +158,11 @@ class AmountController extends Controller
         $suggested = $spentAverage;
 
         // if the user makes less per period, suggest that amount instead.
-        if (bccomp($spentAverage, $earnedAverage) === 1) {
+        if (1 === bccomp($spentAverage, $earnedAverage)) {
             $suggested = $earnedAverage;
         }
 
-        $result
-            = [
-            'available' => $available,
-            'earned'    => $earnedAverage,
-            'spent'     => $spentAverage,
-            'suggested' => $suggested,
-        ];
+        $result = ['available' => $available, 'earned' => $earnedAverage, 'spent' => $spentAverage, 'suggested' => $suggested,];
 
         return view('budgets.info', compact('result', 'searchBegin', 'searchEnd', 'start', 'end'));
     }

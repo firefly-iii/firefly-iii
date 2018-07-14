@@ -68,52 +68,23 @@ class ShowController extends Controller
     }
 
     /**
-     * @param Request                    $request
-     * @param JournalRepositoryInterface $repository
-     * @param string|null                $moment
+     * @param Request     $request
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function noBudget(Request $request, JournalRepositoryInterface $repository, string $moment = null)
+    public function noBudget(Request $request, Carbon $start = null, Carbon $end = null)
     {
-        // default values:
-        $moment  = $moment ?? '';
-        $range   = app('preferences')->get('viewRange', '1M')->data;
-        $start   = null;
-        $end     = null;
-        $periods = new Collection;
-
-        // prep for "all" view.
-        if ('all' === $moment) {
-            $subTitle = trans('firefly.all_journals_without_budget');
-            $first    = $repository->firstNull();
-            $start    = null === $first ? new Carbon : $first->date;
-            $end      = new Carbon;
-        }
-
-        // prep for "specific date" view.
-        if ('all' !== $moment && \strlen($moment) > 0) {
-            $start = new Carbon($moment);
-            /** @var Carbon $end */
-            $end      = app('navigation')->endOfPeriod($start, $range);
-            $subTitle = trans(
-                'firefly.without_budget_between',
-                ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
-            );
-            $periods  = $this->getPeriodOverview();
-        }
-
-        // prep for current period
-        if ('' === $moment) {
-            $start    = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
-            $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
-            $periods  = $this->getPeriodOverview();
-            $subTitle = trans(
-                'firefly.without_budget_between',
-                ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
-            );
-        }
-
+        /** @var Carbon $start */
+        $start = $start ?? session('start');
+        /** @var Carbon $end */
+        $end      = $end ?? session('end');
+        $subTitle = trans(
+            'firefly.without_budget_between',
+            ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+        );
+        $periods  = $this->getPeriodOverview();
         $page     = (int)$request->get('page');
         $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
 
@@ -124,8 +95,35 @@ class ShowController extends Controller
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath(route('budgets.no-budget'));
 
+        return view('budgets.no-budget', compact('transactions', 'subTitle', 'periods', 'start', 'end'));
+    }
+
+    /**
+     * @param Request                    $request
+     * @param JournalRepositoryInterface $repository
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function noBudgetAll(Request $request, JournalRepositoryInterface $repository)
+    {
+        $subTitle = trans('firefly.all_journals_without_budget');
+        $first    = $repository->firstNull();
+        $start    = null === $first ? new Carbon : $first->date;
+        $end      = new Carbon;
+        $page     = (int)$request->get('page');
+        $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
+        $moment   = 'all';
+
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setLimit($pageSize)->setPage($page)
+                  ->withoutBudget()->withOpposingAccount();
+        $transactions = $collector->getPaginatedJournals();
+        $transactions->setPath(route('budgets.no-budget'));
+
         return view('budgets.no-budget', compact('transactions', 'subTitle', 'moment', 'periods', 'start', 'end'));
     }
+
 
     /**
      * @param Request $request
@@ -262,7 +260,13 @@ class ShowController extends Controller
             /** @noinspection PhpUndefinedMethodInspection */
             $dateStr  = $date['end']->format('Y-m-d');
             $dateName = app('navigation')->periodShow($date['end'], $date['period']);
-            $entries->push(['string' => $dateStr, 'name' => $dateName, 'count' => $journals, 'sum' => $sum, 'date' => clone $date['end']]);
+            $entries->push(
+                ['string' => $dateStr, 'name' => $dateName, 'count' => $journals, 'sum' => $sum, 'date' => clone $date['end'],
+                 'start'  => $date['start'],
+                 'end'    => $date['end'],
+
+                ]
+            );
         }
         $cache->store($entries);
 

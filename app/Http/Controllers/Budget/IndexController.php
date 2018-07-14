@@ -70,6 +70,8 @@ class IndexController extends Controller
      * @param string|null $moment
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function index(Request $request, string $moment = null)
     {
@@ -78,11 +80,10 @@ class IndexController extends Controller
         $end      = session('end', new Carbon);
         $page     = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
         $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
-        $days     = 0;
+        $moment   = $moment ?? '';
 
-
-        // make date if present:
-        if (null !== $moment || '' !== (string)$moment) {
+        // make date if the data is given.
+        if ('' !== (string)$moment) {
             try {
                 $start = new Carbon($moment);
                 $end   = app('navigation')->endOfPeriod($start, $range);
@@ -94,15 +95,7 @@ class IndexController extends Controller
 
         // if today is between start and end, use the diff in days between end and today (days left)
         // otherwise, use diff between start and end.
-        $today = new Carbon;
-        if ($today->gte($start) && $today->lte($end)) {
-            $days = $end->diffInDays($today);
-        }
-        if ($today->lte($start) || $today->gte($end)) {
-            $days = $start->diffInDays($end);
-        }
-        $days = 0 === $days ? 1 : $days;
-
+        $dayDifference = $this->getDayDifference($start, $end);
 
         $next = clone $end;
         $next->addDay();
@@ -122,39 +115,12 @@ class IndexController extends Controller
         $available         = $this->repository->getAvailableBudget($defaultCurrency, $start, $end);
         $spent             = array_sum(array_column($budgetInformation, 'spent'));
         $budgeted          = array_sum(array_column($budgetInformation, 'budgeted'));
+        $previousLoop      = $this->getPreviousPeriods($start, $range);
+        $nextLoop          = $this->getNextPeriods($end, $range);
 
         // paginate budgets
         $budgets = new LengthAwarePaginator($budgets, $total, $pageSize, $page);
         $budgets->setPath(route('budgets.index'));
-
-        // select thing for last 12 periods:
-        $previousLoop = [];
-        /** @var Carbon $previousDate */
-        $previousDate = clone $start;
-        $count        = 0;
-        while ($count < 12) {
-            $previousDate->subDay();
-            $previousDate          = app('navigation')->startOfPeriod($previousDate, $range);
-            $format                = $previousDate->format('Y-m-d');
-            $previousLoop[$format] = app('navigation')->periodShow($previousDate, $range);
-            ++$count;
-        }
-
-        // select thing for next 12 periods:
-        $nextLoop = [];
-        /** @var Carbon $nextDate */
-        $nextDate = clone $end;
-        $nextDate->addDay();
-        $count = 0;
-
-        while ($count < 12) {
-            $format            = $nextDate->format('Y-m-d');
-            $nextLoop[$format] = app('navigation')->periodShow($nextDate, $range);
-            $nextDate          = app('navigation')->endOfPeriod($nextDate, $range);
-            ++$count;
-            $nextDate->addDay();
-        }
-
         // display info
         $currentMonth = app('navigation')->periodShow($start, $range);
         $nextText     = app('navigation')->periodShow($next, $range);
@@ -162,15 +128,13 @@ class IndexController extends Controller
 
         return view(
             'budgets.index', compact(
-                               'available', 'currentMonth', 'next', 'nextText', 'prev', 'allBudgets', 'prevText', 'periodStart', 'periodEnd', 'days', 'page',
+                               'available', 'currentMonth', 'next', 'nextText', 'prev', 'allBudgets', 'prevText', 'periodStart', 'periodEnd', 'dayDifference',
+                               'page',
                                'budgetInformation', 'daysPassed',
                                'inactive', 'budgets', 'spent', 'budgeted', 'previousLoop', 'nextLoop', 'start', 'end'
                            )
         );
     }
-
-
-
 
 
 }

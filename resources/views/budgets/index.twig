@@ -194,7 +194,7 @@
                                 data-value="{{ (repAmount + budgetInformation[budget.id]['spent']) }}">
                                 {{ (repAmount + budgetInformation[budget.id]['spent'])|formatAmount }}
                                 {% if repAmount + budgetInformation[budget.id]['spent'] > 0 %}
-                                ({{ ((repAmount + budgetInformation[budget.id]['spent']) / days)|formatAmount }})
+                                ({{ ((repAmount + budgetInformation[budget.id]['spent']) / daysPassed)|formatAmount }})
                                 {% endif %}
                             </td>
                         </tr>

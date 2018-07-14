@@ -90,4 +90,60 @@ trait DateCalculation
 
     }
 
+    /**
+     * Get a list of the periods that will occur after this date. For example,
+     * March 2018, April 2018, etc.
+     *
+     * @param Carbon $date
+     * @param string $range
+     *
+     * @return array
+     */
+    protected function getNextPeriods(Carbon $date, string $range): array
+    {
+        // select thing for next 12 periods:
+        $loop = [];
+        /** @var Carbon $current */
+        $current = clone $date;
+        $current->addDay();
+        $count = 0;
+
+        while ($count < 12) {
+            $format        = $current->format('Y-m-d');
+            $loop[$format] = app('navigation')->periodShow($current, $range);
+            $current      = app('navigation')->endOfPeriod($current, $range);
+            ++$count;
+            $current->addDay();
+        }
+
+        return $loop;
+    }
+
+    /**
+     * Get a list of the periods that occurred before the start date. For example,
+     * March 2018, February 2018, etc.
+     *
+     * @param Carbon $date
+     * @param string $range
+     *
+     * @return array
+     */
+    protected function getPreviousPeriods(Carbon $date, string $range): array
+    {
+        // select thing for last 12 periods:
+        $loop = [];
+        /** @var Carbon $current */
+        $current = clone $date;
+        $count   = 0;
+        while ($count < 12) {
+            $current->subDay();
+            $current       = app('navigation')->startOfPeriod($current, $range);
+            $format        = $current->format('Y-m-d');
+            $loop[$format] = app('navigation')->periodShow($current, $range);
+            ++$count;
+        }
+
+        return $loop;
+    }
+
 }
