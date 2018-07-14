@@ -43,7 +43,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'A_unit_' . random_int(1, 1000);
+        $job->key           = 'A_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -66,7 +66,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'B_unit_' . random_int(1, 1000);
+        $job->key           = 'B_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'needs_config';
         $job->provider      = 'fake';
@@ -89,7 +89,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'C_unit_' . random_int(1, 1000);
+        $job->key           = 'C_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -114,7 +114,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'D_unit_' . random_int(1, 1000);
+        $job->key           = 'D_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'config';
         $job->provider      = 'fake';
@@ -142,7 +142,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'E_unit_' . random_int(1, 1000);
+        $job->key           = 'E_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -169,7 +169,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'f_unit_' . random_int(1, 1000);
+        $job->key           = 'f_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'config';
         $job->provider      = 'fake';
@@ -197,7 +197,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'g_unit_' . random_int(1, 1000);
+        $job->key           = 'g_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -224,7 +224,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'h_unit_' . random_int(1, 1000);
+        $job->key           = 'h_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -259,7 +259,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'i_unit_' . random_int(1, 1000);
+        $job->key           = 'i_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -294,7 +294,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'j_unit_' . random_int(1, 1000);
+        $job->key           = 'j_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -329,7 +329,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'k_unit_' . random_int(1, 1000);
+        $job->key           = 'k_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -364,7 +364,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'l_unit_' . random_int(1, 1000);
+        $job->key           = 'l_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -399,7 +399,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'm_unit_' . random_int(1, 1000);
+        $job->key           = 'm_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -434,7 +434,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'n_unit_' . random_int(1, 1000);
+        $job->key           = 'n_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -469,7 +469,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'o_unit_' . random_int(1, 1000);
+        $job->key           = 'o_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -504,7 +504,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'p_unit_' . random_int(1, 1000);
+        $job->key           = 'p_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'not_new';
         $job->provider      = 'fake';
@@ -528,7 +528,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'p_unit_' . random_int(1, 1000);
+        $job->key           = 'p_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -552,7 +552,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'p_unit_' . random_int(1, 1000);
+        $job->key           = 'p_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -576,7 +576,7 @@ class FakeJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'p_unit_' . random_int(1, 1000);
+        $job->key           = 'p_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';

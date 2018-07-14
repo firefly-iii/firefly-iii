@@ -59,7 +59,7 @@ class AddTagTest extends TestCase
     {
         $journal                  = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'TestTag-' . random_int(1, 1000);
+        $ruleAction->action_value = 'TestTag-' . random_int(1, 10000);
         $action                   = new AddTag($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);

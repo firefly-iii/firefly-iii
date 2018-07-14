@@ -91,7 +91,7 @@ class BudgetFactoryTest extends TestCase
         /** @var BudgetFactory $factory */
         $factory = app(BudgetFactory::class);
         $factory->setUser($this->user());
-        $this->assertNull($factory->find(null, 'I dont exist.' . random_int(1, 1000)));
+        $this->assertNull($factory->find(null, 'I dont exist.' . random_int(1, 10000)));
     }
 
 }

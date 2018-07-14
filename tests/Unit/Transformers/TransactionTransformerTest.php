@@ -280,7 +280,7 @@ class TransactionTransformerTest extends TestCase
         $budget = Budget::create(
             [
                 'user_id' => $this->user()->id,
-                'name'    => 'Random budget #' . random_int(1, 1000),
+                'name'    => 'Random budget #' . random_int(1, 10000),
                 'active'  => 1,
             ]
         );
@@ -464,7 +464,7 @@ class TransactionTransformerTest extends TestCase
         $budget = Budget::create(
             [
                 'user_id' => $this->user()->id,
-                'name'    => 'Random budget #' . random_int(1, 1000),
+                'name'    => 'Random budget #' . random_int(1, 10000),
                 'active'  => 1,
             ]
         );
@@ -566,7 +566,7 @@ class TransactionTransformerTest extends TestCase
         $category = Category::create(
             [
                 'user_id' => $this->user()->id,
-                'name'    => 'Random category #' . random_int(1, 1000),
+                'name'    => 'Random category #' . random_int(1, 10000),
                 'active'  => 1,
             ]
         );
@@ -1024,7 +1024,7 @@ class TransactionTransformerTest extends TestCase
         $budget = Budget::create(
             [
                 'user_id' => $this->user()->id,
-                'name'    => 'Random budget #' . random_int(1, 1000),
+                'name'    => 'Random budget #' . random_int(1, 10000),
                 'active'  => 1,
             ]
         );
@@ -1128,7 +1128,7 @@ class TransactionTransformerTest extends TestCase
         $category = Category::create(
             [
                 'user_id' => $this->user()->id,
-                'name'    => 'Random category #' . random_int(1, 1000),
+                'name'    => 'Random category #' . random_int(1, 10000),
                 'active'  => 1,
             ]
         );

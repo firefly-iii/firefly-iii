@@ -58,7 +58,7 @@ class JobStatusControllerTest extends TestCase
     {
         $job            = new ImportJob;
         $job->user_id   = $this->user()->id;
-        $job->key       = 'Afake_job_' . random_int(1, 1000);
+        $job->key       = 'Afake_job_' . random_int(1, 10000);
         $job->status    = 'ready_to_run';
         $job->provider  = 'fake';
         $job->file_type = '';
@@ -78,7 +78,7 @@ class JobStatusControllerTest extends TestCase
     {
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Bfake_job_' . random_int(1, 1000);
+        $job->key          = 'Bfake_job_' . random_int(1, 10000);
         $job->status       = 'ready_to_run';
         $job->provider     = 'file';
         $job->transactions = [];
@@ -102,7 +102,7 @@ class JobStatusControllerTest extends TestCase
         $tag               = $this->user()->tags()->first();
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Cfake_job_' . random_int(1, 1000);
+        $job->key          = 'Cfake_job_' . random_int(1, 10000);
         $job->status       = 'ready_to_run';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -132,7 +132,7 @@ class JobStatusControllerTest extends TestCase
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Dfake_job_' . random_int(1, 1000);
+        $job->key          = 'Dfake_job_' . random_int(1, 10000);
         $job->status       = 'ready_to_run';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -161,7 +161,7 @@ class JobStatusControllerTest extends TestCase
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Efake_job_' . random_int(1, 1000);
+        $job->key          = 'Efake_job_' . random_int(1, 10000);
         $job->status       = 'ready_to_run';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -185,7 +185,7 @@ class JobStatusControllerTest extends TestCase
     {
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Ffake_job_' . random_int(1, 1000);
+        $job->key          = 'Ffake_job_' . random_int(1, 10000);
         $job->status       = 'ready_to_run';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -214,7 +214,7 @@ class JobStatusControllerTest extends TestCase
     {
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Gfake_job_' . random_int(1, 1000);
+        $job->key          = 'Gfake_job_' . random_int(1, 10000);
         $job->status       = 'ready_to_run';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -244,7 +244,7 @@ class JobStatusControllerTest extends TestCase
     {
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Hfake_job_' . random_int(1, 1000);
+        $job->key          = 'Hfake_job_' . random_int(1, 10000);
         $job->status       = 'ready_to_run';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -274,7 +274,7 @@ class JobStatusControllerTest extends TestCase
     {
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Ifake_job_' . random_int(1, 1000);
+        $job->key          = 'Ifake_job_' . random_int(1, 10000);
         $job->status       = 'bad_state';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -295,7 +295,7 @@ class JobStatusControllerTest extends TestCase
     {
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Jfake_job_' . random_int(1, 1000);
+        $job->key          = 'Jfake_job_' . random_int(1, 10000);
         $job->status       = 'provider_finished';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -326,7 +326,7 @@ class JobStatusControllerTest extends TestCase
     {
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Lfake_job_' . random_int(1, 1000);
+        $job->key          = 'Lfake_job_' . random_int(1, 10000);
         $job->status       = 'provider_finished';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -357,7 +357,7 @@ class JobStatusControllerTest extends TestCase
     {
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Kfake_job_' . random_int(1, 1000);
+        $job->key          = 'Kfake_job_' . random_int(1, 10000);
         $job->status       = 'some_bad_state';
         $job->provider     = 'fake';
         $job->transactions = [];

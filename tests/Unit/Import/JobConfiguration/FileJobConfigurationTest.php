@@ -49,7 +49,7 @@ class FileJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'File_A_unit_' . random_int(1, 1000);
+        $job->key           = 'File_A_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -72,7 +72,7 @@ class FileJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'File_B_unit_' . random_int(1, 1000);
+        $job->key           = 'File_B_unit_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'ready_to_run';
         $job->provider      = 'fake';
@@ -95,7 +95,7 @@ class FileJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'I-file_' . random_int(1, 1000);
+        $job->key           = 'I-Cfile_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'map';
         $job->provider      = 'file';
@@ -103,8 +103,8 @@ class FileJobConfigurationTest extends TestCase
         $job->configuration = [];
         $job->save();
 
-        $bag          = new MessageBag;
-        $result       = null;
+        $bag    = new MessageBag;
+        $result = null;
 
         $configurator = new FileJobConfiguration;
         $configurator->setImportJob($job);
@@ -130,7 +130,7 @@ class FileJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'G-file_' . random_int(1, 1000);
+        $job->key           = 'G-Dfile_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'configure-upload';
         $job->provider      = 'file';
@@ -163,7 +163,7 @@ class FileJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'H-file_' . random_int(1, 1000);
+        $job->key           = 'H-Efile_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'map';
         $job->provider      = 'file';
@@ -196,7 +196,7 @@ class FileJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'F-file_' . random_int(1, 1000);
+        $job->key           = 'F-fFile_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'file';
@@ -229,7 +229,7 @@ class FileJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'H-file_' . random_int(1, 1000);
+        $job->key           = 'H-fiGle_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'roles';
         $job->provider      = 'file';
@@ -262,7 +262,7 @@ class FileJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'Dfile_' . random_int(1, 1000);
+        $job->key           = 'DfiHle_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'configure-upload';
         $job->provider      = 'file';
@@ -290,7 +290,7 @@ class FileJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'Ffile_' . random_int(1, 1000);
+        $job->key           = 'FfilIe_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'map';
         $job->provider      = 'file';
@@ -318,7 +318,7 @@ class FileJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'Cfile_' . random_int(1, 1000);
+        $job->key           = 'CfJile_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'file';
@@ -346,7 +346,7 @@ class FileJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'Efile_' . random_int(1, 1000);
+        $job->key           = 'EfiKle_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'roles';
         $job->provider      = 'file';

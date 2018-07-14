@@ -138,7 +138,7 @@ class AttachmentControllerTest extends TestCase
                 'user_id'         => $this->user()->id,
                 'attachable_id'   => 1,
                 'attachable_type' => TransactionJournal::class,
-                'md5'             => md5('Hello' . random_int(1, 1000)),
+                'md5'             => md5('Hello' . random_int(1, 10000)),
                 'filename'        => 'some name',
                 'mime'            => 'text/plain',
                 'size'            => 5,
@@ -230,7 +230,7 @@ class AttachmentControllerTest extends TestCase
         // data to submit
         $data = [
             'filename'    => 'Some new att',
-            'description' => sprintf('Attempt #%d', random_int(1, 1000)),
+            'description' => sprintf('Attempt #%d', random_int(1, 10000)),
             'model'       => TransactionJournal::class,
             'model_id'    => 1,
         ];
@@ -265,7 +265,7 @@ class AttachmentControllerTest extends TestCase
         // data to submit
         $data = [
             'filename'    => $attachment->filename,
-            'description' => sprintf('Attempt #%d', random_int(1, 1000)),
+            'description' => sprintf('Attempt #%d', random_int(1, 10000)),
             'model'       => TransactionJournal::class,
             'model_id'    => 1,
         ];

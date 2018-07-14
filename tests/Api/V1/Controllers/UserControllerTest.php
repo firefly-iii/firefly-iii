@@ -57,7 +57,7 @@ class UserControllerTest extends TestCase
     public function testDelete(): void
     {
         // create a user first:
-        $user = User::create(['email' => 'some@newu' . random_int(1, 1000) . 'ser.nl', 'password' => 'hello', 'blocked' => 0]);
+        $user = User::create(['email' => 'some@newu' . random_int(1, 10000) . 'ser.nl', 'password' => 'hello', 'blocked' => 0]);
 
         // call API
         $response = $this->delete('/api/v1/users/' . $user->id);
@@ -76,7 +76,7 @@ class UserControllerTest extends TestCase
         Passport::actingAs($this->emptyUser());
 
         // create a user first:
-        $user = User::create(['email' => 'some@newu' . random_int(1, 1000) . 'ser.nl', 'password' => 'hello', 'blocked' => 0]);
+        $user = User::create(['email' => 'some@newu' . random_int(1, 10000) . 'ser.nl', 'password' => 'hello', 'blocked' => 0]);
 
         // call API
         $response = $this->delete('/api/v1/users/' . $user->id);
@@ -137,7 +137,7 @@ class UserControllerTest extends TestCase
     public function testStoreBasic(): void
     {
         $data = [
-            'email'   => 'some_new@user' . random_int(1, 1000) . '.com',
+            'email'   => 'some_new@user' . random_int(1, 10000) . '.com',
             'blocked' => 0,
         ];
 
@@ -192,11 +192,11 @@ class UserControllerTest extends TestCase
     public function testUpdate(): void
     {
         // create a user first:
-        $user = User::create(['email' => 'some@newu' . random_int(1, 1000) . 'ser.nl', 'password' => 'hello', 'blocked' => 0]);
+        $user = User::create(['email' => 'some@newu' . random_int(1, 10000) . 'ser.nl', 'password' => 'hello', 'blocked' => 0]);
 
         // data:
         $data = [
-            'email'   => 'some-new@email' . random_int(1, 1000) . '.com',
+            'email'   => 'some-new@email' . random_int(1, 10000) . '.com',
             'blocked' => 0,
         ];
 

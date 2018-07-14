@@ -80,7 +80,7 @@ class CategoryFactoryTest extends TestCase
      */
     public function testFindOrCreateNewName(): void
     {
-        $name = 'Some new category #' . random_int(1, 1000);
+        $name = 'Some new category #' . random_int(1, 10000);
 
         /** @var CategoryFactory $factory */
         $factory = app(CategoryFactory::class);

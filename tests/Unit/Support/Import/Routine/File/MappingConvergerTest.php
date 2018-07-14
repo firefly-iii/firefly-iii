@@ -120,7 +120,7 @@ class MappingConvergerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'linerB' . random_int(1, 1000);
+        $job->key           = 'linerB' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';

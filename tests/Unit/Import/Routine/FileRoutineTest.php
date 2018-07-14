@@ -45,7 +45,7 @@ class FileRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'a_fr_' . random_int(1, 1000);
+        $job->key           = 'a_fr_' . random_int(1, 10000);
         $job->status        = 'ready_to_run';
         $job->stage         = 'ready_to_run';
         $job->provider      = 'file';
