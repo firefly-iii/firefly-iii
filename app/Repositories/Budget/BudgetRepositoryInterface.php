@@ -47,6 +47,13 @@ interface BudgetRepositoryInterface
     public function budgetedPerDay(Budget $budget): string;
 
     /**
+     * Destroy a budget limit.
+     *
+     * @param BudgetLimit $budgetLimit
+     */
+    public function destroyBudgetLimit(BudgetLimit $budgetLimit): void;
+
+    /**
      * @return bool
      */
     public function cleanupBudgets(): bool;
