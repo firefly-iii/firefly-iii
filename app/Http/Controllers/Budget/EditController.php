@@ -51,7 +51,7 @@ class EditController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', trans('firefly.budgets'));
+                app('view')->share('title', (string)trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-tasks');
                 $this->repository = app(BudgetRepositoryInterface::class);
 
@@ -68,7 +68,7 @@ class EditController extends Controller
      */
     public function edit(Request $request, Budget $budget)
     {
-        $subTitle = trans('firefly.edit_budget', ['name' => $budget->name]);
+        $subTitle = (string)trans('firefly.edit_budget', ['name' => $budget->name]);
 
         // code to handle active-checkboxes
         $hasOldInput = null !== $request->old('_token');

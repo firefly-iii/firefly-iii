@@ -72,7 +72,7 @@ class SplitController extends Controller
                 $this->currencies  = app(CurrencyRepositoryInterface::class);
                 $this->repository  = app(JournalRepositoryInterface::class);
                 app('view')->share('mainTitleIcon', 'fa-share-alt');
-                app('view')->share('title', trans('firefly.split-transactions'));
+                app('view')->share('title', (string)trans('firefly.split-transactions'));
 
                 return $next($request);
             }
@@ -93,7 +93,7 @@ class SplitController extends Controller
         }
         // basic fields:
         $uploadSize   = min(app('steam')->phpBytes(ini_get('upload_max_filesize')), app('steam')->phpBytes(ini_get('post_max_size')));
-        $subTitle     = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
+        $subTitle     = (string)trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
         $subTitleIcon = 'fa-pencil';
 
         // lists and collections

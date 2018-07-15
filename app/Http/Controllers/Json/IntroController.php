@@ -105,7 +105,7 @@ class IntroController
         Log::debug(sprintf('Going to mark the following route as NOT done: %s with special "%s" (%s)', $route, $specialPage, $key));
         app('preferences')->set($key, false);
 
-        return response()->json(['message' => trans('firefly.intro_boxes_after_refresh')]);
+        return response()->json(['message' => (string)trans('firefly.intro_boxes_after_refresh')]);
     }
 
     /**
@@ -142,7 +142,7 @@ class IntroController
                 $currentStep = $options;
 
                 // get the text:
-                $currentStep['intro'] = trans('intro.' . $route . '_' . $key);
+                $currentStep['intro'] = (string)trans('intro.' . $route . '_' . $key);
 
                 // save in array:
                 $steps[] = $currentStep;
@@ -173,7 +173,7 @@ class IntroController
                     $currentStep = $options;
 
                     // get the text:
-                    $currentStep['intro'] = trans('intro.' . $route . '_' . $specificPage . '_' . $key);
+                    $currentStep['intro'] = (string)trans('intro.' . $route . '_' . $specificPage . '_' . $key);
 
                     // save in array:
                     $steps[] = $currentStep;

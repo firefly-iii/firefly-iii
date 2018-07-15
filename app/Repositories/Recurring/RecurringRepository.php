@@ -526,23 +526,23 @@ class RecurringRepository implements RecurringRepositoryInterface
                 throw new FireflyException(sprintf('Cannot translate recurring transaction repetition type "%s"', $repetition->repetition_type));
                 break;
             case 'daily':
-                return trans('firefly.recurring_daily', [], $language);
+                return (string)trans('firefly.recurring_daily', [], $language);
                 break;
             case 'weekly':
                 $dayOfWeek = trans(sprintf('config.dow_%s', $repetition->repetition_moment), [], $language);
 
-                return trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek], $language);
+                return (string)trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek], $language);
                 break;
             case 'monthly':
                 // format a date:
-                return trans('firefly.recurring_monthly', ['dayOfMonth' => $repetition->repetition_moment], $language);
+                return (string)trans('firefly.recurring_monthly', ['dayOfMonth' => $repetition->repetition_moment], $language);
                 break;
             case 'ndom':
                 $parts = explode(',', $repetition->repetition_moment);
                 // first part is number of week, second is weekday.
                 $dayOfWeek = trans(sprintf('config.dow_%s', $parts[1]), [], $language);
 
-                return trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $parts[0]], $language);
+                return (string)trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $parts[0]], $language);
                 break;
             case 'yearly':
                 //
@@ -553,7 +553,7 @@ class RecurringRepository implements RecurringRepositoryInterface
                 $repDate->addYears($diffInYears); // technically not necessary.
                 $string = $repDate->formatLocalized(trans('config.month_and_day_no_year'));
 
-                return trans('firefly.recurring_yearly', ['date' => $string], $language);
+                return (string)trans('firefly.recurring_yearly', ['date' => $string], $language);
                 break;
 
         }

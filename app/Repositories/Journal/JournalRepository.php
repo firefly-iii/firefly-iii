@@ -64,10 +64,10 @@ class JournalRepository implements JournalRepositoryInterface
         if ($source->id === $destination->id || null === $source->id || null === $destination->id) {
             // default message bag that shows errors for everything.
             $messages = new MessageBag;
-            $messages->add('source_account_revenue', trans('firefly.invalid_convert_selection'));
-            $messages->add('destination_account_asset', trans('firefly.invalid_convert_selection'));
-            $messages->add('destination_account_expense', trans('firefly.invalid_convert_selection'));
-            $messages->add('source_account_asset', trans('firefly.invalid_convert_selection'));
+            $messages->add('source_account_revenue', (string)trans('firefly.invalid_convert_selection'));
+            $messages->add('destination_account_asset', (string)trans('firefly.invalid_convert_selection'));
+            $messages->add('destination_account_expense', (string)trans('firefly.invalid_convert_selection'));
+            $messages->add('source_account_asset', (string)trans('firefly.invalid_convert_selection'));
 
             return $messages;
         }
@@ -78,10 +78,10 @@ class JournalRepository implements JournalRepositoryInterface
             // default message bag that shows errors for everything.
 
             $messages = new MessageBag;
-            $messages->add('source_account_revenue', trans('firefly.source_or_dest_invalid'));
-            $messages->add('destination_account_asset', trans('firefly.source_or_dest_invalid'));
-            $messages->add('destination_account_expense', trans('firefly.source_or_dest_invalid'));
-            $messages->add('source_account_asset', trans('firefly.source_or_dest_invalid'));
+            $messages->add('source_account_revenue', (string)trans('firefly.source_or_dest_invalid'));
+            $messages->add('destination_account_asset', (string)trans('firefly.source_or_dest_invalid'));
+            $messages->add('destination_account_expense', (string)trans('firefly.source_or_dest_invalid'));
+            $messages->add('source_account_asset', (string)trans('firefly.source_or_dest_invalid'));
 
             return $messages;
         }

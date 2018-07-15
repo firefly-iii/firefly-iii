@@ -255,7 +255,7 @@ class CreateRecurringTransactions implements ShouldQueue
                 'date'            => $date,
                 'tags'            => $this->repository->getTags($recurrence),
                 'user'            => $recurrence->user_id,
-                'notes'           => trans('firefly.created_from_recurrence', ['id' => $recurrence->id, 'title' => $recurrence->title]),
+                'notes'           => (string)trans('firefly.created_from_recurrence', ['id' => $recurrence->id, 'title' => $recurrence->title]),
 
                 // journal data:
                 'description'     => $recurrence->recurrenceTransactions()->first()->description,

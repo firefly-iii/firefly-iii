@@ -42,7 +42,7 @@ class JsonController extends Controller
         $keys    = array_keys(config('firefly.rule-actions'));
         $actions = [];
         foreach ($keys as $key) {
-            $actions[$key] = trans('firefly.rule_action_' . $key . '_choice');
+            $actions[$key] = (string)trans('firefly.rule_action_' . $key . '_choice');
         }
         $view = view('rules.partials.action', compact('actions', 'count'))->render();
 
@@ -62,7 +62,7 @@ class JsonController extends Controller
         $triggers = [];
         foreach ($keys as $key) {
             if ('user_action' !== $key) {
-                $triggers[$key] = trans('firefly.rule_trigger_' . $key . '_choice');
+                $triggers[$key] = (string)trans('firefly.rule_trigger_' . $key . '_choice');
             }
         }
         asort($triggers);

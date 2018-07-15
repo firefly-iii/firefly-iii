@@ -100,7 +100,7 @@ class ChooseAccountsHandler implements SpectreJobConfigurationInterface
         $config['apply-rules']     = $applyRules;
         $this->repository->setConfiguration($this->importJob, $config);
         if ($final === [0 => 0] || \count($final) === 0) {
-            $messages->add('count', trans('import.spectre_no_mapping'));
+            $messages->add('count', (string)trans('import.spectre_no_mapping'));
         }
 
         return $messages;

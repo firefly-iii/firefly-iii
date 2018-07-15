@@ -67,7 +67,7 @@ class TagController extends Controller
      */
     public function create()
     {
-        $subTitle     = trans('firefly.new_tag');
+        $subTitle     = (string)trans('firefly.new_tag');
         $subTitleIcon = 'fa-tag';
 
         // put previous url in session if not redirect from store (not "create another").
@@ -88,7 +88,7 @@ class TagController extends Controller
      */
     public function delete(Tag $tag)
     {
-        $subTitle = trans('breadcrumbs.delete_tag', ['tag' => $tag->tag]);
+        $subTitle = (string)trans('breadcrumbs.delete_tag', ['tag' => $tag->tag]);
 
         // put previous url in session
         $this->rememberPreviousUri('tags.delete.uri');
@@ -121,7 +121,7 @@ class TagController extends Controller
      */
     public function edit(Tag $tag)
     {
-        $subTitle     = trans('firefly.edit_tag', ['tag' => $tag->tag]);
+        $subTitle     = (string)trans('firefly.edit_tag', ['tag' => $tag->tag]);
         $subTitleIcon = 'fa-tag';
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -184,7 +184,7 @@ class TagController extends Controller
 
         // prep for "all" view.
         if ('all' === $moment) {
-            $subTitle = trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
+            $subTitle = (string)trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
             $start    = $this->repository->firstUseDate($tag);
             $end      = new Carbon;
             $path     = route('tags.show', [$tag->id, 'all']);

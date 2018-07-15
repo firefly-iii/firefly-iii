@@ -54,7 +54,7 @@ class IsValidAttachmentModel implements Rule
      */
     public function message(): string
     {
-        return trans('validation.model_id_invalid');
+        return (string)trans('validation.model_id_invalid');
     }
 
     /**

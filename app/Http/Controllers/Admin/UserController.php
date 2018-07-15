@@ -61,7 +61,7 @@ class UserController extends Controller
      */
     public function delete(User $user)
     {
-        $subTitle = trans('firefly.delete_user', ['email' => $user->email]);
+        $subTitle = (string)trans('firefly.delete_user', ['email' => $user->email]);
 
         return view('admin.users.delete', compact('user', 'subTitle'));
     }

@@ -106,9 +106,9 @@ class BillController extends Controller
             }
         );
         $chartData = [
-            ['type' => 'bar', 'label' => trans('firefly.min-amount'), 'entries' => []],
-            ['type' => 'bar', 'label' => trans('firefly.max-amount'), 'entries' => []],
-            ['type' => 'line', 'label' => trans('firefly.journal-amount'), 'entries' => []],
+            ['type' => 'bar', 'label' => (string)trans('firefly.min-amount'), 'entries' => []],
+            ['type' => 'bar', 'label' => (string)trans('firefly.max-amount'), 'entries' => []],
+            ['type' => 'line', 'label' => (string)trans('firefly.journal-amount'), 'entries' => []],
         ];
 
         /** @var Transaction $entry */

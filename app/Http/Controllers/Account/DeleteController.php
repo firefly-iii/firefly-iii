@@ -50,7 +50,7 @@ class DeleteController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', trans('firefly.accounts'));
+                app('view')->share('title', (string)trans('firefly.accounts'));
 
                 $this->repository = app(AccountRepositoryInterface::class);
 
@@ -67,7 +67,7 @@ class DeleteController extends Controller
     public function delete(Account $account)
     {
         $typeName    = config('firefly.shortNamesByFullName.' . $account->accountType->type);
-        $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
+        $subTitle    = (string)trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
         $accountList = ExpandedForm::makeSelectListWithEmpty($this->repository->getAccountsByType([$account->accountType->type]));
         unset($accountList[$account->id]);
 

@@ -118,7 +118,7 @@ class Amount
      */
     public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = true): string
     {
-        $locale = explode(',', trans('config.locale'));
+        $locale = explode(',', (string)trans('config.locale'));
         $locale = array_map('trim', $locale);
         setlocale(LC_MONETARY, $locale);
         $float     = round($amount, 12);

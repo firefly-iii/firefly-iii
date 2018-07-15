@@ -50,7 +50,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', trans('firefly.accounts'));
+                app('view')->share('title', (string)trans('firefly.accounts'));
 
                 $this->repository = app(AccountRepositoryInterface::class);
 
@@ -68,7 +68,7 @@ class IndexController extends Controller
     public function index(Request $request, string $what)
     {
         $what         = $what ?? 'asset';
-        $subTitle     = trans('firefly.' . $what . '_accounts');
+        $subTitle     = (string)trans('firefly.' . $what . '_accounts');
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
         $types        = config('firefly.accountTypesByIdentifier.' . $what);
         $collection   = $this->repository->getAccountsByType($types);

@@ -57,7 +57,7 @@ class MassController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-repeat');
                 $this->repository = app(JournalRepositoryInterface::class);
 
@@ -73,7 +73,7 @@ class MassController extends Controller
      */
     public function delete(Collection $journals): IlluminateView
     {
-        $subTitle = trans('firefly.mass_delete_journals');
+        $subTitle = (string)trans('firefly.mass_delete_journals');
 
         // put previous url in session
         $this->rememberPreviousUri('transactions.mass-delete.uri');
@@ -110,7 +110,7 @@ class MassController extends Controller
         }
 
         app('preferences')->mark();
-        session()->flash('success', trans('firefly.mass_deleted_transactions_success', ['amount' => $count]));
+        session()->flash('success', (string)trans('firefly.mass_deleted_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-delete.uri'));
@@ -125,7 +125,7 @@ class MassController extends Controller
     {
         /** @var User $user */
         $user     = auth()->user();
-        $subTitle = trans('firefly.mass_edit_journals');
+        $subTitle = (string)trans('firefly.mass_edit_journals');
 
 
         /** @var AccountRepositoryInterface $repository */
@@ -240,7 +240,7 @@ class MassController extends Controller
             }
         }
         app('preferences')->mark();
-        session()->flash('success', trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
+        session()->flash('success', (string)trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-edit.uri'));

@@ -63,7 +63,7 @@ class ShowController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', trans('firefly.categories'));
+                app('view')->share('title', (string)trans('firefly.categories'));
                 app('view')->share('mainTitleIcon', 'fa-bar-chart');
                 $this->journalRepos = app(JournalRepositoryInterface::class);
                 $this->repository   = app(CategoryRepositoryInterface::class);
@@ -130,7 +130,7 @@ class ShowController extends Controller
             $periods      = new Collection;
         $moment       = 'all';
 
-        $subTitle = trans('firefly.all_journals_for_category', ['name' => $category->name]);
+        $subTitle = (string)trans('firefly.all_journals_for_category', ['name' => $category->name]);
         $first    = $this->repository->firstUseDate($category);
         /** @var Carbon $start */
         $start = $first ?? new Carbon;

@@ -59,7 +59,7 @@ class UniqueIban implements Rule
      */
     public function message()
     {
-        return trans('validation.unique_iban_for_user');
+        return (string)trans('validation.unique_iban_for_user');
     }
 
     /**

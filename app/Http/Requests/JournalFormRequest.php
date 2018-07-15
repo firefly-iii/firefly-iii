@@ -250,7 +250,7 @@ class JournalFormRequest extends Request
                 && 0 !== $accountCurrency
             ) {
                 Log::debug('ADD validation error on native_amount');
-                $validator->errors()->add('native_amount', trans('validation.numeric_native'));
+                $validator->errors()->add('native_amount', (string)trans('validation.numeric_native'));
 
                 return;
             }
@@ -265,7 +265,7 @@ class JournalFormRequest extends Request
                 && 0 !== $selectedCurrency
                 && 0 !== $accountCurrency
             ) {
-                $validator->errors()->add('native_amount', trans('validation.numeric_native'));
+                $validator->errors()->add('native_amount', (string)trans('validation.numeric_native'));
 
                 return;
             }
@@ -285,15 +285,15 @@ class JournalFormRequest extends Request
                 && 0 !== $sourceCurrency
                 && 0 !== $destinationCurrency
             ) {
-                $validator->errors()->add('source_amount', trans('validation.numeric_source'));
+                $validator->errors()->add('source_amount', (string)trans('validation.numeric_source'));
             }
 
             if ($sourceCurrency !== $destinationCurrency && '' === $destinationAmount
                 && 0 !== $sourceCurrency
                 && 0 !== $destinationCurrency
             ) {
-                $validator->errors()->add('destination_amount', trans('validation.numeric_destination'));
-                $validator->errors()->add('destination_amount', trans('validation.numeric', ['attribute' => 'destination_amount']));
+                $validator->errors()->add('destination_amount', (string)trans('validation.numeric_destination'));
+                $validator->errors()->add('destination_amount', (string)trans('validation.numeric', ['attribute' => 'destination_amount']));
             }
 
             return;

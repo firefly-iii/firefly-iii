@@ -91,7 +91,7 @@ class NewFileJobHandler implements FileConfigurationInterface
         $importFileTypes   = [];
         $defaultImportType = config('import.options.file.default_import_format');
         foreach ($allowedTypes as $type) {
-            $importFileTypes[$type] = trans('import.import_file_type_' . $type);
+            $importFileTypes[$type] = (string)trans('import.import_file_type_' . $type);
         }
 
         return [
@@ -145,7 +145,7 @@ class NewFileJobHandler implements FileConfigurationInterface
 
             // check if content is UTF8:
             if (!$this->isUTF8($attachment)) {
-                $message = trans('import.file_not_utf8');
+                $message = (string)trans('import.file_not_utf8');
                 Log::error($message);
                 $messages->add('import_file', $message);
                 // delete attachment:

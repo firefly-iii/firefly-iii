@@ -53,7 +53,7 @@ class EditController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', trans('firefly.accounts'));
+                app('view')->share('title', (string)trans('firefly.accounts'));
 
                 $this->repository    = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
@@ -76,7 +76,7 @@ class EditController extends Controller
     public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
     {
         $what         = config('firefly.shortNamesByFullName')[$account->accountType->type];
-        $subTitle     = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
+        $subTitle     = (string)trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
         $roles        = [];
         foreach (config('firefly.accountRoles') as $role) {

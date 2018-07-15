@@ -302,19 +302,19 @@ class Navigation
     {
         $date      = clone $theDate;
         $formatMap = [
-            '1D'      => trans('config.specific_day'),
-            'daily'   => trans('config.specific_day'),
-            'custom'  => trans('config.specific_day'),
-            '1W'      => trans('config.week_in_year'),
-            'week'    => trans('config.week_in_year'),
-            'weekly'  => trans('config.week_in_year'),
-            '1M'      => trans('config.month'),
-            'month'   => trans('config.month'),
-            'monthly' => trans('config.month'),
-            '1Y'      => trans('config.year'),
-            'year'    => trans('config.year'),
-            'yearly'  => trans('config.year'),
-            '6M'      => trans('config.half_year'),
+            '1D'      => (string)trans('config.specific_day'),
+            'daily'   => (string)trans('config.specific_day'),
+            'custom'  => (string)trans('config.specific_day'),
+            '1W'      => (string)trans('config.week_in_year'),
+            'week'    => (string)trans('config.week_in_year'),
+            'weekly'  => (string)trans('config.week_in_year'),
+            '1M'      => (string)trans('config.month'),
+            'month'   => (string)trans('config.month'),
+            'monthly' => (string)trans('config.month'),
+            '1Y'      => (string)trans('config.year'),
+            'year'    => (string)trans('config.year'),
+            'yearly'  => (string)trans('config.year'),
+            '6M'      => (string)trans('config.half_year'),
         ];
 
         if (isset($formatMap[$repeatFrequency])) {

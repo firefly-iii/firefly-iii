@@ -67,7 +67,7 @@ class BillController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', trans('firefly.bills'));
+                app('view')->share('title', (string)trans('firefly.bills'));
                 app('view')->share('mainTitleIcon', 'fa-calendar-o');
                 $this->attachments    = app(AttachmentHelperInterface::class);
                 $this->billRepository = app(BillRepositoryInterface::class);
@@ -91,7 +91,7 @@ class BillController extends Controller
         foreach ($billPeriods as $current) {
             $periods[$current] = strtolower((string)trans('firefly.repeat_freq_' . $current));
         }
-        $subTitle        = trans('firefly.create_new_bill');
+        $subTitle        = (string)trans('firefly.create_new_bill');
         $defaultCurrency = app('amount')->getDefaultCurrency();
 
         // put previous url in session if not redirect from store (not "create another").
@@ -112,7 +112,7 @@ class BillController extends Controller
     {
         // put previous url in session
         $this->rememberPreviousUri('bills.delete.uri');
-        $subTitle = trans('firefly.delete_bill', ['name' => $bill->name]);
+        $subTitle = (string)trans('firefly.delete_bill', ['name' => $bill->name]);
 
         return view('bills.delete', compact('bill', 'subTitle'));
     }
@@ -147,10 +147,10 @@ class BillController extends Controller
         $billPeriods = config('firefly.bill_periods');
 
         foreach ($billPeriods as $current) {
-            $periods[$current] = trans('firefly.' . $current);
+            $periods[$current] = (string)trans('firefly.' . $current);
         }
 
-        $subTitle = trans('firefly.edit_bill', ['name' => $bill->name]);
+        $subTitle = (string)trans('firefly.edit_bill', ['name' => $bill->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('bills.edit.fromUpdate')) {

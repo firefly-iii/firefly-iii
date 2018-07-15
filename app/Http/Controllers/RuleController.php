@@ -69,7 +69,7 @@ class RuleController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', trans('firefly.rules'));
+                app('view')->share('title', (string)trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
 
                 $this->accountRepos   = app(AccountRepositoryInterface::class);
@@ -121,8 +121,8 @@ class RuleController extends Controller
         if (null !== $bill && !$request->old()) {
 
             // create some sensible defaults:
-            $preFilled['title']       = trans('firefly.new_rule_for_bill_title', ['name' => $bill->name]);
-            $preFilled['description'] = trans('firefly.new_rule_for_bill_description', ['name' => $bill->name]);
+            $preFilled['title']       = (string)trans('firefly.new_rule_for_bill_title', ['name' => $bill->name]);
+            $preFilled['description'] = (string)trans('firefly.new_rule_for_bill_description', ['name' => $bill->name]);
 
 
             // get triggers and actions for bill:
@@ -133,7 +133,7 @@ class RuleController extends Controller
         $triggerCount = \count($oldTriggers);
         $actionCount  = \count($oldActions);
         $subTitleIcon = 'fa-clone';
-        $subTitle     = trans('firefly.make_new_rule', ['title' => $ruleGroup->title]);
+        $subTitle     = (string)trans('firefly.make_new_rule', ['title' => $ruleGroup->title]);
 
         $request->session()->flash('preFilled', $preFilled);
 
@@ -161,7 +161,7 @@ class RuleController extends Controller
      */
     public function delete(Rule $rule)
     {
-        $subTitle = trans('firefly.delete_rule', ['title' => $rule->title]);
+        $subTitle = (string)trans('firefly.delete_rule', ['title' => $rule->title]);
 
         // put previous url in session
         $this->rememberPreviousUri('rules.delete.uri');
@@ -181,7 +181,7 @@ class RuleController extends Controller
         $title = $rule->title;
         $this->ruleRepos->destroy($rule);
 
-        session()->flash('success', trans('firefly.deleted_rule', ['title' => $title]));
+        session()->flash('success', (string)trans('firefly.deleted_rule', ['title' => $title]));
         app('preferences')->mark();
 
         return redirect($this->getPreviousUri('rules.delete.uri'));
@@ -237,7 +237,7 @@ class RuleController extends Controller
 
         // get rule trigger for update / store-journal:
         $primaryTrigger = $this->ruleRepos->getPrimaryTrigger($rule);
-        $subTitle       = trans('firefly.edit_rule', ['title' => $rule->title]);
+        $subTitle       = (string)trans('firefly.edit_rule', ['title' => $rule->title]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('rules.edit.fromUpdate')) {
@@ -357,7 +357,7 @@ class RuleController extends Controller
     {
         $data = $request->getRuleData();
         $rule = $this->ruleRepos->store($data);
-        session()->flash('success', trans('firefly.stored_new_rule', ['title' => $rule->title]));
+        session()->flash('success', (string)trans('firefly.stored_new_rule', ['title' => $rule->title]));
         app('preferences')->mark();
 
         // redirect to show bill.
@@ -400,7 +400,7 @@ class RuleController extends Controller
         $triggers = $this->getValidTriggerList($request);
 
         if (0 === \count($triggers)) {
-            return response()->json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
+            return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 
         $limit                = (int)config('firefly.test-triggers.limit');
@@ -424,10 +424,10 @@ class RuleController extends Controller
         // Warn the user if only a subset of transactions is returned
         $warning = '';
         if ($matchingTransactions->count() === $limit) {
-            $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]); // @codeCoverageIgnore
+            $warning = (string)trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]); // @codeCoverageIgnore
         }
         if (0 === $matchingTransactions->count()) {
-            $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]); // @codeCoverageIgnore
+            $warning = (string)trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]); // @codeCoverageIgnore
         }
 
         // Return json response
@@ -462,7 +462,7 @@ class RuleController extends Controller
         $triggers = $rule->ruleTriggers;
 
         if (0 === \count($triggers)) {
-            return response()->json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
+            return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 
         $limit                = (int)config('firefly.test-triggers.limit');
@@ -486,10 +486,10 @@ class RuleController extends Controller
         // Warn the user if only a subset of transactions is returned
         $warning = '';
         if ($matchingTransactions->count() === $limit) {
-            $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]); // @codeCoverageIgnore
+            $warning = (string)trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]); // @codeCoverageIgnore
         }
         if (0 === $matchingTransactions->count()) {
-            $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]); // @codeCoverageIgnore
+            $warning = (string)trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]); // @codeCoverageIgnore
         }
 
         // Return json response
@@ -530,7 +530,7 @@ class RuleController extends Controller
         $data = $request->getRuleData();
         $this->ruleRepos->update($rule, $data);
 
-        session()->flash('success', trans('firefly.updated_rule', ['title' => $rule->title]));
+        session()->flash('success', (string)trans('firefly.updated_rule', ['title' => $rule->title]));
         app('preferences')->mark();
         $redirect = redirect($this->getPreviousUri('rules.edit.uri'));
         if (1 === (int)$request->get('return_to_edit')) {
@@ -553,20 +553,20 @@ class RuleController extends Controller
             $data = [
                 'rule_group_id'   => $this->ruleRepos->getFirstRuleGroup()->id,
                 'stop-processing' => 0,
-                'title'           => trans('firefly.default_rule_name'),
-                'description'     => trans('firefly.default_rule_description'),
+                'title'           => (string)trans('firefly.default_rule_name'),
+                'description'     => (string)trans('firefly.default_rule_description'),
                 'trigger'         => 'store-journal',
                 'strict'          => true,
                 'rule-triggers'   => [
                     [
                         'name'            => 'description_is',
-                        'value'           => trans('firefly.default_rule_trigger_description'),
+                        'value'           => (string)trans('firefly.default_rule_trigger_description'),
                         'stop-processing' => false,
 
                     ],
                     [
                         'name'            => 'from_account_is',
-                        'value'           => trans('firefly.default_rule_trigger_from_account'),
+                        'value'           => (string)trans('firefly.default_rule_trigger_from_account'),
                         'stop-processing' => false,
 
                     ],
@@ -575,12 +575,12 @@ class RuleController extends Controller
                 'rule-actions'    => [
                     [
                         'name'            => 'prepend_description',
-                        'value'           => trans('firefly.default_rule_action_prepend'),
+                        'value'           => (string)trans('firefly.default_rule_action_prepend'),
                         'stop-processing' => false,
                     ],
                     [
                         'name'            => 'set_category',
-                        'value'           => trans('firefly.default_rule_action_set_category'),
+                        'value'           => (string)trans('firefly.default_rule_action_set_category'),
                         'stop-processing' => false,
                     ],
                 ],
@@ -597,8 +597,8 @@ class RuleController extends Controller
     {
         if (0 === $this->ruleGroupRepos->count()) {
             $data = [
-                'title'       => trans('firefly.default_rule_group_name'),
-                'description' => trans('firefly.default_rule_group_description'),
+                'title'       => (string)trans('firefly.default_rule_group_name'),
+                'description' => (string)trans('firefly.default_rule_group_description'),
             ];
 
             $this->ruleGroupRepos->store($data);

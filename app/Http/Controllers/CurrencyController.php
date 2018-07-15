@@ -53,7 +53,7 @@ class CurrencyController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', trans('firefly.currencies'));
+                app('view')->share('title', (string)trans('firefly.currencies'));
                 app('view')->share('mainTitleIcon', 'fa-usd');
                 $this->repository     = app(CurrencyRepositoryInterface::class);
                 $this->userRepository = app(UserRepositoryInterface::class);
@@ -74,13 +74,13 @@ class CurrencyController extends Controller
         /** @var User $user */
         $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
-            $request->session()->flash('error', trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
+            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
 
             return redirect(route('currencies.index'));
         }
 
         $subTitleIcon = 'fa-plus';
-        $subTitle     = trans('firefly.create_currency');
+        $subTitle     = (string)trans('firefly.create_currency');
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('currencies.create.fromStore')) {
@@ -102,7 +102,7 @@ class CurrencyController extends Controller
         app('preferences')->set('currencyPreference', $currency->code);
         app('preferences')->mark();
 
-        $request->session()->flash('success', trans('firefly.new_default_currency', ['name' => $currency->name]));
+        $request->session()->flash('success', (string)trans('firefly.new_default_currency', ['name' => $currency->name]));
         Cache::forget('FFCURRENCYSYMBOL');
         Cache::forget('FFCURRENCYCODE');
 
@@ -122,21 +122,21 @@ class CurrencyController extends Controller
         $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
+            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
 
             return redirect(route('currencies.index'));
             // @codeCoverageIgnoreEnd
         }
 
         if (!$this->repository->canDeleteCurrency($currency)) {
-            $request->session()->flash('error', trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
+            $request->session()->flash('error', (string)trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
 
             return redirect(route('currencies.index'));
         }
 
         // put previous url in session
         $this->rememberPreviousUri('currencies.delete.uri');
-        $subTitle = trans('form.delete_currency', ['name' => $currency->name]);
+        $subTitle = (string)trans('form.delete_currency', ['name' => $currency->name]);
 
         return view('currencies.delete', compact('currency', 'subTitle'));
     }
@@ -154,20 +154,20 @@ class CurrencyController extends Controller
         $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
+            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
 
             return redirect(route('currencies.index'));
             // @codeCoverageIgnoreEnd
         }
 
         if (!$this->repository->canDeleteCurrency($currency)) {
-            $request->session()->flash('error', trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
+            $request->session()->flash('error', (string)trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
 
             return redirect(route('currencies.index'));
         }
 
         $this->repository->destroy($currency);
-        $request->session()->flash('success', trans('firefly.deleted_currency', ['name' => $currency->name]));
+        $request->session()->flash('success', (string)trans('firefly.deleted_currency', ['name' => $currency->name]));
 
         return redirect($this->getPreviousUri('currencies.delete.uri'));
     }
@@ -185,14 +185,14 @@ class CurrencyController extends Controller
         $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
+            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
 
             return redirect(route('currencies.index'));
             // @codeCoverageIgnoreEnd
         }
 
         $subTitleIcon     = 'fa-pencil';
-        $subTitle         = trans('breadcrumbs.edit_currency', ['name' => $currency->name]);
+        $subTitle         = (string)trans('breadcrumbs.edit_currency', ['name' => $currency->name]);
         $currency->symbol = htmlentities($currency->symbol);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -229,7 +229,7 @@ class CurrencyController extends Controller
         $defaultCurrency = $this->repository->getCurrencyByPreference(app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR')));
         $isOwner         = true;
         if (!$this->userRepository->hasRole($user, 'owner')) {
-            $request->session()->flash('info', trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
+            $request->session()->flash('info', (string)trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
             $isOwner = false;
         }
 
@@ -258,7 +258,7 @@ class CurrencyController extends Controller
         $currency = $this->repository->store($data);
         $redirect = redirect($this->getPreviousUri('currencies.create.uri'));
         if (null !== $currency) {
-            $request->session()->flash('success', trans('firefly.created_currency', ['name' => $currency->name]));
+            $request->session()->flash('success', (string)trans('firefly.created_currency', ['name' => $currency->name]));
 
             if (1 === (int)$request->get('create_another')) {
                 // @codeCoverageIgnoreStart
@@ -269,7 +269,7 @@ class CurrencyController extends Controller
             }
         }
         if (null === $currency) {
-            $request->session()->flash('error', trans('firefly.could_not_store_currency'));
+            $request->session()->flash('error', (string)trans('firefly.could_not_store_currency'));
 
         }
 
@@ -289,7 +289,7 @@ class CurrencyController extends Controller
         $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
+            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
 
             return redirect(route('currencies.index'));
             // @codeCoverageIgnoreEnd
@@ -297,7 +297,7 @@ class CurrencyController extends Controller
 
         $data     = $request->getCurrencyData();
         $currency = $this->repository->update($currency, $data);
-        $request->session()->flash('success', trans('firefly.updated_currency', ['name' => $currency->name]));
+        $request->session()->flash('success', (string)trans('firefly.updated_currency', ['name' => $currency->name]));
         app('preferences')->mark();
 
         if (1 === (int)$request->get('return_to_edit')) {

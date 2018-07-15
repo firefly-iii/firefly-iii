@@ -60,8 +60,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int    $id
  * @property string $email
  * @property bool   $isAdmin used in admin user controller.
- * @property bool   $has2FA used in admin user controller.
- * @property array  $prefs used in admin user controller.
+ * @property bool   $has2FA  used in admin user controller.
+ * @property array  $prefs   used in admin user controller.
  * @property mixed  password
  */
 class User extends Authenticatable

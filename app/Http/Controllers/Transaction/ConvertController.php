@@ -53,7 +53,7 @@ class ConvertController extends Controller
             function ($request, $next) {
                 $this->repository = app(JournalRepositoryInterface::class);
 
-                app('view')->share('title', trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 return $next($request);
@@ -79,13 +79,13 @@ class ConvertController extends Controller
         // @codeCoverageIgnoreEnd
         $positiveAmount = $this->repository->getJournalTotal($journal);
         $sourceType     = $journal->transactionType;
-        $subTitle       = trans('firefly.convert_to_' . $destinationType->type, ['description' => $journal->description]);
+        $subTitle       = (string)trans('firefly.convert_to_' . $destinationType->type, ['description' => $journal->description]);
         $subTitleIcon   = 'fa-exchange';
 
         // cannot convert to its own type.
         if ($sourceType->type === $destinationType->type) {
             Log::debug('This is already a transaction of the expected type..');
-            session()->flash('info', trans('firefly.convert_is_already_type_' . $destinationType->type));
+            session()->flash('info', (string)trans('firefly.convert_is_already_type_' . $destinationType->type));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
@@ -93,7 +93,7 @@ class ConvertController extends Controller
         // cannot convert split.
         if ($journal->transactions()->count() > 2) {
             Log::info('This journal has more than two transactions.');
-            session()->flash('error', trans('firefly.cannot_convert_split_journal'));
+            session()->flash('error', (string)trans('firefly.cannot_convert_split_journal'));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
@@ -135,14 +135,14 @@ class ConvertController extends Controller
 
         if ($journal->transactionType->type === $destinationType->type) {
             Log::info('Journal is already of the desired type.');
-            session()->flash('error', trans('firefly.convert_is_already_type_' . $destinationType->type));
+            session()->flash('error', (string)trans('firefly.convert_is_already_type_' . $destinationType->type));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
 
         if ($journal->transactions()->count() > 2) {
             Log::info('Journal has more than two transactions.');
-            session()->flash('error', trans('firefly.cannot_convert_split_journal'));
+            session()->flash('error', (string)trans('firefly.cannot_convert_split_journal'));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
@@ -158,7 +158,7 @@ class ConvertController extends Controller
             return redirect(route('transactions.convert.index', [strtolower($destinationType->type), $journal->id]))->withErrors($errors)->withInput();
         }
 
-        session()->flash('success', trans('firefly.converted_to_' . $destinationType->type));
+        session()->flash('success', (string)trans('firefly.converted_to_' . $destinationType->type));
 
         return redirect(route('transactions.show', [$journal->id]));
     }

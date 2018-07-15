@@ -64,7 +64,7 @@ class ReconcileController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', trans('firefly.accounts'));
+                app('view')->share('title', (string)trans('firefly.accounts'));
                 $this->repository    = app(JournalRepositoryInterface::class);
                 $this->accountRepos  = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
@@ -85,7 +85,7 @@ class ReconcileController extends Controller
             return redirect(route('transactions.edit', [$journal->id]));
         }
         // view related code
-        $subTitle = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
+        $subTitle = (string)trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
 
         // journal related code
         $pTransaction = $this->repository->getFirstPosTransaction($journal);
@@ -126,7 +126,7 @@ class ReconcileController extends Controller
             return $this->redirectToOriginalAccount($account);
         }
         if (AccountType::ASSET !== $account->accountType->type) {
-            session()->flash('error', trans('firefly.must_be_asset_account'));
+            session()->flash('error', (string)trans('firefly.must_be_asset_account'));
 
             return redirect(route('accounts.index', [config('firefly.shortNamesByFullName.' . $account->accountType->type)]));
         }
@@ -153,7 +153,7 @@ class ReconcileController extends Controller
         $startBalance = round(app('steam')->balance($account, $startDate), $currency->decimal_places);
         $endBalance   = round(app('steam')->balance($account, $end), $currency->decimal_places);
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
-        $subTitle     = trans('firefly.reconcile_account', ['account' => $account->name]);
+        $subTitle     = (string)trans('firefly.reconcile_account', ['account' => $account->name]);
 
         // various links
         $transactionsUri = route('accounts.reconcile.transactions', [$account->id, '%start%', '%end%']);
@@ -180,7 +180,7 @@ class ReconcileController extends Controller
         if (TransactionType::RECONCILIATION !== $journal->transactionType->type) {
             return redirect(route('transactions.show', [$journal->id]));
         }
-        $subTitle = trans('firefly.reconciliation') . ' "' . $journal->description . '"';
+        $subTitle = (string)trans('firefly.reconciliation') . ' "' . $journal->description . '"';
 
         // get main transaction:
         $transaction = $this->repository->getAssetTransaction($journal);
@@ -272,7 +272,7 @@ class ReconcileController extends Controller
         }
         Log::debug('End of routine.');
         app('preferences')->mark();
-        session()->flash('success', trans('firefly.reconciliation_stored'));
+        session()->flash('success', (string)trans('firefly.reconciliation_stored'));
 
         return redirect(route('accounts.show', [$account->id]));
     }
@@ -293,7 +293,7 @@ class ReconcileController extends Controller
             return redirect(route('transactions.show', [$journal->id]));
         }
         if (0 === bccomp('0', $request->get('amount'))) {
-            session()->flash('error', trans('firefly.amount_cannot_be_zero'));
+            session()->flash('error', (string)trans('firefly.amount_cannot_be_zero'));
 
             return redirect(route('accounts.reconcile.edit', [$journal->id]))->withInput();
         }

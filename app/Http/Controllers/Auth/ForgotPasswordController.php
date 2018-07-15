@@ -75,7 +75,7 @@ class ForgotPasswordController extends Controller
         $user = User::where('email', $request->get('email'))->first();
 
         if (null !== $user && $repository->hasRole($user, 'demo')) {
-            return back()->withErrors(['email' => trans('firefly.cannot_reset_demo_user')]);
+            return back()->withErrors(['email' => (string)trans('firefly.cannot_reset_demo_user')]);
         }
 
         // We will send the password reset link to this user. Once we have attempted

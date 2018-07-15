@@ -130,7 +130,7 @@ class DebugController extends Controller
         // set languages, see what happens:
         $original       = setlocale(LC_ALL, 0);
         $localeAttempts = [];
-        $parts          = explode(',', trans('config.locale'));
+        $parts          = explode(',', (string)trans('config.locale'));
         foreach ($parts as $code) {
             $code                  = trim($code);
             $localeAttempts[$code] = var_export(setlocale(LC_ALL, $code), true);

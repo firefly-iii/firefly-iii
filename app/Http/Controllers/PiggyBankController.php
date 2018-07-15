@@ -60,7 +60,7 @@ class PiggyBankController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', trans('firefly.piggyBanks'));
+                app('view')->share('title', (string)trans('firefly.piggyBanks'));
                 app('view')->share('mainTitleIcon', 'fa-sort-amount-asc');
 
                 $this->piggyRepos    = app(PiggyBankRepositoryInterface::class);
@@ -129,7 +129,7 @@ class PiggyBankController extends Controller
      */
     public function create()
     {
-        $subTitle     = trans('firefly.new_piggy_bank');
+        $subTitle     = (string)trans('firefly.new_piggy_bank');
         $subTitleIcon = 'fa-plus';
 
         // put previous url in session if not redirect from store (not "create another").
@@ -148,7 +148,7 @@ class PiggyBankController extends Controller
      */
     public function delete(PiggyBank $piggyBank)
     {
-        $subTitle = trans('firefly.delete_piggy_bank', ['name' => $piggyBank->name]);
+        $subTitle = (string)trans('firefly.delete_piggy_bank', ['name' => $piggyBank->name]);
 
         // put previous url in session
         $this->rememberPreviousUri('piggy-banks.delete.uri');
@@ -177,7 +177,7 @@ class PiggyBankController extends Controller
      */
     public function edit(PiggyBank $piggyBank)
     {
-        $subTitle     = trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
+        $subTitle     = (string)trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
         $subTitleIcon = 'fa-pencil';
         $targetDate   = null;
         $startDate    = null;

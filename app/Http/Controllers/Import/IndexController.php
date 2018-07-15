@@ -53,7 +53,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-archive');
-                app('view')->share('title', trans('firefly.import_index_title'));
+                app('view')->share('title', (string)trans('firefly.import_index_title'));
                 $this->repository     = app(ImportJobRepositoryInterface::class);
                 $this->userRepository = app(UserRepositoryInterface::class);
 
@@ -78,7 +78,7 @@ class IndexController extends Controller
         $providers = array_keys($this->getProviders());
         if (!\in_array($importProvider, $providers, true)) {
             Log::error(sprintf('%s-provider is disabled. Cannot create job.', $importProvider));
-            session()->flash('warning', trans('import.cannot_create_for_provider', ['provider' => $importProvider]));
+            session()->flash('warning', (string)trans('import.cannot_create_for_provider', ['provider' => $importProvider]));
 
             return redirect(route('import.index'));
         }
@@ -185,7 +185,7 @@ class IndexController extends Controller
     public function index()
     {
         $providers    = $this->getProviders();
-        $subTitle     = trans('import.index_breadcrumb');
+        $subTitle     = (string)trans('import.index_breadcrumb');
         $subTitleIcon = 'fa-home';
 
         return view('import.index', compact('subTitle', 'subTitleIcon', 'providers'));

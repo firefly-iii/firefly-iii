@@ -141,7 +141,7 @@ class RuleRequest extends Request
         $repetitions = $data['rule-actions'] ?? [];
         // need at least one transaction
         if (0 === \count($repetitions)) {
-            $validator->errors()->add('title', trans('validation.at_least_one_action'));
+            $validator->errors()->add('title', (string)trans('validation.at_least_one_action'));
         }
     }
 
@@ -156,7 +156,7 @@ class RuleRequest extends Request
         $repetitions = $data['rule-triggers'] ?? [];
         // need at least one transaction
         if (0 === \count($repetitions)) {
-            $validator->errors()->add('title', trans('validation.at_least_one_trigger'));
+            $validator->errors()->add('title', (string)trans('validation.at_least_one_trigger'));
         }
     }
 }

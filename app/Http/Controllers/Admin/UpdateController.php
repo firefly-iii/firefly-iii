@@ -62,14 +62,14 @@ class UpdateController extends Controller
      */
     public function index()
     {
-        $subTitle     = trans('firefly.update_check_title');
+        $subTitle     = (string)trans('firefly.update_check_title');
         $subTitleIcon = 'fa-star';
         $permission   = app('fireflyconfig')->get('permission_update_check', -1);
         $selected     = $permission->data;
         $options      = [
-            -1 => trans('firefly.updates_ask_me_later'),
-            0  => trans('firefly.updates_do_not_check'),
-            1  => trans('firefly.updates_enable_check'),
+            -1 => (string)trans('firefly.updates_ask_me_later'),
+            0  => (string)trans('firefly.updates_do_not_check'),
+            1  => (string)trans('firefly.updates_enable_check'),
         ];
 
         return view('admin.update.index', compact('subTitle', 'subTitleIcon', 'selected', 'options'));

@@ -302,7 +302,7 @@ class ExpandedForm
         // get all currencies:
         $list  = $currencyRepos->get();
         $array = [
-            0 => trans('firefly.no_currency'),
+            0 => (string)trans('firefly.no_currency'),
         ];
         /** @var TransactionCurrency $currency */
         foreach ($list as $currency) {
@@ -593,7 +593,7 @@ class ExpandedForm
         $repository = app(PiggyBankRepositoryInterface::class);
         $piggyBanks = $repository->getPiggyBanksWithAmount();
         $array      = [
-            0 => trans('firefly.none_in_select_list'),
+            0 => (string)trans('firefly.none_in_select_list'),
         ];
         /** @var PiggyBank $piggy */
         foreach ($piggyBanks as $piggy) {
@@ -644,7 +644,7 @@ class ExpandedForm
         // get all currencies:
         $list  = $groupRepos->get();
         $array = [
-            0 => trans('firefly.none_in_select_list'),
+            0 => (string)trans('firefly.none_in_select_list'),
         ];
         /** @var RuleGroup $group */
         foreach ($list as $group) {

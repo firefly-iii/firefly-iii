@@ -47,7 +47,7 @@ class RuleGroupController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', trans('firefly.rules'));
+                app('view')->share('title', (string)trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
 
                 return $next($request);
@@ -61,7 +61,7 @@ class RuleGroupController extends Controller
     public function create()
     {
         $subTitleIcon = 'fa-clone';
-        $subTitle     = trans('firefly.make_new_rule_group');
+        $subTitle     = (string)trans('firefly.make_new_rule_group');
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('rule-groups.create.fromStore')) {
@@ -79,7 +79,7 @@ class RuleGroupController extends Controller
      */
     public function delete(RuleGroup $ruleGroup)
     {
-        $subTitle = trans('firefly.delete_rule_group', ['title' => $ruleGroup->title]);
+        $subTitle = (string)trans('firefly.delete_rule_group', ['title' => $ruleGroup->title]);
 
         // put previous url in session
         $this->rememberPreviousUri('rule-groups.delete.uri');
@@ -132,7 +132,7 @@ class RuleGroupController extends Controller
      */
     public function edit(Request $request, RuleGroup $ruleGroup)
     {
-        $subTitle = trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
+        $subTitle = (string)trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
 
         $hasOldInput = null !== $request->old('_token');
         $preFilled   = [

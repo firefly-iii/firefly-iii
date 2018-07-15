@@ -80,7 +80,7 @@ class Range
         $lang = $pref->data;
         App::setLocale($lang);
         Carbon::setLocale(substr($lang, 0, 2));
-        $locale = explode(',', trans('config.locale'));
+        $locale = explode(',', (string)trans('config.locale'));
         $locale = array_map('trim', $locale);
 
         setlocale(LC_TIME, $locale);

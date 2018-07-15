@@ -51,7 +51,7 @@ class ValidTransactions implements Rule
      */
     public function message()
     {
-        return trans('validation.invalid_selection');
+        return (string)trans('validation.invalid_selection');
     }
 
     /**

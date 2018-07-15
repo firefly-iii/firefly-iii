@@ -236,7 +236,7 @@ class ImportTransaction
                 $this->note = trim($this->note . ' ' . $columnValue->getValue());
                 break;
             case 'opposing-id':
-                $mappedValue = $this->getMappedValue($columnValue);
+                $mappedValue      = $this->getMappedValue($columnValue);
                 $this->opposingId = $mappedValue;
                 Log::debug(sprintf('Going to set the OPPOSING-id. Original value is "%s", mapped value is "%s".', $columnValue->getValue(), $mappedValue));
                 break;

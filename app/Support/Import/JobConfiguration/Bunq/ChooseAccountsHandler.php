@@ -86,7 +86,7 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
         }
         if (\count($mapping) === 0) {
             $messages = new MessageBag;
-            $messages->add('nomap', trans('import.bunq_no_mapping'));
+            $messages->add('nomap', (string)trans('import.bunq_no_mapping'));
 
             return $messages;
         }

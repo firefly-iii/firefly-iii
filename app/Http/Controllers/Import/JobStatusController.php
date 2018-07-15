@@ -50,7 +50,7 @@ class JobStatusController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-archive');
-                app('view')->share('title', trans('firefly.import_index_title'));
+                app('view')->share('title', (string)trans('firefly.import_index_title'));
                 $this->repository = app(ImportJobRepositoryInterface::class);
 
                 return $next($request);
@@ -66,7 +66,7 @@ class JobStatusController extends Controller
     public function index(ImportJob $importJob)
     {
         $subTitleIcon = 'fa-gear';
-        $subTitle     = trans('import.job_status_breadcrumb', ['key' => $importJob->key]);
+        $subTitle     = (string)trans('import.job_status_breadcrumb', ['key' => $importJob->key]);
 
         return view('import.status', compact('importJob', 'subTitle', 'subTitleIcon'));
     }
@@ -85,7 +85,7 @@ class JobStatusController extends Controller
             'count'                => $count,
             'tag_id'               => $importJob->tag_id,
             'tag_name'             => null === $importJob->tag_id ? null : $importJob->tag->tag,
-            'report_txt'           => trans('import.unknown_import_result'),
+            'report_txt'           => (string)trans('import.unknown_import_result'),
             'download_config'      => false,
             'download_config_text' => '',
         ];
@@ -93,8 +93,8 @@ class JobStatusController extends Controller
         if ('file' === $importJob->provider) {
             $json['download_config'] = true;
             $json['download_config_text']
-                                     = trans('import.should_download_config', ['route' => route('import.job.download', [$importJob->key])]) . ' '
-                                       . trans('import.share_config_file');
+                                     = (string)trans('import.should_download_config', ['route' => route('import.job.download', [$importJob->key])]) . ' '
+                                       . (string)trans('import.share_config_file');
         }
 
         // if count is zero:
@@ -102,7 +102,7 @@ class JobStatusController extends Controller
             $count = $importJob->tag->transactionJournals->count();
         }
         if (0 === $count) {
-            $json['report_txt'] = trans('import.result_no_transactions');
+            $json['report_txt'] = (string)trans('import.result_no_transactions');
         }
         if (1 === $count && null !== $importJob->tag_id) {
             $json['report_txt'] = trans(

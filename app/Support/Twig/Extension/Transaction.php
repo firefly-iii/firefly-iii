@@ -261,7 +261,7 @@ class Transaction extends Twig_Extension
         }
 
         if (AccountType::CASH === $type) {
-            $txt = '<span class="text-success">(' . trans('firefly.cash') . ')</span>';
+            $txt = '<span class="text-success">(' . (string)trans('firefly.cash') . ')</span>';
 
             return $txt;
         }
@@ -310,19 +310,19 @@ class Transaction extends Twig_Extension
     {
         switch ($transaction->transaction_type_type) {
             case TransactionType::WITHDRAWAL:
-                $txt = sprintf('<i class="fa fa-long-arrow-left fa-fw" title="%s"></i>', trans('firefly.withdrawal'));
+                $txt = sprintf('<i class="fa fa-long-arrow-left fa-fw" title="%s"></i>', (string)trans('firefly.withdrawal'));
                 break;
             case TransactionType::DEPOSIT:
-                $txt = sprintf('<i class="fa fa-long-arrow-right fa-fw" title="%s"></i>', trans('firefly.deposit'));
+                $txt = sprintf('<i class="fa fa-long-arrow-right fa-fw" title="%s"></i>', (string)trans('firefly.deposit'));
                 break;
             case TransactionType::TRANSFER:
-                $txt = sprintf('<i class="fa fa-fw fa-exchange" title="%s"></i>', trans('firefly.transfer'));
+                $txt = sprintf('<i class="fa fa-fw fa-exchange" title="%s"></i>', (string)trans('firefly.transfer'));
                 break;
             case TransactionType::OPENING_BALANCE:
-                $txt = sprintf('<i class="fa-fw fa fa-star-o" title="%s"></i>', trans('firefly.opening_balance'));
+                $txt = sprintf('<i class="fa-fw fa fa-star-o" title="%s"></i>', (string)trans('firefly.opening_balance'));
                 break;
             case TransactionType::RECONCILIATION:
-                $txt = sprintf('<i class="fa-fw fa fa-calculator" title="%s"></i>', trans('firefly.reconciliation_transaction'));
+                $txt = sprintf('<i class="fa-fw fa fa-calculator" title="%s"></i>', (string)trans('firefly.reconciliation_transaction'));
                 break;
             default:
                 $txt = '';
@@ -412,7 +412,7 @@ class Transaction extends Twig_Extension
         }
 
         if (AccountType::CASH === $type) {
-            $txt = '<span class="text-success">(' . trans('firefly.cash') . ')</span>';
+            $txt = '<span class="text-success">(' . (string)trans('firefly.cash') . ')</span>';
 
             return $txt;
         }

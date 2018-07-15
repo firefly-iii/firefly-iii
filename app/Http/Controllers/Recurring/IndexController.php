@@ -55,7 +55,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', trans('firefly.recurrences'));
+                app('view')->share('title', (string)trans('firefly.recurrences'));
 
                 $this->recurring = app(RecurringRepositoryInterface::class);
 
@@ -201,7 +201,7 @@ class IndexController extends Controller
             }
         }
 
-        $subTitle = trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
+        $subTitle = (string)trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
 
         return view('recurring.show', compact('recurrence', 'subTitle', 'array', 'transactions'));
     }
@@ -225,12 +225,12 @@ class IndexController extends Controller
             $yearly     = sprintf('yearly,%s', $date->format('Y-m-d'));
             $yearlyDate = $date->formatLocalized(trans('config.month_and_day_no_year'));
             $result     = [
-                'daily'  => ['label' => trans('firefly.recurring_daily'), 'selected' => 0 === strpos($preSelected, 'daily')],
-                $weekly  => ['label' => trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek]), 'selected' => 0 === strpos($preSelected, 'weekly')],
-                $monthly => ['label' => trans('firefly.recurring_monthly', ['dayOfMonth' => $date->day]), 'selected' => 0 === strpos($preSelected, 'monthly')],
-                $ndom    => ['label'    => trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $date->weekOfMonth]),
+                'daily'  => ['label' => (string)trans('firefly.recurring_daily'), 'selected' => 0 === strpos($preSelected, 'daily')],
+                $weekly  => ['label' => (string)trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek]), 'selected' => 0 === strpos($preSelected, 'weekly')],
+                $monthly => ['label' => (string)trans('firefly.recurring_monthly', ['dayOfMonth' => $date->day]), 'selected' => 0 === strpos($preSelected, 'monthly')],
+                $ndom    => ['label'    => (string)trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $date->weekOfMonth]),
                              'selected' => 0 === strpos($preSelected, 'ndom')],
-                $yearly  => ['label' => trans('firefly.recurring_yearly', ['date' => $yearlyDate]), 'selected' => 0 === strpos($preSelected, 'yearly')],
+                $yearly  => ['label' => (string)trans('firefly.recurring_yearly', ['date' => $yearlyDate]), 'selected' => 0 === strpos($preSelected, 'yearly')],
             ];
         }
 

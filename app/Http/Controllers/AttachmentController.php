@@ -50,7 +50,7 @@ class AttachmentController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-paperclip');
-                app('view')->share('title', trans('firefly.attachments'));
+                app('view')->share('title', (string)trans('firefly.attachments'));
                 $this->repository = app(AttachmentRepositoryInterface::class);
 
                 return $next($request);
@@ -65,7 +65,7 @@ class AttachmentController extends Controller
      */
     public function delete(Attachment $attachment)
     {
-        $subTitle = trans('firefly.delete_attachment', ['name' => $attachment->filename]);
+        $subTitle = (string)trans('firefly.delete_attachment', ['name' => $attachment->filename]);
 
         // put previous url in session
         $this->rememberPreviousUri('attachments.delete.uri');
@@ -131,7 +131,7 @@ class AttachmentController extends Controller
     public function edit(Request $request, Attachment $attachment)
     {
         $subTitleIcon = 'fa-pencil';
-        $subTitle     = trans('firefly.edit_attachment', ['name' => $attachment->filename]);
+        $subTitle     = (string)trans('firefly.edit_attachment', ['name' => $attachment->filename]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('attachments.edit.fromUpdate')) {

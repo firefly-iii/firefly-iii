@@ -71,7 +71,7 @@ class SingleController extends Controller
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->repository  = app(JournalRepositoryInterface::class);
 
-                app('view')->share('title', trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-repeat');
 
                 return $next($request);
@@ -145,7 +145,7 @@ class SingleController extends Controller
         $what           = (string)($request->old('what') ?? $what);
         $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $preFilled      = session()->has('preFilled') ? session('preFilled') : [];
-        $subTitle       = trans('form.add_new_' . $what);
+        $subTitle       = (string)trans('form.add_new_' . $what);
         $subTitleIcon   = 'fa-plus';
         $optionalFields = app('preferences')->get('transaction_journal_optional_fields', [])->data;
         $source         = (int)$request->get('source');
@@ -192,7 +192,7 @@ class SingleController extends Controller
         // @codeCoverageIgnoreEnd
 
         $what     = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        $subTitle = trans('firefly.delete_' . $what, ['description' => $journal->description]);
+        $subTitle = (string)trans('firefly.delete_' . $what, ['description' => $journal->description]);
 
         // put previous url in session
         $this->rememberPreviousUri('transactions.delete.uri');
@@ -253,7 +253,7 @@ class SingleController extends Controller
         $budgetList = ExpandedForm::makeSelectListWithEmpty($this->budgets->getBudgets());
 
         // view related code
-        $subTitle = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
+        $subTitle = (string)trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
 
         // journal related code
         $sourceAccounts      = $repository->getJournalSourceAccounts($journal);

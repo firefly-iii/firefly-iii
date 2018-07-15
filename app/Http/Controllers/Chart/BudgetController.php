@@ -510,7 +510,7 @@ class BudgetController extends Controller
                 $return[$categoryId] = $grouped[$categoryId][0]['name'];
             }
         }
-        $return[0] = trans('firefly.noCategory');
+        $return[0] = (string)trans('firefly.noCategory');
 
         return $return;
     }

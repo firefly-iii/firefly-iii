@@ -49,7 +49,7 @@ class DeleteController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', trans('firefly.budgets'));
+                app('view')->share('title', (string)trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-tasks');
                 $this->repository = app(BudgetRepositoryInterface::class);
 
@@ -66,7 +66,7 @@ class DeleteController extends Controller
      */
     public function delete(Budget $budget)
     {
-        $subTitle = trans('firefly.delete_budget', ['name' => $budget->name]);
+        $subTitle = (string)trans('firefly.delete_budget', ['name' => $budget->name]);
 
         // put previous url in session
         $this->rememberPreviousUri('budgets.delete.uri');

@@ -92,14 +92,14 @@ trait TransactionValidation
                     $destinationAccount = $this->assetAccountExists($validator, $destinationId, $destinationName, $idField, $nameField);
                     break;
                 default:
-                    $validator->errors()->add($idField, trans('validation.invalid_account_info'));
+                    $validator->errors()->add($idField, (string)trans('validation.invalid_account_info'));
 
                     return;
 
             }
             // add some errors in case of same account submitted:
             if (null !== $sourceAccount && null !== $destinationAccount && $sourceAccount->id === $destinationAccount->id) {
-                $validator->errors()->add($idField, trans('validation.source_equals_destination'));
+                $validator->errors()->add($idField, (string)trans('validation.source_equals_destination'));
             }
         }
     }
@@ -124,7 +124,7 @@ trait TransactionValidation
 
         // no valid descriptions and empty journal description? error.
         if ($validDescriptions === 0 && '' === $journalDescription) {
-            $validator->errors()->add('description', trans('validation.filled', ['attribute' => trans('validation.attributes.description')]));
+            $validator->errors()->add('description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')]));
         }
     }
 
@@ -144,7 +144,7 @@ trait TransactionValidation
                      || isset($transaction['foreign_currency_code']))) {
                 $validator->errors()->add(
                     'transactions.' . $index . '.foreign_amount',
-                    trans('validation.require_currency_info')
+                    (string)trans('validation.require_currency_info')
                 );
             }
         }
@@ -164,7 +164,7 @@ trait TransactionValidation
             $description = (string)($transaction['description'] ?? '');
             // description cannot be equal to journal description.
             if ($description === $journalDescription) {
-                $validator->errors()->add('transactions.' . $index . '.description', trans('validation.equal_description'));
+                $validator->errors()->add('transactions.' . $index . '.description', (string)trans('validation.equal_description'));
             }
         }
     }
@@ -180,7 +180,7 @@ trait TransactionValidation
         $transactions = $data['transactions'] ?? [];
         // need at least one transaction
         if (\count($transactions) === 0) {
-            $validator->errors()->add('description', trans('validation.at_least_one_transaction'));
+            $validator->errors()->add('description', (string)trans('validation.at_least_one_transaction'));
         }
     }
 
@@ -223,18 +223,18 @@ trait TransactionValidation
         switch ($data['type']) {
             case 'withdrawal':
                 if (\count($sources) > 1) {
-                    $validator->errors()->add('transactions.0.source_id', trans('validation.all_accounts_equal'));
+                    $validator->errors()->add('transactions.0.source_id', (string)trans('validation.all_accounts_equal'));
                 }
                 break;
             case 'deposit':
                 if (\count($destinations) > 1) {
-                    $validator->errors()->add('transactions.0.destination_id', trans('validation.all_accounts_equal'));
+                    $validator->errors()->add('transactions.0.destination_id', (string)trans('validation.all_accounts_equal'));
                 }
                 break;
             case 'transfer':
                 if (\count($sources) > 1 || \count($destinations) > 1) {
-                    $validator->errors()->add('transactions.0.source_id', trans('validation.all_accounts_equal'));
-                    $validator->errors()->add('transactions.0.destination_id', trans('validation.all_accounts_equal'));
+                    $validator->errors()->add('transactions.0.source_id', (string)trans('validation.all_accounts_equal'));
+                    $validator->errors()->add('transactions.0.destination_id', (string)trans('validation.all_accounts_equal'));
                 }
                 break;
         }
@@ -256,7 +256,7 @@ trait TransactionValidation
             if ('' === $description && \count($transactions) > 1) {
                 $validator->errors()->add(
                     'transactions.' . $index . '.description',
-                    trans('validation.filled', ['attribute' => trans('validation.attributes.transaction_description')])
+                    (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.transaction_description')])
                 );
             }
         }
@@ -283,7 +283,7 @@ trait TransactionValidation
         $accountName = (string)$accountName;
         // both empty? hard exit.
         if ($accountId < 1 && '' === $accountName) {
-            $validator->errors()->add($idField, trans('validation.filled', ['attribute' => $idField]));
+            $validator->errors()->add($idField, (string)trans('validation.filled', ['attribute' => $idField]));
 
             return null;
         }
@@ -297,7 +297,7 @@ trait TransactionValidation
             /** @var Account $first */
             $first = $set->first();
             if ($first->accountType->type !== AccountType::ASSET) {
-                $validator->errors()->add($idField, trans('validation.belongs_user'));
+                $validator->errors()->add($idField, (string)trans('validation.belongs_user'));
 
                 return null;
             }
@@ -308,7 +308,7 @@ trait TransactionValidation
 
         $account = $repository->findByName($accountName, [AccountType::ASSET]);
         if (null === $account) {
-            $validator->errors()->add($nameField, trans('validation.belongs_user'));
+            $validator->errors()->add($nameField, (string)trans('validation.belongs_user'));
 
             return null;
         }
@@ -350,7 +350,7 @@ trait TransactionValidation
                 /** @var Account $first */
                 $first = $set->first();
                 if ($first->accountType->type !== $type) {
-                    $validator->errors()->add($idField, trans('validation.belongs_user'));
+                    $validator->errors()->add($idField, (string)trans('validation.belongs_user'));
 
                     return null;
                 }

@@ -50,7 +50,7 @@ class JobConfigurationController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-archive');
-                app('view')->share('title', trans('firefly.import_index_title'));
+                app('view')->share('title', (string)trans('firefly.import_index_title'));
                 $this->repository = app(ImportJobRepositoryInterface::class);
 
                 return $next($request);
@@ -74,7 +74,7 @@ class JobConfigurationController extends Controller
         $allowed = ['has_prereq', 'need_job_config'];
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
             Log::debug(sprintf('Job has state "%s", but we only accept %s', $importJob->status, json_encode($allowed)));
-            session()->flash('error', trans('import.bad_job_status', ['status' => $importJob->status]));
+            session()->flash('error', (string)trans('import.bad_job_status', ['status' => $importJob->status]));
 
             return redirect(route('import.index'));
         }
@@ -104,7 +104,7 @@ class JobConfigurationController extends Controller
 
         $view         = $configurator->getNextView();
         $data         = $configurator->getNextData();
-        $subTitle     = trans('import.job_configuration_breadcrumb', ['key' => $importJob->key]);
+        $subTitle     = (string)trans('import.job_configuration_breadcrumb', ['key' => $importJob->key]);
         $subTitleIcon = 'fa-wrench';
 
         return view($view, compact('data', 'importJob', 'subTitle', 'subTitleIcon'));
@@ -125,7 +125,7 @@ class JobConfigurationController extends Controller
         // catch impossible status:
         $allowed = ['has_prereq', 'need_job_config'];
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
-            session()->flash('error', trans('import.bad_job_status', ['status' => $importJob->status]));
+            session()->flash('error', (string)trans('import.bad_job_status', ['status' => $importJob->status]));
 
             return redirect(route('import.index'));
         }

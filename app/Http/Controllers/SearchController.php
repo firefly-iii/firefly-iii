@@ -43,7 +43,7 @@ class SearchController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-search');
-                app('view')->share('title', trans('firefly.search'));
+                app('view')->share('title', (string)trans('firefly.search'));
 
                 return $next($request);
             }
@@ -63,7 +63,7 @@ class SearchController extends Controller
         // parse search terms:
         $searcher->parseQuery($fullQuery);
         $query    = $searcher->getWordsAsString();
-        $subTitle = trans('breadcrumbs.search_result', ['query' => $query]);
+        $subTitle = (string)trans('breadcrumbs.search_result', ['query' => $query]);
 
         return view('search.index', compact('query', 'fullQuery', 'subTitle'));
     }

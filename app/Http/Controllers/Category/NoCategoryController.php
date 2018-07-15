@@ -57,7 +57,7 @@ class NoCategoryController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', trans('firefly.categories'));
+                app('view')->share('title', (string)trans('firefly.categories'));
                 app('view')->share('mainTitleIcon', 'fa-bar-chart');
                 $this->journalRepos = app(JournalRepositoryInterface::class);
                 $this->repository   = app(CategoryRepositoryInterface::class);
@@ -120,7 +120,7 @@ class NoCategoryController extends Controller
         $page     = (int)$request->get('page');
         $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
         Log::debug('Start of noCategory()');
-        $subTitle = trans('firefly.all_journals_without_category');
+        $subTitle = (string)trans('firefly.all_journals_without_category');
         $first    = $this->journalRepos->firstNull();
         $start    = null === $first ? new Carbon : $first->date;
         $end      = new Carbon;

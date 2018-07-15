@@ -80,7 +80,7 @@ class ConfigureUploadHandler implements FileConfigurationInterface
         }
         if (!$complete) {
             $messages = new MessageBag;
-            $messages->add('account', trans('import.invalid_import_account'));
+            $messages->add('account', (string)trans('import.invalid_import_account'));
 
             return $messages;
         }
@@ -96,9 +96,9 @@ class ConfigureUploadHandler implements FileConfigurationInterface
     public function getNextData(): array
     {
         $delimiters            = [
-            ','   => trans('form.csv_comma'),
-            ';'   => trans('form.csv_semicolon'),
-            'tab' => trans('form.csv_tab'),
+            ','   => (string)trans('form.csv_comma'),
+            ';'   => (string)trans('form.csv_semicolon'),
+            'tab' => (string)trans('form.csv_tab'),
         ];
         $config                = $this->importJob->configuration;
         $config['date-format'] = $config['date-format'] ?? 'Ymd';

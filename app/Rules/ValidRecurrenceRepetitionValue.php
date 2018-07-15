@@ -41,7 +41,7 @@ class ValidRecurrenceRepetitionValue implements Rule
      */
     public function message(): string
     {
-        return trans('validation.valid_recurrence_rep_type');
+        return (string)trans('validation.valid_recurrence_rep_type');
     }
 
     /**

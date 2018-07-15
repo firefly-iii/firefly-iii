@@ -500,7 +500,7 @@ class AccountController extends Controller
                 $return[$budgetId] = $grouped[$budgetId][0]['name'];
             }
         }
-        $return[0] = trans('firefly.no_budget');
+        $return[0] = (string)trans('firefly.no_budget');
 
         return $return;
     }
@@ -524,7 +524,7 @@ class AccountController extends Controller
                 $return[$categoryId] = $grouped[$categoryId][0]['name'];
             }
         }
-        $return[0] = trans('firefly.noCategory');
+        $return[0] = (string)trans('firefly.noCategory');
 
         return $return;
     }

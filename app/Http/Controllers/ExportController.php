@@ -48,7 +48,7 @@ class ExportController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-file-archive-o');
-                app('view')->share('title', trans('firefly.export_and_backup_data'));
+                app('view')->share('title', (string)trans('firefly.export_and_backup_data'));
 
                 return $next($request);
             }
@@ -100,7 +100,7 @@ class ExportController extends Controller
      */
     public function getStatus(ExportJob $job): JsonResponse
     {
-        return response()->json(['status' => trans('firefly.' . $job->status)]);
+        return response()->json(['status' => (string)trans('firefly.' . $job->status)]);
     }
 
     /**

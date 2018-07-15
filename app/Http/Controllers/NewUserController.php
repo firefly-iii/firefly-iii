@@ -58,7 +58,7 @@ class NewUserController extends Controller
      */
     public function index()
     {
-        app('view')->share('title', trans('firefly.welcome'));
+        app('view')->share('title', (string)trans('firefly.welcome'));
         app('view')->share('mainTitleIcon', 'fa-fire');
 
         $types = config('firefly.accountTypesByIdentifier.asset');

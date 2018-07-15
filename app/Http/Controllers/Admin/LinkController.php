@@ -58,7 +58,7 @@ class LinkController extends Controller
      */
     public function create()
     {
-        $subTitle     = trans('firefly.create_new_link_type');
+        $subTitle     = (string)trans('firefly.create_new_link_type');
         $subTitleIcon = 'fa-link';
 
         // put previous url in session if not redirect from store (not "create another").
@@ -84,11 +84,11 @@ class LinkController extends Controller
             return redirect(route('admin.links.index'));
         }
 
-        $subTitle   = trans('firefly.delete_link_type', ['name' => $linkType->name]);
+        $subTitle   = (string)trans('firefly.delete_link_type', ['name' => $linkType->name]);
         $otherTypes = $repository->get();
         $count      = $repository->countJournals($linkType);
         $moveTo     = [];
-        $moveTo[0]  = trans('firefly.do_not_save_connection');
+        $moveTo[0]  = (string)trans('firefly.do_not_save_connection');
         /** @var LinkType $otherType */
         foreach ($otherTypes as $otherType) {
             if ($otherType->id !== $linkType->id) {
@@ -133,7 +133,7 @@ class LinkController extends Controller
 
             return redirect(route('admin.links.index'));
         }
-        $subTitle     = trans('firefly.edit_link_type', ['name' => $linkType->name]);
+        $subTitle     = (string)trans('firefly.edit_link_type', ['name' => $linkType->name]);
         $subTitleIcon = 'fa-link';
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -152,7 +152,7 @@ class LinkController extends Controller
      */
     public function index(LinkTypeRepositoryInterface $repository)
     {
-        $subTitle     = trans('firefly.journal_link_configuration');
+        $subTitle     = (string)trans('firefly.journal_link_configuration');
         $subTitleIcon = 'fa-link';
         $linkTypes    = $repository->get();
         $linkTypes->each(
@@ -171,7 +171,7 @@ class LinkController extends Controller
      */
     public function show(LinkType $linkType)
     {
-        $subTitle     = trans('firefly.overview_for_link', ['name' => $linkType->name]);
+        $subTitle     = (string)trans('firefly.overview_for_link', ['name' => $linkType->name]);
         $subTitleIcon = 'fa-link';
         $links        = $linkType->transactionJournalLinks()->get();
 

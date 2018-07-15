@@ -296,7 +296,7 @@ class ConfigureRolesHandler implements FileConfigurationInterface
     {
         $roles = [];
         foreach (array_keys(config('csv.import_roles')) as $role) {
-            $roles[$role] = trans('import.column_' . $role);
+            $roles[$role] = (string)trans('import.column_' . $role);
         }
         asort($roles);
 

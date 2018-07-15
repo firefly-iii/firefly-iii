@@ -52,7 +52,7 @@ class BulkController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(JournalRepositoryInterface::class);
-                app('view')->share('title', trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-repeat');
 
                 return $next($request);
@@ -67,7 +67,7 @@ class BulkController extends Controller
      */
     public function edit(Collection $journals)
     {
-        $subTitle = trans('firefly.mass_bulk_journals');
+        $subTitle = (string)trans('firefly.mass_bulk_journals');
 
         // get list of budgets:
         /** @var BudgetRepositoryInterface $repository */
@@ -128,7 +128,7 @@ class BulkController extends Controller
         }
 
         app('preferences')->mark();
-        $request->session()->flash('success', trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
+        $request->session()->flash('success', (string)trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.bulk-edit.uri'));

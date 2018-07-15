@@ -60,7 +60,7 @@ class TransactionController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-repeat');
                 $this->repository = app(JournalRepositoryInterface::class);
 
@@ -101,7 +101,7 @@ class TransactionController extends Controller
 
         $startStr = $start->formatLocalized($this->monthAndDayFormat);
         $endStr   = $end->formatLocalized($this->monthAndDayFormat);
-        $subTitle = trans('firefly.title_' . $what . '_between', ['start' => $startStr, 'end' => $endStr]);
+        $subTitle = (string)trans('firefly.title_' . $what . '_between', ['start' => $startStr, 'end' => $endStr]);
         $periods  = $this->getPeriodOverview($what, $end);
 
         /** @var JournalCollectorInterface $collector */
@@ -134,7 +134,7 @@ class TransactionController extends Controller
         $first        = $this->repository->firstNull();
         $start        = null === $first ? new Carbon : $first->date;
         $end          = new Carbon;
-        $subTitle     = trans('firefly.all_' . $what);
+        $subTitle     = (string)trans('firefly.all_' . $what);
 
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -230,7 +230,7 @@ class TransactionController extends Controller
 
         $events   = $this->repository->getPiggyBankEvents($journal);
         $what     = strtolower($transactionType);
-        $subTitle = trans('firefly.' . $what) . ' "' . $journal->description . '"';
+        $subTitle = (string)trans('firefly.' . $what) . ' "' . $journal->description . '"';
 
         return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'linkTypes', 'links'));
     }

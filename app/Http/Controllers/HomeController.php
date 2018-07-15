@@ -108,7 +108,7 @@ class HomeController extends Controller
         if (0 === $count) {
             return redirect(route('new-user.index'));
         }
-        $subTitle     = trans('firefly.welcomeBack');
+        $subTitle     = (string)trans('firefly.welcomeBack');
         $transactions = [];
         $frontPage    = app('preferences')->get(
             'frontPageAccounts',

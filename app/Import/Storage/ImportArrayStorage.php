@@ -260,7 +260,7 @@ class ImportArrayStorage
         $repository = app(TagRepositoryInterface::class);
         $repository->setUser($this->importJob->user);
         $data = [
-            'tag'         => trans('import.import_with_key', ['key' => $this->importJob->key]),
+            'tag'         => (string)trans('import.import_with_key', ['key' => $this->importJob->key]),
             'date'        => new Carbon,
             'description' => null,
             'latitude'    => null,

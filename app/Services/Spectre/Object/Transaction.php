@@ -186,7 +186,7 @@ class Transaction extends SpectreObject
                 switch ($key) {
                     case 'account_number':
                         $data['number'] = $value;
-                        $data['name']   = $data['name'] ?? trans('import.spectre_account_with_number', ['number' => $value]);
+                        $data['name']   = $data['name'] ?? (string)trans('import.spectre_account_with_number', ['number' => $value]);
                         break;
                     case 'payee':
                         $data['name'] = $value;

@@ -51,7 +51,7 @@ trait RecurrenceValidation
         foreach ($repetitions as $index => $repetition) {
             switch ($repetition['type']) {
                 default:
-                    $validator->errors()->add(sprintf('repetitions.%d.type', $index), trans('validation.valid_recurrence_rep_type'));
+                    $validator->errors()->add(sprintf('repetitions.%d.type', $index), (string)trans('validation.valid_recurrence_rep_type'));
 
                     return;
                 case 'daily':
@@ -84,7 +84,7 @@ trait RecurrenceValidation
         $repetitions = $data['repetitions'] ?? [];
         // need at least one transaction
         if (\count($repetitions) === 0) {
-            $validator->errors()->add('description', trans('validation.at_least_one_repetition'));
+            $validator->errors()->add('description', (string)trans('validation.at_least_one_repetition'));
         }
     }
 
@@ -101,8 +101,8 @@ trait RecurrenceValidation
         $repeatUntil = $data['repeat_until'] ?? null;
         if (null !== $repetitions && null !== $repeatUntil) {
             // expect a date OR count:
-            $validator->errors()->add('repeat_until', trans('validation.require_repeat_until'));
-            $validator->errors()->add('nr_of_repetitions', trans('validation.require_repeat_until'));
+            $validator->errors()->add('repeat_until', (string)trans('validation.require_repeat_until'));
+            $validator->errors()->add('nr_of_repetitions', (string)trans('validation.require_repeat_until'));
         }
     }
 
@@ -116,7 +116,7 @@ trait RecurrenceValidation
     protected function validateDaily(Validator $validator, int $index, string $moment): void
     {
         if ('' !== $moment) {
-            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), trans('validation.valid_recurrence_rep_moment'));
+            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string)trans('validation.valid_recurrence_rep_moment'));
         }
     }
 
@@ -130,7 +130,7 @@ trait RecurrenceValidation
     protected function validateMonthly(Validator $validator, int $index, int $dayOfMonth): void
     {
         if ($dayOfMonth < 1 || $dayOfMonth > 31) {
-            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), trans('validation.valid_recurrence_rep_moment'));
+            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string)trans('validation.valid_recurrence_rep_moment'));
         }
     }
 
@@ -146,19 +146,19 @@ trait RecurrenceValidation
     {
         $parameters = explode(',', $moment);
         if (\count($parameters) !== 2) {
-            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), trans('validation.valid_recurrence_rep_moment'));
+            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string)trans('validation.valid_recurrence_rep_moment'));
 
             return;
         }
         $nthDay    = (int)($parameters[0] ?? 0.0);
         $dayOfWeek = (int)($parameters[1] ?? 0.0);
         if ($nthDay < 1 || $nthDay > 5) {
-            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), trans('validation.valid_recurrence_rep_moment'));
+            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string)trans('validation.valid_recurrence_rep_moment'));
 
             return;
         }
         if ($dayOfWeek < 1 || $dayOfWeek > 7) {
-            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), trans('validation.valid_recurrence_rep_moment'));
+            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string)trans('validation.valid_recurrence_rep_moment'));
         }
     }
 
@@ -172,7 +172,7 @@ trait RecurrenceValidation
     protected function validateWeekly(Validator $validator, int $index, int $dayOfWeek): void
     {
         if ($dayOfWeek < 1 || $dayOfWeek > 7) {
-            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), trans('validation.valid_recurrence_rep_moment'));
+            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string)trans('validation.valid_recurrence_rep_moment'));
         }
     }
 
@@ -188,7 +188,7 @@ trait RecurrenceValidation
         try {
             Carbon::createFromFormat('Y-m-d', $moment);
         } catch (InvalidArgumentException|Exception $e) {
-            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), trans('validation.valid_recurrence_rep_moment'));
+            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string)trans('validation.valid_recurrence_rep_moment'));
         }
     }
 }

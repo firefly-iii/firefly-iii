@@ -50,7 +50,7 @@ class CreateController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', trans('firefly.accounts'));
+                app('view')->share('title', (string)trans('firefly.accounts'));
 
                 $this->repository = app(AccountRepositoryInterface::class);
 
@@ -70,7 +70,7 @@ class CreateController extends Controller
         $what            = $what ?? 'asset';
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $subTitleIcon    = config('firefly.subIconsByIdentifier.' . $what);
-        $subTitle        = trans('firefly.make_new_' . $what . '_account');
+        $subTitle        = (string)trans('firefly.make_new_' . $what . '_account');
         $roles           = [];
         foreach (config('firefly.accountRoles') as $role) {
             $roles[$role] = (string)trans('firefly.account_role_' . $role);

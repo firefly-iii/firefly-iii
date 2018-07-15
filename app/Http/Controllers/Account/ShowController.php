@@ -61,7 +61,7 @@ class ShowController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', trans('firefly.accounts'));
+                app('view')->share('title', (string)trans('firefly.accounts'));
 
                 $this->repository    = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
@@ -107,7 +107,7 @@ class ShowController extends Controller
         }
         $fStart   = $start->formatLocalized($this->monthAndDayFormat);
         $fEnd     = $end->formatLocalized($this->monthAndDayFormat);
-        $subTitle = trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
+        $subTitle = (string)trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
         $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $periods  = $this->getPeriodOverview($account, $end);
         /** @var JournalCollectorInterface $collector */
@@ -151,7 +151,7 @@ class ShowController extends Controller
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
-        $subTitle = trans('firefly.all_journals_for_account', ['name' => $account->name]);
+        $subTitle = (string)trans('firefly.all_journals_for_account', ['name' => $account->name]);
         $periods  = new Collection;
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);

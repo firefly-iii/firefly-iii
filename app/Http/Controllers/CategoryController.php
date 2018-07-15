@@ -46,7 +46,7 @@ class CategoryController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', trans('firefly.categories'));
+                app('view')->share('title', (string)trans('firefly.categories'));
                 app('view')->share('mainTitleIcon', 'fa-bar-chart');
                 $this->repository = app(CategoryRepositoryInterface::class);
 
@@ -66,7 +66,7 @@ class CategoryController extends Controller
             $this->rememberPreviousUri('categories.create.uri');
         }
         $request->session()->forget('categories.create.fromStore');
-        $subTitle = trans('firefly.create_new_category');
+        $subTitle =(string)trans('firefly.create_new_category');
 
         return view('categories.create', compact('subTitle'));
     }
@@ -78,7 +78,7 @@ class CategoryController extends Controller
      */
     public function delete(Category $category)
     {
-        $subTitle = trans('firefly.delete_category', ['name' => $category->name]);
+        $subTitle = (string)trans('firefly.delete_category', ['name' => $category->name]);
 
         // put previous url in session
         $this->rememberPreviousUri('categories.delete.uri');
@@ -111,7 +111,7 @@ class CategoryController extends Controller
      */
     public function edit(Request $request, Category $category)
     {
-        $subTitle = trans('firefly.edit_category', ['name' => $category->name]);
+        $subTitle = (string)trans('firefly.edit_category', ['name' => $category->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('categories.edit.fromUpdate')) {

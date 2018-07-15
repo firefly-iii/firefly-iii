@@ -52,7 +52,7 @@ class AssetAccounts implements MapperInterface
             $list[$accountId] = $name;
         }
         asort($list);
-        $list = [0 => trans('import.map_do_not_map')] + $list;
+        $list = [0 => (string)trans('import.map_do_not_map')] + $list;
 
         return $list;
     }

@@ -114,8 +114,8 @@ class FakeJobConfiguration implements JobConfigurationInterface
     {
         return [
             'rulesOptions' => [
-                1 => trans('firefly.yes'),
-                0 => trans('firefly.no'),
+                1 => (string)trans('firefly.yes'),
+                0 => (string)trans('firefly.no'),
             ],
         ];
     }
