@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Transaction;
 
 use Carbon\Carbon;
-use ExpandedForm;
 use FireflyIII\Events\StoredTransactionJournal;
 use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
@@ -143,7 +142,7 @@ class SingleController extends Controller
     {
         $what           = strtolower($what ?? TransactionType::DEPOSIT);
         $what           = (string)($request->old('what') ?? $what);
-        $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
+        $budgets        = app('expandedform')->makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $preFilled      = session()->has('preFilled') ? session('preFilled') : [];
         $subTitle       = (string)trans('form.add_new_' . $what);
         $subTitleIcon   = 'fa-plus';
@@ -250,7 +249,7 @@ class SingleController extends Controller
         }
 
         $what       = strtolower($transactionType);
-        $budgetList = ExpandedForm::makeSelectListWithEmpty($this->budgets->getBudgets());
+        $budgetList = app('expandedform')->makeSelectListWithEmpty($this->budgets->getBudgets());
 
         // view related code
         $subTitle = (string)trans('breadcrumbs.edit_journal', ['description' => $journal->description]);

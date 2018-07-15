@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-use ExpandedForm;
 use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
@@ -98,7 +97,7 @@ class SplitController extends Controller
 
         // lists and collections
         $currencies = $this->currencies->get();
-        $budgets    = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
+        $budgets    = app('expandedform')->makeSelectListWithEmpty($this->budgets->getActiveBudgets());
 
         // other fields
         $optionalFields = app('preferences')->get('transaction_journal_optional_fields', [])->data;

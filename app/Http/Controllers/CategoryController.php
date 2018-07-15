@@ -66,7 +66,7 @@ class CategoryController extends Controller
             $this->rememberPreviousUri('categories.create.uri');
         }
         $request->session()->forget('categories.create.fromStore');
-        $subTitle =(string)trans('firefly.create_new_category');
+        $subTitle = (string)trans('firefly.create_new_category');
 
         return view('categories.create', compact('subTitle'));
     }

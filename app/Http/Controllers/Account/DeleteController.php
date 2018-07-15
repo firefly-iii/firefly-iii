@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Account;
 
 
-use ExpandedForm;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -68,7 +67,7 @@ class DeleteController extends Controller
     {
         $typeName    = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $subTitle    = (string)trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
-        $accountList = ExpandedForm::makeSelectListWithEmpty($this->repository->getAccountsByType([$account->accountType->type]));
+        $accountList = app('expandedform')->makeSelectListWithEmpty($this->repository->getAccountsByType([$account->accountType->type]));
         unset($accountList[$account->id]);
 
         // put previous url in session

@@ -226,8 +226,10 @@ class IndexController extends Controller
             $yearlyDate = $date->formatLocalized(trans('config.month_and_day_no_year'));
             $result     = [
                 'daily'  => ['label' => (string)trans('firefly.recurring_daily'), 'selected' => 0 === strpos($preSelected, 'daily')],
-                $weekly  => ['label' => (string)trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek]), 'selected' => 0 === strpos($preSelected, 'weekly')],
-                $monthly => ['label' => (string)trans('firefly.recurring_monthly', ['dayOfMonth' => $date->day]), 'selected' => 0 === strpos($preSelected, 'monthly')],
+                $weekly  => ['label'    => (string)trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek]),
+                             'selected' => 0 === strpos($preSelected, 'weekly')],
+                $monthly => ['label'    => (string)trans('firefly.recurring_monthly', ['dayOfMonth' => $date->day]),
+                             'selected' => 0 === strpos($preSelected, 'monthly')],
                 $ndom    => ['label'    => (string)trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $date->weekOfMonth]),
                              'selected' => 0 === strpos($preSelected, 'ndom')],
                 $yearly  => ['label' => (string)trans('firefly.recurring_yearly', ['date' => $yearlyDate]), 'selected' => 0 === strpos($preSelected, 'yearly')],

@@ -36,7 +36,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
 use Log;
 
 /**
@@ -46,9 +45,9 @@ use Log;
  */
 class ReconcileController extends Controller
 {
-    /** @var CurrencyUpdateService */
-    private $accountRepos;
     /** @var AccountRepositoryInterface */
+    private $accountRepos;
+    /** @var CurrencyRepositoryInterface */
     private $currencyRepos;
     /** @var JournalRepositoryInterface */
     private $repository;

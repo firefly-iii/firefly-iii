@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Transaction;
 
 
-use ExpandedForm;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BulkEditJournalRequest;
 use FireflyIII\Models\TransactionJournal;
@@ -72,7 +71,7 @@ class BulkController extends Controller
         // get list of budgets:
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
-        $budgetList = ExpandedForm::makeSelectListWithEmpty($repository->getActiveBudgets());
+        $budgetList = app('expandedform')->makeSelectListWithEmpty($repository->getActiveBudgets());
         // collect some useful meta data for the mass edit:
         $journals->each(
             function (TransactionJournal $journal) {
