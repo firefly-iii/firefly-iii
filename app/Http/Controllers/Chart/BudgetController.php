@@ -43,6 +43,9 @@ use Illuminate\Support\Collection;
 /**
  * Class BudgetController.
  *
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class BudgetController extends Controller
 {
@@ -91,13 +94,11 @@ class BudgetController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
-        // depending on diff, do something with range of chart.
-        $step             = $this->calculateStep($start, $end);
+        $step             = $this->calculateStep($start, $end); // depending on diff, do something with range of chart.
         $budgetCollection = new Collection([$budget]);
         $chartData        = [];
         $current          = clone $start;
         $current          = app('navigation')->startOfPeriod($current, $step);
-
         while ($end >= $current) {
             /** @var Carbon $currentEnd */
             $currentEnd = app('navigation')->endOfPeriod($current, $step);
@@ -172,6 +173,8 @@ class BudgetController extends Controller
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function expenseAsset(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
     {
@@ -218,6 +221,8 @@ class BudgetController extends Controller
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function expenseCategory(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
     {
@@ -253,7 +258,6 @@ class BudgetController extends Controller
         foreach ($result as $categoryId => $amount) {
             $chartData[$names[$categoryId]] = $amount;
         }
-
         $data = $this->generator->pieChart($chartData);
         $cache->store($data);
 
@@ -266,6 +270,8 @@ class BudgetController extends Controller
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function expenseExpense(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
     {
@@ -312,6 +318,9 @@ class BudgetController extends Controller
      * Shows a budget list with spent/left/overspent.
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function frontpage(): \Symfony\Component\HttpFoundation\Response
     {
@@ -524,6 +533,8 @@ class BudgetController extends Controller
      * @param Carbon     $end
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getExpensesForBudget(Collection $limits, Budget $budget, Carbon $start, Carbon $end): array
     {
@@ -564,6 +575,9 @@ class BudgetController extends Controller
      * @param Collection $limits
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     private function spentInPeriodMulti(Budget $budget, Collection $limits): array
     {
@@ -584,18 +598,12 @@ class BudgetController extends Controller
                         ]
                     );
             }
-            /*
-             * amount: amount of budget limit
-             * left: amount of budget limit min spent, or 0 when < 0.
-             * spent: spent, or amount of budget limit when > amount
-             */
             $amount       = $budgetLimit->amount;
             $leftInLimit  = bcsub($amount, $expenses);
             $hasOverspent = bccomp($leftInLimit, '0') === -1;
-
-            $left      = $hasOverspent ? '0' : bcsub($amount, $expenses);
-            $spent     = $hasOverspent ? $amount : $expenses;
-            $overspent = $hasOverspent ? app('steam')->positive($leftInLimit) : '0';
+            $left         = $hasOverspent ? '0' : bcsub($amount, $expenses);
+            $spent        = $hasOverspent ? $amount : $expenses;
+            $overspent    = $hasOverspent ? app('steam')->positive($leftInLimit) : '0';
 
             $return[$name] = [
                 'left'      => $left,

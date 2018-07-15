@@ -76,7 +76,9 @@ class IndexController extends Controller
     public function index(Request $request, string $moment = null)
     {
         $range    = app('preferences')->get('viewRange', '1M')->data;
+        /** @var Carbon $start */
         $start    = session('start', new Carbon);
+        /** @var Carbon $end */
         $end      = session('end', new Carbon);
         $page     = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
         $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
@@ -86,6 +88,7 @@ class IndexController extends Controller
         if ('' !== (string)$moment) {
             try {
                 $start = new Carbon($moment);
+                /** @var Carbon $end */
                 $end   = app('navigation')->endOfPeriod($start, $range);
             } catch (Exception $e) {
                 // start and end are already defined.

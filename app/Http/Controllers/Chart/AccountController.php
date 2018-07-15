@@ -433,8 +433,8 @@ class AccountController extends Controller
      *
      * @return array
      *
-     * @SuppressWarnigns(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnigns(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array
     {
