@@ -32,14 +32,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class RuleGroup.
  *
- * @property bool   $active
- * @property User   $user
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property string $title
- * @property string $text
- * @property int    $id
- * @property int    $order
+ * @property bool       $active
+ * @property User       $user
+ * @property Carbon     $created_at
+ * @property Carbon     $updated_at
+ * @property string     $title
+ * @property string     $text
+ * @property int        $id
+ * @property int        $order
  * @property Collection $rules
  */
 class RuleGroup extends Model

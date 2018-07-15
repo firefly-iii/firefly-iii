@@ -34,7 +34,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon $updated_at
  * @property string $text
  * @property string $title
- * @property int $noteable_id
+ * @property int    $noteable_id
  */
 class Note extends Model
 {

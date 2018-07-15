@@ -42,7 +42,6 @@ use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Log;
-use Preferences;
 
 /**
  * Class JournalRepository.
@@ -107,7 +106,7 @@ class JournalRepository implements JournalRepositoryInterface
             $journal->save();
         }
 
-        Preferences::mark();
+        app('preferences')->mark();
 
         return new MessageBag;
     }

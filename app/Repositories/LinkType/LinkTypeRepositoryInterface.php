@@ -64,13 +64,6 @@ interface LinkTypeRepositoryInterface
     public function find(int $id): LinkType;
 
     /**
-     * Set the user for this instance.
-     *
-     * @param User $user
-     */
-    public function setUser(User $user): void;
-
-    /**
      * Find link type by name.
      *
      * @param string|null $name
@@ -127,6 +120,13 @@ interface LinkTypeRepositoryInterface
      * @return Collection
      */
     public function getLinks(TransactionJournal $journal): Collection;
+
+    /**
+     * Set the user for this instance.
+     *
+     * @param User $user
+     */
+    public function setUser(User $user): void;
 
     /**
      * @param array $data

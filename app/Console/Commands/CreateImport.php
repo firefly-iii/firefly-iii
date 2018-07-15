@@ -34,7 +34,6 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Console\Command;
 use Log;
-use Preferences;
 
 /**
  * Class CreateImport.
@@ -232,7 +231,7 @@ class CreateImport extends Command
             }
         }
         // clear cache for user:
-        Preferences::setForUser($user, 'lastActivity', microtime());
+        app('preferences')->setForUser($user, 'lastActivity', microtime());
 
         return 0;
     }

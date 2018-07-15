@@ -34,7 +34,6 @@ use League\Fractal\Manager;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
-use Preferences;
 
 /**
  *
@@ -60,7 +59,7 @@ class PreferenceController extends Controller
         ];
         $preferences = new Collection;
         foreach ($available as $name) {
-            $pref = Preferences::getForUser($user, $name);
+            $pref = app('preferences')->getForUser($user, $name);
             if (null !== $pref) {
                 $preferences->push($pref);
             }
@@ -130,7 +129,7 @@ class PreferenceController extends Controller
                 $newValue = 1 === (int)$data['data'];
                 break;
         }
-        $result = Preferences::set($preference->name, $newValue);
+        $result = app('preferences')->set($preference->name, $newValue);
 
         // create some objects:
         $manager = new Manager;

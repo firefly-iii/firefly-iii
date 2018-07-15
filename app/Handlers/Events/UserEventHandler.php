@@ -36,7 +36,6 @@ use FireflyIII\User;
 use Illuminate\Auth\Events\Login;
 use Log;
 use Mail;
-use Preferences;
 
 /**
  * Class UserEventHandler.
@@ -138,7 +137,7 @@ class UserEventHandler
         $oldEmail  = $event->oldEmail;
         $user      = $event->user;
         $ipAddress = $event->ipAddress;
-        $token     = Preferences::getForUser($user, 'email_change_confirm_token', 'invalid');
+        $token     = app('preferences')->getForUser($user, 'email_change_confirm_token', 'invalid');
         $uri       = route('profile.confirm-email-change', [$token->data]);
         try {
             Mail::to($newEmail)->send(new ConfirmEmailChangeMail($newEmail, $oldEmail, $uri, $ipAddress));
@@ -164,7 +163,7 @@ class UserEventHandler
         $oldEmail  = $event->oldEmail;
         $user      = $event->user;
         $ipAddress = $event->ipAddress;
-        $token     = Preferences::getForUser($user, 'email_change_undo_token', 'invalid');
+        $token     = app('preferences')->getForUser($user, 'email_change_undo_token', 'invalid');
         $uri       = route('profile.undo-email-change', [$token->data, hash('sha256', $oldEmail)]);
         try {
             Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $uri, $ipAddress));

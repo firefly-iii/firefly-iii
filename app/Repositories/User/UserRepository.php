@@ -27,7 +27,6 @@ use FireflyIII\Models\Role;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
-use Preferences;
 
 /**
  * Class UserRepository.
@@ -73,12 +72,12 @@ class UserRepository implements UserRepositoryInterface
         $oldEmail = $user->email;
 
         // save old email as pref
-        Preferences::setForUser($user, 'previous_email_latest', $oldEmail);
-        Preferences::setForUser($user, 'previous_email_' . date('Y-m-d-H-i-s'), $oldEmail);
+        app('preferences')->setForUser($user, 'previous_email_latest', $oldEmail);
+        app('preferences')->setForUser($user, 'previous_email_' . date('Y-m-d-H-i-s'), $oldEmail);
 
         // set undo and confirm token:
-        Preferences::setForUser($user, 'email_change_undo_token', (string)bin2hex(random_bytes(16)));
-        Preferences::setForUser($user, 'email_change_confirm_token', (string)bin2hex(random_bytes(16)));
+        app('preferences')->setForUser($user, 'email_change_undo_token', (string)bin2hex(random_bytes(16)));
+        app('preferences')->setForUser($user, 'email_change_confirm_token', (string)bin2hex(random_bytes(16)));
         // update user
 
         $user->email        = $newEmail;
@@ -222,8 +221,8 @@ class UserRepository implements UserRepositoryInterface
         $return = [];
 
         // two factor:
-        $is2faEnabled      = Preferences::getForUser($user, 'twoFactorAuthEnabled', false)->data;
-        $has2faSecret      = null !== Preferences::getForUser($user, 'twoFactorAuthSecret');
+        $is2faEnabled      = app('preferences')->getForUser($user, 'twoFactorAuthEnabled', false)->data;
+        $has2faSecret      = null !== app('preferences')->getForUser($user, 'twoFactorAuthSecret');
         $return['has_2fa'] = false;
         if ($is2faEnabled && $has2faSecret) {
             $return['has_2fa'] = true;
@@ -329,8 +328,8 @@ class UserRepository implements UserRepositoryInterface
         $oldEmail = $user->email;
 
         // save old email as pref
-        Preferences::setForUser($user, 'admin_previous_email_latest', $oldEmail);
-        Preferences::setForUser($user, 'admin_previous_email_' . date('Y-m-d-H-i-s'), $oldEmail);
+        app('preferences')->setForUser($user, 'admin_previous_email_latest', $oldEmail);
+        app('preferences')->setForUser($user, 'admin_previous_email_' . date('Y-m-d-H-i-s'), $oldEmail);
 
         $user->email = $newEmail;
         $user->save();

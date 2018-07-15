@@ -32,7 +32,6 @@ use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
-use Preferences;
 
 /**
  * Class CurrencyRepository.
@@ -66,7 +65,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         // is the default currency for the user or the system
-        $defaultCode = Preferences::getForUser($this->user, 'currencyPreference', config('firefly.default_currency', 'EUR'))->data;
+        $defaultCode = app('preferences')->getForUser($this->user, 'currencyPreference', config('firefly.default_currency', 'EUR'))->data;
         if ($currency->code === $defaultCode) {
             return false;
         }

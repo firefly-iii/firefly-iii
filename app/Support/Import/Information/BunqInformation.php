@@ -123,9 +123,9 @@ class BunqInformation implements InformationInterface
     private function closeSession(SessionToken $sessionToken): void
     {
         Log::debug('Going to close session');
-        $apiKey          = Preferences::getForUser($this->user, 'bunq_api_key')->data;
-        $serverPublicKey = Preferences::getForUser($this->user, 'bunq_server_public_key')->data;
-        $privateKey      = Preferences::getForUser($this->user, 'bunq_private_key')->data;
+        $apiKey          = app('preferences')->getForUser($this->user, 'bunq_api_key')->data;
+        $serverPublicKey = app('preferences')->getForUser($this->user, 'bunq_server_public_key')->data;
+        $privateKey      = app('preferences')->getForUser($this->user, 'bunq_private_key')->data;
         $request         = new DeleteDeviceSessionRequest();
         $request->setSecret($apiKey);
         $request->setPrivateKey($privateKey);
@@ -144,9 +144,9 @@ class BunqInformation implements InformationInterface
      */
     private function getMonetaryAccounts(SessionToken $sessionToken, int $userId): Collection
     {
-        $apiKey          = Preferences::getForUser($this->user, 'bunq_api_key')->data;
-        $serverPublicKey = Preferences::getForUser($this->user, 'bunq_server_public_key')->data;
-        $privateKey      = Preferences::getForUser($this->user, 'bunq_private_key')->data;
+        $apiKey          = app('preferences')->getForUser($this->user, 'bunq_api_key')->data;
+        $serverPublicKey = app('preferences')->getForUser($this->user, 'bunq_server_public_key')->data;
+        $privateKey      = app('preferences')->getForUser($this->user, 'bunq_private_key')->data;
         $request         = new ListMonetaryAccountRequest;
 
         $request->setSessionToken($sessionToken);
@@ -168,9 +168,9 @@ class BunqInformation implements InformationInterface
      */
     private function getUserInformation(SessionToken $sessionToken): int
     {
-        $apiKey          = Preferences::getForUser($this->user, 'bunq_api_key')->data;
-        $serverPublicKey = Preferences::getForUser($this->user, 'bunq_server_public_key')->data;
-        $privateKey      = Preferences::getForUser($this->user, 'bunq_private_key')->data;
+        $apiKey          = app('preferences')->getForUser($this->user, 'bunq_api_key')->data;
+        $serverPublicKey = app('preferences')->getForUser($this->user, 'bunq_server_public_key')->data;
+        $privateKey      = app('preferences')->getForUser($this->user, 'bunq_private_key')->data;
         $request         = new ListUserRequest;
         $request->setSessionToken($sessionToken);
         $request->setSecret($apiKey);
@@ -196,10 +196,10 @@ class BunqInformation implements InformationInterface
     private function startSession(): SessionToken
     {
         Log::debug('Now in startSession.');
-        $apiKey            = Preferences::getForUser($this->user, 'bunq_api_key')->data;
-        $serverPublicKey   = Preferences::getForUser($this->user, 'bunq_server_public_key')->data;
-        $privateKey        = Preferences::getForUser($this->user, 'bunq_private_key')->data;
-        $installationToken = Preferences::getForUser($this->user, 'bunq_installation_token')->data;
+        $apiKey            = app('preferences')->getForUser($this->user, 'bunq_api_key')->data;
+        $serverPublicKey   = app('preferences')->getForUser($this->user, 'bunq_server_public_key')->data;
+        $privateKey        = app('preferences')->getForUser($this->user, 'bunq_private_key')->data;
+        $installationToken = app('preferences')->getForUser($this->user, 'bunq_installation_token')->data;
         $request           = new DeviceSessionRequest();
         $request->setSecret($apiKey);
         $request->setServerPublicKey($serverPublicKey);

@@ -34,7 +34,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Log;
-use Preferences;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -396,7 +395,7 @@ class TransactionJournal extends Model
         }
         $entry->data = $value;
         $entry->save();
-        Preferences::mark();
+        app('preferences')->mark();
 
         return $entry;
     }
