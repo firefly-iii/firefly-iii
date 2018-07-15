@@ -64,6 +64,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string              $transaction_journal_category_name
  * @property int                 $bill_id
  * @property string              $bill_name
+ * @property string              $bill_name_encrypted
  * @property string              $notes
  * @property string              $tags
  * @property string              $transaction_currency_symbol
@@ -87,7 +88,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string              $after       // used in audit reports.
  * @property int                 $opposing_id // ID of the opposing transaction, used in collector
  * @property bool                $encrypted   // is the journal encrypted
- * @property                     $bill_name_encrypted
  */
 class Transaction extends Model
 {

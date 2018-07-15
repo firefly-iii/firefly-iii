@@ -123,7 +123,7 @@ trait TransactionValidation
         }
 
         // no valid descriptions and empty journal description? error.
-        if ($validDescriptions === 0 && '' === $journalDescription) {
+        if (0 === $validDescriptions && '' === $journalDescription) {
             $validator->errors()->add('description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')]));
         }
     }
@@ -179,7 +179,7 @@ trait TransactionValidation
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
         // need at least one transaction
-        if (\count($transactions) === 0) {
+        if (0 === \count($transactions)) {
             $validator->errors()->add('description', (string)trans('validation.at_least_one_transaction'));
         }
     }
@@ -293,7 +293,7 @@ trait TransactionValidation
         $repository->setUser($admin);
         $set = $repository->getAccountsById([$accountId]);
         Log::debug(sprintf('Count of accounts found by ID %d is: %d', $accountId, $set->count()));
-        if ($set->count() === 1) {
+        if (1 === $set->count()) {
             /** @var Account $first */
             $first = $set->first();
             if ($first->accountType->type !== AccountType::ASSET) {

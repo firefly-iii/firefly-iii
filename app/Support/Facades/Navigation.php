@@ -22,14 +22,28 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Facades;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @codeCoverageIgnore
  * Class Navigation.
  *
- * @method array blockPeriods(\Carbon\Carbon $start, \Carbon\Carbon $end, string $range)
- * @method string periodShow(\Carbon\Carbon $theDate, string $repeatFrequency)
+ * @method Carbon addPeriod(Carbon $theDate, string $repeatFreq, int $skip)
+ * @method array blockPeriods(Carbon $start, Carbon $end, string $range)
+ * @method Carbon endOfPeriod(Carbon $end, string $repeatFreq)
+ * @method Carbon endOfX(Carbon $theCurrentEnd, string $repeatFreq, Carbon $maxDate = null)
+ * @method array listOfPeriods(Carbon $start, Carbon $end)
+ * @method string periodShow(Carbon $theDate, string $repeatFrequency)
+ * @method string preferredCarbonFormat(Carbon $start, Carbon $end)
+ * @method string preferredCarbonLocalizedFormat(Carbon $start, Carbon $end)
+ * @method string preferredEndOfPeriod(Carbon $start, Carbon $end)
+ * @method string preferredRangeFormat(Carbon $start, Carbon $end)
+ * @method string preferredSqlFormat(Carbon $start, Carbon $end)
+ * @method Carbon startOfPeriod(Carbon $theDate, string $repeatFreq)
+ * @method Carbon subtractPeriod(Carbon $theDate, string $repeatFreq, int $subtract = 1)
+ * @method Carbon updateEndDate(string $range, Carbon $start)
+ * @method Carbon updateStartDate(string $range, Carbon $start)
  */
 class Navigation extends Facade
 {

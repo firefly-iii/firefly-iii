@@ -505,9 +505,10 @@ class Navigation
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function subtractPeriod(Carbon $theDate, string $repeatFreq, int $subtract = 1): Carbon
+    public function subtractPeriod(Carbon $theDate, string $repeatFreq, int $subtract = null): Carbon
     {
-        $date = clone $theDate;
+        $subtract = $subtract ?? 1;
+        $date     = clone $theDate;
         // 1D 1W 1M 3M 6M 1Y
         Log::debug(sprintf('subtractPeriod: date is %s, repeat frequency is %s and subtract is %d', $date->format('Y-m-d'), $repeatFreq, $subtract));
         $functionMap = [

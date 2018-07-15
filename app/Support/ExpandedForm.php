@@ -43,6 +43,7 @@ use Session;
 
 /**
  * Class ExpandedForm.
+ *
  */
 class ExpandedForm
 {

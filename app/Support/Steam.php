@@ -302,11 +302,11 @@ class Steam
     }
 
     /**
-     * @param $string
+     * @param string $string
      *
      * @return int
      */
-    public function phpBytes($string): int
+    public function phpBytes(string $string): int
     {
         $string = strtolower($string);
 
