@@ -45,6 +45,9 @@ class Installer
      * @param  \Closure                 $next
      *
      * @return mixed
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function handle($request, Closure $next)
     {

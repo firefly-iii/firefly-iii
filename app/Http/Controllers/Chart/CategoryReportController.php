@@ -72,6 +72,8 @@ class CategoryReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function accountExpense(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -94,6 +96,8 @@ class CategoryReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function accountIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -119,6 +123,8 @@ class CategoryReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function categoryExpense(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -144,6 +150,7 @@ class CategoryReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function categoryIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -169,6 +176,10 @@ class CategoryReportController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function mainChart(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): JsonResponse
     {
@@ -276,6 +287,8 @@ class CategoryReportController extends Controller
      * @param Carbon     $end
      *
      * @return Collection
+     *
+     *
      */
     private function getExpenses(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Collection
     {

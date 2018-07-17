@@ -62,73 +62,39 @@ class Sandstorm
             /** @var UserRepositoryInterface $repository */
             $repository = app(UserRepositoryInterface::class);
             $userId     = (string)$request->header('X-Sandstorm-User-Id');
-            Log::debug(sprintf('Sandstorm user ID is "%s"', $userId));
-            $count = $repository->count();
+            // catch anonymous:
+            $userId = $userId === '' ? 'anonymous' : $userId;
+            $email  = $userId . '@firefly';
+            $user   = $repository->findByEmail($email) ?? $this->createUser($email);
+            Log::debug(sprintf('Sandstorm user email is "%s"', $email));
 
-            // if there already is one user in this instance, we assume this is
-            // the "main" user. Firefly's nature does not allow other users to
-            // access the same data so we have no choice but to simply login
-            // the new user to the same account and just forget about Bob and Alice
-            // and any other differences there may be between these users.
-            if (1 === $count && \strlen($userId) > 0) {
-                // login as first user user.
-                $user = $repository->first();
-                /** @noinspection NullPointerExceptionInspection */
-                Auth::guard($guard)->login($user);
-                app('view')->share('SANDSTORM_ANON', false);
-
-                return $next($request);
-            }
-
-            if (1 === $count && '' === $userId) {
-                // login but indicate anonymous
-                $user = User::first();
-                /** @noinspection NullPointerExceptionInspection */
-                Auth::guard($guard)->login($user);
-                app('view')->share('SANDSTORM_ANON', true);
-
-                return $next($request);
-            }
-
-            if (0 === $count && \strlen($userId) > 0) {
-                // create new user.
-                $email = $userId . '@firefly';
-                /** @var User $user */
-                $user = $repository->store(
-                    [
-                        'blocked'      => false,
-                        'blocked_code' => null,
-                        'email'        => $email,
-                    ]
-                );
-                Auth::guard($guard)->login($user);
-
-                // also make the user an admin
-                $repository->attachRole($user, 'owner');
-
-                // share value.
-                app('view')->share('SANDSTORM_ANON', false);
-
-                return $next($request);
-            }
-
-            if (0 === $count && '' === $userId) {
-                throw new FireflyException('The first visit to a new Firefly III administration cannot be by a guest user.');
-            }
-
-            if ($count > 1) {
-                throw new FireflyException('Your Firefly III installation has more than one user, which is weird.');
-            }
+            Auth::guard($guard)->login($user);
+            $repository->attachRole($user, 'owner');
+            app('view')->share('SANDSTORM_ANON', false);
         }
-        // if in Sandstorm, user logged in, still must check if user is anon.
-        $userId = (string)$request->header('X-Sandstorm-User-Id');
-        if ('' === $userId) {
-            app('view')->share('SANDSTORM_ANON', true);
-
-            return $next($request);
-        }
-        app('view')->share('SANDSTORM_ANON', false);
 
         return $next($request);
     }
+
+
+    /**
+     * @param string $email
+     *
+     * @return User
+     */
+    private function createUser(string $email): User
+    {
+        $repository = app(UserRepositoryInterface::class);
+
+        return $repository->store(
+            [
+                'blocked'      => false,
+                'blocked_code' => null,
+                'email'        => $email,
+            ]
+        );
+
+    }
 }
+
+

@@ -103,6 +103,8 @@ class ShowController extends Controller
      * @param JournalRepositoryInterface $repository
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function noBudgetAll(Request $request, JournalRepositoryInterface $repository)
     {

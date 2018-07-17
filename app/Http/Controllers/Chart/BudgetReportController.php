@@ -131,6 +131,9 @@ class BudgetReportController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function mainChart(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): JsonResponse
     {

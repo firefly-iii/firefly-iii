@@ -241,6 +241,8 @@ class CurrencyController extends Controller
      * @param CurrencyFormRequest $request
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function store(CurrencyFormRequest $request)
     {
@@ -270,7 +272,6 @@ class CurrencyController extends Controller
         }
         if (null === $currency) {
             $request->session()->flash('error', (string)trans('firefly.could_not_store_currency'));
-
         }
 
         return $redirect;

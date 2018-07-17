@@ -37,6 +37,8 @@ use URL;
 
 /**
  * Class Controller.
+ *
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 class Controller extends BaseController
 {
@@ -78,26 +80,9 @@ class Controller extends BaseController
 
                 // get shown-intro-preference:
                 if (auth()->check()) {
-                    // some routes have a "what" parameter, which indicates a special page:
-                    $specificPage = null === Route::current()->parameter('what') ? '' : '_' . Route::current()->parameter('what');
-                    $page         = str_replace('.', '_', Route::currentRouteName());
-
-                    // indicator if user has seen the help for this page ( + special page):
-                    $key = 'shown_demo_' . $page . $specificPage;
-                    // is there an intro for this route?
-                    $intro        = config('intro.' . $page);
-                    $specialIntro = config('intro.' . $page . $specificPage);
-                    $shownDemo    = true;
-
-                    // either must be array and either must be > 0
-                    if ((\is_array($intro) || \is_array($specialIntro)) && (\count($intro) > 0 || \count($specialIntro) > 0)) {
-                        $shownDemo = app('preferences')->get($key, false)->data;
-                        Log::debug(sprintf('Check if user has already seen intro with key "%s". Result is %d', $key, $shownDemo));
-                    }
-
-                    // share language
-                    $language = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
-
+                    $language  = $this->getLanguage();
+                    $page      = $this->getPageName();
+                    $shownDemo = $this->hasSeenDemo();
                     app('view')->share('language', $language);
                     app('view')->share('shownDemo', $shownDemo);
                     app('view')->share('current_route_name', $page);
@@ -173,5 +158,57 @@ class Controller extends BaseController
     protected function rememberPreviousUri(string $identifier): void
     {
         session()->put($identifier, URL::previous());
+    }
+
+    /**
+     * @return string
+     */
+    private function getLanguage(): string
+    {
+        /** @var string $language */
+        $language = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
+
+        return $language;
+    }
+
+    /**
+     * @return string
+     */
+    private function getPageName(): string
+    {
+        return str_replace('.', '_', Route::currentRouteName());
+    }
+
+    /**
+     * @return string
+     */
+    private function getSpecificPageName(): string
+    {
+        return null === Route::current()->parameter('what') ? '' : '_' . Route::current()->parameter('what');
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasSeenDemo(): bool
+    {
+        $page         = $this->getPageName();
+        $specificPage = $this->getSpecificPageName();
+
+        // indicator if user has seen the help for this page ( + special page):
+        $key = 'shown_demo_' . $page . $specificPage;
+        // is there an intro for this route?
+        $intro        = config('intro.' . $page) ?? [];
+        $specialIntro = config('intro.' . $page . $specificPage) ?? [];
+        // some routes have a "what" parameter, which indicates a special page:
+
+        $shownDemo = true;
+        // both must be array and either must be > 0
+        if (\count($intro) > 0 || \count($specialIntro) > 0) {
+            $shownDemo = app('preferences')->get($key, false)->data;
+            Log::debug(sprintf('Check if user has already seen intro with key "%s". Result is %d', $key, $shownDemo));
+        }
+
+        return $shownDemo;
     }
 }

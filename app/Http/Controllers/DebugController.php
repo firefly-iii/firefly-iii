@@ -37,6 +37,8 @@ use Route as RouteFacade;
 
 /**
  * Class DebugController
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class DebugController extends Controller
 {
@@ -100,6 +102,9 @@ class DebugController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function index(Request $request)
     {
@@ -191,9 +196,8 @@ class DebugController extends Controller
         $return = '&nbsp;';
         /** @var Route $route */
         foreach ($set as $route) {
-            $name = $route->getName();
-            if (null !== $name && \strlen($name) > 0 && \in_array('GET', $route->methods(), true)) {
-
+            $name = (string)$route->getName();
+            if (\in_array('GET', $route->methods(), true)) {
                 $found = false;
                 foreach ($ignore as $string) {
                     if (!(false === stripos($name, $string))) {

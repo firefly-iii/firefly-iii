@@ -27,7 +27,6 @@ use Carbon\Carbon;
 use Closure;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\Request;
-use Session;
 
 /**
  * Class SessionFilter.
@@ -114,25 +113,21 @@ class Range
     }
 
     /**
-     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function setRange(): void
     {
         // ignore preference. set the range to be the current month:
-        if (!Session::has('start') && !Session::has('end')) {
+        if (!app('session')->has('start') && !app('session')->has('end')) {
             $viewRange = app('preferences')->get('viewRange', '1M')->data;
-            if (null === $viewRange) {
-                $viewRange = '1M';
-                app('preferences')->set('viewRange', '1M');
-            }
-            $start = new Carbon;
-            $start = app('navigation')->updateStartDate($viewRange, $start);
-            $end   = app('navigation')->updateEndDate($viewRange, $start);
+            $start     = new Carbon;
+            $start     = app('navigation')->updateStartDate($viewRange, $start);
+            $end       = app('navigation')->updateEndDate($viewRange, $start);
 
-            Session::put('start', $start);
-            Session::put('end', $end);
+            app('session')->put('start', $start);
+            app('session')->put('end', $end);
         }
-        if (!Session::has('first')) {
+        if (!app('session')->has('first')) {
             /** @var JournalRepositoryInterface $repository */
             $repository = app(JournalRepositoryInterface::class);
             $journal    = $repository->firstNull();
@@ -141,7 +136,7 @@ class Range
             if (null !== $journal) {
                 $first = $journal->date ?? $first;
             }
-            Session::put('first', $first);
+            app('session')->put('first', $first);
         }
     }
 }

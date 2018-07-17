@@ -52,17 +52,17 @@ class AuthenticateTwoFactor
     }
 
 
-    /** @noinspection PhpUnusedParameterInspection */
     /**
      * @param         $request
      * @param Closure $next
-     * @param array   ...$guards
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|mixed
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Psr\Container\ContainerExceptionInterface
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function handle($request, Closure $next, ...$guards)
+    public function handle($request, Closure $next)
     {
         /** @noinspection PhpUndefinedMethodInspection */
         if ($this->auth->guest()) {

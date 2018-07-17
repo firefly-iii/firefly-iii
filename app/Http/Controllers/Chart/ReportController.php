@@ -94,6 +94,8 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -123,7 +125,6 @@ class ReportController extends Controller
                 'entries'         => [],
             ],
         ];
-
         foreach ($source['earned'] as $date => $amount) {
             $carbon                          = new Carbon($date);
             $label                           = $carbon->formatLocalized($format);
@@ -151,6 +152,9 @@ class ReportController extends Controller
      * @param Collection $accounts
      *
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function sum(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -238,6 +242,8 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function getChartData(Collection $accounts, Carbon $start, Carbon $end): array
     {

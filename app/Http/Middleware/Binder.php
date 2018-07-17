@@ -60,12 +60,11 @@ class Binder
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure                 $next
-     * @param  string[]                 ...$guards
      *
      * @return mixed
      *
      */
-    public function handle($request, Closure $next, ...$guards)
+    public function handle($request, Closure $next)
     {
         foreach ($request->route()->parameters() as $key => $value) {
             if (isset($this->binders[$key])) {

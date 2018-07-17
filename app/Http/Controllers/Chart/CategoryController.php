@@ -60,6 +60,8 @@ class CategoryController extends Controller
      * @param Category                    $category
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function all(CategoryRepositoryInterface $repository, AccountRepositoryInterface $accountRepository, Category $category): JsonResponse
     {
@@ -69,13 +71,8 @@ class CategoryController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-
-        $start = $repository->firstUseDate($category);
-
-        if (null === $start) {
-            $start = new Carbon; // @codeCoverageIgnore
-        }
-
+        $start     = $repository->firstUseDate($category);
+        $start     = $start ?? new Carbon;
         $range     = app('preferences')->get('viewRange', '1M')->data;
         $start     = app('navigation')->startOfPeriod($start, $range);
         $end       = new Carbon;
@@ -83,19 +80,15 @@ class CategoryController extends Controller
         $chartData = [
             [
                 'label'   => (string)trans('firefly.spent'),
-                'entries' => [],
-                'type'    => 'bar',
+                'entries' => [], 'type' => 'bar',
             ],
             [
                 'label'   => (string)trans('firefly.earned'),
-                'entries' => [],
-                'type'    => 'bar',
+                'entries' => [], 'type' => 'bar',
             ],
             [
                 'label'   => (string)trans('firefly.sum'),
-                'entries' => [],
-                'type'    => 'line',
-                'fill'    => false,
+                'entries' => [], 'type' => 'line', 'fill' => false,
             ],
         ];
 
@@ -167,6 +160,8 @@ class CategoryController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function reportPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -225,6 +220,8 @@ class CategoryController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function reportPeriodNoCategory(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -297,6 +294,8 @@ class CategoryController extends Controller
      * @param Carbon   $end
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function makePeriodChart(Category $category, Carbon $start, Carbon $end): array
     {
