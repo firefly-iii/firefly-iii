@@ -84,9 +84,6 @@ class ReportController extends Controller
             return view('error')->with('message', (string)trans('firefly.end_after_start_date')); // @codeCoverageIgnore
         }
 
-        if ($start < session('first')) {
-            $start = session('first');
-        }
         $this->repository->cleanupBudgets();
 
         app('view')->share(
@@ -116,9 +113,6 @@ class ReportController extends Controller
     {
         if ($end < $start) {
             return view('error')->with('message', (string)trans('firefly.end_after_start_date')); // @codeCoverageIgnore
-        }
-        if ($start < session('first')) {
-            $start = session('first');
         }
         $this->repository->cleanupBudgets();
 
@@ -153,9 +147,6 @@ class ReportController extends Controller
     {
         if ($end < $start) {
             return view('error')->with('message', (string)trans('firefly.end_after_start_date')); // @codeCoverageIgnore
-        }
-        if ($start < session('first')) {
-            $start = session('first');
         }
         $this->repository->cleanupBudgets();
 
@@ -192,9 +183,6 @@ class ReportController extends Controller
         if ($end < $start) {
             return view('error')->with('message', (string)trans('firefly.end_after_start_date')); // @codeCoverageIgnore
         }
-        if ($start < session('first')) {
-            $start = session('first');
-        }
         $this->repository->cleanupBudgets();
 
         app('view')->share(
@@ -230,9 +218,6 @@ class ReportController extends Controller
             return view('error')->with('message', (string)trans('firefly.end_after_start_date'));
         }
 
-        if ($start < session('first')) {
-            $start = session('first');
-        }
         $this->repository->cleanupBudgets();
 
         app('view')->share(
@@ -387,9 +372,6 @@ class ReportController extends Controller
     {
         if ($end < $start) {
             return view('error')->with('message', (string)trans('firefly.end_after_start_date')); // @codeCoverageIgnore
-        }
-        if ($start < session('first')) {
-            $start = session('first');
         }
         $this->repository->cleanupBudgets();
 
