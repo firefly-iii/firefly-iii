@@ -46,6 +46,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \FireflyIII\Models\Account             $destinationAccount
  * @property \Illuminate\Support\Collection         $recurrenceTransactionMeta
  * @property int                                    $id
+ * @property Recurrence                             $recurrence
  */
 class RecurrenceTransaction extends Model
 {
