@@ -25,7 +25,6 @@ namespace FireflyIII\Http\Middleware;
 
 use Auth;
 use Closure;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\Request;
@@ -45,8 +44,6 @@ class Sandstorm
      * @param string|null              $guard
      *
      * @return mixed
-     *
-     * @throws FireflyException
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
