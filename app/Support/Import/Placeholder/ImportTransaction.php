@@ -172,7 +172,7 @@ class ImportTransaction
             'opposing-id'         => 'opposingId',
         ];
         if (isset($mapped[$role])) {
-            $field        = $basics[$role];
+            $field        = $mapped[$role];
             $mappedValue  = $this->getMappedValue($columnValue);
             $this->$field = $mappedValue;
             Log::debug(sprintf('Going to set the %s. Original value is "%s", mapped value is "%s".', $role, $columnValue->getValue(), $mappedValue));
