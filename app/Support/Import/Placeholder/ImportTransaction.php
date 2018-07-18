@@ -131,6 +131,38 @@ class ImportTransaction
      */
     public function addColumnValue(ColumnValue $columnValue): void
     {
+        $role   = $columnValue->getRole();
+        $basics = [
+            'account-iban'          => 'accountIban',
+            'account-name'          => 'accountName',
+            'account-bic'           => 'accountBic',
+            'account-number'        => 'accountNumber',
+            'amount_debit'          => 'amountDebit',
+            'amount_credit'         => 'amountCredit',
+            'amount'                => 'amount',
+            'amount_foreign'        => 'foreignAmount',
+            'bill-name'             => 'billName',
+            'budget-name'           => 'budgetName',
+            'category-name'         => 'categoryName',
+            'currency-name'         => 'currencyName',
+            'currency-code'         => 'currencyCode',
+            'currency-symbol'       => 'currencySymbol',
+            'external-id'           => 'externalId',
+            'foreign-currency-code' => 'foreignCurrencyCode',
+            'date-transaction'      => 'date',
+            'opposing-iban'         => 'opposingIban',
+            'opposing-name'         => 'opposingName',
+            'opposing-bic'          => 'opposingBic',
+            'opposing-number'       => 'opposingNumber',
+        ];
+        if (isset($basics[$role])) {
+            $field        = $basics[$role];
+            $this->$field = $columnValue->getValue();
+
+            return;
+        }
+
+
         switch ($columnValue->getRole()) {
             default:
                 // @codeCoverageIgnoreStart
@@ -144,64 +176,19 @@ class ImportTransaction
                 $this->accountId = $mappedValue;
                 Log::debug(sprintf('Going to set the account-id. Original value is "%s", mapped value is "%s".', $columnValue->getValue(), $mappedValue));
                 break;
-            case 'account-iban':
-                $this->accountIban = $columnValue->getValue();
-                break;
-            case 'account-name':
-                $this->accountName = $columnValue->getValue();
-                break;
-            case 'account-bic':
-                $this->accountBic = $columnValue->getValue();
-                break;
-            case 'account-number':
-                $this->accountNumber = $columnValue->getValue();
-                break;
-            case 'amount_debit':
-                $this->amountDebit = $columnValue->getValue();
-                break;
-            case 'amount_credit':
-                $this->amountCredit = $columnValue->getValue();
-                break;
-            case 'amount':
-                $this->amount = $columnValue->getValue();
-                break;
-            case 'amount_foreign':
-                $this->foreignAmount = $columnValue->getValue();
-                break;
             case 'bill-id':
                 $this->billId = $this->getMappedValue($columnValue);
                 break;
-            case 'bill-name':
-                $this->billName = $columnValue->getValue();
-                break;
             case 'budget-id':
                 $this->budgetId = $this->getMappedValue($columnValue);
-                break;
-            case 'budget-name':
-                $this->budgetName = $columnValue->getValue();
                 break;
             case 'category-id':
                 $value = $this->getMappedValue($columnValue);
                 Log::debug(sprintf('Set category ID to %d in ImportTransaction object', $value));
                 $this->categoryId = $value;
                 break;
-            case 'category-name':
-                $this->categoryName = $columnValue->getValue();
-                break;
             case 'currency-id':
                 $this->currencyId = $this->getMappedValue($columnValue);
-                break;
-            case 'currency-name':
-                $this->currencyName = $columnValue->getValue();
-                break;
-            case 'currency-code':
-                $this->currencyCode = $columnValue->getValue();
-                break;
-            case 'currency-symbol':
-                $this->currencySymbol = $columnValue->getValue();
-                break;
-            case 'external-id':
-                $this->externalId = $columnValue->getValue();
                 break;
             case 'sepa-ct-id':
             case 'sepa-ct-op':
@@ -218,16 +205,12 @@ class ImportTransaction
             case 'date-payment':
             case 'date-process':
             case 'date-due':
+            case 'rabo-debit-credit':
+            case 'ing-debit-credit':
                 $this->meta[$columnValue->getRole()] = $columnValue->getValue();
                 break;
             case 'foreign-currency-id':
                 $this->foreignCurrencyId = $this->getMappedValue($columnValue);
-                break;
-            case 'foreign-currency-code':
-                $this->foreignCurrencyCode = $columnValue->getValue();
-                break;
-            case 'date-transaction':
-                $this->date = $columnValue->getValue();
                 break;
             case 'description':
                 $this->description = trim($this->description . ' ' . $columnValue->getValue());
@@ -239,22 +222,6 @@ class ImportTransaction
                 $mappedValue      = $this->getMappedValue($columnValue);
                 $this->opposingId = $mappedValue;
                 Log::debug(sprintf('Going to set the OPPOSING-id. Original value is "%s", mapped value is "%s".', $columnValue->getValue(), $mappedValue));
-                break;
-            case 'opposing-iban':
-                $this->opposingIban = $columnValue->getValue();
-                break;
-            case 'opposing-name':
-                $this->opposingName = $columnValue->getValue();
-                break;
-            case 'opposing-bic':
-                $this->opposingBic = $columnValue->getValue();
-                break;
-            case 'opposing-number':
-                $this->opposingNumber = $columnValue->getValue();
-                break;
-            case 'rabo-debit-credit':
-            case 'ing-debit-credit':
-                $this->modifiers[$columnValue->getRole()] = $columnValue->getValue();
                 break;
             case 'tags-comma':
                 $tags       = explode(',', $columnValue->getValue());
