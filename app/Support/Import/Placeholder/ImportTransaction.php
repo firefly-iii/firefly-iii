@@ -162,66 +162,44 @@ class ImportTransaction
             return;
         }
 
+        $mapped = [
+            'account-id'          => 'accountId',
+            'bill-id'             => 'billId',
+            'budget-id'           => 'budgetId',
+            'category-id'         => 'categoryId',
+            'currency-id'         => 'currencyId',
+            'foreign-currency-id' => 'foreignCurrencyId',
+            'opposing-id'         => 'opposingId',
+        ];
+        if (isset($mapped[$role])) {
+            $field        = $basics[$role];
+            $mappedValue  = $this->getMappedValue($columnValue);
+            $this->$field = $mappedValue;
+            Log::debug(sprintf('Going to set the %s. Original value is "%s", mapped value is "%s".', $role, $columnValue->getValue(), $mappedValue));
 
-        switch ($columnValue->getRole()) {
+            return;
+        }
+
+        $meta = ['sepa-ct-id', 'sepa-ct-op', 'sepa-db', 'sepa-cc', 'sepa-country', 'sepa-batch-id', 'sepa-ep', 'sepa-ci', 'internal-reference', 'date-interest',
+                 'date-invoice', 'date-book', 'date-payment', 'date-process', 'date-due', 'rabo-debit-credit', 'ing-debit-credit',];
+        if (isset($meta[$role])) {
+            $this->meta[$role] = $columnValue->getValue();
+
+            return;
+        }
+
+        switch ($role) {
             default:
                 // @codeCoverageIgnoreStart
                 throw new FireflyException(
-                    sprintf('ImportTransaction cannot handle role "%s" with value "%s"', $columnValue->getRole(), $columnValue->getValue())
+                    sprintf('ImportTransaction cannot handle role "%s" with value "%s"', $role, $columnValue->getValue())
                 );
             // @codeCoverageIgnoreEnd
-            case 'account-id':
-                $mappedValue = $this->getMappedValue($columnValue);
-                // could be the result of a mapping?
-                $this->accountId = $mappedValue;
-                Log::debug(sprintf('Going to set the account-id. Original value is "%s", mapped value is "%s".', $columnValue->getValue(), $mappedValue));
-                break;
-            case 'bill-id':
-                $this->billId = $this->getMappedValue($columnValue);
-                break;
-            case 'budget-id':
-                $this->budgetId = $this->getMappedValue($columnValue);
-                break;
-            case 'category-id':
-                $value = $this->getMappedValue($columnValue);
-                Log::debug(sprintf('Set category ID to %d in ImportTransaction object', $value));
-                $this->categoryId = $value;
-                break;
-            case 'currency-id':
-                $this->currencyId = $this->getMappedValue($columnValue);
-                break;
-            case 'sepa-ct-id':
-            case 'sepa-ct-op':
-            case 'sepa-db':
-            case 'sepa-cc':
-            case 'sepa-country':
-            case 'sepa-batch-id':
-            case 'sepa-ep':
-            case 'sepa-ci':
-            case 'internal-reference':
-            case 'date-interest':
-            case 'date-invoice':
-            case 'date-book':
-            case 'date-payment':
-            case 'date-process':
-            case 'date-due':
-            case 'rabo-debit-credit':
-            case 'ing-debit-credit':
-                $this->meta[$columnValue->getRole()] = $columnValue->getValue();
-                break;
-            case 'foreign-currency-id':
-                $this->foreignCurrencyId = $this->getMappedValue($columnValue);
-                break;
             case 'description':
                 $this->description = trim($this->description . ' ' . $columnValue->getValue());
                 break;
             case 'note':
                 $this->note = trim($this->note . ' ' . $columnValue->getValue());
-                break;
-            case 'opposing-id':
-                $mappedValue      = $this->getMappedValue($columnValue);
-                $this->opposingId = $mappedValue;
-                Log::debug(sprintf('Going to set the OPPOSING-id. Original value is "%s", mapped value is "%s".', $columnValue->getValue(), $mappedValue));
                 break;
             case 'tags-comma':
                 $tags       = explode(',', $columnValue->getValue());
