@@ -181,9 +181,16 @@ class ImportTransaction
         }
 
         $meta = ['sepa-ct-id', 'sepa-ct-op', 'sepa-db', 'sepa-cc', 'sepa-country', 'sepa-batch-id', 'sepa-ep', 'sepa-ci', 'internal-reference', 'date-interest',
-                 'date-invoice', 'date-book', 'date-payment', 'date-process', 'date-due', 'rabo-debit-credit', 'ing-debit-credit',];
-        if (isset($meta[$role])) {
+                 'date-invoice', 'date-book', 'date-payment', 'date-process', 'date-due',];
+        if (\in_array($role, $meta, true)) {
             $this->meta[$role] = $columnValue->getValue();
+
+            return;
+        }
+
+        $modifiers = ['rabo-debit-credit', 'ing-debit-credit'];
+        if (\in_array($role, $modifiers, true)) {
+            $this->modifiers[$role] = $columnValue->getValue();
 
             return;
         }
